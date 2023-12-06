@@ -1,0 +1,3 @@
+[submodule "submodule/render"]
+	path = submodule/render
+	url = git@gitlab.com:electricity-simulator/render.git
