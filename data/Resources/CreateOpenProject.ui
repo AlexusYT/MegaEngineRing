@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.16.0 -->
+<interface>
+  <!-- interface-name CreateOpenProject.ui -->
+  <requires lib="gtk" version="4.10"/>
+  <object class="GtkApplicationWindow" id="window_createOpenProj">
+    <property name="default-height">300</property>
+    <property name="default-width">700</property>
+    <property name="height-request">300</property>
+    <property name="show-menubar">True</property>
+    <property name="width-request">500</property>
+    <child>
+      <object class="GtkNotebook" id="notebook_mode">
+        <property name="show-border">False</property>
+        <property name="show-tabs">False</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkButton" id="btn_newProject">
+                <property name="label">Создать новый проект</property>
+                <property name="margin-bottom">3</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-top">6</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_openProject">
+                <property name="label">Открыть существующий проект</property>
+                <property name="margin-bottom">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-top">3</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label">Недавние проекты</property>
+                <property name="margin-end">5</property>
+                <property name="margin-top">5</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkGridView">
+                <property name="factory">
+                  <object class="GtkBuilderListItemFactory">
+                    <property name="bytes">&lt;![CDATA[
+                                            &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+                                            &lt;interface&gt;
+                                            &lt;template class="GtkListItem"&gt;
+                                            &lt;property name="child"&gt;
+                                            &lt;object class="GtkBox"&gt;
+                                            &lt;property name="orientation"&gt;GTK_ORIENTATION_HORIZONTAL&lt;/property&gt;
+                                            &lt;property name="spacing"&gt;20&lt;/property&gt;
+                                            &lt;child&gt;
+                                            &lt;object class="GtkImage"&gt;
+                                            &lt;binding name="gicon"&gt;
+                                            &lt;closure type="GIcon" function="get_icon"&gt;
+                                            &lt;lookup name="item"&gt;GtkListItem&lt;/lookup&gt;
+                                            &lt;/closure&gt;
+                                            &lt;/binding&gt;
+                                            &lt;/object&gt;
+                                            &lt;/child&gt;
+                                            &lt;child&gt;
+                                            &lt;object class="GtkLabel"&gt;
+                                            &lt;property name="hexpand"&gt;TRUE&lt;/property&gt;
+                                            &lt;property name="xalign"&gt;0&lt;/property&gt;
+                                            &lt;binding name="label"&gt;
+                                            &lt;closure type="gchararray" function="get_file_name"&gt;
+                                            &lt;lookup name="item"&gt;GtkListItem&lt;/lookup&gt;
+                                            &lt;/closure&gt;
+                                            &lt;/binding&gt;
+                                            &lt;/object&gt;
+                                            &lt;/child&gt;
+                                            &lt;/object&gt;
+                                            &lt;/property&gt;
+                                            &lt;/template&gt;
+                                            &lt;/interface&gt;
+                                            ]]&gt;
+                                        </property>
+                  </object>
+                </property>
+                <property name="model">
+                  <object class="GtkSingleSelection">
+                    <property name="model">
+                      <object class="GtkSortListModel"/>
+                    </property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <child>
+              <object class="GtkNotebook">
+                <property name="tab-pos">left</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">Новый проект</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="margin-top">5</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="column-spacing">6</property>
+                        <property name="row-spacing">6</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">Название</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-start">5</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="entry_name">
+                            <property name="hexpand">True</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-start">5</property>
+                            <property name="truncate-multiline">True</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">0</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">Путь к проекту</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-start">5</property>
+                            <layout>
+                              <property name="column">0</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="entry_path">
+                            <property name="hexpand">True</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-start">5</property>
+                            <property name="secondary-icon-name">folder-open</property>
+                            <property name="truncate-multiline">True</property>
+                            <layout>
+                              <property name="column">1</property>
+                              <property name="row">1</property>
+                            </layout>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label_error">
+                        <property name="css-classes">error</property>
+                        <property name="label">Error label</property>
+                        <property name="margin-top">10</property>
+                        <property name="wrap">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="halign">end</property>
+                        <property name="valign">end</property>
+                        <property name="vexpand">True</property>
+                        <property name="vexpand-set">True</property>
+                        <child>
+                          <object class="GtkButton" id="btn_cancel">
+                            <property name="label">Отмена</property>
+                            <property name="margin-bottom">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-top">5</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="btn_create">
+                            <property name="label">Создать</property>
+                            <property name="margin-bottom">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-top">5</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child type="tab">
+                  <object class="GtkBox">
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">document-new</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-start">5</property>
+                        <property name="margin-top">5</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">Пустой проект</property>
+                        <property name="margin-end">5</property>
+                        <property name="margin-start">5</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

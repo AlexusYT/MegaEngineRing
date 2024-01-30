@@ -1,6 +1,3 @@
 #include <GameEngine.h>
 
-int main(const int argc, char** argv) {
-	return GameEngine::run(argc, argv);
-	;
-}
+int main(const int argc, char** argv) { return n::core::ui::GameEngine::run(argc, argv); }

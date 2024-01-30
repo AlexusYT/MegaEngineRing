@@ -1,0 +1,71 @@
+{
+	"ShaderPrograms": [
+		{
+			"ProgramName": "GUI",
+			"VertexShaders": "GUI-vert",
+			"FragmentShaders": "GUI-frag"
+		},
+		{
+			"ProgramName": "Light",
+			"VertexShaders": "Light-vert",
+			"FragmentShaders": ["Light-frag", "Common-frag"]
+		},
+		{
+			"ProgramName": "Default",
+			"VertexShaders": "Default-vert",
+			"FragmentShaders": ["Default-frag", "Common-frag"]
+		},
+		{
+			"ProgramName": "Shadow",
+			"VertexShaders": "Shadow-vert",
+			"GeometryShaders": "Shadow-geom",
+			"FragmentShaders": "Shadow-frag"
+		}
+	],
+	"VertexShaders": [
+		{
+			"ShaderName": "GUI-vert",
+			"File": "GUI/GUI.vert"
+		},
+		{
+			"ShaderName": "Light-vert",
+			"File": "Light/Light.vert"
+		},
+		{
+			"ShaderName": "Default-vert",
+			"File": "Default/Default.vert"
+		},
+		{
+			"ShaderName": "Shadow-vert",
+			"File": "Shadow/Shadow.vert"
+		}
+	],
+	"GeometryShaders": [
+		{
+			"ShaderName": "Shadow-geom",
+			"File": "Shadow/Shadow.geom"
+		}
+	],
+	"FragmentShaders": [
+		{
+			"ShaderName": "GUI-frag",
+			"File": "GUI/GUI.frag"
+		},
+		{
+			"ShaderName": "Common-frag",
+			"File": "Common.frag"
+		},
+		{
+			"ShaderName": "Light-frag",
+			"File": "Light/Light.frag"
+		},
+		{
+			"ShaderName": "Default-frag",
+			"File": "Default/Default.frag"
+		},
+		{
+			"ShaderName": "Shadow-frag",
+			"File": "Shadow/Shadow.frag"
+		}
+	]
+}

@@ -7,10 +7,10 @@ endif ()
 
 add_custom_target(
         run-exe
-        COMMAND GameEngine_exe
+        COMMAND GameEngine_UI
         VERBATIM
 )
-add_dependencies(run-exe GameEngine_exe)
+add_dependencies(run-exe GameEngine_UI)
 
 option(BUILD_MCSS_DOCS "Build documentation using Doxygen and m.css" OFF)
 if (BUILD_MCSS_DOCS)

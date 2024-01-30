@@ -26,7 +26,7 @@
 	(1,23,"GtkTreeExpander",None,20,None,None,None,-1,None),
 	(1,24,"GtkPaned",None,20,None,None,None,-1,None),
 	(1,25,"GtkFrame",None,24,None,None,None,-1,None),
-	(1,26,"GtkGLArea",None,24,None,None,None,-1,None),
+	(1,26,"GtkGLArea","OpenGLRenderer",24,None,None,None,-1,None),
 	(1,27,"GtkListBox",None,25,None,None,None,-1,None)
   </object>
   <object_property>
@@ -41,21 +41,33 @@
 	(1,19,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
 	(1,19,"GtkPaned","end-child",None,None,None,None,None,21,None,None,None,None),
 	(1,19,"GtkPaned","resize-end-child","False",None,None,None,None,None,None,None,None,None),
+	(1,19,"GtkPaned","resize-start-child","False",None,None,None,None,None,None,None,None,None),
 	(1,19,"GtkPaned","shrink-end-child","False",None,None,None,None,None,None,None,None,None),
+	(1,19,"GtkPaned","shrink-start-child","False",None,None,None,None,None,None,None,None,None),
 	(1,19,"GtkPaned","start-child",None,None,None,None,None,20,None,None,None,None),
 	(1,19,"GtkPaned","wide-handle","True",None,None,None,None,None,None,None,None,None),
 	(1,19,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None),
 	(1,20,"GtkPaned","end-child",None,None,None,None,None,24,None,None,None,None),
-	(1,20,"GtkPaned","position","95",None,None,None,None,None,None,None,None,None),
+	(1,20,"GtkPaned","resize-end-child","False",None,None,None,None,None,None,None,None,None),
+	(1,20,"GtkPaned","resize-start-child","False",None,None,None,None,None,None,None,None,None),
+	(1,20,"GtkPaned","shrink-end-child","False",None,None,None,None,None,None,None,None,None),
+	(1,20,"GtkPaned","shrink-start-child","False",None,None,None,None,None,None,None,None,None),
 	(1,20,"GtkPaned","start-child",None,None,None,None,None,23,None,None,None,None),
 	(1,20,"GtkPaned","wide-handle","True",None,None,None,None,None,None,None,None,None),
 	(1,22,"GtkWidget","height-request","150",None,None,None,None,None,None,None,None,None),
+	(1,23,"GtkWidget","width-request","117",None,None,None,None,None,None,None,None,None),
 	(1,24,"GtkPaned","end-child",None,None,None,None,None,25,None,None,None,None),
-	(1,24,"GtkPaned","position","93",None,None,None,None,None,None,None,None,None),
+	(1,24,"GtkPaned","resize-end-child","False",None,None,None,None,None,None,None,None,None),
+	(1,24,"GtkPaned","resize-start-child","False",None,None,None,None,None,None,None,None,None),
+	(1,24,"GtkPaned","shrink-end-child","False",None,None,None,None,None,None,None,None,None),
+	(1,24,"GtkPaned","shrink-start-child","False",None,None,None,None,None,None,None,None,None),
 	(1,24,"GtkPaned","start-child",None,None,None,None,None,26,None,None,None,None),
 	(1,24,"GtkPaned","wide-handle","True",None,None,None,None,None,None,None,None,None),
 	(1,25,"GtkFrame","child",None,None,None,None,None,27,None,None,None,None),
-	(1,25,"GtkFrame","label","Свойства",None,None,None,None,None,None,None,None,None)
+	(1,25,"GtkFrame","label","Свойства",None,None,None,None,None,None,None,None,None),
+	(1,25,"GtkWidget","width-request","150",None,None,None,None,None,None,None,None,None),
+	(1,26,"GtkWidget","height-request","200",None,None,None,None,None,None,None,None,None),
+	(1,26,"GtkWidget","width-request","200",None,None,None,None,None,None,None,None,None)
   </object_property>
   <object_data>
 	(1,1,"GtkWidget",1,1,None,None,None,None,None,None)

@@ -14,7 +14,7 @@ include(Catch)
 add_executable(GameEngine_test source/GameEngine_test.cpp)
 target_link_libraries(
         GameEngine_test PRIVATE
-        GameEngine_lib
+        GameEngine_core
         Catch2::Catch2WithMain
 )
 target_compile_features(GameEngine_test PRIVATE cxx_std_20)
