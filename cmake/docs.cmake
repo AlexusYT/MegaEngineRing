@@ -21,14 +21,14 @@ find_package(Python3 3.6 REQUIRED)
 # ---- Declare documentation target ----
 
 set(
-        DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/docs"
+        DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/engine/docs"
         CACHE PATH "Path for the generated Doxygen documentation"
 )
 
-set(working_dir "${PROJECT_BINARY_DIR}/docs")
+set(working_dir "${PROJECT_BINARY_DIR}/engine/docs")
 
 foreach (file IN ITEMS Doxyfile conf.py)
-    configure_file("docs/${file}.in" "${working_dir}/${file}" @ONLY)
+    configure_file("engine/docs/${file}.in" "${working_dir}/${file}" @ONLY)
 endforeach ()
 
 set(mcss_script "${mcss_SOURCE_DIR}/documentation/doxygen.py")
@@ -39,7 +39,9 @@ add_custom_target(
         COMMAND "${CMAKE_COMMAND}" -E remove_directory
         "${DOXYGEN_OUTPUT_DIRECTORY}/html"
         "${DOXYGEN_OUTPUT_DIRECTORY}/xml"
-        COMMAND "${Python3_EXECUTABLE}" "${mcss_script}" "${config}"
+        "${DOXYGEN_OUTPUT_DIRECTORY}/templates"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/engine/docs/templates" "${DOXYGEN_OUTPUT_DIRECTORY}/templates"
+        COMMAND "${Python3_EXECUTABLE}" "${mcss_script}" --templates=templates/doxygen --debug "${config}"
         COMMENT "Building documentation using Doxygen and m.css"
         WORKING_DIRECTORY "${working_dir}"
         VERBATIM

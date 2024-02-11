@@ -20,6 +20,8 @@ class ProjectExplorerEntry : public Glib::Object {
 	std::string image;
 	Glib::RefPtr<Gio::ListStore<ProjectExplorerEntry>> children;
 	Glib::RefPtr<Gio::Menu> contextMenu;
+	bool databaseSaveRequired{};
+	bool fileSaveRequired{};
 
 protected:
 	ProjectExplorerEntry(const std::string &pName) : name(pName) {}
@@ -70,34 +72,64 @@ public:
 
 	[[nodiscard]] const Glib::RefPtr<Gio::Menu> &getContextMenu() const { return contextMenu; }
 
-	engine::utils::ReportMessageUPtr load() {
-		if (auto msg = onLoad()) return msg;
+	[[nodiscard]] bool isDatabaseSaveRequired() const { return databaseSaveRequired; }
+
+	void setDatabaseSaveRequired(const bool pDatabaseSaveRequired = true) {
+		databaseSaveRequired = pDatabaseSaveRequired;
+	}
+
+	[[nodiscard]] bool isFileSaveRequired() const { return fileSaveRequired; }
+
+	void setFileSaveRequired(const bool pFileSaveRequired = true) { fileSaveRequired = pFileSaveRequired; }
+
+	engine::utils::ReportMessagePtr loadDatabase() {
+		if (auto msg = onLoadDatabase()) return msg;
 		if (!children) return nullptr;
 		for (uint32_t i = 0; i < children->get_n_items(); i++) {
 			auto child = children->get_item(i);
-			if (auto msg = child->load()) return msg;
+			if (auto msg = child->loadDatabase()) return msg;
 		}
 		return nullptr;
 	}
 
-	engine::utils::ReportMessageUPtr save() const {
-		if (auto msg = onSave()) return msg;
+	engine::utils::ReportMessagePtr saveDatabase() {
+		if (isDatabaseSaveRequired()) {
+			if (auto msg = onSaveDatabase()) return msg;
+			setDatabaseSaveRequired(false);
+		}
 		if (!children) return nullptr;
 		for (uint32_t i = 0; i < children->get_n_items(); i++) {
 			auto child = children->get_item(i);
-			if (auto msg = child->save()) return msg;
+			if (auto msg = child->saveDatabase()) return msg;
 		}
 		return nullptr;
 	}
 
-	virtual std::filesystem::path getPath() const { return {}; }
+	engine::utils::ReportMessagePtr saveFile() {
+		if (isFileSaveRequired()) {
+			if (auto msg = onSaveFile()) return msg;
+			setFileSaveRequired(false);
+		}
+		if (!children) return nullptr;
+		for (uint32_t i = 0; i < children->get_n_items(); i++) {
+			auto child = children->get_item(i);
+			if (auto msg = child->saveFile()) return msg;
+		}
+		return nullptr;
+	}
+
+	virtual std::filesystem::path getHeaderPath() const { return {}; }
+
+	virtual std::filesystem::path getSourcePath() const { return {}; }
 
 	virtual std::shared_ptr<mvp::IEditorPresenter> openEditor() { return nullptr; }
 
 private:
-	virtual engine::utils::ReportMessageUPtr onLoad() { return nullptr; }
+	virtual engine::utils::ReportMessagePtr onLoadDatabase() { return nullptr; }
 
-	virtual engine::utils::ReportMessageUPtr onSave() const { return nullptr; }
+	virtual engine::utils::ReportMessagePtr onSaveDatabase() const { return nullptr; }
+
+	virtual engine::utils::ReportMessagePtr onSaveFile() const { return nullptr; }
 };
 } // namespace UI_CORE
 

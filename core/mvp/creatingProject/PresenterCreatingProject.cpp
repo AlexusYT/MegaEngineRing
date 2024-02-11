@@ -41,7 +41,7 @@ void PresenterCreatingProject::runTasksImpl() const {
 		logMessage("Готово");
 
 		view->executeInMainThread([this, project](const std::promise<void> & /*pPromise*/) {
-			engine::utils::ReportMessageUPtr msg;
+			engine::utils::ReportMessagePtr msg;
 			auto viewMain = MainWindow::create(project, msg);
 			if (msg) return logError(std::move(msg));
 			auto modelMain = std::make_shared<ModelMain>();
@@ -61,7 +61,7 @@ void PresenterCreatingProject::runTasksImpl() const {
 	}
 }
 
-engine::utils::ReportMessageUPtr PresenterCreatingProject::generateFiles(const std::filesystem::path &pPath) const {
+engine::utils::ReportMessagePtr PresenterCreatingProject::generateFiles(const std::filesystem::path &pPath) const {
 	logMessage("Генерация vcpkg.json...");
 	if (auto msg = ToolchainUtils::generateVcpkgManifestFile(pPath / "vcpkg.json")) return msg;
 	logMessage("Генерация CMakePresets.json...");
@@ -73,14 +73,15 @@ engine::utils::ReportMessageUPtr PresenterCreatingProject::generateFiles(const s
 	logMessage("Генерация директории cmake...");
 	create_directories(pPath / "cmake");
 	if (auto msg = ToolchainUtils::generateCMakeDirectory(pPath / "cmake")) return msg;
+	auto project = model->getProject();
 	logMessage("Генерация main.cpp...");
-	if (auto msg = model->getProject()->generateMainFile()) return msg;
+	if (auto msg = project->generateMainFile()) return msg;
 	logMessage("Генерация generated-files.cmake...");
-	if (auto msg = model->getProject()->saveGeneratedFilesCmake()) return msg;
+	if (auto msg = project->saveFiles()) return msg;
 	return nullptr;
 }
 
-engine::utils::ReportMessageUPtr PresenterCreatingProject::installLibraries(
+engine::utils::ReportMessagePtr PresenterCreatingProject::installLibraries(
 	const std::filesystem::path &pProjectPath) const {
 	logMessage("Установка необходимых библиотек...");
 	const auto vcpkgPath = ToolchainSettings::getVcpkgPath();
@@ -147,7 +148,7 @@ std::string PresenterCreatingProject::editTargetLinkLibraries(const std::string 
 	return editedScript.str();
 }
 
-engine::utils::ReportMessageUPtr PresenterCreatingProject::reloadCmake() const {
+engine::utils::ReportMessagePtr PresenterCreatingProject::reloadCmake() const {
 	logMessage("Создание сборочных файлов");
 	if (auto exitCode = model->getProject()->reloadCMake([](const std::string & /*pLine*/) {},
 														 [this](const std::string &pLine) {
@@ -164,7 +165,7 @@ engine::utils::ReportMessageUPtr PresenterCreatingProject::reloadCmake() const {
 	return nullptr;
 }
 
-engine::utils::ReportMessageUPtr PresenterCreatingProject::parseLibrariesScript(
+engine::utils::ReportMessagePtr PresenterCreatingProject::parseLibrariesScript(
 	std::stringstream &pLog, std::unordered_map<std::string, Library> &pLibraries) {
 	try {
 		bool foundScripts = false;
@@ -226,7 +227,7 @@ void PresenterCreatingProject::logMessage(const std::string &pMessage) const {
 		[pMessage, this](const std::promise<void> & /*pPromise*/) { view->addMessageToLog(pMessage + "\n"); });
 }
 
-void PresenterCreatingProject::logError(engine::utils::ReportMessageUPtr pError)const{
+void PresenterCreatingProject::logError(engine::utils::ReportMessagePtr pError)const{
 	view->executeInMainThread([&pError, this](const std::promise<void> &/*pPromise*/) {
 		view->reportError(std::move(pError));
 	});

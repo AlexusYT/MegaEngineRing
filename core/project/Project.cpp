@@ -4,12 +4,14 @@
 
 #include "Project.h"
 
+#include <dlfcn.h>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
 
 #include "generatedFiles/ApplicationInfo.h"
 #include "generatedFiles/ScenesInfo.h"
 #include "generators/cpp/CppCustomStatement.h"
 #include "generators/cpp/CppGenerator.h"
+#include "generators/cpp/CppHeaderFile.h"
 #include "generators/cpp/CppMethod.h"
 #include "sceneObjects/SimpleMesh.h"
 #include "sceneObjects/World.h"
@@ -30,7 +32,11 @@ Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEn
 	addToplevelObject(obj);
 }
 
-engine::utils::ReportMessageUPtr Project::openDatabase() {
+Project::~Project() {
+	if (editorLib) dlclose(editorLib);
+}
+
+engine::utils::ReportMessagePtr Project::openDatabase() {
 
 	try {
 		database = std::make_shared<SQLite::Database>(projectPath / (projectName + ".enproj"),
@@ -38,7 +44,7 @@ engine::utils::ReportMessageUPtr Project::openDatabase() {
 	} catch (...) {
 		auto msg = engine::utils::ReportMessage::create();
 		msg->setTitle("Failed to connect to database");
-		return std::move(msg);
+		return msg;
 	}
 	return nullptr;
 }
@@ -55,14 +61,17 @@ void Project::initProject() {
 	projectExplorerEntries->append(engineFileEntries);
 }
 
-engine::utils::ReportMessageUPtr Project::loadProject() const {
+engine::utils::ReportMessagePtr Project::loadProject() {
 
-	if (auto msg = engineFileEntries->load()) return msg;
+	if (auto msg = engineFileEntries->loadDatabase()) return msg;
+	if (auto msg = saveFiles()) return msg;
 
+	requestRebuildEditorLib();
 	return nullptr;
 }
 
-engine::utils::ReportMessageUPtr Project::saveProject() const {
+engine::utils::ReportMessagePtr Project::saveProject() const {
+	engine::utils::Logger::info("Saving project...");
 	try {
 		database->backup((database->getFilename() + ".bak").c_str(), SQLite::Database::Save);
 	} catch (...) {
@@ -71,33 +80,34 @@ engine::utils::ReportMessageUPtr Project::saveProject() const {
 		msg->setMessage("Exception occurred while backup");
 		return msg;
 	}
-	if (auto msg = engineFileEntries->save()) return msg;
+	if (auto msg = engineFileEntries->saveDatabase()) return msg;
+	engine::utils::Logger::info("Project saved");
 	return nullptr;
 }
 
-engine::utils::ReportMessageUPtr Project::saveGeneratedFilesCmake() const {
-
-	if (auto msg = engineFileEntries->saveToCmake()) { return msg; }
-
+engine::utils::ReportMessagePtr Project::saveFiles() const {
+	if (auto msg = engineFileEntries->saveToCmake()) return msg;
+	if (auto msg = engineFileEntries->saveFile()) return msg;
 	return nullptr;
 }
 
-n::engine::utils::ReportMessageUPtr Project::generateMainFile() const {
+n::engine::utils::ReportMessagePtr Project::generateMainFile() const {
 
-	const auto sourcesPath = projectPath / "source";
-	CppGenerator gen;
-	gen.addInclude("EngineSDK/main/Application.h");
-	gen.addInclude("ApplicationSettings.h");
-	CppMethod main;
-	main.setReturnType("int");
-	main.setName("main");
-	main.setParamsList({"int argc", "char* argv[]"});
-	main.addStatement(CppCustomStatement::create("using namespace n::sdk::main"));
-	main.addStatement(CppCustomStatement::create("Application app"));
-	main.addStatement(CppMethodCall::create("app.setApplicationSettings", {"std::make_shared<ApplicationSettings>()"}));
-	main.addStatement(CppCustomStatement::create("return app.runMainLoop(argc, argv)"));
-	gen.addElement(&main);
-	return gen.saveFile(sourcesPath / "main.cpp");
+	const auto sourcesPath = projectPath / "source/main";
+	CppSourceFile sourceFile;
+	sourceFile.addInclude("EngineSDK/main/Application.h");
+	sourceFile.addInclude("ApplicationSettings.h");
+	auto main = CppMethod::create();
+	main->setReturnType("int");
+	main->setName("main");
+	main->setParamsList({"int argc", "char* argv[]"});
+	main->addStatement(CppCustomStatement::create("using namespace n::sdk::main"));
+	main->addStatement(CppCustomStatement::create("Application app"));
+	main->addStatement(
+		CppMethodCall::create("app.setApplicationSettings", {"std::make_shared<ApplicationSettings>()"}));
+	main->addStatement(CppCustomStatement::create("return app.runMainLoop(argc, argv)"));
+	sourceFile.addDefinition(main->getDefinition());
+	return sourceFile.writeFile(sourcesPath);
 }
 
 Glib::RefPtr<Gio::SimpleActionGroup> Project::getActionGroups() const {
@@ -106,8 +116,46 @@ Glib::RefPtr<Gio::SimpleActionGroup> Project::getActionGroups() const {
 	return refActionGroup;
 }
 
-int Project::reloadCMake(const sigc::slot<void(const std::string &pLogLine)> &pCoutCallback,
-						 const sigc::slot<void(const std::string &pLogLine)> &pCerrCallback) const {
+void Project::requestRebuildEditorLib() {
+	std::thread([this] {
+		editorLibLoadStarted();
+		int result = reloadCMake([](const std::string &pLine) { engine::utils::Logger::info(pLine); },
+								 [](const std::string &pLine) { engine::utils::Logger::error(pLine); });
+		if (result != 0) {
+
+			auto msg = engine::utils::ReportMessage::create();
+			msg->setTitle("Failed to open editor library");
+			msg->setMessage("Cmake failed");
+			editorLibLoadErrored(msg);
+			return;
+		}
+		result = build(
+			"_EDITOR_TMP_", [](const std::string &pLine) { engine::utils::Logger::info(pLine); },
+			[](const std::string &pLine) { engine::utils::Logger::error(pLine); });
+		if (result != 0) {
+
+			auto msg = engine::utils::ReportMessage::create();
+			msg->setTitle("Failed to open editor library");
+			msg->setMessage("Library compilation failed");
+			editorLibLoadErrored(msg);
+			return;
+		}
+		auto path = (getProjectBuildPath() / "lib_EDITOR_TMP_.so").string();
+		editorLib = dlopen((path).c_str(), RTLD_LAZY | RTLD_GLOBAL);
+		if (!editorLib) {
+			auto msg = engine::utils::ReportMessage::create();
+			msg->setTitle("Failed to open editor library");
+			msg->setMessage("The function dlopen() returned error");
+			msg->addInfoLine("Path: {}", path);
+			msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
+			editorLibLoadErrored(msg);
+			return;
+		}
+		editorLibLoadFinished();
+	}).detach();
+}
+
+int Project::reloadCMake(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
 	create_directories(projectPath);
 
 	const std::string command = std::format("-DCMAKE_BUILD_TYPE=Debug --preset dev -S {} -B {}", projectPath.string(),
@@ -116,21 +164,44 @@ int Project::reloadCMake(const sigc::slot<void(const std::string &pLogLine)> &pC
 									   pCerrCallback);
 }
 
-int Project::build(const sigc::slot<void(const std::string &pLogLine)> &pCoutCallback,
-				   const sigc::slot<void(const std::string &pLogLine)> &pCerrCallback) const {
-
-	const std::string command = "--build --target GameEngine_exe --preset dev";
-
-	return ToolchainUtils::executeSync(projectPath, ToolchainSettings::getCMakePath(), command, pCoutCallback,
+int Project::build(const std::string &pTarget, const std::string &pPreset, const CallbackSlot &pCoutCallback,
+				   const CallbackSlot &pCerrCallback) const {
+	std::string args = std::format("--build --target {} --preset {}", pTarget, pPreset);
+	return ToolchainUtils::executeSync(projectPath, ToolchainSettings::getCMakePath(), args, pCoutCallback,
 									   pCerrCallback);
 }
 
-int Project::run(const sigc::slot<void(const std::string &pLogLine)> &pCoutCallback,
-				 const sigc::slot<void(const std::string &pLogLine)> &pCerrCallback) const {
+int Project::run(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
 
 	const std::string command = "";
 
 	return ToolchainUtils::executeSync(projectPath, projectPath / "build/dev/GameEngine", command, pCoutCallback,
 									   pCerrCallback);
+}
+
+int Project::runDebug(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
+
+	const std::string command = projectPath / "build/dev/GameEngine";
+
+	return ToolchainUtils::executeSync(projectPath, "gdb", command, pCoutCallback, pCerrCallback);
+}
+
+void Project::editorLibLoadStarted() {
+
+	editorLibLoading = true;
+	editorLibError = nullptr;
+	onEditorLibLoadingSignal();
+}
+
+void Project::editorLibLoadFinished() {
+	editorLibLoading = false;
+	editorLibError = nullptr;
+	onEditorLibLoadedSignal(nullptr);
+}
+
+void Project::editorLibLoadErrored(const engine::utils::ReportMessagePtr &pError) {
+	editorLibLoading = false;
+	editorLibError = pError;
+	onEditorLibLoadedSignal(pError);
 }
 } // namespace PROJECT_CORE

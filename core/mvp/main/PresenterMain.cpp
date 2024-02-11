@@ -4,6 +4,7 @@
 
 #include "PresenterMain.h"
 
+#include <dlfcn.h>
 #include <future>
 #include <mvp/main/IModelMain.h>
 #include <mvp/main/IViewMain.h>
@@ -15,6 +16,19 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 	viewMain->connectReloadCmakeClickedSignal(
 		bind(mem_fun(*this, &PresenterMain::generateCmakeFiles), sigc::slot<void(int pExitCode)>{}));
 
+	//TODO move to project
+	const char* path = "/mnt/LinuxFS/CLionProjects/GameEngine/installed/sdk/1.0.0/lib/libGameEngine.so";
+	errno = 0;
+	const auto handle = dlopen(path, RTLD_NOW | RTLD_GLOBAL);
+	if (!handle) {
+		auto msg = engine::utils::ReportMessage::create();
+		msg->setTitle("Failed to open engine sdk library");
+		msg->addInfoLine("Path: {}", path);
+		msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
+		modelMain->getProject()->errorOccurred(msg);
+		return;
+	}
+	modelMain->getProject()->setEditorSdkLib(handle);
 	viewMain->connectRunClickedSignal([this] {
 		std::thread([this] {
 			build([this](int pExitCode) {
@@ -25,15 +39,15 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 	});
 	viewMain->setWindowTitle("Game engine editor - " + modelMain->getProject()->getProjectName());
 
-	auto r =
-		viewMain->connectKeyPressedSignal([this](const guint pKeyVal, guint pKeyCode, const Gdk::ModifierType pState) {
+	modelMain->getProject()->connectOnErrorSignal(sigc::mem_fun(*viewMain, &IViewMain::reportError));
+
+	auto r = viewMain->connectKeyPressedSignal(
+		[this](const guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
 			if (pKeyCode == 39 && (pState & (Gdk::ModifierType::SHIFT_MASK | Gdk::ModifierType::CONTROL_MASK |
 											 Gdk::ModifierType::ALT_MASK)) == Gdk::ModifierType::CONTROL_MASK) {
 				std::thread([this] {
-					engine::utils::Logger::info("Saving project...");
-					if (const auto msg = modelMain->getProject()->saveProject()) engine::utils::Logger::error(msg);
-					else
-						engine::utils::Logger::info("Project saved");
+					if (const auto msg = modelMain->getProject()->saveProject())
+						modelMain->getProject()->errorOccurred(msg);
 				}).detach();
 
 				return true;
@@ -45,36 +59,47 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 	viewMain->addActionGroup("win", modelMain->getProject()->getActionGroups());
 }
 
+PresenterMain::~PresenterMain() {
+	//TODO move to project
+	if (void* handle = modelMain->getProject()->getEditorSdkLib()) dlclose(handle);
+}
+
 void PresenterMain::generateCmakeFiles(const sigc::slot<void(int pExitCode)> &pOnFinish) const {
-	viewMain->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
-		viewMain->switchLogPage(0);
-		viewMain->clearLogMessage(0);
-	});
 
 	std::thread([this, pOnFinish] {
+		viewMain
+			->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
+				viewMain->switchLogPage(0);
+				viewMain->clearLogMessage(0);
+			})
+			.wait();
 		pOnFinish(modelMain->getProject()->reloadCMake([this](const std::string &pLogLine) { logMessage(0, pLogLine); },
 													   [this](const std::string &pLogLine) { logError(0, pLogLine); }));
 	}).detach();
 }
 
 void PresenterMain::build(const sigc::slot<void(int pExitCode)> &pOnFinish) const {
-	viewMain->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
-		viewMain->switchLogPage(1);
-		viewMain->clearLogMessage(1);
-	});
 
 	std::thread([this, pOnFinish] {
+		viewMain
+			->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
+				viewMain->switchLogPage(1);
+				viewMain->clearLogMessage(1);
+			})
+			.wait();
 		pOnFinish(modelMain->getProject()->build([this](const std::string &pLogLine) { logMessage(1, pLogLine); },
 												 [this](const std::string &pLogLine) { logError(1, pLogLine); }));
 	}).detach();
 }
 
 void PresenterMain::run(const sigc::slot<void(int pExitCode)> &pOnFinish) const {
-	viewMain->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
-		viewMain->switchLogPage(2);
-		viewMain->clearLogMessage(2);
-	});
 	std::thread([this, pOnFinish] {
+		viewMain
+			->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
+				viewMain->switchLogPage(2);
+				viewMain->clearLogMessage(2);
+			})
+			.wait();
 		pOnFinish(modelMain->getProject()->run([this](const std::string &pLogLine) { logMessage(2, pLogLine); },
 											   [this](const std::string &pLogLine) { logError(2, pLogLine); }));
 	}).detach();

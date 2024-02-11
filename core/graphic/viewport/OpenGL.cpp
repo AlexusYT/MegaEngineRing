@@ -34,14 +34,14 @@ OpenGL::OpenGL(Gtk::GLArea* pArea) : EngineContext(pArea) {
 
 OpenGL::~OpenGL() {}
 
-bool OpenGL::init() {
+n::engine::utils::ReportMessagePtr OpenGL::init() {
 
 	camera = Camera::create(this);
 	if (!camera) {
 		std::cerr << "Failed to create camera\n";
-		return false;
+		return nullptr;
 	}
-	return true;
+	return nullptr;
 }
 
 void OpenGL::onRealize() {

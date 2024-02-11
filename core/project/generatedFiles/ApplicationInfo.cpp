@@ -8,6 +8,7 @@
 #include <mvp/main/editors/appInfo/AppInfoEditor.h>
 #include <mvp/main/editors/appInfo/ModelAppInfo.h>
 #include <mvp/main/editors/appInfo/PresenterAppInfo.h>
+#include <project/generators/cpp/CppHeaderFile.h>
 
 #include "project/Project.h"
 #include "project/generators/cpp/AccessModifier.h"
@@ -23,9 +24,10 @@ ApplicationInfo::ApplicationInfo(const std::shared_ptr<Project> &pProject) : Gen
 	addProperty(AppInfoProperty::create("applicationName", pProject->getProjectName()));
 	addProperty(AppInfoProperty::create("applicationDisplayName", pProject->getProjectName()));
 	addProperty(AppInfoProperty::create("logsDirectory", ""));
+	setDatabaseSaveRequired();
 }
 
-engine::utils::ReportMessageUPtr ApplicationInfo::onLoad() {
+engine::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
 	const auto database = getProject()->getDatabase();
 
 	if (!database->tableExists("ApplicationInfo")) return nullptr;
@@ -53,7 +55,7 @@ engine::utils::ReportMessageUPtr ApplicationInfo::onLoad() {
 	return nullptr;
 }
 
-engine::utils::ReportMessageUPtr ApplicationInfo::onSave() const {
+engine::utils::ReportMessagePtr ApplicationInfo::onSaveDatabase() const {
 	const auto database = getProject()->getDatabase();
 	if (auto msg = createTable(database.get())) return msg;
 
@@ -88,12 +90,16 @@ INSERT INTO ApplicationInfo (PropertyName, PropertyValue) VALUES
 	}
 
 	transaction->commit();
-	if (auto msg = writeFile()) { return msg; }
 
 	return nullptr;
 }
 
-engine::utils::ReportMessageUPtr ApplicationInfo::createTable(SQLite::Database* pDatabase) {
+engine::utils::ReportMessagePtr ApplicationInfo::onSaveFile() const {
+	if (auto msg = writeFile()) { return msg; }
+	return nullptr;
+}
+
+engine::utils::ReportMessagePtr ApplicationInfo::createTable(SQLite::Database* pDatabase) {
 	try {
 		//language=sql
 		pDatabase->exec(R"(DROP TABLE IF EXISTS ApplicationInfo;
@@ -116,27 +122,32 @@ CREATE TABLE ApplicationInfo
 	return nullptr;
 }
 
-engine::utils::ReportMessageUPtr ApplicationInfo::writeFile() const {
+engine::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
 	using namespace std::string_literals;
 
-	CppMethod method;
-	method.setName("init");
-	method.setReturnType("n::engine::utils::ReportMessageUPtr");
-	method.setIsOverride(true);
+	auto method = CppMethod::create();
+	method->setName("init");
+	method->setReturnType("n::engine::utils::ReportMessagePtr");
+	method->setIsOverride(true);
 	for (const auto &[name, value]: properties) {
 		if (name.empty() || value->getValue().empty()) continue;
 		std::string methodName = "set"s + static_cast<char>(std::toupper(name[0])) + name.substr(1);
-		method.addStatement(CppMethodCall::create(methodName, {std::format("\"{}\"", value->getValue())}));
+		method->addStatement(CppMethodCall::create(methodName, {std::format("\"{}\"", value->getValue())}));
 	}
-	method.addStatement(CppCustomStatement::create("return DefaultApplicationSettings::init()"));
-	CppClass class_;
-	class_.setName("ApplicationSettings");
-	class_.addImplement("public n::sdk::main::DefaultApplicationSettings");
-	class_.addElement(&method, AccessModifier::PRIVATE);
-	CppGenerator generator;
-	generator.addInclude("EngineSDK/main/DefaultApplicationSettings.h");
-	generator.addElement(&class_);
-	return generator.saveFile(getProject()->getProjectPath() / getPath());
+	method->addStatement(CppCustomStatement::create("return DefaultApplicationSettings::init()"));
+	const auto class_ = CppClass::create();
+	method->setKlass(class_.get());
+	class_->setName("ApplicationSettings");
+	class_->addImplement("public n::sdk::main::DefaultApplicationSettings");
+	class_->addDeclaration(method->getDeclaration(), AccessModifier::PRIVATE);
+	CppHeaderFile headerFile;
+	headerFile.addInclude("EngineSDK/main/DefaultApplicationSettings.h");
+	headerFile.addDefinition(class_->getDefinition());
+	if (auto msg = headerFile.writeFile(getProject()->getProjectPath() / getHeaderPath())) return msg;
+	CppSourceFile sourceFile;
+	sourceFile.addInclude(getHeaderPath().filename(), false);
+	sourceFile.addDefinition(method->getDefinition());
+	return sourceFile.writeFile(getProject()->getProjectPath() / getSourcePath());
 }
 
 std::shared_ptr<mvp::IEditorPresenter> ApplicationInfo::openEditor() {

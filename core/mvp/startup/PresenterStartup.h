@@ -27,7 +27,7 @@ public:
 	PresenterStartup(const std::shared_ptr<IViewStartup> &pView, const std::shared_ptr<IModelStartup> &pModel);
 
 private:
-	static engine::utils::ReportMessageUPtr initProject(const std::shared_ptr<project::Project> &pProject);
+	static engine::utils::ReportMessagePtr initProject(const std::shared_ptr<project::Project> &pProject);
 
 	void openProjectCreatingWindow(const std::shared_ptr<project::Project> &pProject) const;
 

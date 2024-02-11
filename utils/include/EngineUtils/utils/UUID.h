@@ -25,25 +25,34 @@ class UUID {
 	uint16_t node2 = 0;
 
 public:
-	static void create(UUID &pUuid) {
+	static std::shared_ptr<UUID> create() {
 		static std::mt19937 gen(rd());
 		static std::uniform_int_distribution<uint32_t> dis(0, 0xFFFFFFFF);
 		static std::uniform_int_distribution<uint16_t> dis2(0, 0xFFFF);
 		const auto time = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
 
 		using namespace std::chrono_literals;
-		pUuid.timeLow = time & 0xFFFFFFFF;
-		pUuid.timeMid = (time >> 32) & 0xFFFF;
-		pUuid.timeHiVersion = static_cast<uint16_t>(time >> 48);
-		pUuid.varClockSeq = dis2(gen);
-		pUuid.node1 = dis(gen);
-		pUuid.node2 = dis2(gen);
+		auto uuid = std::make_shared<UUID>();
+		uuid->timeLow = time & 0xFFFFFFFF;
+		uuid->timeMid = (time >> 32) & 0xFFFF;
+		uuid->timeHiVersion = static_cast<uint16_t>(time >> 48);
+		uuid->varClockSeq = dis2(gen);
+		uuid->node1 = dis(gen);
+		uuid->node2 = dis2(gen);
+		return uuid;
 	}
 
 	static UUID getNull() {
 		static UUID uuid;
 		return uuid;
 	}
+
+	static std::shared_ptr<UUID> parse(const std::string &pString) {
+		n::engine::utils::ReportMessagePtr error;
+		return parse(pString, error);
+	}
+
+	static std::shared_ptr<UUID> parse(const std::string &pString, n::engine::utils::ReportMessagePtr &pError);
 
 	constexpr std::string toString(const bool pUpperCase = false) const {
 		if (pUpperCase) {
@@ -100,4 +109,21 @@ struct std::formatter<UUID> {
 	}
 };
 
+template<>
+struct std::formatter<std::shared_ptr<UUID>> {
+	bool upperCase{};
+
+	constexpr auto parse(std::format_parse_context &ctx) {
+		auto pos = ctx.begin();
+		while (pos != ctx.end() && *pos != '}') {
+			if (*pos == 'h' || *pos == 'H') upperCase = true;
+			++pos;
+		}
+		return pos;
+	}
+
+	auto format(const std::shared_ptr<UUID> &obj, std::format_context &ctx) const {
+		return std::format_to(ctx.out(), "{}", obj->toString(upperCase));
+	}
+};
 #endif //UUID_H

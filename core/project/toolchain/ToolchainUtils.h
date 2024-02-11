@@ -15,17 +15,17 @@ public:
 						   const std::string &pArgs, const sigc::slot<void(const std::string &pLog)> &pCoutCallback,
 						   const sigc::slot<void(const std::string &pLog)> &pCerrCallback);
 
-	static n::engine::utils::ReportMessageUPtr generateCMakeListsFile(const std::filesystem::path &pPath);
+	static n::engine::utils::ReportMessagePtr generateCMakeListsFile(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessageUPtr generateCMakePresetsFile(const std::filesystem::path &pPath);
+	static n::engine::utils::ReportMessagePtr generateCMakePresetsFile(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessageUPtr generateCMakeUserPresetsFile(const std::filesystem::path &pPath);
+	static n::engine::utils::ReportMessagePtr generateCMakeUserPresetsFile(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessageUPtr generateVcpkgManifestFile(const std::filesystem::path &pPath);
+	static n::engine::utils::ReportMessagePtr generateVcpkgManifestFile(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessageUPtr generateCMakeDirectory(const std::filesystem::path &pPath);
+	static n::engine::utils::ReportMessagePtr generateCMakeDirectory(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessageUPtr writeFile(const std::filesystem::path &pPath,
+	static n::engine::utils::ReportMessagePtr writeFile(const std::filesystem::path &pPath,
 														 const std::string &pContents);
 };
 

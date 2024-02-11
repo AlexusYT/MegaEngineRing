@@ -69,12 +69,14 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 			const auto msg = engine::utils::ReportMessage::create();
 			msg->setTitle("Failed to create directory for project");
 			msg->setMessage("Exception occurred");
+			//TODO Report error to the window
 			engine::utils::Logger::error(msg);
 			return;
 		}
 		auto project = project::Project::create();
 		project->setProjectName(model->getName());
 		project->setProjectPath(path);
+		//TODO Report error to the window
 		if (const auto msg = initProject(project)) return engine::utils::Logger::error(msg);
 		openProjectCreatingWindow(project);
 	});
@@ -107,7 +109,7 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 	});
 }
 
-engine::utils::ReportMessageUPtr PresenterStartup::initProject(const std::shared_ptr<project::Project> &pProject) {
+engine::utils::ReportMessagePtr PresenterStartup::initProject(const std::shared_ptr<project::Project> &pProject) {
 
 	if (auto msg = pProject->openDatabase()) return msg;
 
@@ -132,7 +134,7 @@ void PresenterStartup::openProjectCreatingWindow(const std::shared_ptr<project::
 
 void PresenterStartup::openMainWindow(const std::shared_ptr<project::Project> &pProject) const {
 
-	engine::utils::ReportMessageUPtr msg;
+	engine::utils::ReportMessagePtr msg;
 	auto viewMain = MainWindow::create(pProject, msg);
 	if (msg) return engine::utils::Logger::error(msg);
 	auto modelMain = std::make_shared<ModelMain>();

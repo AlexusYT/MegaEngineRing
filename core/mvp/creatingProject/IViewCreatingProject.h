@@ -14,7 +14,7 @@ public:
 
 	virtual void addMessageToLog(const std::string &pMessage) = 0;
 
-	virtual void reportError(engine::utils::ReportMessageUPtr pMessage) = 0;
+	virtual void reportError(engine::utils::ReportMessagePtr pMessage) = 0;
 };
 } // namespace MVP_CORE
 #endif //IVIEWCREATINGPROJECT_H

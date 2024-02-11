@@ -24,8 +24,8 @@ class ReportMessage {
 
 
 public:
-	static ReportMessageUPtr create(const std::stacktrace &pStacktrace = std::stacktrace::current()) {
-		return ReportMessageUPtr(new (std::nothrow) ReportMessage(pStacktrace));
+	static ReportMessagePtr create(const std::stacktrace &pStacktrace = std::stacktrace::current()) {
+		return ReportMessagePtr(new (std::nothrow) ReportMessage(pStacktrace));
 	}
 
 	[[nodiscard]] const std::string &getTitle() const { return title; }

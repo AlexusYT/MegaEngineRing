@@ -72,13 +72,15 @@ public:
 		return Glib::make_refptr_for_instance(new ApplicationInfo(pProject));
 	}
 
-	engine::utils::ReportMessageUPtr onLoad() override;
+	engine::utils::ReportMessagePtr onLoadDatabase() override;
 
-	engine::utils::ReportMessageUPtr onSave() const override;
+	engine::utils::ReportMessagePtr onSaveDatabase() const override;
 
-	static engine::utils::ReportMessageUPtr createTable(SQLite::Database* pDatabase);
+	engine::utils::ReportMessagePtr onSaveFile() const override;
 
-	engine::utils::ReportMessageUPtr writeFile() const;
+	static engine::utils::ReportMessagePtr createTable(SQLite::Database* pDatabase);
+
+	engine::utils::ReportMessagePtr writeFile() const;
 
 	std::shared_ptr<mvp::IEditorPresenter> openEditor() override;
 
@@ -86,7 +88,9 @@ public:
 		return propertiesList;
 	}
 
-	std::filesystem::path getPath() const override { return "source/ApplicationSettings.h"; }
+	std::filesystem::path getHeaderPath() const override { return "source/ApplicationSettings.h"; }
+
+	std::filesystem::path getSourcePath() const override { return "source/ApplicationSettings.cpp"; }
 
 private:
 	void addProperty(std::shared_ptr<AppInfoProperty> pProperty);

@@ -8,7 +8,6 @@
 #include <mvp/main/IViewMain.h>
 #include <ui/widgetWindows/CenterWindow.h>
 #include <ui/widgetWindows/LogView.h>
-#include <ui/widgetWindows/ObjectPropertiesWindow.h>
 #include <ui/widgetWindows/TreeObjectWindow.h>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerWindow.h>
 
@@ -21,8 +20,6 @@ class MainWindow : public IViewMain, public Gtk::Window {
 
 	std::shared_ptr<project::Project> project;
 
-	ui::TreeObjectWindow objectWindow;
-	ui::ObjectPropertiesWindow propertiesWindow;
 	ui::ProjectExplorerWindow projectExplorerWindow;
 	ui::CenterWindow centerWindow;
 	Glib::RefPtr<Gtk::Builder> builder;
@@ -31,7 +28,7 @@ class MainWindow : public IViewMain, public Gtk::Window {
 
 public:
 	static std::shared_ptr<MainWindow> create(const std::shared_ptr<project::Project> &pProject,
-											  engine::utils::ReportMessageUPtr &pReportMessage) {
+											  engine::utils::ReportMessagePtr &pReportMessage) {
 		const auto builder = Gtk::Builder::create();
 		try {
 			builder->add_from_file("Resources/base.ui");
@@ -77,14 +74,14 @@ public:
 	void switchLogPage(const int pId) const override { notebook->set_current_page(pId); }
 
 	void addLogMessage(const int pId, const Glib::ustring &pMessage) override {
-		auto &log = logs[pId];
+		auto &log = logs[static_cast<size_t>(pId)];
 		const auto buffer = log.getBuffer();
 		buffer->insert_markup(buffer->end(), pMessage);
 		log.scrollToEnd();
 	}
 
 	void clearLogMessage(const int pId) override {
-		auto &log = logs[pId];
+		auto &log = logs[static_cast<size_t>(pId)];
 		const auto buffer = log.getBuffer();
 		buffer->set_text("");
 	}
@@ -99,7 +96,11 @@ public:
 		insert_action_group(pName, pActionGroup);
 	}
 
-	void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) override {}
+	void reportError(const engine::utils::ReportMessagePtr &pError) override {
+		if (pError) engine::utils::Logger::error(pError);
+	}
+
+	void addWindow(const std::shared_ptr<Gtk::Window> & /*pWindow*/) override {}
 
 	void closeWindow() override {}
 

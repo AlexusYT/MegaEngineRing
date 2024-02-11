@@ -20,6 +20,8 @@ class PresenterMain : public IPresenter {
 public:
 	PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const std::shared_ptr<IModelMain> &pModelMain);
 
+	~PresenterMain() override;
+
 private:
 	void generateCmakeFiles(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
 

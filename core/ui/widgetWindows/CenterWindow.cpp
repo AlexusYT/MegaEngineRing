@@ -53,6 +53,7 @@ n::core::ui::CenterWindow::CenterWindow() {
 			},
 			true);
 	mainNotebook.set_group_name("center-window-notebook");
+	mainNotebook.set_show_border(false);
 }
 
 void n::core::ui::CenterWindow::openEntry(ProjectExplorerEntry* pEntry) {

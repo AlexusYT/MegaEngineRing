@@ -21,35 +21,51 @@ class Logger {
 	inline static std::ofstream logFile;
 
 public:
-	static ReportMessageUPtr openLog(const std::filesystem::path &pLogPath);
+	static ReportMessagePtr openLog(const std::filesystem::path &pLogPath);
+
+	static void info(const std::string &pStr) { print(LoggerMsgType::INFO, pStr); }
 
 	template<typename... Args>
 	static void info(const std::string_view pFmt, Args &&... pArgs) {
-		print(LoggerMsgType::INFO, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		try {
+			print(LoggerMsgType::INFO, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
+
+	static void warn(const std::string &pStr) { print(LoggerMsgType::WARN, pStr); }
 
 	template<typename... Args>
 	static void warn(const std::string_view pFmt, Args &&... pArgs) {
-		print(LoggerMsgType::WARN, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		try {
+			print(LoggerMsgType::WARN, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
-	static void error(const ReportMessageUPtr &pMessage) { print(LoggerMsgType::ERROR, pMessage->getReport()); }
+	static void error(const ReportMessagePtr &pMessage) { print(LoggerMsgType::ERROR, pMessage->getReport()); }
+
+	static void error(const std::string &pStr) { print(LoggerMsgType::ERROR, pStr); }
 
 	template<typename... Args>
 	static void error(const std::string_view pFmt, Args &&... pArgs) {
-		print(LoggerMsgType::ERROR, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		try {
+			print(LoggerMsgType::ERROR, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
 	static void out(const std::string &pStr) { print(LoggerMsgType::OUT, pStr); }
 
 	template<typename... Args>
 	static void out(const std::string_view pFmt, Args &&... pArgs) {
-		print(LoggerMsgType::OUT, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		try {
+			print(LoggerMsgType::OUT, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
 	template<typename... Args>
 	static void print(const LoggerMsgType pType, const std::string_view pFmt, Args &&... pArgs) {
-		print(pType, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		try {
+			print(pType, std::vformat(pFmt, std::make_format_args(pArgs...)));
+		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
 	static void print(LoggerMsgType pType, const std::string &pMessage);
@@ -65,6 +81,9 @@ public:
 	[[nodiscard]] static const std::filesystem::path &getLogPath() { return logPath; }
 
 	static void setLogPath(const std::filesystem::path &pLogPath) { logPath = pLogPath; }
+
+private:
+	static void processException(const std::string &pFailedMessage);
 };
 } // namespace n::engine::utils
 

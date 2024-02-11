@@ -132,6 +132,24 @@ add_library(
         mvp/main/editors/appInfo/ModelAppInfo.h
         mvp/main/editors/appInfo/PresenterAppInfo.cpp
         mvp/main/editors/appInfo/PresenterAppInfo.h
+        mvp/main/editors/sceneEditor/IViewSceneEditor.h
+        mvp/main/editors/sceneEditor/IModelSceneEditor.h
+        mvp/main/editors/sceneEditor/PresenterSceneEditor.cpp
+        mvp/main/editors/sceneEditor/PresenterSceneEditor.h
+        mvp/main/editors/sceneEditor/ModelSceneEditor.cpp
+        mvp/main/editors/sceneEditor/ModelSceneEditor.h
+        mvp/main/editors/sceneEditor/ViewSceneEditor.cpp
+        mvp/main/editors/sceneEditor/ViewSceneEditor.h
+        project/generators/cpp/CppHeaderFile.cpp
+        project/generators/cpp/CppHeaderFile.h
+        project/generators/cpp/CppFile.cpp
+        project/generators/cpp/CppFile.h
+        project/generators/cpp/CppDefinition.h
+        project/generators/cpp/CppDeclaration.h
+        project/generators/cpp/CppClassMember.cpp
+        project/generators/cpp/CppClassMember.h
+        project/generators/cpp/CppExternC.cpp
+        project/generators/cpp/CppExternC.h
 
 )
 
@@ -156,6 +174,7 @@ target_include_directories(
 )
 
 target_link_libraries(GameEngine_core PRIVATE GameEngine_utils)
+#target_link_libraries(GameEngine_core PRIVATE GameEngine_engine_shared)
 
 target_compile_features(GameEngine_core PUBLIC cxx_std_23)
 

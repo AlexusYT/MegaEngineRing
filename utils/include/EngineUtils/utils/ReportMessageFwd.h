@@ -9,7 +9,7 @@
 namespace n::engine::utils {
 class ReportMessage;
 
-using ReportMessageUPtr = std::unique_ptr<ReportMessage>;
+using ReportMessagePtr = std::shared_ptr<ReportMessage>;
 } // namespace n::engine::utils
 
 #endif //REPORTMESSAGEFWD_H

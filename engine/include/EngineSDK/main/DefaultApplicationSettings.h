@@ -34,7 +34,7 @@ public:
 	DefaultApplicationSettings() = default;
 
 	//TODO make replacing of the environment variables
-	engine::utils::ReportMessageUPtr init() override;
+	engine::utils::ReportMessagePtr init() override;
 
 	[[nodiscard]] const utils::Property<std::string> &getLogsDirectory() const override { return logsDirectory; }
 

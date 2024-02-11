@@ -28,8 +28,6 @@ public:
 
 	operator Gtk::Widget&() { return mainNotebook; }
 
-	void openFile(const std::filesystem::path &path) {}
-
 	void openEntry(ProjectExplorerEntry* pEntry);
 };
 } // namespace UI_CORE

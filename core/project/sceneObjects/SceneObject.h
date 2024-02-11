@@ -9,9 +9,9 @@
 #include <uuid/uuid.h>
 
 class SceneObject : public Glib::Object {
-	UUID uuid;
+	std::shared_ptr<UUID> uuid;
 	SceneObject* parent{};
-	using ChildrenMap = std::unordered_map<UUID, std::shared_ptr<SceneObject>>;
+	using ChildrenMap = std::unordered_map<std::shared_ptr<UUID>, std::shared_ptr<SceneObject>>;
 	ChildrenMap children;
 	Glib::RefPtr<Gio::ListStore<SceneObject>> childrenUi;
 	std::string name;
@@ -19,7 +19,7 @@ class SceneObject : public Glib::Object {
 protected:
 	SceneObject() {
 		childrenUi = Gio::ListStore<SceneObject>::create();
-		UUID::create(uuid);
+		uuid = UUID::create();
 	}
 
 public:
@@ -47,9 +47,9 @@ public:
 		return Glib::make_refptr_for_instance<T>(new (std::nothrow) T(pArgs...));
 	}
 
-	[[nodiscard]] const UUID &getUuid() const { return uuid; }
+	[[nodiscard]] const std::shared_ptr<UUID> &getUuid() const { return uuid; }
 
-	void setUuid(const UUID &pUuid) { uuid = pUuid; }
+	void setUuid(const std::shared_ptr<UUID> &pUuid) { uuid = pUuid; }
 
 	[[nodiscard]] SceneObject* getParent() const { return parent; }
 
@@ -65,7 +65,7 @@ public:
 		childrenUi->append(pChild);
 	}
 
-	bool removeChild(const UUID &pUuid) {
+	bool removeChild(const std::shared_ptr<UUID> &pUuid) {
 		if (const auto iter = children.find(pUuid); iter != children.end()) {
 			children.erase(iter);
 			childrenUi->remove(childrenUi->get_n_items() - 1);

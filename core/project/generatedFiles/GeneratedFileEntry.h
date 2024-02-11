@@ -13,7 +13,9 @@ class GeneratedFileEntry : public ui::ProjectExplorerEntry {
 	std::shared_ptr<Project> project{};
 
 protected:
-	explicit GeneratedFileEntry(const std::shared_ptr<Project> &pProject) : project(pProject) {}
+	explicit GeneratedFileEntry(const std::shared_ptr<Project> &pProject) : project(pProject) {
+		setFileSaveRequired(true);
+	}
 
 public:
 	[[nodiscard]] const std::shared_ptr<Project> &getProject() const { return project; }

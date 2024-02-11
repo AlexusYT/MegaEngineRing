@@ -24,7 +24,7 @@ public:
 private:
 	void addMessageToLog(const std::string &pMessage) override;
 
-	void reportError(engine::utils::ReportMessageUPtr pMessage) override;
+	void reportError(engine::utils::ReportMessagePtr pMessage) override;
 
 	void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) override {
 		pWindow->set_application(get_application());

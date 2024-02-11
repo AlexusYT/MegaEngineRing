@@ -38,7 +38,9 @@ public:
 
 	~OpenGL();
 
-	bool init();
+	n::engine::utils::ReportMessagePtr init() override;
+
+	void swapBuffers() const override {}
 
 	void onRealize();
 

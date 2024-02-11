@@ -11,7 +11,7 @@
 #include "ConsoleColors.h"
 
 namespace n::engine::utils {
-ReportMessageUPtr Logger::openLog(const std::filesystem::path &pLogPath) {
+ReportMessagePtr Logger::openLog(const std::filesystem::path &pLogPath) {
 	if (pLogPath.empty()) {
 		auto report = ReportMessage::create();
 		report->setTitle("Failed to open new log.");
@@ -90,17 +90,20 @@ void Logger::print(const LoggerMsgType pType, const std::string &pMessage) {
 				<< color << result << ConsoleColors::CLEAR << '\n';
 		else
 			(useCErr && pType == LoggerMsgType::ERROR ? std::cerr : std::cout) << result << '\n';
-	} catch (...) {
-		auto msg = ReportMessage::create();
-		msg->setTitle("Failed to print the logger message");
-		msg->setMessage("Exception occurred");
-		msg->addInfoLine("Failed message: " + pMessage);
-		std::string s = msg->getReport();
-		std::cout << s << "\n";
-		if (logFile.is_open()) {
-			logFile << s << "\n";
-			logFile.flush();
-		}
+	} catch (...) { processException(pMessage); }
+	std::cout.flush();
+}
+
+void Logger::processException(const std::string &pFailedMessage) {
+	auto msg = ReportMessage::create();
+	msg->setTitle("Failed to print the logger message");
+	msg->setMessage("Exception occurred");
+	msg->addInfoLine("Failed message: " + pFailedMessage);
+	std::string s = msg->getReport();
+	std::cout << s << "\n";
+	if (logFile.is_open()) {
+		logFile << s << "\n";
+		logFile.flush();
 	}
 }
 } // namespace n::engine::utils

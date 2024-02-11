@@ -23,6 +23,11 @@ public:
 	void getActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup);
 
 private:
+	engine::utils::ReportMessagePtr onLoadDatabase() override;
+
+	engine::utils::ReportMessagePtr onSaveDatabase() const override;
+
+	engine::utils::ReportMessagePtr createTable() const;
 };
 } // namespace PROJECT_CORE
 

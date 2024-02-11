@@ -9,7 +9,12 @@ namespace n::sdk::main {
 class IContext {
 public:
 	virtual ~IContext() = default;
+
+	virtual engine::utils::ReportMessagePtr init() = 0;
+
 	virtual void makeCurrent() = 0;
+
+	virtual void swapBuffers() const = 0;
 };
 } // namespace n::sdk::main
 

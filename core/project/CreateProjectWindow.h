@@ -6,7 +6,6 @@
 #define CREATEPROJECTWINDOW_H
 
 namespace UI_CORE {
-class MainWindow;
 
 class CreateProjectWindow {
 	Glib::Dispatcher logDispatcher;
@@ -19,7 +18,7 @@ class CreateProjectWindow {
 public:
 	bool reloadUi = false;
 	Gtk::Window* window = nullptr;
-	MainWindow* mainWindow;
+	//MainWindow* mainWindow;
 	Glib::RefPtr<Gtk::Builder> builder;
 
 	Gtk::Notebook* notebook;

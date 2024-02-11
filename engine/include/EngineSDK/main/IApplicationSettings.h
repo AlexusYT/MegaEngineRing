@@ -14,7 +14,7 @@ public:
 	IApplicationSettings() = default;
 	virtual ~IApplicationSettings() = default;
 
-	virtual engine::utils::ReportMessageUPtr init() = 0;
+	virtual engine::utils::ReportMessagePtr init() = 0;
 
 	[[nodiscard]] virtual const utils::Property<std::string> &getLogsDirectory() const = 0;
 

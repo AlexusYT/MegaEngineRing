@@ -6,8 +6,7 @@
 #define TOOLCHAINSETTINGS_H
 
 class ToolchainSettings {
-	inline static std::filesystem::path cmakePath =
-		"/home/alexus/.local/share/JetBrains/Toolbox/apps/clion-nova/bin/cmake/linux/x64/bin/cmake";
+	inline static std::filesystem::path cmakePath = "/usr/bin/cmake";
 	inline static std::filesystem::path vcpkgPath = "/home/alexus/.clion-vcpkg/vcpkg/vcpkg";
 
 public:

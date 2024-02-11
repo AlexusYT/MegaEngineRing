@@ -54,20 +54,10 @@ MainWindow::MainWindow(BaseObjectType* pCobject, const Glib::RefPtr<Gtk::Builder
 	topPaned->set_end_child(centerWindow);
 
 	auto* leftTopNotebook = builder->get_widget<Gtk::Notebook>("notebook_leftTop");
-	objectWindow.setSlotGetObjectChildren([this](const SceneObject* /*pObject*/) {
-		std::vector<std::shared_ptr<SceneObject>> children;
-
-		for (const auto &toplevelObject: project->getToplevelObjects()) { children.emplace_back(toplevelObject); }
-		return children;
-	});
-	leftTopNotebook->append_page(objectWindow, "Дерево объектов");
 	leftTopNotebook->append_page(projectExplorerWindow, "Структура проекта");
 	projectExplorerWindow.setEntrySelectionChanged(
 		[this](ui::ProjectExplorerEntry* pEntry) { centerWindow.openEntry(pEntry); });
 
-	auto* rightTopNotebook = builder->get_widget<Gtk::Notebook>("notebook_rightTop");
-
-	rightTopNotebook->append_page(propertiesWindow, "Свойства объекта");
 
 	keyController = Gtk::EventControllerKey::create();
 	add_controller(keyController);

@@ -2,6 +2,27 @@
 
 set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/DefaultApplicationSettings.cpp
+        include/EngineSDK/main/context/Window.cpp
+        include/EngineSDK/main/context/Window.h
+        include/EngineSDK/main/context/MainWindow.cpp
+        include/EngineSDK/main/context/MainWindow.h
+        include/EngineSDK/main/resources/LoadedResources.cpp
+        include/EngineSDK/main/resources/LoadedResources.h
+        include/EngineSDK/renderer/shaders/Shader.cpp
+        include/EngineSDK/main/context/ResourcesWindow.cpp
+        include/EngineSDK/main/context/ResourcesWindow.h
+        include/EngineSDK/main/scene/TestScene.cpp
+        include/EngineSDK/main/scene/TestScene.h
+        include/EngineSDK/main/resources/ResourceRequest.cpp
+        include/EngineSDK/main/resources/shaders/BuiltInShaderRequest.cpp
+        include/EngineSDK/main/resources/ResourceLoader.cpp
+        include/EngineSDK/main/resources/ResourceRequests.cpp
+        include/EngineSDK/main/resources/Resources.cpp
+        include/EngineSDK/main/resources/LazyResource.cpp
+        include/EngineSDK/main/scene/Scene.cpp
+        include/EngineSDK/renderer/shaders/ShaderProgram.cpp
+        include/EngineSDK/main/resources/shaders/BuiltInProgramRequest.cpp
+        include/EngineSDK/main/buffers/ProgramWideShaderBuffer.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/IApplication.h
@@ -9,52 +30,66 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/IWindow.h
         include/EngineSDK/main/IApplicationSettings.h
         include/EngineSDK/main/DefaultApplicationSettings.h
-        include/EngineSDK/utils/Property.h)
+        include/EngineSDK/utils/Property.h
+        include/EngineSDK/main/scene/IScene.h
+        include/EngineSDK/main/resources/ResourceRequest.h
+        include/EngineSDK/main/resources/shaders/BuiltInShaderRequest.h
+        include/EngineSDK/renderer/shaders/ShaderTypeEnum.h
+        include/EngineSDK/renderer/shaders/VertexShader.h
+        include/EngineSDK/renderer/shaders/FragmentShader.h
+        include/EngineSDK/main/resources/ResourceLoader.h
+        include/EngineSDK/main/resources/ResourceRequests.h
+        include/EngineSDK/main/resources/IResource.h
+        include/EngineSDK/main/resources/Resources.h
+        include/EngineSDK/main/resources/LazyResource.h
+        include/EngineSDK/main/scene/Scene.h
+        include/EngineSDK/renderer/shaders/IShaderProgram.h
+        include/EngineSDK/renderer/shaders/ShaderProgram.h
+        include/EngineSDK/renderer/buffers/ISSBO.h
+        include/EngineSDK/renderer/buffers/SSBO.cpp
+        include/EngineSDK/renderer/buffers/SSBO.h
+        include/EngineSDK/renderer/buffers/BufferUsageEnum.h
+        include/EngineSDK/main/resources/shaders/BuiltInProgramRequest.h
+        include/EngineSDK/main/buffers/ProgramWideShaderBuffer.h
+        include/EngineSDK/renderer/shaders/IShader.h
+        include/EngineSDK/renderer/shaders/Shader.h
+)
 
 add_library(GameEngine_engine_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 add_library(GameEngine_engine_static STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
 target_sources(GameEngine_engine_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
-target_precompile_headers(GameEngine_engine_shared
-        PRIVATE common.h
-)
-target_precompile_headers(GameEngine_engine_static
-        PRIVATE common.h
-)
+target_compile_definitions(GameEngine_engine_shared PRIVATE EDITOR_SDK)
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(GameEngine_engine_static INTERFACE glfw)
+find_package(GLEW REQUIRED)
+target_link_libraries(GameEngine_engine_shared INTERFACE GLEW::GLEW)
 
-target_include_directories(
-        GameEngine_engine_shared ${warning_guard}
-        PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/engine/include>"
-)
-target_include_directories(
-        GameEngine_engine_shared ${warning_guard}
-        PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
-)
-target_include_directories(
-        GameEngine_engine_static ${warning_guard}
-        PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/engine/include>"
-)
-target_include_directories(
-        GameEngine_engine_static ${warning_guard}
-        PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
-)
 find_package(sigc++-3 CONFIG REQUIRED)
+function(setupTarget target)
+    target_precompile_headers(${target}
+            PRIVATE common.h
+    )
+    target_include_directories(
+            ${target} ${warning_guard}
+            PUBLIC
+            "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/engine/include>"
+    )
+    target_include_directories(
+            ${target} ${warning_guard}
+            PUBLIC
+            "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
+    )
 
-target_compile_features(GameEngine_engine_shared PUBLIC cxx_std_23)
-target_link_libraries(GameEngine_engine_shared PUBLIC stdc++exp GameEngine_utils)
-target_link_libraries(GameEngine_engine_shared PRIVATE sigc-3.0)
-set_property(TARGET GameEngine_engine_shared PROPERTY OUTPUT_NAME GameEngine)
+    target_compile_features(${target} PUBLIC cxx_std_23)
+    target_link_libraries(${target} PUBLIC stdc++exp GameEngine_utils)
+    target_link_libraries(${target} PRIVATE sigc-3.0)
+    set_property(TARGET ${target} PROPERTY OUTPUT_NAME GameEngine)
 
-target_compile_features(GameEngine_engine_static PUBLIC cxx_std_23)
-target_link_libraries(GameEngine_engine_static PUBLIC stdc++exp GameEngine_utils)
-target_link_libraries(GameEngine_engine_static PRIVATE sigc-3.0)
-set_property(TARGET GameEngine_engine_static PROPERTY OUTPUT_NAME GameEngine)
-
+endfunction()
+setupTarget(GameEngine_engine_shared)
+setupTarget(GameEngine_engine_static)
 install(
         TARGETS GameEngine_engine_static GameEngine_engine_shared
         ARCHIVE

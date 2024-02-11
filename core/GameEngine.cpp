@@ -4,6 +4,7 @@
 
 #include "GameEngine.h"
 
+#include <dlfcn.h>
 #include <getopt.h>
 #include <mvp/startup/ModelStartup.h>
 #include <mvp/startup/PresenterStartup.h>
@@ -104,6 +105,8 @@ public:
 
 		application->add_window(*tmpWindow);
 		addWindow(presenter);
+
+
 		//application->add_window(*window->getCreateProjectWindow()->window);
 	}
 

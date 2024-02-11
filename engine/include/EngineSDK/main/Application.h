@@ -4,16 +4,19 @@
 
 #ifndef APPLICATION_H
 #define APPLICATION_H
-#include <EngineUtils/utils/ReportMessage.h>
 
-#include "IApplicationSettings.h"
+#ifndef EDITOR_SDK
+
+	#include <EngineUtils/utils/ReportMessage.h>
+
+	#include "IApplicationSettings.h"
 
 namespace n::sdk::main {
 class Application {
 	std::shared_ptr<IApplicationSettings> applicationSettings;
 
 public:
-	engine::utils::ReportMessageUPtr initEngine();
+	engine::utils::ReportMessagePtr initEngine();
 
 	int runMainLoop(int argc, char* argv[]);
 
@@ -27,5 +30,6 @@ public:
 };
 } // namespace n::sdk::main
 
+#endif
 
 #endif //APPLICATION_H

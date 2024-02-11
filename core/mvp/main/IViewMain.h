@@ -25,6 +25,8 @@ public:
 	virtual void setWindowTitle(const std::string &pTitle) = 0;
 
 	virtual void addActionGroup(const std::string &pName, const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) = 0;
+
+	virtual void reportError(const engine::utils::ReportMessagePtr &pError) = 0;
 };
 } // namespace MVP_CORE
 

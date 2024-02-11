@@ -6,7 +6,7 @@
 #define UIUTILS_H
 
 class ErrorDialog {
-	inline static n::engine::utils::ReportMessageUPtr message;
+	inline static n::engine::utils::ReportMessagePtr message;
 	Gtk::Window* rootWindow;
 
 	class DetailsDialog : public Gtk::Window {
@@ -14,10 +14,10 @@ class ErrorDialog {
 		Gtk::ScrolledWindow scrolledWindow;
 		Gtk::Label contentLabel;
 		Gtk::Button closeBtn, copyBtn;
-		n::engine::utils::ReportMessageUPtr message;
+		n::engine::utils::ReportMessagePtr message;
 
 	public:
-		DetailsDialog(n::engine::utils::ReportMessageUPtr pMessage) : message(std::move(pMessage)) {
+		DetailsDialog(n::engine::utils::ReportMessagePtr pMessage) : message(std::move(pMessage)) {
 			set_destroy_with_parent(true);
 			set_title("Name Dialog");
 			mainBox.append(scrolledWindow);
@@ -44,7 +44,7 @@ class ErrorDialog {
 	inline static std::unique_ptr<DetailsDialog> errorDetailsDialog;
 
 public:
-	static void showErrorDialog(Gtk::Root* pRoot, n::engine::utils::ReportMessageUPtr &pMessage) {
+	static void showErrorDialog(Gtk::Root* pRoot, n::engine::utils::ReportMessagePtr &pMessage) {
 		message.swap(pMessage);
 		n::engine::utils::Logger::error(message);
 		Glib::RefPtr<Gtk::AlertDialog> dialog = Gtk::AlertDialog::create();

@@ -31,7 +31,7 @@ void ProjectCreatingWindow::addMessageToLog(const std::string &pMessage) {
 	logView.scrollToEnd();
 }
 
-void ProjectCreatingWindow::reportError(engine::utils::ReportMessageUPtr pMessage) {
+void ProjectCreatingWindow::reportError(engine::utils::ReportMessagePtr pMessage) {
 	engine::utils::Logger::error(pMessage);
 }
 

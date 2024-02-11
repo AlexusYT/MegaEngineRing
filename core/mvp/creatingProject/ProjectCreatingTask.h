@@ -8,7 +8,7 @@
 namespace MVP_CORE {
 struct ProjectCreatingTask {
 	using MessageCallback = std::function<void(const std::string &pMessage)>;
-	using TaskFunc = std::function<engine::utils::ReportMessageUPtr(const MessageCallback &pCallback)>;
+	using TaskFunc = std::function<engine::utils::ReportMessagePtr(const MessageCallback &pCallback)>;
 
 	TaskFunc function;
 	std::string tabName;
