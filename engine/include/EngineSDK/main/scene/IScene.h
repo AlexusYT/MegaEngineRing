@@ -37,6 +37,8 @@ private:
 	virtual void setResources(const std::shared_ptr<Resources> &pResources) = 0;
 
 	virtual void render() = 0;
+
+	virtual void resize(int pWidth, int pHeight) = 0;
 };
 } // namespace n::sdk::main
 

@@ -6,7 +6,6 @@
 	#include "Window.h"
 
 	#include <EngineUtils/utils/ReportMessage.h>
-	#include <GL/glew.h>
 	#include <GLFW/glfw3.h>
 
 namespace n::sdk::main {
@@ -18,6 +17,11 @@ void Window::show() {
 	if (!native) {
 		native = glfwCreateWindow(width, height, title.c_str(), nullptr, sharedWindow ? sharedWindow->native : nullptr);
 		glfwDefaultWindowHints();
+		glfwSetWindowUserPointer(native, this);
+		glfwSetWindowSizeCallback(native, [](GLFWwindow* window, const int pWidth, const int pHeight) {
+			const auto win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->onResize(pWidth, pHeight);
+		});
 	}
 }
 
@@ -70,7 +74,7 @@ bool Window::isCloseRequest() const {
 
 engine::utils::ReportMessagePtr Window::init() {
 	makeCurrent();
-	glewExperimental = true;
+	/*glewExperimental = true;
 	if (auto error = glewInit(); error != GLEW_OK) {
 		auto msg = engine::utils::ReportMessage::create();
 		msg->setTitle("Failed to init glew");
@@ -78,7 +82,7 @@ engine::utils::ReportMessagePtr Window::init() {
 		msg->addInfoLine("Error num: {}", error);
 		msg->addInfoLine("Error msg: {}", reinterpret_cast<const char*>(glewGetErrorString(error)));
 		return msg;
-	}
+	}*/
 	return nullptr;
 }
 

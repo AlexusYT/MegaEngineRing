@@ -129,6 +129,8 @@ void Project::requestRebuildEditorLib() {
 			editorLibLoadErrored(msg);
 			return;
 		}
+		using namespace std::chrono_literals;
+		std::this_thread::sleep_for(1s);
 		result = build(
 			"_EDITOR_TMP_", [](const std::string &pLine) { engine::utils::Logger::info(pLine); },
 			[](const std::string &pLine) { engine::utils::Logger::error(pLine); });

@@ -4,11 +4,7 @@
 
 #include "Shader.h"
 
-#ifdef EDITOR_SDK
-	#include <epoxy/gl.h>
-#else
-	#include <GL/glew.h>
-#endif
+#include <epoxy/gl.h>
 #include "ShaderTypeEnum.h"
 
 namespace n::sdk::renderer {

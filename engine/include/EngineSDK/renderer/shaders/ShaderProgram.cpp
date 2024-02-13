@@ -4,11 +4,7 @@
 
 #include "ShaderProgram.h"
 
-#ifdef EDITOR_SDK
-	#include <epoxy/gl.h>
-#else
-	#include <GL/glew.h>
-#endif
+#include <epoxy/gl.h>
 #include <glm/mat4x4.hpp>
 
 #include "EngineSDK/renderer/buffers/ISSBO.h"
@@ -37,7 +33,11 @@ void ShaderProgram::link() { glLinkProgram(name); }
 
 void ShaderProgram::validate() const { glValidateProgram(name); }
 
-void ShaderProgram::use() const { glUseProgram(name); }
+void ShaderProgram::use() const {
+	//if (this == usedProgram) return;
+	glUseProgram(name);
+	//usedProgram = this;
+}
 
 void ShaderProgram::getInfoLog(std::string &pLogOut) const {
 

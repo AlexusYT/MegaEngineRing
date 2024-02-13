@@ -13,6 +13,8 @@
 	#include "EngineSDK/main/context/MainWindow.h"
 	#include "EngineSDK/main/scene/TestScene.h"
 
+extern std::shared_ptr<n::sdk::main::IScene> getPrimaryScene();
+
 namespace n::sdk::main {
 engine::utils::ReportMessagePtr Application::initEngine() { return nullptr; }
 
@@ -86,8 +88,8 @@ int Application::runMainLoop(int argc, char* argv[]) {
 		Logger::error(msg);
 		return 1;
 	}
-	Logger::out("Opening scene");
-	window->openScene(std::make_shared<TestScene>());
+	Logger::out("Opening primary scene");
+	window->openScene(getPrimaryScene());
 
 	Logger::info("Starting main loop...");
 	try {

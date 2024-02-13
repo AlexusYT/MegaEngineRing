@@ -4,10 +4,49 @@
 
 #include "Scene.h"
 
+#include "EngineSDK/renderer/GL.h"
 #include "EngineUtils/utils/Logger.h"
+#include "objects/BasicRenderObject.h"
+#include "objects/ISceneObject.h"
 
-void n::sdk::main::Scene::onResourceLoadingError(const std::shared_ptr<ResourceRequest> & /*pRequest*/,
-												 const engine::utils::ReportMessagePtr &pError) {
+namespace n::sdk::main {
+Scene::Scene() {}
+
+void Scene::onResourceLoadingError(const std::shared_ptr<ResourceRequest> & /*pRequest*/,
+								   const engine::utils::ReportMessagePtr &pError) {
 
 	engine::utils::Logger::error(pError);
 }
+
+void Scene::beforeRender() { renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT); }
+
+engine::utils::ReportMessagePtr Scene::initScene() {
+	for (const auto &sceneObject: objects) {
+		if (auto msg = sceneObject->init()) return msg;
+	}
+	return nullptr;
+}
+
+engine::utils::ReportMessagePtr Scene::preloadScene(const std::shared_ptr<ResourceRequests> &pRequests) {
+	for (const auto &sceneObject: objects) { sceneObject->fillResourceRequests(pRequests); }
+	return nullptr;
+}
+
+void Scene::addObject(const std::shared_ptr<ISceneObject> &pObject) { objects.emplace_back(pObject); }
+
+void Scene::setResources(const std::shared_ptr<Resources> &pResources) {
+	for (const auto &object: objects) { object->setResources(pResources); }
+	resources = pResources;
+}
+
+void Scene::render() {
+	beforeRender();
+	for (const auto &object: objects)
+		//
+
+		object->render();
+	afterRender();
+}
+
+void Scene::resize(const int pWidth, const int pHeight) { renderer::GL::viewport(0, 0, pWidth, pHeight); }
+} // namespace n::sdk::main

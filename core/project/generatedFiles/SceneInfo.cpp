@@ -55,10 +55,18 @@ engine::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	CppSourceFile source;
 	source.addInclude(getHeaderPath().filename(), false);
 	source.addInclude("EngineSDK/main/resources/ResourceRequests.h", true);
-	source.addInclude("EngineSDK/main/resources/shaders/BuiltInProgramRequest.h", true);
-	source.addInclude("EngineSDK/main/resources/LazyResource.h", true);
-	source.addInclude("EngineSDK/renderer/shaders/ShaderProgram.h", true);
+	source.addInclude("EngineSDK/renderer/GL.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/BasicRenderObject.h", true);
 	source.addInclude("EngineUtils/utils/Logger.h", true);
+	if (primaryScene) {
+		source.addInclude("EngineSDK/main/scene/IScene.h");
+		auto getPrimarySceneMethod = CppMethod::create();
+		getPrimarySceneMethod->setReturnType<std::shared_ptr<n::sdk::main::IScene>>();
+		getPrimarySceneMethod->setName("getPrimaryScene");
+		getPrimarySceneMethod->addStatement(
+			CppCustomStatement::create(std::format("return std::make_shared<{}>()", getName())));
+		source.addDefinition(getPrimarySceneMethod->getDefinition());
+	}
 	source.addDefinition(createExternCBlock(getName())->getDefinition());
 
 	const std::shared_ptr<CppClass> class_ = CppClass::create(getName());
@@ -102,9 +110,8 @@ std::shared_ptr<CppMethod> SceneInfo::createPreloadSceneMethod(const std::shared
 
 	method->addStatement(CppCustomStatement::create("using namespace n::sdk::main"));
 	method->addStatement(CppCustomStatement::create("using namespace n::engine::utils"));
-	method->addStatement(
-		CppCustomStatement::create("pRequests->addRequest(BuiltInProgramRequest::getDefaultProgram())"));
-	method->addStatement(CppCustomStatement::create("return nullptr"));
+	method->addStatement(CppCustomStatement::create("addObject(std::make_shared<BasicRenderObject>())"));
+	method->addStatement(CppCustomStatement::create("return Scene::preloadScene(pRequests)"));
 	return method;
 }
 
@@ -114,14 +121,11 @@ std::shared_ptr<CppMethod> SceneInfo::createInitMethod(const std::shared_ptr<Cpp
 	method->setName("initScene");
 	method->setReturnType<engine::utils::ReportMessagePtr>();
 	method->setIsOverride(true);
+	method->addStatement(CppCustomStatement::create("using namespace n::sdk::renderer"));
 	method->addStatement(CppCustomStatement::create("using namespace n::sdk::main"));
 	method->addStatement(CppCustomStatement::create("using namespace n::engine::utils"));
-	//language=c++
-	method->addStatement(
-		CppCustomStatement::create(R"(auto shader = getResourceByRequest(BuiltInProgramRequest::getDefaultProgram());
-
-	Logger::out("{}", shader->getSync<n::sdk::renderer::ShaderProgram>()->getLinkStatus()))"));
-	method->addStatement(CppCustomStatement::create("return nullptr"));
+	method->addStatement(CppCustomStatement::create("GL::setClearColor(0.0f, 0.0f, 0.9f, 1.0f)"));
+	method->addStatement(CppCustomStatement::create("return Scene::initScene()"));
 	return method;
 }
 } // namespace PROJECT_CORE

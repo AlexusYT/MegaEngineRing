@@ -4,6 +4,8 @@
 
 #include "ViewSceneEditor.h"
 
+#include <epoxy/gl.h>
+
 namespace n::core::mvp {
 ViewSceneEditor::ViewSceneEditor() {
 	Gtk::Notebook leftNotebook;
@@ -53,12 +55,37 @@ ViewSceneEditor::ViewSceneEditor() {
 		for (const auto &toplevelObject: project->getToplevelObjects()) { children.emplace_back(toplevelObject); }
 		return children;
 	});*/
+	area.set_required_version(4, 0);
+
+
+	area.set_expand(true);
+	area.set_size_request(100, 200);
+	area.set_auto_render(true);
 }
 
 sigc::connection ViewSceneEditor::connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) {
 
 	return area.signal_render().connect(pSlot, false);
 }
+
+sigc::connection ViewSceneEditor::connectRealize(const sigc::slot<void()> &pSlot) {
+
+	return area.signal_realize().connect(pSlot);
+}
+
+sigc::connection ViewSceneEditor::connectUnrealize(const sigc::slot<void()> &pSlot) {
+	return area.signal_unrealize().connect(pSlot, false);
+}
+
+sigc::connection ViewSceneEditor::connectResize(const sigc::slot<void(int pWidth, int pHeight)> &pSlot) {
+	return area.signal_resize().connect(pSlot);
+}
+
+void ViewSceneEditor::makeCurrent() { area.make_current(); }
+
+void ViewSceneEditor::redraw() { area.queue_render(); }
+
+void ViewSceneEditor::throwIfError() { area.throw_if_error(); }
 
 void ViewSceneEditor::onLoadingStarted() { loadingBox.set_visible(true); }
 

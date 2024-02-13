@@ -261,9 +261,6 @@ target_include_directories(GameEngine_core PRIVATE JPEG::JPEG)
 find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(GameEngine_core PRIVATE glfw)
 
-find_package(GLEW REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE GLEW::GLEW)
-
 pkg_check_modules(GTKMM gtkmm-4.0)
 include_directories(${GTKMM_INCLUDE_DIRS})
 target_link_libraries(GameEngine_core PRIVATE ${GTKMM_LINK_LIBRARIES})

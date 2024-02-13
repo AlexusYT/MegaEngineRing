@@ -20,12 +20,25 @@ class ViewSceneEditor : public IViewSceneEditor {
 	Gtk::Box loadingBox{Gtk::Orientation::VERTICAL};
 	Gtk::Label loadingErrorLabel;
 
+
 public:
 	ViewSceneEditor();
 
 	Gtk::Widget &getMainWidget() override { return mainWidget; }
 
 	sigc::connection connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) override;
+
+	sigc::connection connectRealize(const sigc::slot<void()> &pSlot) override;
+
+	sigc::connection connectUnrealize(const sigc::slot<void()> &pSlot) override;
+
+	sigc::connection connectResize(const sigc::slot<void(int pWidth, int pHeight)> &pSlot) override;
+
+	void makeCurrent() override;
+
+	void redraw() override;
+
+	void throwIfError() override;
 
 	void onLoadingStarted() override;
 

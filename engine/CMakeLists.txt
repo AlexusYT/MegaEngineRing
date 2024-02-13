@@ -23,6 +23,9 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/renderer/shaders/ShaderProgram.cpp
         include/EngineSDK/main/resources/shaders/BuiltInProgramRequest.cpp
         include/EngineSDK/main/buffers/ProgramWideShaderBuffer.cpp
+        include/EngineSDK/main/scene/objects/SceneObject.cpp
+        include/EngineSDK/main/scene/objects/BasicRenderObject.cpp
+        include/EngineSDK/renderer/GL.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/IApplication.h
@@ -53,6 +56,10 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/buffers/ProgramWideShaderBuffer.h
         include/EngineSDK/renderer/shaders/IShader.h
         include/EngineSDK/renderer/shaders/Shader.h
+        include/EngineSDK/main/scene/objects/ISceneObject.h
+        include/EngineSDK/main/scene/objects/SceneObject.h
+        include/EngineSDK/main/scene/objects/BasicRenderObject.h
+        include/EngineSDK/renderer/GL.h
 )
 
 add_library(GameEngine_engine_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
@@ -60,11 +67,8 @@ add_library(GameEngine_engine_static STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
 target_sources(GameEngine_engine_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
-target_compile_definitions(GameEngine_engine_shared PRIVATE EDITOR_SDK)
 find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(GameEngine_engine_static INTERFACE glfw)
-find_package(GLEW REQUIRED)
-target_link_libraries(GameEngine_engine_shared INTERFACE GLEW::GLEW)
 
 find_package(sigc++-3 CONFIG REQUIRED)
 function(setupTarget target)

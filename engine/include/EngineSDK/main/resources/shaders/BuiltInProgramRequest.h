@@ -11,7 +11,7 @@ class ShaderProgram;
 }
 
 namespace n::sdk::main {
-class BuiltInProgramRequest final : public LazyRequest {
+class BuiltInProgramRequest final : public RegularRequest {
 
 	class BuiltInProgramLoader : public ResourceLoader {
 	public:

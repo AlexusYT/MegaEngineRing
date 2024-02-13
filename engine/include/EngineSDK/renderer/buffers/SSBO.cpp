@@ -4,15 +4,7 @@
 
 #include "SSBO.h"
 
-#ifdef EDITOR_SDK
-
-
-	#include <epoxy/gl.h>
-#else
-
-
-	#include <GL/glew.h>
-#endif
+#include <epoxy/gl.h>
 
 namespace n::sdk::renderer {
 SSBO::SSBO() {}

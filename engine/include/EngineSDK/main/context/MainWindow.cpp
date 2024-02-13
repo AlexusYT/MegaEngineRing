@@ -37,5 +37,9 @@ void MainWindow::runMainLoop() {
 		getContext()->swapBuffers();
 	}
 }
+
+void MainWindow::onResize(const int pWidth, const int pHeight) {
+	if (currentScene) currentScene->resize(pWidth, pHeight);
+}
 } // namespace n::sdk::main
 #endif

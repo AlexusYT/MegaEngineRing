@@ -12,6 +12,7 @@
 	#include "IApplicationSettings.h"
 
 namespace n::sdk::main {
+
 class Application {
 	std::shared_ptr<IApplicationSettings> applicationSettings;
 

@@ -38,12 +38,6 @@
                                                 <property name="resize-start-child">False</property>
                                                 <property name="shrink-end-child">False</property>
                                                 <property name="shrink-start-child">False</property>
-                                                <property name="start-child">
-                                                    <object class="GtkGLArea" id="OpenGLRenderer">
-                                                        <property name="height-request">200</property>
-                                                        <property name="width-request">200</property>
-                                                    </object>
-                                                </property>
                                                 <property name="wide-handle">True</property>
                                             </object>
                                         </child>

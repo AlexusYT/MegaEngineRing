@@ -15,6 +15,19 @@ public:
 
 	virtual sigc::connection connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) = 0;
 
+	virtual sigc::connection connectRealize(const sigc::slot<void()> &pSlot) = 0;
+
+	virtual sigc::connection connectUnrealize(const sigc::slot<void()> &pSlot) = 0;
+
+	virtual sigc::connection connectResize(const sigc::slot<void(int pWidth, int pHeight)> &pSlot) = 0;
+
+	virtual void makeCurrent() = 0;
+
+	virtual void redraw() = 0;
+
+
+	virtual void throwIfError() = 0;
+
 	virtual void onLoadingStarted() = 0;
 
 	virtual void onLoadingStopped(const engine::utils::ReportMessagePtr &pError) = 0;

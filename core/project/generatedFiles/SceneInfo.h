@@ -20,6 +20,7 @@ class CppMethod;
 class SceneInfo : public GeneratedFileEntry {
 	std::shared_ptr<Scene> scene;
 	std::shared_ptr<UUID> uuid;
+	bool primaryScene{true};
 
 protected:
 	explicit SceneInfo(const std::shared_ptr<Project> &pProject);

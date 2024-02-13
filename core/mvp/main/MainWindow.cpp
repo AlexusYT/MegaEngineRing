@@ -17,9 +17,9 @@ MainWindow::MainWindow(BaseObjectType* pCobject, const Glib::RefPtr<Gtk::Builder
 	  notebook(nullptr) {
 	set_visible();
 
-	auto* area = builder->get_widget<Gtk::GLArea>("OpenGLRenderer");
+	/*auto* area = builder->get_widget<Gtk::GLArea>("OpenGLRenderer");
 	render = OpenGL::create(area);
-	render->init();
+	render->init();*/
 
 	notebook = builder->get_widget<Gtk::Notebook>("noteboook_logs");
 	notebook->append_page(logs[0], "CMake");

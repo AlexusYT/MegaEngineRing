@@ -29,6 +29,9 @@ public:
 	engine::utils::ReportMessagePtr openScene(const std::shared_ptr<IScene> &pNewScene);
 
 	void runMainLoop();
+
+private:
+	void onResize(int pWidth, int pHeight) override;
 };
 } // namespace n::sdk::main
 

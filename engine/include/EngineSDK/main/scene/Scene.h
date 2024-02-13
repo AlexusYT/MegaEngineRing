@@ -11,11 +11,18 @@
 #include "IScene.h"
 
 namespace n::sdk::main {
+class ISceneObject;
+}
+
+namespace n::sdk::main {
 class Scene : public IScene {
 	std::shared_ptr<Resources> resources;
 	std::shared_ptr<ProgramWideShaderBuffer> programBuffer;
+	std::vector<std::shared_ptr<ISceneObject>> objects;
 
 public:
+	Scene();
+
 	[[nodiscard]] const std::shared_ptr<Resources> &getResources() const final { return resources; }
 
 	/**
@@ -157,18 +164,24 @@ public:
 
 	void onResourceLoadingError(const std::shared_ptr<ResourceRequest> &pRequest, const engine::utils::ReportMessagePtr& pError) override;
 
+
 protected:
-	virtual void beforeRender() {}
+	virtual void beforeRender();
 
 	virtual void afterRender() {}
 
-private:
-	void setResources(const std::shared_ptr<Resources> &pResources) final { resources = pResources; }
+	engine::utils::ReportMessagePtr initScene() override;
 
-	void render() final {
-		beforeRender();
-		afterRender();
-	}
+	engine::utils::ReportMessagePtr preloadScene(const std::shared_ptr<ResourceRequests>& pRequests) override;
+
+	void addObject(const std::shared_ptr<ISceneObject> &pObject) ;
+
+private:
+	void setResources(const std::shared_ptr<Resources> &pResources) final;
+
+	void render() final;
+
+	void resize(int pWidth, int pHeight) override;
 };
 } // namespace n::sdk::main
 

@@ -18,7 +18,7 @@ std::shared_ptr<IResource> BuiltInShaderLoader::load(const std::shared_ptr<Resou
 		result = std::make_shared<renderer::FragmentShader>();
 		//language=glsl
 		if (BuiltInFragmentShaderRequest::getDefault() == fragRequest)
-			result->setSource(R"(
+			/*result->setSource(R"(
 #version 430 core
 
 uniform sampler2D textureIn;
@@ -33,12 +33,36 @@ in VS_OUT {
 void main(){
 	colorOut = vec4(vec3(1), 1);
 }
-)");
+)");*/
+			result->setSource(R"(#version 330
+
+out vec4 outputColor;
+
+void main() {
+  float lerpVal = gl_FragCoord.y / 500.0f;
+
+  outputColor = mix(vec4(1.0f, 0.85f, 0.35f, 1.0f), vec4(0.2f, 0.2f, 0.2f, 1.0f), lerpVal);
+})");
 	} else if (auto verRequest = std::dynamic_pointer_cast<BuiltInVertexShaderRequest>(pRequest)) {
 		result = std::make_shared<renderer::VertexShader>();
 		//language=glsl
 		if (BuiltInVertexShaderRequest::getDefault() == verRequest)
-			result->setSource(R"(
+			result->setSource(R"(#version 330
+layout(location = 0) in vec4 position;
+uniform mat4 mvp;
+
+void main() {
+  gl_Position = position;
+})");
+		/*result->setSource(R"(
+#version 430 core
+
+    layout (location = 0) in vec3 position;
+    void main()
+    {
+    gl_Position = vec4(position.x, position.y, position.z, 1.0);
+    }
+)");*/ /*result->setSource(R"(
 #version 430 core
 
 layout (location = 0) in vec3 vertexIn;
@@ -64,7 +88,7 @@ void main(){
 	vs_out.color = colorsIn;
 
 }
-)");
+)");*/
 	} else {
 		pError->setStacktrace();
 		pError->setTitle("Failed to compile the builtin shader");

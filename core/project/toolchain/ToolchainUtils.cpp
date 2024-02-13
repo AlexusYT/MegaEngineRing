@@ -231,7 +231,7 @@ target_link_libraries(GameEngine_exe PRIVATE stdc++exp)
 
 add_dependencies(GameEngine_exe _EDITOR_TMP_)
 
-target_link_libraries(GameEngine_exe PRIVATE GameEngine_lib )
+target_link_libraries(GameEngine_exe PRIVATE GameEngine_lib epoxy)
 
 # ---- Install rules ----
 
@@ -567,10 +567,11 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::generateVcpkgManifestFile(con
       "name": "glfw3",
       "version>=": "3.3.8#3"
     },
-    {
-      "name": "glew",
-      "version>=": "2.2.0#3"
-    },
+
+	{
+		"name": "libepoxy",
+		"version>=": "1.5.10#2"
+	},
     {
       "name": "glm",
       "version>=": "0.9.9.8#2"

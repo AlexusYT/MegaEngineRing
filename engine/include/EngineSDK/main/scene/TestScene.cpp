@@ -27,7 +27,7 @@ ReportMessagePtr TestScene::preloadScene(const std::shared_ptr<ResourceRequests>
 	pRequests->addRequest(BuiltInVertexShaderRequest::getDefault());
 
 
-	return nullptr;
+	return Scene::preloadScene(pRequests);
 }
 
 ReportMessagePtr TestScene::initScene() {
@@ -37,6 +37,6 @@ ReportMessagePtr TestScene::initScene() {
 
 	Logger::out("{}", vert->getCompileStatus());
 	Logger::out("{}", frag->getCompileStatus());
-	Logger::out("{}", shader->getSync<n::sdk::renderer::ShaderProgram>()->getLinkStatus());
-	return nullptr;
+	//Logger::out("{}", shader->getSync<n::sdk::renderer::ShaderProgram>()->getLinkStatus());
+	return Scene::initScene();
 }

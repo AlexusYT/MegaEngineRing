@@ -12,6 +12,7 @@
 namespace n::sdk::renderer {
 
 class ShaderProgram : public IShaderProgram, public main::IResource {
+	inline static const ShaderProgram* usedProgram{};
 	uint32_t name;
 	std::vector<std::shared_ptr<IShader>> attachedShaders;
 	std::vector<std::shared_ptr<ISSBO>> buffers;
