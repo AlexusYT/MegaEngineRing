@@ -67,6 +67,7 @@ add_library(GameEngine_engine_static STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
 target_sources(GameEngine_engine_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
+target_compile_definitions(GameEngine_engine_shared PRIVATE EDITOR_SDK)
 find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(GameEngine_engine_static INTERFACE glfw)
 
