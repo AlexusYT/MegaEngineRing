@@ -16,6 +16,8 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 	viewMain->connectReloadCmakeClickedSignal(
 		bind(mem_fun(*this, &PresenterMain::generateCmakeFiles), sigc::slot<void(int pExitCode)>{}));
 
+
+	modelMain->getProject()->connectOnErrorSignal(sigc::mem_fun(*viewMain, &IViewMain::reportError));
 	//TODO move to project
 	const char* path = "/mnt/LinuxFS/CLionProjects/GameEngine/installed/sdk/1.0.0/lib/libGameEngine.so";
 	errno = 0;
@@ -26,9 +28,8 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 		msg->addInfoLine("Path: {}", path);
 		msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
 		modelMain->getProject()->errorOccurred(msg);
-		return;
-	}
-	modelMain->getProject()->setEditorSdkLib(handle);
+	} else
+		modelMain->getProject()->setEditorSdkLib(handle);
 	viewMain->connectRunClickedSignal([this] {
 		std::thread([this] {
 			build([this](int pExitCode) {
@@ -38,8 +39,6 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 		}).detach();
 	});
 	viewMain->setWindowTitle("Game engine editor - " + modelMain->getProject()->getProjectName());
-
-	modelMain->getProject()->connectOnErrorSignal(sigc::mem_fun(*viewMain, &IViewMain::reportError));
 
 	auto r = viewMain->connectKeyPressedSignal(
 		[this](const guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
