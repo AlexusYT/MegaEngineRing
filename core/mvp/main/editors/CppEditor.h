@@ -17,13 +17,13 @@ public:
 	explicit CppEditor(const std::filesystem::path &pFilePath) : filePath(pFilePath) {
 
 
-		std::thread thread([](const std::filesystem::path &pFilePath) {}, filePath);
-		thread.detach();
+		/*std::thread thread([](const std::filesystem::path &pFilePath) {}, filePath);
+		thread.detach();*/
 	}
 
 	operator Gtk::Widget&() override { return mainTextView; }
 
-	sigc::connection connectTabHeaderChanged(const sigc::slot<void(const std::string &pName)> &pSlot) override {
+	sigc::connection connectTabHeaderChanged(const sigc::slot<void(const std::string &pName)> &/*pSlot*/) override {
 		return {};
 	}
 };

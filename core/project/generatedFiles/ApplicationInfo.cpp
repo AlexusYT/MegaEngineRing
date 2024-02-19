@@ -37,12 +37,12 @@ engine::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
 		//language=sql
 		SQLite::Statement statement(*database, "SELECT * FROM ApplicationInfo");
 		while (statement.executeStep()) {
-			std::string name = statement.getColumn(1);
+			std::string propertyName = statement.getColumn(1);
 			const auto &column = statement.getColumn(2);
-			if (auto iter = properties.find(name); iter != properties.end()) {
+			if (auto iter = properties.find(propertyName); iter != properties.end()) {
 				iter->second->setValue(column.getString());
 			} else {
-				addProperty(AppInfoProperty::create(name, column.getString()));
+				addProperty(AppInfoProperty::create(propertyName, column.getString()));
 			}
 		}
 	} catch (...) {
@@ -74,8 +74,8 @@ engine::utils::ReportMessagePtr ApplicationInfo::onSaveDatabase() const {
 INSERT INTO ApplicationInfo (PropertyName, PropertyValue) VALUES
 (?, ?)
 )");
-		for (const auto &[name, value]: properties) {
-			statement.bind(1, name);
+		for (const auto &[propertyName, value]: properties) {
+			statement.bind(1, propertyName);
 			statement.bind(2, value->getValue());
 			statement.executeStep();
 			statement.clearBindings();
@@ -129,9 +129,9 @@ engine::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
 	method->setName("init");
 	method->setReturnType("n::engine::utils::ReportMessagePtr");
 	method->setIsOverride(true);
-	for (const auto &[name, value]: properties) {
-		if (name.empty() || value->getValue().empty()) continue;
-		std::string methodName = "set"s + static_cast<char>(std::toupper(name[0])) + name.substr(1);
+	for (const auto &[optName, value]: properties) {
+		if (optName.empty() || value->getValue().empty()) continue;
+		std::string methodName = "set"s + static_cast<char>(std::toupper(optName[0])) + optName.substr(1);
 		method->addStatement(CppMethodCall::create(methodName, {std::format("\"{}\"", value->getValue())}));
 	}
 	method->addStatement(CppCustomStatement::create("return DefaultApplicationSettings::init()"));

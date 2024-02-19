@@ -72,6 +72,8 @@ bool Window::isCloseRequest() const {
 	return false;
 }
 
+inline void Window::onResize(int /*pWidth*/, int /*pHeight*/) {}
+
 engine::utils::ReportMessagePtr Window::init() {
 	makeCurrent();
 	/*glewExperimental = true;

@@ -94,6 +94,8 @@ AppInfoEditor::AppInfoEditor() {
 	}*/
 }
 
+void AppInfoEditor::addWindow(const std::shared_ptr<Gtk::Window> & /*pWindow*/) {}
+
 void AppInfoEditor::setSlotCreateModel(const ui::TreeWidget::SlotCreateModel &pSlotCreateModel) {
 	tree.setSlotCreateModel(pSlotCreateModel);
 }

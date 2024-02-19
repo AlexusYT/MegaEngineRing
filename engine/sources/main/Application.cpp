@@ -18,7 +18,7 @@ extern std::shared_ptr<n::sdk::main::IScene> getPrimaryScene();
 namespace n::sdk::main {
 engine::utils::ReportMessagePtr Application::initEngine() { return nullptr; }
 
-int Application::runMainLoop(int argc, char* argv[]) {
+int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 	using namespace engine::utils;
 	struct sigaction sig;
 	sig.sa_flags = SA_SIGINFO;

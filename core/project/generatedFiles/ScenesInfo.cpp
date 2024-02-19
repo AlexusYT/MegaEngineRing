@@ -43,11 +43,11 @@ engine::utils::ReportMessagePtr ScenesInfo::onLoadDatabase() {
 		//language=sql
 		SQLite::Statement statement(*database, "SELECT * FROM Scenes");
 		while (statement.executeStep()) {
-			std::string name = statement.getColumn(1);
+			std::string sceneName = statement.getColumn(1);
 			engine::utils::ReportMessagePtr msg;
 			auto uuid = UUID::parse(statement.getColumn(2), msg);
 			if (!uuid) return msg;
-			auto sceneInfo = SceneInfo::create(getProject(), name, uuid);
+			auto sceneInfo = SceneInfo::create(getProject(), sceneName, uuid);
 			addChildEntry(sceneInfo);
 		}
 	} catch (...) {

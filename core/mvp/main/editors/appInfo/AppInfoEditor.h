@@ -23,7 +23,7 @@ class AppInfoEditor : public IViewAppInfo {
 public:
 	AppInfoEditor();
 
-	void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) override {}
+	void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) override;
 
 	void closeWindow() override {}
 
