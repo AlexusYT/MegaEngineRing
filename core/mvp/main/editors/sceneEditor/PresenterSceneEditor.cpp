@@ -50,7 +50,7 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 			std::cerr << gle.domain() << "-" << gle.code() << "-" << gle.what() << std::endl;
 		}
 	});
-	viewSceneEditor->connectRender([this](const Glib::RefPtr<Gdk::GLContext> &pContext) {
+	viewSceneEditor->connectRender([this](const Glib::RefPtr<Gdk::GLContext> & /*pContext*/) {
 		auto scene = modelSceneEditor->getScene().get();
 		if (scene) scene->render();
 		glFlush();

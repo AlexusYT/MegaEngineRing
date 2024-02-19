@@ -42,7 +42,8 @@ ProjectExplorerWindow::ProjectExplorerWindow(project::Project* pProject) : proje
 
 	tree.setContextMenuRequested([](Glib::ObjectBase* pObjectBase) -> Glib::RefPtr<Gio::Menu> {
 		auto entry = dynamic_cast<ProjectExplorerEntry*>(pObjectBase);
-		const Glib::RefPtr<Gio::Menu> &menu = entry->getContextMenu();
+		if (!entry) return nullptr;
+		Glib::RefPtr<Gio::Menu> menu = entry->getContextMenu();
 		if (!menu) return nullptr;
 		return menu;
 	});
@@ -53,7 +54,8 @@ ProjectExplorerWindow::ProjectExplorerWindow(project::Project* pProject) : proje
 	tree.setSlotCreateModel([this](const Glib::RefPtr<Glib::ObjectBase> &pItem) -> Glib::RefPtr<Gio::ListModel> {
 		auto col = std::dynamic_pointer_cast<ProjectExplorerEntry>(pItem);
 		Glib::RefPtr<Gio::ListStore<ProjectExplorerEntry>> result;
-		if (col) {result = col->getEntryChildren();
+		if (col) {
+			result = col->getEntryChildren();
 		} else {
 			result = project->getProjectExplorerEntries();
 		}

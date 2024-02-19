@@ -34,9 +34,12 @@ void ToolchainUtils::execute(const std::filesystem::path &pRootPath, const std::
 	std::jthread thrd([pArgs, pPath, pCoutCallback, pCerrCallback, pRootPath, pOnFinish] {
 		n::engine::utils::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
 		pCoutCallback(pPath.string() + " " + pArgs + "\n");
-		// pipes for parent to write and read
+// pipes for parent to write and read
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
 		pipe(pipes[PARENT_READ_PIPE]);
 		pipe(pipes[PARENT_WRITE_PIPE]);
+#pragma GCC diagnostic pop
 
 		auto pid = fork();
 		if (pid == 0) {
@@ -112,8 +115,12 @@ int ToolchainUtils::executeSync(const std::filesystem::path &pRootPath, const st
 	n::engine::utils::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
 	pCoutCallback(pPath.string() + " " + pArgs + "\n");
 	// pipes for parent to write and read
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-result"
 	pipe(pipes[PARENT_READ_PIPE]);
 	pipe(pipes[PARENT_WRITE_PIPE]);
+#pragma GCC diagnostic pop
 
 	auto pid = fork();
 	if (pid == 0) {

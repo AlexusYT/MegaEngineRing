@@ -43,7 +43,7 @@ n::core::ui::CenterWindow::CenterWindow() {
 				window.set_visible();
 				notebook->set_group_name("center-window-notebook");
 				notebook->signal_page_removed().connect(sigc::bind(
-					[](Gtk::Widget* pPage, guint pPageNum, Gtk::Notebook* pNotebook, Gtk::Window* pWindow) {
+					[](Gtk::Widget* /*pPage*/, guint /*pPageNum*/, Gtk::Notebook* pNotebook, Gtk::Window* pWindow) {
 						if (pNotebook->get_n_pages() == 0) pWindow->destroy();
 					},
 					notebook.get(), &window));

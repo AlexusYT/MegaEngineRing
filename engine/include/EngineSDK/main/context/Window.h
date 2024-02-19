@@ -45,7 +45,7 @@ public:
 	IContext* getContext() { return this; }
 
 private:
-	virtual void onResize(int pWidth, int pHeight) {}
+	virtual void onResize(int pWidth, int pHeight);
 
 	engine::utils::ReportMessagePtr init() override;
 

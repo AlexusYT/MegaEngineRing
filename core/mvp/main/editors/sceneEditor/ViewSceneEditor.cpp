@@ -49,7 +49,7 @@ ViewSceneEditor::ViewSceneEditor() {
 	mainWidget.set_shrink_end_child(false);
 	mainWidget.set_resize_end_child(false);
 
-	/*objectWindow.setSlotGetObjectChildren([this](const SceneObject* /*pObject#1#) {
+	/*objectWindow.setSlotGetObjectChildren([this](const SceneObject* pObject) {
 		std::vector<std::shared_ptr<SceneObject>> children;
 
 		for (const auto &toplevelObject: project->getToplevelObjects()) { children.emplace_back(toplevelObject); }
