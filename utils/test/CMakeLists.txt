@@ -11,7 +11,9 @@ include(GoogleTest)
 
 # ---- Tests ----
 
-add_executable(GameEngineUtils_test source/UUIDTests.cpp)
+add_executable(GameEngineUtils_test source/UUIDTests.cpp
+        source/UtilsTests.cpp
+        source/LoggerTests.cpp)
 target_link_libraries(
         GameEngineUtils_test PRIVATE
         GameEngine_utils

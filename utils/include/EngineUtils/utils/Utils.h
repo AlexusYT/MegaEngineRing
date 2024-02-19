@@ -12,10 +12,13 @@ class Utils {
 private:
 public:
 	template<typename T>
-	static std::string getTypeName(T pE) {
-		if constexpr (std::is_pointer<T>()) return demangle(typeid(*pE).name());
-		else
-			return demangle(typeid(pE).name());
+	static std::string getTypeName(const T &pE) {
+		return demangle(typeid(pE).name());
+	}
+
+	template<typename T>
+	static std::string getTypeName(T* pE) {
+		return demangle(typeid(*pE).name());
 	}
 
 	template<typename T>
