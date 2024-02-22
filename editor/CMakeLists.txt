@@ -150,6 +150,10 @@ add_library(
         project/generators/cpp/CppClassMember.h
         project/generators/cpp/CppExternC.cpp
         project/generators/cpp/CppExternC.h
+        cmdOptions/options/SdkPathOption.cpp
+        cmdOptions/options/SdkPathOption.h
+        cmdOptions/options/SdkVersionOption.cpp
+        cmdOptions/options/SdkVersionOption.h
 
 )
 

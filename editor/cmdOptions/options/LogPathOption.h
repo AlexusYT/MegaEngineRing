@@ -15,7 +15,7 @@ class LogPathOption final : public Option {
 
 public:
 	explicit LogPathOption(Glib::OptionGroup* pOptionGroup)
-		: Option(pOptionGroup, "log_path", "Path to logs directory. Default is: " + Globals::getLogPath().string()) {
+		: Option(pOptionGroup, "log_path", "Path to logs directory. Default: " + Globals::getLogPath().string()) {
 
 		set_flags(Flags::FILENAME);
 	}
