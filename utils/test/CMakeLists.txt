@@ -2,7 +2,7 @@
 # depends on being added from it, i.e. the testing is done only from the build
 # tree and is not feasible from an install location
 
-project(GameEngineTests LANGUAGES CXX)
+project(MegaEngineUtilsTests LANGUAGES CXX)
 
 # ---- Dependencies ----
 
@@ -11,16 +11,16 @@ include(GoogleTest)
 
 # ---- Tests ----
 
-add_executable(GameEngineUtils_test source/UUIDTests.cpp
+add_executable(MegaEngineUtils_test source/UUIDTests.cpp
         source/UtilsTests.cpp
         source/LoggerTests.cpp)
 target_link_libraries(
-        GameEngineUtils_test PRIVATE
-        GameEngine_utils
+        MegaEngineUtils_test PRIVATE
+        MegaEngineUtils
         GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main
 )
 
-gtest_discover_tests(GameEngineUtils_test)
+gtest_discover_tests(MegaEngineUtils_test)
 
 # ---- End-of-file commands ----
 

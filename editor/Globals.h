@@ -12,9 +12,9 @@ class Globals {
 public:
 	static void init() {
 		const std::filesystem::path home = getenv("HOME");
-		logPath = home / ".cache/GameEngine/logs";
+		logPath = home / ".cache/MegaEngineRing/logs";
 		create_directories(logPath);
-		projectsPath = home / "GameEngineProjects";
+		projectsPath = home / "MegaEngineProjects";
 		create_directories(projectsPath);
 	}
 

@@ -62,14 +62,14 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/renderer/GL.h
 )
 
-add_library(GameEngine_engine_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
-add_library(GameEngine_engine_static STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
+add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
+add_library(MegaEngineSDK_static STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
-target_sources(GameEngine_engine_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
+target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
-target_compile_definitions(GameEngine_engine_shared PRIVATE EDITOR_SDK)
+target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
 find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(GameEngine_engine_static INTERFACE glfw)
+target_link_libraries(MegaEngineSDK_static INTERFACE glfw)
 
 find_package(sigc++-3 CONFIG REQUIRED)
 function(setupTarget target)
@@ -79,7 +79,7 @@ function(setupTarget target)
     target_include_directories(
             ${target} ${warning_guard}
             PUBLIC
-            "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/engine/include>"
+            "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/include>"
     )
     target_include_directories(
             ${target} ${warning_guard}
@@ -87,16 +87,16 @@ function(setupTarget target)
             "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
     )
 
-    target_compile_features(${target} PUBLIC cxx_std_23)
-    target_link_libraries(${target} PUBLIC stdc++exp GameEngine_utils)
+    target_link_libraries(${target} PUBLIC stdc++exp MegaEngineUtils)
     target_link_libraries(${target} PRIVATE sigc-3.0)
-    set_property(TARGET ${target} PROPERTY OUTPUT_NAME GameEngine)
+    set_property(TARGET ${target} PROPERTY OUTPUT_NAME MegaEngineSDK)
+    set_property(TARGET ${target} PROPERTY PREFIX "")
 
 endfunction()
-setupTarget(GameEngine_engine_shared)
-setupTarget(GameEngine_engine_static)
+setupTarget(MegaEngineSDK_shared)
+setupTarget(MegaEngineSDK_static)
 install(
-        TARGETS GameEngine_engine_static GameEngine_engine_shared
+        TARGETS MegaEngineSDK_static MegaEngineSDK_shared
         ARCHIVE
         DESTINATION sdk/1.0.0/lib/
         COMPONENT sdk-1.0.0

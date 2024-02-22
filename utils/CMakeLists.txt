@@ -15,22 +15,23 @@ set(UTILS_HEADERS
         include/EngineUtils/utils/UUID.h
 )
 
-add_library(GameEngine_utils STATIC ${UTILS_SOURCES} ${UTILS_HEADERS})
-target_sources(GameEngine_utils PUBLIC FILE_SET utils_headers TYPE HEADERS FILES ${UTILS_HEADERS})
+add_library(MegaEngineUtils STATIC ${UTILS_SOURCES} ${UTILS_HEADERS})
+target_sources(MegaEngineUtils PUBLIC FILE_SET utils_headers TYPE HEADERS FILES ${UTILS_HEADERS})
 
 target_include_directories(
-        GameEngine_utils ${warning_guard}
+        MegaEngineUtils ${warning_guard}
         PUBLIC
         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
 )
 
-target_compile_features(GameEngine_utils PUBLIC cxx_std_23)
-target_link_libraries(GameEngine_utils PRIVATE stdc++exp)
-target_compile_options(GameEngine_utils PRIVATE -fPIC)
-set_property(TARGET GameEngine_utils PROPERTY OUTPUT_NAME GameEngineUtils)
+target_compile_features(MegaEngineUtils PUBLIC cxx_std_23)
+target_link_libraries(MegaEngineUtils PRIVATE stdc++exp)
+target_compile_options(MegaEngineUtils PRIVATE -fPIC)
+set_property(TARGET MegaEngineUtils PROPERTY OUTPUT_NAME MegaEngineUtils)
+set_property(TARGET MegaEngineUtils PROPERTY PREFIX "")
 
 install(
-        TARGETS GameEngine_utils
+        TARGETS MegaEngineUtils
         ARCHIVE
         DESTINATION sdk/1.0.0/lib
         COMPONENT sdk-1.0.0

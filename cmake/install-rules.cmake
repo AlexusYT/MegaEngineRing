@@ -1,10 +1,5 @@
-#[[install(
-        TARGETS GameEngine_UI
-        RUNTIME COMPONENT GameEngine_Runtime
-        DESTINATION .
-)]]
 install(
-        IMPORTED_RUNTIME_ARTIFACTS GameEngine_UI
+        IMPORTED_RUNTIME_ARTIFACTS MegaEngineEditor
         DESTINATION .
 )
 install(

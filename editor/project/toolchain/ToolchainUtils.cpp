@@ -473,7 +473,7 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(
 			],
 			"cacheVariables": {
 				"BUILD_MCSS_DOCS": "ON",
-				"ENGINE_SDK_PATH": "/mnt/LinuxFS/CLionProjects/GameEngine/installed/sdk",
+				"ENGINE_SDK_PATH": "/mnt/LinuxFS/CLionProjects/MegaEngineRing/installed/sdk",
 				"ENGINE_SDK_VERSION": "1.0.0"
 			}
 		},
@@ -737,8 +737,8 @@ endfunction()
 function(add_required_libraries_target target)
 	add_required_include_target(${target})
 
-	target_link_libraries(${target} PRIVATE "${ENGINE_SDK_PATH}/${ENGINE_SDK_VERSION}/lib/libGameEngine.a")
-	target_link_libraries(${target} PRIVATE "${ENGINE_SDK_PATH}/${ENGINE_SDK_VERSION}/lib/libGameEngineUtils.a")
+	target_link_libraries(${target} PRIVATE "${ENGINE_SDK_PATH}/${ENGINE_SDK_VERSION}/lib/MegaEngineSDK.a")
+	target_link_libraries(${target} PRIVATE "${ENGINE_SDK_PATH}/${ENGINE_SDK_VERSION}/lib/MegaEngineUtils.a")
 	target_link_libraries(${target} PRIVATE stdc++exp)
 	file(GLOB cmakeLibFiles RELATIVE ${CMAKE_SOURCE_DIR} "cmake/libraries/required/*.cmake")
 

@@ -41,7 +41,8 @@ bool CreateProjectWindow::init() {
 	window->signal_hide().connect([this] { mainWindow->mainWindow->set_sensitive(true); });*/
 
 	auto* pathEntry = builder->get_widget<Gtk::Entry>("entry_path");
-	pathEntry->set_text("/home/alexus/GameEngineProjects");
+	using namespace std::string_literals;
+	if (const auto home = getenv("HOME")) pathEntry->set_text(home + "/MegaEngineProjects"s);
 	auto* errorLabel = builder->get_widget<Gtk::Label>("label_error");
 	errorLabel->set_visible(false);
 	pathEntry->signal_icon_release().connect([this, pathEntry, errorLabel](Gtk::Entry::IconPosition) {

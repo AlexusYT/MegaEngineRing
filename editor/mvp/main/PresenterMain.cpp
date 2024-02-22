@@ -19,9 +19,9 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 
 	modelMain->getProject()->connectOnErrorSignal(sigc::mem_fun(*viewMain, &IViewMain::reportError));
 	//TODO move to project
-	const char* path = "/mnt/LinuxFS/CLionProjects/GameEngine/installed/sdk/1.0.0/lib/libGameEngine.so";
+	std::string path = std::filesystem::current_path() / "sdk/1.0.0/lib/MegaEngineSDK.so";
 	errno = 0;
-	const auto handle = dlopen(path, RTLD_NOW | RTLD_GLOBAL);
+	const auto handle = dlopen(path.c_str(), RTLD_NOW | RTLD_GLOBAL);
 	if (!handle) {
 		auto msg = engine::utils::ReportMessage::create();
 		msg->setTitle("Failed to open engine sdk library");
