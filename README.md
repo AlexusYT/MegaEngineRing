@@ -73,6 +73,14 @@ cmake --build build/ci-ubuntu -j 20 --target install
 
 If you encounter any problems, please feel free to create a new issue.
 
+### 4. Running
+
+To run MegaEngineEditor executable, you need to specify path to SDK directory and sdk version to use.
+
+* `--sdk-path` to set a path to SDK directory. By default, it is `${INSTALLATION_DIR}/sdk`
+* `--sdk-version` to set an SDK version. By default, it is randomly selected. Currently only `1.0.0` version is
+  available, so it's not a big problem.
+
 ### Another way
 
 To simplify the installation process, I created the [Dockerfile](Dockerfile), that can build image for your Docker with
