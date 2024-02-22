@@ -10,6 +10,8 @@
 #include <mvp/main/IViewMain.h>
 #include <project/Project.h>
 
+#include "Globals.h"
+
 namespace MVP_CORE {
 PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const std::shared_ptr<IModelMain> &pModelMain)
 	: viewMain(pViewMain), modelMain(pModelMain) {
@@ -19,7 +21,7 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 
 	modelMain->getProject()->connectOnErrorSignal(sigc::mem_fun(*viewMain, &IViewMain::reportError));
 	//TODO move to project
-	std::string path = std::filesystem::current_path() / "sdk/1.0.0/lib/MegaEngineSDK.so";
+	std::string path = Globals::getSdk() / "lib/MegaEngineSDK.so";
 	errno = 0;
 	const auto handle = dlopen(path.c_str(), RTLD_NOW | RTLD_GLOBAL);
 	if (!handle) {

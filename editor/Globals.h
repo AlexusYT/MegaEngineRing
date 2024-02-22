@@ -8,6 +8,9 @@
 class Globals {
 	inline static std::filesystem::path logPath;
 	inline static std::filesystem::path projectsPath;
+	inline static std::filesystem::path sdkPath;
+	inline static std::string sdkVersion;
+	inline static std::filesystem::path sdk;
 
 public:
 	static void init() {
@@ -16,6 +19,8 @@ public:
 		create_directories(logPath);
 		projectsPath = home / "MegaEngineProjects";
 		create_directories(projectsPath);
+
+		sdkPath = std::filesystem::current_path() / "sdk";
 	}
 
 	[[nodiscard]] static const std::filesystem::path &getLogPath() { return logPath; }
@@ -25,6 +30,18 @@ public:
 	[[nodiscard]] static const std::filesystem::path &getProjectsPath() { return projectsPath; }
 
 	static void setProjectsPath(const std::filesystem::path &pProjectsPath) { projectsPath = pProjectsPath; }
+
+	[[nodiscard]] static const std::filesystem::path &getSdkPath() { return sdkPath; }
+
+	static void setSdkPath(const std::filesystem::path &pSdkPath) { sdkPath = pSdkPath; }
+
+	[[nodiscard]] static const std::string &getSdkVersion() { return sdkVersion; }
+
+	static void setSdkVersion(const std::string &pSdkVersion) { sdkVersion = pSdkVersion; }
+
+	[[nodiscard]] static const std::filesystem::path &getSdk() { return sdk; }
+
+	static void setSdk(const std::filesystem::path &pSdk) { sdk = pSdk; }
 };
 
 

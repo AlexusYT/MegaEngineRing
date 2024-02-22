@@ -5,10 +5,14 @@
 #include "EngineOptionGroup.h"
 
 #include "options/LogPathOption.h"
+#include "options/SdkPathOption.h"
+#include "options/SdkVersionOption.h"
 
 namespace UTILS_CORE {
 EngineOptionGroup::EngineOptionGroup() : OptionGroup("engine-options", "Engine options", "Engine options") {
 	optionEntries.emplace_back(std::make_unique<LogPathOption>(this));
+	optionEntries.emplace_back(std::make_unique<SdkPathOption>(this));
+	optionEntries.emplace_back(std::make_unique<SdkVersionOption>(this));
 }
 
 EngineOptionGroup::~EngineOptionGroup() = default;
@@ -20,4 +24,4 @@ bool EngineOptionGroup::on_post_parse(Glib::OptionContext &pContext) { return Op
 void EngineOptionGroup::on_error(Glib::OptionContext &pContext, const Glib::Error &pError) {
 	OptionGroup::on_error(pContext, pError);
 }
-} // namespace CORE_UTILS_NAMESPACE
+} // namespace UTILS_CORE

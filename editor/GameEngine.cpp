@@ -47,7 +47,7 @@ public:
 		Gtk::StyleContext::add_provider_for_display(Gdk::Display::get_default(), cssProvider,
 													GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-		application->signal_startup().connect(&GameEngineImpl::startup);
+		application->signal_activate().connect(&GameEngineImpl::startup);
 
 		application->register_application();
 		auto result = application->run(pArgc, pArgv);
@@ -80,6 +80,36 @@ public:
 			msg->setMessage("Exception in the signal handler occurred");
 			Logger::error(msg);
 		});
+
+		auto sdk = Globals::getSdkPath();
+		std::string version = Globals::getSdkVersion();
+		if (version.empty()) {
+			//TODO add regex check
+			for (auto entry: std::filesystem::directory_iterator(sdk)) { version = entry.path().filename(); }
+			Logger::warn("SDK version not specified. Using {}", version);
+			Globals::setSdkVersion(version);
+		}
+		sdk /= version;
+		if (!exists(sdk)) {
+			const auto msg = ReportMessage::create();
+			msg->setTitle("Failed to detect sdk");
+			msg->setMessage("No sdk directory");
+			msg->addInfoLine("Path to sdk: {}", sdk.string());
+			Logger::error(msg);
+			return;
+		}
+
+		if (!exists(sdk / "lib/MegaEngineSDK.a")) {
+			const auto msg = ReportMessage::create();
+			msg->setTitle("Failed to detect sdk");
+			msg->setMessage("File lib/MegaEngineSDK.a not found in sdk directory");
+			msg->addInfoLine("SDK directory: {}", sdk.string());
+			Logger::error(msg);
+			return;
+		}
+		Logger::info("Detected SDK: {}", sdk.string());
+		Globals::setSdk(sdk);
+
 		auto builder = Gtk::Builder::create();
 		try {
 			builder->add_from_file("Resources/CreateOpenProject.ui");

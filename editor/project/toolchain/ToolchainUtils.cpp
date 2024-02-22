@@ -8,6 +8,8 @@
 #include <sys/wait.h>
 #include <thread>
 
+#include "Globals.h"
+
 #define NUM_PIPES 2
 
 #define PARENT_WRITE_PIPE 0
@@ -455,8 +457,9 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakePresetsFile(cons
 }
 
 n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(const std::filesystem::path &pPath) {
-
-	return writeFile(pPath, R"({
+	//TODO MER-11
+	std::stringstream content;
+	content << R"({
 	"version": 2,
 	"cmakeMinimumRequired": {
 		"major": 3,
@@ -473,8 +476,10 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(
 			],
 			"cacheVariables": {
 				"BUILD_MCSS_DOCS": "ON",
-				"ENGINE_SDK_PATH": "/mnt/LinuxFS/CLionProjects/MegaEngineRing/installed/sdk",
-				"ENGINE_SDK_VERSION": "1.0.0"
+				"ENGINE_SDK_PATH": ")"
+			<< Globals::getSdkPath().string() << R"(",
+				"ENGINE_SDK_VERSION": ")"
+			<< Globals::getSdkVersion() << R"("
 			}
 		},
 		{
@@ -556,7 +561,8 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(
 			}
 		}
 	]
-})");
+})";
+	return writeFile(pPath, content.str());
 }
 
 n::engine::utils::ReportMessagePtr ToolchainUtils::generateVcpkgManifestFile(const std::filesystem::path &pPath) {
