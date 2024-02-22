@@ -2,8 +2,8 @@
 // Created by alexus on 30.10.2021.
 //
 
-#ifndef GAMEENGINE_H
-#define GAMEENGINE_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <mvp/main/IViewMain.h>
 #include <ui/widgetWindows/CenterWindow.h>
@@ -108,4 +108,4 @@ protected:
 };
 } // namespace MVP_CORE
 
-#endif //GAMEENGINE_H
+#endif //MAINWINDOW_H

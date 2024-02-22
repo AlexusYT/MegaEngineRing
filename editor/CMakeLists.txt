@@ -1,6 +1,6 @@
 
 add_library(
-        GameEngine_core OBJECT
+        MegaEngineEditor_lib OBJECT
         GameEngine.cpp
         mvp/main/MainWindow.cpp
         graphic/viewport/OpenGL.cpp
@@ -153,118 +153,117 @@ add_library(
 
 )
 
-target_precompile_headers(GameEngine_core
+target_precompile_headers(MegaEngineEditor_lib
         PRIVATE common.h
 )
 
 target_include_directories(
-        GameEngine_core ${warning_guard}
+        MegaEngineEditor_lib ${warning_guard}
         PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/core>"
+        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor>"
 )
 target_include_directories(
-        GameEngine_core ${warning_guard}
+        MegaEngineEditor_lib ${warning_guard}
         PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/engine/include>"
+        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/include>"
 )
 target_include_directories(
-        GameEngine_core ${warning_guard}
+        MegaEngineEditor_lib ${warning_guard}
         PUBLIC
         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
 )
 
-target_link_libraries(GameEngine_core PRIVATE GameEngine_utils)
-#target_link_libraries(GameEngine_core PRIVATE GameEngine_engine_shared)
+target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineUtils)
 
-target_compile_features(GameEngine_core PUBLIC cxx_std_23)
+target_compile_features(MegaEngineEditor_lib PUBLIC cxx_std_23)
 
 
 find_package(ZLIB REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE ZLIB::ZLIB)
+target_link_libraries(MegaEngineEditor_lib PRIVATE ZLIB::ZLIB)
 
 # Each component imports a target:
 # TARGETS: PCRE2::8BIT PCRE2::16BIT PCRE2::32BIT PCRE2::POSIX
 find_package(pcre2 CONFIG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE PCRE2::8BIT PCRE2::16BIT PCRE2::32BIT PCRE2::POSIX)
+target_link_libraries(MegaEngineEditor_lib PRIVATE PCRE2::8BIT PCRE2::16BIT PCRE2::32BIT PCRE2::POSIX)
 
 pkg_check_modules(LIBFFI REQUIRED IMPORTED_TARGET libffi)
-target_link_libraries(GameEngine_core PRIVATE PkgConfig::LIBFFI)
+target_link_libraries(MegaEngineEditor_lib PRIVATE PkgConfig::LIBFFI)
 
 find_package(unofficial-libffi CONFIG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE unofficial::libffi::libffi)
+target_link_libraries(MegaEngineEditor_lib PRIVATE unofficial::libffi::libffi)
 
 find_package(Intl REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE Intl::Intl) # since CMake 3.20
+target_link_libraries(MegaEngineEditor_lib PRIVATE Intl::Intl) # since CMake 3.20
 
 find_package(unofficial-brotli CONFIG REQUIRED)
 # Brotli decoder library
-target_link_libraries(GameEngine_core PRIVATE unofficial::brotli::brotlidec)
+target_link_libraries(MegaEngineEditor_lib PRIVATE unofficial::brotli::brotlidec)
 # Brotli encoder library
-target_link_libraries(GameEngine_core PRIVATE unofficial::brotli::brotlienc)
+target_link_libraries(MegaEngineEditor_lib PRIVATE unofficial::brotli::brotlienc)
 
 find_package(BZip2 REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE BZip2::BZip2)
+target_link_libraries(MegaEngineEditor_lib PRIVATE BZip2::BZip2)
 
 find_package(PNG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE PNG::PNG)
+target_link_libraries(MegaEngineEditor_lib PRIVATE PNG::PNG)
 
 find_package(Freetype REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE Freetype::Freetype) # since CMake 3.10
+target_link_libraries(MegaEngineEditor_lib PRIVATE Freetype::Freetype) # since CMake 3.10
 
 # this is heuristically generated, and may not be correct
 find_package(unofficial-libuuid CONFIG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE unofficial::UUID::uuid)
+target_link_libraries(MegaEngineEditor_lib PRIVATE unofficial::UUID::uuid)
 
 # this is heuristically generated, and may not be correct
 find_package(expat CONFIG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE expat::expat)
+target_link_libraries(MegaEngineEditor_lib PRIVATE expat::expat)
 
 find_package(Fontconfig REQUIRED) # since CMake 3.14
-target_link_libraries(GameEngine_core PRIVATE Fontconfig::Fontconfig)
+target_link_libraries(MegaEngineEditor_lib PRIVATE Fontconfig::Fontconfig)
 
 # cairo
 pkg_check_modules(cairo REQUIRED IMPORTED_TARGET cairo)
-target_link_libraries(GameEngine_core PRIVATE PkgConfig::cairo)
+target_link_libraries(MegaEngineEditor_lib PRIVATE PkgConfig::cairo)
 
 # cairo-script-interpreter
 pkg_check_modules(cairo-script-interpreter REQUIRED IMPORTED_TARGET cairo-script-interpreter)
-target_link_libraries(GameEngine_core PRIVATE PkgConfig::cairo-script-interpreter)
+target_link_libraries(MegaEngineEditor_lib PRIVATE PkgConfig::cairo-script-interpreter)
 
 # this is heuristically generated, and may not be correct
 find_package(sigc++-3 CONFIG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE sigc-3.0)
+target_link_libraries(MegaEngineEditor_lib PRIVATE sigc-3.0)
 
 pkg_check_modules(CAIROMM REQUIRED IMPORTED_TARGET cairomm-1.16)
-target_link_libraries(GameEngine_core PRIVATE PkgConfig::CAIROMM)
+target_link_libraries(MegaEngineEditor_lib PRIVATE PkgConfig::CAIROMM)
 
 find_path(EGL_REGISTRY_INCLUDE_DIRS "EGL/egl.h")
-target_include_directories(GameEngine_core PRIVATE ${EGL_REGISTRY_INCLUDE_DIRS})
+target_include_directories(MegaEngineEditor_lib PRIVATE ${EGL_REGISTRY_INCLUDE_DIRS})
 
 find_package(fmt REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE fmt::fmt)
+target_link_libraries(MegaEngineEditor_lib PRIVATE fmt::fmt)
 
 find_package(LibLZMA REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE LibLZMA::LibLZMA)
+target_link_libraries(MegaEngineEditor_lib PRIVATE LibLZMA::LibLZMA)
 
 # this is heuristically generated, and may not be correct
 find_package(harfbuzz CONFIG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE harfbuzz::harfbuzz)
+target_link_libraries(MegaEngineEditor_lib PRIVATE harfbuzz::harfbuzz)
 
 # this is heuristically generated, and may not be correct
 find_package(unofficial-pcre CONFIG REQUIRED)
 # note: 1 additional targets are not displayed.
-target_link_libraries(GameEngine_core PRIVATE unofficial::pcre::pcre unofficial::pcre::pcre16 unofficial::pcre::pcre32 unofficial::pcre::pcrecpp)
+target_link_libraries(MegaEngineEditor_lib PRIVATE unofficial::pcre::pcre unofficial::pcre::pcre16 unofficial::pcre::pcre32 unofficial::pcre::pcrecpp)
 
 find_package(JPEG REQUIRED)
-target_include_directories(GameEngine_core PRIVATE JPEG::JPEG)
+target_include_directories(MegaEngineEditor_lib PRIVATE JPEG::JPEG)
 
 find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE glfw)
+target_link_libraries(MegaEngineEditor_lib PRIVATE glfw)
 
 pkg_check_modules(GTKMM gtkmm-4.0)
 include_directories(${GTKMM_INCLUDE_DIRS})
-target_link_libraries(GameEngine_core PRIVATE ${GTKMM_LINK_LIBRARIES})
+target_link_libraries(MegaEngineEditor_lib PRIVATE ${GTKMM_LINK_LIBRARIES})
 
 # this is heuristically generated, and may not be correct
 find_package(SQLiteCpp CONFIG REQUIRED)
-target_link_libraries(GameEngine_core PRIVATE SQLiteCpp)
+target_link_libraries(MegaEngineEditor_lib PRIVATE SQLiteCpp)

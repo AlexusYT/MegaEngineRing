@@ -9,7 +9,7 @@ guide.
 ## Developer mode
 
 Build system targets that are only useful for developers of this project are
-hidden if the `GameEngine_DEVELOPER_MODE` option is disabled. Enabling this
+hidden if the `MegaEngine_DEVELOPER_MODE` option is disabled. Enabling this
 option makes tests and other developer targets and options available. Not
 enabling this option means that you are a consumer of this project and thus you
 have no need for these targets and options.
@@ -23,7 +23,7 @@ the project. As a developer, you are recommended to always have the [latest
 CMake version][2] installed to make use of the latest Quality-of-Life
 additions.
 
-You have a few options to pass `GameEngine_DEVELOPER_MODE` to the configure
+You have a few options to pass `MegaEngine_DEVELOPER_MODE` to the configure
 command, but this project prefers to use presets.
 
 As a developer, you should create a `CMakeUserPresets.json` file at the root of
@@ -31,39 +31,43 @@ the project:
 
 ```json
 {
-  "version": 2,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 14,
-    "patch": 0
-  },
-  "configurePresets": [
-    {
-      "name": "dev",
-      "binaryDir": "${sourceDir}/build/dev",
-      "inherits": ["dev-mode", "vcpkg", "ci-<os>"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    }
-  ],
-  "buildPresets": [
-    {
-      "name": "dev",
-      "configurePreset": "dev",
-      "configuration": "Debug"
-    }
-  ],
-  "testPresets": [
-    {
-      "name": "dev",
-      "configurePreset": "dev",
-      "configuration": "Debug",
-      "output": {
-        "outputOnFailure": true
-      }
-    }
-  ]
+	"version": 2,
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 14,
+		"patch": 0
+	},
+	"configurePresets": [
+		{
+			"name": "dev",
+			"binaryDir": "${sourceDir}/build/dev",
+			"inherits": [
+				"dev-mode",
+				"vcpkg",
+				"ci-<os>"
+			],
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		}
+	],
+	"buildPresets": [
+		{
+			"name": "dev",
+			"configurePreset": "dev",
+			"configuration": "Debug"
+		}
+	],
+	"testPresets": [
+		{
+			"name": "dev",
+			"configurePreset": "dev",
+			"configuration": "Debug",
+			"output": {
+				"outputOnFailure": true
+			}
+		}
+	]
 }
 ```
 
@@ -148,7 +152,7 @@ fix them respectively. Customization available using the `FORMAT_PATTERNS` and
 
 #### `run-exe`
 
-Runs the executable target `GameEngine_exe`.
+Runs the executable target `MegaEngineEditor`.
 
 #### `spell-check` and `spell-fix`
 

@@ -10,7 +10,7 @@
 			"name": "dev-mode",
 			"hidden": true,
 			"cacheVariables": {
-				"GameEngine_DEVELOPER_MODE": "ON",
+				"MegaEngine_DEVELOPER_MODE": "ON",
 				"VCPKG_MANIFEST_FEATURES": "test"
 			}
 		},

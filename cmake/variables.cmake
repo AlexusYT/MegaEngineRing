@@ -1,11 +1,11 @@
 # ---- Developer mode ----
 
 # Developer mode enables targets and code paths in the CMake scripts that are
-# only relevant for the developer(s) of GameEngine
+# only relevant for the developer(s) of MegaEngineRing
 # Targets necessary to build the project must be provided unconditionally, so
 # consumers can trivially build and package the project
 if (PROJECT_IS_TOP_LEVEL)
-    option(GameEngine_DEVELOPER_MODE "Enable developer mode" OFF)
+    option(MegaEngine_DEVELOPER_MODE "Enable developer mode" OFF)
 endif ()
 
 # ---- Warning guard ----
@@ -17,12 +17,12 @@ endif ()
 set(warning_guard "")
 if (NOT PROJECT_IS_TOP_LEVEL)
     option(
-            GameEngine_INCLUDES_WITH_SYSTEM
-            "Use SYSTEM modifier for GameEngine's includes, disabling warnings"
+            MegaEngine_INCLUDES_WITH_SYSTEM
+            "Use SYSTEM modifier for MegaEngine's includes, disabling warnings"
             ON
     )
-    mark_as_advanced(GameEngine_INCLUDES_WITH_SYSTEM)
-    if (GameEngine_INCLUDES_WITH_SYSTEM)
+    mark_as_advanced(MegaEngine_INCLUDES_WITH_SYSTEM)
+    if (MegaEngine_INCLUDES_WITH_SYSTEM)
         set(warning_guard SYSTEM)
     endif ()
 endif ()
