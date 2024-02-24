@@ -9,7 +9,7 @@
 
 #include "BufferUsageEnum.h"
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 
 
 class ISSBO {
@@ -26,7 +26,7 @@ public:
 
 	virtual void bindBufferBase(uint32_t pBinding) = 0;
 };
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 
 
 #endif //ISSBO_H

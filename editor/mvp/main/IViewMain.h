@@ -6,7 +6,7 @@
 #define IVIEWMAIN_H
 #include <mvp/IView.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IViewMain : public IView {
 public:
 	virtual sigc::connection connectReloadCmakeClickedSignal(const sigc::slot<void()> &pSlot) const = 0;
@@ -26,9 +26,9 @@ public:
 
 	virtual void addActionGroup(const std::string &pName, const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) = 0;
 
-	virtual void reportError(const engine::utils::ReportMessagePtr &pError) = 0;
+	virtual void reportError(const sdk::utils::ReportMessagePtr &pError) = 0;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //IVIEWMAIN_H

@@ -8,7 +8,7 @@
 #include <mvp/main/editors/IEditorPresenter.h>
 #include <thread>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class CppEditor : public IEditorPresenter {
 	std::filesystem::path filePath;
 	Gtk::TextView mainTextView;
@@ -27,5 +27,5 @@ public:
 		return {};
 	}
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 #endif //CPPEDITOR_H

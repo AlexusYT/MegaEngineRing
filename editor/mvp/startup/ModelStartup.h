@@ -7,7 +7,7 @@
 
 #include <mvp/startup/IModelStartup.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class ModelStartup : public IModelStartup {
 	std::string name;
 	std::filesystem::path path;
@@ -23,6 +23,6 @@ public:
 
 	void setPath(const std::filesystem::path &pPath) override { path = pPath; }
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //MODELSTARTUP_H

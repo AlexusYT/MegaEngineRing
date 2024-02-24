@@ -4,5 +4,5 @@
 
 #include "LogPathOption.h"
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 } // CORE_UTILS_NAMESPACE

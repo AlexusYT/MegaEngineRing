@@ -9,7 +9,7 @@
 
 #include "Resources.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class IScene;
 enum class ResourceLoadingPolicy;
 class ResourceRequest;
@@ -50,7 +50,7 @@ private:
 													 const std::shared_ptr<ResourceRequest> &pRequest);
 };
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //LOADEDRESOURCES_H

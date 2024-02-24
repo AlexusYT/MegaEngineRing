@@ -9,7 +9,7 @@
 #include "ui/widgetWindows/ObjectPropertiesWindow.h"
 #include "ui/widgetWindows/TreeObjectWindow.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class ViewSceneEditor : public IViewSceneEditor {
 	Gtk::Paned mainWidget;
 
@@ -42,8 +42,8 @@ public:
 
 	void onLoadingStarted() override;
 
-	void onLoadingStopped(const engine::utils::ReportMessagePtr &pError) override;
+	void onLoadingStopped(const sdk::utils::ReportMessagePtr &pError) override;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //VIEWSCENEEDITOR_H

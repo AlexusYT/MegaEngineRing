@@ -5,7 +5,7 @@
 #ifndef GENERATORELEMENT_H
 #define GENERATORELEMENT_H
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class CppDefinition;
 class CppDeclaration;
 
@@ -15,6 +15,6 @@ public:
 	virtual ~GeneratorElement() = default;
 };
 
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //GENERATORELEMENT_H

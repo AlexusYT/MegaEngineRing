@@ -6,7 +6,7 @@
 #define PROPERTY_H
 #include <sigc++/signal.h>
 
-namespace n::sdk::utils {
+namespace mer::sdk::utils {
 
 template<typename T>
 class Property {
@@ -72,6 +72,6 @@ public:
 	[[nodiscard]] const SignalT &getSignalChanged() const { return signalChanged; }
 };
 
-} // namespace n::sdk::utils
+} // namespace mer::sdk::utils
 
 #endif //PROPERTY_H

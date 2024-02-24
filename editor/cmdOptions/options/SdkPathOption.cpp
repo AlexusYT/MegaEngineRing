@@ -6,12 +6,12 @@
 
 #include "Globals.h"
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 SdkPathOption::SdkPathOption(Glib::OptionGroup* const pOptionGroup)
 	: Option(pOptionGroup, "sdk-path", "Path to sdk directory. Default: " + Globals::getSdkPath().string()) {}
 
 bool SdkPathOption::onOptionParsed(const Glib::ustring & /*pUstring*/, const Glib::ustring &pValue, bool /*pCond*/) {
-	using namespace engine::utils;
+	using namespace sdk::utils;
 	const std::filesystem::path sdkPath = std::filesystem::absolute(pValue.data());
 	if (std::error_code err; !exists(sdkPath, err)) {
 		const auto message = ReportMessage::create();
@@ -30,4 +30,4 @@ bool SdkPathOption::onOptionParsed(const Glib::ustring & /*pUstring*/, const Gli
 
 	return true;
 }
-} // namespace UTILS_CORE
+} // namespace mer::editor::utils

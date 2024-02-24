@@ -8,16 +8,16 @@
 
 #include "EngineSDK/main/resources/ResourceRequest.h"
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 class VertexShader;
 class FragmentShader;
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class BuiltInShaderLoader : public ResourceLoader {
 public:
 	std::shared_ptr<IResource> load(const std::shared_ptr<ResourceRequest> &pRequest,
-									const engine::utils::ReportMessagePtr &pError,
+									const sdk::utils::ReportMessagePtr &pError,
 									const std::shared_ptr<Resources> &pDependencies) override;
 };
 
@@ -67,7 +67,7 @@ public:
 	}
 };
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //BUILTINSHADERREQUEST_H

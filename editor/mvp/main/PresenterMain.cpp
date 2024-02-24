@@ -12,7 +12,7 @@
 
 #include "Globals.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const std::shared_ptr<IModelMain> &pModelMain)
 	: viewMain(pViewMain), modelMain(pModelMain) {
 	viewMain->connectReloadCmakeClickedSignal(
@@ -25,7 +25,7 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 	errno = 0;
 	const auto handle = dlopen(path.c_str(), RTLD_NOW | RTLD_GLOBAL);
 	if (!handle) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to open engine sdk library");
 		msg->addInfoLine("Path: {}", path);
 		msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
@@ -117,4 +117,4 @@ void PresenterMain::logError(int pId, const std::string &pMessage) const {
 		viewMain->addLogMessage(pId, "<span foreground=\"red\">" + Glib::Markup::escape_text(pMessage) + "</span>\n");
 	});
 }
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp

@@ -9,7 +9,7 @@
 
 #include "ResourceRequest.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class ResourceRequest;
 
 class ResourceRequests {
@@ -33,7 +33,7 @@ public:
 
 	void clearRequests() { requests.clear(); }
 };
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //RESOURCEREQUESTS_H

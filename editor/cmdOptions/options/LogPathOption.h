@@ -9,7 +9,7 @@
 #include "Globals.h"
 #include "Option.h"
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 
 class LogPathOption final : public Option {
 
@@ -22,7 +22,7 @@ public:
 
 	bool onOptionParsed(const Glib::ustring & /*pOptionName*/, const Glib::ustring &pValue,
 						bool /*pHasValue*/) override {
-		using namespace engine::utils;
+		using namespace sdk::utils;
 		std::filesystem::path logPath = std::filesystem::absolute(pValue.data());
 		if (std::error_code err; !exists(logPath, err)) {
 			const auto message = ReportMessage::create();
@@ -43,6 +43,6 @@ public:
 	}
 };
 
-} // namespace UTILS_CORE
+} // namespace mer::editor::utils
 
 #endif //LOGPATHOPTION_H

@@ -13,13 +13,13 @@
 	#include "EngineSDK/main/context/MainWindow.h"
 	#include "EngineSDK/main/scene/TestScene.h"
 
-extern std::shared_ptr<n::sdk::main::IScene> getPrimaryScene();
+extern std::shared_ptr<mer::sdk::main::IScene> getPrimaryScene();
 
-namespace n::sdk::main {
-engine::utils::ReportMessagePtr Application::initEngine() { return nullptr; }
+namespace mer::sdk::main {
+sdk::utils::ReportMessagePtr Application::initEngine() { return nullptr; }
 
 int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
-	using namespace engine::utils;
+	using namespace sdk::utils;
 	struct sigaction sig;
 	sig.sa_flags = SA_SIGINFO;
 	sig.sa_sigaction = [](int pSig, siginfo_t* pInfo, void*) {
@@ -104,5 +104,5 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 
 	return 0;
 }
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 #endif

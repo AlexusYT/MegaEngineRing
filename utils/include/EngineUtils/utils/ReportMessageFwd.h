@@ -6,10 +6,10 @@
 #define REPORTMESSAGEFWD_H
 #include <memory>
 
-namespace n::engine::utils {
+namespace mer::sdk::utils {
 class ReportMessage;
 
 using ReportMessagePtr = std::shared_ptr<ReportMessage>;
-} // namespace n::engine::utils
+} // namespace mer::sdk::utils
 
 #endif //REPORTMESSAGEFWD_H

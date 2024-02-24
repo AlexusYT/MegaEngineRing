@@ -8,7 +8,7 @@
 
 #include "ProjectExplorerEntry.h"
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 ProjectExplorerWindow::ProjectExplorerWindow(project::Project* pProject) : project(pProject) {
 	mainScrolledWindow.set_child(tree);
 	const auto factory = Gtk::SignalListItemFactory::create();
@@ -69,4 +69,4 @@ ProjectExplorerWindow::ProjectExplorerWindow(project::Project* pProject) : proje
 		if (entrySelectionChanged) entrySelectionChanged(dynamic_cast<ProjectExplorerEntry*>(pObjectBase));
 	});
 }
-} // namespace UI_CORE
+} // namespace mer::editor::ui

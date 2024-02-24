@@ -7,14 +7,14 @@
 
 #include <mvp/IView.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IViewCreatingProject : public IView {
 public:
 	~IViewCreatingProject() override = default;
 
 	virtual void addMessageToLog(const std::string &pMessage) = 0;
 
-	virtual void reportError(engine::utils::ReportMessagePtr pMessage) = 0;
+	virtual void reportError(sdk::utils::ReportMessagePtr pMessage) = 0;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 #endif //IVIEWCREATINGPROJECT_H

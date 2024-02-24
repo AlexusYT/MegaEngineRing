@@ -8,7 +8,7 @@
 
 #include "GeneratedFileEntry.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class Project;
 
 class GeneratedFiles : public GeneratedFileEntry {
@@ -24,13 +24,13 @@ public:
 		return Glib::make_refptr_for_instance(new GeneratedFiles(pProject));
 	}
 
-	engine::utils::ReportMessagePtr saveToCmake() const;
+	sdk::utils::ReportMessagePtr saveToCmake() const;
 
 	static void getFilesToSave(const ProjectExplorerEntry* pEntry, std::vector<std::string> &pFiles);
 
 private:
 	bool isSaveRequired(const std::vector<std::string> &pFiles) const;
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //GENERATEDFILES_H

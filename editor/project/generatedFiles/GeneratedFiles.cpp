@@ -7,8 +7,8 @@
 #include <project/Project.h>
 #include <project/toolchain/ToolchainUtils.h>
 
-namespace PROJECT_CORE {
-n::engine::utils::ReportMessagePtr GeneratedFiles::saveToCmake() const {
+namespace mer::editor::project {
+mer::sdk::utils::ReportMessagePtr GeneratedFiles::saveToCmake() const {
 	std::vector<std::string> files;
 	getFilesToSave(this, files);
 	if (!isSaveRequired(files)) return nullptr;
@@ -39,4 +39,4 @@ bool GeneratedFiles::isSaveRequired(const std::vector<std::string> &pFiles) cons
 	return false;
 }
 
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project

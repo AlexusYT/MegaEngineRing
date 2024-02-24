@@ -4,4 +4,4 @@
 
 #include "ModelMain.h"
 
-namespace MVP_CORE {}
+namespace mer::editor::mvp {}

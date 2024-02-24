@@ -29,7 +29,7 @@ static const Glib::SignalProxyInfo Notebook_signal_create_window = {
 	"create_window", (GCallback) &Notebook_signal_create_window_callback,
 	(GCallback) &Notebook_signal_create_window_callback};
 
-n::core::ui::CenterWindow::CenterWindow() {
+mer::editor::ui::CenterWindow::CenterWindow() {
 	//g_signal_connect(mainNotebook.gobj(), "create_window", )
 	Glib::SignalProxy<Glib::RefPtr<Gtk::Notebook>(Gtk::Widget*)>(&mainNotebook, &Notebook_signal_create_window)
 		.connect(
@@ -47,7 +47,7 @@ n::core::ui::CenterWindow::CenterWindow() {
 						if (pNotebook->get_n_pages() == 0) pWindow->destroy();
 					},
 					notebook.get(), &window));
-				engine::utils::Logger::out("Create window");
+				sdk::utils::Logger::out("Create window");
 
 				return notebook;
 			},
@@ -56,7 +56,7 @@ n::core::ui::CenterWindow::CenterWindow() {
 	mainNotebook.set_show_border(false);
 }
 
-void n::core::ui::CenterWindow::openEntry(ProjectExplorerEntry* pEntry) {
+void mer::editor::ui::CenterWindow::openEntry(ProjectExplorerEntry* pEntry) {
 	int pageNum;
 	const auto iter = openedPages.find(pEntry);
 	if (iter == openedPages.end()) {

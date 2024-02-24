@@ -15,8 +15,8 @@
 #include "EngineSDK/renderer/shaders/VertexShader.h"
 #include "EngineUtils/utils/Logger.h"
 
-using namespace n::sdk::main;
-using namespace n::engine::utils;
+using namespace mer::sdk::main;
+using namespace mer::sdk::utils;
 extern "C" {
 void* loadTestScene() { return new TestScene(); }
 }
@@ -37,6 +37,6 @@ ReportMessagePtr TestScene::initScene() {
 
 	Logger::out("{}", vert->getCompileStatus());
 	Logger::out("{}", frag->getCompileStatus());
-	//Logger::out("{}", shader->getSync<n::sdk::renderer::ShaderProgram>()->getLinkStatus());
+	//Logger::out("{}", shader->getSync<mer::sdk::renderer::ShaderProgram>()->getLinkStatus());
 	return Scene::initScene();
 }

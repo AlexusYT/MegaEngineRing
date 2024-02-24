@@ -5,7 +5,7 @@
 #ifndef CPPFILE_H
 #define CPPFILE_H
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class GeneratorElement;
 class CppDefinition;
 class CppDeclaration;
@@ -40,9 +40,9 @@ public:
 
 	virtual bool isHeader() = 0;
 
-	n::engine::utils::ReportMessagePtr writeFile(const std::filesystem::path &pPath);
+	mer::sdk::utils::ReportMessagePtr writeFile(const std::filesystem::path &pPath);
 };
 
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //CPPFILE_H

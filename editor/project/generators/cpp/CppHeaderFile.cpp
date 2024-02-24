@@ -4,4 +4,4 @@
 
 #include "CppHeaderFile.h"
 
-namespace n::core::project {} // namespace n::core::project
+namespace mer::editor::project {} // namespace mer::editor::project

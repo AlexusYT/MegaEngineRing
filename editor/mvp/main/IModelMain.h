@@ -5,11 +5,11 @@
 #ifndef IMODELMAIN_H
 #define IMODELMAIN_H
 
-namespace n::core::project {
+namespace mer::editor::project {
 class Project;
 }
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 class IModelMain {
 public:
@@ -20,6 +20,6 @@ public:
 	virtual void setProject(const std::shared_ptr<project::Project> &pProject) = 0;
 };
 
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //IMODELMAIN_H

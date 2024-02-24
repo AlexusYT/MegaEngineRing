@@ -5,7 +5,7 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 
 class IResource {
 protected:
@@ -14,6 +14,6 @@ protected:
 public:
 };
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 #endif //RESOURCE_H

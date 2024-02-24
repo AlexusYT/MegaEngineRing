@@ -14,8 +14,8 @@
 #include "EngineSDK/main/resources/shaders/BuiltInProgramRequest.h"
 #include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
-namespace n::sdk::main {
-using namespace engine::utils;
+namespace mer::sdk::main {
+using namespace sdk::utils;
 
 GLuint vao;
 
@@ -51,4 +51,4 @@ void BasicRenderObject::render() {
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glBindVertexArray(0);
 }
-} // namespace n::sdk::main
+} // namespace mer::sdk::main

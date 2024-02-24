@@ -6,7 +6,7 @@
 #define MODELMAIN_H
 #include "IModelMain.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class ModelMain : public IModelMain {
 	std::shared_ptr<project::Project> project;
 
@@ -15,7 +15,7 @@ public:
 
 	void setProject(const std::shared_ptr<project::Project> &pProject) override { project = pProject; }
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //MODELMAIN_H

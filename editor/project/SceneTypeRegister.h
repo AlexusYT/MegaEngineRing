@@ -5,7 +5,7 @@
 #ifndef SCENETYPEREGISTER_H
 #define SCENETYPEREGISTER_H
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class SceneTypeRegister {
 	/*struct SceneTypeInfo{
 
@@ -13,6 +13,6 @@ class SceneTypeRegister {
 	std::unordered_map<std::string, >*/
 public:
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //SCENETYPEREGISTER_H

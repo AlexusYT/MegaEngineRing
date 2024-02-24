@@ -7,7 +7,7 @@
 #include <cstring>
 #include <utility>
 
-n::engine::utils::ReportMessage::ReportMessage(std::stacktrace pStacktrace)
+mer::sdk::utils::ReportMessage::ReportMessage(std::stacktrace pStacktrace)
 	: stacktrace(std::move(pStacktrace)), exceptionPtr(std::current_exception()) {
 
 	addInfoLine("Current errno status: {}", strerror(errno));

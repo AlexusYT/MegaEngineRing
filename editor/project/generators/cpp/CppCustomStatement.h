@@ -6,7 +6,7 @@
 #define CPPCUSTOMSTATEMENT_H
 #include "CppBodyStatement.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 
 class CppCustomStatement : public CppBodyStatement {
 	std::string line;
@@ -36,6 +36,6 @@ public:
 		return ss.str();
 	}
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //CPPCUSTOMSTATEMENT_H

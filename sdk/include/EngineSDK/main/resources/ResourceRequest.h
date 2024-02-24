@@ -8,7 +8,7 @@
 
 #include "ResourceLoader.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class ResourceRequest {
 	friend class LoadedResources;
 	friend class LazyResource;
@@ -39,6 +39,6 @@ private:
 class LazyRequest : public ResourceRequest {};
 
 class RegularRequest : public ResourceRequest {};
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 #endif //RESOURCEREQUEST_H

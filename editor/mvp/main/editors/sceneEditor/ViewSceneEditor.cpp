@@ -6,7 +6,7 @@
 
 #include <epoxy/gl.h>
 
-namespace n::core::mvp {
+namespace mer::editor::mvp {
 ViewSceneEditor::ViewSceneEditor() {
 	Gtk::Notebook leftNotebook;
 	leftNotebook.append_page(objectWindow, "Дерево объектов");
@@ -89,13 +89,13 @@ void ViewSceneEditor::throwIfError() { area.throw_if_error(); }
 
 void ViewSceneEditor::onLoadingStarted() { loadingBox.set_visible(true); }
 
-void ViewSceneEditor::onLoadingStopped(const engine::utils::ReportMessagePtr &pError) {
+void ViewSceneEditor::onLoadingStopped(const sdk::utils::ReportMessagePtr &pError) {
 	if (pError) {
 		loadingErrorLabel.set_label(pError->getReport());
 		loadingErrorLabel.set_visible();
-		engine::utils::Logger::error(pError);
+		sdk::utils::Logger::error(pError);
 		return;
 	}
 	loadingBox.set_visible(false);
 }
-} // namespace n::core::mvp
+} // namespace mer::editor::mvp

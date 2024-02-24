@@ -6,7 +6,7 @@
 
 #include <project/generatedFiles/ApplicationInfo.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 AppInfoEditor::AppInfoEditor() {
 	Gtk::ScrolledWindow scrolledWindow;
 	scrolledWindow.set_child(tree);
@@ -99,4 +99,4 @@ void AppInfoEditor::addWindow(const std::shared_ptr<Gtk::Window> & /*pWindow*/) 
 void AppInfoEditor::setSlotCreateModel(const ui::TreeWidget::SlotCreateModel &pSlotCreateModel) {
 	tree.setSlotCreateModel(pSlotCreateModel);
 }
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp

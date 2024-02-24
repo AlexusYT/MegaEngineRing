@@ -9,14 +9,14 @@
 #include "ResourceRequest.h"
 #include "Resources.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 void LazyResource::getAsync(const sigc::slot<void(std::shared_ptr<IResource> pResource)> &pSlot) {
 	std::thread([pSlot, this] { pSlot(getSync()); }).detach();
 }
 
 std::shared_ptr<IResource> LazyResource::getSync() {
 	if (isLoaded()) return resource;
-	auto error = engine::utils::ReportMessage::create();
+	auto error = sdk::utils::ReportMessage::create();
 	if (const auto res = request->getLoader()->load(request, error, dependencies)) {
 		resource = res;
 		dependencies->clear();
@@ -29,4 +29,4 @@ std::shared_ptr<IResource> LazyResource::getSync() {
 	return resource;
 }
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main

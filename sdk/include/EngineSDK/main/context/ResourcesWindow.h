@@ -10,12 +10,12 @@
 	#include "EngineSDK/main/scene/IScene.h"
 	#include "Window.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class ResourceRequests;
 class ILoadedResources;
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class ResourcesWindow : public Window {
 
 	std::shared_ptr<ILoadedResources> resources;
@@ -29,7 +29,7 @@ public:
 	std::shared_ptr<Resources> executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
 											   const std::shared_ptr<IScene> &pScene) const;
 };
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif

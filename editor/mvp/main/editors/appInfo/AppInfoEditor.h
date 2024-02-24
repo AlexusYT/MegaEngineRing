@@ -7,12 +7,12 @@
 
 #include "IViewAppInfo.h"
 
-namespace n::core::project {
+namespace mer::editor::project {
 class ApplicationInfo;
 class AppInfoProperty;
-} // namespace n::core::project
+} // namespace mer::editor::project
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class AppInfoEditor : public IViewAppInfo {
 	ValueChangedSlot valueChangedSlot;
 	std::unordered_map<Glib::RefPtr<Gtk::ListItem>, sigc::connection> connections;
@@ -37,7 +37,7 @@ public:
 		valueChangedSlot = pValueChangedSlot;
 	}
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //APPINFOEDITOR_H

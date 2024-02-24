@@ -6,7 +6,7 @@
 #define ENGINEOPTIONGROUP_H
 #include "options/Option.h"
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 
 
 class EngineOptionGroup final : public Glib::OptionGroup {

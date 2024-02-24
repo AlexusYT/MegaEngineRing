@@ -7,7 +7,7 @@
 #include "GeneratedFileEntry.h"
 #include "SceneInfo.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class ScenesInfo : public GeneratedFileEntry {
 
 
@@ -23,13 +23,13 @@ public:
 	void getActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup);
 
 private:
-	engine::utils::ReportMessagePtr onLoadDatabase() override;
+	sdk::utils::ReportMessagePtr onLoadDatabase() override;
 
-	engine::utils::ReportMessagePtr onSaveDatabase() const override;
+	sdk::utils::ReportMessagePtr onSaveDatabase() const override;
 
-	engine::utils::ReportMessagePtr createTable() const;
+	sdk::utils::ReportMessagePtr createTable() const;
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 
 #endif //SCENESINFO_H

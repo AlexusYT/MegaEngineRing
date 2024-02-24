@@ -7,8 +7,8 @@
 #include "CppDeclaration.h"
 #include "CppDefinition.h"
 
-namespace n::core::project {
-n::engine::utils::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath) {
+namespace mer::editor::project {
+mer::sdk::utils::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath) {
 	std::filesystem::path path = pPath;
 	path.replace_extension(getExtension());
 	create_directories(pPath.parent_path());
@@ -32,7 +32,7 @@ n::engine::utils::ReportMessagePtr CppFile::writeFile(const std::filesystem::pat
 
 	} catch (...) {
 
-		auto msg = n::engine::utils::ReportMessage::create();
+		auto msg = mer::sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to save the file.");
 		msg->setMessage("Exception thrown");
 		msg->addInfoLine("Trying to save the file at {}", pPath.string());
@@ -40,4 +40,4 @@ n::engine::utils::ReportMessagePtr CppFile::writeFile(const std::filesystem::pat
 	}
 	return nullptr;
 }
-} // namespace n::core::project
+} // namespace mer::editor::project

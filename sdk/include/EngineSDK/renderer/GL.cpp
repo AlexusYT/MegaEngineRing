@@ -6,7 +6,7 @@
 
 #include <epoxy/gl.h>
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 
 void GL::viewport(const int pX, const int pY, const int pWidth, const int pHeight) {
 	glViewport(pX, pY, pWidth, pHeight);
@@ -24,4 +24,4 @@ void GL::clear(const ClearBits pMask) {
 	glClear(mask);
 }
 
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer

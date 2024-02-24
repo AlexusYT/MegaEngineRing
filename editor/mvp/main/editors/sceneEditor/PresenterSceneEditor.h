@@ -6,7 +6,7 @@
 #define PRESENTERSCENEEDITOR_H
 #include "mvp/main/editors/IEditorPresenter.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IViewSceneEditor;
 class IModelSceneEditor;
 
@@ -28,11 +28,11 @@ public:
 
 private:
 	void notifyLoadingStarted() const;
-	void notifyLoadingStopped(const engine::utils::ReportMessagePtr &pError) const;
+	void notifyLoadingStopped(const sdk::utils::ReportMessagePtr &pError) const;
 
-	engine::utils::ReportMessagePtr loadScene() const;
+	sdk::utils::ReportMessagePtr loadScene() const;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //PRESENTERSCENEEDITOR_H

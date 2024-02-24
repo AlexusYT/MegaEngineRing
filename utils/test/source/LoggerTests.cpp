@@ -5,7 +5,7 @@
 #include <regex>
 
 #include "EngineUtils/utils/Logger.h"
-using namespace n::engine::utils;
+using namespace mer::sdk::utils;
 
 class LoggerTestsFixture : public testing::Test {
 	bool useColors = true;

@@ -15,7 +15,7 @@
 #include "cmdOptions/EngineOptionGroup.h"
 #include "mvp/startup/StartupWindow.h"
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 
 class GameEngineImpl {
 	static inline std::shared_ptr<Gtk::Application> application;
@@ -40,16 +40,16 @@ public:
 	}
 
 	static void signals(int pSig) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Signal handled");
 		msg->setMessage("Aborting...");
 		msg->addInfoLine("Signal: {}", pSig);
-		engine::utils::Logger::error(msg);
+		sdk::utils::Logger::error(msg);
 		std::exit(-1);
 	}
 
 	static void startup() {
-		using namespace n::engine::utils;
+		using namespace mer::sdk::utils;
 		const std::filesystem::path logPath = Globals::getLogPath() / "latest.log";
 		if (auto message = Logger::openLog(logPath)) {
 			Logger::error("Log file cannot be open, so logging to file feature won't be available");
@@ -165,4 +165,4 @@ void GameEngine::removeWindow(std::shared_ptr<mvp::IPresenter> pWindow) {
 	GameEngineImpl::removeWindow(std::move(pWindow));
 }
 
-} // namespace UI_CORE
+} // namespace mer::editor::ui

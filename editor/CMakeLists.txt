@@ -26,14 +26,9 @@ add_library(
         project/toolchain/ToolchainUtils.h
         project/toolchain/ToolchainSettings.cpp
         project/toolchain/ToolchainSettings.h
-        project/ProjectSettings.cpp
-        project/ProjectSettings.h
         project/Project.cpp
         project/Project.h
         project/ProjectFwd.h
-        project/CreateProjectWindow.cpp
-        project/CreateProjectWindow.h
-        project/CreateProjectWindowFwd.h
         mvp/startup/StartupWindow.cpp
         mvp/startup/StartupWindow.h
         cmdOptions/EngineOptionGroup.cpp
@@ -119,8 +114,6 @@ add_library(
         project/generatedFiles/ScenesInfo.h
         project/SceneTypeRegister.cpp
         project/SceneTypeRegister.h
-        project/scenes/Scene.cpp
-        project/scenes/Scene.h
         project/generatedFiles/SceneInfo.cpp
         project/generatedFiles/SceneInfo.h
         ui/widgetWindows/projectExplorer/FileEntry.cpp
@@ -136,7 +129,6 @@ add_library(
         mvp/main/editors/sceneEditor/IModelSceneEditor.h
         mvp/main/editors/sceneEditor/PresenterSceneEditor.cpp
         mvp/main/editors/sceneEditor/PresenterSceneEditor.h
-        mvp/main/editors/sceneEditor/ModelSceneEditor.cpp
         mvp/main/editors/sceneEditor/ModelSceneEditor.h
         mvp/main/editors/sceneEditor/ViewSceneEditor.cpp
         mvp/main/editors/sceneEditor/ViewSceneEditor.h

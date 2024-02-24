@@ -6,7 +6,7 @@
 #define CPPGENERATOR_H
 #include <project/generators/GeneratorElement.h>
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class CppGenerator {
 	std::vector<std::string> includes;
 	std::vector<GeneratorElement*> elements;
@@ -24,7 +24,7 @@ public:
 
 	void addElement(GeneratorElement* pElement) { elements.emplace_back(pElement); }
 
-	n::engine::utils::ReportMessagePtr saveHeader(const std::filesystem::path &pPath) const {
+	mer::sdk::utils::ReportMessagePtr saveHeader(const std::filesystem::path &pPath) const {
 		create_directories(pPath.parent_path());
 		std::ofstream stream;
 		try {
@@ -32,7 +32,7 @@ public:
 			stream.open(pPath);
 		} catch (...) {
 
-			auto msg = n::engine::utils::ReportMessage::create();
+			auto msg = mer::sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to save header file.");
 			msg->setMessage("Exception thrown");
 			msg->addInfoLine("Trying to save file at {}", pPath.string());
@@ -49,7 +49,7 @@ public:
 		return nullptr;
 	}
 
-	n::engine::utils::ReportMessagePtr saveSource(const std::filesystem::path &pPath) const {
+	mer::sdk::utils::ReportMessagePtr saveSource(const std::filesystem::path &pPath) const {
 		create_directories(pPath.parent_path());
 		std::ofstream stream;
 		try {
@@ -57,7 +57,7 @@ public:
 			stream.open(pPath);
 		} catch (...) {
 
-			auto msg = n::engine::utils::ReportMessage::create();
+			auto msg = mer::sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to save source file.");
 			msg->setMessage("Exception thrown");
 			msg->addInfoLine("Trying to save file at {}", pPath.string());
@@ -73,7 +73,7 @@ public:
 		return nullptr;
 	}
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 
 #endif //CPPGENERATOR_H

@@ -8,7 +8,7 @@
 	#include <EngineUtils/utils/ReportMessage.h>
 	#include <GLFW/glfw3.h>
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 Window::~Window() {
 	if (native) glfwDestroyWindow(native);
 }
@@ -39,12 +39,12 @@ void Window::setCloseRequest(const bool pState) const {
 	if (native) glfwSetWindowShouldClose(native, pState);
 }
 
-engine::utils::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor) const {
+sdk::utils::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor) const {
 	if (native) return nullptr;
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, pMajor);
 	const char* errorMsg;
 	if (auto errorId = glfwGetError(&errorMsg); errorId != GLFW_NO_ERROR) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to set context version");
 		msg->setMessage("Function returns an error when setting major version");
 		msg->addInfoLine("Error num: {}", errorId);
@@ -55,7 +55,7 @@ engine::utils::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, pMajor);
 
 	if (auto errorId = glfwGetError(&errorMsg); errorId != GLFW_NO_ERROR) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to set context version");
 		msg->setMessage("Function returns an error when setting minor version");
 		msg->addInfoLine("Error num: {}", errorId);
@@ -74,11 +74,11 @@ bool Window::isCloseRequest() const {
 
 inline void Window::onResize(int /*pWidth*/, int /*pHeight*/) {}
 
-engine::utils::ReportMessagePtr Window::init() {
+sdk::utils::ReportMessagePtr Window::init() {
 	makeCurrent();
 	/*glewExperimental = true;
 	if (auto error = glewInit(); error != GLEW_OK) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to init glew");
 		msg->setMessage("Error occurred");
 		msg->addInfoLine("Error num: {}", error);
@@ -94,5 +94,5 @@ void Window::swapBuffers() const {
 	glfwSwapBuffers(native);
 	glfwPollEvents();
 }
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 #endif

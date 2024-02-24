@@ -6,7 +6,7 @@
 #define DIRECTORYENTRY_H
 #include "ProjectExplorerEntry.h"
 
-namespace n::core::ui {
+namespace mer::editor::ui {
 
 class DirectoryEntry : public ProjectExplorerEntry {
 protected:
@@ -17,7 +17,7 @@ public:
 		return Glib::make_refptr_for_instance(new DirectoryEntry(pName));
 	}
 };
-} // namespace n::core::ui
+} // namespace mer::editor::ui
 
 
 #endif //DIRECTORYENTRY_H

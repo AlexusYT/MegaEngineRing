@@ -5,7 +5,7 @@
 #ifndef OPTION_H
 #define OPTION_H
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 
 class Option : public Glib::OptionEntry {
 public:
@@ -21,6 +21,6 @@ public:
 	virtual bool onOptionParsed(const Glib::ustring &pOptionName, const Glib::ustring &pValue, bool pHasValue);
 };
 
-} // namespace UTILS_CORE
+} // namespace mer::editor::utils
 
 #endif //OPTION_H

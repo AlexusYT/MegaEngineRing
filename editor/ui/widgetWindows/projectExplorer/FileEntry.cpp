@@ -6,8 +6,8 @@
 
 #include <mvp/main/editors/CppEditor.h>
 
-namespace n::core::ui {
+namespace mer::editor::ui {
 std::shared_ptr<mvp::IEditorPresenter> FileEntry::openEditor() {
 	return /*std::make_shared<mvp::CppEditor>(path);*/ nullptr;
 }
-} // namespace n::core::ui
+} // namespace mer::editor::ui

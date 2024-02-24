@@ -4,4 +4,4 @@
 
 #include "ObjectPropertiesWindow.h"
 
-namespace UI_CORE {}
+namespace mer::editor::ui {}

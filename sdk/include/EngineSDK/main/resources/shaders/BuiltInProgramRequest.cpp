@@ -11,12 +11,12 @@
 
 #include "BuiltInShaderRequest.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 
 std::shared_ptr<BuiltInProgramRequest> BuiltInProgramRequest::defaultProgram;
 
 std::shared_ptr<IResource> BuiltInProgramRequest::BuiltInProgramLoader::load(
-	const std::shared_ptr<ResourceRequest> &pRequest, const engine::utils::ReportMessagePtr &pError,
+	const std::shared_ptr<ResourceRequest> &pRequest, const sdk::utils::ReportMessagePtr &pError,
 	const std::shared_ptr<Resources> &pDependencies) {
 
 	auto program = std::make_shared<renderer::ShaderProgram>();
@@ -48,4 +48,4 @@ const std::shared_ptr<BuiltInProgramRequest> &BuiltInProgramRequest::getDefaultP
 	}
 	return defaultProgram;
 }
-} // namespace n::sdk::main
+} // namespace mer::sdk::main

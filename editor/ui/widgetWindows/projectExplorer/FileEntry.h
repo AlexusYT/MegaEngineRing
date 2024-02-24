@@ -6,7 +6,7 @@
 #define FILEENTRY_H
 #include "ProjectExplorerEntry.h"
 
-namespace n::core::ui {
+namespace mer::editor::ui {
 class FileEntry : public ProjectExplorerEntry {
 	std::filesystem::path path;
 
@@ -21,6 +21,6 @@ public:
 	std::shared_ptr<mvp::IEditorPresenter> openEditor() override;
 };
 
-} // namespace n::core::ui
+} // namespace mer::editor::ui
 
 #endif //FILEENTRY_H

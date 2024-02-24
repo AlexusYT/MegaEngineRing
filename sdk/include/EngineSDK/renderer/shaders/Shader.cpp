@@ -7,7 +7,7 @@
 #include <epoxy/gl.h>
 #include "ShaderTypeEnum.h"
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 Shader::Shader(const ShaderTypeEnum pType) {
 	uint32_t type;
 	switch (pType) {
@@ -86,4 +86,4 @@ int Shader::getSourceLength() const {
 	glGetShaderiv(name, GL_SHADER_SOURCE_LENGTH, &out);
 	return out;
 }
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer

@@ -9,25 +9,25 @@
 #include "objects/BasicRenderObject.h"
 #include "objects/ISceneObject.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 Scene::Scene() {}
 
 void Scene::onResourceLoadingError(const std::shared_ptr<ResourceRequest> & /*pRequest*/,
-								   const engine::utils::ReportMessagePtr &pError) {
+								   const sdk::utils::ReportMessagePtr &pError) {
 
-	engine::utils::Logger::error(pError);
+	sdk::utils::Logger::error(pError);
 }
 
 void Scene::beforeRender() { renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT); }
 
-engine::utils::ReportMessagePtr Scene::initScene() {
+sdk::utils::ReportMessagePtr Scene::initScene() {
 	for (const auto &sceneObject: objects) {
 		if (auto msg = sceneObject->init()) return msg;
 	}
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr Scene::preloadScene(const std::shared_ptr<ResourceRequests> &pRequests) {
+sdk::utils::ReportMessagePtr Scene::preloadScene(const std::shared_ptr<ResourceRequests> &pRequests) {
 	for (const auto &sceneObject: objects) { sceneObject->fillResourceRequests(pRequests); }
 	return nullptr;
 }
@@ -49,4 +49,4 @@ void Scene::render() {
 }
 
 void Scene::resize(const int pWidth, const int pHeight) { renderer::GL::viewport(0, 0, pWidth, pHeight); }
-} // namespace n::sdk::main
+} // namespace mer::sdk::main

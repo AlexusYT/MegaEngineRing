@@ -9,7 +9,7 @@
 
 #include "EngineSDK/renderer/shaders/IShaderProgram.h"
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 
 class ShaderProgram : public IShaderProgram, public main::IResource {
 	inline static const ShaderProgram* usedProgram{};
@@ -54,7 +54,7 @@ public:
 };
 
 
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 
 
 #endif //SHADERPROGRAM_H

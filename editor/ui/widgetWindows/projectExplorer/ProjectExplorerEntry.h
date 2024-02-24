@@ -5,12 +5,12 @@
 #ifndef FILESYSTEMENTRY_H
 #define FILESYSTEMENTRY_H
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IEditorPresenter;
 class IEditor;
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 
 enum class EntryKind { FILE, DIRECTORY, SCENE };
 
@@ -82,7 +82,7 @@ public:
 
 	void setFileSaveRequired(const bool pFileSaveRequired = true) { fileSaveRequired = pFileSaveRequired; }
 
-	engine::utils::ReportMessagePtr loadDatabase() {
+	sdk::utils::ReportMessagePtr loadDatabase() {
 		if (auto msg = onLoadDatabase()) return msg;
 		if (!children) return nullptr;
 		for (uint32_t i = 0; i < children->get_n_items(); i++) {
@@ -92,7 +92,7 @@ public:
 		return nullptr;
 	}
 
-	engine::utils::ReportMessagePtr saveDatabase() {
+	sdk::utils::ReportMessagePtr saveDatabase() {
 		if (isDatabaseSaveRequired()) {
 			if (auto msg = onSaveDatabase()) return msg;
 			setDatabaseSaveRequired(false);
@@ -105,7 +105,7 @@ public:
 		return nullptr;
 	}
 
-	engine::utils::ReportMessagePtr saveFile() {
+	sdk::utils::ReportMessagePtr saveFile() {
 		if (isFileSaveRequired()) {
 			if (auto msg = onSaveFile()) return msg;
 			setFileSaveRequired(false);
@@ -125,12 +125,12 @@ public:
 	virtual std::shared_ptr<mvp::IEditorPresenter> openEditor() { return nullptr; }
 
 private:
-	virtual engine::utils::ReportMessagePtr onLoadDatabase() { return nullptr; }
+	virtual sdk::utils::ReportMessagePtr onLoadDatabase() { return nullptr; }
 
-	virtual engine::utils::ReportMessagePtr onSaveDatabase() const { return nullptr; }
+	virtual sdk::utils::ReportMessagePtr onSaveDatabase() const { return nullptr; }
 
-	virtual engine::utils::ReportMessagePtr onSaveFile() const { return nullptr; }
+	virtual sdk::utils::ReportMessagePtr onSaveFile() const { return nullptr; }
 };
-} // namespace UI_CORE
+} // namespace mer::editor::ui
 
 #endif //FILESYSTEMENTRY_H

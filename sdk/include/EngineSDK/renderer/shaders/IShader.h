@@ -7,7 +7,7 @@
 #include <EngineSDK/renderer/shaders/ShaderTypeEnum.h>
 #include <cstdint>
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 class IShader {
 
 protected:
@@ -38,7 +38,7 @@ public:
 
 	virtual uint32_t native() const = 0;
 };
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 
 
 #endif //ISHADER_H

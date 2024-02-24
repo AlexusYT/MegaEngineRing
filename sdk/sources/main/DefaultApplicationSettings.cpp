@@ -4,8 +4,8 @@
 
 #include <EngineSDK/main/DefaultApplicationSettings.h>
 
-namespace n::sdk::main {
-engine::utils::ReportMessagePtr DefaultApplicationSettings::init() {
+namespace mer::sdk::main {
+sdk::utils::ReportMessagePtr DefaultApplicationSettings::init() {
 	if (applicationName->empty()) setApplicationName("DefaultApplication");
 	if (applicationDisplayName->empty()) setApplicationDisplayName("Default Application");
 	/*if (logsDirectory->empty())
@@ -13,4 +13,4 @@ engine::utils::ReportMessagePtr DefaultApplicationSettings::init() {
 	//setLogsDirectory("{HOME}/{APPLICATION_NAME}/Logs");
 	return nullptr;
 }
-} // namespace n::sdk::main
+} // namespace mer::sdk::main

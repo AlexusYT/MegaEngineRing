@@ -5,7 +5,7 @@
 #ifndef IMODELSTARTUP_H
 #define IMODELSTARTUP_H
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IModelStartup {
 public:
 	virtual ~IModelStartup() = default;
@@ -18,7 +18,7 @@ public:
 
 	virtual void setPath(const std::filesystem::path &pPath) = 0;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //IMODELSTARTUP_H

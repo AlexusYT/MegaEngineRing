@@ -5,6 +5,7 @@
 #ifndef TOOLCHAINSETTINGS_H
 #define TOOLCHAINSETTINGS_H
 
+namespace mer::editor::project {
 class ToolchainSettings {
 	inline static std::filesystem::path cmakePath = "/usr/bin/cmake";
 	inline static std::filesystem::path vcpkgPath = "/home/alexus/.clion-vcpkg/vcpkg/vcpkg";
@@ -18,6 +19,7 @@ public:
 
 	static void setVcpkgPath(const std::filesystem::path &pVcpkgPath) { vcpkgPath = pVcpkgPath; }
 };
+} // namespace mer::editor::project
 
 
 #endif //TOOLCHAINSETTINGS_H

@@ -6,7 +6,7 @@
 #define ISHADERPROGRAM_H
 #include <glm/fwd.hpp>
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 class IShader;
 class ISSBO;
 
@@ -44,7 +44,7 @@ public:
 
 	virtual void setUniform(const std::string &pName, const glm::mat4 &pValue) const = 0;
 };
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 
 
 #endif //ISHADERPROGRAM_H

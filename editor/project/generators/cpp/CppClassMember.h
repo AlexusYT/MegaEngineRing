@@ -5,7 +5,7 @@
 #ifndef CPPCLASSMEMBER_H
 #define CPPCLASSMEMBER_H
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class CppClass;
 
 class CppClassMember {
@@ -21,6 +21,6 @@ public:
 
 	void setOutsideClass(const bool pOutsideClass) { outsideClass = pOutsideClass; }
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //CPPCLASSMEMBER_H

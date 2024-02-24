@@ -4,7 +4,7 @@
 
 #include "StartupWindow.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 std::shared_ptr<Gtk::FileDialog> StartupWindow::showFolderChooserDialog(
 	const std::string &pInitialFolder,
 	const sigc::slot<void(const std::shared_ptr<Gio::AsyncResult> &, const std::shared_ptr<Gtk::FileDialog> &)>
@@ -35,4 +35,4 @@ void StartupWindow::showFileChooserDialog(
 
 	dialog->open(*this, sigc::bind(pSlot, dialog));
 }
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp

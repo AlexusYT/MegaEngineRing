@@ -6,7 +6,7 @@
 
 #include <thread>
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 LogView::LogView() {
 	Gtk::Box buttonBox(Gtk::Orientation::VERTICAL);
 	mainBox.append(buttonBox);
@@ -34,4 +34,4 @@ LogView::LogView() {
 	});
 }
 
-} // namespace UI_CORE
+} // namespace mer::editor::ui

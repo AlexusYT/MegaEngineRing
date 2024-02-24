@@ -5,6 +5,7 @@
 #ifndef TOOLCHAINUTILS_H
 #define TOOLCHAINUTILS_H
 
+namespace mer::editor::project {
 class ToolchainUtils {
 public:
 	static void execute(const std::filesystem::path &pRootPath, const std::filesystem::path &path,
@@ -15,19 +16,18 @@ public:
 						   const std::string &pArgs, const sigc::slot<void(const std::string &pLog)> &pCoutCallback,
 						   const sigc::slot<void(const std::string &pLog)> &pCerrCallback);
 
-	static n::engine::utils::ReportMessagePtr generateCMakeListsFile(const std::filesystem::path &pPath);
+	static sdk::utils::ReportMessagePtr generateCMakeListsFile(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessagePtr generateCMakePresetsFile(const std::filesystem::path &pPath);
+	static sdk::utils::ReportMessagePtr generateCMakePresetsFile(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessagePtr generateCMakeUserPresetsFile(const std::filesystem::path &pPath);
+	static sdk::utils::ReportMessagePtr generateCMakeUserPresetsFile(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessagePtr generateVcpkgManifestFile(const std::filesystem::path &pPath);
+	static sdk::utils::ReportMessagePtr generateVcpkgManifestFile(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessagePtr generateCMakeDirectory(const std::filesystem::path &pPath);
+	static sdk::utils::ReportMessagePtr generateCMakeDirectory(const std::filesystem::path &pPath);
 
-	static n::engine::utils::ReportMessagePtr writeFile(const std::filesystem::path &pPath,
-														 const std::string &pContents);
+	static sdk::utils::ReportMessagePtr writeFile(const std::filesystem::path &pPath, const std::string &pContents);
 };
-
+} // namespace mer::editor::project
 
 #endif //TOOLCHAINUTILS_H

@@ -5,7 +5,7 @@
 #ifndef SHADERTYPEENUM_H
 #define SHADERTYPEENUM_H
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 enum class ShaderTypeEnum {
 
 	/// Shader that is intended to run on the programmable compute processor.

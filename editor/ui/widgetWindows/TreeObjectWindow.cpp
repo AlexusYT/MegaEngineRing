@@ -7,7 +7,7 @@
 #include <project/sceneObjects/World.h>
 #include <ui/utils/ErrorDialog.h>
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 TreeObjectWindow::TreeObjectWindow() {
 
 	mainBox.set_expand(true);
@@ -114,7 +114,7 @@ TreeObjectWindow::TreeObjectWindow() {
 				auto* object = dynamic_cast<SceneObject*>(pObjectBase);
 
 				removeBtn.set_sensitive(!dynamic_cast<World*>(object));
-				engine::utils::Logger::out("Object {} selected", object->getName());
+				sdk::utils::Logger::out("Object {} selected", object->getName());
 			});
 
 			const Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
@@ -171,14 +171,14 @@ void TreeObjectWindow::setSlotGetObjectChildren(const SlotGetObjectChildren &pSl
 
 void TreeObjectWindow::removeObject(SceneObject* pObject) {
 	if (!pObject) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to remove an object");
 		msg->setMessage("Object is nullptr. Most likely there is an error in the TreeWidget code");
 		ErrorDialog::showErrorDialog(tree.get_root(), msg);
 		return;
 	}
 	if (dynamic_cast<World*>(pObject)) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to remove an object");
 		msg->setMessage("Removing the top-level object is not permitted by architecture");
 		msg->addInfoLine("Object name: {}", pObject->getName());
@@ -188,7 +188,7 @@ void TreeObjectWindow::removeObject(SceneObject* pObject) {
 	}
 	auto* parent = pObject->getParent();
 	if (!parent) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to remove an object");
 		msg->setMessage("Object is orphan. Most likely there is an error in the SceneObject code");
 		ErrorDialog::showErrorDialog(tree.get_root(), msg);
@@ -196,7 +196,7 @@ void TreeObjectWindow::removeObject(SceneObject* pObject) {
 	}
 
 	if (!parent->removeChild(pObject->getUuid())) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to remove an object");
 		msg->setMessage(
 			"Parent object has no the removing object. Most likely there is an error in the SceneObject code");
@@ -204,13 +204,13 @@ void TreeObjectWindow::removeObject(SceneObject* pObject) {
 		return;
 	}
 
-	engine::utils::Logger::out("Removing {}", pObject->getName());
+	sdk::utils::Logger::out("Removing {}", pObject->getName());
 }
 
 SceneObject* TreeObjectWindow::getSelectedObject() {
 	auto* objColumn = std::dynamic_pointer_cast<SceneObject>(tree.getSelectedItem()).get();
 	if (!objColumn) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to get selected object");
 		msg->setMessage("TreeView selected object is not the TreeObjectColumns*");
 

@@ -6,13 +6,13 @@
 #define TESTSCENE_H
 #include "Scene.h"
 
-class TestScene : public n::sdk::main::Scene {
+class TestScene : public mer::sdk::main::Scene {
 public:
 	using ResourceT = TestScene;
 
-	n::engine::utils::ReportMessagePtr preloadScene(
-		const std::shared_ptr<n::sdk::main::ResourceRequests> &pRequests) override;
-	n::engine::utils::ReportMessagePtr initScene() override;
+	mer::sdk::utils::ReportMessagePtr preloadScene(
+		const std::shared_ptr<mer::sdk::main::ResourceRequests> &pRequests) override;
+	mer::sdk::utils::ReportMessagePtr initScene() override;
 };
 
 

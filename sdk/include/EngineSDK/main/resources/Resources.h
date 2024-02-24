@@ -10,12 +10,12 @@
 
 #include "IResource.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class RegularRequest;
 class LazyRequest;
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class LazyResource;
 class IResource;
 
@@ -114,7 +114,7 @@ public:
 	void clear() {resources.clear();}
 };
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //RESOURCES_H

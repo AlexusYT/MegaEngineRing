@@ -6,4 +6,4 @@
 
 #include <Globals.h>
 
-n::core::mvp::ModelStartup::ModelStartup() : name("Untitled"), path(Globals::getProjectsPath() / name) {}
+mer::editor::mvp::ModelStartup::ModelStartup() : name("Untitled"), path(Globals::getProjectsPath() / name) {}

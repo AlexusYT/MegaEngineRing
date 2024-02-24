@@ -11,11 +11,11 @@
 #include "CppClass.h"
 #include "CppClassMember.h"
 
-namespace n::core::project {
+namespace mer::editor::project {
 class CppClass;
 }
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class CppMethod : public CppClassMember, public std::enable_shared_from_this<CppMethod> {
 	std::string name;
 	std::string returnType;
@@ -206,7 +206,7 @@ public:
 		return ss.str();
 	}
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 
 #endif //CPPMETHOD_H

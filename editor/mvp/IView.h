@@ -6,7 +6,7 @@
 #define IVIEW_H
 #include "ThreadDispatcher.h"
 
-namespace n::core::mvp {
+namespace mer::editor::mvp {
 class IView : public ThreadDispatcher {
 public:
 	virtual ~IView() = default;
@@ -15,7 +15,7 @@ public:
 
 	virtual void closeWindow() = 0;
 };
-} // namespace n::core::mvp
+} // namespace mer::editor::mvp
 
 
 #endif //IVIEW_H

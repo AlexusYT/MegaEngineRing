@@ -9,11 +9,11 @@
 #include "IModelStartup.h"
 #include "IViewStartup.h"
 
-namespace n::core::project {
+namespace mer::editor::project {
 class Project;
 }
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IModelStartup;
 class IViewStartup;
 
@@ -27,12 +27,12 @@ public:
 	PresenterStartup(const std::shared_ptr<IViewStartup> &pView, const std::shared_ptr<IModelStartup> &pModel);
 
 private:
-	static engine::utils::ReportMessagePtr initProject(const std::shared_ptr<project::Project> &pProject);
+	static sdk::utils::ReportMessagePtr initProject(const std::shared_ptr<project::Project> &pProject);
 
 	void openProjectCreatingWindow(const std::shared_ptr<project::Project> &pProject) const;
 
 	void openMainWindow(const std::shared_ptr<project::Project> &pProject) const;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //PRESENTERSTARTUP_H

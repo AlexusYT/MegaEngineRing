@@ -8,7 +8,7 @@
 
 #include "IModelAppInfo.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 class ModelAppInfo : public IModelAppInfo {
 	project::ApplicationInfo* info{};
@@ -24,6 +24,6 @@ public:
 	void setProject(const std::shared_ptr<project::Project> &pProject) override { project = pProject; }
 };
 
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //MODELAPPINFO_H

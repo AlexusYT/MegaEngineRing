@@ -18,7 +18,7 @@
 #include "project/Project.h"
 #include "project/generatedFiles/SceneInfo.h"
 
-namespace n::core::mvp {
+namespace mer::editor::mvp {
 std::shared_ptr<sdk::main::ILoadedResources> loadedResources;
 
 PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEditor> &pViewSceneEditor,
@@ -30,7 +30,7 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 		if (project->getEditorLibLoading()) {
 			notifyLoadingStarted();
 		} else {
-			if (const engine::utils::ReportMessagePtr msg = project->getEditorLibError()) notifyLoadingStopped(msg);
+			if (const sdk::utils::ReportMessagePtr msg = project->getEditorLibError()) notifyLoadingStopped(msg);
 			else
 				notifyLoadingStopped(nullptr);
 		}
@@ -68,21 +68,21 @@ void PresenterSceneEditor::notifyLoadingStarted() const {
 		[this](const std::promise<void> & /*pPromise*/) { viewSceneEditor->onLoadingStarted(); });
 }
 
-void PresenterSceneEditor::notifyLoadingStopped(const engine::utils::ReportMessagePtr &pError) const {
-	engine::utils::ReportMessagePtr error = !pError ? loadScene() : pError;
+void PresenterSceneEditor::notifyLoadingStopped(const sdk::utils::ReportMessagePtr &pError) const {
+	sdk::utils::ReportMessagePtr error = !pError ? loadScene() : pError;
 	viewSceneEditor->executeInMainThread([this, error](const std::promise<void> & /*pPromise*/) {
 		viewSceneEditor->redraw();
 		viewSceneEditor->onLoadingStopped(error);
 	});
 }
 
-engine::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
+sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	auto sceneInfo = modelSceneEditor->getSceneInfo();
 	auto functionName = "load" + sceneInfo->getName();
 	auto project = modelSceneEditor->getProject();
 	auto func = dlsym(project->getEditorLib(), functionName.c_str());
 	if (!func) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to get scene entry point");
 		msg->addInfoLine("Function name: {}", functionName);
 		msg->addInfoLine("Scene name: {}", sceneInfo->getName());
@@ -95,7 +95,7 @@ engine::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 
 		scene = std::shared_ptr<sdk::main::IScene>(startFunc());
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to get scene entry point");
 		msg->setMessage("Load function thrown an exception");
 		msg->addInfoLine("Function name: {}", functionName);
@@ -103,7 +103,7 @@ engine::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 		return msg;
 	}
 	if (!scene) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to get scene entry point");
 		msg->setMessage("Load function returned nullptr");
 		msg->addInfoLine("Function name: {}", functionName);
@@ -116,7 +116,7 @@ engine::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	auto requests = std::make_shared<sdk::main::ResourceRequests>();
 	if (auto msg = scene->preloadScene(requests)) return msg;
 	auto sdk = project->getEditorSdkLib();
-	void* sym = dlsym(sdk, "_ZN1n3sdk4main15LoadedResources6createEv");
+	void* sym = dlsym(sdk, "_ZN3mer3sdk4main15LoadedResources6createEv");
 	loadedResources = reinterpret_cast<std::shared_ptr<sdk::main::ILoadedResources> (*)()>(sym)();
 	auto resources = loadedResources->executeRequests(requests, scene);
 
@@ -125,4 +125,4 @@ engine::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	if (auto msg = scene->initScene()) return msg;
 	return nullptr;
 }
-} // namespace n::core::mvp
+} // namespace mer::editor::mvp

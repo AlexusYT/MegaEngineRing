@@ -6,7 +6,7 @@
 
 #include <ui/utils/ErrorDialog.h>
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 TreeWidget::TreeWidget() {
 
 	/*Glib::RefPtr<Gtk::GestureClick> refGesture = Gtk::GestureClick::create();
@@ -41,7 +41,7 @@ void TreeWidget::onRightClick(int /*pNPress*/, double x, double y,
 	auto* widget = pGestureClick->get_widget();
 	auto* data = widget->get_data("contextSelectedObject");
 	if (!data) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to get context selected object");
 		msg->setMessage("Widget has no data named contextSelectedObject");
 		msg->addInfoLine("This is an error in the TreeWidget logic");
@@ -74,4 +74,4 @@ void TreeWidget::onLeftClick(int pNPress, double /*x*/, double /*y*/,
 	}
 }
 
-} // namespace UI_CORE
+} // namespace mer::editor::ui

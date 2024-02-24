@@ -10,7 +10,7 @@
 #include "EngineSDK/renderer/buffers/ISSBO.h"
 #include "IShader.h"
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 
 ShaderProgram::ShaderProgram() { name = glCreateProgram(); }
 
@@ -89,4 +89,4 @@ void ShaderProgram::setUniform(const std::string &pName, const glm::vec4 &pValue
 void ShaderProgram::setUniform(const std::string &pName, const glm::mat4 &pValue) const {
 	glUniformMatrix4fv(glGetUniformLocation(name, pName.c_str()), 1, GL_FALSE, &pValue[0][0]);
 }
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
