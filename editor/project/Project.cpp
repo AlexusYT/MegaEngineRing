@@ -18,7 +18,7 @@
 #include "toolchain/ToolchainSettings.h"
 #include "ui/widgetWindows/projectExplorer/DirectoryEntry.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()) {
 
 	auto obj = SceneObject::create<World>();
@@ -36,13 +36,13 @@ Project::~Project() {
 	if (editorLib) dlclose(editorLib);
 }
 
-engine::utils::ReportMessagePtr Project::openDatabase() {
+sdk::utils::ReportMessagePtr Project::openDatabase() {
 
 	try {
 		database = std::make_shared<SQLite::Database>(projectPath / (projectName + ".enproj"),
 													  SQLite::OPEN_CREATE | SQLite::OPEN_READWRITE);
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to connect to database");
 		return msg;
 	}
@@ -61,7 +61,7 @@ void Project::initProject() {
 	projectExplorerEntries->append(engineFileEntries);
 }
 
-engine::utils::ReportMessagePtr Project::loadProject() {
+sdk::utils::ReportMessagePtr Project::loadProject() {
 
 	if (auto msg = engineFileEntries->loadDatabase()) return msg;
 	if (auto msg = saveFiles()) return msg;
@@ -70,28 +70,28 @@ engine::utils::ReportMessagePtr Project::loadProject() {
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr Project::saveProject() const {
-	engine::utils::Logger::info("Saving project...");
+sdk::utils::ReportMessagePtr Project::saveProject() const {
+	sdk::utils::Logger::info("Saving project...");
 	try {
 		database->backup((database->getFilename() + ".bak").c_str(), SQLite::Database::Save);
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to save project");
 		msg->setMessage("Exception occurred while backup");
 		return msg;
 	}
 	if (auto msg = engineFileEntries->saveDatabase()) return msg;
-	engine::utils::Logger::info("Project saved");
+	sdk::utils::Logger::info("Project saved");
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr Project::saveFiles() const {
+sdk::utils::ReportMessagePtr Project::saveFiles() const {
 	if (auto msg = engineFileEntries->saveToCmake()) return msg;
 	if (auto msg = engineFileEntries->saveFile()) return msg;
 	return nullptr;
 }
 
-n::engine::utils::ReportMessagePtr Project::generateMainFile() const {
+mer::sdk::utils::ReportMessagePtr Project::generateMainFile() const {
 
 	const auto sourcesPath = projectPath / "source/main";
 	CppSourceFile sourceFile;
@@ -101,7 +101,7 @@ n::engine::utils::ReportMessagePtr Project::generateMainFile() const {
 	main->setReturnType("int");
 	main->setName("main");
 	main->setParamsList({"int argc", "char* argv[]"});
-	main->addStatement(CppCustomStatement::create("using namespace n::sdk::main"));
+	main->addStatement(CppCustomStatement::create("using namespace mer::sdk::main"));
 	main->addStatement(CppCustomStatement::create("Application app"));
 	main->addStatement(
 		CppMethodCall::create("app.setApplicationSettings", {"std::make_shared<ApplicationSettings>()"}));
@@ -119,11 +119,11 @@ Glib::RefPtr<Gio::SimpleActionGroup> Project::getActionGroups() const {
 void Project::requestRebuildEditorLib() {
 	std::thread([this] {
 		editorLibLoadStarted();
-		int result = reloadCMake([](const std::string &pLine) { engine::utils::Logger::info(pLine); },
-								 [](const std::string &pLine) { engine::utils::Logger::error(pLine); });
+		int result = reloadCMake([](const std::string &pLine) { sdk::utils::Logger::info(pLine); },
+								 [](const std::string &pLine) { sdk::utils::Logger::error(pLine); });
 		if (result != 0) {
 
-			auto msg = engine::utils::ReportMessage::create();
+			auto msg = sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to open editor library");
 			msg->setMessage("Cmake failed");
 			editorLibLoadErrored(msg);
@@ -132,11 +132,11 @@ void Project::requestRebuildEditorLib() {
 		using namespace std::chrono_literals;
 		std::this_thread::sleep_for(1s);
 		result = build(
-			"_EDITOR_TMP_", [](const std::string &pLine) { engine::utils::Logger::info(pLine); },
-			[](const std::string &pLine) { engine::utils::Logger::error(pLine); });
+			"_EDITOR_TMP_", [](const std::string &pLine) { sdk::utils::Logger::info(pLine); },
+			[](const std::string &pLine) { sdk::utils::Logger::error(pLine); });
 		if (result != 0) {
 
-			auto msg = engine::utils::ReportMessage::create();
+			auto msg = sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to open editor library");
 			msg->setMessage("Library compilation failed");
 			editorLibLoadErrored(msg);
@@ -145,7 +145,7 @@ void Project::requestRebuildEditorLib() {
 		auto path = (getProjectBuildPath() / "lib_EDITOR_TMP_.so").string();
 		editorLib = dlopen((path).c_str(), RTLD_LAZY | RTLD_GLOBAL);
 		if (!editorLib) {
-			auto msg = engine::utils::ReportMessage::create();
+			auto msg = sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to open editor library");
 			msg->setMessage("The function dlopen() returned error");
 			msg->addInfoLine("Path: {}", path);
@@ -201,9 +201,9 @@ void Project::editorLibLoadFinished() {
 	onEditorLibLoadedSignal(nullptr);
 }
 
-void Project::editorLibLoadErrored(const engine::utils::ReportMessagePtr &pError) {
+void Project::editorLibLoadErrored(const sdk::utils::ReportMessagePtr &pError) {
 	editorLibLoading = false;
 	editorLibError = pError;
 	onEditorLibLoadedSignal(pError);
 }
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project

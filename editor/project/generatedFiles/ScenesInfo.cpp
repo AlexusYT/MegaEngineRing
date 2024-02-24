@@ -6,7 +6,7 @@
 
 #include <project/Project.h>
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 ScenesInfo::ScenesInfo(const std::shared_ptr<Project> &pProject) : GeneratedFileEntry(pProject) {
 	setEntryChildren(Gio::ListStore<ProjectExplorerEntry>::create());
 	setName("Сцены");
@@ -32,7 +32,7 @@ void ScenesInfo::getActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pAct
 	});
 }
 
-engine::utils::ReportMessagePtr ScenesInfo::onLoadDatabase() {
+sdk::utils::ReportMessagePtr ScenesInfo::onLoadDatabase() {
 
 	const auto database = getProject()->getDatabase();
 
@@ -44,14 +44,14 @@ engine::utils::ReportMessagePtr ScenesInfo::onLoadDatabase() {
 		SQLite::Statement statement(*database, "SELECT * FROM Scenes");
 		while (statement.executeStep()) {
 			std::string sceneName = statement.getColumn(1);
-			engine::utils::ReportMessagePtr msg;
+			sdk::utils::ReportMessagePtr msg;
 			auto uuid = UUID::parse(statement.getColumn(2), msg);
 			if (!uuid) return msg;
 			auto sceneInfo = SceneInfo::create(getProject(), sceneName, uuid);
 			addChildEntry(sceneInfo);
 		}
 	} catch (...) {
-		auto msg = n::engine::utils::ReportMessage::create();
+		auto msg = mer::sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to parse Scenes info");
 		msg->setMessage("Exception occurred while querying the Scenes info");
 		return msg;
@@ -59,7 +59,7 @@ engine::utils::ReportMessagePtr ScenesInfo::onLoadDatabase() {
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr ScenesInfo::onSaveDatabase() const {
+sdk::utils::ReportMessagePtr ScenesInfo::onSaveDatabase() const {
 	auto database = getProject()->getDatabase();
 
 	if (auto msg = createTable()) return msg;
@@ -70,7 +70,7 @@ engine::utils::ReportMessagePtr ScenesInfo::onSaveDatabase() const {
 	try {
 		transaction = std::make_unique<SQLite::Transaction>(*database);
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to save Scenes into database");
 		msg->setMessage("Exception occurred while starting transaction");
 		return msg;
@@ -90,7 +90,7 @@ INSERT INTO Scenes (SceneName, SceneUUID) VALUES (?, ?)
 		}
 	} catch (...) {
 		transaction->rollback();
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to create Scenes table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -100,7 +100,7 @@ INSERT INTO Scenes (SceneName, SceneUUID) VALUES (?, ?)
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr ScenesInfo::createTable() const {
+sdk::utils::ReportMessagePtr ScenesInfo::createTable() const {
 	try {
 		//language=sql
 		getProject()->getDatabase()->exec(R"(DROP TABLE IF EXISTS Scenes;
@@ -114,7 +114,7 @@ CREATE TABLE Scenes
 );
 )");
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to create Scenes table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;

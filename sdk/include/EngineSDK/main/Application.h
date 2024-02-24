@@ -11,13 +11,13 @@
 
 	#include "IApplicationSettings.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 
 class Application {
 	std::shared_ptr<IApplicationSettings> applicationSettings;
 
 public:
-	engine::utils::ReportMessagePtr initEngine();
+	sdk::utils::ReportMessagePtr initEngine();
 
 	int runMainLoop(int argc, char* argv[]);
 
@@ -29,7 +29,7 @@ public:
 		applicationSettings = pApplicationSettings;
 	}
 };
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 #endif
 

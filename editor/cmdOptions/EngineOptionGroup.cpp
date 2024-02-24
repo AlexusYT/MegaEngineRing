@@ -9,7 +9,7 @@
 #include "options/SdkPathOption.h"
 #include "options/SdkVersionOption.h"
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 EngineOptionGroup::EngineOptionGroup() : OptionGroup("engine-options", "Engine options", "Engine options") {
 	optionEntries.emplace_back(std::make_unique<LogPathOption>(this));
 	optionEntries.emplace_back(std::make_unique<SdkPathOption>(this));
@@ -26,4 +26,4 @@ bool EngineOptionGroup::on_post_parse(Glib::OptionContext &pContext) { return Op
 void EngineOptionGroup::on_error(Glib::OptionContext &pContext, const Glib::Error &pError) {
 	OptionGroup::on_error(pContext, pError);
 }
-} // namespace UTILS_CORE
+} // namespace mer::editor::utils

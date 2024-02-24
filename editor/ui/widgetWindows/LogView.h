@@ -5,7 +5,7 @@
 #ifndef LOGVIEW_H
 #define LOGVIEW_H
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 class LogView {
 	Gtk::Box mainBox;
 	Gtk::TextView logText;
@@ -36,6 +36,6 @@ public:
 		newMessages.emplace_back(pMessage);
 	}
 };
-} // namespace UI_CORE
+} // namespace mer::editor::ui
 
 #endif //LOGVIEW_H

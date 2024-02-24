@@ -6,7 +6,7 @@
 #define GL_H
 #include <cstdint>
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 
 enum class ClearBits : uint32_t {
 
@@ -15,7 +15,7 @@ enum class ClearBits : uint32_t {
 	STENCIL_BUFFER_BIT
 
 
-}; // namespace n::sdk::renderer
+}; // namespace mer::sdk::renderer
 
 constexpr ClearBits operator&(ClearBits pX, ClearBits pY) noexcept {
 	using utype = std::underlying_type_t<ClearBits>;
@@ -52,7 +52,7 @@ public:
 	static void clear(ClearBits pMask);
 };
 
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 
 
 #endif //GL_H

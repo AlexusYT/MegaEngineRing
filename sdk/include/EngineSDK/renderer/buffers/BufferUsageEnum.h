@@ -5,7 +5,7 @@
 #ifndef BUFFERUSAGEENUM_H
 #define BUFFERUSAGEENUM_H
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 
 enum BufferUsageEnum {
 	STREAM_DRAW = 0x88E0,

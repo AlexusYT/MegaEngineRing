@@ -5,7 +5,7 @@
 #ifndef IVIEWSTARTUP_H
 #define IVIEWSTARTUP_H
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 class IViewStartup {
 public:
@@ -54,7 +54,7 @@ public:
 
 	virtual void closeWindow() = 0;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //IVIEWSTARTUP_H

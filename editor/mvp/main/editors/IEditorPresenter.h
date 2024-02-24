@@ -5,7 +5,7 @@
 #ifndef IEDITOR_H
 #define IEDITOR_H
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 class IEditorPresenter {
 public:
@@ -16,6 +16,6 @@ public:
 	virtual sigc::connection connectTabHeaderChanged(const sigc::slot<void(const std::string &pName)> &pSlot) = 0;
 };
 
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //IEDITOR_H

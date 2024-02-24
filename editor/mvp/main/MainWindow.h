@@ -14,7 +14,7 @@
 #include "graphic/viewport/OpenGLFwd.h"
 #include "project/ProjectFwd.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class MainWindow : public IViewMain, public Gtk::Window {
 	std::vector<ui::LogView> logs{3};
 
@@ -28,7 +28,7 @@ class MainWindow : public IViewMain, public Gtk::Window {
 
 public:
 	static std::shared_ptr<MainWindow> create(const std::shared_ptr<project::Project> &pProject,
-											  engine::utils::ReportMessagePtr &pReportMessage);
+											  sdk::utils::ReportMessagePtr &pReportMessage);
 
 	bool reloadUi = false;
 	OpenGLUPtr render;
@@ -77,8 +77,8 @@ public:
 		insert_action_group(pName, pActionGroup);
 	}
 
-	void reportError(const engine::utils::ReportMessagePtr &pError) override {
-		if (pError) engine::utils::Logger::error(pError);
+	void reportError(const sdk::utils::ReportMessagePtr &pError) override {
+		if (pError) sdk::utils::Logger::error(pError);
 	}
 
 	void addWindow(const std::shared_ptr<Gtk::Window> & /*pWindow*/) override {}
@@ -87,6 +87,6 @@ public:
 
 protected:
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //MAINWINDOW_H

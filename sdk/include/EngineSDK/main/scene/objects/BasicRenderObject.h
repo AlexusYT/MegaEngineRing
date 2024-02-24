@@ -6,7 +6,7 @@
 #define BASICRENDEROBJECT_H
 #include "SceneObject.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class BasicRenderObject : public SceneObject {
 public:
 	uint32_t vbo;
@@ -14,11 +14,11 @@ public:
 private:
 	void fillResourceRequests(const std::shared_ptr<ResourceRequests> &pRequests) override;
 
-	engine::utils::ReportMessagePtr init() override;
+	sdk::utils::ReportMessagePtr init() override;
 
 	void render() override;
 };
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //BASICRENDEROBJECT_H

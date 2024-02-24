@@ -10,7 +10,7 @@
 #include "IModelAppInfo.h"
 #include "IViewAppInfo.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 PresenterAppInfo::PresenterAppInfo(const std::shared_ptr<IViewAppInfo> &pViewAppInfo,
 								   const std::shared_ptr<IModelAppInfo> &pModelAppInfo)
@@ -34,4 +34,4 @@ PresenterAppInfo::PresenterAppInfo(const std::shared_ptr<IViewAppInfo> &pViewApp
 }
 
 PresenterAppInfo::operator Gtk::Widget&() { return viewAppInfo->getMainWidget(); }
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp

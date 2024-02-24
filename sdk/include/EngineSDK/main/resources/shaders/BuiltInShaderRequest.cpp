@@ -8,10 +8,10 @@
 #include <EngineSDK/renderer/shaders/VertexShader.h>
 #include <EngineUtils/utils/ReportMessage.h>
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 
 std::shared_ptr<IResource> BuiltInShaderLoader::load(const std::shared_ptr<ResourceRequest> &pRequest,
-													 const engine::utils::ReportMessagePtr &pError,
+													 const sdk::utils::ReportMessagePtr &pError,
 													 const std::shared_ptr<Resources> & /*pDependencies*/) {
 	std::shared_ptr<renderer::Shader> result;
 	if (auto fragRequest = std::dynamic_pointer_cast<BuiltInFragmentShaderRequest>(pRequest)) {
@@ -110,4 +110,4 @@ void main(){
 	return result;
 }
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main

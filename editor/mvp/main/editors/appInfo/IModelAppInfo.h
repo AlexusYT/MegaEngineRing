@@ -5,7 +5,7 @@
 #ifndef IMODELAPPINFO_H
 #define IMODELAPPINFO_H
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IModelAppInfo {
 public:
 	virtual ~IModelAppInfo() = default;
@@ -19,6 +19,6 @@ public:
 	virtual void setProject(const std::shared_ptr<project::Project> &pProject) = 0;
 
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //IMODELAPPINFO_H

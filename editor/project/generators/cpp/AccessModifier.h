@@ -5,7 +5,7 @@
 #ifndef ACCESSMODIFIER_H
 #define ACCESSMODIFIER_H
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 enum class AccessModifier { PUBLIC, PROTECTED, PRIVATE };
 
 inline const char* to_string(const AccessModifier pE) {
@@ -16,7 +16,7 @@ inline const char* to_string(const AccessModifier pE) {
 		default: return "";
 	}
 }
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 
 #endif //ACCESSMODIFIER_H

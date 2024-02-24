@@ -10,11 +10,11 @@
 
 #include "IResource.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class ResourceRequest;
 }
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class LazyResource : public IResource {
 	friend class LoadedResources;
 	std::shared_ptr<ResourceRequest> request;
@@ -53,7 +53,7 @@ public:
 		return std::async(std::launch::async, [this] { return getSync(); });
 	}
 };
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //LAZYRESOURCE_H

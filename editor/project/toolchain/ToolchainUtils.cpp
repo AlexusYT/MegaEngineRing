@@ -28,13 +28,14 @@ int pipes[NUM_PIPES][2];
 #define CHILD_READ_FD (pipes[PARENT_WRITE_PIPE][READ_FD])
 #define CHILD_WRITE_FD (pipes[PARENT_READ_PIPE][WRITE_FD])
 
+namespace mer::editor::project {
 void ToolchainUtils::execute(const std::filesystem::path &pRootPath, const std::filesystem::path &pPath,
 							 const std::string &pArgs, const sigc::slot<void(const std::string &pLog)> &pCoutCallback,
 							 const sigc::slot<void(const std::string &pLog)> &pCerrCallback,
 							 const sigc::slot<void(int pReturnValue)> &pOnFinish) {
 
 	std::jthread thrd([pArgs, pPath, pCoutCallback, pCerrCallback, pRootPath, pOnFinish] {
-		n::engine::utils::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
+		sdk::utils::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
 		pCoutCallback(pPath.string() + " " + pArgs + "\n");
 // pipes for parent to write and read
 #pragma GCC diagnostic push
@@ -114,7 +115,7 @@ int ToolchainUtils::executeSync(const std::filesystem::path &pRootPath, const st
 								const sigc::slot<void(const std::string &pLog)> &pCoutCallback,
 								const sigc::slot<void(const std::string &pLog)> &pCerrCallback) {
 
-	n::engine::utils::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
+	sdk::utils::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
 	pCoutCallback(pPath.string() + " " + pArgs + "\n");
 	// pipes for parent to write and read
 
@@ -183,13 +184,13 @@ int ToolchainUtils::executeSync(const std::filesystem::path &pRootPath, const st
 	if (pid > 0) {
 		int wstatus;
 		waitpid(pid, &wstatus, 0); // Store proc info into wstatus
-		n::engine::utils::Logger::info("Command {} finished with {}", pPath.string(), wstatus);
+		sdk::utils::Logger::info("Command {} finished with {}", pPath.string(), wstatus);
 		return WEXITSTATUS(wstatus);
 	}
 	return 1;
 }
 
-n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakeListsFile(const std::filesystem::path &pPath) {
+sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeListsFile(const std::filesystem::path &pPath) {
 	//language=cmake
 	return writeFile(pPath, R"(
 
@@ -263,7 +264,7 @@ include(cmake/internal/dev-mode.cmake)
 )");
 }
 
-n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakePresetsFile(const std::filesystem::path &pPath) {
+sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakePresetsFile(const std::filesystem::path &pPath) {
 	return writeFile(pPath, R"({
 	"version": 2,
 	"cmakeMinimumRequired": {
@@ -456,7 +457,7 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakePresetsFile(cons
 })");
 }
 
-n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(const std::filesystem::path &pPath) {
+sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(const std::filesystem::path &pPath) {
 	//TODO MER-11
 	std::stringstream content;
 	content << R"({
@@ -565,7 +566,7 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(
 	return writeFile(pPath, content.str());
 }
 
-n::engine::utils::ReportMessagePtr ToolchainUtils::generateVcpkgManifestFile(const std::filesystem::path &pPath) {
+sdk::utils::ReportMessagePtr ToolchainUtils::generateVcpkgManifestFile(const std::filesystem::path &pPath) {
 	//language=json
 	return writeFile(pPath, R"(
 {
@@ -611,7 +612,7 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::generateVcpkgManifestFile(con
 )");
 }
 
-n::engine::utils::ReportMessagePtr ToolchainUtils::generateCMakeDirectory(const std::filesystem::path &pPath) {
+sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeDirectory(const std::filesystem::path &pPath) {
 	const auto internalPath = pPath / "internal";
 	create_directory(internalPath);
 	if (auto msg = writeFile(internalPath / "general.cmake", R"(if( NOT ENGINE_SDK_PATH)
@@ -772,11 +773,11 @@ endif ()
 	return nullptr;
 }
 
-n::engine::utils::ReportMessagePtr ToolchainUtils::writeFile(const std::filesystem::path &pPath,
-															 const std::string &pContents) {
+sdk::utils::ReportMessagePtr ToolchainUtils::writeFile(const std::filesystem::path &pPath,
+													   const std::string &pContents) {
 	create_directories(pPath.parent_path());
 	if (!exists(pPath.parent_path())) {
-		auto msg = n::engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to write file");
 		msg->setMessage("Parent directory doesn't exists");
 		msg->addInfoLine("File path: {}", pPath.string());
@@ -790,3 +791,4 @@ n::engine::utils::ReportMessagePtr ToolchainUtils::writeFile(const std::filesyst
 	if (time) last_write_time(pPath, time.value());
 	return nullptr;
 }
+} // namespace mer::editor::project

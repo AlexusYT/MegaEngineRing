@@ -6,7 +6,7 @@
 #define OBJECTTREE_H
 #include <ui/utils/ErrorDialog.h>
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 
 class TreeWidget : public Gtk::ColumnView {
 public:
@@ -72,7 +72,7 @@ public:
 		auto* widget = popoverMenu.get_parent();
 		auto* data = widget->get_data("contextSelectedObject");
 		if (!data) {
-			auto msg = engine::utils::ReportMessage::create();
+			auto msg = sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to get context selected object");
 			msg->setMessage("Widget has no data named contextSelectedObject");
 			msg->addInfoLine("This is an error in the TreeWidget logic");
@@ -114,6 +114,6 @@ protected:
 	void onLeftClick(int pNPress, double x, double y, const Glib::RefPtr<Gtk::GestureClick> &);
 };
 
-} // namespace UI_CORE
+} // namespace mer::editor::ui
 
 #endif //OBJECTTREE_H

@@ -16,7 +16,7 @@
 //#include "Render/opengl/shaders/ShaderProgram.h"
 //#include "graphic/renderers/SceneMeshFwd.h"
 
-class OpenGL final : public n::sdk::main::IWindow, public n::core::graphics::EngineContext {
+class OpenGL final : public mer::sdk::main::IWindow, public mer::editor::graphics::EngineContext {
 	friend Camera;
 	glm::ivec2 size{};
 	CameraUPtr camera;
@@ -38,7 +38,7 @@ public:
 
 	~OpenGL();
 
-	n::engine::utils::ReportMessagePtr init() override;
+	mer::sdk::utils::ReportMessagePtr init() override;
 
 	void swapBuffers() const override {}
 

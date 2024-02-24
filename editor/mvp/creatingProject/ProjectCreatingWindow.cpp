@@ -8,7 +8,7 @@
 
 #include "ui/widgetWindows/LogView.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 ProjectCreatingWindow::ProjectCreatingWindow() : cancelButton("Отмена") {
 	Gtk::Box box(Gtk::Orientation::VERTICAL);
 	set_child(box);
@@ -31,8 +31,8 @@ void ProjectCreatingWindow::addMessageToLog(const std::string &pMessage) {
 	logView.scrollToEnd();
 }
 
-void ProjectCreatingWindow::reportError(engine::utils::ReportMessagePtr pMessage) {
-	engine::utils::Logger::error(pMessage);
+void ProjectCreatingWindow::reportError(sdk::utils::ReportMessagePtr pMessage) {
+	sdk::utils::Logger::error(pMessage);
 }
 
 }

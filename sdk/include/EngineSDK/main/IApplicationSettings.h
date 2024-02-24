@@ -7,14 +7,14 @@
 
 #include <EngineSDK/utils/Property.h>
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 
 class IApplicationSettings {
 public:
 	IApplicationSettings() = default;
 	virtual ~IApplicationSettings() = default;
 
-	virtual engine::utils::ReportMessagePtr init() = 0;
+	virtual sdk::utils::ReportMessagePtr init() = 0;
 
 	[[nodiscard]] virtual const utils::Property<std::string> &getLogsDirectory() const = 0;
 
@@ -29,6 +29,6 @@ public:
 	virtual void setApplicationDisplayName(const std::string &pApplicationDisplayName) = 0;
 };
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 #endif //IAPPLICATIONSETTINGS_H

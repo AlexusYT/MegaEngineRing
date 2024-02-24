@@ -3,3 +3,5 @@
 //
 
 #include "ToolchainSettings.h"
+
+namespace mer::editor::project {}

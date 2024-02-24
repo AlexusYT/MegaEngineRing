@@ -6,7 +6,7 @@
 #define CPPHEADERFILE_H
 #include "CppFile.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class CppHeaderFile : public CppFile {
 
 public:
@@ -22,7 +22,7 @@ public:
 
 	bool isHeader() override { return false; }
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 
 #endif //CPPHEADERFILE_H

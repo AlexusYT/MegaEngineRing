@@ -6,7 +6,7 @@
 #define PRESENTERAPPINFO_H
 #include <mvp/main/editors/IEditorPresenter.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IViewAppInfo;
 class IModelAppInfo;
 
@@ -26,6 +26,6 @@ public:
 	}
 };
 
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //PRESENTERAPPINFO_H

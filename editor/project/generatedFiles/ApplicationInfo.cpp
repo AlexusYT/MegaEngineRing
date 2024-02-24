@@ -17,7 +17,7 @@
 #include "project/generators/cpp/CppGenerator.h"
 #include "project/generators/cpp/CppMethod.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 ApplicationInfo::ApplicationInfo(const std::shared_ptr<Project> &pProject) : GeneratedFileEntry(pProject) {
 	setName("Настройки приложения");
 	propertiesList = Gio::ListStore<AppInfoProperty>::create();
@@ -27,7 +27,7 @@ ApplicationInfo::ApplicationInfo(const std::shared_ptr<Project> &pProject) : Gen
 	setDatabaseSaveRequired();
 }
 
-engine::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
+sdk::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
 	const auto database = getProject()->getDatabase();
 
 	if (!database->tableExists("ApplicationInfo")) return nullptr;
@@ -46,7 +46,7 @@ engine::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
 			}
 		}
 	} catch (...) {
-		auto msg = n::engine::utils::ReportMessage::create();
+		auto msg = mer::sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to parse application info");
 		msg->setMessage("Exception occurred while querying the application info");
 		return msg;
@@ -55,7 +55,7 @@ engine::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr ApplicationInfo::onSaveDatabase() const {
+sdk::utils::ReportMessagePtr ApplicationInfo::onSaveDatabase() const {
 	const auto database = getProject()->getDatabase();
 	if (auto msg = createTable(database.get())) return msg;
 
@@ -63,7 +63,7 @@ engine::utils::ReportMessagePtr ApplicationInfo::onSaveDatabase() const {
 	try {
 		transaction = std::make_unique<SQLite::Transaction>(*database);
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to save application info into database");
 		msg->setMessage("Exception occurred while starting transaction");
 		return msg;
@@ -83,7 +83,7 @@ INSERT INTO ApplicationInfo (PropertyName, PropertyValue) VALUES
 		}
 	} catch (...) {
 		transaction->rollback();
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to create application info table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -94,12 +94,12 @@ INSERT INTO ApplicationInfo (PropertyName, PropertyValue) VALUES
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr ApplicationInfo::onSaveFile() const {
+sdk::utils::ReportMessagePtr ApplicationInfo::onSaveFile() const {
 	if (auto msg = writeFile()) { return msg; }
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr ApplicationInfo::createTable(SQLite::Database* pDatabase) {
+sdk::utils::ReportMessagePtr ApplicationInfo::createTable(SQLite::Database* pDatabase) {
 	try {
 		//language=sql
 		pDatabase->exec(R"(DROP TABLE IF EXISTS ApplicationInfo;
@@ -113,7 +113,7 @@ CREATE TABLE ApplicationInfo
 );
 )");
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to create application info table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -122,12 +122,12 @@ CREATE TABLE ApplicationInfo
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
+sdk::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
 	using namespace std::string_literals;
 
 	auto method = CppMethod::create();
 	method->setName("init");
-	method->setReturnType("n::engine::utils::ReportMessagePtr");
+	method->setReturnType("mer::sdk::utils::ReportMessagePtr");
 	method->setIsOverride(true);
 	for (const auto &[optName, value]: properties) {
 		if (optName.empty() || value->getValue().empty()) continue;
@@ -138,7 +138,7 @@ engine::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
 	const auto class_ = CppClass::create();
 	method->setKlass(class_.get());
 	class_->setName("ApplicationSettings");
-	class_->addImplement("public n::sdk::main::DefaultApplicationSettings");
+	class_->addImplement("public mer::sdk::main::DefaultApplicationSettings");
 	class_->addDeclaration(method->getDeclaration(), AccessModifier::PRIVATE);
 	CppHeaderFile headerFile;
 	headerFile.addInclude("EngineSDK/main/DefaultApplicationSettings.h");
@@ -163,4 +163,4 @@ void ApplicationInfo::addProperty(std::shared_ptr<AppInfoProperty> pProperty) {
 	propertiesList->append(pProperty);
 	properties.emplace(pProperty->getName(), pProperty);
 }
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project

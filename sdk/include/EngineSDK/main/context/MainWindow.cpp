@@ -9,7 +9,7 @@
 
 	#include "ResourcesWindow.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 MainWindow::MainWindow() {
 
 	resourcesWindow = ResourcesWindow::create();
@@ -18,7 +18,7 @@ MainWindow::MainWindow() {
 	setSharedWindow(resourcesWindow);
 }
 
-engine::utils::ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene> &pNewScene) {
+sdk::utils::ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene> &pNewScene) {
 	auto requests = std::make_shared<ResourceRequests>();
 	if (auto msg = pNewScene->preloadScene(requests)) return msg;
 	auto resources = resourcesWindow->executeRequests(requests, pNewScene);
@@ -41,5 +41,5 @@ void MainWindow::runMainLoop() {
 void MainWindow::onResize(const int pWidth, const int pHeight) {
 	if (currentScene) currentScene->resize(pWidth, pHeight);
 }
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 #endif

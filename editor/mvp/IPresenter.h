@@ -5,13 +5,13 @@
 #ifndef IPRESENTER_H
 #define IPRESENTER_H
 
-namespace n::core::mvp {
+namespace mer::editor::mvp {
 class IPresenter {
 public:
 	virtual ~IPresenter() = default;
 };
 
-} // namespace n::core::mvp
+} // namespace mer::editor::mvp
 
 
 #endif //IPRESENTER_H

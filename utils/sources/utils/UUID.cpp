@@ -5,13 +5,13 @@
 #include <EngineUtils/utils/UUID.h>
 #include <regex>
 
-std::shared_ptr<UUID> UUID::parse(const std::string &pString, n::engine::utils::ReportMessagePtr &pError) {
+std::shared_ptr<UUID> UUID::parse(const std::string &pString, mer::sdk::utils::ReportMessagePtr &pError) {
 	//language=regexp
 	static std::regex regex(
 		"([0-9a-fA-F]{8})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{8})([0-9a-fA-F]{4})");
 	std::smatch matchResults;
 	if (!std::regex_match(pString, matchResults, regex)) {
-		if (!pError) pError = n::engine::utils::ReportMessage::create();
+		if (!pError) pError = mer::sdk::utils::ReportMessage::create();
 		pError->setTitle("Failed to parse the given string");
 		pError->setMessage("The string doesn't match the regex");
 		pError->addInfoLine("String to parse: {}", pString);
@@ -28,7 +28,7 @@ std::shared_ptr<UUID> UUID::parse(const std::string &pString, n::engine::utils::
 		uuid->node2 = static_cast<uint16_t>(std::stoul(matchResults[6].str(), nullptr, 16));
 		return uuid;
 	} catch (...) {
-		if (!pError) pError = n::engine::utils::ReportMessage::create();
+		if (!pError) pError = mer::sdk::utils::ReportMessage::create();
 		pError->setTitle("Failed to parse the given string");
 		pError->setMessage("Exception occurred while parsing the values");
 		pError->addInfoLine("String to parse: {}", pString);

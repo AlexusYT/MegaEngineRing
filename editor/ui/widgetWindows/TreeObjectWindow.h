@@ -7,7 +7,7 @@
 #include <project/sceneObjects/SceneObject.h>
 #include <ui/customWidgets/TreeWidget.h>
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 
 class TreeObjectWindow {
 	Gtk::Box mainBox;
@@ -41,7 +41,7 @@ private:
 	static Glib::RefPtr<Gio::Menu> createContextMenu();
 	static Glib::RefPtr<Gio::Menu> createAddContextMenu();
 };
-} // namespace UI_CORE
+} // namespace mer::editor::ui
 
 
 #endif //TREEOBJECTWINDOW_H

@@ -17,7 +17,7 @@
 #include "mvp/main/editors/sceneEditor/PresenterSceneEditor.h"
 #include "mvp/main/editors/sceneEditor/ViewSceneEditor.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 SceneInfo::SceneInfo(const std::shared_ptr<Project> &pProject) : GeneratedFileEntry(pProject) {
 	setName("Scene1");
 	uuid = UUID::create();
@@ -42,15 +42,15 @@ std::shared_ptr<mvp::IEditorPresenter> SceneInfo::openEditor() {
 	return std::make_shared<mvp::PresenterSceneEditor>(viewSceneEditor, modelSceneEditor);
 }
 
-engine::utils::ReportMessagePtr SceneInfo::onLoadDatabase() { return nullptr; }
+sdk::utils::ReportMessagePtr SceneInfo::onLoadDatabase() { return nullptr; }
 
-engine::utils::ReportMessagePtr SceneInfo::onSaveDatabase() const { return nullptr; }
+sdk::utils::ReportMessagePtr SceneInfo::onSaveDatabase() const { return nullptr; }
 
-engine::utils::ReportMessagePtr SceneInfo::onSaveFile() const { return writeFile(); }
+sdk::utils::ReportMessagePtr SceneInfo::onSaveFile() const { return writeFile(); }
 
-engine::utils::ReportMessagePtr SceneInfo::createTable() { return nullptr; }
+sdk::utils::ReportMessagePtr SceneInfo::createTable() { return nullptr; }
 
-engine::utils::ReportMessagePtr SceneInfo::writeFile() const {
+sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	using namespace std::string_literals;
 	CppSourceFile source;
 	source.addInclude(getHeaderPath().filename(), false);
@@ -61,7 +61,7 @@ engine::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	if (primaryScene) {
 		source.addInclude("EngineSDK/main/scene/IScene.h");
 		auto getPrimarySceneMethod = CppMethod::create();
-		getPrimarySceneMethod->setReturnType<std::shared_ptr<n::sdk::main::IScene>>();
+		getPrimarySceneMethod->setReturnType<std::shared_ptr<mer::sdk::main::IScene>>();
 		getPrimarySceneMethod->setName("getPrimaryScene");
 		getPrimarySceneMethod->addStatement(
 			CppCustomStatement::create(std::format("return std::make_shared<{}>()", getName())));
@@ -70,7 +70,7 @@ engine::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	source.addDefinition(createExternCBlock(getName())->getDefinition());
 
 	const std::shared_ptr<CppClass> class_ = CppClass::create(getName());
-	class_->addImplement("public n::sdk::main::Scene");
+	class_->addImplement("public mer::sdk::main::Scene");
 
 	const std::shared_ptr<CppMethod> method = createPreloadSceneMethod(class_);
 	source.addDefinition(method->getDefinition());
@@ -104,12 +104,12 @@ std::shared_ptr<CppMethod> SceneInfo::createPreloadSceneMethod(const std::shared
 	auto method = CppMethod::create();
 	method->setKlass(pClass.get());
 	method->setName("preloadScene");
-	method->setReturnType<engine::utils::ReportMessagePtr>();
+	method->setReturnType<sdk::utils::ReportMessagePtr>();
 	method->setParamsList<const std::shared_ptr<sdk::main::ResourceRequests> &>("pRequests");
 	method->setIsOverride(true);
 
-	method->addStatement(CppCustomStatement::create("using namespace n::sdk::main"));
-	method->addStatement(CppCustomStatement::create("using namespace n::engine::utils"));
+	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::main"));
+	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::utils"));
 	method->addStatement(CppCustomStatement::create("addObject(std::make_shared<BasicRenderObject>())"));
 	method->addStatement(CppCustomStatement::create("return Scene::preloadScene(pRequests)"));
 	return method;
@@ -119,13 +119,13 @@ std::shared_ptr<CppMethod> SceneInfo::createInitMethod(const std::shared_ptr<Cpp
 	auto method = CppMethod::create();
 	method->setKlass(pClass.get());
 	method->setName("initScene");
-	method->setReturnType<engine::utils::ReportMessagePtr>();
+	method->setReturnType<sdk::utils::ReportMessagePtr>();
 	method->setIsOverride(true);
-	method->addStatement(CppCustomStatement::create("using namespace n::sdk::renderer"));
-	method->addStatement(CppCustomStatement::create("using namespace n::sdk::main"));
-	method->addStatement(CppCustomStatement::create("using namespace n::engine::utils"));
+	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::renderer"));
+	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::main"));
+	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::utils"));
 	method->addStatement(CppCustomStatement::create("GL::setClearColor(0.0f, 0.0f, 0.9f, 1.0f)"));
 	method->addStatement(CppCustomStatement::create("return Scene::initScene()"));
 	return method;
 }
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project

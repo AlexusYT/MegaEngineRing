@@ -11,14 +11,14 @@
 #include "graphic/viewport/OpenGL.h"
 #include "project/Project.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<project::Project> &pProject,
-											   engine::utils::ReportMessagePtr &pReportMessage) {
+											   sdk::utils::ReportMessagePtr &pReportMessage) {
 	const auto builder = Gtk::Builder::create();
 	try {
 		builder->add_from_file(Globals::getResourcesPath() / "base.ui");
 	} catch (...) {
-		pReportMessage = engine::utils::ReportMessage::create();
+		pReportMessage = sdk::utils::ReportMessage::create();
 		pReportMessage->setTitle("Failed to init main window");
 		pReportMessage->setMessage("Error while loading UI from file");
 
@@ -28,7 +28,7 @@ std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<project::Pr
 	auto viewMain =
 		std::shared_ptr<MainWindow>(Gtk::Builder::get_widget_derived<MainWindow>(builder, "MainWindow", pProject));
 	if (!viewMain) {
-		pReportMessage = engine::utils::ReportMessage::create();
+		pReportMessage = sdk::utils::ReportMessage::create();
 		pReportMessage->setTitle("Failed to init main window");
 		pReportMessage->setMessage("Could not get the dialog");
 		return nullptr;

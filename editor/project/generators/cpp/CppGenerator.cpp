@@ -4,4 +4,4 @@
 
 #include "CppGenerator.h"
 
-namespace PROJECT_CORE {}
+namespace mer::editor::project {}

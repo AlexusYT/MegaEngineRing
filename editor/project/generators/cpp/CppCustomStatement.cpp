@@ -4,5 +4,5 @@
 
 #include "CppCustomStatement.h"
 
-namespace PROJECT_CORE {
-} // PROJECT_CORE
+namespace mer::editor::project {
+} // mer::editor::project

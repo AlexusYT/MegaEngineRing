@@ -4,5 +4,5 @@
 
 #include "ModelAppInfo.h"
 
-namespace MVP_CORE {
-} // MVP_CORE
+namespace mer::editor::mvp {
+} // mer::editor::mvp

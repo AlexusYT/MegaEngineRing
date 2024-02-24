@@ -6,7 +6,7 @@
 #define IVIEWSCENEEDITOR_H
 #include <mvp/ThreadDispatcher.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IViewSceneEditor : public ThreadDispatcher {
 public:
 	virtual ~IViewSceneEditor() = default;
@@ -30,9 +30,9 @@ public:
 
 	virtual void onLoadingStarted() = 0;
 
-	virtual void onLoadingStopped(const engine::utils::ReportMessagePtr &pError) = 0;
+	virtual void onLoadingStopped(const sdk::utils::ReportMessagePtr &pError) = 0;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //IVIEWSCENEEDITOR_H

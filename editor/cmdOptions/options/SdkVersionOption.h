@@ -6,7 +6,7 @@
 #define SDKVERSIONOPTION_H
 #include "Option.h"
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 
 class SdkVersionOption final : public Option {
 public:
@@ -16,6 +16,6 @@ public:
 						bool /*pHasValue*/) override;
 };
 
-} // namespace UTILS_CORE
+} // namespace mer::editor::utils
 
 #endif //SDKVERSIONOPTION_H

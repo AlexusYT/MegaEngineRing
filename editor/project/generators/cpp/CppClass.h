@@ -10,7 +10,7 @@
 #include "CppDeclaration.h"
 #include "CppDefinition.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class CppClass : public GeneratorElement, public std::enable_shared_from_this<CppClass> {
 	std::string name;
 	std::list<std::string> implementsList;
@@ -107,7 +107,7 @@ public:
 	}
 };
 
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 
 #endif //CPPCLASS_H

@@ -6,11 +6,11 @@
 #define CPPEXTERNC_H
 #include "CppDefinition.h"
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class CppExternC : public std::enable_shared_from_this<CppExternC> {
 	std::list<std::shared_ptr<CppDefinition>> definitions;
 
-	class CppExternCDefinition : public n::core::project::CppDefinition {
+	class CppExternCDefinition : public mer::editor::project::CppDefinition {
 		std::shared_ptr<CppExternC> parent;
 
 	public:
@@ -44,6 +44,6 @@ public:
 		return ss.str();
 	}
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //CPPEXTERNC_H

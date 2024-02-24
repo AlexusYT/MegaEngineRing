@@ -7,11 +7,11 @@
 #include <mvp/IView.h>
 #include <ui/customWidgets/TreeWidget.h>
 
-namespace n::core::project {
+namespace mer::editor::project {
 class AppInfoProperty;
-} // namespace n::core::project
+} // namespace mer::editor::project
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 class IViewAppInfo : public IView {
 public:
@@ -26,6 +26,6 @@ public:
 	virtual void setValueChangedSlot(const ValueChangedSlot &pValueChangedSlot) = 0;
 };
 
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //IVIEWAPPINFO_H

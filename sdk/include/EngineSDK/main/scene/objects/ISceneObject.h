@@ -6,7 +6,7 @@
 #define ISCENEOBJECT_H
 #include <EngineUtils/utils/ReportMessageFwd.h>
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class ResourceRequests;
 class Resources;
 
@@ -20,11 +20,11 @@ public:
 
 	virtual void setResources(const std::shared_ptr<Resources> &pResources) = 0;
 
-	virtual engine::utils::ReportMessagePtr init() = 0;
+	virtual sdk::utils::ReportMessagePtr init() = 0;
 
 	virtual void render() = 0;
 };
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 #endif //ISCENEOBJECT_H

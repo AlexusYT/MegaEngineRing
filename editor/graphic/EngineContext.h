@@ -7,7 +7,7 @@
 
 #include <EngineSDK/main/context/IContext.h>
 
-namespace n::core::graphics {
+namespace mer::editor::graphics {
 class EngineContext : public sdk::main::IContext {
 
 	Gtk::GLArea* area;
@@ -17,12 +17,12 @@ public:
 
 	void makeCurrent() override {
 		area->make_current();
-		engine::utils::Logger::out("Test");
+		sdk::utils::Logger::out("Test");
 	}
 
 	[[nodiscard]] Gtk::GLArea* getArea() const { return area; }
 };
-} // namespace n::core::graphics
+} // namespace mer::editor::graphics
 
 
 #endif //ENGINECONTEXT_H

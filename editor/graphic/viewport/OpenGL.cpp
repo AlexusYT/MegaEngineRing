@@ -34,7 +34,7 @@ OpenGL::OpenGL(Gtk::GLArea* pArea) : EngineContext(pArea) {
 
 OpenGL::~OpenGL() {}
 
-n::engine::utils::ReportMessagePtr OpenGL::init() {
+mer::sdk::utils::ReportMessagePtr OpenGL::init() {
 
 	camera = Camera::create(this);
 	if (!camera) {

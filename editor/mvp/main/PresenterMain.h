@@ -6,12 +6,12 @@
 #define PRESENTERMAIN_H
 #include <mvp/IPresenter.h>
 
-namespace n::core::mvp {
+namespace mer::editor::mvp {
 class IViewMain;
 class IModelMain;
-} // namespace n::core::mvp
+} // namespace mer::editor::mvp
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 class PresenterMain : public IPresenter {
 	std::shared_ptr<IViewMain> viewMain;
@@ -34,6 +34,6 @@ private:
 	void logError(int pId, const std::string &pMessage) const;
 };
 
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //PRESENTERMAIN_H

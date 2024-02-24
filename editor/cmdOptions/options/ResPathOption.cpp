@@ -6,13 +6,13 @@
 
 #include "Globals.h"
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 ResPathOption::ResPathOption(Glib::OptionGroup* pOptionGroup)
 	: Option(pOptionGroup, "res-path",
 			 "Path to resources directory. Default: " + Globals::getResourcesPath().parent_path().string()) {}
 
 bool ResPathOption::onOptionParsed(const Glib::ustring & /*pUstring*/, const Glib::ustring &pValue, bool /*pCond*/) {
-	using namespace engine::utils;
+	using namespace sdk::utils;
 	const std::filesystem::path resPath = std::filesystem::absolute(pValue.data()) / "Resources";
 	if (std::error_code err; !exists(resPath, err)) {
 		const auto message = ReportMessage::create();
@@ -30,4 +30,4 @@ bool ResPathOption::onOptionParsed(const Glib::ustring & /*pUstring*/, const Gli
 	Globals::setResourcesPath(resPath);
 	return true;
 }
-} // namespace UTILS_CORE
+} // namespace mer::editor::utils

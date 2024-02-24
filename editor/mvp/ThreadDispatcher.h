@@ -6,7 +6,7 @@
 #define THREADDISPATCHER_H
 #include <future>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class ThreadDispatcher {
 public:
 	using SlotT = sigc::slot<void(std::promise<void>)>;
@@ -24,6 +24,6 @@ public:
 
 	std::future<void> executeInMainThread(const SlotT &pSlot);
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //THREADDISPATCHER_H

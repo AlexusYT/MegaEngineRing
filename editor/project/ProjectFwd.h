@@ -5,9 +5,9 @@
 #ifndef PROJECTFWD_H
 #define PROJECTFWD_H
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class Project;
 
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //PROJECTFWD_H

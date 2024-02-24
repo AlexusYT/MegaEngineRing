@@ -5,11 +5,11 @@
 #ifndef IMODELCREATINGPROJECT_H
 #define IMODELCREATINGPROJECT_H
 
-namespace n::core::project {
+namespace mer::editor::project {
 class Project;
 }
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 class IModelCreatingProject {
 public:
@@ -19,7 +19,7 @@ public:
 
 	virtual void setProject(const std::shared_ptr<project::Project> &pProject) = 0;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //IMODELCREATINGPROJECT_H

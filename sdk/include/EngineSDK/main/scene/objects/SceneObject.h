@@ -7,11 +7,11 @@
 
 #include "ISceneObject.h"
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 class ShaderProgram;
 }
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 
 class SceneObject : public ISceneObject {
 	std::shared_ptr<Resources> resources;
@@ -27,7 +27,7 @@ protected:
 
 	void setResources(const std::shared_ptr<Resources> &pResources) final { resources = pResources; }
 };
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //SCENEOBJECT_H

@@ -7,7 +7,7 @@
 
 #include <ui/customWidgets/TreeWidget.h>
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 class ObjectPropertiesWindow {
 public:
 	Gtk::Paned mainPaned;
@@ -30,7 +30,7 @@ public:
 
 	operator Gtk::Widget&() { return mainPaned; }
 };
-} // namespace UI_CORE
+} // namespace mer::editor::ui
 
 
 #endif //OBJECTPROPERTIESWINDOW_H

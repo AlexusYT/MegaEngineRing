@@ -7,11 +7,11 @@
 
 #include "GeneratedFileEntry.h"
 
-namespace n::core::mvp {
+namespace mer::editor::mvp {
 class AppInfoEditor;
 }
 
-namespace n::core::project {
+namespace mer::editor::project {
 class Project;
 }
 
@@ -19,7 +19,7 @@ namespace SQLite {
 class Database;
 }
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class AppInfoProperty : public Glib::Object {
 	std::string name;
 	std::string value;
@@ -72,15 +72,15 @@ public:
 		return Glib::make_refptr_for_instance(new ApplicationInfo(pProject));
 	}
 
-	engine::utils::ReportMessagePtr onLoadDatabase() override;
+	sdk::utils::ReportMessagePtr onLoadDatabase() override;
 
-	engine::utils::ReportMessagePtr onSaveDatabase() const override;
+	sdk::utils::ReportMessagePtr onSaveDatabase() const override;
 
-	engine::utils::ReportMessagePtr onSaveFile() const override;
+	sdk::utils::ReportMessagePtr onSaveFile() const override;
 
-	static engine::utils::ReportMessagePtr createTable(SQLite::Database* pDatabase);
+	static sdk::utils::ReportMessagePtr createTable(SQLite::Database* pDatabase);
 
-	engine::utils::ReportMessagePtr writeFile() const;
+	sdk::utils::ReportMessagePtr writeFile() const;
 
 	std::shared_ptr<mvp::IEditorPresenter> openEditor() override;
 
@@ -95,6 +95,6 @@ public:
 private:
 	void addProperty(std::shared_ptr<AppInfoProperty> pProperty);
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //APPLICATIONINFO_H

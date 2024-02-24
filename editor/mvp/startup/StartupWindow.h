@@ -7,7 +7,7 @@
 
 #include <mvp/startup/IViewStartup.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class StartupWindow final : public Gtk::Window, public IViewStartup {
 
 	Glib::RefPtr<Gtk::Builder> builder{};
@@ -101,7 +101,7 @@ public:
 		this->close();
 	}*/
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //STARTUPWINDOW_H

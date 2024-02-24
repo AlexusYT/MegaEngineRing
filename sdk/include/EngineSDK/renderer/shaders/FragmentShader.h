@@ -6,11 +6,11 @@
 #define FRAGMENTSHADER_H
 #include <EngineSDK/renderer/shaders/Shader.h>
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 class FragmentShader : public Shader {
 public:
 	FragmentShader() : Shader(ShaderTypeEnum::FRAGMENT_SHADER) {}
 };
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 
 #endif //FRAGMENTSHADER_H

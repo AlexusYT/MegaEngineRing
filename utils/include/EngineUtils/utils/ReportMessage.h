@@ -10,7 +10,7 @@
 #include "ReportMessageFwd.h"
 #include "Utils.h"
 
-namespace n::engine::utils {
+namespace mer::sdk::utils {
 class ReportMessage {
 
 	std::string title;
@@ -65,7 +65,7 @@ public:
 		return ss.str();
 	}
 };
-} // namespace n::engine::utils
+} // namespace mer::sdk::utils
 
 
 #endif //REPORTMESSAGE_H

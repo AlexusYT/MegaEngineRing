@@ -8,7 +8,7 @@
 #include <memory>
 #include <mvp/IPresenter.h>
 
-namespace n::core::ui {
+namespace mer::editor::ui {
 class GameEngine {
 
 public:
@@ -18,6 +18,6 @@ public:
 	static void addWindow(std::shared_ptr<mvp::IPresenter> pWindow);
 	static void removeWindow(std::shared_ptr<mvp::IPresenter> pWindow);
 };
-} // namespace n::core::ui
+} // namespace mer::editor::ui
 
 #endif //GAMEENGINE_GAMEENGINE_H

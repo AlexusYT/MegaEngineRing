@@ -6,7 +6,7 @@
 #define MODELSCENEEDITOR_H
 #include "IModelSceneEditor.h"
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class ModelSceneEditor : public IModelSceneEditor {
 	std::shared_ptr<project::Project> project;
 	project::SceneInfo* sceneInfo{};
@@ -26,5 +26,5 @@ public:
 
 	void setScene(const std::shared_ptr<sdk::main::IScene> &pScene) override { scene = pScene; }
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 #endif //MODELSCENEEDITOR_H

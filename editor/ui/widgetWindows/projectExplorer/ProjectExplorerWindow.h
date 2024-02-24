@@ -8,11 +8,11 @@
 
 #include "ProjectExplorerEntry.h"
 
-namespace n::core::project {
+namespace mer::editor::project {
 class Project;
 }
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 class ProjectExplorerWindow {
 public:
 	using SlotEntrySelectionChanged = sigc::slot<void(ProjectExplorerEntry*)>;
@@ -34,6 +34,6 @@ public:
 		entrySelectionChanged = pEntrySelectionChanged;
 	}
 };
-} // namespace UI_CORE
+} // namespace mer::editor::ui
 
 #endif //PROJECTEXPORERWINDOW_H

@@ -17,7 +17,7 @@
 #include <thread>
 #include <utility>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 PresenterCreatingProject::PresenterCreatingProject(std::shared_ptr<IViewCreatingProject> pView,
 												   std::shared_ptr<IModelCreatingProject> pModel)
 	: view(std::move(pView)), model(std::move(pModel)) {}
@@ -41,7 +41,7 @@ void PresenterCreatingProject::runTasksImpl() const {
 		logMessage("Готово");
 
 		view->executeInMainThread([this, project](const std::promise<void> & /*pPromise*/) {
-			engine::utils::ReportMessagePtr msg;
+			sdk::utils::ReportMessagePtr msg;
 			auto viewMain = MainWindow::create(project, msg);
 			if (msg) return logError(std::move(msg));
 			auto modelMain = std::make_shared<ModelMain>();
@@ -53,7 +53,7 @@ void PresenterCreatingProject::runTasksImpl() const {
 		});
 
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to run project tasks");
 		msg->setMessage("Exception occurred");
 
@@ -61,7 +61,8 @@ void PresenterCreatingProject::runTasksImpl() const {
 	}
 }
 
-engine::utils::ReportMessagePtr PresenterCreatingProject::generateFiles(const std::filesystem::path &pPath) const {
+sdk::utils::ReportMessagePtr PresenterCreatingProject::generateFiles(const std::filesystem::path &pPath) const {
+	using namespace mer::editor::project;
 	logMessage("Генерация vcpkg.json...");
 	if (auto msg = ToolchainUtils::generateVcpkgManifestFile(pPath / "vcpkg.json")) return msg;
 	logMessage("Генерация CMakePresets.json...");
@@ -81,8 +82,9 @@ engine::utils::ReportMessagePtr PresenterCreatingProject::generateFiles(const st
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr PresenterCreatingProject::installLibraries(
+sdk::utils::ReportMessagePtr PresenterCreatingProject::installLibraries(
 	const std::filesystem::path &pProjectPath) const {
+	using namespace mer::editor::project;
 	logMessage("Установка необходимых библиотек...");
 	const auto vcpkgPath = ToolchainSettings::getVcpkgPath();
 	const auto installRoot = model->getProject()->getProjectBuildPath() / "vcpkg_installed";
@@ -99,7 +101,7 @@ engine::utils::ReportMessagePtr PresenterCreatingProject::installLibraries(
 
 	if (auto exitCode = ToolchainUtils::executeSync(pProjectPath, vcpkgPath, command, coutCallback, cerrCallback);
 		exitCode != 0) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to install libraries");
 		msg->setMessage("Vcpkg finished with error");
 		msg->addInfoLine("Exit code: {}", exitCode);
@@ -122,7 +124,7 @@ engine::utils::ReportMessagePtr PresenterCreatingProject::installLibraries(
 			ToolchainUtils::writeFile(cmakePath / (name + ".cmake"), editedScript);
 		}
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to install libraries");
 		msg->setMessage("Exception occurred while writing cmake scripts");
 		msg->addInfoLine("Scripts path: {}", cmakePath.string());
@@ -148,7 +150,7 @@ std::string PresenterCreatingProject::editTargetLinkLibraries(const std::string 
 	return editedScript.str();
 }
 
-engine::utils::ReportMessagePtr PresenterCreatingProject::reloadCmake() const {
+sdk::utils::ReportMessagePtr PresenterCreatingProject::reloadCmake() const {
 	logMessage("Создание сборочных файлов");
 	if (auto exitCode = model->getProject()->reloadCMake([](const std::string & /*pLine*/) {},
 														 [this](const std::string &pLine) {
@@ -156,7 +158,7 @@ engine::utils::ReportMessagePtr PresenterCreatingProject::reloadCmake() const {
 																		Glib::Markup::escape_text(pLine) + "</span>");
 														 });
 		exitCode != 0) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to generate cmake files");
 		msg->setMessage("Cmake finished with error");
 		msg->addInfoLine("Exit code: {}", exitCode);
@@ -165,7 +167,7 @@ engine::utils::ReportMessagePtr PresenterCreatingProject::reloadCmake() const {
 	return nullptr;
 }
 
-engine::utils::ReportMessagePtr PresenterCreatingProject::parseLibrariesScript(
+sdk::utils::ReportMessagePtr PresenterCreatingProject::parseLibrariesScript(
 	std::stringstream &pLog, std::unordered_map<std::string, Library> &pLibraries) {
 	try {
 		bool foundScripts = false;
@@ -197,13 +199,13 @@ engine::utils::ReportMessagePtr PresenterCreatingProject::parseLibrariesScript(
 		}
 		if (!foundScripts) {
 
-			auto msg = engine::utils::ReportMessage::create();
+			auto msg = sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to parse libraries scripts");
 			msg->setMessage("Scripts not found");
 			return msg;
 		}
 	} catch (...) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to parse libraries scripts");
 		msg->setMessage("Exception occurred while parsing cmake scripts of installed libraries");
 		return msg;
@@ -227,10 +229,10 @@ void PresenterCreatingProject::logMessage(const std::string &pMessage) const {
 		[pMessage, this](const std::promise<void> & /*pPromise*/) { view->addMessageToLog(pMessage + "\n"); });
 }
 
-void PresenterCreatingProject::logError(engine::utils::ReportMessagePtr pError)const{
+void PresenterCreatingProject::logError(sdk::utils::ReportMessagePtr pError)const{
 	view->executeInMainThread([&pError, this](const std::promise<void> &/*pPromise*/) {
 		view->reportError(std::move(pError));
 	});
 }
 
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp

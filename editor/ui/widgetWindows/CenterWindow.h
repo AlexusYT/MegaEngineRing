@@ -5,11 +5,11 @@
 #ifndef CENTERWINDOW_H
 #define CENTERWINDOW_H
 
-namespace n::core::mvp {
+namespace mer::editor::mvp {
 class IEditorPresenter;
-} // namespace n::core::mvp
+} // namespace mer::editor::mvp
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 class ProjectExplorerEntry;
 
 class CenterWindow {
@@ -30,7 +30,7 @@ public:
 
 	void openEntry(ProjectExplorerEntry* pEntry);
 };
-} // namespace UI_CORE
+} // namespace mer::editor::ui
 
 
 #endif //CENTERWINDOW_H

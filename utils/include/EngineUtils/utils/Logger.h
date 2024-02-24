@@ -11,7 +11,7 @@
 
 #include "ReportMessage.h"
 
-namespace n::engine::utils {
+namespace mer::sdk::utils {
 enum class LoggerMsgType : uint8_t { INFO, WARN, ERROR, OUT };
 
 class Logger {
@@ -85,7 +85,7 @@ public:
 private:
 	static void processException(const std::string &pFailedMessage);
 };
-} // namespace n::engine::utils
+} // namespace mer::sdk::utils
 
 
 #endif //LOGGER_H

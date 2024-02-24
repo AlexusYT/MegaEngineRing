@@ -4,9 +4,9 @@
 
 #include "Option.h"
 
-namespace UTILS_CORE {
+namespace mer::editor::utils {
 bool Option::onOptionParsed(const Glib::ustring & /*pOptionName*/, const Glib::ustring & /*pValue*/,
 							bool /*pHasValue*/) {
 	return true;
 }
-} // namespace UTILS_CORE
+} // namespace mer::editor::utils

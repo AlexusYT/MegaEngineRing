@@ -28,7 +28,6 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/renderer/GL.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
-        include/EngineSDK/main/IApplication.h
         include/EngineSDK/main/context/IContext.h
         include/EngineSDK/main/IWindow.h
         include/EngineSDK/main/IApplicationSettings.h

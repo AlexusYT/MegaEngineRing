@@ -6,9 +6,9 @@
 #define PROGRAMWIDESHADERBUFFER_H
 #include <EngineSDK/renderer/buffers/SSBO.h>
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class ProgramWideShaderBuffer : public renderer::SSBO {};
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //PROGRAMWIDESHADERBUFFER_H

@@ -14,7 +14,7 @@
 #include <mvp/main/PresenterMain.h>
 #include <project/Project.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 								   const std::shared_ptr<IModelStartup> &pModel)
 	: view(pView), model(pModel) {
@@ -66,18 +66,18 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 			if (!exists(path)) create_directories(path);
 
 		} catch (...) {
-			const auto msg = engine::utils::ReportMessage::create();
+			const auto msg = sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to create directory for project");
 			msg->setMessage("Exception occurred");
 			//TODO Report error to the window
-			engine::utils::Logger::error(msg);
+			sdk::utils::Logger::error(msg);
 			return;
 		}
 		auto project = project::Project::create();
 		project->setProjectName(model->getName());
 		project->setProjectPath(path);
 		//TODO Report error to the window
-		if (const auto msg = initProject(project)) return engine::utils::Logger::error(msg);
+		if (const auto msg = initProject(project)) return sdk::utils::Logger::error(msg);
 		openProjectCreatingWindow(project);
 	});
 
@@ -92,9 +92,9 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 											project->setProjectName(path.stem());
 											project->setProjectPath(path.parent_path());
 											if (const auto msg = initProject(project))
-												return engine::utils::Logger::error(msg);
+												return sdk::utils::Logger::error(msg);
 											if (const auto msg = project->loadProject())
-												return engine::utils::Logger::error(msg);
+												return sdk::utils::Logger::error(msg);
 											openMainWindow(project);
 										} catch (const Gtk::DialogError &err) {
 											if (err.code() != Gtk::DialogError::DISMISSED) {
@@ -109,7 +109,7 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 	});
 }
 
-engine::utils::ReportMessagePtr PresenterStartup::initProject(const std::shared_ptr<project::Project> &pProject) {
+sdk::utils::ReportMessagePtr PresenterStartup::initProject(const std::shared_ptr<project::Project> &pProject) {
 
 	if (auto msg = pProject->openDatabase()) return msg;
 
@@ -134,9 +134,9 @@ void PresenterStartup::openProjectCreatingWindow(const std::shared_ptr<project::
 
 void PresenterStartup::openMainWindow(const std::shared_ptr<project::Project> &pProject) const {
 
-	engine::utils::ReportMessagePtr msg;
+	sdk::utils::ReportMessagePtr msg;
 	auto viewMain = MainWindow::create(pProject, msg);
-	if (msg) return engine::utils::Logger::error(msg);
+	if (msg) return sdk::utils::Logger::error(msg);
 	auto modelMain = std::make_shared<ModelMain>();
 	modelMain->setProject(pProject);
 	const auto presenter = std::make_shared<PresenterMain>(viewMain, modelMain);

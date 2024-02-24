@@ -10,7 +10,5 @@
 #include <vector>
 
 
-#define GENERAL_NAMESPACE n
-#define SDK_NAMESPACE GENERAL_NAMESPACE::sdk
 #define MAIN_SDK SDK_NAMESPACE::main
 #endif //COMMON_H

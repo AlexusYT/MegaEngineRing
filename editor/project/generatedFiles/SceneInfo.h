@@ -8,13 +8,13 @@
 
 #include "GeneratedFileEntry.h"
 
-namespace n::core::project {
+namespace mer::editor::project {
 class CppClass;
 class CppExternC;
-} // namespace n::core::project
+} // namespace mer::editor::project
 class Scene;
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class CppMethod;
 
 class SceneInfo : public GeneratedFileEntry {
@@ -43,16 +43,16 @@ public:
 	[[nodiscard]] const std::shared_ptr<UUID> &getUuid() const { return uuid; }
 
 private:
-	engine::utils::ReportMessagePtr onLoadDatabase() override;
+	sdk::utils::ReportMessagePtr onLoadDatabase() override;
 
-	engine::utils::ReportMessagePtr onSaveDatabase() const override;
+	sdk::utils::ReportMessagePtr onSaveDatabase() const override;
 
-	engine::utils::ReportMessagePtr onSaveFile() const override;
+	sdk::utils::ReportMessagePtr onSaveFile() const override;
 
-	engine::utils::ReportMessagePtr createTable();
+	sdk::utils::ReportMessagePtr createTable();
 
 
-	engine::utils::ReportMessagePtr writeFile() const;
+	sdk::utils::ReportMessagePtr writeFile() const;
 
 	std::filesystem::path getHeaderPath() const override { return "source/scenes/" + getName() + ".h"; }
 
@@ -65,6 +65,6 @@ private:
 	static std::shared_ptr<CppMethod> createInitMethod(const std::shared_ptr<CppClass> &pClass);
 };
 
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //SCENEINFO_H

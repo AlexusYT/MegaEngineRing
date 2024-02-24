@@ -26,11 +26,4 @@
 #include <unordered_map>
 #include <vector>
 
-#define GENERAL_NAMESPACE n
-#define CORE_NAMESPACE GENERAL_NAMESPACE::core
-#define UI_CORE CORE_NAMESPACE::ui
-#define MVP_CORE CORE_NAMESPACE::mvp
-#define PROJECT_CORE CORE_NAMESPACE::project
-#define UTILS_CORE CORE_NAMESPACE::utils
-
 #endif //COMMON_H

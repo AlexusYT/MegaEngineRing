@@ -10,7 +10,7 @@
 
 #include "ConsoleColors.h"
 
-namespace n::engine::utils {
+namespace mer::sdk::utils {
 ReportMessagePtr Logger::openLog(const std::filesystem::path &pLogPath) {
 	if (pLogPath.empty()) {
 		auto report = ReportMessage::create();
@@ -106,4 +106,4 @@ void Logger::processException(const std::string &pFailedMessage) {
 		logFile.flush();
 	}
 }
-} // namespace n::engine::utils
+} // namespace mer::sdk::utils

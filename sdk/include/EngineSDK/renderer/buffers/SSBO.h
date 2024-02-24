@@ -7,7 +7,7 @@
 
 #include "ISSBO.h"
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 
 class SSBO : public ISSBO {
 public:
@@ -26,6 +26,6 @@ public:
 	void bindBufferBase(uint32_t pBinding) override;
 };
 
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 
 #endif //SSBO_H

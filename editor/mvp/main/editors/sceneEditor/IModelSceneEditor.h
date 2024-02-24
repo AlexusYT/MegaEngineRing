@@ -5,16 +5,16 @@
 #ifndef IMODELSCENEEDITOR_H
 #define IMODELSCENEEDITOR_H
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class IScene;
 }
 
-namespace n::core::project {
+namespace mer::editor::project {
 class Project;
 class SceneInfo;
-} // namespace n::core::project
+} // namespace mer::editor::project
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 class IModelSceneEditor {
 public:
 	virtual ~IModelSceneEditor() = default;
@@ -30,7 +30,7 @@ public:
 
 	virtual void setScene(const std::shared_ptr<sdk::main::IScene> &pScene) = 0 ;
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //IMODELSCENEEDITOR_H

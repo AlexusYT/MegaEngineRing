@@ -10,7 +10,7 @@
 
 #include "IApplicationSettings.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 
 class DefaultApplicationSettings : public IApplicationSettings {
 
@@ -34,12 +34,12 @@ public:
 	DefaultApplicationSettings() = default;
 
 	//TODO make replacing of the environment variables
-	engine::utils::ReportMessagePtr init() override;
+	sdk::utils::ReportMessagePtr init() override;
 
 	[[nodiscard]] const utils::Property<std::string> &getLogsDirectory() const override { return logsDirectory; }
 
 	void setLogsDirectory(const std::string &pLogsDirectory) override { logsDirectory = pLogsDirectory;
-		engine::utils::Logger::info(pLogsDirectory);}
+		sdk::utils::Logger::info(pLogsDirectory);}
 
 	[[nodiscard]] utils::Property<std::string> &getApplicationName() override { return applicationName; }
 
@@ -60,6 +60,6 @@ private:
 	}*/
 };
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 #endif //DEFAULTAPPLICATIONSETTINGS_H

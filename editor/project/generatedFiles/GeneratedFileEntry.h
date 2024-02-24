@@ -6,7 +6,7 @@
 #define GENERATEDFILEENTRY_H
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class Project;
 
 class GeneratedFileEntry : public ui::ProjectExplorerEntry {
@@ -23,6 +23,6 @@ public:
 	void setProject(const std::shared_ptr<Project> &pProject) { project = pProject; }
 };
 
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //GENERATEDFILEENTRY_H

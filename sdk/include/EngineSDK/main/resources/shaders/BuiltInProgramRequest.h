@@ -6,17 +6,17 @@
 #define BUILTINPROGRAMREQUEST_H
 #include "EngineSDK/main/resources/ResourceRequest.h"
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 class ShaderProgram;
 }
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class BuiltInProgramRequest final : public RegularRequest {
 
 	class BuiltInProgramLoader : public ResourceLoader {
 	public:
 		std::shared_ptr<IResource> load(const std::shared_ptr<ResourceRequest> &pRequest,
-										const engine::utils::ReportMessagePtr &pError,
+										const sdk::utils::ReportMessagePtr &pError,
 										const std::shared_ptr<Resources> &pDependencies) override;
 	};
 
@@ -39,7 +39,7 @@ private:
 	}
 };
 
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //BUILTINPROGRAMREQUEST_H

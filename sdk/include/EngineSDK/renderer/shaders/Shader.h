@@ -8,11 +8,11 @@
 #include <EngineSDK/main/resources/IResource.h>
 #include <EngineSDK/renderer/shaders/IShader.h>
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 enum class ShaderTypeEnum;
 }
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 class Shader : public IShader, public main::IResource {
 	uint32_t name;
 
@@ -44,5 +44,5 @@ public:
 
 	uint32_t native() const override { return name; }
 };
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer
 #endif //SHADER_H

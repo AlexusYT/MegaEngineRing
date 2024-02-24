@@ -23,7 +23,7 @@ TEST(UUID_TESTS, RandomUUIDUpper) {
 }
 
 TEST(UUID_TESTS, ParseUUID) {
-	n::engine::utils::ReportMessagePtr msg;
+	mer::sdk::utils::ReportMessagePtr msg;
 	auto uuid = UUID::parse("A27C75DB-3886-17B2-F65A-C3B4D89D24F2", msg);
 	ASSERT_NE(uuid, nullptr) << (msg ? msg->getReport() : "");
 	EXPECT_EQ(uuid->toString(true), "A27C75DB-3886-17B2-F65A-C3B4D89D24F2");
@@ -36,7 +36,7 @@ TEST(UUID_TESTS, ParseUUID) {
 }
 
 TEST(UUID_TESTS, ParseUUIDNotMatch) {
-	n::engine::utils::ReportMessagePtr msg;
+	mer::sdk::utils::ReportMessagePtr msg;
 	auto uuid = UUID::parse("A27C75DB-3886-17B2-F65A-C3B4D89D24F2sdfsd", msg);
 	EXPECT_EQ(uuid, nullptr);
 	ASSERT_NE(msg, nullptr);

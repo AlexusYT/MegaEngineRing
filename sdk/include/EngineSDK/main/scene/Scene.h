@@ -10,11 +10,11 @@
 #include "EngineSDK/main/resources/Resources.h"
 #include "IScene.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class ISceneObject;
 }
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 class Scene : public IScene {
 	std::shared_ptr<Resources> resources;
 	std::shared_ptr<ProgramWideShaderBuffer> programBuffer;
@@ -162,7 +162,7 @@ public:
 		return getLazyResource(pName)->get<ClassT>();
 	}
 
-	void onResourceLoadingError(const std::shared_ptr<ResourceRequest> &pRequest, const engine::utils::ReportMessagePtr& pError) override;
+	void onResourceLoadingError(const std::shared_ptr<ResourceRequest> &pRequest, const sdk::utils::ReportMessagePtr& pError) override;
 
 
 protected:
@@ -170,9 +170,9 @@ protected:
 
 	virtual void afterRender() {}
 
-	engine::utils::ReportMessagePtr initScene() override;
+	sdk::utils::ReportMessagePtr initScene() override;
 
-	engine::utils::ReportMessagePtr preloadScene(const std::shared_ptr<ResourceRequests>& pRequests) override;
+	sdk::utils::ReportMessagePtr preloadScene(const std::shared_ptr<ResourceRequests>& pRequests) override;
 
 	void addObject(const std::shared_ptr<ISceneObject> &pObject) ;
 
@@ -183,7 +183,7 @@ private:
 
 	void resize(int pWidth, int pHeight) override;
 };
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
 
 
 #endif //SCENE_H

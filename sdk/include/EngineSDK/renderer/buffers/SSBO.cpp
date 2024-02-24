@@ -6,7 +6,7 @@
 
 #include <epoxy/gl.h>
 
-namespace n::sdk::renderer {
+namespace mer::sdk::renderer {
 SSBO::SSBO() {}
 
 SSBO::~SSBO() {}
@@ -22,4 +22,4 @@ uint32_t SSBO::native() const {}
 void SSBO::bindBufferBase(uint32_t pBinding) {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pSsbo->getBindingPoint(), pSsbo->native());
 }
-} // namespace n::sdk::renderer
+} // namespace mer::sdk::renderer

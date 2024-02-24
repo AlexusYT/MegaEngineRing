@@ -17,11 +17,11 @@
 #include "sceneObjects/SceneObject.h"
 #include "toolchain/ToolchainUtils.h"
 
-namespace UI_CORE {
+namespace mer::editor::ui {
 class ProjectExplorerEntry;
-} // namespace UI_CORE
+} // namespace mer::editor::ui
 
-namespace PROJECT_CORE {
+namespace mer::editor::project {
 class ScenesInfo;
 
 class Project : public std::enable_shared_from_this<Project> {
@@ -37,10 +37,10 @@ class Project : public std::enable_shared_from_this<Project> {
 	std::shared_ptr<ApplicationInfo> applicationInfo;
 	std::shared_ptr<ScenesInfo> scenesInfo;
 
-	sigc::signal<void(const engine::utils::ReportMessagePtr &pError)> onErrorSignal;
+	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onErrorSignal;
 	std::atomic<bool> editorLibLoading{};
-	std::atomic<engine::utils::ReportMessagePtr> editorLibError{nullptr};
-	sigc::signal<void(const engine::utils::ReportMessagePtr &pError)> onEditorLibLoadedSignal;
+	std::atomic<sdk::utils::ReportMessagePtr> editorLibError{nullptr};
+	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onEditorLibLoadedSignal;
 	sigc::signal<void()> onEditorLibLoadingSignal;
 
 	void* editorLib{};
@@ -53,17 +53,17 @@ public:
 
 	static std::shared_ptr<Project> create() { return std::shared_ptr<Project>(new (std::nothrow) Project()); }
 
-	engine::utils::ReportMessagePtr openDatabase();
+	sdk::utils::ReportMessagePtr openDatabase();
 
 	void initProject();
 
-	engine::utils::ReportMessagePtr loadProject();
+	sdk::utils::ReportMessagePtr loadProject();
 
-	engine::utils::ReportMessagePtr saveProject() const;
+	sdk::utils::ReportMessagePtr saveProject() const;
 
-	engine::utils::ReportMessagePtr saveFiles() const;
+	sdk::utils::ReportMessagePtr saveFiles() const;
 
-	engine::utils::ReportMessagePtr generateMainFile() const;
+	sdk::utils::ReportMessagePtr generateMainFile() const;
 
 	Glib::RefPtr<Gio::SimpleActionGroup> getActionGroups() const;
 
@@ -119,12 +119,12 @@ public:
 	[[nodiscard]] void* getEditorLib() const { return editorLib; }
 
 	sigc::connection connectOnErrorSignal(
-		const sigc::slot<void(const engine::utils::ReportMessagePtr &pError)> &pSlot) {
+		const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
 		return onErrorSignal.connect(pSlot);
 	}
 
 	sigc::connection connectOnEditorLibLoadedSignal(
-		const sigc::slot<void(const engine::utils::ReportMessagePtr &pError)> &pSlot) {
+		const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
 		return onEditorLibLoadedSignal.connect(pSlot);
 	}
 
@@ -138,18 +138,18 @@ public:
 
 	[[nodiscard]] const std::atomic<bool> &getEditorLibLoading() const { return editorLibLoading; }
 
-	[[nodiscard]] const std::atomic<engine::utils::ReportMessagePtr> &getEditorLibError() const {
+	[[nodiscard]] const std::atomic<sdk::utils::ReportMessagePtr> &getEditorLibError() const {
 		return editorLibError;
 	}
 
-	void errorOccurred(const engine::utils::ReportMessagePtr &pError) const { onErrorSignal(pError); }
+	void errorOccurred(const sdk::utils::ReportMessagePtr &pError) const { onErrorSignal(pError); }
 
 private:
 	void editorLibLoadStarted();
 
 	void editorLibLoadFinished();
 
-	void editorLibLoadErrored(const engine::utils::ReportMessagePtr &pError);
+	void editorLibLoadErrored(const sdk::utils::ReportMessagePtr &pError);
 
 	static std::shared_ptr<ui::ProjectExplorerEntry> getDirectoryEntry(const std::filesystem::path &pPath) {
 		auto explorerEntry = ui::DirectoryEntry::create(pPath.filename());
@@ -165,6 +165,6 @@ private:
 		return explorerEntry;
 	}
 };
-} // namespace PROJECT_CORE
+} // namespace mer::editor::project
 
 #endif //PROJECT_H

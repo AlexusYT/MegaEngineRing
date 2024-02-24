@@ -8,7 +8,7 @@
 #include <mvp/creatingProject/IViewCreatingProject.h>
 #include <ui/widgetWindows/LogView.h>
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 
 
 class ProjectCreatingWindow final : public Gtk::Window, public IViewCreatingProject {
@@ -24,7 +24,7 @@ public:
 private:
 	void addMessageToLog(const std::string &pMessage) override;
 
-	void reportError(engine::utils::ReportMessagePtr pMessage) override;
+	void reportError(sdk::utils::ReportMessagePtr pMessage) override;
 
 	void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) override {
 		pWindow->set_application(get_application());
@@ -32,6 +32,6 @@ private:
 
 	void closeWindow() override { close(); }
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 #endif //PROJECTCREATINGWINDOW_H

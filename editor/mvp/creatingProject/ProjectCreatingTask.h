@@ -5,17 +5,17 @@
 #ifndef PROJECTCREATINGTASK_H
 #define PROJECTCREATINGTASK_H
 
-namespace MVP_CORE {
+namespace mer::editor::mvp {
 struct ProjectCreatingTask {
 	using MessageCallback = std::function<void(const std::string &pMessage)>;
-	using TaskFunc = std::function<engine::utils::ReportMessagePtr(const MessageCallback &pCallback)>;
+	using TaskFunc = std::function<sdk::utils::ReportMessagePtr(const MessageCallback &pCallback)>;
 
 	TaskFunc function;
 	std::string tabName;
 
 	//void appendToBuffer(const Glib::ustring &pMarkup) const { buffer->insert_markup(buffer->end(), pMarkup + "\n"); }
 };
-} // namespace MVP_CORE
+} // namespace mer::editor::mvp
 
 
 #endif //PROJECTCREATINGTASK_H

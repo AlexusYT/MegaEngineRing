@@ -12,7 +12,7 @@
 #include "ResourceRequests.h"
 #include "Resources.h"
 
-namespace n::sdk::main {
+namespace mer::sdk::main {
 LoadedResources::LoadedResources() {}
 
 std::shared_ptr<ILoadedResources> LoadedResources::create() {
@@ -40,7 +40,7 @@ std::shared_ptr<IResource> LoadedResources::processRequest(const std::shared_ptr
 	if (auto res = getLoadedResourceByRequest(pRequest, pScene)) { return res; }
 
 	if (std::ranges::find(processingRequests, pRequest->getName()) != processingRequests.end()) {
-		auto msg = engine::utils::ReportMessage::create();
+		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to process request");
 		msg->setMessage("Cyclic dependencies have been found");
 		for (auto reqIter = processingRequests.begin(); reqIter != processingRequests.end(); ++reqIter) {
@@ -83,7 +83,7 @@ std::shared_ptr<IResource> LoadedResources::getLoadedResourceByRequest(const std
 	if (!res) return nullptr;
 	if (std::dynamic_pointer_cast<LazyResource>(res)) {
 		if (std::dynamic_pointer_cast<RegularRequest>(pRequest)) {
-			const auto msg = engine::utils::ReportMessage::create();
+			const auto msg = sdk::utils::ReportMessage::create();
 			msg->setTitle("Resource loading policy mismatch");
 			msg->setMessage("Resource previously loaded with LAZY policy, but trying to load with REGULAR");
 			msg->addInfoLine("DO NOT CHANGE POLICY FOR SINGLE RESOURCE");
@@ -94,7 +94,7 @@ std::shared_ptr<IResource> LoadedResources::getLoadedResourceByRequest(const std
 		return res;
 	}
 	if (std::dynamic_pointer_cast<LazyRequest>(pRequest)) {
-		const auto msg = engine::utils::ReportMessage::create();
+		const auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Resource loading policy mismatch");
 		msg->setMessage("Resource previously loaded with REGULAR policy, but trying to load with LAZY");
 		msg->addInfoLine("DO NOT CHANGE POLICY FOR SINGLE RESOURCE");
@@ -108,9 +108,9 @@ std::shared_ptr<IResource> LoadedResources::getLoadedResourceByRequest(const std
 std::shared_ptr<IResource> LoadedResources::executeRequest(const std::shared_ptr<Resources> &pDependencies,
 														   const std::shared_ptr<ResourceRequest> &pRequest) {
 
-	auto error = engine::utils::ReportMessage::create();
+	auto error = sdk::utils::ReportMessage::create();
 	if (auto resource = pRequest->getLoader()->load(pRequest, error, pDependencies)) { return resource; }
-	engine::utils::Logger::error(error);
+	sdk::utils::Logger::error(error);
 	return nullptr;
 }
-} // namespace n::sdk::main
+} // namespace mer::sdk::main
