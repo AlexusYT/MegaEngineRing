@@ -33,10 +33,10 @@ set_property(TARGET MegaEngineUtils PROPERTY PREFIX "")
 install(
         TARGETS MegaEngineUtils
         ARCHIVE
-        DESTINATION sdk/1.0.0/lib
-        COMPONENT sdk-1.0.0
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
+        COMPONENT sdk
         FILE_SET utils_headers
-        DESTINATION sdk/1.0.0/
-        COMPONENT sdk-1.0.0
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/"
+        COMPONENT sdk
 )
 

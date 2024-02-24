@@ -10,15 +10,19 @@ project(
         LANGUAGES CXX
 )
 
+set(SDK_VERSION "0.1.0")
+
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
 # ---- Declare library ----
 
 find_package(PkgConfig REQUIRED)
+include(GNUInstallDirs)
 
 add_subdirectory(utils)
 add_subdirectory(sdk)
+add_subdirectory(data)
 add_subdirectory(editor)
 
 
@@ -31,13 +35,11 @@ target_link_options(MegaEngineEditor PRIVATE -rdynamic)
 set_property(TARGET MegaEngineEditor PROPERTY OUTPUT_NAME MegaEngineEditor)
 
 target_link_libraries(MegaEngineEditor PRIVATE MegaEngineEditor_lib)
-# Remove existing Resources directory before copying and copy new resources
-add_custom_target(CopyResources ALL
-        COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_CURRENT_BINARY_DIR}/Resources
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/data/Resources ${CMAKE_CURRENT_BINARY_DIR}/Resources
-        VERBATIM)
 
-add_dependencies(MegaEngineEditor CopyResources)
+install(
+        IMPORTED_RUNTIME_ARTIFACTS MegaEngineEditor
+        COMPONENT editor
+)
 
 # ---- Install rules ----
 

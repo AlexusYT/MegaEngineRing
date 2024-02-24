@@ -31,24 +31,8 @@ public:
 
 		application = Gtk::Application::create("org.gtkmm.example");
 		utils::EngineOptionGroup group;
-
 		application->add_option_group(group);
-
-		const std::shared_ptr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
-		cssProvider->signal_parsing_error().connect(
-			[](const Glib::RefPtr<const Gtk::CssSection> & /*section*/, const Glib::Error &pError) {
-				//section.
-				engine::utils::Logger::error(pError.what());
-			},
-			true);
-		try {
-			cssProvider->load_from_path("Resources/style.css");
-		} catch (Glib::Error &e) { engine::utils::Logger::error("Failed to load style {}", e.what()); }
-		Gtk::StyleContext::add_provider_for_display(Gdk::Display::get_default(), cssProvider,
-													GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-
 		application->signal_activate().connect(&GameEngineImpl::startup);
-
 		application->register_application();
 		auto result = application->run(pArgc, pArgv);
 		windows.clear();
@@ -81,6 +65,19 @@ public:
 			Logger::error(msg);
 		});
 
+		if (!exists(Globals::getResourcesPath())) {
+			Logger::warn("There is no resources at: {}", Globals::getResourcesPath().parent_path().string());
+			auto path = std::filesystem::current_path();
+			Logger::info("Checking resources at the executable dir: {}", path.string());
+			if (!exists(path / "Resources")) {
+				Logger::error("No resources directory found. Exiting...");
+				return;
+			}
+			Globals::setResourcesPath(path / "Resources");
+			Logger::info("Using resources from the executable");
+		}
+
+
 		auto sdk = Globals::getSdkPath();
 		std::string version = Globals::getSdkVersion();
 		if (version.empty()) {
@@ -112,7 +109,7 @@ public:
 
 		auto builder = Gtk::Builder::create();
 		try {
-			builder->add_from_file("Resources/CreateOpenProject.ui");
+			builder->add_from_file(Globals::getResourcesPath() / "CreateOpenProject.ui");
 		} catch (...) {
 			auto msg = ReportMessage::create();
 			msg->setTitle("Failed to init window");
@@ -120,6 +117,21 @@ public:
 			Logger::error(msg);
 			return;
 		}
+
+
+		const std::shared_ptr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
+		cssProvider->signal_parsing_error().connect(
+			[](const Glib::RefPtr<const Gtk::CssSection> & /*section*/, const Glib::Error &pError) {
+				//section.
+				Logger::error(pError.what());
+			},
+			true);
+		try {
+			cssProvider->load_from_path(Globals::getResourcesPath() / "style.css");
+		} catch (Glib::Error &e) { Logger::error("Failed to load style {}", e.what()); }
+		Gtk::StyleContext::add_provider_for_display(Gdk::Display::get_default(), cssProvider,
+													GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
 		auto tmpWindow = std::shared_ptr<mvp::StartupWindow>(
 			Gtk::Builder::get_widget_derived<mvp::StartupWindow>(builder, "window_createOpenProj"));
 		if (!tmpWindow) {

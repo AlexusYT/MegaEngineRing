@@ -1,0 +1,5 @@
+install(
+        DIRECTORY Resources
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}"
+        COMPONENT editor
+)

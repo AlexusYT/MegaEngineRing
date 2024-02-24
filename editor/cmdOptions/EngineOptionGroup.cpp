@@ -5,6 +5,7 @@
 #include "EngineOptionGroup.h"
 
 #include "options/LogPathOption.h"
+#include "options/ResPathOption.h"
 #include "options/SdkPathOption.h"
 #include "options/SdkVersionOption.h"
 
@@ -13,6 +14,7 @@ EngineOptionGroup::EngineOptionGroup() : OptionGroup("engine-options", "Engine o
 	optionEntries.emplace_back(std::make_unique<LogPathOption>(this));
 	optionEntries.emplace_back(std::make_unique<SdkPathOption>(this));
 	optionEntries.emplace_back(std::make_unique<SdkVersionOption>(this));
+	optionEntries.emplace_back(std::make_unique<ResPathOption>(this));
 }
 
 EngineOptionGroup::~EngineOptionGroup() = default;
