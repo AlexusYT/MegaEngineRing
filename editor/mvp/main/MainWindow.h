@@ -28,26 +28,7 @@ class MainWindow : public IViewMain, public Gtk::Window {
 
 public:
 	static std::shared_ptr<MainWindow> create(const std::shared_ptr<project::Project> &pProject,
-											  engine::utils::ReportMessagePtr &pReportMessage) {
-		const auto builder = Gtk::Builder::create();
-		try {
-			builder->add_from_file("Resources/base.ui");
-		} catch (...) {
-			pReportMessage = engine::utils::ReportMessage::create();
-			pReportMessage->setTitle("Failed to init main window");
-			pReportMessage->setMessage("Error while loading UI from file");
-		}
-
-		auto viewMain =
-			std::shared_ptr<MainWindow>(Gtk::Builder::get_widget_derived<MainWindow>(builder, "MainWindow", pProject));
-		if (!viewMain) {
-			pReportMessage = engine::utils::ReportMessage::create();
-			pReportMessage->setTitle("Failed to init main window");
-			pReportMessage->setMessage("Could not get the dialog");
-		}
-		pReportMessage = nullptr;
-		return viewMain;
-	}
+											  engine::utils::ReportMessagePtr &pReportMessage);
 
 	bool reloadUi = false;
 	OpenGLUPtr render;

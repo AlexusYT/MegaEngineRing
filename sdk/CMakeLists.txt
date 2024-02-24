@@ -95,17 +95,21 @@ function(setupTarget target)
 endfunction()
 setupTarget(MegaEngineSDK_shared)
 setupTarget(MegaEngineSDK_static)
+
+add_custom_target(MegaEngineSDK)
+add_dependencies(MegaEngineSDK MegaEngineSDK_static MegaEngineSDK_shared MegaEngineUtils)
+
 install(
         TARGETS MegaEngineSDK_static MegaEngineSDK_shared
         ARCHIVE
-        DESTINATION sdk/1.0.0/lib/
-        COMPONENT sdk-1.0.0
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
+        COMPONENT sdk
         LIBRARY
-        DESTINATION sdk/1.0.0/lib/
-        COMPONENT sdk-1.0.0
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
+        COMPONENT sdk
         FILE_SET engine_headers
-        DESTINATION sdk/1.0.0/
-        COMPONENT sdk-1.0.0
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/"
+        COMPONENT sdk
 )
 
 

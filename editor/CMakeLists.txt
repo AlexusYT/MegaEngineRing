@@ -154,6 +154,8 @@ add_library(
         cmdOptions/options/SdkPathOption.h
         cmdOptions/options/SdkVersionOption.cpp
         cmdOptions/options/SdkVersionOption.h
+        cmdOptions/options/ResPathOption.cpp
+        cmdOptions/options/ResPathOption.h
 
 )
 
@@ -161,6 +163,12 @@ target_precompile_headers(MegaEngineEditor_lib
         PRIVATE common.h
 )
 
+configure_file("${PROJECT_SOURCE_DIR}/data/Resources.h.in" "Resources.h")
+target_include_directories(
+        MegaEngineEditor_lib ${warning_guard}
+        PUBLIC
+        ${CMAKE_CURRENT_BINARY_DIR}
+)
 target_include_directories(
         MegaEngineEditor_lib ${warning_guard}
         PUBLIC
@@ -242,9 +250,6 @@ target_link_libraries(MegaEngineEditor_lib PRIVATE PkgConfig::CAIROMM)
 
 find_path(EGL_REGISTRY_INCLUDE_DIRS "EGL/egl.h")
 target_include_directories(MegaEngineEditor_lib PRIVATE ${EGL_REGISTRY_INCLUDE_DIRS})
-
-find_package(fmt REQUIRED)
-target_link_libraries(MegaEngineEditor_lib PRIVATE fmt::fmt)
 
 find_package(LibLZMA REQUIRED)
 target_link_libraries(MegaEngineEditor_lib PRIVATE LibLZMA::LibLZMA)

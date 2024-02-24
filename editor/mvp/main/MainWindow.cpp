@@ -7,10 +7,36 @@
 #include <ui/widgetWindows/CenterWindow.h>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerWindow.h>
 
+#include "Globals.h"
 #include "graphic/viewport/OpenGL.h"
 #include "project/Project.h"
 
 namespace MVP_CORE {
+std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<project::Project> &pProject,
+											   engine::utils::ReportMessagePtr &pReportMessage) {
+	const auto builder = Gtk::Builder::create();
+	try {
+		builder->add_from_file(Globals::getResourcesPath() / "base.ui");
+	} catch (...) {
+		pReportMessage = engine::utils::ReportMessage::create();
+		pReportMessage->setTitle("Failed to init main window");
+		pReportMessage->setMessage("Error while loading UI from file");
+
+		return nullptr;
+	}
+
+	auto viewMain =
+		std::shared_ptr<MainWindow>(Gtk::Builder::get_widget_derived<MainWindow>(builder, "MainWindow", pProject));
+	if (!viewMain) {
+		pReportMessage = engine::utils::ReportMessage::create();
+		pReportMessage->setTitle("Failed to init main window");
+		pReportMessage->setMessage("Could not get the dialog");
+		return nullptr;
+	}
+	pReportMessage = nullptr;
+	return viewMain;
+}
+
 MainWindow::MainWindow(BaseObjectType* pCobject, const Glib::RefPtr<Gtk::Builder> &pBuilder,
 					   std::shared_ptr<project::Project> pProject)
 	: Window(pCobject), project(std::move(pProject)), projectExplorerWindow{(project.get())}, builder(pBuilder),

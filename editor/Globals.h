@@ -11,17 +11,10 @@ class Globals {
 	inline static std::filesystem::path sdkPath;
 	inline static std::string sdkVersion;
 	inline static std::filesystem::path sdk;
+	inline static std::filesystem::path resourcesPath;
 
 public:
-	static void init() {
-		const std::filesystem::path home = getenv("HOME");
-		logPath = home / ".cache/MegaEngineRing/logs";
-		create_directories(logPath);
-		projectsPath = home / "MegaEngineProjects";
-		create_directories(projectsPath);
-
-		sdkPath = std::filesystem::current_path() / "sdk";
-	}
+	static void init();
 
 	[[nodiscard]] static const std::filesystem::path &getLogPath() { return logPath; }
 
@@ -42,6 +35,10 @@ public:
 	[[nodiscard]] static const std::filesystem::path &getSdk() { return sdk; }
 
 	static void setSdk(const std::filesystem::path &pSdk) { sdk = pSdk; }
+
+	[[nodiscard]] static const std::filesystem::path &getResourcesPath() { return resourcesPath; }
+
+	static void setResourcesPath(const std::filesystem::path &pResourcesPath) { resourcesPath = pResourcesPath; }
 };
 
 
