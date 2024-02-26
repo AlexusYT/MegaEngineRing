@@ -52,6 +52,11 @@ public:
 		return keyController->signal_key_pressed().connect(pSlot, false);
 	}
 
+	sigc::connection connectKeyReleasedSignal(
+		const sigc::slot<void(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const override {
+		return keyController->signal_key_released().connect(pSlot, false);
+	}
+
 	void switchLogPage(const int pId) const override { notebook->set_current_page(pId); }
 
 	void addLogMessage(const int pId, const Glib::ustring &pMessage) override {

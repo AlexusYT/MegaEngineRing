@@ -12,6 +12,7 @@ class ModelSceneEditor : public IModelSceneEditor {
 	project::SceneInfo* sceneInfo{};
 
 	std::shared_ptr<sdk::main::IScene> scene;
+	bool interactive{};
 
 public:
 	[[nodiscard]] const std::shared_ptr<project::Project> &getProject() const override { return project; }
@@ -25,6 +26,10 @@ public:
 	[[nodiscard]] const std::shared_ptr<sdk::main::IScene> &getScene() const override { return scene; }
 
 	void setScene(const std::shared_ptr<sdk::main::IScene> &pScene) override { scene = pScene; }
+
+	[[nodiscard]] bool isInteractive() const override { return interactive; }
+
+	void setInteractive(const bool pInteractive) override { interactive = pInteractive; }
 };
 } // namespace mer::editor::mvp
 #endif //MODELSCENEEDITOR_H

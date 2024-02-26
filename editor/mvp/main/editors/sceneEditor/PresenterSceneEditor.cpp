@@ -6,13 +6,10 @@
 
 #include <EngineSDK/main/resources/LoadedResources.h>
 #include <EngineSDK/main/resources/ResourceRequests.h>
-#include <EngineSDK/main/resources/shaders/BuiltInProgramRequest.h>
 #include <EngineSDK/main/scene/IScene.h>
-#include <EngineSDK/renderer/shaders/ShaderProgram.h>
-#include <cxxabi.h>
 #include <dlfcn.h>
-#include <epoxy/gl.h>
 
+#include "EngineSDK/utils/KeyboardKey.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
 #include "project/Project.h"
@@ -36,6 +33,25 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 		}
 		project->connectOnEditorLibLoadingSignal(sigc::mem_fun(*this, &PresenterSceneEditor::notifyLoadingStarted));
 		project->connectOnEditorLibLoadedSignal(sigc::mem_fun(*this, &PresenterSceneEditor::notifyLoadingStopped));
+
+		viewSceneEditor->connectKeyPressedSignal(
+			[this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
+				if (!modelSceneEditor->isInteractive()) return false;
+				const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
+				if (const auto scene = modelSceneEditor->getScene())
+					scene->onKeyChanged(key, true, convertToModifierKeys(pState));
+				return false;
+			});
+
+		viewSceneEditor->connectKeyReleasedSignal(
+			[this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
+				const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
+				if (key == sdk::utils::KeyboardKey::KEY_F2)
+					modelSceneEditor->setInteractive(!modelSceneEditor->isInteractive());
+				if (!modelSceneEditor->isInteractive()) return;
+				if (const auto scene = modelSceneEditor->getScene())
+					scene->onKeyChanged(key, false, convertToModifierKeys(pState));
+			});
 	});
 
 	viewSceneEditor->connectUnrealize([this] {
@@ -53,11 +69,17 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 	viewSceneEditor->connectRender([this](const Glib::RefPtr<Gdk::GLContext> & /*pContext*/) {
 		auto scene = modelSceneEditor->getScene().get();
 		if (scene) scene->render();
-		glFlush();
+
+		viewSceneEditor->executeInMainThread(
+			[this](const std::promise<void> & /*pPromise*/) { viewSceneEditor->redraw(); });
 		return true;
 	});
 	viewSceneEditor->connectResize([this](const int pWidth, const int pHeight) {
 		if (const auto scene = modelSceneEditor->getScene()) scene->resize(pWidth, pHeight);
+	});
+	viewSceneEditor->connectCursorMovedSignal([this](const double pX, const double pY) {
+		if (!modelSceneEditor->isInteractive()) return;
+		if (const auto scene = modelSceneEditor->getScene()) { scene->onCursorPosChanged(pX, pY); }
 	});
 }
 
@@ -72,6 +94,7 @@ void PresenterSceneEditor::notifyLoadingStopped(const sdk::utils::ReportMessageP
 	sdk::utils::ReportMessagePtr error = !pError ? loadScene() : pError;
 	viewSceneEditor->executeInMainThread([this, error](const std::promise<void> & /*pPromise*/) {
 		viewSceneEditor->redraw();
+		viewSceneEditor->emitResize();
 		viewSceneEditor->onLoadingStopped(error);
 	});
 }
@@ -91,6 +114,9 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	}
 	sdk::main::IScene* (*startFunc)() = reinterpret_cast<sdk::main::IScene* (*) ()>(func);
 	std::shared_ptr<sdk::main::IScene> scene;
+	sdk::utils::Logger::out("test1");
+	viewSceneEditor->makeCurrent();
+	sdk::utils::Logger::out("test2");
 	try {
 
 		scene = std::shared_ptr<sdk::main::IScene>(startFunc());
@@ -110,8 +136,6 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 		msg->addInfoLine("Scene name: {}", sceneInfo->getName());
 		return msg;
 	}
-	modelSceneEditor->setScene(scene);
-	viewSceneEditor->makeCurrent();
 
 	auto requests = std::make_shared<sdk::main::ResourceRequests>();
 	if (auto msg = scene->preloadScene(requests)) return msg;
@@ -123,6 +147,23 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	scene->setResources(resources);
 
 	if (auto msg = scene->initScene()) return msg;
+
+	modelSceneEditor->setScene(scene);
 	return nullptr;
+}
+
+sdk::utils::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::ModifierType &pState) {
+	using namespace sdk::utils;
+	uint8_t mods = 0;
+	if ((pState & Gdk::ModifierType::SHIFT_MASK) == Gdk::ModifierType::SHIFT_MASK) { mods |= ModifierKeys::MOD_SHIFT; }
+	if ((pState & Gdk::ModifierType::CONTROL_MASK) == Gdk::ModifierType::CONTROL_MASK) {
+		mods |= ModifierKeys::MOD_CONTROL;
+	}
+	if ((pState & Gdk::ModifierType::ALT_MASK) == Gdk::ModifierType::ALT_MASK) { mods |= ModifierKeys::MOD_ALT; }
+	if ((pState & Gdk::ModifierType::SUPER_MASK) == Gdk::ModifierType::SUPER_MASK) { mods |= ModifierKeys::MOD_SUPER; }
+	if ((pState & Gdk::ModifierType::LOCK_MASK) == Gdk::ModifierType::LOCK_MASK) {
+		mods |= ModifierKeys::MOD_CAPS_LOCK;
+	}
+	return ModifierKeys(mods);
 }
 } // namespace mer::editor::mvp

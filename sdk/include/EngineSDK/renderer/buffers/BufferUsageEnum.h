@@ -7,7 +7,7 @@
 
 namespace mer::sdk::renderer {
 
-enum BufferUsageEnum {
+enum BufferUsageEnum : uint32_t {
 	STREAM_DRAW = 0x88E0,
 	STREAM_READ = 0x88E1,
 	STREAM_COPY = 0x88E2,

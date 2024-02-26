@@ -18,10 +18,21 @@ void Window::show() {
 		native = glfwCreateWindow(width, height, title.c_str(), nullptr, sharedWindow ? sharedWindow->native : nullptr);
 		glfwDefaultWindowHints();
 		glfwSetWindowUserPointer(native, this);
-		glfwSetWindowSizeCallback(native, [](GLFWwindow* window, const int pWidth, const int pHeight) {
-			const auto win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-			win->onResize(pWidth, pHeight);
+		glfwSetWindowSizeCallback(native, [](GLFWwindow* pWindow, const int pWidth, const int pHeight) {
+			const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
+			win->width = pWidth;
+			win->height = pHeight;
+			win->onSizeChanged(pWidth, pHeight);
 		});
+		glfwSetCursorPosCallback(native, [](GLFWwindow* pWindow, const double pX, const double pY) {
+			const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
+			win->onCursorPosChanged(pX, pY);
+		});
+		glfwSetKeyCallback(
+			native, [](GLFWwindow* pWindow, const int pKey, const int pScancode, const int pAction, const int pMods) {
+				const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
+				win->onKeyChanged(pKey, pScancode, pAction, pMods);
+			});
 	}
 }
 
@@ -72,7 +83,11 @@ bool Window::isCloseRequest() const {
 	return false;
 }
 
-inline void Window::onResize(int /*pWidth*/, int /*pHeight*/) {}
+void Window::onSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
+
+void Window::onCursorPosChanged(double /*pX*/, double /*pY*/) {}
+
+void Window::onKeyChanged(int /*pKey*/, int /*pScancode*/, int /*pAction*/, int /*pMods*/) {}
 
 sdk::utils::ReportMessagePtr Window::init() {
 	makeCurrent();

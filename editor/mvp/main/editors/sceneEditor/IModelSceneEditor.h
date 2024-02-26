@@ -28,7 +28,11 @@ public:
 
 	[[nodiscard]] virtual const std::shared_ptr<sdk::main::IScene> &getScene() const = 0;
 
-	virtual void setScene(const std::shared_ptr<sdk::main::IScene> &pScene) = 0 ;
+	virtual void setScene(const std::shared_ptr<sdk::main::IScene> &pScene) = 0;
+
+	[[nodiscard]] virtual bool isInteractive() const = 0;
+
+	virtual void setInteractive(bool pInteractive) = 0;
 };
 } // namespace mer::editor::mvp
 

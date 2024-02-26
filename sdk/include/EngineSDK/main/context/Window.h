@@ -44,8 +44,20 @@ public:
 
 	IContext* getContext() { return this; }
 
+	[[nodiscard]] int getWidth() const { return width; }
+
+	void setWidth(const int pWidth) { width = pWidth; }
+
+	[[nodiscard]] int getHeight() const { return height; }
+
+	void setHeight(const int pHeight) { height = pHeight; }
+
 private:
-	virtual void onResize(int pWidth, int pHeight);
+	virtual void onSizeChanged(int pWidth, int pHeight);
+
+	virtual void onCursorPosChanged(double pX, double pY);
+
+	virtual void onKeyChanged(int pKey, int pScancode, int pAction, int pMods);
 
 	sdk::utils::ReportMessagePtr init() override;
 

@@ -10,6 +10,8 @@
 #include "ui/widgetWindows/TreeObjectWindow.h"
 
 namespace mer::editor::mvp {
+class IViewMain;
+
 class ViewSceneEditor : public IViewSceneEditor {
 	Gtk::Paned mainWidget;
 
@@ -19,7 +21,8 @@ class ViewSceneEditor : public IViewSceneEditor {
 	Gtk::GLArea area;
 	Gtk::Box loadingBox{Gtk::Orientation::VERTICAL};
 	Gtk::Label loadingErrorLabel;
-
+	Glib::RefPtr<Gtk::EventControllerMotion> motionController;
+	IViewMain* viewMain{};
 
 public:
 	ViewSceneEditor();
@@ -34,11 +37,23 @@ public:
 
 	sigc::connection connectResize(const sigc::slot<void(int pWidth, int pHeight)> &pSlot) override;
 
+	sigc::connection connectKeyPressedSignal(
+		const sigc::slot<bool(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const override;
+
+	sigc::connection connectKeyReleasedSignal(
+		const sigc::slot<void(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const override;
+
+	sigc::connection connectCursorMovedSignal(const sigc::slot<void(double pX, double pY)> &pSlot) const override {
+		return motionController->signal_motion().connect(pSlot, false);
+	}
+
 	void makeCurrent() override;
 
 	void redraw() override;
 
 	void throwIfError() override;
+
+	void emitResize() override;
 
 	void onLoadingStarted() override;
 

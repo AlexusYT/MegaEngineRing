@@ -11,14 +11,17 @@
 #include "IScene.h"
 
 namespace mer::sdk::main {
+class Camera;
+class IActor;
 class ISceneObject;
-}
+} // namespace mer::sdk::main
 
 namespace mer::sdk::main {
 class Scene : public IScene {
 	std::shared_ptr<Resources> resources;
 	std::shared_ptr<ProgramWideShaderBuffer> programBuffer;
-	std::vector<std::shared_ptr<ISceneObject>> objects;
+	std::vector<std::shared_ptr<IActor>> objects;
+	std::shared_ptr<Camera> camera;
 
 public:
 	Scene();
@@ -174,7 +177,7 @@ protected:
 
 	sdk::utils::ReportMessagePtr preloadScene(const std::shared_ptr<ResourceRequests>& pRequests) override;
 
-	void addObject(const std::shared_ptr<ISceneObject> &pObject) ;
+	void addObject(const std::shared_ptr<IActor> &pObject) ;
 
 private:
 	void setResources(const std::shared_ptr<Resources> &pResources) final;
@@ -182,6 +185,11 @@ private:
 	void render() final;
 
 	void resize(int pWidth, int pHeight) override;
+
+	void onCursorPosChanged(double pX, double pY) override;
+
+	void onKeyChanged(utils::KeyboardKey pKey, bool pPressed, utils::ModifierKeys pMods) override;
+
 };
 } // namespace mer::sdk::main
 

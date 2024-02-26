@@ -6,6 +6,11 @@
 #define ISCENE_H
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
+namespace mer::sdk::utils {
+class ModifierKeys;
+enum class KeyboardKey;
+} // namespace mer::sdk::utils
+
 namespace mer::sdk::main {
 class Resources;
 class ResourceRequests;
@@ -39,6 +44,10 @@ private:
 	virtual void render() = 0;
 
 	virtual void resize(int pWidth, int pHeight) = 0;
+
+	virtual void onCursorPosChanged(double pX, double pY) = 0;
+
+	virtual void onKeyChanged(utils::KeyboardKey pKey, bool pPressed, utils::ModifierKeys pMods) = 0;
 };
 } // namespace mer::sdk::main
 

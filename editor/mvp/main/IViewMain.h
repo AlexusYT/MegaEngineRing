@@ -16,6 +16,9 @@ public:
 	virtual sigc::connection connectKeyPressedSignal(
 		const sigc::slot<bool(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const = 0;
 
+	virtual sigc::connection connectKeyReleasedSignal(
+		const sigc::slot<void(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const = 0;
+
 	virtual void switchLogPage(int pId) const = 0;
 
 	virtual void addLogMessage(int pId, const Glib::ustring &pMessage) = 0;

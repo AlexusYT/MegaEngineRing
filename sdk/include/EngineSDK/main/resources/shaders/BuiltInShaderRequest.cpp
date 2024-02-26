@@ -34,7 +34,7 @@ void main(){
 	colorOut = vec4(vec3(1), 1);
 }
 )");*/
-			result->setSource(R"(#version 330
+			result->setSource(R"(#version 430
 
 out vec4 outputColor;
 
@@ -47,12 +47,15 @@ void main() {
 		result = std::make_shared<renderer::VertexShader>();
 		//language=glsl
 		if (BuiltInVertexShaderRequest::getDefault() == verRequest)
-			result->setSource(R"(#version 330
+			result->setSource(R"(#version 430
 layout(location = 0) in vec4 position;
-uniform mat4 mvp;
+layout(std430, binding = 0) buffer ProgramWideSettings {
+	mat4 viewProjMatrix;
+};
+
 
 void main() {
-  gl_Position = position;
+  gl_Position = viewProjMatrix*position;
 })");
 		/*result->setSource(R"(
 #version 430 core

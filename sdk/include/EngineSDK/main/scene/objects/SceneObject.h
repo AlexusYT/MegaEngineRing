@@ -5,6 +5,7 @@
 #ifndef SCENEOBJECT_H
 #define SCENEOBJECT_H
 
+#include "EngineSDK/main/scene/actor/IActor.h"
 #include "ISceneObject.h"
 
 namespace mer::sdk::renderer {
@@ -13,7 +14,7 @@ class ShaderProgram;
 
 namespace mer::sdk::main {
 
-class SceneObject : public ISceneObject {
+class SceneObject : public ISceneObject, public IActor {
 	std::shared_ptr<Resources> resources;
 	std::shared_ptr<renderer::ShaderProgram> shader;
 

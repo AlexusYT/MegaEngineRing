@@ -29,7 +29,8 @@ static const Glib::SignalProxyInfo Notebook_signal_create_window = {
 	"create_window", (GCallback) &Notebook_signal_create_window_callback,
 	(GCallback) &Notebook_signal_create_window_callback};
 
-mer::editor::ui::CenterWindow::CenterWindow() {
+namespace mer::editor::ui {
+CenterWindow::CenterWindow() {
 	//g_signal_connect(mainNotebook.gobj(), "create_window", )
 	Glib::SignalProxy<Glib::RefPtr<Gtk::Notebook>(Gtk::Widget*)>(&mainNotebook, &Notebook_signal_create_window)
 		.connect(
@@ -56,7 +57,7 @@ mer::editor::ui::CenterWindow::CenterWindow() {
 	mainNotebook.set_show_border(false);
 }
 
-void mer::editor::ui::CenterWindow::openEntry(ProjectExplorerEntry* pEntry) {
+void CenterWindow::openEntry(ProjectExplorerEntry* pEntry) {
 	int pageNum;
 	const auto iter = openedPages.find(pEntry);
 	if (iter == openedPages.end()) {
@@ -83,3 +84,5 @@ void mer::editor::ui::CenterWindow::openEntry(ProjectExplorerEntry* pEntry) {
 	}
 	mainNotebook.set_current_page(pageNum);
 }
+
+} // namespace mer::editor::ui

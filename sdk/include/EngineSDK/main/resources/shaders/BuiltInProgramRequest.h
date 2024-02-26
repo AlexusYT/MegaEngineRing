@@ -5,10 +5,7 @@
 #ifndef BUILTINPROGRAMREQUEST_H
 #define BUILTINPROGRAMREQUEST_H
 #include "EngineSDK/main/resources/ResourceRequest.h"
-
-namespace mer::sdk::renderer {
-class ShaderProgram;
-}
+#include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
 namespace mer::sdk::main {
 class BuiltInProgramRequest final : public RegularRequest {
