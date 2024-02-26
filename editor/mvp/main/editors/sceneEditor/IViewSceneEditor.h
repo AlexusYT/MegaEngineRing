@@ -21,12 +21,21 @@ public:
 
 	virtual sigc::connection connectResize(const sigc::slot<void(int pWidth, int pHeight)> &pSlot) = 0;
 
+	virtual sigc::connection connectKeyPressedSignal(
+		const sigc::slot<bool(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const = 0;
+
+	virtual sigc::connection connectKeyReleasedSignal(
+		const sigc::slot<void(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const = 0;
+
+	virtual sigc::connection connectCursorMovedSignal(const sigc::slot<void(double pX, double pY)> &pSlot) const = 0;
+
 	virtual void makeCurrent() = 0;
 
 	virtual void redraw() = 0;
 
-
 	virtual void throwIfError() = 0;
+
+	virtual void emitResize() = 0;
 
 	virtual void onLoadingStarted() = 0;
 

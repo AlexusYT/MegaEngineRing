@@ -16,7 +16,7 @@ class ISSBO {
 public:
 	virtual ~ISSBO() = default;
 
-	virtual void setData(const void* pData, uint64_t pSize, BufferUsageEnum pUsage) const = 0;
+	virtual void setData(const void* pData, int64_t pSize, BufferUsageEnum pUsage) const = 0;
 
 	virtual void bind() const = 0;
 
@@ -25,6 +25,8 @@ public:
 	virtual uint32_t native() const = 0;
 
 	virtual void bindBufferBase(uint32_t pBinding) = 0;
+
+	virtual void bufferSubData(int32_t pOffset, int64_t pSize, const void* pData) = 0;
 };
 } // namespace mer::sdk::renderer
 

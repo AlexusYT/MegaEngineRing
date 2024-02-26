@@ -31,7 +31,11 @@ public:
 	void runMainLoop();
 
 private:
-	void onResize(int pWidth, int pHeight) override;
+	void onSizeChanged(int pWidth, int pHeight) override;
+
+	void onCursorPosChanged(double pX, double pY) override;
+
+	void onKeyChanged(int pKey, int pScancode, int pAction, int pMods) override;
 };
 } // namespace mer::sdk::main
 

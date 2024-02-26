@@ -5,8 +5,9 @@
 #ifndef EDITOR_SDK
 	#include "MainWindow.h"
 
-	#include <EngineUtils/utils/Logger.h>
+	#include <GLFW/glfw3.h>
 
+	#include "EngineSDK/utils/ModifierKeys.h"
 	#include "ResourcesWindow.h"
 
 namespace mer::sdk::main {
@@ -31,6 +32,7 @@ sdk::utils::ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene>
 }
 
 void MainWindow::runMainLoop() {
+	onSizeChanged(getWidth(), getHeight());
 	getContext()->makeCurrent();
 	while (!isCloseRequest()) {
 		if (currentScene) currentScene->render();
@@ -38,8 +40,18 @@ void MainWindow::runMainLoop() {
 	}
 }
 
-void MainWindow::onResize(const int pWidth, const int pHeight) {
+void MainWindow::onSizeChanged(const int pWidth, const int pHeight) {
 	if (currentScene) currentScene->resize(pWidth, pHeight);
+}
+
+void MainWindow::onCursorPosChanged(double pX, double pY) {
+	if (currentScene) currentScene->onCursorPosChanged(pX, pY);
+}
+
+void MainWindow::onKeyChanged(int /*pKey*/, int pScancode, const int pAction, const int pMods) {
+	if (currentScene)
+		currentScene->onKeyChanged(static_cast<utils::KeyboardKey>(pScancode), pAction != GLFW_RELEASE,
+								   utils::ModifierKeys(static_cast<uint8_t>(pMods)));
 }
 } // namespace mer::sdk::main
 #endif

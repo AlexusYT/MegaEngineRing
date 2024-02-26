@@ -26,6 +26,8 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/scene/objects/SceneObject.cpp
         include/EngineSDK/main/scene/objects/BasicRenderObject.cpp
         include/EngineSDK/renderer/GL.cpp
+        include/EngineSDK/main/scene/cameras/Camera.cpp
+        include/EngineSDK/renderer/buffers/SSBO.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -48,7 +50,6 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/renderer/shaders/IShaderProgram.h
         include/EngineSDK/renderer/shaders/ShaderProgram.h
         include/EngineSDK/renderer/buffers/ISSBO.h
-        include/EngineSDK/renderer/buffers/SSBO.cpp
         include/EngineSDK/renderer/buffers/SSBO.h
         include/EngineSDK/renderer/buffers/BufferUsageEnum.h
         include/EngineSDK/main/resources/shaders/BuiltInProgramRequest.h
@@ -59,6 +60,11 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/SceneObject.h
         include/EngineSDK/main/scene/objects/BasicRenderObject.h
         include/EngineSDK/renderer/GL.h
+        include/EngineSDK/main/scene/cameras/ICamera.h
+        include/EngineSDK/main/scene/cameras/Camera.h
+        include/EngineSDK/main/scene/actor/IActor.h
+        include/EngineSDK/utils/ModifierKeys.h
+        include/EngineSDK/utils/KeyboardKey.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
@@ -71,6 +77,7 @@ find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(MegaEngineSDK_static INTERFACE glfw)
 
 find_package(sigc++-3 CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 function(setupTarget target)
     target_precompile_headers(${target}
             PRIVATE common.h
@@ -86,6 +93,7 @@ function(setupTarget target)
             "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
     )
 
+    target_link_libraries(${target} PRIVATE glm::glm)
     target_link_libraries(${target} PUBLIC stdc++exp MegaEngineUtils)
     target_link_libraries(${target} PRIVATE sigc-3.0)
     set_property(TARGET ${target} PROPERTY OUTPUT_NAME MegaEngineSDK)
