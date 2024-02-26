@@ -148,6 +148,12 @@ add_library(
         cmdOptions/options/SdkVersionOption.h
         cmdOptions/options/ResPathOption.cpp
         cmdOptions/options/ResPathOption.h
+        project/blueprints/elements/IModelBlueprintElement.h
+        project/blueprints/elements/IViewBlueprintElement.h
+        project/blueprints/elements/IPresenterBlueprintElement.h
+        project/blueprints/elements/triggers/IModelTimerTrigger.h
+        project/blueprints/elements/triggers/ModelTimerTrigger.cpp
+        project/blueprints/elements/triggers/ModelTimerTrigger.h
 
 )
 
