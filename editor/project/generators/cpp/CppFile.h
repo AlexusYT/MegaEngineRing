@@ -28,9 +28,9 @@ public:
 
 	void addInclude(const std::string &pInclude, bool pGlobal = true) {
 		std::string include;
-		if (pGlobal) include = std::format("<{}>\n", pInclude);
+		if (pGlobal) include = std::format("<{}>", pInclude);
 		else
-			include = std::format("\"{}\"\n", pInclude);
+			include = std::format("\"{}\"", pInclude);
 		includes.emplace_back(include);
 	}
 
