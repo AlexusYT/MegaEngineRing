@@ -60,8 +60,6 @@ private:
 
 	static std::shared_ptr<CppExternC> createExternCBlock(const std::string &pSceneName);
 
-	static std::shared_ptr<CppMethod> createPreloadSceneMethod(const std::shared_ptr<CppClass> &pClass);
-
 	static std::shared_ptr<CppMethod> createInitMethod(const std::shared_ptr<CppClass> &pClass);
 };
 

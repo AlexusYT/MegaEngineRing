@@ -7,8 +7,10 @@
 #include <EngineSDK/main/resources/LoadedResources.h>
 #include <EngineSDK/main/resources/ResourceRequests.h>
 #include <EngineSDK/main/scene/IScene.h>
+
 #include <dlfcn.h>
 
+#include "EngineSDK/main/resources/IResources.h"
 #include "EngineSDK/utils/KeyboardKey.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
@@ -16,7 +18,74 @@
 #include "project/generatedFiles/SceneInfo.h"
 
 namespace mer::editor::mvp {
-std::shared_ptr<sdk::main::ILoadedResources> loadedResources;
+
+class ResourcesContext : public sdk::main::IResources {
+	std::list<std::pair<std::shared_ptr<sdk::main::ResourceRequest>, ResourceSlot>> queue;
+	std::mutex queueMutex;
+	std::shared_ptr<sdk::main::ILoadedResources> resources;
+	std::condition_variable cv;
+
+	std::shared_ptr<Gdk::GLContext> sharedContext;
+	std::jthread thread;
+
+public:
+	ResourcesContext(const std::shared_ptr<sdk::main::ILoadedResources> &pResources,
+					 const std::shared_ptr<Gdk::GLContext> &pSharedContext)
+		: resources(pResources), sharedContext(pSharedContext),
+		  thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) {
+		thread.detach();
+	}
+
+	~ResourcesContext() override {
+		thread.request_stop();
+		cv.notify_one();
+	}
+
+	void enqueueResourceLoading(const std::shared_ptr<sdk::main::ResourceRequest> &pRequest,
+								const ResourceSlot &pSlot) override {
+
+		std::lock_guard lock(queueMutex);
+		queue.emplace_back(pRequest, pSlot);
+		cv.notify_one();
+	}
+
+	void resourceLoop(const std::stop_token &pToken) {
+		while (!pToken.stop_requested()) {
+			sharedContext->make_current();
+			std::unique_lock lck(queueMutex);
+			cv.wait(lck, [this, pToken]() {
+				return !queue.empty() || pToken.stop_requested();
+			});
+			for (auto &[request, slot]: queue) {
+				sdk::utils::ReportMessagePtr error;
+				std::shared_ptr<sdk::main::IResource> resource;
+				try {
+					resource = resources->executeRequest(request, error);
+				} catch (...) {
+					error = sdk::utils::ReportMessage::create();
+					error->setTitle("Failed to load resource");
+					error->setMessage("Exception thrown while executing request");
+				}
+				try {
+					slot(resource, error);
+				} catch (...) {
+					auto msg = sdk::utils::ReportMessage::create();
+					msg->setTitle("Failed to load resource");
+					msg->setMessage("Exception thrown in callback");
+
+					if (error) {
+						sdk::utils::Logger::error(error);
+						msg->addInfoLine("Additional error reported earlier");
+					}
+					sdk::utils::Logger::error(msg);
+				}
+			}
+			queue.clear();
+		}
+	}
+};
+
+std::shared_ptr<ResourcesContext> loadedResources;
 
 PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEditor> &pViewSceneEditor,
 										   const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor)
@@ -114,9 +183,7 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	}
 	sdk::main::IScene* (*startFunc)() = reinterpret_cast<sdk::main::IScene* (*) ()>(func);
 	std::shared_ptr<sdk::main::IScene> scene;
-	sdk::utils::Logger::out("test1");
 	viewSceneEditor->makeCurrent();
-	sdk::utils::Logger::out("test2");
 	try {
 
 		scene = std::shared_ptr<sdk::main::IScene>(startFunc());
@@ -137,14 +204,11 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 		return msg;
 	}
 
-	auto requests = std::make_shared<sdk::main::ResourceRequests>();
-	if (auto msg = scene->preloadScene(requests)) return msg;
 	auto sdk = project->getEditorSdkLib();
 	void* sym = dlsym(sdk, "_ZN3mer3sdk4main15LoadedResources6createEv");
-	loadedResources = reinterpret_cast<std::shared_ptr<sdk::main::ILoadedResources> (*)()>(sym)();
-	auto resources = loadedResources->executeRequests(requests, scene);
-
-	scene->setResources(resources);
+	auto resources = reinterpret_cast<std::shared_ptr<sdk::main::ILoadedResources> (*)()>(sym)();
+	loadedResources = std::make_shared<ResourcesContext>(resources, viewSceneEditor->getSharedContext());
+	scene->setResources(loadedResources.get());
 
 	if (auto msg = scene->initScene()) return msg;
 

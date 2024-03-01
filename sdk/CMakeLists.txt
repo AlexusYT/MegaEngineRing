@@ -11,8 +11,6 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/renderer/shaders/Shader.cpp
         include/EngineSDK/main/context/ResourcesWindow.cpp
         include/EngineSDK/main/context/ResourcesWindow.h
-        include/EngineSDK/main/scene/TestScene.cpp
-        include/EngineSDK/main/scene/TestScene.h
         include/EngineSDK/main/resources/ResourceRequest.cpp
         include/EngineSDK/main/resources/shaders/BuiltInShaderRequest.cpp
         include/EngineSDK/main/resources/ResourceLoader.cpp
@@ -23,11 +21,14 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/renderer/shaders/ShaderProgram.cpp
         include/EngineSDK/main/resources/shaders/BuiltInProgramRequest.cpp
         include/EngineSDK/main/buffers/ProgramWideShaderBuffer.cpp
-        include/EngineSDK/main/scene/objects/SceneObject.cpp
-        include/EngineSDK/main/scene/objects/BasicRenderObject.cpp
         include/EngineSDK/renderer/GL.cpp
         include/EngineSDK/main/scene/cameras/Camera.cpp
         include/EngineSDK/renderer/buffers/SSBO.cpp
+        include/EngineSDK/main/scene/objects/SceneObject.cpp
+        sources/main/scene/objects/extensions/Extension.cpp
+        sources/main/scene/objects/extensions/BasicRenderExtension.cpp
+        sources/main/scene/objects/extensions/CameraExtension.cpp
+        sources/main/scene/objects/extensions/CameraKeyboardExtension.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -57,14 +58,19 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/renderer/shaders/IShader.h
         include/EngineSDK/renderer/shaders/Shader.h
         include/EngineSDK/main/scene/objects/ISceneObject.h
-        include/EngineSDK/main/scene/objects/SceneObject.h
-        include/EngineSDK/main/scene/objects/BasicRenderObject.h
         include/EngineSDK/renderer/GL.h
         include/EngineSDK/main/scene/cameras/ICamera.h
         include/EngineSDK/main/scene/cameras/Camera.h
         include/EngineSDK/main/scene/actor/IActor.h
         include/EngineSDK/utils/ModifierKeys.h
         include/EngineSDK/utils/KeyboardKey.h
+        include/EngineSDK/main/scene/objects/SceneObject.h
+        include/EngineSDK/main/scene/objects/extensions/Extension.h
+        include/EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h
+        include/EngineSDK/main/resources/IResources.h
+        include/EngineSDK/main/scene/objects/extensions/CameraExtension.h
+        include/EngineSDK/main/scene/objects/extensions/CameraKeyboardExtension.h
+        include/EngineSDK/main/scene/objects/extensions/CameraMouseExtension.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

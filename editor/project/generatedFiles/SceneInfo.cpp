@@ -5,6 +5,7 @@
 #include "SceneInfo.h"
 
 #include <EngineSDK/main/scene/Scene.h>
+
 #include <project/Project.h>
 #include <project/generators/cpp/AccessModifier.h>
 #include <project/generators/cpp/CppClass.h>
@@ -54,10 +55,12 @@ sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	using namespace std::string_literals;
 	CppSourceFile source;
 	source.addInclude(getHeaderPath().filename(), false);
-	source.addInclude("EngineSDK/main/resources/ResourceRequests.h", true);
 	source.addInclude("EngineSDK/renderer/GL.h", true);
-	source.addInclude("EngineSDK/main/scene/objects/BasicRenderObject.h", true);
-	source.addInclude("EngineUtils/utils/Logger.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraExtension.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraKeyboardExtension.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraMouseExtension.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/SceneObject.h", true);
 	if (primaryScene) {
 		source.addInclude("EngineSDK/main/scene/IScene.h");
 		auto getPrimarySceneMethod = CppMethod::create();
@@ -71,10 +74,6 @@ sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 
 	const std::shared_ptr<CppClass> class_ = CppClass::create(getName());
 	class_->addImplement("public mer::sdk::main::Scene");
-
-	const std::shared_ptr<CppMethod> method = createPreloadSceneMethod(class_);
-	source.addDefinition(method->getDefinition());
-	class_->addDeclaration(method->getDeclaration(), AccessModifier::PRIVATE);
 
 	const auto initMethod = createInitMethod(class_);
 	source.addDefinition(initMethod->getDefinition());
@@ -100,32 +99,38 @@ std::shared_ptr<CppExternC> SceneInfo::createExternCBlock(const std::string &pSc
 	return externC;
 }
 
-std::shared_ptr<CppMethod> SceneInfo::createPreloadSceneMethod(const std::shared_ptr<CppClass> &pClass) {
-	auto method = CppMethod::create();
-	method->setKlass(pClass.get());
-	method->setName("preloadScene");
-	method->setReturnType<sdk::utils::ReportMessagePtr>();
-	method->setParamsList<const std::shared_ptr<sdk::main::ResourceRequests> &>("pRequests");
-	method->setIsOverride(true);
-
-	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::main"));
-	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::utils"));
-	method->addStatement(CppCustomStatement::create("addObject(std::make_shared<BasicRenderObject>())"));
-	method->addStatement(CppCustomStatement::create("return Scene::preloadScene(pRequests)"));
-	return method;
-}
-
 std::shared_ptr<CppMethod> SceneInfo::createInitMethod(const std::shared_ptr<CppClass> &pClass) {
 	auto method = CppMethod::create();
 	method->setKlass(pClass.get());
 	method->setName("initScene");
 	method->setReturnType<sdk::utils::ReportMessagePtr>();
 	method->setIsOverride(true);
-	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::renderer"));
-	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::main"));
-	method->addStatement(CppCustomStatement::create("using namespace mer::sdk::utils"));
-	method->addStatement(CppCustomStatement::create("GL::setClearColor(0.0f, 0.0f, 0.9f, 1.0f)"));
-	method->addStatement(CppCustomStatement::create("return Scene::initScene()"));
+	//language=c++
+	method->addStatement(CppCustomStatement::create(R"(
+	using namespace mer::sdk::renderer;
+	using namespace mer::sdk::main;
+	using namespace mer::sdk::utils;
+
+	auto object = std::make_shared<SceneObject>();
+	auto render = std::make_shared<BasicRenderExtension>();
+	object->addExtension("render", render);
+	addObject(object);
+
+	auto player = std::make_shared<SceneObject>();
+	auto camera = std::make_shared<CameraExtension>();
+	auto cameraKeyboard = std::make_shared<CameraKeyboardExtension>();
+	auto cameraMouse = std::make_shared<CameraMouseExtension>();
+	cameraMouse->setMethodAddAngle(sigc::mem_fun(*camera, &CameraExtension::addAngle));
+	cameraKeyboard->setMethodGetAngle(sigc::mem_fun(*camera, &CameraExtension::getAngle));
+	camera->getOnMatrixChanged().connect(sigc::mem_fun(*this, &Scene::setViewProjMatrix));
+	player->addExtension("cameraKeyboard", cameraKeyboard);
+	player->addExtension("cameraMouse", cameraMouse);
+	player->addExtension("camera", camera);
+	addObject(player);
+
+	GL::setClearColor(0.0f, 0.0f, 0.9f, 1.0f);
+	return Scene::initScene())"));
+
 	return method;
 }
 } // namespace mer::editor::project

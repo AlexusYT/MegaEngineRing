@@ -31,6 +31,8 @@ public:
 
 	virtual void makeCurrent() = 0;
 
+	virtual const Glib::RefPtr<Gdk::GLContext> &getSharedContext() const = 0;
+
 	virtual void redraw() = 0;
 
 	virtual void throwIfError() = 0;

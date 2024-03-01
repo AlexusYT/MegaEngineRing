@@ -11,7 +11,6 @@
 
 	#include "EngineSDK/main/DefaultApplicationSettings.h"
 	#include "EngineSDK/main/context/MainWindow.h"
-	#include "EngineSDK/main/scene/TestScene.h"
 
 extern std::shared_ptr<mer::sdk::main::IScene> getPrimaryScene();
 
@@ -75,6 +74,15 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 		Logger::error(msg);
 		return 1;
 	}
+
+	glfwSetErrorCallback([](int error_code, const char* description) {
+		auto msg = ReportMessage::create();
+		msg->setTitle("GLFW error");
+		msg->setMessage("GLFW error");
+		msg->addInfoLine("Error code: {}", error_code);
+		msg->addInfoLine("Error description: {}", description);
+		Logger::error(msg);
+	});
 
 
 	std::shared_ptr<MainWindow> window = MainWindow::create();

@@ -20,11 +20,8 @@ MainWindow::MainWindow() {
 }
 
 sdk::utils::ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene> &pNewScene) {
-	auto requests = std::make_shared<ResourceRequests>();
-	if (auto msg = pNewScene->preloadScene(requests)) return msg;
-	auto resources = resourcesWindow->executeRequests(requests, pNewScene);
 
-	pNewScene->setResources(resources);
+	pNewScene->setResources(resourcesWindow.get());
 
 	if (auto msg = pNewScene->initScene()) return msg;
 	currentScene = pNewScene;
@@ -33,8 +30,8 @@ sdk::utils::ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene>
 
 void MainWindow::runMainLoop() {
 	onSizeChanged(getWidth(), getHeight());
-	getContext()->makeCurrent();
 	while (!isCloseRequest()) {
+		getContext()->makeCurrent();
 		if (currentScene) currentScene->render();
 		getContext()->swapBuffers();
 	}
