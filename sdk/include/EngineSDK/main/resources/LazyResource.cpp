@@ -23,7 +23,8 @@ std::shared_ptr<IResource> LazyResource::getSync() {
 
 	} else {
 		dependencies->clear();
-		scene->onResourceLoadingError(request, error);
+		utils::Logger::error(error);
+		//scene->onResourceLoadingError(request, error);
 		return nullptr;
 	}
 	return resource;

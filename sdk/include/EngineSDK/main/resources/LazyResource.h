@@ -4,7 +4,6 @@
 
 #ifndef LAZYRESOURCE_H
 #define LAZYRESOURCE_H
-#include <EngineSDK/main/scene/IScene.h>
 #include <future>
 #include <sigc++/functors/slot.h>
 
@@ -12,20 +11,19 @@
 
 namespace mer::sdk::main {
 class ResourceRequest;
-}
+class Resources;
+} // namespace mer::sdk::main
 
 namespace mer::sdk::main {
 class LazyResource : public IResource {
 	friend class LoadedResources;
 	std::shared_ptr<ResourceRequest> request;
 	std::shared_ptr<IResource> resource;
-	std::shared_ptr<IScene> scene;
 	std::shared_ptr<Resources> dependencies;
 
 protected:
-	LazyResource(const std::shared_ptr<ResourceRequest> &pRequest, const std::shared_ptr<IScene> &pScene,
-				 const std::shared_ptr<Resources> &pDependencies)
-		: request(pRequest), scene(pScene), dependencies(pDependencies) {}
+	LazyResource(const std::shared_ptr<ResourceRequest> &pRequest, const std::shared_ptr<Resources> &pDependencies)
+		: request(pRequest), dependencies(pDependencies) {}
 
 public:
 	[[nodiscard]] bool isLoaded() const { return resource != nullptr; }

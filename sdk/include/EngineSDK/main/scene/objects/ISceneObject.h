@@ -6,23 +6,29 @@
 #define ISCENEOBJECT_H
 #include <EngineUtils/utils/ReportMessageFwd.h>
 
+namespace mer::sdk::utils {
+class ModifierKeys;
+enum class KeyboardKey;
+} // namespace mer::sdk::utils
+
 namespace mer::sdk::main {
-class ResourceRequests;
-class Resources;
+class IScene;
 
 class ISceneObject {
 public:
 	virtual ~ISceneObject() = default;
 
-	virtual void fillResourceRequests(const std::shared_ptr<ResourceRequests> &pRequests) = 0;
+	virtual utils::ReportMessagePtr init() = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<Resources> &getResources() const = 0;
+	virtual void render() const = 0;
 
-	virtual void setResources(const std::shared_ptr<Resources> &pResources) = 0;
+	virtual void onWindowSizeChanged(int pWidth, int pHeight) const = 0;
 
-	virtual sdk::utils::ReportMessagePtr init() = 0;
+	virtual void onCursorPosChanged(double pX, double pY) const = 0;
 
-	virtual void render() = 0;
+	virtual void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) const = 0;
+
+	virtual void setScene(IScene* pScene) = 0;
 };
 
 } // namespace mer::sdk::main

@@ -38,7 +38,7 @@ CompactNamespaces: false
 ContinuationIndentWidth: 4
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex: '^<Render/'
+  - Regex: '^<EngineSDK/'
     Priority: 1
   - Regex: '^"(llvm|llvm-c|clang|clang-c)/'
     Priority: 2

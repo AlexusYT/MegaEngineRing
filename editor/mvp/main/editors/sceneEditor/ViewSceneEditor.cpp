@@ -57,7 +57,16 @@ ViewSceneEditor::ViewSceneEditor() {
 	});*/
 	area.set_required_version(4, 0);
 
-
+	area.signal_create_context().connect(
+		[this]() -> Glib::RefPtr<Gdk::GLContext> {
+			const auto surface = area.get_native()->get_surface();
+			sharedContext = surface->create_gl_context();
+			auto context = surface->create_gl_context();
+			sharedContext->realize();
+			context->realize();
+			return context;
+		},
+		false);
 	area.set_expand(true);
 	area.set_size_request(100, 200);
 	area.set_auto_render(true);

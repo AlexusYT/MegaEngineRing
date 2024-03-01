@@ -24,9 +24,20 @@ std::shared_ptr<Resources> LoadedResources::executeRequests(const std::shared_pt
 	auto resourcesOut = std::make_shared<Resources>();
 	for (auto &requests = pRequests->getRequests(); const auto &[name, request]: requests) {
 		processingRequests.clear();
-		if (auto res = processRequest(request, pScene)) { resourcesOut->resources.emplace(name, res); }
+		utils::ReportMessagePtr error;
+		if (auto res = processRequest(request, error)) {
+			resourcesOut->resources.emplace(name, res);
+		} else
+			pScene->onResourceLoadingError(request, error);
 	}
 	return resourcesOut;
+}
+
+std::shared_ptr<IResource> LoadedResources::executeRequest(const std::shared_ptr<ResourceRequest> &pRequest,
+														   utils::ReportMessagePtr &pError) {
+	processingRequests.clear();
+	if (auto res = processRequest(pRequest, pError)) { return res; }
+	return nullptr;
 }
 
 std::shared_ptr<IResource> LoadedResources::getResource(const std::string &pName) const {
@@ -35,12 +46,12 @@ std::shared_ptr<IResource> LoadedResources::getResource(const std::string &pName
 }
 
 std::shared_ptr<IResource> LoadedResources::processRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-														   const std::shared_ptr<IScene> &pScene) {
+														   utils::ReportMessagePtr &pError) {
 
-	if (auto res = getLoadedResourceByRequest(pRequest, pScene)) { return res; }
+	if (auto res = getLoadedResourceByRequest(pRequest, pError)) { return res; }
 
 	if (std::ranges::find(processingRequests, pRequest->getName()) != processingRequests.end()) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = utils::ReportMessage::create();
 		msg->setTitle("Failed to process request");
 		msg->setMessage("Cyclic dependencies have been found");
 		for (auto reqIter = processingRequests.begin(); reqIter != processingRequests.end(); ++reqIter) {
@@ -51,21 +62,21 @@ std::shared_ptr<IResource> LoadedResources::processRequest(const std::shared_ptr
 			else
 				msg->addInfoLine("Request {} required {}", *reqIter, *iterNext);
 		}
-		pScene->onResourceLoadingError(pRequest, msg);
+		pError = msg;
 		return nullptr;
 	}
 	processingRequests.emplace_back(pRequest->getName());
 
-	std::shared_ptr<Resources> dependencies = std::make_shared<Resources>();
+	const auto dependencies = std::make_shared<Resources>();
 	for (const auto &resourceRequest: pRequest->getRequired()) {
-		if (auto result = processRequest(resourceRequest, pScene)) {
+		if (auto result = processRequest(resourceRequest, pError)) {
 			dependencies->resources.emplace(resourceRequest->getName(), result);
 			resources.emplace(resourceRequest->getName(), result);
 		}
 	}
 
 	if (std::dynamic_pointer_cast<RegularRequest>(pRequest)) {
-		if (auto resource = executeRequest(dependencies, pRequest)) {
+		if (auto resource = executeRequest(dependencies, pRequest, pError)) {
 
 			resources.emplace(pRequest->getName(), resource);
 			return resource;
@@ -73,44 +84,45 @@ std::shared_ptr<IResource> LoadedResources::processRequest(const std::shared_ptr
 		return nullptr;
 	}
 
-	return std::shared_ptr<LazyResource>(new LazyResource(pRequest, pScene, dependencies));
+	return std::shared_ptr<LazyResource>(new LazyResource(pRequest, dependencies));
 }
 
 std::shared_ptr<IResource> LoadedResources::getLoadedResourceByRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-																	   const std::shared_ptr<IScene> &pScene) const {
+																	   utils::ReportMessagePtr &pError) const {
 
 	auto res = getResource(pRequest->getName());
 	if (!res) return nullptr;
 	if (std::dynamic_pointer_cast<LazyResource>(res)) {
 		if (std::dynamic_pointer_cast<RegularRequest>(pRequest)) {
-			const auto msg = sdk::utils::ReportMessage::create();
+			const auto msg = utils::ReportMessage::create();
 			msg->setTitle("Resource loading policy mismatch");
 			msg->setMessage("Resource previously loaded with LAZY policy, but trying to load with REGULAR");
 			msg->addInfoLine("DO NOT CHANGE POLICY FOR SINGLE RESOURCE");
 			msg->addInfoLine("Resource added as LAZY");
 			msg->addInfoLine("Resource name: {}", pRequest->getName());
-			pScene->onResourceLoadingError(pRequest, msg);
+			pError = msg;
 		}
 		return res;
 	}
 	if (std::dynamic_pointer_cast<LazyRequest>(pRequest)) {
-		const auto msg = sdk::utils::ReportMessage::create();
+		const auto msg = utils::ReportMessage::create();
 		msg->setTitle("Resource loading policy mismatch");
 		msg->setMessage("Resource previously loaded with REGULAR policy, but trying to load with LAZY");
 		msg->addInfoLine("DO NOT CHANGE POLICY FOR SINGLE RESOURCE");
 		msg->addInfoLine("Resource added as IMMEDIATELY");
 		msg->addInfoLine("Resource name: {}", pRequest->getName());
-		pScene->onResourceLoadingError(pRequest, msg);
+		pError = msg;
 	}
 	return res;
 }
 
 std::shared_ptr<IResource> LoadedResources::executeRequest(const std::shared_ptr<Resources> &pDependencies,
-														   const std::shared_ptr<ResourceRequest> &pRequest) {
+														   const std::shared_ptr<ResourceRequest> &pRequest,
+														   utils::ReportMessagePtr &pError) {
 
-	auto error = sdk::utils::ReportMessage::create();
+	auto error = utils::ReportMessage::create();
 	if (auto resource = pRequest->getLoader()->load(pRequest, error, pDependencies)) { return resource; }
-	sdk::utils::Logger::error(error);
+	pError = error;
 	return nullptr;
 }
 } // namespace mer::sdk::main

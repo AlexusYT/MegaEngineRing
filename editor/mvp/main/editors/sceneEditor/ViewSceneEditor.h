@@ -23,6 +23,7 @@ class ViewSceneEditor : public IViewSceneEditor {
 	Gtk::Label loadingErrorLabel;
 	Glib::RefPtr<Gtk::EventControllerMotion> motionController;
 	IViewMain* viewMain{};
+	Glib::RefPtr<Gdk::GLContext> sharedContext;
 
 public:
 	ViewSceneEditor();
@@ -48,6 +49,8 @@ public:
 	}
 
 	void makeCurrent() override;
+
+	[[nodiscard]] const Glib::RefPtr<Gdk::GLContext> &getSharedContext() const override { return sharedContext; }
 
 	void redraw() override;
 
