@@ -36,6 +36,7 @@ class Logger {
 	inline static bool useCErr = false;
 	inline static std::filesystem::path logPath;
 	inline static std::ofstream logFile;
+	inline static std::mutex logMutex;
 
 public:
 	static ReportMessagePtr openLog(const std::filesystem::path &pLogPath);

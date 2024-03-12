@@ -16,35 +16,24 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 06.01.24.
+// Created by alexus on 04.03.24.
 //
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#ifndef GLOBALS_H
+#define GLOBALS_H
+#include <memory>
 
+namespace valijson {
+class Schema;
+}
 
-#include <EngineUtils/utils/ReportMessage.h>
-
-#include "IApplicationSettings.h"
-
-namespace mer::sdk::main {
-
-class Application {
-	std::shared_ptr<IApplicationSettings> applicationSettings;
-
+class Globals {
 public:
-	sdk::utils::ReportMessagePtr initEngine();
-
-	int runMainLoop(int argc, char* argv[]);
-
-	[[nodiscard]] const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const {
-		return applicationSettings;
-	}
-
-	void setApplicationSettings(const std::shared_ptr<IApplicationSettings> &pApplicationSettings) {
-		applicationSettings = pApplicationSettings;
-	}
+	inline static void* editorLib;
+	inline static std::shared_ptr<valijson::Schema> schema;
+	inline static std::string hostAddress = "127.0.0.1";
+	inline static uint16_t hostPort = 2736;
 };
-} // namespace mer::sdk::main
 
-#endif
+
+#endif //GLOBALS_H

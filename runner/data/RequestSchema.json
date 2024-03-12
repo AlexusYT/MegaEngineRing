@@ -1,0 +1,60 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"title": "Request schema",
+	"description": "Schema for the requests",
+	"type": "object",
+	"if": {
+		"properties": {
+			"type": {
+				"enum": [
+					"command"
+				]
+			}
+		},
+		"required": [
+			"type"
+		]
+	},
+	"then": {
+		"properties": {
+			"data": {
+				"required": [
+					"command",
+					"args"
+				]
+			}
+		}
+	},
+	"else": false,
+	"properties": {
+		"type": {
+			"type": "string",
+			"enum": [
+				"command",
+				"query"
+			],
+			"uniqueItems": true
+		},
+		"data": {
+			"properties": {
+				"command": {
+					"type": "string",
+					"enum": [
+						"lib",
+						"run"
+					]
+				},
+				"args": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	},
+	"required": [
+		"type",
+		"data"
+	]
+}

@@ -22,12 +22,12 @@
 #ifndef RESOURCESWINDOW_H
 #define RESOURCESWINDOW_H
 
-#ifndef EDITOR_SDK
-	#include "EngineSDK/main/resources/IResources.h"
-	#include "EngineSDK/main/resources/Resources.h"
-	#include "EngineSDK/main/scene/IScene.h"
-	#include "Window.h"
-	#include <thread>
+#include <thread>
+
+#include "EngineSDK/main/resources/IResources.h"
+#include "EngineSDK/main/resources/Resources.h"
+#include "EngineSDK/main/scene/IScene.h"
+#include "Window.h"
 
 namespace mer::sdk::main {
 class ResourceRequests;
@@ -62,4 +62,3 @@ private:
 
 
 #endif
-#endif //RESOURCESWINDOW_H

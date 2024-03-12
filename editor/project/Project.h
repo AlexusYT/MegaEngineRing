@@ -39,6 +39,7 @@ class ProjectExplorerEntry;
 } // namespace mer::editor::ui
 
 namespace mer::editor::project {
+class Runner;
 class ScenesInfo;
 
 class Project : public std::enable_shared_from_this<Project> {
@@ -63,6 +64,7 @@ class Project : public std::enable_shared_from_this<Project> {
 	void* editorLib{};
 
 	void* editorSdkLib{};
+	std::shared_ptr<Runner> runner;
 	Project();
 
 public:
@@ -135,8 +137,7 @@ public:
 
 	[[nodiscard]] void* getEditorLib() const { return editorLib; }
 
-	sigc::connection connectOnErrorSignal(
-		const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
+	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
 		return onErrorSignal.connect(pSlot);
 	}
 
@@ -155,9 +156,7 @@ public:
 
 	[[nodiscard]] const std::atomic<bool> &getEditorLibLoading() const { return editorLibLoading; }
 
-	[[nodiscard]] const std::atomic<sdk::utils::ReportMessagePtr> &getEditorLibError() const {
-		return editorLibError;
-	}
+	[[nodiscard]] const std::atomic<sdk::utils::ReportMessagePtr> &getEditorLibError() const { return editorLibError; }
 
 	void errorOccurred(const sdk::utils::ReportMessagePtr &pError) const { onErrorSignal(pError); }
 

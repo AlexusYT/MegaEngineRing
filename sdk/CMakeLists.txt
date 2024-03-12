@@ -79,6 +79,9 @@ add_library(MegaEngineSDK_static STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
 target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
+pkg_check_modules(libepoxy epoxy)
+include_directories(${libepoxy_INCLUDE_DIRS})
+target_link_libraries(MegaEngineSDK_shared PRIVATE ${libepoxy_LINK_LIBRARIES})
 find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(MegaEngineSDK_static INTERFACE glfw)
 

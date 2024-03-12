@@ -148,6 +148,8 @@ add_library(
         cmdOptions/options/SdkVersionOption.h
         cmdOptions/options/ResPathOption.cpp
         cmdOptions/options/ResPathOption.h
+        project/Runner.cpp
+        project/Runner.h
 
 )
 
@@ -268,3 +270,10 @@ target_link_libraries(MegaEngineEditor_lib PRIVATE ${GTKMM_LINK_LIBRARIES})
 # this is heuristically generated, and may not be correct
 find_package(SQLiteCpp CONFIG REQUIRED)
 target_link_libraries(MegaEngineEditor_lib PRIVATE SQLiteCpp)
+
+find_package(nlohmann_json CONFIG REQUIRED)
+set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
+target_link_libraries(MegaEngineEditor_lib PRIVATE nlohmann_json::nlohmann_json)
+
+find_package(asio CONFIG REQUIRED)
+target_link_libraries(MegaEngineEditor_lib PRIVATE asio::asio)

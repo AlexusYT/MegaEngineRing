@@ -19,15 +19,14 @@
 // Created by alexus on 06.01.24.
 //
 
-#ifndef EDITOR_SDK
-	#include "EngineSDK/main/Application.h"
+#include "EngineSDK/main/Application.h"
 
-	#include <EngineUtils/utils/Logger.h>
-	#include <GLFW/glfw3.h>
-	#include <signal.h>
+#include <EngineUtils/utils/Logger.h>
+#include <GLFW/glfw3.h>
+#include <signal.h>
 
-	#include "EngineSDK/main/DefaultApplicationSettings.h"
-	#include "EngineSDK/main/context/MainWindow.h"
+#include "EngineSDK/main/DefaultApplicationSettings.h"
+#include "EngineSDK/main/context/MainWindow.h"
 
 extern std::shared_ptr<mer::sdk::main::IScene> getPrimaryScene();
 
@@ -130,4 +129,3 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 	return 0;
 }
 } // namespace mer::sdk::main
-#endif

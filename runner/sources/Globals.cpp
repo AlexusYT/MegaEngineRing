@@ -16,35 +16,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 06.01.24.
+// Created by alexus on 04.03.24.
 //
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
-
-
-#include <EngineUtils/utils/ReportMessage.h>
-
-#include "IApplicationSettings.h"
-
-namespace mer::sdk::main {
-
-class Application {
-	std::shared_ptr<IApplicationSettings> applicationSettings;
-
-public:
-	sdk::utils::ReportMessagePtr initEngine();
-
-	int runMainLoop(int argc, char* argv[]);
-
-	[[nodiscard]] const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const {
-		return applicationSettings;
-	}
-
-	void setApplicationSettings(const std::shared_ptr<IApplicationSettings> &pApplicationSettings) {
-		applicationSettings = pApplicationSettings;
-	}
-};
-} // namespace mer::sdk::main
-
-#endif
+#include "Globals.h"

@@ -20,8 +20,8 @@
 //
 
 #include <EngineUtils/utils/Logger.h>
-#include <cstring>
 #include <chrono>
+#include <cstring>
 #include <iostream>
 #include <stacktrace>
 
@@ -98,6 +98,7 @@ void Logger::print(const LoggerMsgType pType, const std::string &pMessage) {
 
 
 		const std::string result = std::format("{} - {} - {}: {}", time, type, source, pMessage);
+		std::lock_guard lock(logMutex);
 		if (logFile.is_open()) {
 			logFile << result << "\n";
 			logFile.flush();

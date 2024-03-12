@@ -24,6 +24,7 @@ add_subdirectory(utils)
 add_subdirectory(sdk)
 add_subdirectory(data)
 add_subdirectory(editor)
+add_subdirectory(runner)
 
 
 # ---- Declare executable ----

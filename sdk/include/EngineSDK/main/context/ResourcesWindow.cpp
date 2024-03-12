@@ -19,14 +19,13 @@
 // Created by alexus on 02.02.24.
 //
 
+#include "ResourcesWindow.h"
+
 #include <condition_variable>
 
+#include "EngineSDK/main/resources/LoadedResources.h"
 #include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/ReportMessage.h"
-#ifndef EDITOR_SDK
-	#include "ResourcesWindow.h"
-
-	#include "EngineSDK/main/resources/LoadedResources.h"
 
 namespace mer::sdk::main {
 std::condition_variable cv;
@@ -56,8 +55,7 @@ void ResourcesWindow::requestStopThread() { thread.request_stop(); }
 void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 	while (!pToken.stop_requested()) {
 		std::unique_lock lck(queueMutex);
-		cv.wait(lck, [this, pToken]() {
-				return !queue.empty() || pToken.stop_requested(); });
+		cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
 		getContext()->makeCurrent();
 		for (auto &[request, slot]: queue) {
 			utils::ReportMessagePtr error;
@@ -89,4 +87,3 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 
 
 } // namespace mer::sdk::main
-#endif

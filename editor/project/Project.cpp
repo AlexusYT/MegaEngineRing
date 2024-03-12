@@ -22,8 +22,11 @@
 #include "Project.h"
 
 #include <dlfcn.h>
+#include <nlohmann/json.hpp>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
 
+#include "Globals.h"
+#include "Runner.h"
 #include "generatedFiles/ApplicationInfo.h"
 #include "generatedFiles/ScenesInfo.h"
 #include "generators/cpp/CppCustomStatement.h"
@@ -36,8 +39,11 @@
 #include "ui/widgetWindows/projectExplorer/DirectoryEntry.h"
 
 namespace mer::editor::project {
-Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()) {
+Project::Project()
+	: projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()),
+	  runner(std::make_shared<Runner>(this)) {
 
+	;
 	auto obj = SceneObject::create<World>();
 	obj->setName("World");
 	for (int i = 0; i < 50; i++) {
@@ -83,6 +89,7 @@ sdk::utils::ReportMessagePtr Project::loadProject() {
 	if (auto msg = engineFileEntries->loadDatabase()) return msg;
 	if (auto msg = saveFiles()) return msg;
 
+	runner->getOnRunnerConnected().connect([this] { runner->loadCommand(Globals::getSdk() / "lib/MegaEngineSDK.so"); });
 	requestRebuildEditorLib();
 	return nullptr;
 }
@@ -136,7 +143,7 @@ Glib::RefPtr<Gio::SimpleActionGroup> Project::getActionGroups() const {
 void Project::requestRebuildEditorLib() {
 	std::thread([this] {
 		editorLibLoadStarted();
-		int result = reloadCMake([](const std::string &pLine) { sdk::utils::Logger::info(pLine); },
+		int result = reloadCMake([](const std::string & /*pLine*/) { /*sdk::utils::Logger::info(pLine);*/ },
 								 [](const std::string &pLine) { sdk::utils::Logger::error(pLine); });
 		if (result != 0) {
 
@@ -147,9 +154,9 @@ void Project::requestRebuildEditorLib() {
 			return;
 		}
 		using namespace std::chrono_literals;
-		std::this_thread::sleep_for(1s);
+		//std::this_thread::sleep_for(1s);
 		result = build(
-			"_EDITOR_TMP_", [](const std::string &pLine) { sdk::utils::Logger::info(pLine); },
+			"_EDITOR_TMP_", [](const std::string & /*pLine*/) { /*sdk::utils::Logger::info(pLine);*/ },
 			[](const std::string &pLine) { sdk::utils::Logger::error(pLine); });
 		if (result != 0) {
 
@@ -160,7 +167,7 @@ void Project::requestRebuildEditorLib() {
 			return;
 		}
 		auto path = (getProjectBuildPath() / "lib_EDITOR_TMP_.so").string();
-		editorLib = dlopen((path).c_str(), RTLD_LAZY | RTLD_GLOBAL);
+		/*editorLib = dlopen((path).c_str(), RTLD_LAZY | RTLD_GLOBAL);
 		if (!editorLib) {
 			auto msg = sdk::utils::ReportMessage::create();
 			msg->setTitle("Failed to open editor library");
@@ -169,7 +176,9 @@ void Project::requestRebuildEditorLib() {
 			msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
 			editorLibLoadErrored(msg);
 			return;
-		}
+		}*/
+		if (auto msg = runner->loadCommand(path)) { sdk::utils::Logger::error(msg); }
+		if (auto msg = runner->runCommand("lib_EDITOR_TMP", "main")) { sdk::utils::Logger::error(msg); }
 		editorLibLoadFinished();
 	}).detach();
 }
@@ -222,5 +231,6 @@ void Project::editorLibLoadErrored(const sdk::utils::ReportMessagePtr &pError) {
 	editorLibLoading = false;
 	editorLibError = pError;
 	onEditorLibLoadedSignal(pError);
+	sdk::utils::Logger::error(pError);
 }
 } // namespace mer::editor::project

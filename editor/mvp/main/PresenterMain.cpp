@@ -38,7 +38,7 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 
 	modelMain->getProject()->connectOnErrorSignal(sigc::mem_fun(*viewMain, &IViewMain::reportError));
 	//TODO move to project
-	std::string path = Globals::getSdk() / "lib/MegaEngineSDK.so";
+	/*std::string path = Globals::getSdk() / "lib/MegaEngineSDK.so";
 	errno = 0;
 	const auto handle = dlopen(path.c_str(), RTLD_NOW | RTLD_GLOBAL);
 	if (!handle) {
@@ -48,7 +48,7 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 		msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
 		modelMain->getProject()->errorOccurred(msg);
 	} else
-		modelMain->getProject()->setEditorSdkLib(handle);
+		modelMain->getProject()->setEditorSdkLib(handle);*/
 	viewMain->connectRunClickedSignal([this] {
 		std::thread([this] {
 			build([this](int pExitCode) {

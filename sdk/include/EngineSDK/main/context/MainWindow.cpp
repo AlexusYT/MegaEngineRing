@@ -19,13 +19,12 @@
 // Created by alexus on 31.01.24.
 //
 
-#ifndef EDITOR_SDK
-	#include "MainWindow.h"
+#include "MainWindow.h"
 
-	#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h>
 
-	#include "EngineSDK/utils/ModifierKeys.h"
-	#include "ResourcesWindow.h"
+#include "EngineSDK/utils/ModifierKeys.h"
+#include "ResourcesWindow.h"
 
 namespace mer::sdk::main {
 MainWindow::MainWindow() {
@@ -68,4 +67,3 @@ void MainWindow::onKeyChanged(int /*pKey*/, int pScancode, const int pAction, co
 								   utils::ModifierKeys(static_cast<uint8_t>(pMods)));
 }
 } // namespace mer::sdk::main
-#endif

@@ -70,9 +70,7 @@ public:
 		while (!pToken.stop_requested()) {
 			sharedContext->make_current();
 			std::unique_lock lck(queueMutex);
-			cv.wait(lck, [this, pToken]() {
-				return !queue.empty() || pToken.stop_requested();
-			});
+			cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
 			for (auto &[request, slot]: queue) {
 				sdk::utils::ReportMessagePtr error;
 				std::shared_ptr<sdk::main::IResource> resource;

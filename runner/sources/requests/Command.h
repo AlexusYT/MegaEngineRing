@@ -16,35 +16,38 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 06.01.24.
+// Created by alexus on 04.03.24.
 //
 
-#ifndef APPLICATION_H
-#define APPLICATION_H
+#ifndef COMMAND_H
+#define COMMAND_H
+#include <nlohmann/json_fwd.hpp>
+#include <string>
+#include <vector>
 
+#include "EngineUtils/utils/ReportMessageFwd.h"
 
-#include <EngineUtils/utils/ReportMessage.h>
-
-#include "IApplicationSettings.h"
-
-namespace mer::sdk::main {
-
-class Application {
-	std::shared_ptr<IApplicationSettings> applicationSettings;
+namespace mer::runner {
+class Command {
+	std::string command;
+	std::vector<std::string> args;
 
 public:
-	sdk::utils::ReportMessagePtr initEngine();
+	mer::sdk::utils::ReportMessagePtr execute();
 
-	int runMainLoop(int argc, char* argv[]);
+	[[nodiscard]] const std::string &getCommand() const { return command; }
 
-	[[nodiscard]] const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const {
-		return applicationSettings;
-	}
+	void setCommand(const std::string &pCommand) { command = pCommand; }
 
-	void setApplicationSettings(const std::shared_ptr<IApplicationSettings> &pApplicationSettings) {
-		applicationSettings = pApplicationSettings;
-	}
+	[[nodiscard]] const std::vector<std::string> &getArgs() const { return args; }
+
+	void setArgs(const std::vector<std::string> &pArgs) { args = pArgs; }
+
+	friend void to_json(nlohmann::json &pNlohmannJsonJ, const Command &pNlohmannJsonT);
+
+	friend void from_json(const nlohmann::json &pNlohmannJsonJ, Command &pNlohmannJsonT);
 };
-} // namespace mer::sdk::main
+} // namespace mer::runner
 
-#endif
+
+#endif //COMMAND_H

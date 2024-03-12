@@ -60,7 +60,15 @@ public:
 
 	void addInfoLine(const std::string &pInfoLine) { infoLines.emplace_back(pInfoLine); }
 
+	[[nodiscard]] const std::vector<std::string> &getInfoLines() const { return infoLines; }
+
+	void setInfoLines(const std::vector<std::string> &pInfoLines) { infoLines = pInfoLines; }
+
 	void setStacktrace(const std::stacktrace &pStacktrace = std::stacktrace::current()) { stacktrace = pStacktrace; }
+
+	[[nodiscard]] const std::stacktrace &getStacktrace() const { return stacktrace; }
+
+	[[nodiscard]] const std::exception_ptr &getExceptionPtr() const { return exceptionPtr; }
 
 	[[nodiscard]] std::string getReport() const {
 		std::stringstream ss;

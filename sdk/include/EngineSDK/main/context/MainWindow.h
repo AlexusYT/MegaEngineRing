@@ -22,10 +22,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#ifndef EDITOR_SDK
-	#include "EngineSDK/main/resources/ResourceRequests.h"
-	#include "EngineSDK/main/scene/IScene.h"
-	#include "Window.h"
+#include "EngineSDK/main/resources/ResourceRequests.h"
+#include "EngineSDK/main/scene/IScene.h"
+#include "Window.h"
 
 namespace mer::sdk::main {
 class ResourcesWindow;
@@ -57,5 +56,3 @@ private:
 } // namespace mer::sdk::main
 
 #endif
-
-#endif //MAINWINDOW_H

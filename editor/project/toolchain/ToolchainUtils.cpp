@@ -103,7 +103,7 @@ void ToolchainUtils::execute(const std::filesystem::path &pRootPath, const std::
 				ssize_t size;
 				while ((size = read(pipes[PARENT_WRITE_PIPE][READ_FD], buffer, sizeof(buffer) - 1)) > 0) {
 					std::lock_guard lock(mutex);
-					pCerrCallback({buffer, static_cast<std::string::size_type>(size)});
+					pCerrCallback({buffer, static_cast<std::string::size_type>(size - 1)});
 				}
 			});
 			jthread.detach();
@@ -112,7 +112,7 @@ void ToolchainUtils::execute(const std::filesystem::path &pRootPath, const std::
 				ssize_t size;
 				while ((size = read(pipes[PARENT_READ_PIPE][READ_FD], buffer, sizeof(buffer) - 1)) > 0) {
 					std::lock_guard lock(mutex);
-					pCoutCallback({buffer, static_cast<std::string::size_type>(size)});
+					pCoutCallback({buffer, static_cast<std::string::size_type>(size - 1)});
 				}
 			}
 		}
@@ -184,7 +184,7 @@ int ToolchainUtils::executeSync(const std::filesystem::path &pRootPath, const st
 			ssize_t size;
 			while ((size = read(pipes[PARENT_WRITE_PIPE][READ_FD], buffer, sizeof(buffer) - 1)) > 0) {
 				std::lock_guard lock(mutex);
-				pCerrCallback({buffer, static_cast<std::string::size_type>(size)});
+				pCerrCallback({buffer, static_cast<std::string::size_type>(size - 1)});
 			}
 		});
 		jthread.detach();
@@ -193,7 +193,7 @@ int ToolchainUtils::executeSync(const std::filesystem::path &pRootPath, const st
 			ssize_t size;
 			while ((size = read(pipes[PARENT_READ_PIPE][READ_FD], buffer, sizeof(buffer) - 1)) > 0) {
 				std::lock_guard lock(mutex);
-				pCoutCallback({buffer, static_cast<std::string::size_type>(size)});
+				pCoutCallback({buffer, static_cast<std::string::size_type>(size - 1)});
 			}
 		}
 	}
