@@ -30,24 +30,11 @@
 #include "generators/cpp/CppGenerator.h"
 #include "generators/cpp/CppHeaderFile.h"
 #include "generators/cpp/CppMethod.h"
-#include "sceneObjects/SimpleMesh.h"
-#include "sceneObjects/World.h"
 #include "toolchain/ToolchainSettings.h"
 #include "ui/widgetWindows/projectExplorer/DirectoryEntry.h"
 
 namespace mer::editor::project {
-Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()) {
-
-	auto obj = SceneObject::create<World>();
-	obj->setName("World");
-	for (int i = 0; i < 50; i++) {
-
-		auto obj2 = SceneObject::create<SimpleMesh>();
-		obj2->setName("Object" + std::to_string(i));
-		obj->addChild(obj2);
-	}
-	addToplevelObject(obj);
-}
+Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()) {}
 
 Project::~Project() {
 	if (editorLib) dlclose(editorLib);

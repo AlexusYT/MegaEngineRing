@@ -47,10 +47,6 @@ add_library(
         ui/customWidgets/TreeWidget.h
         ui/widgetWindows/TreeObjectWindow.cpp
         ui/widgetWindows/TreeObjectWindow.h
-        project/sceneObjects/World.cpp
-        project/sceneObjects/World.h
-        project/sceneObjects/SimpleMesh.cpp
-        project/sceneObjects/SimpleMesh.h
         ui/utils/ErrorDialog.cpp
         ui/utils/ErrorDialog.h
         ui/widgetWindows/ObjectPropertiesWindow.cpp

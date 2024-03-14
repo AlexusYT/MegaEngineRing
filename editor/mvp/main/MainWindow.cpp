@@ -20,7 +20,6 @@
 //
 #include "MainWindow.h"
 
-#include <project/sceneObjects/World.h>
 #include <ui/widgetWindows/CenterWindow.h>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerWindow.h>
 
