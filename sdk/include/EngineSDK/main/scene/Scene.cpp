@@ -54,6 +54,7 @@ sdk::utils::ReportMessagePtr Scene::initScene() {
 void Scene::addObject(const std::shared_ptr<ISceneObject> &pObject) {
 	pObject->setScene(this);
 	objects.emplace_back(pObject);
+	onObjectAddedSignal(pObject.get());
 }
 
 void Scene::setResources(IResources* pResources) { resources = pResources; }

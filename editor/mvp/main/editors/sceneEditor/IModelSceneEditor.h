@@ -22,6 +22,11 @@
 #ifndef IMODELSCENEEDITOR_H
 #define IMODELSCENEEDITOR_H
 
+namespace mer::editor::ui {
+class EditorSceneObject;
+}
+class UUID;
+
 namespace mer::sdk::main {
 class IScene;
 }
@@ -50,6 +55,10 @@ public:
 	[[nodiscard]] virtual bool isInteractive() const = 0;
 
 	virtual void setInteractive(bool pInteractive) = 0;
+
+	virtual void addToplevelSceneObject(UUID* pUuid, const std::shared_ptr<ui::EditorSceneObject> &pObject) = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &getToplevelObjects() const = 0;
 };
 } // namespace mer::editor::mvp
 

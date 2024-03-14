@@ -23,6 +23,14 @@
 #define IVIEWSCENEEDITOR_H
 #include <mvp/ThreadDispatcher.h>
 
+namespace mer::editor::project {
+class Project;
+}
+
+namespace mer::editor::ui {
+class EditorSceneObject;
+}
+
 namespace mer::editor::mvp {
 class IViewSceneEditor : public ThreadDispatcher {
 public:
@@ -59,6 +67,8 @@ public:
 	virtual void onLoadingStarted() = 0;
 
 	virtual void onLoadingStopped(const sdk::utils::ReportMessagePtr &pError) = 0;
+
+	virtual void onSceneReady(const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &pTopLevelObjects) = 0;
 };
 } // namespace mer::editor::mvp
 

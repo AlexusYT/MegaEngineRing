@@ -41,8 +41,8 @@ add_library(
         Globals.h
         graphic/EngineContext.h
         graphic/EngineContext.cpp
-        project/sceneObjects/SceneObject.cpp
-        project/sceneObjects/SceneObject.h
+        project/sceneObjects/EditorSceneObject.cpp
+        project/sceneObjects/EditorSceneObject.h
         ui/customWidgets/TreeWidget.cpp
         ui/customWidgets/TreeWidget.h
         ui/widgetWindows/TreeObjectWindow.cpp

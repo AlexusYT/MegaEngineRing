@@ -23,13 +23,13 @@
 #define PROJECTEXPORERWINDOW_H
 #include <ui/customWidgets/TreeWidget.h>
 
-#include "ProjectExplorerEntry.h"
-
 namespace mer::editor::project {
 class Project;
 }
 
 namespace mer::editor::ui {
+class ProjectExplorerEntry;
+
 class ProjectExplorerWindow {
 public:
 	using SlotEntrySelectionChanged = sigc::slot<void(ProjectExplorerEntry*)>;

@@ -31,7 +31,7 @@
 #include "generatedFiles/ApplicationInfo.h"
 #include "generatedFiles/GeneratedFiles.h"
 #include "generators/cpp/CppGenerator.h"
-#include "sceneObjects/SceneObject.h"
+#include "sceneObjects/EditorSceneObject.h"
 #include "toolchain/ToolchainUtils.h"
 
 namespace mer::editor::ui {
@@ -46,7 +46,6 @@ class Project : public std::enable_shared_from_this<Project> {
 	std::filesystem::path projectBuildPath;
 	std::string projectName;
 
-	std::vector<std::shared_ptr<SceneObject>> toplevelObjects;
 	Glib::RefPtr<Gio::ListStore<ui::ProjectExplorerEntry>> projectExplorerEntries;
 	std::shared_ptr<ui::ProjectExplorerEntry> filesystemEntries;
 	std::shared_ptr<SQLite::Database> database;
@@ -116,13 +115,6 @@ public:
 
 	void setProjectName(const std::string &pProjectName) { projectName = pProjectName; }
 
-	[[nodiscard]] const std::vector<std::shared_ptr<SceneObject>> &getToplevelObjects() const {
-
-		return toplevelObjects;
-	}
-
-	void addToplevelObject(std::shared_ptr<SceneObject> pObject) { toplevelObjects.emplace_back(pObject); }
-
 	[[nodiscard]] const Glib::RefPtr<Gio::ListStore<ui::ProjectExplorerEntry>> &getProjectExplorerEntries() const {
 		return projectExplorerEntries;
 	}
@@ -135,8 +127,7 @@ public:
 
 	[[nodiscard]] void* getEditorLib() const { return editorLib; }
 
-	sigc::connection connectOnErrorSignal(
-		const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
+	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
 		return onErrorSignal.connect(pSlot);
 	}
 
@@ -155,9 +146,7 @@ public:
 
 	[[nodiscard]] const std::atomic<bool> &getEditorLibLoading() const { return editorLibLoading; }
 
-	[[nodiscard]] const std::atomic<sdk::utils::ReportMessagePtr> &getEditorLibError() const {
-		return editorLibError;
-	}
+	[[nodiscard]] const std::atomic<sdk::utils::ReportMessagePtr> &getEditorLibError() const { return editorLibError; }
 
 	void errorOccurred(const sdk::utils::ReportMessagePtr &pError) const { onErrorSignal(pError); }
 

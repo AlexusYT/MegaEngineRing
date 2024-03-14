@@ -38,6 +38,7 @@ class Scene : public IScene {
 	std::shared_ptr<ProgramWideShaderBuffer> programBuffer;
 	std::vector<std::shared_ptr<ISceneObject>> objects;
 	sigc::signal<void(int pWidth, int pHeight)> onWindowSizeChangedSignal;
+	sigc::signal<void(ISceneObject* pObject)> onObjectAddedSignal;
 
 public:
 	Scene();
@@ -57,6 +58,13 @@ public:
 	[[nodiscard]] const std::shared_ptr<ProgramWideShaderBuffer> &getProgramBuffer() const override {
 		return programBuffer;
 	}
+
+	[[nodiscard]] const std::vector<std::shared_ptr<ISceneObject>> &getObjects() const override { return objects; }
+
+	[[nodiscard]] sigc::signal<void(ISceneObject* pObject)> &getOnObjectAddedSignal() override {
+		return onObjectAddedSignal;
+	}
+
 
 protected:
 	virtual void beforeRender();
