@@ -25,7 +25,6 @@
 #include <mvp/main/IViewMain.h>
 #include <ui/widgetWindows/CenterWindow.h>
 #include <ui/widgetWindows/LogView.h>
-#include <ui/widgetWindows/TreeObjectWindow.h>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerWindow.h>
 
 #include "graphic/viewport/OpenGLFwd.h"

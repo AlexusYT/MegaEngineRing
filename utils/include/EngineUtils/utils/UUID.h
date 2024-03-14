@@ -143,4 +143,22 @@ struct std::formatter<std::shared_ptr<UUID>> {
 		return std::format_to(ctx.out(), "{}", obj->toString(upperCase));
 	}
 };
+
+template<>
+struct std::formatter<UUID*> {
+	bool upperCase{};
+
+	constexpr auto parse(std::format_parse_context &ctx) {
+		auto pos = ctx.begin();
+		while (pos != ctx.end() && *pos != '}') {
+			if (*pos == 'h' || *pos == 'H') upperCase = true;
+			++pos;
+		}
+		return pos;
+	}
+
+	auto format(UUID* obj, std::format_context &ctx) const {
+		return std::format_to(ctx.out(), "{}", obj->toString(upperCase));
+	}
+};
 #endif //UUID_H

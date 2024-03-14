@@ -31,7 +31,12 @@ class ModelSceneEditor : public IModelSceneEditor {
 	std::shared_ptr<sdk::main::IScene> scene;
 	bool interactive{};
 
+	std::unordered_map<UUID*, ui::EditorSceneObject*> objects;
+	std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> toplevelObjects;
+
 public:
+	ModelSceneEditor() : toplevelObjects(Gio::ListStore<ui::EditorSceneObject>::create()) {}
+
 	[[nodiscard]] const std::shared_ptr<project::Project> &getProject() const override { return project; }
 
 	void setProject(const std::shared_ptr<project::Project> &pProject) override { project = pProject; }
@@ -47,6 +52,15 @@ public:
 	[[nodiscard]] bool isInteractive() const override { return interactive; }
 
 	void setInteractive(const bool pInteractive) override { interactive = pInteractive; }
+
+	void addToplevelSceneObject(UUID* pUuid, const std::shared_ptr<ui::EditorSceneObject> &pObject) override {
+		toplevelObjects->append(pObject);
+		objects.emplace(pUuid, pObject.get());
+	}
+
+	[[nodiscard]] const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &getToplevelObjects() const override {
+		return toplevelObjects;
+	}
 };
 } // namespace mer::editor::mvp
 #endif //MODELSCENEEDITOR_H

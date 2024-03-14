@@ -28,6 +28,7 @@
 #include <dlfcn.h>
 
 #include "EngineSDK/main/resources/IResources.h"
+#include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "EngineSDK/utils/KeyboardKey.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
@@ -70,9 +71,7 @@ public:
 		while (!pToken.stop_requested()) {
 			sharedContext->make_current();
 			std::unique_lock lck(queueMutex);
-			cv.wait(lck, [this, pToken]() {
-				return !queue.empty() || pToken.stop_requested();
-			});
+			cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
 			for (auto &[request, slot]: queue) {
 				sdk::utils::ReportMessagePtr error;
 				std::shared_ptr<sdk::main::IResource> resource;
@@ -220,6 +219,12 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 		msg->addInfoLine("Scene name: {}", sceneInfo->getName());
 		return msg;
 	}
+	scene->getOnObjectAddedSignal().connect([this](sdk::main::ISceneObject* pObject) {
+		viewSceneEditor->executeInMainThread([pObject, this](const std::promise<void> & /*pPromise*/) {
+			const auto object = ui::EditorSceneObject::create(pObject);
+			modelSceneEditor->addToplevelSceneObject(pObject->getUuid(), object);
+		});
+	});
 
 	auto sdk = project->getEditorSdkLib();
 	void* sym = dlsym(sdk, "_ZN3mer3sdk4main15LoadedResources6createEv");
@@ -230,6 +235,7 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	if (auto msg = scene->initScene()) return msg;
 
 	modelSceneEditor->setScene(scene);
+	viewSceneEditor->onSceneReady(modelSceneEditor->getToplevelObjects());
 	return nullptr;
 }
 

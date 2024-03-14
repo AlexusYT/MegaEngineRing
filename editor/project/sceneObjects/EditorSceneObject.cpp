@@ -16,7 +16,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 12.01.24.
+// Created by alexus on 08.01.24.
 //
 
-#include "World.h"
+#include "EditorSceneObject.h"

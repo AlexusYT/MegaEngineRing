@@ -22,8 +22,17 @@
 #include "SceneObject.h"
 
 #include "EngineUtils/utils/ReportMessage.h"
+#include "EngineUtils/utils/UUID.h"
 
 namespace mer::sdk::main {
+
+SceneObject::SceneObject() {
+	uuid = UUID::create();
+	//TODO make this smarter (avoid dups and missing names)
+	static int i = 0;
+	name = std::format("SceneObject{}", i);
+	i++;
+}
 
 utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 												  const std::shared_ptr<Extension> &pExtension) {

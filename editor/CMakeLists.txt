@@ -41,16 +41,12 @@ add_library(
         Globals.h
         graphic/EngineContext.h
         graphic/EngineContext.cpp
-        project/sceneObjects/SceneObject.cpp
-        project/sceneObjects/SceneObject.h
+        project/sceneObjects/EditorSceneObject.cpp
+        project/sceneObjects/EditorSceneObject.h
         ui/customWidgets/TreeWidget.cpp
         ui/customWidgets/TreeWidget.h
         ui/widgetWindows/TreeObjectWindow.cpp
         ui/widgetWindows/TreeObjectWindow.h
-        project/sceneObjects/World.cpp
-        project/sceneObjects/World.h
-        project/sceneObjects/SimpleMesh.cpp
-        project/sceneObjects/SimpleMesh.h
         ui/utils/ErrorDialog.cpp
         ui/utils/ErrorDialog.h
         ui/widgetWindows/ObjectPropertiesWindow.cpp

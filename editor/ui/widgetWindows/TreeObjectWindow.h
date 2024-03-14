@@ -21,44 +21,38 @@
 
 #ifndef TREEOBJECTWINDOW_H
 #define TREEOBJECTWINDOW_H
-#include <project/sceneObjects/SceneObject.h>
+
 #include <ui/customWidgets/TreeWidget.h>
 
+namespace mer::editor::project {
+class Project;
+}
+
 namespace mer::editor::ui {
+class EditorSceneObject;
 
 class TreeObjectWindow {
-	Gtk::Box mainBox;
-	Gtk::Box buttonBox;
-	Gtk::Button addBtn;
-	Gtk::Button removeBtn;
+public:
+	using SlotEntrySelectionChanged = sigc::slot<void(EditorSceneObject*)>;
+
+private:
+	Gtk::ScrolledWindow mainScrolledWindow;
 	TreeWidget tree;
-
-	Glib::RefPtr<Gtk::GestureClick> rightClickGesture;
-
-	using SlotGetObjectChildren = sigc::slot<std::vector<std::shared_ptr<SceneObject>>(const SceneObject* pObject)>;
-	SlotGetObjectChildren slotGetObjectChildren;
-
+	SlotEntrySelectionChanged entrySelectionChanged;
 
 public:
 	TreeObjectWindow();
 
-	operator Gtk::Widget&() { return mainBox; }
+	operator Gtk::Widget&() { return mainScrolledWindow; }
 
-	[[nodiscard]] const SlotGetObjectChildren &getSlotGetObjectChildren() const { return slotGetObjectChildren; }
+	[[nodiscard]] const SlotEntrySelectionChanged &getEntrySelectionChanged() const { return entrySelectionChanged; }
 
-	void setSlotGetObjectChildren(const SlotGetObjectChildren &pSlotGetObjectChildren);
+	void setEntrySelectionChanged(const SlotEntrySelectionChanged &pEntrySelectionChanged) {
+		entrySelectionChanged = pEntrySelectionChanged;
+	}
 
-	void removeObject(SceneObject* pObject);
-
-	SceneObject* getSelectedObject();
-
-private:
-	SceneObject* getPopoverObject();
-
-	static Glib::RefPtr<Gio::Menu> createContextMenu();
-	static Glib::RefPtr<Gio::Menu> createAddContextMenu();
+	void setTopLevelObjects(const std::shared_ptr<Gio::ListStore<EditorSceneObject>> &pTopLevelObjects);
 };
 } // namespace mer::editor::ui
-
 
 #endif //TREEOBJECTWINDOW_H

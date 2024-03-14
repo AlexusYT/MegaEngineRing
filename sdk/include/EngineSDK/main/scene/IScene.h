@@ -21,7 +21,7 @@
 
 #ifndef ISCENE_H
 #define ISCENE_H
-#include <sigc++/slot.h>
+#include <sigc++/signal.h>
 
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
@@ -35,7 +35,9 @@ class PresenterSceneEditor;
 } // namespace mer::editor::mvp
 
 namespace mer::sdk::main {
+class ISceneObject;
 class ResourceRequest;
+class IResource;
 class IResources;
 class ProgramWideShaderBuffer;
 
@@ -50,11 +52,15 @@ public:
 
 	[[nodiscard]] virtual IResources* getResources() const = 0;
 
-
 	virtual void onResourceLoadingError(const std::shared_ptr<ResourceRequest> &pRequest,
 										const sdk::utils::ReportMessagePtr &pError) = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<ProgramWideShaderBuffer> &getProgramBuffer() const = 0;
+
+	[[nodiscard]] virtual const std::vector<std::shared_ptr<ISceneObject>> &getObjects() const = 0;
+
+	[[nodiscard]] virtual sigc::signal<void(ISceneObject* pObject)> &getOnObjectAddedSignal() = 0;
+
 	virtual void enqueueResourceLoading(
 		const std::shared_ptr<ResourceRequest> &pRequest,
 		const sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>

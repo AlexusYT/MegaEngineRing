@@ -78,6 +78,10 @@ public:
 	void onLoadingStarted() override;
 
 	void onLoadingStopped(const sdk::utils::ReportMessagePtr &pError) override;
+
+	void onSceneReady(const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &pTopLevelObjects) override {
+		objectWindow.setTopLevelObjects(pTopLevelObjects);
+	}
 };
 } // namespace mer::editor::mvp
 

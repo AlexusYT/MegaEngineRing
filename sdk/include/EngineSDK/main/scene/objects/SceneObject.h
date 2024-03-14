@@ -35,6 +35,8 @@ class Extension;
 class IScene;
 
 class SceneObject : public ISceneObject {
+	std::shared_ptr<UUID> uuid;
+	std::string name;
 	IScene* scene{};
 	std::map<std::string, std::shared_ptr<Extension>> extensions;
 	bool inited{};
@@ -43,7 +45,7 @@ class SceneObject : public ISceneObject {
 	sigc::signal<void()> onPositionChangedSignal;
 
 public:
-	virtual ~SceneObject() = default;
+	SceneObject();
 	/**
 	 * \brief 
 	 * \param[in] pName
@@ -68,6 +70,10 @@ public:
 
 	[[nodiscard]] sigc::signal<void()> &getOnPositionChangedSignal() { return onPositionChangedSignal; }
 
+	[[nodiscard]] const std::string &getName() const override { return name; }
+
+	void setName(const std::string &pName) override { name = pName; }
+
 
 private:
 	utils::ReportMessagePtr init() override;
@@ -81,6 +87,8 @@ private:
 	void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) const override;
 
 	void setScene(IScene* const pScene) override { scene = pScene; }
+
+	UUID* getUuid() override { return uuid.get(); }
 };
 } // namespace mer::sdk::main
 

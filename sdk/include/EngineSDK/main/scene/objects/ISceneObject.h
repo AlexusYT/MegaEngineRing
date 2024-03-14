@@ -23,6 +23,9 @@
 #define ISCENEOBJECT_H
 #include <EngineUtils/utils/ReportMessageFwd.h>
 
+
+class UUID;
+
 namespace mer::sdk::utils {
 class ModifierKeys;
 enum class KeyboardKey;
@@ -46,6 +49,12 @@ public:
 	virtual void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) const = 0;
 
 	virtual void setScene(IScene* pScene) = 0;
+
+	virtual UUID* getUuid() = 0;
+
+	[[nodiscard]] virtual const std::string &getName() const = 0;
+
+	virtual void setName(const std::string &pName) = 0;
 };
 
 } // namespace mer::sdk::main
