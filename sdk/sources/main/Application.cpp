@@ -28,6 +28,7 @@
 
 	#include "EngineSDK/main/DefaultApplicationSettings.h"
 	#include "EngineSDK/main/context/MainWindow.h"
+	#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 
 extern std::shared_ptr<mer::sdk::main::IScene> getPrimaryScene();
 
@@ -113,6 +114,8 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 		Logger::error(msg);
 		return 1;
 	}
+
+	ExtensionRegistry::init();
 	Logger::out("Opening primary scene");
 	window->openScene(getPrimaryScene());
 
@@ -126,6 +129,7 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 		Logger::error(msg);
 	}
 	Logger::info("Main loop finished");
+	ExtensionRegistry::deinit();
 
 	return 0;
 }

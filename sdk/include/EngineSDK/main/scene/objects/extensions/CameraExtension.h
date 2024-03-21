@@ -43,8 +43,13 @@ class CameraExtension : public Extension {
 	float zFar{};
 	ValueChanged onZFarChanged;
 
-public:
+protected:
 	CameraExtension();
+
+public:
+	METHOD_CREATE(CameraExtension)
+
+	EXT_TYPE_NAME("CameraExtension")
 
 	[[nodiscard]] ValueChangedArgs<const glm::mat4 &> &getOnMatrixChanged() { return onMatrixChanged; }
 
@@ -132,6 +137,8 @@ protected:
 
 private:
 	void updateMatrix();
+
+	void getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties) override;
 };
 } // namespace mer::sdk::main
 

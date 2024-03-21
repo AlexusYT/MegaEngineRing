@@ -23,8 +23,15 @@
 #include <EngineSDK/main/scene/objects/extensions/Extension.h>
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
+#include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
+
+Extension::Extension() {}
+
+void Extension::getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> & /*pProperties*/) {}
+
 IScene* Extension::getScene() const { return getObject()->getScene(); }
 
 void Extension::onWindowSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
@@ -33,4 +40,9 @@ void Extension::onCursorPosChanged(const double /*pX*/, const double /*pY*/) {}
 
 void Extension::onKeyStateChanged(const utils::KeyboardKey /*pKey*/, const bool /*pPressed*/,
 								  const utils::ModifierKeys & /*pMods*/) {}
+
+void Extension::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
+	if (auto msg = ExtensionRegistry::getTypeNameFor(pExt, pNameOut)) { utils::Logger::error(msg); }
+}
+
 } // namespace mer::sdk::main

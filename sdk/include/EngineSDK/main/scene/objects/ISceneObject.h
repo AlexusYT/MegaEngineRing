@@ -21,7 +21,9 @@
 
 #ifndef ISCENEOBJECT_H
 #define ISCENEOBJECT_H
+
 #include <EngineUtils/utils/ReportMessageFwd.h>
+#include <map>
 
 
 class UUID;
@@ -32,6 +34,7 @@ enum class KeyboardKey;
 } // namespace mer::sdk::utils
 
 namespace mer::sdk::main {
+class Extension;
 class IScene;
 
 class ISceneObject {
@@ -51,6 +54,12 @@ public:
 	virtual void setScene(IScene* pScene) = 0;
 
 	virtual UUID* getUuid() = 0;
+
+	virtual const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const = 0;
+
+	[[nodiscard]] virtual const glm::vec3 &getPosition() const = 0;
+
+	virtual void setPosition(const glm::vec3 &pPosition) = 0;
 
 	[[nodiscard]] virtual const std::string &getName() const = 0;
 

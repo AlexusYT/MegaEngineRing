@@ -29,6 +29,7 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/scene/objects/extensions/BasicRenderExtension.cpp
         sources/main/scene/objects/extensions/CameraExtension.cpp
         sources/main/scene/objects/extensions/CameraKeyboardExtension.cpp
+        sources/main/scene/objects/extensions/ExtensionRegistry.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -71,6 +72,7 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/extensions/CameraExtension.h
         include/EngineSDK/main/scene/objects/extensions/CameraKeyboardExtension.h
         include/EngineSDK/main/scene/objects/extensions/CameraMouseExtension.h
+        include/EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

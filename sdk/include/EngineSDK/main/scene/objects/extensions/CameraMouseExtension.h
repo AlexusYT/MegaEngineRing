@@ -32,7 +32,14 @@ class CameraMouseExtension : public Extension {
 
 	Method<const glm::vec2 &> methodAddAngle;
 
+protected:
+	CameraMouseExtension() = default;
+
 public:
+	METHOD_CREATE(CameraMouseExtension)
+
+	EXT_TYPE_NAME("CameraMouseExtension")
+
 	[[nodiscard]] const glm::vec2 &getMouseSensitivity() const { return mouseSensitivity; }
 
 	void setMouseSensitivity(const glm::vec2 &pMouseSensitivity) { mouseSensitivity = pMouseSensitivity; }
@@ -54,6 +61,12 @@ protected:
 		const glm::vec2 delta = lastCursorPos - pos;
 		methodAddAngle(mouseSensitivity * glm::vec2(delta.y, delta.x));
 		lastCursorPos = pos;
+	}
+
+	void getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties) override {
+		pProperties.emplace_back(createProperty("Sensitivity", "Mouse Sensitivity",
+												&CameraMouseExtension::getMouseSensitivity,
+												&CameraMouseExtension::setMouseSensitivity));
 	}
 };
 } // namespace mer::sdk::main

@@ -25,6 +25,9 @@
 
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
 
+
+class ObjectPropertyEntry;
+
 namespace mer::sdk::main {
 class ISceneObject;
 }
@@ -32,11 +35,11 @@ class ISceneObject;
 namespace mer::editor::ui {
 class EditorSceneObject : public Glib::Object {
 	std::shared_ptr<Gio::ListStore<EditorSceneObject>> childrenUi;
+	std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> propertyEntries;
 
 	sdk::main::ISceneObject* nativeObject{};
 
-	explicit EditorSceneObject(sdk::main::ISceneObject* const pNativeObject)
-		: childrenUi(Gio::ListStore<EditorSceneObject>::create()), nativeObject(pNativeObject) {}
+	explicit EditorSceneObject(sdk::main::ISceneObject* pNativeObject);
 
 public:
 	static std::shared_ptr<EditorSceneObject> create(sdk::main::ISceneObject* const pNativeObject) {
@@ -64,6 +67,10 @@ public:
 	void setName(const std::string &pName) { nativeObject->setName(pName); }
 
 	[[nodiscard]] sdk::main::ISceneObject* getNativeObject() const { return nativeObject; }
+
+	[[nodiscard]] const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &getPropertyEntries() const {
+		return propertyEntries;
+	}
 };
 } // namespace mer::editor::ui
 

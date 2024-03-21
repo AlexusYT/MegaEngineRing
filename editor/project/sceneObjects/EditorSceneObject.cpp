@@ -20,3 +20,36 @@
 //
 
 #include "EditorSceneObject.h"
+
+#include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "ui/widgetWindows/objectProperties/ObjectPropertyEntry.h"
+
+mer::editor::ui::EditorSceneObject::EditorSceneObject(sdk::main::ISceneObject* const pNativeObject)
+	: childrenUi(Gio::ListStore<EditorSceneObject>::create()),
+	  propertyEntries(Gio::ListStore<ObjectPropertyEntry>::create()), nativeObject(pNativeObject) {
+
+	auto basicGroup = std::make_shared<sdk::main::ExtensionPropertyGroup>();
+	basicGroup->setName("Basic properties");
+	auto nameProp = std::make_shared<sdk::main::ExtensionProperty<std::string>>();
+	nameProp->setName("Object name");
+	nameProp->setGetterFunc(sigc::mem_fun(*this, &EditorSceneObject::getName));
+	nameProp->setSetterFunc(sigc::mem_fun(*this, &EditorSceneObject::setName));
+	basicGroup->addChild(nameProp);
+	auto positionProp = std::make_shared<sdk::main::ExtensionProperty<glm::vec3>>();
+	positionProp->setName("Position");
+	positionProp->setGetterFunc(sigc::mem_fun(*pNativeObject, &sdk::main::ISceneObject::getPosition));
+	positionProp->setSetterFunc(sigc::mem_fun(*pNativeObject, &sdk::main::ISceneObject::setPosition));
+	basicGroup->addChild(positionProp);
+
+	propertyEntries->append(ObjectPropertyEntry::create(basicGroup));
+
+	for (const auto &extension: pNativeObject->getExtensions()) {
+
+		auto group = std::make_shared<sdk::main::ExtensionPropertyGroup>();
+		group->setName(extension.second->getTypeName());
+		std::vector<std::shared_ptr<sdk::main::ExtensionPropertyBase>> properties;
+		extension.second->getProperties(properties);
+		for (const auto &extensionPropertyBase: properties) { group->addChild(extensionPropertyBase); }
+		propertyEntries->append(ObjectPropertyEntry::create(group));
+	}
+}

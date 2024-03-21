@@ -49,4 +49,14 @@ void CameraExtension::updateMatrix() {
 	const auto position = objectSelf->getPosition();
 	setMatrix(glm::perspective(fov, aspect, zNear, zFar) * lookAt(position, position + direction, {0, 1, 0}));
 }
+
+void CameraExtension::getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties) {
+	pProperties.emplace_back(createProperty("View Angle", "", &CameraExtension::getAngle, &CameraExtension::setAngle));
+	pProperties.emplace_back(
+		createProperty("Frame aspect", "", &CameraExtension::getAspect, &CameraExtension::setAspect));
+	pProperties.emplace_back(createProperty("Fov, rad", "", &CameraExtension::getFov, &CameraExtension::setFov));
+	pProperties.emplace_back(createProperty("Z near", "", &CameraExtension::getZNear, &CameraExtension::setZNear));
+	pProperties.emplace_back(createProperty("Z far", "", &CameraExtension::getZFar, &CameraExtension::setZFar));
+}
+
 } // namespace mer::sdk::main

@@ -17,6 +17,8 @@ target_link_libraries(
         MegaEngineSDK_static
         GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main
 )
+pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
+target_link_libraries(MegaEngineSDK_test PRIVATE PkgConfig::epoxy)
 
 gtest_discover_tests(MegaEngineSDK_test)
 

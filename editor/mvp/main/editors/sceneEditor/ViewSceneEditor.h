@@ -23,8 +23,8 @@
 #define VIEWSCENEEDITOR_H
 
 #include "IViewSceneEditor.h"
-#include "ui/widgetWindows/ObjectPropertiesWindow.h"
 #include "ui/widgetWindows/TreeObjectWindow.h"
+#include "ui/widgetWindows/objectProperties/ObjectPropertiesWindow.h"
 
 namespace mer::editor::mvp {
 class IViewMain;
@@ -65,6 +65,10 @@ public:
 		return motionController->signal_motion().connect(pSlot, false);
 	}
 
+	void setOnObjectSelectedSlot(const ui::TreeObjectWindow::SlotEntrySelectionChanged &pSlot) override {
+		objectWindow.setEntrySelectionChanged(pSlot);
+	}
+
 	void makeCurrent() override;
 
 	[[nodiscard]] const Glib::RefPtr<Gdk::GLContext> &getSharedContext() const override { return sharedContext; }
@@ -81,6 +85,10 @@ public:
 
 	void onSceneReady(const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &pTopLevelObjects) override {
 		objectWindow.setTopLevelObjects(pTopLevelObjects);
+	}
+
+	void onObjectSelectionChanged(const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &pEntries) override {
+		propertiesWindow.setEntries(pEntries);
 	}
 };
 } // namespace mer::editor::mvp

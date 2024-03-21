@@ -66,11 +66,10 @@ TreeObjectWindow::TreeObjectWindow() {
 	const auto column = Gtk::ColumnViewColumn::create("Name", factory);
 	column->set_resizable(true);
 	tree.append_column(column);
-	tree.setSelectOnDoubleClick();
 
-	/*tree.setSlotSelectionChanged([this](Glib::ObjectBase* pObjectBase) {
+	tree.setSlotSelectionChanged([this](Glib::ObjectBase* pObjectBase) {
 		if (entrySelectionChanged) entrySelectionChanged(dynamic_cast<EditorSceneObject*>(pObjectBase));
-	});*/
+	});
 }
 
 void TreeObjectWindow::setTopLevelObjects(const std::shared_ptr<Gio::ListStore<EditorSceneObject>> &pTopLevelObjects) {

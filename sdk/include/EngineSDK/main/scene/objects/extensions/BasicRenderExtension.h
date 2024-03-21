@@ -35,6 +35,14 @@ class BasicRenderExtension : public Extension {
 	uint32_t vbo{};
 
 protected:
+	BasicRenderExtension() = default;
+
+public:
+	METHOD_CREATE(BasicRenderExtension)
+
+	EXT_TYPE_NAME("BasicRenderExtension")
+
+protected:
 	utils::ReportMessagePtr onInit() override;
 	utils::ReportMessagePtr onDeinit() override;
 	void onRender() override;

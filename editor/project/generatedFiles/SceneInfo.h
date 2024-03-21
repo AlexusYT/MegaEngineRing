@@ -29,13 +29,11 @@ namespace mer::editor::project {
 class CppClass;
 class CppExternC;
 } // namespace mer::editor::project
-class Scene;
 
 namespace mer::editor::project {
 class CppMethod;
 
 class SceneInfo : public GeneratedFileEntry {
-	std::shared_ptr<Scene> scene;
 	std::shared_ptr<UUID> uuid;
 	bool primaryScene{true};
 

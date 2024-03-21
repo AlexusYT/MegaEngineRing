@@ -77,6 +77,7 @@ sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraExtension.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraKeyboardExtension.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraMouseExtension.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/SceneObject.h", true);
 	if (primaryScene) {
 		source.addInclude("EngineSDK/main/scene/IScene.h");
@@ -129,14 +130,14 @@ std::shared_ptr<CppMethod> SceneInfo::createInitMethod(const std::shared_ptr<Cpp
 	using namespace mer::sdk::utils;
 
 	auto object = std::make_shared<SceneObject>();
-	auto render = std::make_shared<BasicRenderExtension>();
+	auto render = BasicRenderExtension::create();
 	object->addExtension("render", render);
 	addObject(object);
 
 	auto player = std::make_shared<SceneObject>();
-	auto camera = std::make_shared<CameraExtension>();
-	auto cameraKeyboard = std::make_shared<CameraKeyboardExtension>();
-	auto cameraMouse = std::make_shared<CameraMouseExtension>();
+	auto camera = CameraExtension::create();
+	auto cameraKeyboard = CameraKeyboardExtension::create();
+	auto cameraMouse = CameraMouseExtension::create();
 	cameraMouse->setMethodAddAngle(sigc::mem_fun(*camera, &CameraExtension::addAngle));
 	cameraKeyboard->setMethodGetAngle(sigc::mem_fun(*camera, &CameraExtension::getAngle));
 	camera->getOnMatrixChanged().connect(sigc::mem_fun(*this, &Scene::setViewProjMatrix));
