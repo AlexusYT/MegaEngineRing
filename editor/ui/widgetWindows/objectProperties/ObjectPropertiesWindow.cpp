@@ -63,8 +63,10 @@ ObjectPropertiesWindow::ObjectPropertiesWindow() {
 	});
 
 	propertiesTree.setSlotSelectionChanged([this](Glib::ObjectBase* pObjectBase) {
-		auto property = dynamic_cast<ObjectPropertyEntry*>(pObjectBase)->getNativeProperty();
-		descriptionLabel.set_label(property->getDescription());
+		if (auto entry = dynamic_cast<ObjectPropertyEntry*>(pObjectBase)) {
+			auto property = entry->getNativeProperty();
+			descriptionLabel.set_label(property->getDescription());
+		}
 		//if (entrySelectionChanged) entrySelectionChanged(dynamic_cast<ObjectPropertyEntryBase*>(pObjectBase));
 	});
 }
