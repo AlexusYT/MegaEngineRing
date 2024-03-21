@@ -166,6 +166,10 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 		if (!modelSceneEditor->isInteractive()) return;
 		if (const auto scene = modelSceneEditor->getScene()) { scene->onCursorPosChanged(pX, pY); }
 	});
+
+	viewSceneEditor->setOnObjectSelectedSlot([this](const ui::EditorSceneObject* pObject) {
+		viewSceneEditor->onObjectSelectionChanged(pObject->getPropertyEntries());
+	});
 }
 
 PresenterSceneEditor::operator Gtk::Widget&() { return viewSceneEditor->getMainWidget(); }

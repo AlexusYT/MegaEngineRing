@@ -39,7 +39,14 @@ class CameraKeyboardExtension : public Extension {
 
 	sigc::slot<glm::vec2()> methodGetAngle{};
 
+protected:
+	CameraKeyboardExtension() = default;
+
 public:
+	METHOD_CREATE(CameraKeyboardExtension)
+
+	EXT_TYPE_NAME("CameraKeyboardExtension")
+
 	[[nodiscard]] utils::KeyboardKey getForwardKey() const { return forwardKey; }
 
 	void setForwardKey(const utils::KeyboardKey pForwardKey) { forwardKey = pForwardKey; }
@@ -73,6 +80,19 @@ protected:
 	void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) override;
 
 	void onRender() override;
+
+	void getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties) override {
+		pProperties.emplace_back(
+			createProperty("Speed", "", &CameraKeyboardExtension::getSpeed, &CameraKeyboardExtension::setSpeed));
+		pProperties.emplace_back(createProperty("Forward key", "", &CameraKeyboardExtension::getForwardKey,
+												&CameraKeyboardExtension::setForwardKey));
+		pProperties.emplace_back(createProperty("Backward key", "", &CameraKeyboardExtension::getBackwardKey,
+												&CameraKeyboardExtension::setBackwardKey));
+		pProperties.emplace_back(createProperty("Strafe left key", "", &CameraKeyboardExtension::getStrafeLeftKey,
+												&CameraKeyboardExtension::setStrafeLeftKey));
+		pProperties.emplace_back(createProperty("Strafe right key", "", &CameraKeyboardExtension::getStrafeRightKey,
+												&CameraKeyboardExtension::setStrafeRightKey));
+	}
 };
 } // namespace mer::sdk::main
 

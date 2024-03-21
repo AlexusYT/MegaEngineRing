@@ -33,12 +33,83 @@ enum class KeyboardKey;
 } // namespace mer::sdk::utils
 
 namespace mer::sdk::main {
+class ExtensionPropertyBase;
 class SceneObject;
+
+class ExtensionPropertyBase {
+	std::string name;
+	std::string description;
+
+protected:
+	ExtensionPropertyBase() = default;
+
+	ExtensionPropertyBase(const std::string &pName, const std::string &pDescription)
+		: name(pName), description(pDescription) {}
+
+	virtual ~ExtensionPropertyBase() = default;
+
+public:
+	[[nodiscard]] const std::string &getName() const { return name; }
+
+	void setName(const std::string &pName) { name = pName; }
+
+	[[nodiscard]] const std::string &getDescription() const { return description; }
+
+	void setDescription(const std::string &pDescription) { description = pDescription; }
+};
+
+class ExtensionPropertyGroup : public ExtensionPropertyBase {
+	std::vector<std::shared_ptr<ExtensionPropertyBase>> children;
+
+public:
+	ExtensionPropertyGroup() = default;
+
+	ExtensionPropertyGroup(const std::string &pName, const std::string &pDescription)
+		: ExtensionPropertyBase(pName, pDescription) {}
+
+	[[nodiscard]] const std::vector<std::shared_ptr<ExtensionPropertyBase>> &getChildren() const { return children; }
+
+	void addChild(const std::shared_ptr<ExtensionPropertyBase> &pChild) { children.emplace_back(pChild); }
+};
+
+template<typename T>
+class ExtensionProperty : public ExtensionPropertyBase {
+
+	sigc::slot<T()> getterFunc;
+	sigc::slot<void(const T &)> setterFunc;
+
+
+public:
+	using PropertyT = T;
+	ExtensionProperty() = default;
+
+	ExtensionProperty(const std::string &pName, const std::string &pDescription, const sigc::slot<T()> &pGetterFunc,
+					  const sigc::slot<void(const T &)> &pSetterFunc)
+		: ExtensionPropertyBase(pName, pDescription), getterFunc(pGetterFunc), setterFunc(pSetterFunc) {}
+
+	[[nodiscard]] const sigc::slot<T()> &getGetterFunc() const { return getterFunc; }
+
+	void setGetterFunc(const sigc::slot<T()> &pGetterFunc) { getterFunc = pGetterFunc; }
+
+	[[nodiscard]] const sigc::slot<void(const T &)> &getSetterFunc() const { return setterFunc; }
+
+	void setSetterFunc(const sigc::slot<void(const T &)> &pSetterFunc) { setterFunc = pSetterFunc; }
+};
+
+#define METHOD_CREATE(__CLASS)                                                                                         \
+	static std::shared_ptr<__CLASS> create() { return Extension::create(new __CLASS); }
+
+#define EXT_TYPE_NAME(__TYPE_NAME)                                                                                     \
+	static const char* typeName() { return __TYPE_NAME; }
 
 class Extension {
 	friend SceneObject;
 	SceneObject* object{};
 	std::vector<sigc::connection> connectionStorage;
+	std::string typeNameStr;
+
+protected:
+	Extension();
 
 public:
 	using ValueChanged = sigc::signal<void()>;
@@ -47,9 +118,23 @@ public:
 	template<typename... Args>
 	using Method = sigc::slot<void(Args...)>;
 
+	template<typename ClassT>
+	static std::shared_ptr<ClassT> create(ClassT* pPtr = new ClassT()) {
+		static_assert(std::derived_from<ClassT, Extension>, "ClassT must be derived from Extension");
+		auto ptr = std::shared_ptr<ClassT>(pPtr);
+		getTypeNameFor(pPtr, ptr->typeNameStr);
+		return ptr;
+	}
+
 	virtual ~Extension() = default;
 
 	[[nodiscard]] SceneObject* getObject() const { return object; }
+
+	virtual void getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties);
+
+	static const char* typeName() { return nullptr; }
+
+	[[nodiscard]] const std::string &getTypeName() const { return typeNameStr; }
 
 protected:
 	template<RequestRegularConcept ClassT>
@@ -87,8 +172,19 @@ protected:
 
 	virtual void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods);
 
+	template<typename T, typename T1 = std::remove_cvref_t<T>, typename ClassT>
+	std::shared_ptr<ExtensionProperty<T1>> createProperty(const std::string &pName, const std::string &pDescription,
+														  T (ClassT::*pGetterFunc)() const,
+														  void (ClassT::*pSetterFunc)(T)) {
+		return std::make_shared<ExtensionProperty<T1>>(
+			pName, pDescription, sigc::mem_fun<T, ClassT>(*dynamic_cast<ClassT*>(this), pGetterFunc),
+			sigc::mem_fun<void, ClassT>(*dynamic_cast<ClassT*>(this), pSetterFunc));
+	}
+
 private:
 	void setObject(SceneObject* const pObject) { object = pObject; }
+
+	static void getTypeNameFor(Extension* pExt, std::string &pNameOut);
 };
 } // namespace mer::sdk::main
 

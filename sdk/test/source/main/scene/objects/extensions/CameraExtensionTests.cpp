@@ -23,6 +23,7 @@
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/CameraExtension.h"
+#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 
 using namespace mer::sdk::main;
 
@@ -32,9 +33,13 @@ protected:
 	std::shared_ptr<SceneObject> obj;
 	std::shared_ptr<CameraExtension> ext;
 
+	static void SetUpTestSuite() { ExtensionRegistry::registerClass<CameraExtension>(); }
+
+	static void TearDownTestSuite() {}
+
 	void SetUp() override {
 		obj = std::make_shared<SceneObject>();
-		ext = std::make_shared<CameraExtension>();
+		ext = CameraExtension::create();
 		obj->addExtension("test-ext", ext);
 		auto iObj = std::dynamic_pointer_cast<ISceneObject>(obj);
 		iObj->init();

@@ -24,6 +24,7 @@
 #include <dlfcn.h>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
 
+#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "generatedFiles/ApplicationInfo.h"
 #include "generatedFiles/ScenesInfo.h"
 #include "generators/cpp/CppCustomStatement.h"
@@ -157,6 +158,19 @@ void Project::requestRebuildEditorLib() {
 			editorLibLoadErrored(msg);
 			return;
 		}
+		void (*init)() =
+			reinterpret_cast<void (*)()>(dlsym(editorSdkLib, "_ZN3mer3sdk4main17ExtensionRegistry4initEv"));
+		if (!init) {
+			auto msg = sdk::utils::ReportMessage::create();
+			msg->setTitle("Failed to open editor library");
+			msg->setMessage("Unable to find ExtensionRegistry::init() method in sdk library");
+			msg->addInfoLine("Path: {}", path);
+			msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
+			editorLibLoadErrored(msg);
+			return;
+		}
+
+		init();
 		editorLibLoadFinished();
 	}).detach();
 }

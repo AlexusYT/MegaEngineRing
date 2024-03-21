@@ -58,6 +58,7 @@ ViewSceneEditor::ViewSceneEditor() {
 
 	mainWidget.set_start_child(leftPaned);
 	mainWidget.set_shrink_start_child(false);
+	mainWidget.set_wide_handle();
 
 	Gtk::Notebook rightNotebook;
 	rightNotebook.set_show_border(false);

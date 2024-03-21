@@ -23,6 +23,9 @@
 #define IVIEWSCENEEDITOR_H
 #include <mvp/ThreadDispatcher.h>
 
+
+class ObjectPropertyEntry;
+
 namespace mer::editor::project {
 class Project;
 }
@@ -54,6 +57,8 @@ public:
 
 	virtual sigc::connection connectCursorMovedSignal(const sigc::slot<void(double pX, double pY)> &pSlot) const = 0;
 
+	virtual void setOnObjectSelectedSlot(const sigc::slot<void(ui::EditorSceneObject*)> &pSlot) = 0;
+
 	virtual void makeCurrent() = 0;
 
 	virtual const Glib::RefPtr<Gdk::GLContext> &getSharedContext() const = 0;
@@ -69,6 +74,8 @@ public:
 	virtual void onLoadingStopped(const sdk::utils::ReportMessagePtr &pError) = 0;
 
 	virtual void onSceneReady(const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &pTopLevelObjects) = 0;
+
+	virtual void onObjectSelectionChanged(const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &pEntries) = 0;
 };
 } // namespace mer::editor::mvp
 

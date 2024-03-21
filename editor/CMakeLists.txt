@@ -49,8 +49,8 @@ add_library(
         ui/widgetWindows/TreeObjectWindow.h
         ui/utils/ErrorDialog.cpp
         ui/utils/ErrorDialog.h
-        ui/widgetWindows/ObjectPropertiesWindow.cpp
-        ui/widgetWindows/ObjectPropertiesWindow.h
+        ui/widgetWindows/objectProperties/ObjectPropertiesWindow.cpp
+        ui/widgetWindows/objectProperties/ObjectPropertiesWindow.h
         ui/widgetWindows/CenterWindow.cpp
         ui/widgetWindows/CenterWindow.h
         ui/widgetWindows/projectExplorer/ProjectExplorerWindow.cpp
@@ -144,6 +144,8 @@ add_library(
         cmdOptions/options/SdkVersionOption.h
         cmdOptions/options/ResPathOption.cpp
         cmdOptions/options/ResPathOption.h
+        ui/widgetWindows/objectProperties/ObjectPropertyEntry.cpp
+        ui/widgetWindows/objectProperties/ObjectPropertyEntry.h
 
 )
 

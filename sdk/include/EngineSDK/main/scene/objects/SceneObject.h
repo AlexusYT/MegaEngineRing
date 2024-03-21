@@ -58,11 +58,13 @@ public:
 
 	utils::ReportMessagePtr transferExtensionTo(const std::string &pName, SceneObject* pTransferTo);
 
+	[[nodiscard]] const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const { return extensions; }
+
 	[[nodiscard]] IScene* getScene() const { return scene; }
 
-	[[nodiscard]] const glm::vec3 &getPosition() const { return position; }
+	[[nodiscard]] const glm::vec3 &getPosition() const override { return position; }
 
-	void setPosition(const glm::vec3 &pPosition) {
+	void setPosition(const glm::vec3 &pPosition) override {
 		if (pPosition == position) return;
 		position = pPosition;
 		onPositionChangedSignal();

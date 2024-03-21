@@ -19,6 +19,33 @@
 // Created by alexus on 17.01.24.
 //
 
-#include "ObjectPropertiesWindow.h"
+#ifndef OBJECTPROPERTIESWINDOW_H
+#define OBJECTPROPERTIESWINDOW_H
 
-namespace mer::editor::ui {}
+#include <ui/customWidgets/TreeWidget.h>
+
+
+class ObjectPropertyEntry;
+
+namespace mer::editor::ui {
+class ObjectPropertiesWindow {
+	Gtk::Paned mainPaned;
+	TreeWidget propertiesTree;
+	Gtk::Label descriptionLabel;
+
+public:
+	ObjectPropertiesWindow();
+
+	operator Gtk::Widget&() { return mainPaned; }
+
+	void setEntries(const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &pEntries);
+
+	static std::shared_ptr<Gtk::ColumnViewColumn> createNameColumn();
+
+	static std::shared_ptr<Gtk::ColumnViewColumn> createValueColumn();
+};
+
+} // namespace mer::editor::ui
+
+
+#endif //OBJECTPROPERTIESWINDOW_H
