@@ -52,11 +52,12 @@ public:
 	 * \param[in] pExtension
 	 * \return 
 	 */
-	utils::ReportMessagePtr addExtension(const std::string &pName, const std::shared_ptr<Extension> &pExtension);
+	utils::ReportMessagePtr addExtension(const std::string &pName,
+										 const std::shared_ptr<Extension> &pExtension) override;
 
-	utils::ReportMessagePtr removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension);
+	utils::ReportMessagePtr removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension) override;
 
-	utils::ReportMessagePtr transferExtensionTo(const std::string &pName, SceneObject* pTransferTo);
+	utils::ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) override;
 
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const { return extensions; }
 

@@ -47,7 +47,7 @@ mer::editor::ui::EditorSceneObject::EditorSceneObject(sdk::main::ISceneObject* c
 
 		auto group = std::make_shared<sdk::main::ExtensionPropertyGroup>();
 		group->setName(extension.second->getTypeName());
-		std::vector<std::shared_ptr<sdk::main::ExtensionPropertyBase>> properties;
+		sdk::main::ExtensionProperties properties;
 		extension.second->getProperties(properties);
 		for (const auto &extensionPropertyBase: properties) { group->addChild(extensionPropertyBase); }
 		propertyEntries->append(ObjectPropertyEntry::create(group));

@@ -26,6 +26,7 @@
 #include "EngineSDK/main/resources/Resources.h"
 #include "EngineSDK/main/scene/IScene.h"
 #include "EngineUtils/utils/ReportMessageFwd.h"
+#include "ExtensionProperties.h"
 
 namespace mer::sdk::utils {
 class ModifierKeys;
@@ -33,68 +34,8 @@ enum class KeyboardKey;
 } // namespace mer::sdk::utils
 
 namespace mer::sdk::main {
-class ExtensionPropertyBase;
 class SceneObject;
 
-class ExtensionPropertyBase {
-	std::string name;
-	std::string description;
-
-protected:
-	ExtensionPropertyBase() = default;
-
-	ExtensionPropertyBase(const std::string &pName, const std::string &pDescription)
-		: name(pName), description(pDescription) {}
-
-	virtual ~ExtensionPropertyBase() = default;
-
-public:
-	[[nodiscard]] const std::string &getName() const { return name; }
-
-	void setName(const std::string &pName) { name = pName; }
-
-	[[nodiscard]] const std::string &getDescription() const { return description; }
-
-	void setDescription(const std::string &pDescription) { description = pDescription; }
-};
-
-class ExtensionPropertyGroup : public ExtensionPropertyBase {
-	std::vector<std::shared_ptr<ExtensionPropertyBase>> children;
-
-public:
-	ExtensionPropertyGroup() = default;
-
-	ExtensionPropertyGroup(const std::string &pName, const std::string &pDescription)
-		: ExtensionPropertyBase(pName, pDescription) {}
-
-	[[nodiscard]] const std::vector<std::shared_ptr<ExtensionPropertyBase>> &getChildren() const { return children; }
-
-	void addChild(const std::shared_ptr<ExtensionPropertyBase> &pChild) { children.emplace_back(pChild); }
-};
-
-template<typename T>
-class ExtensionProperty : public ExtensionPropertyBase {
-
-	sigc::slot<T()> getterFunc;
-	sigc::slot<void(const T &)> setterFunc;
-
-
-public:
-	using PropertyT = T;
-	ExtensionProperty() = default;
-
-	ExtensionProperty(const std::string &pName, const std::string &pDescription, const sigc::slot<T()> &pGetterFunc,
-					  const sigc::slot<void(const T &)> &pSetterFunc)
-		: ExtensionPropertyBase(pName, pDescription), getterFunc(pGetterFunc), setterFunc(pSetterFunc) {}
-
-	[[nodiscard]] const sigc::slot<T()> &getGetterFunc() const { return getterFunc; }
-
-	void setGetterFunc(const sigc::slot<T()> &pGetterFunc) { getterFunc = pGetterFunc; }
-
-	[[nodiscard]] const sigc::slot<void(const T &)> &getSetterFunc() const { return setterFunc; }
-
-	void setSetterFunc(const sigc::slot<void(const T &)> &pSetterFunc) { setterFunc = pSetterFunc; }
-};
 
 #define METHOD_CREATE(__CLASS)                                                                                         \
 	static std::shared_ptr<__CLASS> create() { return Extension::create(new __CLASS); }
@@ -130,7 +71,7 @@ public:
 
 	[[nodiscard]] SceneObject* getObject() const { return object; }
 
-	virtual void getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties);
+	virtual void getProperties(ExtensionProperties &pProperties);
 
 	static const char* typeName() { return nullptr; }
 

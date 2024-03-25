@@ -22,8 +22,8 @@
 #include <gtest/gtest.h>
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/CameraExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
+#include "EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h"
 
 using namespace mer::sdk::main;
 

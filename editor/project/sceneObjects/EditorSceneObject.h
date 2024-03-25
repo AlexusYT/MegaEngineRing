@@ -19,8 +19,8 @@
 // Created by alexus on 08.01.24.
 //
 
-#ifndef SCENEOBJECT_H
-#define SCENEOBJECT_H
+#ifndef ENGINESCENEOBJECT_H
+#define ENGINESCENEOBJECT_H
 #include <EngineUtils/utils/UUID.h>
 
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
@@ -87,4 +87,4 @@ struct std::formatter<mer::editor::ui::EditorSceneObject> : std::formatter<strin
 	}
 };
 
-#endif //SCENEOBJECT_H
+#endif //ENGINESCENEOBJECT_H

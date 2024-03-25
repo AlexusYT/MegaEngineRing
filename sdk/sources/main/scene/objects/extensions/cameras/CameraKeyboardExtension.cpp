@@ -20,7 +20,7 @@
 //
 
 
-#include <EngineSDK/main/scene/objects/extensions/CameraKeyboardExtension.h>
+#include <EngineSDK/main/scene/objects/extensions/cameras/CameraKeyboardExtension.h>
 
 #include <cmath>
 #include <glm/detail/func_geometric.inl>

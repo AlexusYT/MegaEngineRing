@@ -28,12 +28,15 @@
 #include <dlfcn.h>
 
 #include "EngineSDK/main/resources/IResources.h"
+#include "EngineSDK/main/scene/ISceneDataInjector.h"
+#include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "EngineSDK/utils/KeyboardKey.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
 #include "project/Project.h"
 #include "project/generatedFiles/SceneInfo.h"
+#include "project/sceneObjects/EditorSceneObject.h"
 
 namespace mer::editor::mvp {
 
@@ -201,12 +204,12 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 		msg->addInfoLine("Error: {}", dlerror());
 		return msg;
 	}
-	sdk::main::IScene* (*startFunc)() = reinterpret_cast<sdk::main::IScene* (*) ()>(func);
-	std::shared_ptr<sdk::main::IScene> scene;
+	auto startFunc = reinterpret_cast<sdk::main::ISceneDataInjector* (*) ()>(func);
+	std::shared_ptr<sdk::main::ISceneDataInjector> sceneInjector;
 	viewSceneEditor->makeCurrent();
 	try {
 
-		scene = std::shared_ptr<sdk::main::IScene>(startFunc());
+		sceneInjector = std::shared_ptr<sdk::main::ISceneDataInjector>(startFunc());
 	} catch (...) {
 		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to get scene entry point");
@@ -215,7 +218,7 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 		msg->addInfoLine("Scene name: {}", sceneInfo->getName());
 		return msg;
 	}
-	if (!scene) {
+	if (!sceneInjector) {
 		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to get scene entry point");
 		msg->setMessage("Load function returned nullptr");
@@ -223,6 +226,7 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 		msg->addInfoLine("Scene name: {}", sceneInfo->getName());
 		return msg;
 	}
+	auto scene = sceneInjector->getScene();
 	scene->getOnObjectAddedSignal().connect([this](sdk::main::ISceneObject* pObject) {
 		viewSceneEditor->executeInMainThread([pObject, this](const std::promise<void> & /*pPromise*/) {
 			const auto object = ui::EditorSceneObject::create(pObject);
@@ -237,6 +241,7 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	scene->setResources(loadedResources.get());
 
 	if (auto msg = scene->initScene()) return msg;
+	sceneInjector->injectEditorCamera();
 
 	modelSceneEditor->setScene(scene);
 	viewSceneEditor->onSceneReady(modelSceneEditor->getToplevelObjects());

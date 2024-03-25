@@ -31,6 +31,7 @@
 #include "IScene.h"
 
 namespace mer::sdk::main {
+class ICamera;
 class ISceneObject;
 
 class Scene : public IScene {
@@ -39,11 +40,12 @@ class Scene : public IScene {
 	std::vector<std::shared_ptr<ISceneObject>> objects;
 	sigc::signal<void(int pWidth, int pHeight)> onWindowSizeChangedSignal;
 	sigc::signal<void(ISceneObject* pObject)> onObjectAddedSignal;
+	ICamera* currentCamera;
 
 public:
 	Scene();
 
-	void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const;
+	void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const override;
 
 	[[nodiscard]] IResources* getResources() const final { return resources; }
 
@@ -54,6 +56,8 @@ public:
 								const IResources::ResourceSlot &pSlot) const override {
 		resources->enqueueResourceLoading(pRequest, pSlot);
 	}
+
+	void switchCamera(ICamera* pNewCamera) override;
 
 	[[nodiscard]] const std::shared_ptr<ProgramWideShaderBuffer> &getProgramBuffer() const override {
 		return programBuffer;
@@ -73,7 +77,7 @@ protected:
 
 	sdk::utils::ReportMessagePtr initScene() override;
 
-	void addObject(const std::shared_ptr<ISceneObject> &pObject);
+	void addObject(const std::shared_ptr<ISceneObject> &pObject) override;
 
 private:
 	void setResources(IResources* pResources) final;
