@@ -23,7 +23,7 @@
 #define CAMERAMOUSEEXTENSION_H
 #include <glm/vec2.hpp>
 
-#include "Extension.h"
+#include "EngineSDK/main/scene/objects/extensions/Extension.h"
 
 namespace mer::sdk::main {
 class CameraMouseExtension : public Extension {
@@ -31,6 +31,7 @@ class CameraMouseExtension : public Extension {
 	ValueChangedArgs<const glm::vec2 &> onMouseSensitivityChanged;
 
 	Method<const glm::vec2 &> methodAddAngle;
+	std::optional<glm::dvec2> lastCursorPos{};
 
 protected:
 	CameraMouseExtension() = default;
@@ -56,17 +57,16 @@ protected:
 	void onCursorPosChanged(const double pX, const double pY) override {
 
 		const glm::dvec2 pos{pX, pY};
-		static glm::dvec2 lastCursorPos = pos;
-
-		const glm::vec2 delta = lastCursorPos - pos;
-		methodAddAngle(mouseSensitivity * glm::vec2(delta.y, delta.x));
+		if (lastCursorPos) {
+			const glm::vec2 delta = lastCursorPos.value() - pos;
+			methodAddAngle(mouseSensitivity * glm::vec2(delta.y, delta.x));
+		}
 		lastCursorPos = pos;
 	}
 
-	void getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties) override {
-		pProperties.emplace_back(createProperty("Sensitivity", "Mouse Sensitivity",
-												&CameraMouseExtension::getMouseSensitivity,
-												&CameraMouseExtension::setMouseSensitivity));
+	void getProperties(ExtensionProperties &pProperties) override {
+		pProperties.emplace_back(this, "Sensitivity", "Mouse Sensitivity", &CameraMouseExtension::getMouseSensitivity,
+								 &CameraMouseExtension::setMouseSensitivity);
 	}
 };
 } // namespace mer::sdk::main

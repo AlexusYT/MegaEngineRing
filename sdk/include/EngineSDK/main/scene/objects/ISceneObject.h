@@ -41,6 +41,14 @@ class ISceneObject {
 public:
 	virtual ~ISceneObject() = default;
 
+	virtual utils::ReportMessagePtr addExtension(const std::string &pName,
+												 const std::shared_ptr<Extension> &pExtension) = 0;
+
+	virtual utils::ReportMessagePtr removeExtension(const std::string &pName,
+													std::shared_ptr<Extension> &pExtension) = 0;
+
+	virtual utils::ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) = 0;
+
 	virtual utils::ReportMessagePtr init() = 0;
 
 	virtual void render() const = 0;

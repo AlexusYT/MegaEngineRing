@@ -20,16 +20,30 @@
 //
 
 
-#include <EngineSDK/main/scene/objects/extensions/CameraExtension.h>
+#include <EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h>
 
-#include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/polar_coordinates.hpp>
 
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 
 namespace mer::sdk::main {
-CameraExtension::CameraExtension() : fov(glm::radians(60.0f)), zNear(0.1f), zFar(1000.0f) {}
+
+void CameraExtension::setAngle(const glm::vec2 &pAngle) {
+	if (angle == pAngle) return;
+	glm::vec2 angleTmp = pAngle;
+	constexpr float delta = 0.001f;
+	if (angleTmp.x > 90.0f - delta) angleTmp.x = 90.0f - delta;
+	if (angleTmp.x < -90.0f + delta) angleTmp.x = -90.0f + delta;
+	if (angleTmp.y > 360) angleTmp.y -= 360;
+	if (angleTmp.y < 0) angleTmp.y += 360;
+	if (angle == angleTmp) return;
+	angle = angleTmp;
+	onAngleChanged(angle);
+	setDirection(euclidean(radians(angleTmp)));
+}
 
 utils::ReportMessagePtr CameraExtension::onInit() {
 
@@ -44,19 +58,17 @@ void CameraExtension::onWindowSizeChanged(const int pWidth, const int pHeight) {
 	setAspect(static_cast<float>(pWidth) / static_cast<float>(pHeight));
 }
 
+void CameraExtension::projectionMatrixChanged(const glm::mat4 & /*pNewMatrix*/) { updateMatrix(); }
+
 void CameraExtension::updateMatrix() {
 	const auto &objectSelf = getObject();
 	const auto position = objectSelf->getPosition();
-	setMatrix(glm::perspective(fov, aspect, zNear, zFar) * lookAt(position, position + direction, {0, 1, 0}));
+	setMatrix(getProjMatrix() * lookAt(position, position + direction, {0, 1, 0}));
 }
 
-void CameraExtension::getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties) {
-	pProperties.emplace_back(createProperty("View Angle", "", &CameraExtension::getAngle, &CameraExtension::setAngle));
-	pProperties.emplace_back(
-		createProperty("Frame aspect", "", &CameraExtension::getAspect, &CameraExtension::setAspect));
-	pProperties.emplace_back(createProperty("Fov, rad", "", &CameraExtension::getFov, &CameraExtension::setFov));
-	pProperties.emplace_back(createProperty("Z near", "", &CameraExtension::getZNear, &CameraExtension::setZNear));
-	pProperties.emplace_back(createProperty("Z far", "", &CameraExtension::getZFar, &CameraExtension::setZFar));
+void CameraExtension::getProperties(ExtensionProperties &pProperties) {
+	pProperties.emplace_back(this, "View Angle", "", &CameraExtension::getAngle, &CameraExtension::setAngle);
+	getProjectionProperties(pProperties);
 }
 
 } // namespace mer::sdk::main

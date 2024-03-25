@@ -23,8 +23,8 @@
 #define CAMERAKEYBOARDEXTENSION_H
 #include <glm/vec2.hpp>
 
+#include "EngineSDK/main/scene/objects/extensions/Extension.h"
 #include "EngineSDK/utils/KeyboardKey.h"
-#include "Extension.h"
 
 namespace mer::sdk::main {
 class CameraKeyboardExtension : public Extension {
@@ -81,17 +81,17 @@ protected:
 
 	void onRender() override;
 
-	void getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> &pProperties) override {
-		pProperties.emplace_back(
-			createProperty("Speed", "", &CameraKeyboardExtension::getSpeed, &CameraKeyboardExtension::setSpeed));
-		pProperties.emplace_back(createProperty("Forward key", "", &CameraKeyboardExtension::getForwardKey,
-												&CameraKeyboardExtension::setForwardKey));
-		pProperties.emplace_back(createProperty("Backward key", "", &CameraKeyboardExtension::getBackwardKey,
-												&CameraKeyboardExtension::setBackwardKey));
-		pProperties.emplace_back(createProperty("Strafe left key", "", &CameraKeyboardExtension::getStrafeLeftKey,
-												&CameraKeyboardExtension::setStrafeLeftKey));
-		pProperties.emplace_back(createProperty("Strafe right key", "", &CameraKeyboardExtension::getStrafeRightKey,
-												&CameraKeyboardExtension::setStrafeRightKey));
+	void getProperties(ExtensionProperties &pProperties) override {
+		pProperties.emplace_back(this, "Speed", "", &CameraKeyboardExtension::getSpeed,
+								 &CameraKeyboardExtension::setSpeed);
+		pProperties.emplace_back(this, "Forward key", "", &CameraKeyboardExtension::getForwardKey,
+								 &CameraKeyboardExtension::setForwardKey);
+		pProperties.emplace_back(this, "Backward key", "", &CameraKeyboardExtension::getBackwardKey,
+								 &CameraKeyboardExtension::setBackwardKey);
+		pProperties.emplace_back(this, "Strafe left key", "", &CameraKeyboardExtension::getStrafeLeftKey,
+								 &CameraKeyboardExtension::setStrafeLeftKey);
+		pProperties.emplace_back(this, "Strafe right key", "", &CameraKeyboardExtension::getStrafeRightKey,
+								 &CameraKeyboardExtension::setStrafeRightKey);
 	}
 };
 } // namespace mer::sdk::main

@@ -16,20 +16,29 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 24.02.24.
+// Created by alexus on 24.03.24.
 //
 
-#ifndef ICAMERA_H
-#define ICAMERA_H
-#include <glm/fwd.hpp>
+#ifndef ISCENEDATAINJECTOR_H
+#define ISCENEDATAINJECTOR_H
 
 namespace mer::sdk::main {
-class ICamera {
-public:
-	virtual ~ICamera() = default;
+class Extension;
+class SceneObject;
+class ISceneObject;
+class IScene;
 
-	virtual const glm::mat4 &getMatrix() = 0;
+class ISceneDataInjector {
+public:
+	virtual ~ISceneDataInjector() = default;
+
+	[[nodiscard]] virtual const std::shared_ptr<IScene> &getScene() const = 0;
+
+	virtual std::shared_ptr<SceneObject> newObject() = 0;
+
+	virtual std::shared_ptr<ISceneObject> injectEditorCamera() = 0;
 };
 } // namespace mer::sdk::main
 
-#endif //ICAMERA_H
+
+#endif //ISCENEDATAINJECTOR_H

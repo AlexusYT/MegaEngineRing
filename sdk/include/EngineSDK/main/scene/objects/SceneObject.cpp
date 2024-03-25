@@ -109,7 +109,7 @@ utils::ReportMessagePtr SceneObject::removeExtension(const std::string &pName, s
 	return nullptr;
 }
 
-utils::ReportMessagePtr SceneObject::transferExtensionTo(const std::string &pName, SceneObject* pTransferTo) {
+utils::ReportMessagePtr SceneObject::transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) {
 	std::shared_ptr<Extension> tmp;
 	if (auto msg = this->removeExtension(pName, tmp)) { return msg; }
 	if (auto msg = pTransferTo->addExtension(pName, tmp)) { return msg; }

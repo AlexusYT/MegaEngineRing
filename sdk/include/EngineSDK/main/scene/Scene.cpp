@@ -25,8 +25,8 @@
 #include "EngineSDK/renderer/GL.h"
 #include "EngineUtils/utils/Logger.h"
 #include "actor/IActor.h"
-#include "cameras/Camera.h"
 #include "objects/ISceneObject.h"
+#include "objects/extensions/cameras/ICamera.h"
 
 namespace mer::sdk::main {
 Scene::Scene() : programBuffer(std::make_shared<ProgramWideShaderBuffer>()) {}
@@ -39,6 +39,13 @@ void Scene::onResourceLoadingError(const std::shared_ptr<ResourceRequest> & /*pR
 								   const sdk::utils::ReportMessagePtr &pError) {
 
 	sdk::utils::Logger::error(pError);
+}
+
+void Scene::switchCamera(ICamera* pNewCamera) {
+	currentCamera = pNewCamera;
+	static sigc::connection connection;
+	if (!connection.empty()) connection.disconnect();
+	connection = pNewCamera->getOnMatrixChanged().connect(sigc::mem_fun(*this, &Scene::setViewProjMatrix));
 }
 
 void Scene::beforeRender() { renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT); }

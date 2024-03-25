@@ -31,6 +31,7 @@
 #include <project/generators/cpp/CppHeaderFile.h>
 #include <project/generators/cpp/CppMethod.h>
 
+#include "EngineSDK/main/scene/ISceneDataInjector.h"
 #include "mvp/main/editors/sceneEditor/ModelSceneEditor.h"
 #include "mvp/main/editors/sceneEditor/PresenterSceneEditor.h"
 #include "mvp/main/editors/sceneEditor/ViewSceneEditor.h"
@@ -73,10 +74,11 @@ sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	CppSourceFile source;
 	source.addInclude(getHeaderPath().filename(), false);
 	source.addInclude("EngineSDK/renderer/GL.h", true);
+	source.addInclude("EngineSDK/main/scene/SceneDataInjector.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h", true);
-	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraExtension.h", true);
-	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraKeyboardExtension.h", true);
-	source.addInclude("EngineSDK/main/scene/objects/extensions/CameraMouseExtension.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/cameras/CameraKeyboardExtension.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/cameras/CameraMouseExtension.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/SceneObject.h", true);
 	if (primaryScene) {
@@ -109,9 +111,10 @@ sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 std::shared_ptr<CppExternC> SceneInfo::createExternCBlock(const std::string &pSceneName) {
 
 	auto loadMethod = CppMethod::create();
-	loadMethod->setReturnType<sdk::main::IScene*>();
+	loadMethod->setReturnType<sdk::main::ISceneDataInjector*>();
 	loadMethod->setName("load" + pSceneName);
-	loadMethod->addStatement(CppCustomStatement::create("return new " + pSceneName + "()"));
+	loadMethod->addStatement(
+		CppCustomStatement::create("return new mer::sdk::main::SceneDataInjector(new " + pSceneName + "())"));
 	auto externC = CppExternC::create();
 	externC->addDefinition(loadMethod->getDefinition());
 	return externC;
@@ -140,7 +143,7 @@ std::shared_ptr<CppMethod> SceneInfo::createInitMethod(const std::shared_ptr<Cpp
 	auto cameraMouse = CameraMouseExtension::create();
 	cameraMouse->setMethodAddAngle(sigc::mem_fun(*camera, &CameraExtension::addAngle));
 	cameraKeyboard->setMethodGetAngle(sigc::mem_fun(*camera, &CameraExtension::getAngle));
-	camera->getOnMatrixChanged().connect(sigc::mem_fun(*this, &Scene::setViewProjMatrix));
+	switchCamera(camera.get());
 	player->addExtension("cameraKeyboard", cameraKeyboard);
 	player->addExtension("cameraMouse", cameraMouse);
 	player->addExtension("camera", camera);

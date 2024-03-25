@@ -30,7 +30,7 @@ namespace mer::sdk::main {
 
 Extension::Extension() {}
 
-void Extension::getProperties(std::vector<std::shared_ptr<ExtensionPropertyBase>> & /*pProperties*/) {}
+void Extension::getProperties(ExtensionProperties & /*pProperties*/) {}
 
 IScene* Extension::getScene() const { return getObject()->getScene(); }
 

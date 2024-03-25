@@ -21,6 +21,7 @@
 
 #ifndef ISCENE_H
 #define ISCENE_H
+#include <glm/fwd.hpp>
 #include <sigc++/signal.h>
 
 #include "EngineUtils/utils/ReportMessageFwd.h"
@@ -35,6 +36,7 @@ class PresenterSceneEditor;
 } // namespace mer::editor::mvp
 
 namespace mer::sdk::main {
+class ICamera;
 class ISceneObject;
 class ResourceRequest;
 class IResource;
@@ -48,12 +50,16 @@ class IScene {
 public:
 	virtual ~IScene() = default;
 
+	virtual void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const = 0;
+
 	virtual sdk::utils::ReportMessagePtr initScene() = 0;
 
 	[[nodiscard]] virtual IResources* getResources() const = 0;
 
 	virtual void onResourceLoadingError(const std::shared_ptr<ResourceRequest> &pRequest,
 										const sdk::utils::ReportMessagePtr &pError) = 0;
+
+	virtual void addObject(const std::shared_ptr<ISceneObject> &pObject) = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<ProgramWideShaderBuffer> &getProgramBuffer() const = 0;
 
@@ -65,6 +71,9 @@ public:
 		const std::shared_ptr<ResourceRequest> &pRequest,
 		const sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>
 			&pSlot) const = 0;
+
+
+	virtual void switchCamera(ICamera* pNewCamera) = 0;
 
 private:
 	virtual void setResources(IResources* pResources) = 0;
