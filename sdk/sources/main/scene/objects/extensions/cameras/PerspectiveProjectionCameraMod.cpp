@@ -42,5 +42,6 @@ void PerspectiveProjectionCameraMod::projectionMatrixChanged(const glm::mat4 & /
 void PerspectiveProjectionCameraMod::updateProjMatrix() {
 	projMatrix = glm::perspective(fov, aspect, zNear, zFar);
 	onProjMatrixChanged(projMatrix);
+	projectionMatrixChanged(projMatrix);
 }
 } // namespace mer::sdk::main

@@ -57,6 +57,13 @@ public:
 
 	virtual sigc::connection connectCursorMovedSignal(const sigc::slot<void(double pX, double pY)> &pSlot) const = 0;
 
+
+	virtual sigc::connection connectMouseButtonPressedSignal(
+		const sigc::slot<void(unsigned int pButton, double pX, double pY)> &pSlot) const = 0;
+
+	virtual sigc::connection connectMouseButtonReleasedSignal(
+		const sigc::slot<void(unsigned int pButton, double pX, double pY)> &pSlot) const = 0;
+
 	virtual void setOnObjectSelectedSlot(const sigc::slot<void(ui::EditorSceneObject*)> &pSlot) = 0;
 
 	virtual void makeCurrent() = 0;
@@ -76,6 +83,12 @@ public:
 	virtual void onSceneReady(const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &pTopLevelObjects) = 0;
 
 	virtual void onObjectSelectionChanged(const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &pEntries) = 0;
+
+	virtual sigc::connection connectSimToggledSignal(const sigc::slot<void()> &pSlot) const = 0;
+
+	virtual void toggleSimMode(bool pMode = true) = 0;
+
+	virtual bool isSimMode() const = 0;
 };
 } // namespace mer::editor::mvp
 

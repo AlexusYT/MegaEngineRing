@@ -46,6 +46,7 @@ void Scene::switchCamera(ICamera* pNewCamera) {
 	static sigc::connection connection;
 	if (!connection.empty()) connection.disconnect();
 	connection = pNewCamera->getOnMatrixChanged().connect(sigc::mem_fun(*this, &Scene::setViewProjMatrix));
+	pNewCamera->updateMatrix();
 }
 
 void Scene::beforeRender() { renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT); }
@@ -84,5 +85,10 @@ void Scene::onCursorPosChanged(const double pX, const double pY) {
 
 void Scene::onKeyChanged(const utils::KeyboardKey pKey, const bool pPressed, const utils::ModifierKeys &pMods) {
 	for (const auto &object: objects) { object->onKeyStateChanged(pKey, pPressed, pMods); }
+}
+
+void Scene::onMouseButtonStateChanged(const utils::MouseButton pButton, const bool pPressed, const double pX,
+									  const double pY) {
+	for (const auto &object: objects) { object->onMouseButtonStateChanged(pButton, pPressed, pX, pY); }
 }
 } // namespace mer::sdk::main

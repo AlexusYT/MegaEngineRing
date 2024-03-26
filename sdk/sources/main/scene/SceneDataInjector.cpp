@@ -22,25 +22,32 @@
 #include "EngineSDK/main/scene/SceneDataInjector.h"
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/cameras/CameraMouseExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
+#include "EngineSDK/utils/MouseButton.h"
+#include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
 
 std::shared_ptr<SceneObject> SceneDataInjector::newObject() { return std::make_shared<SceneObject>(); }
 
-std::shared_ptr<ISceneObject> SceneDataInjector::injectEditorCamera() {
+void SceneDataInjector::setupEditorCamera(std::shared_ptr<ISceneObject> &pEditorCamera,
+										  std::shared_ptr<ICamera> &pCamera) {
 
-	std::shared_ptr<ISceneObject> editorCamera = newObject();
+	pEditorCamera = newObject();
 	auto camera = OrbitCameraExtension::create();
 	auto cameraMouse = CameraMouseExtension::create();
+	cameraMouse->setEnabled(false);
+	auto mouseButton = MouseButtonExtension::create();
+	mouseButton->connectButtonSignal(utils::MouseButton::BUTTON_MIDDLE,
+									 [cameraMouse](utils::MouseButton /*pButton*/, bool pPressed, double /*pX*/,
+												   double /*pY*/) { cameraMouse->setEnabled(pPressed); });
 	cameraMouse->setMethodAddAngle(sigc::mem_fun(*camera, &OrbitCameraExtension::addAngle));
-	scene->switchCamera(camera.get());
-	camera->getOnMatrixChanged().connect(sigc::mem_fun(*scene, &IScene::setViewProjMatrix));
-	editorCamera->addExtension("cameraMouse", cameraMouse);
-	editorCamera->addExtension("camera", camera);
-	editorCamera->setName("EditorCamera");
-	scene->addObject(editorCamera);
-	return editorCamera;
+	pEditorCamera->addExtension("cameraMouse", cameraMouse);
+	pEditorCamera->addExtension("mouseButton", mouseButton);
+	pEditorCamera->addExtension("camera", camera);
+	pCamera = camera;
+	pEditorCamera->setName("EditorCamera");
 }
 } // namespace mer::sdk::main

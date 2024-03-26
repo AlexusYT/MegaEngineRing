@@ -84,7 +84,7 @@ protected:
 private:
 	void projectionMatrixChanged(const glm::mat4 &pNewMatrix) override;
 
-	void updateMatrix();
+	void updateMatrix() override;
 
 	void getProperties(ExtensionProperties &pProperties) override;
 };

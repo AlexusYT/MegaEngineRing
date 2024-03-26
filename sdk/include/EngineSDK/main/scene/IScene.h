@@ -27,6 +27,7 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
 namespace mer::sdk::utils {
+enum class MouseButton;
 class ModifierKeys;
 enum class KeyboardKey;
 } // namespace mer::sdk::utils
@@ -67,6 +68,8 @@ public:
 
 	[[nodiscard]] virtual sigc::signal<void(ISceneObject* pObject)> &getOnObjectAddedSignal() = 0;
 
+	[[nodiscard]] virtual ICamera* getCurrentCamera() const = 0;
+
 	virtual void enqueueResourceLoading(
 		const std::shared_ptr<ResourceRequest> &pRequest,
 		const sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>
@@ -85,6 +88,8 @@ private:
 	virtual void onCursorPosChanged(double pX, double pY) = 0;
 
 	virtual void onKeyChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) = 0;
+
+	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) = 0;
 };
 } // namespace mer::sdk::main
 

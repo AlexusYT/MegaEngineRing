@@ -81,6 +81,8 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h
         include/EngineSDK/main/scene/ISceneDataInjector.h
         include/EngineSDK/main/scene/SceneDataInjector.h
+        include/EngineSDK/utils/MouseButton.h
+        include/EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

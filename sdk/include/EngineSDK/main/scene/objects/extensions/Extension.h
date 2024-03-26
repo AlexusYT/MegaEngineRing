@@ -48,6 +48,8 @@ class Extension {
 	SceneObject* object{};
 	std::vector<sigc::connection> connectionStorage;
 	std::string typeNameStr;
+	bool enabled = true;
+	sigc::signal<void()> onEnabledChangedSignal;
 
 protected:
 	Extension();
@@ -76,6 +78,16 @@ public:
 	static const char* typeName() { return nullptr; }
 
 	[[nodiscard]] const std::string &getTypeName() const { return typeNameStr; }
+
+	[[nodiscard]] bool isEnabled() const { return enabled; }
+
+	void setEnabled(const bool pEnabled = true) {
+		enabled = pEnabled;
+		onEnabledChangedSignal();
+		onEnabledChanged();
+	}
+
+	[[nodiscard]] sigc::signal<void()> &getOnEnabledChangedSignal() { return onEnabledChangedSignal; }
 
 protected:
 	template<RequestRegularConcept ClassT>
@@ -113,6 +125,8 @@ protected:
 
 	virtual void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods);
 
+	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const;
+
 	template<typename T, typename T1 = std::remove_cvref_t<T>, typename ClassT>
 	std::shared_ptr<ExtensionProperty<T1>> createProperty(const std::string &pName, const std::string &pDescription,
 														  T (ClassT::*pGetterFunc)() const,
@@ -121,6 +135,8 @@ protected:
 			pName, pDescription, sigc::mem_fun<T, ClassT>(*dynamic_cast<ClassT*>(this), pGetterFunc),
 			sigc::mem_fun<void, ClassT>(*dynamic_cast<ClassT*>(this), pSetterFunc));
 	}
+
+	virtual void onEnabledChanged();
 
 private:
 	void setObject(SceneObject* const pObject) { object = pObject; }

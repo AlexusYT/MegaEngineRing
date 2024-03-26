@@ -38,7 +38,9 @@ class ViewSceneEditor : public IViewSceneEditor {
 	Gtk::GLArea area;
 	Gtk::Box loadingBox{Gtk::Orientation::VERTICAL};
 	Gtk::Label loadingErrorLabel;
+	Gtk::Switch modeSwitch;
 	Glib::RefPtr<Gtk::EventControllerMotion> motionController;
+	std::shared_ptr<Gtk::GestureClick> gestureClick;
 	IViewMain* viewMain{};
 	Glib::RefPtr<Gdk::GLContext> sharedContext;
 
@@ -63,6 +65,24 @@ public:
 
 	sigc::connection connectCursorMovedSignal(const sigc::slot<void(double pX, double pY)> &pSlot) const override {
 		return motionController->signal_motion().connect(pSlot, false);
+	}
+
+	sigc::connection connectMouseButtonPressedSignal(
+		const sigc::slot<void(unsigned int pButton, double pX, double pY)> &pSlot) const override {
+		return gestureClick->signal_pressed().connect(
+			[this, pSlot](int /*pNPress*/, const double pX, const double pY) {
+				pSlot(gestureClick->get_current_button(), pX, pY);
+			},
+			false);
+	}
+
+	sigc::connection connectMouseButtonReleasedSignal(
+		const sigc::slot<void(unsigned int pButton, double pX, double pY)> &pSlot) const override {
+		return gestureClick->signal_released().connect(
+			[this, pSlot](int /*pNPress*/, const double pX, const double pY) {
+				pSlot(gestureClick->get_current_button(), pX, pY);
+			},
+			false);
 	}
 
 	void setOnObjectSelectedSlot(const ui::TreeObjectWindow::SlotEntrySelectionChanged &pSlot) override {
@@ -90,6 +110,14 @@ public:
 	void onObjectSelectionChanged(const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &pEntries) override {
 		propertiesWindow.setEntries(pEntries);
 	}
+
+	sigc::connection connectSimToggledSignal(const sigc::slot<void()> &pSlot) const override {
+		return modeSwitch.property_active().signal_changed().connect(pSlot);
+	}
+
+	void toggleSimMode(const bool pMode = true) override { modeSwitch.set_active(pMode); }
+
+	bool isSimMode() const override { return modeSwitch.get_active(); }
 };
 } // namespace mer::editor::mvp
 
