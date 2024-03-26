@@ -89,6 +89,8 @@ private:
 
 	void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) const override;
 
+	void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const override;
+
 	void setScene(IScene* const pScene) override { scene = pScene; }
 
 	UUID* getUuid() override { return uuid.get(); }

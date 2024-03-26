@@ -64,6 +64,8 @@ protected:
 		lastCursorPos = pos;
 	}
 
+	void onEnabledChanged() override { lastCursorPos.reset(); }
+
 	void getProperties(ExtensionProperties &pProperties) override {
 		pProperties.emplace_back(this, "Sensitivity", "Mouse Sensitivity", &CameraMouseExtension::getMouseSensitivity,
 								 &CameraMouseExtension::setMouseSensitivity);

@@ -37,7 +37,7 @@ class CameraExtension : public Extension, public PerspectiveProjectionCameraMod,
 	ValueChangedArgs<const glm::vec2 &> onAngleChanged;
 
 protected:
-	CameraExtension() = default;
+	CameraExtension();
 
 public:
 	METHOD_CREATE(CameraExtension)
@@ -80,7 +80,7 @@ protected:
 private:
 	void projectionMatrixChanged(const glm::mat4 &pNewMatrix) override;
 
-	void updateMatrix();
+	void updateMatrix() override;
 
 	void getProperties(ExtensionProperties &pProperties) override;
 };

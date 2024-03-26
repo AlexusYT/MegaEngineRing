@@ -28,6 +28,7 @@
 
 #include "EngineSDK/main/resources/IResources.h"
 #include "EngineSDK/main/resources/ResourceRequest.h"
+#include "EngineSDK/utils/MouseButton.h"
 #include "IScene.h"
 
 namespace mer::sdk::main {
@@ -69,6 +70,7 @@ public:
 		return onObjectAddedSignal;
 	}
 
+	[[nodiscard]] ICamera* getCurrentCamera() const override { return currentCamera; }
 
 protected:
 	virtual void beforeRender();
@@ -89,6 +91,8 @@ private:
 	void onCursorPosChanged(double pX, double pY) override;
 
 	void onKeyChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) override;
+
+	void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) override;
 };
 } // namespace mer::sdk::main
 

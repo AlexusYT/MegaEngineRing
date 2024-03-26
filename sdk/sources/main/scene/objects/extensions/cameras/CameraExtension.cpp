@@ -31,6 +31,8 @@
 
 namespace mer::sdk::main {
 
+CameraExtension::CameraExtension() { setDirection(euclidean(radians(angle))); }
+
 void CameraExtension::setAngle(const glm::vec2 &pAngle) {
 	if (angle == pAngle) return;
 	glm::vec2 angleTmp = pAngle;
@@ -62,6 +64,7 @@ void CameraExtension::projectionMatrixChanged(const glm::mat4 & /*pNewMatrix*/) 
 
 void CameraExtension::updateMatrix() {
 	const auto &objectSelf = getObject();
+	if (!objectSelf) return;
 	const auto position = objectSelf->getPosition();
 	setMatrix(getProjMatrix() * lookAt(position, position + direction, {0, 1, 0}));
 }

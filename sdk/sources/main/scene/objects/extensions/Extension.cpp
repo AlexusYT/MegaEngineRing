@@ -41,6 +41,11 @@ void Extension::onCursorPosChanged(const double /*pX*/, const double /*pY*/) {}
 void Extension::onKeyStateChanged(const utils::KeyboardKey /*pKey*/, const bool /*pPressed*/,
 								  const utils::ModifierKeys & /*pMods*/) {}
 
+void Extension::onMouseButtonStateChanged(utils::MouseButton /*pButton*/, bool /*pPressed*/, double /*pX*/,
+										  double /*pY*/) const {}
+
+void Extension::onEnabledChanged() {}
+
 void Extension::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
 	if (auto msg = ExtensionRegistry::getTypeNameFor(pExt, pNameOut)) { utils::Logger::error(msg); }
 }

@@ -16,26 +16,26 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 24.02.24.
+// Created by alexus on 25.03.24.
 //
 
-#ifndef ICAMERA_H
-#define ICAMERA_H
-#include <glm/fwd.hpp>
-#include <sigc++/signal.h>
+#ifndef MOUSEBUTTON_H
+#define MOUSEBUTTON_H
 
-namespace mer::sdk::main {
-class ICamera {
-public:
-	virtual ~ICamera() = default;
+namespace mer::sdk::utils {
+enum class MouseButton {
+	BUTTON_PRIMARY = 1,
+	BUTTON_MIDDLE,
+	BUTTON_SECONDARY,
+	BUTTON_1,
+	BUTTON_2,
+	BUTTON_3,
+	BUTTON_4,
+	BUTTON_5,
+	BUTTON_6
 
-
-	[[nodiscard]] virtual sigc::signal<void(const glm::mat4 &)> &getOnMatrixChanged() = 0;
-
-	[[nodiscard]] virtual const glm::mat4 &getMatrix() const = 0;
-
-	virtual void updateMatrix() = 0;
 };
-} // namespace mer::sdk::main
+}
 
-#endif //ICAMERA_H
+
+#endif //MOUSEBUTTON_H

@@ -37,7 +37,7 @@ public:
 
 	std::shared_ptr<SceneObject> newObject() override;
 
-	std::shared_ptr<ISceneObject> injectEditorCamera() override;
+	void setupEditorCamera(std::shared_ptr<ISceneObject> &pEditorCamera, std::shared_ptr<ICamera> &pCamera) override;
 };
 } // namespace mer::sdk::main
 

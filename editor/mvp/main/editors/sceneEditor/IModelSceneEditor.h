@@ -52,13 +52,25 @@ public:
 
 	virtual void setScene(const std::shared_ptr<sdk::main::IScene> &pScene) = 0;
 
-	[[nodiscard]] virtual bool isInteractive() const = 0;
+	[[nodiscard]] virtual bool isSimMode() const = 0;
 
-	virtual void setInteractive(bool pInteractive) = 0;
+	virtual void setSimMode(bool pSimMode) = 0;
 
 	virtual void addToplevelSceneObject(UUID* pUuid, const std::shared_ptr<ui::EditorSceneObject> &pObject) = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &getToplevelObjects() const = 0;
+
+	[[nodiscard]] virtual sdk::main::ICamera* getPrimaryCamera() const = 0;
+
+	void virtual setPrimaryCamera(sdk::main::ICamera* pPrimaryCamera) = 0;
+
+	[[nodiscard]] virtual sdk::main::ICamera* getEditorCamera() const = 0;
+
+	virtual void setEditorCamera(sdk::main::ICamera* pEditorCamera) = 0;
+
+	[[nodiscard]] virtual sdk::main::ISceneObject* getEditorCameraObject() const = 0;
+
+	virtual void setEditorCameraObject(sdk::main::ISceneObject* const pEditorCameraObject) = 0;
 };
 } // namespace mer::editor::mvp
 

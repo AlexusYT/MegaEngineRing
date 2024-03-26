@@ -23,6 +23,7 @@
 #define ISCENEDATAINJECTOR_H
 
 namespace mer::sdk::main {
+class ICamera;
 class Extension;
 class SceneObject;
 class ISceneObject;
@@ -36,7 +37,7 @@ public:
 
 	virtual std::shared_ptr<SceneObject> newObject() = 0;
 
-	virtual std::shared_ptr<ISceneObject> injectEditorCamera() = 0;
+	virtual void setupEditorCamera(std::shared_ptr<ISceneObject> &pEditorCamera, std::shared_ptr<ICamera> &pCamera) = 0;
 };
 } // namespace mer::sdk::main
 

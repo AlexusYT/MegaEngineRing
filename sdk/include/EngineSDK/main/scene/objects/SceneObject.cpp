@@ -130,18 +130,32 @@ void SceneObject::render() const {
 }
 
 void SceneObject::onWindowSizeChanged(const int pWidth, const int pHeight) const {
-	for (const auto &extension: extensions) { extension.second->onWindowSizeChanged(pWidth, pHeight); }
+	for (const auto &extension: extensions) {
+		if (!extension.second->isEnabled()) continue;
+		extension.second->onWindowSizeChanged(pWidth, pHeight);
+	}
 }
 
 void SceneObject::onCursorPosChanged(const double pX, const double pY) const {
 	for (const auto &extension: extensions) {
-		//
+		if (!extension.second->isEnabled()) continue;
 		extension.second->onCursorPosChanged(pX, pY);
 	}
 }
 
 void SceneObject::onKeyStateChanged(const utils::KeyboardKey pKey, const bool pPressed,
 									const utils::ModifierKeys &pMods) const {
-	for (const auto &extension: extensions) { extension.second->onKeyStateChanged(pKey, pPressed, pMods); }
+	for (const auto &extension: extensions) {
+		if (!extension.second->isEnabled()) continue;
+		extension.second->onKeyStateChanged(pKey, pPressed, pMods);
+	}
+}
+
+void SceneObject::onMouseButtonStateChanged(const utils::MouseButton pButton, const bool pPressed, const double pX,
+											const double pY) const {
+	for (const auto &extension: extensions) {
+		if (!extension.second->isEnabled()) continue;
+		extension.second->onMouseButtonStateChanged(pButton, pPressed, pX, pY);
+	}
 }
 } // namespace mer::sdk::main

@@ -29,6 +29,7 @@
 class UUID;
 
 namespace mer::sdk::utils {
+enum class MouseButton;
 class ModifierKeys;
 enum class KeyboardKey;
 } // namespace mer::sdk::utils
@@ -58,6 +59,8 @@ public:
 	virtual void onCursorPosChanged(double pX, double pY) const = 0;
 
 	virtual void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) const = 0;
+
+	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const = 0;
 
 	virtual void setScene(IScene* pScene) = 0;
 

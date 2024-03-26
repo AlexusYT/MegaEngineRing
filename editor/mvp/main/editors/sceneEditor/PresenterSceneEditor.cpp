@@ -32,6 +32,7 @@
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "EngineSDK/utils/KeyboardKey.h"
+#include "EngineSDK/utils/MouseButton.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
 #include "project/Project.h"
@@ -124,22 +125,64 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 
 		viewSceneEditor->connectKeyPressedSignal(
 			[this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
-				if (!modelSceneEditor->isInteractive()) return false;
 				const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
-				if (const auto scene = modelSceneEditor->getScene())
-					scene->onKeyChanged(key, true, convertToModifierKeys(pState));
-				return false;
+				const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
+				if (!modelSceneEditor->isSimMode()) {
+					if (const auto object = modelSceneEditor->getEditorCameraObject())
+						object->onKeyStateChanged(key, true, mods);
+					return false;
+				}
+
+				if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, true, mods);
+				return true;
 			});
 
 		viewSceneEditor->connectKeyReleasedSignal(
 			[this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
 				const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
 				if (key == sdk::utils::KeyboardKey::KEY_F2)
-					modelSceneEditor->setInteractive(!modelSceneEditor->isInteractive());
-				if (!modelSceneEditor->isInteractive()) return;
-				if (const auto scene = modelSceneEditor->getScene())
-					scene->onKeyChanged(key, false, convertToModifierKeys(pState));
+					viewSceneEditor->toggleSimMode(!modelSceneEditor->isSimMode());
+
+				const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
+				if (!modelSceneEditor->isSimMode()) {
+					if (const auto object = modelSceneEditor->getEditorCameraObject())
+						object->onKeyStateChanged(key, false, mods);
+				} else {
+					if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, false, mods);
+				}
 			});
+		viewSceneEditor->connectMouseButtonPressedSignal([this](unsigned int pButton, double pX, double pY) {
+			const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
+			if (!modelSceneEditor->isSimMode()) {
+				if (const auto object = modelSceneEditor->getEditorCameraObject())
+					object->onMouseButtonStateChanged(btn, true, pX, pY);
+			} else {
+				if (const auto scene = modelSceneEditor->getScene())
+					scene->onMouseButtonStateChanged(btn, true, pX, pY);
+			}
+		});
+		viewSceneEditor->connectMouseButtonReleasedSignal(
+			[this](unsigned int pButton, const double pX, const double pY) {
+				const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
+				if (!modelSceneEditor->isSimMode()) {
+					if (const auto object = modelSceneEditor->getEditorCameraObject())
+						object->onMouseButtonStateChanged(btn, false, pX, pY);
+				} else {
+					if (const auto scene = modelSceneEditor->getScene())
+						scene->onMouseButtonStateChanged(btn, false, pX, pY);
+				}
+			});
+	});
+
+	viewSceneEditor->connectSimToggledSignal([this] {
+		bool simMode = viewSceneEditor->isSimMode();
+		auto scene = modelSceneEditor->getScene();
+		if (simMode) {
+			scene->switchCamera(modelSceneEditor->getPrimaryCamera());
+		} else {
+			scene->switchCamera(modelSceneEditor->getEditorCamera());
+		}
+		modelSceneEditor->setSimMode(simMode);
 	});
 
 	viewSceneEditor->connectUnrealize([this] {
@@ -155,9 +198,7 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 		}
 	});
 	viewSceneEditor->connectRender([this](const Glib::RefPtr<Gdk::GLContext> & /*pContext*/) {
-		auto scene = modelSceneEditor->getScene().get();
-		if (scene) scene->render();
-
+		if (auto scene = modelSceneEditor->getScene().get()) scene->render();
 		viewSceneEditor->executeInMainThread(
 			[this](const std::promise<void> & /*pPromise*/) { viewSceneEditor->redraw(); });
 		return true;
@@ -166,8 +207,11 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 		if (const auto scene = modelSceneEditor->getScene()) scene->resize(pWidth, pHeight);
 	});
 	viewSceneEditor->connectCursorMovedSignal([this](const double pX, const double pY) {
-		if (!modelSceneEditor->isInteractive()) return;
-		if (const auto scene = modelSceneEditor->getScene()) { scene->onCursorPosChanged(pX, pY); }
+		if (!modelSceneEditor->isSimMode()) {
+			if (const auto object = modelSceneEditor->getEditorCameraObject()) object->onCursorPosChanged(pX, pY);
+		} else {
+			if (const auto scene = modelSceneEditor->getScene()) { scene->onCursorPosChanged(pX, pY); }
+		}
 	});
 
 	viewSceneEditor->setOnObjectSelectedSlot([this](const ui::EditorSceneObject* pObject) {
@@ -241,7 +285,15 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	scene->setResources(loadedResources.get());
 
 	if (auto msg = scene->initScene()) return msg;
-	sceneInjector->injectEditorCamera();
+	modelSceneEditor->setPrimaryCamera(scene->getCurrentCamera());
+	std::shared_ptr<sdk::main::ISceneObject> cameraObject;
+	std::shared_ptr<sdk::main::ICamera> editorCamera;
+	sceneInjector->setupEditorCamera(cameraObject, editorCamera);
+
+	scene->switchCamera(editorCamera.get());
+	scene->addObject(cameraObject);
+	modelSceneEditor->setEditorCamera(editorCamera.get());
+	modelSceneEditor->setEditorCameraObject(cameraObject.get());
 
 	modelSceneEditor->setScene(scene);
 	viewSceneEditor->onSceneReady(modelSceneEditor->getToplevelObjects());

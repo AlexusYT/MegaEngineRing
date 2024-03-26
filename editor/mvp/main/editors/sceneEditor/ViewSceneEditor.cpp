@@ -52,7 +52,19 @@ ViewSceneEditor::ViewSceneEditor() {
 	loadingBox.append(loadingErrorLabel);
 
 	areaOverlay.add_overlay(loadingBox);
-	leftPaned.set_end_child(areaOverlay);
+
+
+	modeSwitch.set_margin(5);
+	Gtk::Label simulatingLabel("Simulation");
+	simulatingLabel.set_margin(5);
+	Gtk::Box topBox;
+	topBox.append(simulatingLabel);
+	topBox.append(modeSwitch);
+
+	Gtk::Box centerBox(Gtk::Orientation::VERTICAL);
+	centerBox.append(topBox);
+	centerBox.append(areaOverlay);
+	leftPaned.set_end_child(centerBox);
 	leftPaned.set_shrink_end_child(false);
 	leftPaned.set_resize_end_child(true);
 
@@ -91,6 +103,10 @@ ViewSceneEditor::ViewSceneEditor() {
 	motionController = Gtk::EventControllerMotion::create();
 	mainWidget.signal_realize().connect([this] { viewMain = dynamic_cast<IViewMain*>(mainWidget.get_root()); });
 	area.add_controller(motionController);
+
+	gestureClick = Gtk::GestureClick::create();
+	gestureClick->set_button();
+	area.add_controller(gestureClick);
 }
 
 sigc::connection ViewSceneEditor::connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) {
