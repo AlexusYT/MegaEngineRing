@@ -19,15 +19,15 @@
 // Created by alexus on 26.03.24.
 //
 
-#include "ObjModelRequest.h"
+#include "EngineSDK/main/resources/models/ObjModelRequest.h"
 
 #include <cstring>
 #include <fstream>
 #include <regex>
 
 #include "EngineSDK/main/resources/MultipleResource.h"
+#include "EngineSDK/main/resources/models/ModelResource.h"
 #include "EngineUtils/utils/Logger.h"
-#include "ModelResource.h"
 
 namespace mer::sdk::main {
 
@@ -188,7 +188,7 @@ utils::ReportMessagePtr FileModelRequest::getStream(std::shared_ptr<std::istream
 		msg->setStacktrace();
 		msg->setTitle("Failed to open model file");
 		msg->setMessage("Exception thrown");
-		msg->addInfoLine("File path: {}", filePath.string());
+		msg->addInfoLine("File path: {}", absolute(filePath).string());
 		return msg;
 	}
 	pStreamOut = file;

@@ -75,7 +75,9 @@ sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	source.addInclude(getHeaderPath().filename(), false);
 	source.addInclude("EngineSDK/renderer/GL.h", true);
 	source.addInclude("EngineSDK/main/scene/SceneDataInjector.h", true);
-	source.addInclude("EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h", true);
+	source.addInclude("EngineSDK/main/resources/shaders/BuiltInProgramRequest.h", true);
+	source.addInclude("EngineSDK/main/resources/models/ObjModelRequest.h", true);
+	source.addInclude("EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/extensions/cameras/CameraKeyboardExtension.h", true);
 	source.addInclude("EngineSDK/main/scene/objects/extensions/cameras/CameraMouseExtension.h", true);
@@ -133,7 +135,9 @@ std::shared_ptr<CppMethod> SceneInfo::createInitMethod(const std::shared_ptr<Cpp
 	using namespace mer::sdk::utils;
 
 	auto object = std::make_shared<SceneObject>();
-	auto render = BasicRenderExtension::create();
+	auto render = ModelRenderExtension::create();
+	render->setShaderRequest(BuiltInProgramRequest::getDefaultProgram());
+	render->setModelRequest(std::make_shared<FileModelRequest>("TestModel",  "Resources/Cube.obj"), "Cube");
 	object->addExtension("render", render);
 	addObject(object);
 

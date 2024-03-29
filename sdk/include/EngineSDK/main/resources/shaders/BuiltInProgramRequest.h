@@ -21,11 +21,11 @@
 
 #ifndef BUILTINPROGRAMREQUEST_H
 #define BUILTINPROGRAMREQUEST_H
-#include "EngineSDK/main/resources/ResourceRequest.h"
 #include "EngineSDK/renderer/shaders/ShaderProgram.h"
+#include "ShaderProgramRequest.h"
 
 namespace mer::sdk::main {
-class BuiltInProgramRequest final : public RegularRequest {
+class BuiltInProgramRequest final : public ShaderProgramRequest {
 
 	class BuiltInProgramLoader : public ResourceLoader {
 	public:
@@ -36,15 +36,10 @@ class BuiltInProgramRequest final : public RegularRequest {
 
 	static std::shared_ptr<BuiltInProgramRequest> defaultProgram;
 
-	std::string name;
-
-	explicit BuiltInProgramRequest(const std::string &pName) : name("__BuiltIn_" + pName + "Program__") {}
+	explicit BuiltInProgramRequest(const std::string &pName)
+		: ShaderProgramRequest("__BuiltIn_" + pName + "Program__") {}
 
 public:
-	using ResourceT = renderer::ShaderProgram;
-
-	[[nodiscard]] std::string getName() const override { return name; }
-
 	[[nodiscard]] static const std::shared_ptr<BuiltInProgramRequest> &getDefaultProgram();
 
 private:
