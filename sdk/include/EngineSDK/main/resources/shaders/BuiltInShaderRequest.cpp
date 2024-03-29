@@ -23,13 +23,14 @@
 
 #include <EngineSDK/renderer/shaders/FragmentShader.h>
 #include <EngineSDK/renderer/shaders/VertexShader.h>
+
 #include <EngineUtils/utils/ReportMessage.h>
 
 namespace mer::sdk::main {
 
-std::shared_ptr<IResource> BuiltInShaderLoader::load(const std::shared_ptr<ResourceRequest> &pRequest,
-													 const sdk::utils::ReportMessagePtr &pError,
-													 const std::shared_ptr<Resources> & /*pDependencies*/) {
+utils::ReportMessagePtr BuiltInShaderLoader::load(const std::shared_ptr<ResourceRequest> &pRequest,
+												  const std::shared_ptr<Resources> & /*pDependencies*/,
+												  std::shared_ptr<IResource> &pResourceOut) {
 	std::shared_ptr<renderer::Shader> result;
 	if (auto fragRequest = std::dynamic_pointer_cast<BuiltInFragmentShaderRequest>(pRequest)) {
 		result = std::make_shared<renderer::FragmentShader>();
@@ -110,24 +111,25 @@ void main(){
 }
 )");*/
 	} else {
-		pError->setStacktrace();
-		pError->setTitle("Failed to compile the builtin shader");
-		pError->setMessage("Invalid request");
-		pError->addInfoLine("Shader name: {}", pRequest->getName());
-		return nullptr;
+		auto msg = utils::ReportMessage::create();
+		msg->setTitle("Failed to compile the builtin shader");
+		msg->setMessage("Invalid request");
+		msg->addInfoLine("Shader name: {}", pRequest->getName());
+		return msg;
 	}
 	result->compile();
 	if (!result->getCompileStatus()) {
-		pError->setStacktrace();
-		pError->setTitle("Failed to compile the builtin shader");
-		pError->setMessage("Error in shader code detected");
-		pError->addInfoLine("Shader name: {}", pRequest->getName());
+		auto msg = utils::ReportMessage::create();
+		msg->setTitle("Failed to compile the builtin shader");
+		msg->setMessage("Error in shader code detected");
+		msg->addInfoLine("Shader name: {}", pRequest->getName());
 		std::string log;
 		result->getInfoLog(log);
-		pError->addInfoLine("Compiler log: {}", log);
-		return nullptr;
+		msg->addInfoLine("Compiler log: {}", log);
+		return msg;
 	}
-	return result;
+	pResourceOut = result;
+	return nullptr;
 }
 
 } // namespace mer::sdk::main

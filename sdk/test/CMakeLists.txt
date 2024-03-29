@@ -11,7 +11,8 @@ include(GoogleTest)
 
 # ---- Tests ----
 
-add_executable(MegaEngineSDK_test source/main/scene/objects/extensions/CameraExtensionTests.cpp)
+add_executable(MegaEngineSDK_test source/main/scene/objects/extensions/CameraExtensionTests.cpp
+        source/main/resources/models/ObjModelLoaderTests.cpp)
 target_link_libraries(
         MegaEngineSDK_test PRIVATE
         MegaEngineSDK_static
@@ -21,6 +22,12 @@ pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 target_link_libraries(MegaEngineSDK_test PRIVATE PkgConfig::epoxy)
 
 gtest_discover_tests(MegaEngineSDK_test)
+add_custom_command(
+        TARGET MegaEngineSDK_test POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/data/
+        ${CMAKE_CURRENT_BINARY_DIR}/)
+
 
 # ---- End-of-file commands ----
 

@@ -56,14 +56,13 @@ void ResourcesWindow::requestStopThread() { thread.request_stop(); }
 void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 	while (!pToken.stop_requested()) {
 		std::unique_lock lck(queueMutex);
-		cv.wait(lck, [this, pToken]() {
-				return !queue.empty() || pToken.stop_requested(); });
+		cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
 		getContext()->makeCurrent();
 		for (auto &[request, slot]: queue) {
 			utils::ReportMessagePtr error;
 			std::shared_ptr<IResource> resource;
 			try {
-				resource = resources->executeRequest(request, error);
+				error = resources->executeRequest(request, resource);
 			} catch (...) {
 				error = utils::ReportMessage::create();
 				error->setTitle("Failed to load resource");

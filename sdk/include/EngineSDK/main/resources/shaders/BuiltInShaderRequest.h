@@ -33,9 +33,9 @@ class FragmentShader;
 namespace mer::sdk::main {
 class BuiltInShaderLoader : public ResourceLoader {
 public:
-	std::shared_ptr<IResource> load(const std::shared_ptr<ResourceRequest> &pRequest,
-									const sdk::utils::ReportMessagePtr &pError,
-									const std::shared_ptr<Resources> &pDependencies) override;
+	utils::ReportMessagePtr load(const std::shared_ptr<ResourceRequest> &pRequest,
+								 const std::shared_ptr<Resources> &pDependencies,
+								 std::shared_ptr<IResource> &pResourceOut) override;
 };
 
 class BuiltInShaderRequest : public RegularRequest {
