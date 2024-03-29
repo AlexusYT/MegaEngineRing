@@ -80,7 +80,7 @@ public:
 				sdk::utils::ReportMessagePtr error;
 				std::shared_ptr<sdk::main::IResource> resource;
 				try {
-					resource = resources->executeRequest(request, error);
+					error = resources->executeRequest(request, resource);
 				} catch (...) {
 					error = sdk::utils::ReportMessage::create();
 					error->setTitle("Failed to load resource");

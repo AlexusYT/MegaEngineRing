@@ -33,7 +33,6 @@ class LazyRequest;
 } // namespace mer::sdk::main
 
 namespace mer::sdk::main {
-class LazyResource;
 class IResource;
 
 
@@ -42,12 +41,6 @@ concept RequestRegularConcept = requires(T) {
 	requires std::derived_from<T, RegularRequest>;
 	typename T::ResourceT;
 	requires std::derived_from<typename T::ResourceT, IResource>;
-};
-
-template<class T>
-concept RequestLazyConcept = requires(T pX) {
-	requires std::derived_from<T, LazyRequest>;
-	//requires pX.getPolicy() == ResourceLoadingPolicy::LAZY;
 };
 
 class Resources {
@@ -69,29 +62,10 @@ public:
 	/**
 	 * \brief Проверяет, существует ли ресурс с таким именем.
 	 *
-	 * \note Независимо от того, "ленивый" ли ресурс или же обычный, метод вернет `true`. Для проверки способа загрузки
-	 * используйте isLazyResource().
 	 * \param pName Название ресурса для проверки
 	 * \return `true` если такой ресурс существует, `false` если нет
 	 */
 	bool hasResource(const std::string &pName) const { return find(pName) != nullptr; }
-
-	/**
-	 * \brief Проверят, является ли ресурс "ленивым".
-	 *
-	 * \note Метод вернет `false` если:
-	 * - ресурс с таким именем не существует;
-	 * - ресурс не "ленивый".
-	 * \note Для того, чтобы различить причины, используйте этот метод в паре с hasResource()
-	 * \code
-	 * if(isLazyResource(name)) //Ленивый
-	 * else if(hasResource(name)) //обычный
-	 * else //Не существует
-	 * \endcode
-	 * \param pName Название ресурса для проверки
-	 * \return `true` если ресурс "ленивый", `false` если нет или не существует
-	 */
-	bool isLazyResource(const std::string &pName) const;
 
 	/**
 	 * \brief Возвращает ранее загруженный ресурс
@@ -110,19 +84,6 @@ public:
 	std::shared_ptr<typename ClassT::ResourceT> getByRequest(const std::shared_ptr<ClassT> &pRequest) const {
 		return get<typename ClassT::ResourceT>(pRequest->getName());
 	}
-
-	template<RequestLazyConcept ClassT>
-	std::shared_ptr<LazyResource> getByRequest(const std::shared_ptr<ClassT> &pRequest) const {
-		return getLazyResource(pRequest->getName());
-	}
-
-	/**
-	 * \brief Возвращает "ленивый" ресурс, который содержит требуемый ресурс, либо запрос на его загрузку.
-	 * \param pName Название ресурса, которое было указано в запросе ранее
-	 * \return Указатель на LazyResource или на nullptr в случае, если ресурс не найден или невозможно преобразовать
-	 * ресурс к LazyResource. Для проверки существования ресурса, используйте hasResource()
-	 */
-	std::shared_ptr<LazyResource> getLazyResource(const std::string &pName) const;
 
 	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<IResource>> &getResources() const {
 		return resources;

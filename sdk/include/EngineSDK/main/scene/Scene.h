@@ -22,7 +22,6 @@
 #ifndef SCENE_H
 #define SCENE_H
 #include <EngineSDK/main/buffers/ProgramWideShaderBuffer.h>
-#include <EngineSDK/main/resources/LazyResource.h>
 
 #include <sigc++/signal.h>
 

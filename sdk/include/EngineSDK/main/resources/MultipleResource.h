@@ -16,26 +16,22 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 01.02.24.
+// Created by alexus on 29.03.24.
 //
 
-#ifndef RESOURCELOADER_H
-#define RESOURCELOADER_H
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#ifndef MULTIPLERESOURCE_H
+#define MULTIPLERESOURCE_H
+#include <memory>
+#include <string>
+#include <unordered_map>
+
+#include "IResource.h"
 
 namespace mer::sdk::main {
-class IResource;
-class ResourceRequest;
-class Resources;
+class MultipleResource : public IResource, public std::unordered_map<std::string, std::shared_ptr<IResource>> {
 
-class ResourceLoader {
 public:
-	virtual ~ResourceLoader() = default;
-	virtual utils::ReportMessagePtr load(const std::shared_ptr<ResourceRequest> &pRequest,
-										 const std::shared_ptr<Resources> &pDependencies,
-										 std::shared_ptr<IResource> &pResourceOut) = 0;
 };
 } // namespace mer::sdk::main
 
-
-#endif //RESOURCELOADER_H
+#endif //MULTIPLERESOURCE_H

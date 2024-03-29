@@ -24,6 +24,7 @@
 #include <EngineSDK/main/resources/Resources.h>
 #include <EngineSDK/renderer/shaders/Shader.h>
 #include <EngineSDK/renderer/shaders/ShaderProgram.h>
+
 #include <EngineUtils/utils/ReportMessage.h>
 
 #include "BuiltInShaderRequest.h"
@@ -32,9 +33,9 @@ namespace mer::sdk::main {
 
 std::shared_ptr<BuiltInProgramRequest> BuiltInProgramRequest::defaultProgram;
 
-std::shared_ptr<IResource> BuiltInProgramRequest::BuiltInProgramLoader::load(
-	const std::shared_ptr<ResourceRequest> &pRequest, const sdk::utils::ReportMessagePtr &pError,
-	const std::shared_ptr<Resources> &pDependencies) {
+utils::ReportMessagePtr BuiltInProgramRequest::BuiltInProgramLoader::load(
+	const std::shared_ptr<ResourceRequest> &pRequest, const std::shared_ptr<Resources> &pDependencies,
+	std::shared_ptr<IResource> &pResourceOut) {
 
 	auto program = std::make_shared<renderer::ShaderProgram>();
 	for (const auto &resource: pDependencies->getResources()) {
@@ -45,16 +46,18 @@ std::shared_ptr<IResource> BuiltInProgramRequest::BuiltInProgramLoader::load(
 	program->link();
 	if (!program->getLinkStatus()) {
 
-		pError->setStacktrace();
-		pError->setTitle("Failed to link the builtin shader program");
-		pError->setMessage("Error in shader code detected");
-		pError->addInfoLine("Shader program name: {}", pRequest->getName());
+		auto msg = utils::ReportMessage::create();
+		msg->setStacktrace();
+		msg->setTitle("Failed to link the builtin shader program");
+		msg->setMessage("Error in shader code detected");
+		msg->addInfoLine("Shader program name: {}", pRequest->getName());
 		std::string log;
 		program->getInfoLog(log);
-		pError->addInfoLine("Linker log: {}", log);
-		return nullptr;
+		msg->addInfoLine("Linker log: {}", log);
+		return msg;
 	}
-	return program;
+	pResourceOut = program;
+	return nullptr;
 }
 
 const std::shared_ptr<BuiltInProgramRequest> &BuiltInProgramRequest::getDefaultProgram() {

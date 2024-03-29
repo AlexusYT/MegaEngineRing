@@ -38,8 +38,8 @@ public:
 	virtual ~ILoadedResources() = default;
 	virtual std::shared_ptr<Resources> executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
 													   const std::shared_ptr<IScene> &pScene) = 0;
-	virtual std::shared_ptr<IResource> executeRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-													  utils::ReportMessagePtr &pError) = 0;
+	virtual utils::ReportMessagePtr executeRequest(const std::shared_ptr<ResourceRequest> &pRequest,
+												   std::shared_ptr<IResource> &pResourceOut) = 0;
 };
 
 class LoadedResources : public ILoadedResources {
@@ -56,21 +56,16 @@ public:
 	std::shared_ptr<Resources> executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
 											   const std::shared_ptr<IScene> &pScene) override;
 
-	std::shared_ptr<IResource> executeRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-											  utils::ReportMessagePtr &pError) override;
+	utils::ReportMessagePtr executeRequest(const std::shared_ptr<ResourceRequest> &pRequest,
+										   std::shared_ptr<IResource> &pResourceOut) override;
 
 private:
-	std::shared_ptr<IResource> getResource(const std::string &pName) const;
+	utils::ReportMessagePtr processRequest(const std::shared_ptr<ResourceRequest> &pRequest,
+										   std::shared_ptr<IResource> &pResourceOut);
 
-	std::shared_ptr<IResource> processRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-											  utils::ReportMessagePtr &pError);
-
-	std::shared_ptr<IResource> getLoadedResourceByRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-														  utils::ReportMessagePtr &pError) const;
-
-	static std::shared_ptr<IResource> executeRequest(const std::shared_ptr<Resources> &pDependencies,
-													 const std::shared_ptr<ResourceRequest> &pRequest,
-													 utils::ReportMessagePtr &pError);
+	static utils::ReportMessagePtr executeRequest(const std::shared_ptr<Resources> &pDependencies,
+												  const std::shared_ptr<ResourceRequest> &pRequest,
+												  std::shared_ptr<IResource> &pResourceOut);
 };
 
 } // namespace mer::sdk::main
