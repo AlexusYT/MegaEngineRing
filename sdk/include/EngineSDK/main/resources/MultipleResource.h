@@ -31,6 +31,20 @@ namespace mer::sdk::main {
 class MultipleResource : public IResource, public std::unordered_map<std::string, std::shared_ptr<IResource>> {
 
 public:
+	bool contains(const std::string &pName) { return find(pName) != end(); }
+
+	bool contains(const std::string &pName, iterator &pIteratorOut) {
+
+		pIteratorOut = find(pName);
+		return pIteratorOut != end();
+	}
+
+	template<typename ClassT>
+	std::shared_ptr<ClassT> get(const std::string &pName) {
+
+		if (const auto iter = find(pName); iter != end()) { return std::dynamic_pointer_cast<ClassT>(iter->second); }
+		return nullptr;
+	}
 };
 } // namespace mer::sdk::main
 

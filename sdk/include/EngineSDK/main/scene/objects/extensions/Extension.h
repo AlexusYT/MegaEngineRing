@@ -90,6 +90,13 @@ public:
 	[[nodiscard]] sigc::signal<void()> &getOnEnabledChangedSignal() { return onEnabledChangedSignal; }
 
 protected:
+	//TODO Documentation
+	/**
+	 * @brief NON BLOCKING!
+	 * @tparam ClassT
+	 * @param pRequest
+	 * @param pSlot NOT in a main context
+	 */
 	template<RequestRegularConcept ClassT>
 	void enqueueResourceLoading(const std::shared_ptr<ClassT> &pRequest,
 								const sigc::slot<void(const std::shared_ptr<typename ClassT::ResourceT> &pResource,

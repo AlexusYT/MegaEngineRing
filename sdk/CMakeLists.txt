@@ -32,7 +32,9 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/scene/objects/extensions/ExtensionProperties.cpp
         sources/main/scene/objects/extensions/OrbitCameraExtension.cpp
         sources/main/scene/SceneDataInjector.cpp
-        include/EngineSDK/main/resources/models/ObjModelRequest.cpp
+        sources/main/resources/models/ObjModelRequest.cpp
+        sources/main/resources/models/ModelResource.cpp
+        sources/main/scene/objects/extensions/ModelRenderExtension.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -83,10 +85,10 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/utils/MouseButton.h
         include/EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h
         include/EngineSDK/main/resources/models/ObjModelRequest.h
-        include/EngineSDK/main/resources/models/ModelResource.cpp
         include/EngineSDK/main/resources/models/ModelResource.h
-        include/EngineSDK/main/resources/MultipleResource.cpp
         include/EngineSDK/main/resources/MultipleResource.h
+        include/EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h
+        include/EngineSDK/main/resources/shaders/ShaderProgramRequest.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
