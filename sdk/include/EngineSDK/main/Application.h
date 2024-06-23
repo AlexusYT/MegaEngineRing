@@ -22,32 +22,50 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#ifndef EDITOR_SDK
 
-	#include <EngineUtils/utils/ReportMessage.h>
+#include <EngineUtils/utils/ReportMessage.h>
 
-	#include "IApplicationSettings.h"
+#include "IApplication.h"
+#include "IApplicationSettings.h"
 
 namespace mer::sdk::main {
 
-class Application {
+class Application : public IApplication {
 	std::shared_ptr<IApplicationSettings> applicationSettings;
 
+	Application() = default;
+
 public:
-	sdk::utils::ReportMessagePtr initEngine();
+	static std::shared_ptr<Application> create();
 
-	int runMainLoop(int argc, char* argv[]);
+	utils::ReportMessagePtr initEngine() override;
 
-	[[nodiscard]] const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const {
+	void deinitEngine() override;
+
+#ifndef EDITOR_SDK
+	int runMainLoop(int argc, char* argv[]) override;
+#endif
+
+	[[nodiscard]] const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const override {
 		return applicationSettings;
 	}
 
-	void setApplicationSettings(const std::shared_ptr<IApplicationSettings> &pApplicationSettings) {
+	void setApplicationSettings(const std::shared_ptr<IApplicationSettings> &pApplicationSettings) override {
 		applicationSettings = pApplicationSettings;
 	}
+
+private:
+	static void initSigHandlers();
+
+	void loadSettings();
+
+	void createLog() const;
+
+#ifndef EDITOR_SDK
+	utils::ReportMessagePtr setupGlfw();
+#endif
 };
 } // namespace mer::sdk::main
 
-#endif
 
 #endif //APPLICATION_H

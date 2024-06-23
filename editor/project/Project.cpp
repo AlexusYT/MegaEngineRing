@@ -107,10 +107,20 @@ mer::sdk::utils::ReportMessagePtr Project::generateMainFile() const {
 	main->setName("main");
 	main->setParamsList({"int argc", "char* argv[]"});
 	main->addStatement(CppCustomStatement::create("using namespace mer::sdk::main"));
-	main->addStatement(CppCustomStatement::create("Application app"));
+	main->addStatement(CppCustomStatement::create("using namespace mer::sdk::utils"));
+	main->addStatement(CppCustomStatement::create("auto app = Application::create()"));
 	main->addStatement(
-		CppMethodCall::create("app.setApplicationSettings", {"std::make_shared<ApplicationSettings>()"}));
-	main->addStatement(CppCustomStatement::create("return app.runMainLoop(argc, argv)"));
+		CppMethodCall::create("app->setApplicationSettings", {"std::make_shared<ApplicationSettings>()"}));
+	//language=c++
+	main->addStatement(CppCustomStatement::create(R"(
+	if(auto msg = app->initEngine()) {
+		Logger::error(msg);
+		return -1;
+	}
+	int ret = app->runMainLoop(argc, argv);
+	app->deinitEngine();
+	return ret;
+)"));
 	sourceFile.addDefinition(main->getDefinition());
 	return sourceFile.writeFile(sourcesPath);
 }
@@ -158,19 +168,6 @@ void Project::requestRebuildEditorLib() {
 			editorLibLoadErrored(msg);
 			return;
 		}
-		void (*init)() =
-			reinterpret_cast<void (*)()>(dlsym(editorSdkLib, "_ZN3mer3sdk4main17ExtensionRegistry4initEv"));
-		if (!init) {
-			auto msg = sdk::utils::ReportMessage::create();
-			msg->setTitle("Failed to open editor library");
-			msg->setMessage("Unable to find ExtensionRegistry::init() method in sdk library");
-			msg->addInfoLine("Path: {}", path);
-			msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
-			editorLibLoadErrored(msg);
-			return;
-		}
-
-		init();
 		editorLibLoadFinished();
 	}).detach();
 }

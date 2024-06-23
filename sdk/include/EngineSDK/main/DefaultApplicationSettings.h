@@ -47,6 +47,11 @@ class DefaultApplicationSettings : public IApplicationSettings {
 	 */
 	utils::Property<std::string> logsDirectory;
 
+	/**
+	 * @brief The directory where the app running.
+	 */
+	utils::Property<std::string> runDirectory;
+
 public:
 	DefaultApplicationSettings() = default;
 
@@ -55,8 +60,10 @@ public:
 
 	[[nodiscard]] const utils::Property<std::string> &getLogsDirectory() const override { return logsDirectory; }
 
-	void setLogsDirectory(const std::string &pLogsDirectory) override { logsDirectory = pLogsDirectory;
-		sdk::utils::Logger::info(pLogsDirectory);}
+	void setLogsDirectory(const std::string &pLogsDirectory) override {
+		logsDirectory = pLogsDirectory;
+		sdk::utils::Logger::info(pLogsDirectory);
+	}
 
 	[[nodiscard]] utils::Property<std::string> &getApplicationName() override { return applicationName; }
 
@@ -69,6 +76,8 @@ public:
 	void setApplicationDisplayName(const std::string &pApplicationDisplayName) override {
 		applicationDisplayName = pApplicationDisplayName;
 	}
+
+	[[nodiscard]] const utils::Property<std::string> &getRunDirectory() const { return runDirectory; }
 
 private:
 	/*std::string parse(const std::string &input) {

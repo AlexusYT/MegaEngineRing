@@ -19,28 +19,50 @@
 // Created by alexus on 06.01.24.
 //
 
+#include "EngineSDK/main/Application.h"
+
+#include <EngineUtils/utils/Logger.h>
 #ifndef EDITOR_SDK
-	#include "EngineSDK/main/Application.h"
-
-	#include <EngineUtils/utils/Logger.h>
 	#include <GLFW/glfw3.h>
-	#include <signal.h>
+#endif
+#include <signal.h>
 
-	#include "EngineSDK/main/DefaultApplicationSettings.h"
+#include "EngineSDK/main/DefaultApplicationSettings.h"
+#ifndef EDITOR_SDK
 	#include "EngineSDK/main/context/MainWindow.h"
-	#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
+#endif
+#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 
+#ifndef EDITOR_SDK
 extern std::shared_ptr<mer::sdk::main::IScene> getPrimaryScene();
+#endif
 
 namespace mer::sdk::main {
-sdk::utils::ReportMessagePtr Application::initEngine() { return nullptr; }
+std::shared_ptr<Application> Application::create() { return std::shared_ptr<Application>(new Application()); }
 
-int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
-	using namespace sdk::utils;
+utils::ReportMessagePtr Application::initEngine() {
+
+#ifndef EDITOR_SDK
+	initSigHandlers();
+#endif
+	loadSettings();
+#ifndef EDITOR_SDK
+	createLog();
+	if (auto msg = setupGlfw()) return msg;
+#else
+	ExtensionRegistry::init();
+#endif
+	return nullptr;
+}
+
+void Application::deinitEngine() { ExtensionRegistry::deinit(); }
+
+void Application::initSigHandlers() {
 	struct sigaction sig;
 	sig.sa_flags = SA_SIGINFO;
 	sig.sa_sigaction = [](int pSig, siginfo_t* pInfo, void*) {
-		auto msg = ReportMessage::create();
+		using namespace sdk::utils;
+		const auto msg = ReportMessage::create();
 		msg->setTitle("Signal recieved");
 		msg->setMessage("Aborting...");
 		std::string sigName;
@@ -56,6 +78,10 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 	};
 	sigaction(SIGILL, &sig, nullptr);
 	sigaction(SIGSEGV, &sig, nullptr);
+}
+
+void Application::loadSettings() {
+	using namespace sdk::utils;
 	bool userSettingsLoaded = false;
 	if (applicationSettings) {
 		if (ReportMessagePtr msg = applicationSettings->init()) {
@@ -71,7 +97,10 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 		applicationSettings = std::make_shared<DefaultApplicationSettings>();
 		applicationSettings->init();
 	}
+}
 
+void Application::createLog() const {
+	using namespace sdk::utils;
 	if (const auto logsDir = applicationSettings->getLogsDirectory().getValue(); !logsDir.empty()) {
 		const auto logPath = std::filesystem::path(logsDir) / "latest.log";
 		if (const auto msg = Logger::openLog(logPath)) {
@@ -83,25 +112,31 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 	} else {
 		Logger::info("LogsDirectory property is empty. Logging to file will be disabled.");
 	}
-
-
+}
+#ifndef EDITOR_SDK
+utils::ReportMessagePtr Application::setupGlfw() {
+	using namespace sdk::utils;
 	if (!glfwInit()) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to init engine");
 		msg->setMessage("Failed to init glfw");
 		Logger::error(msg);
-		return 1;
+		return msg;
 	}
 
-	glfwSetErrorCallback([](int error_code, const char* description) {
+	glfwSetErrorCallback([](int pErrorCode, const char* pDescription) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("GLFW error");
 		msg->setMessage("GLFW error");
-		msg->addInfoLine("Error code: {}", error_code);
-		msg->addInfoLine("Error description: {}", description);
+		msg->addInfoLine("Error code: {}", pErrorCode);
+		msg->addInfoLine("Error description: {}", pDescription);
 		Logger::error(msg);
 	});
+	return nullptr;
+}
 
+int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
+	using namespace sdk::utils;
 
 	std::shared_ptr<MainWindow> window = MainWindow::create();
 	if (auto msg = window->setContextVersion(4, 0)) {
@@ -129,9 +164,8 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 		Logger::error(msg);
 	}
 	Logger::info("Main loop finished");
-	ExtensionRegistry::deinit();
 
 	return 0;
 }
-} // namespace mer::sdk::main
 #endif
+} // namespace mer::sdk::main

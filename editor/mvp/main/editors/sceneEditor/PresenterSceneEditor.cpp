@@ -27,6 +27,7 @@
 
 #include <dlfcn.h>
 
+#include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/resources/IResources.h"
 #include "EngineSDK/main/scene/ISceneDataInjector.h"
 #include "EngineSDK/main/scene/Scene.h"
@@ -192,6 +193,7 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 
 			modelSceneEditor->setScene(nullptr);
 			loadedResources = nullptr;
+			application->deinitEngine();
 		} catch (const Gdk::GLError &gle) {
 			std::cerr << "An error occured making the context current during unrealize" << std::endl;
 			std::cerr << gle.domain() << "-" << gle.code() << "-" << gle.what() << std::endl;
@@ -226,7 +228,7 @@ void PresenterSceneEditor::notifyLoadingStarted() const {
 		[this](const std::promise<void> & /*pPromise*/) { viewSceneEditor->onLoadingStarted(); });
 }
 
-void PresenterSceneEditor::notifyLoadingStopped(const sdk::utils::ReportMessagePtr &pError) const {
+void PresenterSceneEditor::notifyLoadingStopped(const sdk::utils::ReportMessagePtr &pError) {
 	sdk::utils::ReportMessagePtr error = !pError ? loadScene() : pError;
 	viewSceneEditor->executeInMainThread([this, error](const std::promise<void> & /*pPromise*/) {
 		viewSceneEditor->redraw();
@@ -235,7 +237,7 @@ void PresenterSceneEditor::notifyLoadingStopped(const sdk::utils::ReportMessageP
 	});
 }
 
-sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
+sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() {
 	auto sceneInfo = modelSceneEditor->getSceneInfo();
 	auto functionName = "load" + sceneInfo->getName();
 	auto project = modelSceneEditor->getProject();
@@ -279,6 +281,21 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() const {
 	});
 
 	auto sdk = project->getEditorSdkLib();
+
+
+	auto appCreateMethod = reinterpret_cast<std::shared_ptr<sdk::main::Application> (*)()>(
+		dlsym(sdk, "_ZN3mer3sdk4main11Application6createEv"));
+	if (!appCreateMethod) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to get Application::create method");
+		msg->setMessage("Unable to find Application::create() method in sdk library");
+		msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
+		return msg;
+	}
+
+
+	application = appCreateMethod();
+	application->initEngine();
 	void* sym = dlsym(sdk, "_ZN3mer3sdk4main15LoadedResources6createEv");
 	auto resources = reinterpret_cast<std::shared_ptr<sdk::main::ILoadedResources> (*)()>(sym)();
 	loadedResources = std::make_shared<ResourcesContext>(resources, viewSceneEditor->getSharedContext());

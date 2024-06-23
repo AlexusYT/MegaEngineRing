@@ -24,6 +24,10 @@
 #include "EngineSDK/utils/ModifierKeys.h"
 #include "mvp/main/editors/IEditorPresenter.h"
 
+namespace mer::sdk::main {
+class IApplication;
+}
+
 namespace mer::editor::mvp {
 class IViewSceneEditor;
 class IModelSceneEditor;
@@ -32,6 +36,7 @@ class PresenterSceneEditor : public IEditorPresenter {
 	std::shared_ptr<IViewSceneEditor> viewSceneEditor;
 	std::shared_ptr<IModelSceneEditor> modelSceneEditor;
 	sigc::signal<void(const std::string &pName)> tabHeaderChanged;
+	std::shared_ptr<sdk::main::IApplication> application;
 
 public:
 	PresenterSceneEditor(const std::shared_ptr<IViewSceneEditor> &pViewSceneEditor,
@@ -46,9 +51,9 @@ public:
 
 private:
 	void notifyLoadingStarted() const;
-	void notifyLoadingStopped(const sdk::utils::ReportMessagePtr &pError) const;
+	void notifyLoadingStopped(const sdk::utils::ReportMessagePtr &pError);
 
-	sdk::utils::ReportMessagePtr loadScene() const;
+	sdk::utils::ReportMessagePtr loadScene();
 
 	static sdk::utils::ModifierKeys convertToModifierKeys(const Gdk::ModifierType &pState);
 };
