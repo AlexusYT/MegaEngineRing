@@ -44,6 +44,8 @@ public:
 	[[nodiscard]] virtual const utils::Property<std::string> &getApplicationDisplayName() const = 0;
 
 	virtual void setApplicationDisplayName(const std::string &pApplicationDisplayName) = 0;
+
+	[[nodiscard]] virtual const utils::Property<std::string> &getRunDirectory() const = 0;
 };
 
 } // namespace mer::sdk::main
