@@ -211,7 +211,9 @@ sdk::utils::ReportMessagePtr PresenterCreatingProject::parseLibrariesScript(
 					}
 					lib.reset();
 				}
-				lib.emplace(s.substr(0, s.find(' ')));
+				if (s.contains(" provides pkg-config modules:")) continue;
+
+				if (auto str = s.substr(0, s.find(' ')); !str.empty()) lib.emplace(str);
 			}
 		}
 		if (!foundScripts) {
