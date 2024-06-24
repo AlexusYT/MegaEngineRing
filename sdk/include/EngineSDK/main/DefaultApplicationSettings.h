@@ -77,7 +77,9 @@ public:
 		applicationDisplayName = pApplicationDisplayName;
 	}
 
-	[[nodiscard]] const utils::Property<std::string> &getRunDirectory() const { return runDirectory; }
+	[[nodiscard]] const utils::Property<std::string> &getRunDirectory() const override { return runDirectory; }
+
+	void setRunDirectory(const std::string &pRunDirectory) override { runDirectory.setValue(pRunDirectory); }
 
 private:
 	/*std::string parse(const std::string &input) {

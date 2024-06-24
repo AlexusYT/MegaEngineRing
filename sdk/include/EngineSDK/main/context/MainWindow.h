@@ -28,6 +28,7 @@
 	#include "Window.h"
 
 namespace mer::sdk::main {
+class IApplication;
 class ResourcesWindow;
 class LoadedResources;
 class IScene;
@@ -36,6 +37,7 @@ class MainWindow : public Window {
 	std::shared_ptr<LoadedResources> loadedResources;
 	std::shared_ptr<ResourcesWindow> resourcesWindow;
 	std::shared_ptr<IScene> currentScene;
+	IApplication* application;
 
 protected:
 	MainWindow();
@@ -46,6 +48,10 @@ public:
 	sdk::utils::ReportMessagePtr openScene(const std::shared_ptr<IScene> &pNewScene);
 
 	void runMainLoop();
+
+	[[nodiscard]] IApplication* getApplication() const { return application; }
+
+	void setApplication(IApplication* pApplication) { application = pApplication; }
 
 private:
 	void onSizeChanged(int pWidth, int pHeight) override;

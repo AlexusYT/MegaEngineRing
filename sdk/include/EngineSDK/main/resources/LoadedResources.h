@@ -27,6 +27,7 @@
 #include "Resources.h"
 
 namespace mer::sdk::main {
+class IResources;
 class IScene;
 enum class ResourceLoadingPolicy;
 class ResourceRequest;
@@ -45,12 +46,13 @@ public:
 class LoadedResources : public ILoadedResources {
 	std::unordered_map<std::string, std::shared_ptr<IResource>> resources;
 	std::vector<std::string> processingRequests;
+	IResources* iResources;
 
 
-	LoadedResources();
+	LoadedResources(IResources* pResources);
 
 public:
-	static std::shared_ptr<ILoadedResources> create();
+	static std::shared_ptr<ILoadedResources> create(IResources* pResources);
 
 	~LoadedResources() override = default;
 	std::shared_ptr<Resources> executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
@@ -63,9 +65,9 @@ private:
 	utils::ReportMessagePtr processRequest(const std::shared_ptr<ResourceRequest> &pRequest,
 										   std::shared_ptr<IResource> &pResourceOut);
 
-	static utils::ReportMessagePtr executeRequest(const std::shared_ptr<Resources> &pDependencies,
-												  const std::shared_ptr<ResourceRequest> &pRequest,
-												  std::shared_ptr<IResource> &pResourceOut);
+	utils::ReportMessagePtr executeRequest(const std::shared_ptr<Resources> &pDependencies,
+										   const std::shared_ptr<ResourceRequest> &pRequest,
+										   std::shared_ptr<IResource> &pResourceOut) const;
 };
 
 } // namespace mer::sdk::main

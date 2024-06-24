@@ -42,9 +42,8 @@ public:
 
 	void deinitEngine() override;
 
-#ifndef EDITOR_SDK
+
 	int runMainLoop(int argc, char* argv[]) override;
-#endif
 
 	[[nodiscard]] const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const override {
 		return applicationSettings;

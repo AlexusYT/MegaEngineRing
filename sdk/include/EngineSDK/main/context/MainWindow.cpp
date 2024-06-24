@@ -36,8 +36,16 @@ MainWindow::MainWindow() {
 	setSharedWindow(resourcesWindow);
 }
 
-sdk::utils::ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene> &pNewScene) {
+utils::ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene> &pNewScene) {
 
+	if (currentScene) {
+		auto oldScene = currentScene;
+		currentScene.reset();
+		oldScene->setApplication(nullptr);
+	}
+
+	pNewScene->setApplication(getApplication());
+	resourcesWindow->setApplication(getApplication());
 	pNewScene->setResources(resourcesWindow.get());
 
 	if (auto msg = pNewScene->initScene()) return msg;

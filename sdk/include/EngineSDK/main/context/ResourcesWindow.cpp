@@ -32,7 +32,7 @@ namespace mer::sdk::main {
 std::condition_variable cv;
 
 ResourcesWindow::ResourcesWindow()
-	: resources(LoadedResources::create()),
+	: resources(LoadedResources::create(this)),
 	  thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) {
 	thread.detach();
 }
