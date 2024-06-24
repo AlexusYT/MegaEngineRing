@@ -37,6 +37,7 @@ class PresenterSceneEditor;
 } // namespace mer::editor::mvp
 
 namespace mer::sdk::main {
+class IApplication;
 class ICamera;
 class ISceneObject;
 class ResourceRequest;
@@ -77,6 +78,11 @@ public:
 
 
 	virtual void switchCamera(ICamera* pNewCamera) = 0;
+
+
+	[[nodiscard]] virtual IApplication* getApplication() const = 0;
+
+	virtual void setApplication(IApplication* pApplication) = 0;
 
 private:
 	virtual void setResources(IResources* pResources) = 0;

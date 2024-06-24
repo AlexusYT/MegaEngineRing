@@ -41,6 +41,7 @@ class ResourcesWindow : public Window, public IResources {
 
 	std::shared_ptr<ILoadedResources> resources;
 	std::jthread thread;
+	IApplication* application;
 
 protected:
 	ResourcesWindow();
@@ -54,6 +55,10 @@ public:
 	void enqueueResourceLoading(const std::shared_ptr<ResourceRequest> &pRequest, const ResourceSlot &pSlot) override;
 
 	void requestStopThread();
+
+	[[nodiscard]] IApplication* getApplication() const override { return application; }
+
+	void setApplication(IApplication* pApplication) override { application = pApplication; }
 
 private:
 	void resourceLoop(const std::stop_token &pToken);

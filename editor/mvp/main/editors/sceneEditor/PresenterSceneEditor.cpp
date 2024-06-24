@@ -50,12 +50,11 @@ class ResourcesContext : public sdk::main::IResources {
 
 	std::shared_ptr<Gdk::GLContext> sharedContext;
 	std::jthread thread;
+	sdk::main::IApplication* application{};
 
 public:
-	ResourcesContext(const std::shared_ptr<sdk::main::ILoadedResources> &pResources,
-					 const std::shared_ptr<Gdk::GLContext> &pSharedContext)
-		: resources(pResources), sharedContext(pSharedContext),
-		  thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) {
+	explicit ResourcesContext(const std::shared_ptr<Gdk::GLContext> &pSharedContext)
+		: sharedContext(pSharedContext), thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) {
 		thread.detach();
 	}
 
@@ -104,6 +103,12 @@ public:
 			queue.clear();
 		}
 	}
+
+	[[nodiscard]] sdk::main::IApplication* getApplication() const override { return application; }
+
+	void setApplication(sdk::main::IApplication* pApplication) override { application = pApplication; }
+
+	void setResources(const std::shared_ptr<sdk::main::ILoadedResources> &pResources) { resources = pResources; }
 };
 
 std::shared_ptr<ResourcesContext> loadedResources;
@@ -296,10 +301,16 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() {
 
 	application = appCreateMethod();
 	application->initEngine();
-	void* sym = dlsym(sdk, "_ZN3mer3sdk4main15LoadedResources6createEv");
-	auto resources = reinterpret_cast<std::shared_ptr<sdk::main::ILoadedResources> (*)()>(sym)();
-	loadedResources = std::make_shared<ResourcesContext>(resources, viewSceneEditor->getSharedContext());
+	application->getApplicationSettings()->setRunDirectory(project->getProjectPath());
+
+	loadedResources = std::make_shared<ResourcesContext>(viewSceneEditor->getSharedContext());
 	scene->setResources(loadedResources.get());
+	void* sym = dlsym(sdk, "_ZN3mer3sdk4main15LoadedResources6createEPNS1_10IResourcesE");
+	const auto resources =
+		reinterpret_cast<std::shared_ptr<sdk::main::ILoadedResources> (*)(sdk::main::IResources* pResources)>(sym)(
+			loadedResources.get());
+	loadedResources->setResources(resources);
+	loadedResources->setApplication(application.get());
 
 	if (auto msg = scene->initScene()) return msg;
 	modelSceneEditor->setPrimaryCamera(scene->getCurrentCamera());

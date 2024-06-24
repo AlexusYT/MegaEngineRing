@@ -22,17 +22,17 @@
 #include "LoadedResources.h"
 
 #include "EngineSDK/main/scene/IScene.h"
-#include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/ReportMessage.h"
+#include "IResources.h"
 #include "ResourceRequest.h"
 #include "ResourceRequests.h"
 #include "Resources.h"
 
 namespace mer::sdk::main {
-LoadedResources::LoadedResources() {}
+LoadedResources::LoadedResources(IResources* pResources) : iResources(pResources) {}
 
-std::shared_ptr<ILoadedResources> LoadedResources::create() {
-	return std::shared_ptr<ILoadedResources>(new LoadedResources);
+std::shared_ptr<ILoadedResources> LoadedResources::create(IResources* pResources) {
+	return std::shared_ptr<ILoadedResources>(new LoadedResources(pResources));
 }
 
 std::shared_ptr<Resources> LoadedResources::executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
@@ -95,9 +95,12 @@ utils::ReportMessagePtr LoadedResources::processRequest(const std::shared_ptr<Re
 
 utils::ReportMessagePtr LoadedResources::executeRequest(const std::shared_ptr<Resources> &pDependencies,
 														const std::shared_ptr<ResourceRequest> &pRequest,
-														std::shared_ptr<IResource> &pResourceOut) {
+														std::shared_ptr<IResource> &pResourceOut) const {
 
-	if (auto error = pRequest->getLoader()->load(pRequest, pDependencies, pResourceOut)) { return error; }
+	const auto loader = pRequest->getLoader();
+	const auto iLoader = std::dynamic_pointer_cast<IResourceLoader>(loader);
+	iLoader->setApplication(iResources->getApplication());
+	if (auto error = loader->load(pRequest, pDependencies, pResourceOut)) { return error; }
 	return nullptr;
 }
 } // namespace mer::sdk::main

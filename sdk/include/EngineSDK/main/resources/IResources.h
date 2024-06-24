@@ -26,6 +26,7 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
 namespace mer::sdk::main {
+class IApplication;
 class ResourceRequest;
 class IResource;
 
@@ -38,6 +39,10 @@ public:
 
 	virtual void enqueueResourceLoading(const std::shared_ptr<ResourceRequest> &pRequest,
 										const ResourceSlot &pSlot) = 0;
+
+	[[nodiscard]] virtual IApplication* getApplication() const = 0;
+
+	virtual void setApplication(IApplication* pApplication) = 0;
 };
 } // namespace mer::sdk::main
 

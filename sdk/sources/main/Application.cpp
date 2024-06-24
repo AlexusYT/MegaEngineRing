@@ -134,8 +134,9 @@ utils::ReportMessagePtr Application::setupGlfw() {
 	});
 	return nullptr;
 }
-
+#endif
 int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
+#ifndef EDITOR_SDK
 	using namespace sdk::utils;
 
 	std::shared_ptr<MainWindow> window = MainWindow::create();
@@ -152,6 +153,8 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 
 	ExtensionRegistry::init();
 	Logger::out("Opening primary scene");
+
+	window->setApplication(this);
 	window->openScene(getPrimaryScene());
 
 	Logger::info("Starting main loop...");
@@ -165,7 +168,7 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 	}
 	Logger::info("Main loop finished");
 
+#endif
 	return 0;
 }
-#endif
 } // namespace mer::sdk::main

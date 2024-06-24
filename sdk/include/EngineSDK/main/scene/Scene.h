@@ -41,6 +41,7 @@ class Scene : public IScene {
 	sigc::signal<void(int pWidth, int pHeight)> onWindowSizeChangedSignal;
 	sigc::signal<void(ISceneObject* pObject)> onObjectAddedSignal;
 	ICamera* currentCamera;
+	IApplication* application;
 
 public:
 	Scene();
@@ -71,7 +72,11 @@ public:
 
 	[[nodiscard]] ICamera* getCurrentCamera() const override { return currentCamera; }
 
+	[[nodiscard]] IApplication* getApplication() const override { return application; }
+
 protected:
+	void setApplication(IApplication* pApplication) override { application = pApplication; }
+
 	virtual void beforeRender();
 
 	virtual void afterRender() {}

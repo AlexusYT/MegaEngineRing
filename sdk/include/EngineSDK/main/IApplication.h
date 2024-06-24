@@ -34,9 +34,7 @@ public:
 
 	virtual void deinitEngine() = 0;
 
-#ifndef EDITOR_SDK
 	virtual int runMainLoop(int argc, char* argv[]) = 0;
-#endif
 
 	[[nodiscard]] virtual const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const = 0;
 

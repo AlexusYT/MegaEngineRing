@@ -25,6 +25,8 @@
 #include <fstream>
 #include <regex>
 
+#include "EngineSDK/main/IApplication.h"
+#include "EngineSDK/main/IApplicationSettings.h"
 #include "EngineSDK/main/resources/MultipleResource.h"
 #include "EngineSDK/main/resources/models/ModelResource.h"
 #include "EngineUtils/utils/Logger.h"
@@ -65,6 +67,10 @@ utils::ReportMessagePtr ObjModelLoader::load(const std::shared_ptr<ResourceReque
 		msg->setMessage("Invalid request");
 		msg->addInfoLine("Request name: {}", pRequest->getName());
 		return msg;
+	}
+	if (auto fileRequest = std::dynamic_pointer_cast<FileModelRequest>(pRequest)) {
+		auto rootPath = getApplication()->getApplicationSettings()->getRunDirectory().getValue();
+		fileRequest->setFilePath(rootPath / fileRequest->getFilePath());
 	}
 
 	std::shared_ptr<std::istream> stream;
