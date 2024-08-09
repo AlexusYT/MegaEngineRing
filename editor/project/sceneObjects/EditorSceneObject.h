@@ -24,8 +24,12 @@
 #include <EngineUtils/utils/UUID.h>
 
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
+#include "project/generatedFiles/GeneratedFiles.h"
 
-
+namespace mer::editor::project {
+class Project;
+class GraphicsScript;
+} // namespace mer::editor::project
 class ObjectPropertyEntry;
 
 namespace mer::sdk::main {
@@ -33,17 +37,19 @@ class ISceneObject;
 }
 
 namespace mer::editor::ui {
-class EditorSceneObject : public Glib::Object {
+class EditorSceneObject : public project::GeneratedFiles {
 	std::shared_ptr<Gio::ListStore<EditorSceneObject>> childrenUi;
 	std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> propertyEntries;
 
+	std::shared_ptr<project::GraphicsScript> graphicsScript;
 	sdk::main::ISceneObject* nativeObject{};
 
-	explicit EditorSceneObject(sdk::main::ISceneObject* pNativeObject);
+	EditorSceneObject(sdk::main::ISceneObject* pNativeObject, std::shared_ptr<project::Project> pProject);
 
 public:
-	static std::shared_ptr<EditorSceneObject> create(sdk::main::ISceneObject* const pNativeObject) {
-		return Glib::make_refptr_for_instance(new EditorSceneObject(pNativeObject));
+	static std::shared_ptr<EditorSceneObject> create(sdk::main::ISceneObject* const pNativeObject,
+													 const std::shared_ptr<project::Project> &pProject) {
+		return Glib::make_refptr_for_instance(new EditorSceneObject(pNativeObject, pProject));
 	}
 
 	EditorSceneObject(const EditorSceneObject &pOther) = delete;
@@ -52,6 +58,7 @@ public:
 
 
 	~EditorSceneObject() override = default;
+	void onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &) override;
 
 	[[nodiscard]] const Glib::RefPtr<Gio::ListStore<EditorSceneObject>> &getChildrenUi() const { return childrenUi; }
 
@@ -62,15 +69,22 @@ public:
 		return false;
 	}
 
-	[[nodiscard]] const std::string &getName() const { return nativeObject->getName(); }
+	[[nodiscard]] const std::string &getObjectName() const { return nativeObject->getName(); }
 
-	void setName(const std::string &pName) { nativeObject->setName(pName); }
+	void setObjectName(const std::string &pName) { nativeObject->setName(pName); }
+
+	void setNativeObject(sdk::main::ISceneObject* pNativeObject) { nativeObject = pNativeObject; }
 
 	[[nodiscard]] sdk::main::ISceneObject* getNativeObject() const { return nativeObject; }
 
 	[[nodiscard]] const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &getPropertyEntries() const {
 		return propertyEntries;
 	}
+
+	[[nodiscard]] const std::shared_ptr<project::GraphicsScript> &getGraphicsScript() const { return graphicsScript; }
+
+private:
+	sdk::utils::ReportMessagePtr onSaveDatabase() const override;
 };
 } // namespace mer::editor::ui
 
@@ -80,9 +94,9 @@ struct std::formatter<mer::editor::ui::EditorSceneObject> : std::formatter<strin
 
 		std::string temp;
 		if (const auto obj = col.getNativeObject())
-			std::format_to(std::back_inserter(temp), "Name: {}\nUUID: {}", col.getName(), obj->getUuid());
+			std::format_to(std::back_inserter(temp), "Name: {}\nUUID: {}", col.getObjectName(), obj->getUuid());
 		else
-			std::format_to(std::back_inserter(temp), "Name: {}\nUUID: nullptr", col.getName());
+			std::format_to(std::back_inserter(temp), "Name: {}\nUUID: nullptr", col.getObjectName());
 		return std::formatter<string_view>::format(temp, ctx);
 	}
 };

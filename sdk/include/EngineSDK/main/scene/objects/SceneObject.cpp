@@ -21,6 +21,9 @@
 
 #include "SceneObject.h"
 
+#include <dlfcn.h>
+
+#include "EngineSDK/main/scripting/IScript.h"
 #include "EngineUtils/utils/ReportMessage.h"
 #include "EngineUtils/utils/UUID.h"
 
@@ -29,9 +32,9 @@ namespace mer::sdk::main {
 SceneObject::SceneObject() {
 	uuid = UUID::create();
 	//TODO make this smarter (avoid dups and missing names)
-	static int i = 0;
-	name = std::format("SceneObject{}", i);
-	i++;
+
+	name = std::format("SceneObject{}", counter);
+	counter++;
 }
 
 utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
@@ -72,6 +75,7 @@ utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 				return msg;
 			}
 		}
+		pExtension->setName(pName);
 		extensions.emplace_hint(iter, pName, std::move(pExtension));
 	}
 	return nullptr;
@@ -120,6 +124,17 @@ utils::ReportMessagePtr SceneObject::init() {
 
 	for (const auto &extension: extensions) {
 		if (auto msg = extension.second->onInit()) return msg;
+	}
+
+	if (!scriptName.empty()) {
+
+		auto main = dlopen(nullptr, RTLD_LAZY);
+
+		auto createFunc =
+			reinterpret_cast<std::shared_ptr<IScript> (*)()>(dlsym(main, ("create" + scriptName).c_str()));
+		script = createFunc();
+		script->setObject(this);
+		script->setup();
 	}
 	inited = true;
 	return nullptr;

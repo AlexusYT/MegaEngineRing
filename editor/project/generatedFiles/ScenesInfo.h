@@ -37,7 +37,7 @@ public:
 		return Glib::make_refptr_for_instance(new ScenesInfo(pProject));
 	}
 
-	void getActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup);
+	void onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) override;
 
 private:
 	sdk::utils::ReportMessagePtr onLoadDatabase() override;

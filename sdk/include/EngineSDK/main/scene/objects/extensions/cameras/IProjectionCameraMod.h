@@ -35,8 +35,6 @@ protected:
 	[[nodiscard]] virtual sigc::signal<void(const glm::mat4 &)> &getOnProjMatrixChanged() = 0;
 
 	[[nodiscard]] virtual const glm::mat4 &getProjMatrix() const = 0;
-
-	virtual void getProjectionProperties(ExtensionProperties &pProperties) = 0;
 };
 } // namespace mer::sdk::main
 

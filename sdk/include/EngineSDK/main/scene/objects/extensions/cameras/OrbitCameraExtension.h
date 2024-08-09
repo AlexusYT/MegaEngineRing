@@ -29,15 +29,16 @@
 
 namespace mer::sdk::main {
 class OrbitCameraExtension : public Extension, public PerspectiveProjectionCameraMod, public ICamera {
-	glm::mat4 matrix{1};
-	sigc::signal<void(const glm::mat<4, 4, float> &)> onMatrixChanged;
-	glm::vec2 angle{};
-	ValueChangedArgs<const glm::vec2 &> onAngleChanged;
-	glm::vec3 targetPosition{};
-	ValueChanged onTargetPositionChanged;
+
+	DECLARE_PROPERTY(glm::mat4, Matrix);
+	ADD_PROPERTY_EVENT(OrbitCameraExtension, Matrix, "View-Projection matrix", "");
+	DECLARE_PROPERTY(glm::vec2, Angle);
+	ADD_PROPERTY_SET_EVENT(OrbitCameraExtension, Angle, "View angle", "");
+	DECLARE_PROPERTY(glm::vec3, TargetPosition);
+	ADD_PROPERTY_SET_EVENT(OrbitCameraExtension, TargetPosition, "Look at position", "");
 
 protected:
-	OrbitCameraExtension() = default;
+	OrbitCameraExtension() : propertyMatrix(1) {}
 
 public:
 	METHOD_CREATE(OrbitCameraExtension)
@@ -46,25 +47,26 @@ public:
 
 	[[nodiscard]] sigc::signal<void(const glm::mat4 &)> &getOnMatrixChanged() override { return onMatrixChanged; }
 
-	[[nodiscard]] const glm::mat4 &getMatrix() const override { return matrix; }
+	[[nodiscard]] const glm::mat4 &getMatrix() const override { return propertyMatrix; }
 
 	[[nodiscard]] ValueChangedArgs<const glm::vec2 &> &getOnAngleChanged() { return onAngleChanged; }
 
-	[[nodiscard]] const glm::vec3 &getTargetPosition() const { return targetPosition; }
+	[[nodiscard]] const glm::vec3 &getTargetPosition() const { return propertyTargetPosition; }
 
 	void setTargetPosition(const glm::vec3 &pTargetPosition) {
-		targetPosition = pTargetPosition;
+		propertyTargetPosition = pTargetPosition;
+		onTargetPositionChanged(pTargetPosition);
 		updateMatrix();
 	}
 
-	[[nodiscard]] ValueChanged &getOnTargetPositionChanged() { return onTargetPositionChanged; }
+	[[nodiscard]] ValueChangedArgs<const glm::vec3 &> &getOnTargetPositionChanged() { return onTargetPositionChanged; }
 
-	[[nodiscard]] const glm::vec2 &getAngle() const { return angle; }
+	[[nodiscard]] const glm::vec2 &getAngle() const { return propertyAngle; }
 
 	void setAngle(const glm::vec2 &pAngle) {
-		if (angle == pAngle) return;
-		angle = pAngle;
-		onAngleChanged(angle);
+		if (propertyAngle == pAngle) return;
+		propertyAngle = pAngle;
+		onAngleChanged(pAngle);
 		updateMatrix();
 	}
 
@@ -75,7 +77,7 @@ protected:
 	utils::ReportMessagePtr onInit() override;
 
 	void setMatrix(const glm::mat4 &pMatrix) {
-		matrix = pMatrix;
+		propertyMatrix = pMatrix;
 		onMatrixChanged(pMatrix);
 	}
 
@@ -85,8 +87,6 @@ private:
 	void projectionMatrixChanged(const glm::mat4 &pNewMatrix) override;
 
 	void updateMatrix() override;
-
-	void getProperties(ExtensionProperties &pProperties) override;
 };
 } // namespace mer::sdk::main
 

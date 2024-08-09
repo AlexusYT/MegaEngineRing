@@ -81,6 +81,7 @@ void CenterWindow::openEntry(ProjectExplorerEntry* pEntry) {
 
 		auto editor = pEntry->openEditor();
 		if (!editor) return;
+		pEntry->setCenterWindow(this);
 		Gtk::Box box;
 		auto fileNameLabel = Gtk::make_managed<Gtk::Label>(pEntry->getName());
 		box.append(*fileNameLabel);
@@ -88,16 +89,21 @@ void CenterWindow::openEntry(ProjectExplorerEntry* pEntry) {
 		closeBtn.set_has_frame(false);
 		closeBtn.set_icon_name("window-close");
 		box.append(closeBtn);
-		pageNum = mainNotebook.append_page(*editor, box);
+		Gtk::Widget &editorWidget = *editor;
+		pageNum = mainNotebook.append_page(editorWidget, box);
 		editor->connectTabHeaderChanged([fileNameLabel](const std::string &pName) { fileNameLabel->set_label(pName); });
 
 		openedPages.emplace_hint(iter, pEntry, Page{pageNum, editor});
 
 		auto page = mainNotebook.get_page(*editor);
 		page->property_reorderable().set_value(true);
+		executeInMainThread([&editorWidget](const std::promise<void> &) { editorWidget.grab_focus(); });
 		//page->property_detachable().set_value(true);
 	} else {
 		pageNum = iter->second.pageNum;
+
+		Gtk::Widget &editorWidget = *iter->second.widget;
+		executeInMainThread([&editorWidget](const std::promise<void> &) { editorWidget.grab_focus(); });
 	}
 	mainNotebook.set_current_page(pageNum);
 }

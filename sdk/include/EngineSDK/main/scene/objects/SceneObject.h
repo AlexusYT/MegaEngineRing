@@ -31,6 +31,10 @@
 #include "extensions/Extension.h"
 
 namespace mer::sdk::main {
+class IScript;
+}
+
+namespace mer::sdk::main {
 class Extension;
 class IScene;
 
@@ -40,9 +44,12 @@ class SceneObject : public ISceneObject {
 	IScene* scene{};
 	std::map<std::string, std::shared_ptr<Extension>> extensions;
 	bool inited{};
+	std::shared_ptr<IScript> script;
+	std::string scriptName;
 
 	glm::vec3 position{};
 	sigc::signal<void()> onPositionChangedSignal;
+	static inline uint64_t counter;
 
 public:
 	SceneObject();
@@ -59,7 +66,9 @@ public:
 
 	utils::ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) override;
 
-	[[nodiscard]] const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const { return extensions; }
+	[[nodiscard]] const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const override {
+		return extensions;
+	}
 
 	[[nodiscard]] IScene* getScene() const { return scene; }
 
@@ -77,6 +86,11 @@ public:
 
 	void setName(const std::string &pName) override { name = pName; }
 
+	[[nodiscard]] const std::string &getScriptName() const override { return scriptName; }
+
+	void setScriptName(const std::string &pScriptName) override { scriptName = pScriptName; }
+
+	static void resetCounter() { counter = 0; }
 
 private:
 	utils::ReportMessagePtr init() override;

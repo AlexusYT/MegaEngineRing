@@ -56,10 +56,6 @@ public:
 
 	virtual void setSimMode(bool pSimMode) = 0;
 
-	virtual void addToplevelSceneObject(UUID* pUuid, const std::shared_ptr<ui::EditorSceneObject> &pObject) = 0;
-
-	[[nodiscard]] virtual const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &getToplevelObjects() const = 0;
-
 	[[nodiscard]] virtual sdk::main::ICamera* getPrimaryCamera() const = 0;
 
 	void virtual setPrimaryCamera(sdk::main::ICamera* pPrimaryCamera) = 0;

@@ -146,6 +146,28 @@ add_library(
         cmdOptions/options/ResPathOption.h
         ui/widgetWindows/objectProperties/ObjectPropertyEntry.cpp
         ui/widgetWindows/objectProperties/ObjectPropertyEntry.h
+        project/scripting/ScriptParser.cpp
+        project/scripting/ScriptParser.h
+        project/scripting/ScriptNode.cpp
+        project/scripting/ScriptNode.h
+        project/generatedFiles/GraphicsScript.cpp
+        project/generatedFiles/GraphicsScript.h
+        mvp/main/editors/graphicsScriptEditor/IModelGraphicsScriptEditor.h
+        mvp/main/editors/graphicsScriptEditor/ModelGraphicsScriptEditor.cpp
+        mvp/main/editors/graphicsScriptEditor/ModelGraphicsScriptEditor.h
+        mvp/main/editors/graphicsScriptEditor/IViewGraphicsScriptEditor.h
+        mvp/main/editors/graphicsScriptEditor/ViewGraphicsScriptEditor.cpp
+        mvp/main/editors/graphicsScriptEditor/ViewGraphicsScriptEditor.h
+        mvp/main/editors/graphicsScriptEditor/PresenterGraphicsScriptEditor.cpp
+        mvp/main/editors/graphicsScriptEditor/PresenterGraphicsScriptEditor.h
+        mvp/main/editors/graphicsScriptEditor/canvas/CanvasWidget.cpp
+        mvp/main/editors/graphicsScriptEditor/canvas/CanvasWidget.h
+        mvp/main/editors/graphicsScriptEditor/canvas/CanvasElement.cpp
+        mvp/main/editors/graphicsScriptEditor/canvas/CanvasElement.h
+        project/scripting/ExtensionScriptNode.cpp
+        project/scripting/ExtensionScriptNode.h
+        project/scripting/FakeScriptNode.cpp
+        project/scripting/FakeScriptNode.h
 
 )
 
@@ -266,3 +288,7 @@ target_link_libraries(MegaEngineEditor_lib PRIVATE ${GTKMM_LINK_LIBRARIES})
 # this is heuristically generated, and may not be correct
 find_package(SQLiteCpp CONFIG REQUIRED)
 target_link_libraries(MegaEngineEditor_lib PRIVATE SQLiteCpp)
+
+find_package(nlohmann_json CONFIG REQUIRED)
+target_link_libraries(MegaEngineEditor_lib PRIVATE nlohmann_json::nlohmann_json)
+set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)

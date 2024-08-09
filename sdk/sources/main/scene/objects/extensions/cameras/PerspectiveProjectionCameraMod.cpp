@@ -27,21 +27,13 @@
 
 namespace mer::sdk::main {
 PerspectiveProjectionCameraMod::PerspectiveProjectionCameraMod()
-	: fov(glm::radians(60.0f)), zNear(0.1f), zFar(1000.0f) {}
-
-void PerspectiveProjectionCameraMod::getProjectionProperties(ExtensionProperties &pProperties) {
-	using CamerMod = PerspectiveProjectionCameraMod;
-	pProperties.emplace_back(this, "Frame aspect", "", &CamerMod::getAspect, &CamerMod::setAspect);
-	pProperties.emplace_back(this, "Fov, rad", "", &CamerMod::getFov, &CamerMod::setFov);
-	pProperties.emplace_back(this, "Z near", "", &CamerMod::getZNear, &CamerMod::setZNear);
-	pProperties.emplace_back(this, "Z far", "", &CamerMod::getZFar, &CamerMod::setZFar);
-}
+	: propertyFov(glm::radians(60.0f)), propertyZNear(0.1f), propertyZFar(1000.0f) {}
 
 void PerspectiveProjectionCameraMod::projectionMatrixChanged(const glm::mat4 & /*pNewMatrix*/) {}
 
 void PerspectiveProjectionCameraMod::updateProjMatrix() {
-	projMatrix = glm::perspective(fov, aspect, zNear, zFar);
-	onProjMatrixChanged(projMatrix);
-	projectionMatrixChanged(projMatrix);
+	propertyProjMatrix = glm::perspective(propertyFov, propertyAspect, propertyZNear, propertyZFar);
+	onProjMatrixChanged(propertyProjMatrix);
+	projectionMatrixChanged(propertyProjMatrix);
 }
 } // namespace mer::sdk::main

@@ -178,7 +178,7 @@ private:
 		}
 
 		ss << ")";
-		if (pIsHeader) {
+		if (pIsHeader || (!pIsHeader && !getKlass())) {
 			if (isConst && !isStatic) ss << " const";
 			if (isOverride && !isStatic) ss << " override";
 			if (isNoexcept) ss << " noexcept";

@@ -30,8 +30,6 @@ namespace mer::sdk::main {
 
 Extension::Extension() {}
 
-void Extension::getProperties(ExtensionProperties & /*pProperties*/) {}
-
 IScene* Extension::getScene() const { return getObject()->getScene(); }
 
 void Extension::onWindowSizeChanged(int /*pWidth*/, int /*pHeight*/) {}

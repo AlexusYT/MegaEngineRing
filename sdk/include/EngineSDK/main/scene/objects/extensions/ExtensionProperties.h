@@ -30,6 +30,9 @@ namespace mer::sdk::main {
 class ExtensionPropertyBase {
 	std::string name;
 	std::string description;
+	std::string getterName;
+	std::string setterName;
+	std::string eventName;
 
 protected:
 	ExtensionPropertyBase() = default;
@@ -47,6 +50,27 @@ public:
 	[[nodiscard]] const std::string &getDescription() const { return description; }
 
 	void setDescription(const std::string &pDescription) { description = pDescription; }
+
+	[[nodiscard]] const std::string &getGetterName() const { return getterName; }
+
+	ExtensionPropertyBase* setGetterName(const std::string &pGetterName) {
+		getterName = pGetterName;
+		return this;
+	}
+
+	[[nodiscard]] const std::string &getSetterName() const { return setterName; }
+
+	ExtensionPropertyBase* setSetterName(const std::string &pSetterName) {
+		setterName = pSetterName;
+		return this;
+	}
+
+	[[nodiscard]] const std::string &getEventName() const { return eventName; }
+
+	ExtensionPropertyBase* setEventName(const std::string &pEventName) {
+		eventName = pEventName;
+		return this;
+	}
 };
 
 class ExtensionPropertyGroup : public ExtensionPropertyBase {
@@ -68,6 +92,7 @@ class ExtensionProperty : public ExtensionPropertyBase {
 
 	sigc::slot<T()> getterFunc;
 	sigc::slot<void(const T &)> setterFunc;
+	sigc::slot<sigc::signal<void(const T &)>()> eventFunc;
 
 
 public:
@@ -78,12 +103,28 @@ public:
 					  const sigc::slot<void(const T &)> &pSetterFunc)
 		: ExtensionPropertyBase(pName, pDescription), getterFunc(pGetterFunc), setterFunc(pSetterFunc) {}
 
+	ExtensionProperty(const std::string &pName, const std::string &pDescription, const sigc::slot<T()> &pGetterFunc,
+					  const sigc::slot<void(const T &)> &pSetterFunc,
+					  const sigc::slot<sigc::signal<void(const T &)>()> &pEventFunc)
+		: ExtensionPropertyBase(pName, pDescription), getterFunc(pGetterFunc), setterFunc(pSetterFunc),
+		  eventFunc(pEventFunc) {}
+
 	template<typename ClassT>
 	ExtensionProperty(ClassT* pClass, const std::string &pName, const std::string &pDescription,
 					  T (ClassT::*pGetterFunc)() const, void (ClassT::*pSetterFunc)(T))
 		: ExtensionPropertyBase(pName, pDescription) {
 		getterFunc = sigc::mem_fun<T, ClassT>(*dynamic_cast<ClassT*>(pClass), pGetterFunc);
 		setterFunc = sigc::mem_fun<void, ClassT>(*dynamic_cast<ClassT*>(pClass), pSetterFunc);
+	}
+
+	template<typename ClassT>
+	ExtensionProperty(ClassT* pClass, const std::string &pName, const std::string &pDescription,
+					  T (ClassT::*pGetterFunc)() const, void (ClassT::*pSetterFunc)(T),
+					  sigc::signal<void(T)> (ClassT::*pEventFunc)() const)
+		: ExtensionPropertyBase(pName, pDescription) {
+		getterFunc = sigc::mem_fun<T, ClassT>(*dynamic_cast<ClassT*>(pClass), pGetterFunc);
+		setterFunc = sigc::mem_fun<void, ClassT>(*dynamic_cast<ClassT*>(pClass), pSetterFunc);
+		eventFunc = sigc::mem_fun<sigc::signal<void(T)>, ClassT>(*dynamic_cast<ClassT*>(pClass), pEventFunc);
 	}
 
 	[[nodiscard]] const sigc::slot<T()> &getGetterFunc() const { return getterFunc; }
@@ -93,6 +134,10 @@ public:
 	[[nodiscard]] const sigc::slot<void(const T &)> &getSetterFunc() const { return setterFunc; }
 
 	void setSetterFunc(const sigc::slot<void(const T &)> &pSetterFunc) { setterFunc = pSetterFunc; }
+
+	[[nodiscard]] const sigc::slot<sigc::signal<void(const T &)>()> &getEventFunc() const { return eventFunc; }
+
+	void setEventFunc(const sigc::slot<sigc::signal<void(const T &)>()> &pEventFunc) { eventFunc = pEventFunc; }
 };
 
 class ExtensionProperties : public std::vector<std::shared_ptr<ExtensionPropertyBase>> {
@@ -100,12 +145,32 @@ class ExtensionProperties : public std::vector<std::shared_ptr<ExtensionProperty
 public:
 	template<typename T, typename T1 = std::remove_cvref_t<T>, typename ClassT>
 	// ReSharper disable once CppInconsistentNaming
-	reference emplace_back(ClassT* pClass, const std::string &pName, const std::string &pDescription,
-						   T (ClassT::*pGetterFunc)() const, void (ClassT::*pSetterFunc)(T)) {
+	ExtensionProperty<T1>* emplace_back(ClassT* pClass, const std::string &pName, const std::string &pDescription,
+										T (ClassT::*pGetterFunc)() const, void (ClassT::*pSetterFunc)(T)) {
+		auto clazz = dynamic_cast<ClassT*>(pClass);
 
-		return vector::emplace_back(std::make_shared<ExtensionProperty<T1>>(
-			pName, pDescription, sigc::mem_fun<T, ClassT>(*dynamic_cast<ClassT*>(pClass), pGetterFunc),
-			sigc::mem_fun<void, ClassT>(*dynamic_cast<ClassT*>(pClass), pSetterFunc)));
+		auto getter = sigc::mem_fun<T, ClassT>(*clazz, pGetterFunc);
+		auto setter = sigc::mem_fun<void, ClassT>(*clazz, pSetterFunc);
+
+		auto prop = std::make_shared<ExtensionProperty<T1>>(pName, pDescription, getter, setter);
+		vector::emplace_back(prop);
+		return dynamic_cast<ExtensionProperty<T1>*>(prop.get());
+	}
+
+	template<typename T, typename T1 = std::remove_cvref_t<T>, typename ClassT>
+	// ReSharper disable once CppInconsistentNaming
+	ExtensionProperty<T1>* emplace_back(ClassT* pClass, const std::string &pName, const std::string &pDescription,
+										T (ClassT::*pGetterFunc)() const, void (ClassT::*pSetterFunc)(T),
+										sigc::signal<void(const T1 &)> &(ClassT::*pEventFunc)()) {
+		auto clazz = dynamic_cast<ClassT*>(pClass);
+
+		auto getter = sigc::mem_fun<T, ClassT>(*clazz, pGetterFunc);
+		auto setter = sigc::mem_fun<void, ClassT>(*clazz, pSetterFunc);
+		auto event = sigc::mem_fun<sigc::signal<void(const T1 &)> &, ClassT>(*clazz, pEventFunc);
+
+		auto prop = std::make_shared<ExtensionProperty<T1>>(pName, pDescription, getter, setter, event);
+		vector::emplace_back(prop);
+		return dynamic_cast<ExtensionProperty<T1>*>(prop.get());
 	}
 };
 } // namespace mer::sdk::main

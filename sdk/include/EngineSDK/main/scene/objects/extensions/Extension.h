@@ -25,8 +25,10 @@
 
 #include "EngineSDK/main/resources/Resources.h"
 #include "EngineSDK/main/scene/IScene.h"
+#include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/ReportMessageFwd.h"
 #include "ExtensionProperties.h"
+#include "PropertiesForExtension.h"
 
 namespace mer::sdk::utils {
 class ModifierKeys;
@@ -38,16 +40,18 @@ class SceneObject;
 
 
 #define METHOD_CREATE(__CLASS)                                                                                         \
-	static std::shared_ptr<__CLASS> create() { return Extension::create(new __CLASS); }
+	static std::shared_ptr<__CLASS> create() { return Extension::create(new __CLASS, trimFilename(__FILE__)); }
 
 #define EXT_TYPE_NAME(__TYPE_NAME)                                                                                     \
 	static const char* typeName() { return __TYPE_NAME; }
 
-class Extension {
+class Extension : public virtual PropertiesForExtension {
 	friend SceneObject;
 	SceneObject* object{};
 	std::vector<sigc::connection> connectionStorage;
 	std::string typeNameStr;
+	std::string name;
+	std::string header;
 	bool enabled = true;
 	sigc::signal<void()> onEnabledChangedSignal;
 
@@ -57,23 +61,24 @@ protected:
 public:
 	using ValueChanged = sigc::signal<void()>;
 	template<typename... Args>
-	using ValueChangedArgs = sigc::signal<void(Args...)>;
-	template<typename... Args>
 	using Method = sigc::slot<void(Args...)>;
 
+	static constexpr auto trimFilename(const std::string_view &pFilename) {
+		return pFilename.substr(pFilename.find("include") + 8);
+	}
+
 	template<typename ClassT>
-	static std::shared_ptr<ClassT> create(ClassT* pPtr = new ClassT()) {
+	static std::shared_ptr<ClassT> create(ClassT* pPtr = new ClassT(), std::string_view pFilePath = "") {
 		static_assert(std::derived_from<ClassT, Extension>, "ClassT must be derived from Extension");
 		auto ptr = std::shared_ptr<ClassT>(pPtr);
 		getTypeNameFor(pPtr, ptr->typeNameStr);
+		ptr->setHeader(std::string(pFilePath));
 		return ptr;
 	}
 
 	virtual ~Extension() = default;
 
 	[[nodiscard]] SceneObject* getObject() const { return object; }
-
-	virtual void getProperties(ExtensionProperties &pProperties);
 
 	static const char* typeName() { return nullptr; }
 
@@ -88,6 +93,14 @@ public:
 	}
 
 	[[nodiscard]] sigc::signal<void()> &getOnEnabledChangedSignal() { return onEnabledChangedSignal; }
+
+	[[nodiscard]] const std::string &getName() const { return name; }
+
+	void setName(const std::string &pName) { name = pName; }
+
+	[[nodiscard]] const std::string &getHeader() const { return header; }
+
+	void setHeader(const std::string &pHeader) { header = pHeader; }
 
 protected:
 	//TODO Documentation
@@ -144,6 +157,7 @@ protected:
 	}
 
 	virtual void onEnabledChanged();
+
 
 private:
 	void setObject(SceneObject* const pObject) { object = pObject; }

@@ -31,19 +31,19 @@
 
 namespace mer::sdk::main {
 
-CameraExtension::CameraExtension() { setDirection(euclidean(radians(angle))); }
+CameraExtension::CameraExtension() { setDirection(euclidean(radians(propertyAngle))); }
 
 void CameraExtension::setAngle(const glm::vec2 &pAngle) {
-	if (angle == pAngle) return;
+	if (propertyAngle == pAngle) return;
 	glm::vec2 angleTmp = pAngle;
 	constexpr float delta = 0.001f;
 	if (angleTmp.x > 90.0f - delta) angleTmp.x = 90.0f - delta;
 	if (angleTmp.x < -90.0f + delta) angleTmp.x = -90.0f + delta;
 	if (angleTmp.y > 360) angleTmp.y -= 360;
 	if (angleTmp.y < 0) angleTmp.y += 360;
-	if (angle == angleTmp) return;
-	angle = angleTmp;
-	onAngleChanged(angle);
+	if (propertyAngle == angleTmp) return;
+	propertyAngle = angleTmp;
+	onAngleChanged(propertyAngle);
 	setDirection(euclidean(radians(angleTmp)));
 }
 
@@ -66,12 +66,7 @@ void CameraExtension::updateMatrix() {
 	const auto &objectSelf = getObject();
 	if (!objectSelf) return;
 	const auto position = objectSelf->getPosition();
-	setMatrix(getProjMatrix() * lookAt(position, position + direction, {0, 1, 0}));
-}
-
-void CameraExtension::getProperties(ExtensionProperties &pProperties) {
-	pProperties.emplace_back(this, "View Angle", "", &CameraExtension::getAngle, &CameraExtension::setAngle);
-	getProjectionProperties(pProperties);
+	setMatrix(getProjMatrix() * lookAt(position, position + propertyDirection, {0, 1, 0}));
 }
 
 } // namespace mer::sdk::main

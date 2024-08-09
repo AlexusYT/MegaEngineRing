@@ -21,6 +21,7 @@
 
 #ifndef CENTERWINDOW_H
 #define CENTERWINDOW_H
+#include "mvp/ThreadDispatcher.h"
 
 namespace mer::editor::mvp {
 class IEditorPresenter;
@@ -29,7 +30,7 @@ class IEditorPresenter;
 namespace mer::editor::ui {
 class ProjectExplorerEntry;
 
-class CenterWindow {
+class CenterWindow : mvp::ThreadDispatcher {
 	Gtk::Notebook mainNotebook;
 
 	struct Page {

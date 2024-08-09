@@ -32,6 +32,10 @@ mer::sdk::utils::ReportMessagePtr GeneratedFiles::saveToCmake() const {
 	std::stringstream ss;
 	ss << "set(GENERATED_SOURCES\n";
 	for (const auto &file: files) { ss << "\t" << file << "\n"; }
+	//ss << "\tsource/scripts/TestScript.cpp\n";
+	ss << "\tsource/scripts/EditorCameraScript.cpp\n";
+	ss << "\tsource/scripts/SceneObject0Script.cpp\n";
+	ss << "\tsource/scripts/SceneObject1Script.cpp\n";
 	ss << ")";
 
 	return ToolchainUtils::writeFile(getProject()->getProjectPath() / "cmake/generated-sources.cmake", ss.str());

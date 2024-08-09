@@ -28,6 +28,7 @@ class IEditor;
 } // namespace mer::editor::mvp
 
 namespace mer::editor::ui {
+class CenterWindow;
 
 enum class EntryKind { FILE, DIRECTORY, SCENE };
 
@@ -37,7 +38,8 @@ class ProjectExplorerEntry : public Glib::Object {
 	std::string image;
 	Glib::RefPtr<Gio::ListStore<ProjectExplorerEntry>> children;
 	Glib::RefPtr<Gio::Menu> contextMenu;
-	bool databaseSaveRequired{};
+	CenterWindow* centerWindow{};
+	bool databaseSaveRequired{true};
 	bool fileSaveRequired{};
 
 protected:
@@ -99,6 +101,22 @@ public:
 
 	void setFileSaveRequired(const bool pFileSaveRequired = true) { fileSaveRequired = pFileSaveRequired; }
 
+	[[nodiscard]] CenterWindow* getCenterWindow() const { return centerWindow; }
+
+	void setCenterWindow(CenterWindow* pCenterWindow) { centerWindow = pCenterWindow; }
+
+	virtual void onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> & /*pActionGroup*/) {}
+
+	void getActionGroup(const std::shared_ptr<Gio::SimpleActionGroup> &pActionGroup) {
+		if (!pActionGroup) return;
+		onGetActionGroup(pActionGroup);
+		if (!children) return;
+		for (uint32_t i = 0; i < children->get_n_items(); i++) {
+			auto entry = children->get_item(i);
+			entry->getActionGroup(pActionGroup);
+		}
+	}
+
 	sdk::utils::ReportMessagePtr loadDatabase() {
 		if (auto msg = onLoadDatabase()) return msg;
 		if (!children) return nullptr;
@@ -112,7 +130,7 @@ public:
 	sdk::utils::ReportMessagePtr saveDatabase() {
 		if (isDatabaseSaveRequired()) {
 			if (auto msg = onSaveDatabase()) return msg;
-			setDatabaseSaveRequired(false);
+			//setDatabaseSaveRequired(false);
 		}
 		if (!children) return nullptr;
 		for (uint32_t i = 0; i < children->get_n_items(); i++) {
