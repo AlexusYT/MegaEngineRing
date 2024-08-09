@@ -43,11 +43,13 @@ void SceneDataInjector::setupEditorCamera(std::shared_ptr<ISceneObject> &pEditor
 	mouseButton->connectButtonSignal(utils::MouseButton::BUTTON_MIDDLE,
 									 [cameraMouse](utils::MouseButton /*pButton*/, bool pPressed, double /*pX*/,
 												   double /*pY*/) { cameraMouse->setEnabled(pPressed); });
-	cameraMouse->setMethodAddAngle(sigc::mem_fun(*camera, &OrbitCameraExtension::addAngle));
+
+	cameraMouse->getOnAngleChanged().connect(sigc::mem_fun(*camera, &OrbitCameraExtension::addAngle));
 	pEditorCamera->addExtension("cameraMouse", cameraMouse);
 	pEditorCamera->addExtension("mouseButton", mouseButton);
 	pEditorCamera->addExtension("camera", camera);
 	pCamera = camera;
 	pEditorCamera->setName("EditorCamera");
+	pEditorCamera->setScriptName("EditorCameraScript");
 }
 } // namespace mer::sdk::main

@@ -35,6 +35,7 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/resources/models/ObjModelRequest.cpp
         sources/main/resources/models/ModelResource.cpp
         sources/main/scene/objects/extensions/ModelRenderExtension.cpp
+        sources/main/scripting/Script.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -90,6 +91,9 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h
         include/EngineSDK/main/resources/shaders/ShaderProgramRequest.h
         include/EngineSDK/main/IApplication.h
+        include/EngineSDK/main/scripting/IScript.h
+        include/EngineSDK/main/scripting/Script.h
+        include/EngineSDK/main/scene/objects/extensions/PropertiesForExtension.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

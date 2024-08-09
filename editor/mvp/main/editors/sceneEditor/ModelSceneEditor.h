@@ -34,11 +34,9 @@ class ModelSceneEditor : public IModelSceneEditor {
 	std::shared_ptr<sdk::main::IScene> scene;
 	bool simMode{};
 
-	std::unordered_map<UUID*, ui::EditorSceneObject*> objects;
-	std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> toplevelObjects;
 
 public:
-	ModelSceneEditor() : toplevelObjects(Gio::ListStore<ui::EditorSceneObject>::create()) {}
+	ModelSceneEditor() {}
 
 	[[nodiscard]] const std::shared_ptr<project::Project> &getProject() const override { return project; }
 
@@ -55,15 +53,6 @@ public:
 	[[nodiscard]] bool isSimMode() const override { return simMode; }
 
 	void setSimMode(const bool pSimMode) override { simMode = pSimMode; }
-
-	void addToplevelSceneObject(UUID* pUuid, const std::shared_ptr<ui::EditorSceneObject> &pObject) override {
-		toplevelObjects->append(pObject);
-		objects.emplace(pUuid, pObject.get());
-	}
-
-	[[nodiscard]] const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &getToplevelObjects() const override {
-		return toplevelObjects;
-	}
 
 	[[nodiscard]] sdk::main::ICamera* getPrimaryCamera() const override { return primaryCamera; }
 

@@ -33,20 +33,22 @@ namespace mer::sdk::main {
 
 void CameraKeyboardExtension::onKeyStateChanged(const utils::KeyboardKey pKey, const bool pPressed,
 												const utils::ModifierKeys & /*pMods*/) {
-	if (pKey == forwardKey) fwdPressed = pPressed;
-	if (pKey == backwardKey) bwdPressed = pPressed;
-	if (pKey == strafeLeftKey) strafeLeftPressed = pPressed;
-	if (pKey == strafeRightKey) strafeRightPressed = pPressed;
+	if (pKey == propertyForwardKey) fwdPressed = pPressed;
+	if (pKey == propertyBackwardKey) bwdPressed = pPressed;
+	if (pKey == propertyStrafeLeftKey) strafeLeftPressed = pPressed;
+	if (pKey == propertyStrafeRightKey) strafeRightPressed = pPressed;
 }
 
 void CameraKeyboardExtension::onRender() {
 	if (fwdPressed || bwdPressed || strafeLeftPressed || strafeRightPressed) {
 		const auto &objectSelf = getObject();
-		const float angleYRad = glm::radians(methodGetAngle().y);
+		const float angleYRad = glm::radians(propertyAngle.y);
 		const float angleYRight = angleYRad - 3.14f / 2.0f;
-		const glm::vec3 right = glm::normalize(glm::vec3(std::sin(angleYRight), 0.0f, std::cos(angleYRight))) * speed;
+		const glm::vec3 right =
+			glm::normalize(glm::vec3(std::sin(angleYRight), 0.0f, std::cos(angleYRight))) * propertySpeed;
 
-		const glm::vec3 fwdBwd = glm::normalize(glm::vec3(std::sin(angleYRad), 0.0f, std::cos(angleYRad))) * speed;
+		const glm::vec3 fwdBwd =
+			glm::normalize(glm::vec3(std::sin(angleYRad), 0.0f, std::cos(angleYRad))) * propertySpeed;
 		auto position = objectSelf->getPosition();
 		if (fwdPressed) { position += fwdBwd; }
 		if (bwdPressed) { position -= fwdBwd; }

@@ -31,11 +31,15 @@
 #include "generators/cpp/CppGenerator.h"
 #include "generators/cpp/CppHeaderFile.h"
 #include "generators/cpp/CppMethod.h"
+#include "scripting/ScriptParser.h"
 #include "toolchain/ToolchainSettings.h"
 #include "ui/widgetWindows/projectExplorer/DirectoryEntry.h"
 
 namespace mer::editor::project {
-Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()) {}
+Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()) {
+
+	scriptParser = std::make_shared<ScriptParser>();
+}
 
 Project::~Project() {
 	if (editorLib) dlclose(editorLib);
@@ -55,6 +59,9 @@ sdk::utils::ReportMessagePtr Project::openDatabase() {
 }
 
 void Project::initProject() {
+
+	scriptParser->setProject(shared_from_this());
+
 	filesystemEntries = getDirectoryEntry(projectPath);
 	filesystemEntries->setName("Файлы сборки");
 	projectExplorerEntries->append(filesystemEntries);
@@ -75,7 +82,7 @@ sdk::utils::ReportMessagePtr Project::loadProject() {
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr Project::saveProject() const {
+sdk::utils::ReportMessagePtr Project::saveProject() {
 	sdk::utils::Logger::info("Saving project...");
 	try {
 		database->backup((database->getFilename() + ".bak").c_str(), SQLite::Database::Save);
@@ -87,6 +94,8 @@ sdk::utils::ReportMessagePtr Project::saveProject() const {
 	}
 	if (auto msg = engineFileEntries->saveDatabase()) return msg;
 	sdk::utils::Logger::info("Project saved");
+
+	requestRebuildEditorLib();
 	return nullptr;
 }
 
@@ -157,6 +166,7 @@ void Project::requestRebuildEditorLib() {
 			editorLibLoadErrored(msg);
 			return;
 		}
+		if (editorLib) dlclose(editorLib);
 		auto path = (getProjectBuildPath() / "lib_EDITOR_TMP_.so").string();
 		editorLib = dlopen((path).c_str(), RTLD_LAZY | RTLD_GLOBAL);
 		if (!editorLib) {

@@ -39,6 +39,7 @@ class ProjectExplorerEntry;
 } // namespace mer::editor::ui
 
 namespace mer::editor::project {
+class ScriptParser;
 class ScenesInfo;
 
 class Project : public std::enable_shared_from_this<Project> {
@@ -52,6 +53,7 @@ class Project : public std::enable_shared_from_this<Project> {
 	std::shared_ptr<GeneratedFiles> engineFileEntries;
 	std::shared_ptr<ApplicationInfo> applicationInfo;
 	std::shared_ptr<ScenesInfo> scenesInfo;
+	std::shared_ptr<ScriptParser> scriptParser;
 
 	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onErrorSignal;
 	std::atomic<bool> editorLibLoading{};
@@ -75,7 +77,7 @@ public:
 
 	sdk::utils::ReportMessagePtr loadProject();
 
-	sdk::utils::ReportMessagePtr saveProject() const;
+	sdk::utils::ReportMessagePtr saveProject();
 
 	sdk::utils::ReportMessagePtr saveFiles() const;
 
@@ -149,6 +151,10 @@ public:
 	[[nodiscard]] const std::atomic<sdk::utils::ReportMessagePtr> &getEditorLibError() const { return editorLibError; }
 
 	void errorOccurred(const sdk::utils::ReportMessagePtr &pError) const { onErrorSignal(pError); }
+
+	[[nodiscard]] const std::shared_ptr<ScriptParser> &getScriptParser() const { return scriptParser; }
+
+	void setScriptParser(const std::shared_ptr<ScriptParser> &pScriptParser) { scriptParser = pScriptParser; }
 
 private:
 	void editorLibLoadStarted();

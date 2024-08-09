@@ -60,6 +60,7 @@ public:
 			const auto leftClickGesture = Gtk::GestureClick::create();
 			leftClickGesture->set_button(GDK_BUTTON_PRIMARY);
 			pListItem->get_child()->add_controller(leftClickGesture);
+			leftClickGesture->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
 			leftClickGesture->signal_pressed().connect(
 				sigc::bind(sigc::mem_fun(*this, &TreeWidget::onLeftClick), leftClickGesture));
 

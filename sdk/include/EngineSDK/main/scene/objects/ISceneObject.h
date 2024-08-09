@@ -75,6 +75,10 @@ public:
 	[[nodiscard]] virtual const std::string &getName() const = 0;
 
 	virtual void setName(const std::string &pName) = 0;
+
+	[[nodiscard]] virtual const std::string &getScriptName() const = 0;
+
+	virtual void setScriptName(const std::string &pScriptName) = 0;
 };
 
 } // namespace mer::sdk::main

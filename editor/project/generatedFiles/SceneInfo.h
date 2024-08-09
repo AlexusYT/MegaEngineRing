@@ -24,6 +24,11 @@
 #include <EngineUtils/utils/UUID.h>
 
 #include "GeneratedFileEntry.h"
+#include "project/sceneObjects/EditorSceneObject.h"
+
+namespace mer::editor::ui {
+class EditorSceneObject;
+}
 
 namespace mer::editor::project {
 class CppClass;
@@ -36,6 +41,10 @@ class CppMethod;
 class SceneInfo : public GeneratedFileEntry {
 	std::shared_ptr<UUID> uuid;
 	bool primaryScene{true};
+
+	std::unordered_map<UUID*, ui::EditorSceneObject*> objects;
+
+	std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> toplevelObjects;
 
 protected:
 	explicit SceneInfo(const std::shared_ptr<Project> &pProject);
@@ -57,6 +66,20 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<UUID> &getUuid() const { return uuid; }
 
+	void addToplevelSceneObject(UUID* pUuid, const std::shared_ptr<ui::EditorSceneObject> &pObject) {
+		pObject->setCenterWindow(getCenterWindow());
+		toplevelObjects->append(pObject);
+		objects.emplace(pUuid, pObject.get());
+	}
+
+	[[nodiscard]] const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &getToplevelObjects() const {
+		return toplevelObjects;
+	}
+
+	void onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &) override;
+
+	void resetSceneInfo();
+
 private:
 	sdk::utils::ReportMessagePtr onLoadDatabase() override;
 
@@ -64,7 +87,7 @@ private:
 
 	sdk::utils::ReportMessagePtr onSaveFile() const override;
 
-	sdk::utils::ReportMessagePtr createTable();
+	sdk::utils::ReportMessagePtr createTable() const;
 
 
 	sdk::utils::ReportMessagePtr writeFile() const;

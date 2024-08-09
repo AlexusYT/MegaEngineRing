@@ -32,12 +32,14 @@
 #include <project/generators/cpp/CppMethod.h>
 
 #include "EngineSDK/main/scene/ISceneDataInjector.h"
+#include "GraphicsScript.h"
 #include "mvp/main/editors/sceneEditor/ModelSceneEditor.h"
 #include "mvp/main/editors/sceneEditor/PresenterSceneEditor.h"
 #include "mvp/main/editors/sceneEditor/ViewSceneEditor.h"
 
 namespace mer::editor::project {
 SceneInfo::SceneInfo(const std::shared_ptr<Project> &pProject) : GeneratedFileEntry(pProject) {
+	resetSceneInfo();
 	setName("Scene1");
 	uuid = UUID::create();
 	setDatabaseSaveRequired();
@@ -47,6 +49,7 @@ SceneInfo::SceneInfo(const std::shared_ptr<Project> &pProject) : GeneratedFileEn
 SceneInfo::SceneInfo(const std::shared_ptr<Project> &pProject, const std::string &pName,
 					 const std::shared_ptr<UUID> &pUuid)
 	: GeneratedFileEntry(pProject), uuid(pUuid) {
+	resetSceneInfo();
 	setName(pName);
 }
 
@@ -61,13 +64,89 @@ std::shared_ptr<mvp::IEditorPresenter> SceneInfo::openEditor() {
 	return std::make_shared<mvp::PresenterSceneEditor>(viewSceneEditor, modelSceneEditor);
 }
 
+void SceneInfo::onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pSimpleActionGroup) {
+
+	if (!toplevelObjects) return;
+	for (uint32_t i = 0; i < toplevelObjects->get_n_items(); i++) {
+		auto entry = toplevelObjects->get_item(i);
+		entry->getActionGroup(pSimpleActionGroup);
+	}
+}
+
+void SceneInfo::resetSceneInfo() {
+	objects.clear();
+	toplevelObjects = Gio::ListStore<ui::EditorSceneObject>::create();
+}
+
 sdk::utils::ReportMessagePtr SceneInfo::onLoadDatabase() { return nullptr; }
 
-sdk::utils::ReportMessagePtr SceneInfo::onSaveDatabase() const { return nullptr; }
+sdk::utils::ReportMessagePtr SceneInfo::onSaveDatabase() const {
+	auto database = getProject()->getDatabase();
+
+	if (auto msg = createTable()) return msg;
+	if (auto msg = GraphicsScript::createTable(database)) return msg;
+
+	std::unique_ptr<SQLite::Transaction> transaction;
+	try {
+		transaction = std::make_unique<SQLite::Transaction>(*database);
+	} catch (...) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to save Scripts into database");
+		msg->setMessage("Exception occurred while starting transaction");
+		return msg;
+	}
+	try {
+		//language=sql
+		SQLite::Statement statement(*database, R"(
+INSERT INTO Scripts (ObjectUUID) VALUES (?)
+)");
+		for (auto [objectUuid, object]: objects) {
+			auto script = object->getGraphicsScript();
+			if (!script) continue;
+			statement.bind(1, objectUuid->toString());
+			statement.executeStep();
+			statement.clearBindings();
+			statement.reset();
+			script->setScriptId(database->getLastInsertRowid());
+		}
+	} catch (...) {
+		transaction->rollback();
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to create Scripts table");
+		msg->setMessage("Exception occurred while executing query");
+		return msg;
+	}
+
+	transaction->commit();
+	for (auto [objUuid, object]: objects) {
+		if (auto msg = object->saveDatabase()) return msg;
+	}
+	return nullptr;
+}
 
 sdk::utils::ReportMessagePtr SceneInfo::onSaveFile() const { return writeFile(); }
 
-sdk::utils::ReportMessagePtr SceneInfo::createTable() { return nullptr; }
+sdk::utils::ReportMessagePtr SceneInfo::createTable() const {
+	try {
+		//language=sql
+		getProject()->getDatabase()->exec(R"(DROP TABLE IF EXISTS Scripts;
+CREATE TABLE Scripts
+(
+    ScriptID   INTEGER
+        CONSTRAINT Scripts_pk
+            PRIMARY KEY AUTOINCREMENT,
+    ObjectUUID TEXT    NOT NULL
+);
+)");
+	} catch (...) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to create Scripts table");
+		msg->setMessage("Exception occurred while executing query");
+		return msg;
+	}
+
+	return nullptr;
+}
 
 sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	using namespace std::string_literals;
@@ -107,7 +186,11 @@ sdk::utils::ReportMessagePtr SceneInfo::writeFile() const {
 	header.addInclude("memory");
 	auto path = getProject()->getProjectPath();
 	if (auto msg = header.writeFile(path / getHeaderPath())) return msg;
-	return source.writeFile(path / getSourcePath());
+	if (auto msg = source.writeFile(path / getSourcePath())) return msg;
+	for (auto [objUuid, object]: objects) {
+		if (auto msg = object->saveFile()) return msg;
+	}
+	return nullptr;
 }
 
 std::shared_ptr<CppExternC> SceneInfo::createExternCBlock(const std::string &pSceneName) {
@@ -135,6 +218,7 @@ std::shared_ptr<CppMethod> SceneInfo::createInitMethod(const std::shared_ptr<Cpp
 	using namespace mer::sdk::utils;
 
 	auto object = std::make_shared<SceneObject>();
+	object->setScriptName("SceneObject0Script");
 	auto render = ModelRenderExtension::create();
 	render->setShaderRequest(BuiltInProgramRequest::getDefaultProgram());
 	render->setModelRequest(std::make_shared<FileModelRequest>("TestModel",  "Resources/Cube.obj"), "Cube");
@@ -142,11 +226,13 @@ std::shared_ptr<CppMethod> SceneInfo::createInitMethod(const std::shared_ptr<Cpp
 	addObject(object);
 
 	auto player = std::make_shared<SceneObject>();
+	player->setScriptName("SceneObject1Script");
 	auto camera = CameraExtension::create();
 	auto cameraKeyboard = CameraKeyboardExtension::create();
 	auto cameraMouse = CameraMouseExtension::create();
-	cameraMouse->setMethodAddAngle(sigc::mem_fun(*camera, &CameraExtension::addAngle));
-	cameraKeyboard->setMethodGetAngle(sigc::mem_fun(*camera, &CameraExtension::getAngle));
+	//cameraMouse->setMethodAddAngle(sigc::mem_fun(*camera, &CameraExtension::addAngle));
+
+	//camera->getOnAngleChanged().connect(sigc::mem_fun(*cameraKeyboard, &CameraKeyboardExtension::setAngle));
 	switchCamera(camera.get());
 	player->addExtension("cameraKeyboard", cameraKeyboard);
 	player->addExtension("cameraMouse", cameraMouse);

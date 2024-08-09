@@ -28,16 +28,24 @@
 
 namespace mer::sdk::main {
 class CameraKeyboardExtension : public Extension {
-	utils::KeyboardKey forwardKey = utils::KeyboardKey::KEY_W;
-	utils::KeyboardKey strafeLeftKey = utils::KeyboardKey::KEY_A;
-	utils::KeyboardKey backwardKey = utils::KeyboardKey::KEY_S;
-	utils::KeyboardKey strafeRightKey = utils::KeyboardKey::KEY_D;
+	DECLARE_PROPERTY_DEF(float, Speed, 1.4f);
+	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, Speed, "Movement speed", "");
+
+	DECLARE_PROPERTY_DEF(utils::KeyboardKey, ForwardKey, utils::KeyboardKey::KEY_W);
+	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, ForwardKey, "Move forward key", "");
+	DECLARE_PROPERTY_DEF(utils::KeyboardKey, StrafeLeftKey, utils::KeyboardKey::KEY_A);
+	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, StrafeLeftKey, "Move left key", "");
+	DECLARE_PROPERTY_DEF(utils::KeyboardKey, BackwardKey, utils::KeyboardKey::KEY_S);
+	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, BackwardKey, "Move back key", "");
+	DECLARE_PROPERTY_DEF(utils::KeyboardKey, StrafeRightKey, utils::KeyboardKey::KEY_D);
+	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, StrafeRightKey, "Move right key", "");
+
+	DECLARE_PROPERTY(glm::vec2, Angle);
+	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, Angle, "View angle", "");
+
 
 	bool fwdPressed{}, bwdPressed{}, strafeLeftPressed{}, strafeRightPressed{};
-	float speed = 1.4f;
-	ValueChangedArgs<float> onSpeedChanged;
 
-	sigc::slot<glm::vec2()> methodGetAngle{};
 
 protected:
 	CameraKeyboardExtension() = default;
@@ -47,52 +55,56 @@ public:
 
 	EXT_TYPE_NAME("CameraKeyboardExtension")
 
-	[[nodiscard]] utils::KeyboardKey getForwardKey() const { return forwardKey; }
+	[[nodiscard]] ValueChangedArgs<const utils::KeyboardKey &> &getOnForwardKeyChanged() { return onForwardKeyChanged; }
 
-	void setForwardKey(const utils::KeyboardKey pForwardKey) { forwardKey = pForwardKey; }
-
-	[[nodiscard]] utils::KeyboardKey getStrafeLeftKey() const { return strafeLeftKey; }
-
-	void setStrafeLeftKey(const utils::KeyboardKey pStrafeLeftKey) { strafeLeftKey = pStrafeLeftKey; }
-
-	[[nodiscard]] utils::KeyboardKey getBackwardKey() const { return backwardKey; }
-
-	void setBackwardKey(const utils::KeyboardKey pBackwardKey) { backwardKey = pBackwardKey; }
-
-	[[nodiscard]] utils::KeyboardKey getStrafeRightKey() const { return strafeRightKey; }
-
-	void setStrafeRightKey(const utils::KeyboardKey pStrafeRightKey) { strafeRightKey = pStrafeRightKey; }
-
-	[[nodiscard]] float getSpeed() const { return speed; }
-
-	void setSpeed(const float pSpeed) {
-		speed = pSpeed;
-		onSpeedChanged(speed);
+	[[nodiscard]] ValueChangedArgs<const utils::KeyboardKey &> &getOnStrafeLeftKeyChanged() {
+		return onStrafeLeftKeyChanged;
 	}
 
-	[[nodiscard]] ValueChangedArgs<float> &getOnSpeedChanged() { return onSpeedChanged; }
+	[[nodiscard]] ValueChangedArgs<const utils::KeyboardKey &> &getOnBackwardKeyChanged() {
+		return onBackwardKeyChanged;
+	}
 
-	[[nodiscard]] const sigc::slot<glm::vec2()> &getMethodGetAngle() const { return methodGetAngle; }
+	[[nodiscard]] ValueChangedArgs<const utils::KeyboardKey &> &getOnStrafeRightKeyChanged() {
+		return onStrafeRightKeyChanged;
+	}
 
-	void setMethodGetAngle(const sigc::slot<glm::vec2()> &pMethodGetAngle) { methodGetAngle = pMethodGetAngle; }
+	[[nodiscard]] utils::KeyboardKey getForwardKey() const { return propertyForwardKey; }
+
+	void setForwardKey(const utils::KeyboardKey pForwardKey) { propertyForwardKey = pForwardKey; }
+
+	[[nodiscard]] utils::KeyboardKey getStrafeLeftKey() const { return propertyStrafeLeftKey; }
+
+	void setStrafeLeftKey(const utils::KeyboardKey pStrafeLeftKey) { propertyStrafeLeftKey = pStrafeLeftKey; }
+
+	[[nodiscard]] utils::KeyboardKey getBackwardKey() const { return propertyBackwardKey; }
+
+	void setBackwardKey(const utils::KeyboardKey pBackwardKey) { propertyBackwardKey = pBackwardKey; }
+
+	[[nodiscard]] utils::KeyboardKey getStrafeRightKey() const { return propertyStrafeRightKey; }
+
+	void setStrafeRightKey(const utils::KeyboardKey pStrafeRightKey) { propertyStrafeRightKey = pStrafeRightKey; }
+
+	[[nodiscard]] float getSpeed() const { return propertySpeed; }
+
+	void setSpeed(const float pSpeed) {
+		propertySpeed = pSpeed;
+		onSpeedChanged(pSpeed);
+	}
+
+	[[nodiscard]] ValueChangedArgs<const float &> &getOnSpeedChanged() { return onSpeedChanged; }
+
+	[[nodiscard]] const glm::vec2 &getAngle() const { return propertyAngle; }
+
+	void setAngle(const glm::vec2 &pPropertyAngle) { propertyAngle = pPropertyAngle; }
+
+	[[nodiscard]] ValueChangedArgs<const glm::vec2 &> &getOnAngleChanged() { return onAngleChanged; }
+
 
 protected:
 	void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) override;
 
 	void onRender() override;
-
-	void getProperties(ExtensionProperties &pProperties) override {
-		pProperties.emplace_back(this, "Speed", "", &CameraKeyboardExtension::getSpeed,
-								 &CameraKeyboardExtension::setSpeed);
-		pProperties.emplace_back(this, "Forward key", "", &CameraKeyboardExtension::getForwardKey,
-								 &CameraKeyboardExtension::setForwardKey);
-		pProperties.emplace_back(this, "Backward key", "", &CameraKeyboardExtension::getBackwardKey,
-								 &CameraKeyboardExtension::setBackwardKey);
-		pProperties.emplace_back(this, "Strafe left key", "", &CameraKeyboardExtension::getStrafeLeftKey,
-								 &CameraKeyboardExtension::setStrafeLeftKey);
-		pProperties.emplace_back(this, "Strafe right key", "", &CameraKeyboardExtension::getStrafeRightKey,
-								 &CameraKeyboardExtension::setStrafeRightKey);
-	}
 };
 } // namespace mer::sdk::main
 

@@ -52,16 +52,15 @@ TreeObjectWindow::TreeObjectWindow() {
 		expander->set_hide_expander(false);
 		auto* label = dynamic_cast<Gtk::Label*>(expander->get_child());
 		if (!label) return;
-		label->set_text(col->getName());
+		label->set_text(col->getObjectName());
 	});
 
-	tree.setContextMenuRequested([](Glib::ObjectBase* /*pObjectBase*/) -> Glib::RefPtr<Gio::Menu> {
-		return nullptr;
-		/*auto entry = dynamic_cast<EditorSceneObject*>(pObjectBase);
+	tree.setContextMenuRequested([](Glib::ObjectBase* pObjectBase) -> Glib::RefPtr<Gio::Menu> {
+		auto entry = dynamic_cast<EditorSceneObject*>(pObjectBase);
 		if (!entry) return nullptr;
 		Glib::RefPtr<Gio::Menu> menu = entry->getContextMenu();
 		if (!menu) return nullptr;
-		return menu;*/
+		return menu;
 	});
 	const auto column = Gtk::ColumnViewColumn::create("Name", factory);
 	column->set_resizable(true);

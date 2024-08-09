@@ -24,23 +24,25 @@
 #include <glm/mat4x4.hpp>
 #include <memory>
 #include <sigc++/signal.h>
-#include <vector>
 
+#include "EngineSDK/main/scene/objects/extensions/PropertiesForExtension.h"
 #include "IProjectionCameraMod.h"
 
 namespace mer::sdk::main {
 
-class PerspectiveProjectionCameraMod : public IProjectionCameraMod {
-	glm::mat4 projMatrix{1};
-	sigc::signal<void(const glm::mat<4, 4, float> &)> onProjMatrixChanged;
-	float aspect{};
-	sigc::signal<void()> onAspectChanged;
-	float fov{};
-	sigc::signal<void()> onFovChanged;
-	float zNear{};
-	sigc::signal<void()> onZNearChanged;
-	float zFar{};
-	sigc::signal<void()> onZFarChanged;
+class PerspectiveProjectionCameraMod : public IProjectionCameraMod, public virtual PropertiesForExtension {
+
+	DECLARE_PROPERTY(float, Aspect);
+	ADD_PROPERTY_SET_EVENT(PerspectiveProjectionCameraMod, Aspect, "Frame aspect", "");
+	DECLARE_PROPERTY(float, Fov);
+	ADD_PROPERTY_SET_EVENT(PerspectiveProjectionCameraMod, Fov, "Field of view", "");
+	DECLARE_PROPERTY(float, ZNear);
+	ADD_PROPERTY_SET_EVENT(PerspectiveProjectionCameraMod, ZNear, "Near z-plane", "");
+	DECLARE_PROPERTY(float, ZFar);
+	ADD_PROPERTY_SET_EVENT(PerspectiveProjectionCameraMod, ZFar, "Far z-plane", "");
+
+	DECLARE_PROPERTY(glm::mat4, ProjMatrix){1};
+	ADD_PROPERTY_EVENT(PerspectiveProjectionCameraMod, ProjMatrix, "Projection matrix", "");
 
 protected:
 	PerspectiveProjectionCameraMod();
@@ -50,51 +52,49 @@ public:
 		return onProjMatrixChanged;
 	}
 
-	[[nodiscard]] const glm::mat4 &getProjMatrix() const override { return projMatrix; }
+	[[nodiscard]] const glm::mat4 &getProjMatrix() const override { return propertyProjMatrix; }
 
-	[[nodiscard]] sigc::signal<void()> &getOnAspectChanged() { return onAspectChanged; }
+	[[nodiscard]] sigc::signal<void(const float &)> &getOnAspectChanged() { return onAspectChanged; }
 
-	[[nodiscard]] float getAspect() const { return aspect; }
+	[[nodiscard]] float getAspect() const { return propertyAspect; }
 
 	void setAspect(const float pAspect) {
-		aspect = pAspect;
-		onAspectChanged();
+		propertyAspect = pAspect;
+		onAspectChanged(pAspect);
 		updateProjMatrix();
 	}
 
-	[[nodiscard]] float getFov() const { return fov; }
+	[[nodiscard]] float getFov() const { return propertyFov; }
 
 	void setFov(const float pFov) {
-		fov = pFov;
-		onFovChanged();
+		propertyFov = pFov;
+		onFovChanged(pFov);
 		updateProjMatrix();
 	}
 
-	[[nodiscard]] sigc::signal<void()> &getOnFovChanged() { return onFovChanged; }
+	[[nodiscard]] sigc::signal<void(const float &)> &getOnFovChanged() { return onFovChanged; }
 
-	[[nodiscard]] float getZNear() const { return zNear; }
+	[[nodiscard]] float getZNear() const { return propertyZNear; }
 
 	void setZNear(const float pZNear) {
-		zNear = pZNear;
-		onZNearChanged();
+		propertyZNear = pZNear;
+		onZNearChanged(pZNear);
 		updateProjMatrix();
 	}
 
-	[[nodiscard]] sigc::signal<void()> &getOnZNearChanged() { return onZNearChanged; }
+	[[nodiscard]] sigc::signal<void(const float &)> &getOnZNearChanged() { return onZNearChanged; }
 
-	[[nodiscard]] float getZFar() const { return zFar; }
+	[[nodiscard]] float getZFar() const { return propertyZFar; }
 
 	void setZFar(const float pZFar) {
-		zFar = pZFar;
-		onZFarChanged();
+		propertyZFar = pZFar;
+		onZFarChanged(pZFar);
 		updateProjMatrix();
 	}
 
-	[[nodiscard]] sigc::signal<void()> &getOnZFarChanged() { return onZFarChanged; }
+	[[nodiscard]] sigc::signal<void(const float &)> &getOnZFarChanged() { return onZFarChanged; }
 
 protected:
-	void getProjectionProperties(ExtensionProperties &pProperties) override;
-
 	virtual void projectionMatrixChanged(const glm::mat4 &pNewMatrix);
 
 private:

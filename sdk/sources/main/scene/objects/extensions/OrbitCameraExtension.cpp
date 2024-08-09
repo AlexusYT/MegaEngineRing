@@ -44,18 +44,14 @@ void OrbitCameraExtension::updateMatrix() {
 
 	float dist = 25;
 	glm::vec3 globalUp{0, 1, 0};
-	glm::mat4 rotationMatrix = glm::yawPitchRoll(glm::radians(angle.y), glm::radians(angle.x), 0.0f);
+	glm::mat4 rotationMatrix = glm::yawPitchRoll(glm::radians(propertyAngle.y), glm::radians(propertyAngle.x), 0.0f);
 
-	auto position = targetPosition + glm::vec3(rotationMatrix * glm::vec4(0, 0, dist, 0.0f));
+	auto position = propertyTargetPosition + glm::vec3(rotationMatrix * glm::vec4(0, 0, dist, 0.0f));
 	//auto look = glm::normalize(targetPosition - position);
 	auto up = glm::vec3(rotationMatrix * glm::vec4(globalUp, 0.0f));
 	/*auto right = glm::cross(look, up);
 	auto V = glm::lookAt(position, target, up);*/
-	setMatrix(getProjMatrix() * lookAt(position, targetPosition, up));
+	setMatrix(getProjMatrix() * lookAt(position, propertyTargetPosition, up));
 }
 
-void OrbitCameraExtension::getProperties(ExtensionProperties &pProperties) {
-	pProperties.emplace_back(this, "View Angle", "", &OrbitCameraExtension::getAngle, &OrbitCameraExtension::setAngle);
-	getProjectionProperties(pProperties);
-}
 } // namespace mer::sdk::main

@@ -32,6 +32,7 @@
 #include "EngineSDK/main/scene/ISceneDataInjector.h"
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
+#include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/utils/KeyboardKey.h"
 #include "EngineSDK/utils/MouseButton.h"
 #include "IModelSceneEditor.h"
@@ -229,6 +230,13 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEdito
 PresenterSceneEditor::operator Gtk::Widget&() { return viewSceneEditor->getMainWidget(); }
 
 void PresenterSceneEditor::notifyLoadingStarted() const {
+
+	modelSceneEditor->getSceneInfo()->resetSceneInfo();
+	sdk::main::SceneObject::resetCounter();
+	modelSceneEditor->setScene(nullptr);
+	modelSceneEditor->setEditorCamera(nullptr);
+	modelSceneEditor->setPrimaryCamera(nullptr);
+	modelSceneEditor->setEditorCameraObject(nullptr);
 	viewSceneEditor->executeInMainThread(
 		[this](const std::promise<void> & /*pPromise*/) { viewSceneEditor->onLoadingStarted(); });
 }
@@ -278,12 +286,19 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() {
 		return msg;
 	}
 	auto scene = sceneInjector->getScene();
-	scene->getOnObjectAddedSignal().connect([this](sdk::main::ISceneObject* pObject) {
-		viewSceneEditor->executeInMainThread([pObject, this](const std::promise<void> & /*pPromise*/) {
-			const auto object = ui::EditorSceneObject::create(pObject);
-			modelSceneEditor->addToplevelSceneObject(pObject->getUuid(), object);
-		});
+	const Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
+	scene->getOnObjectAddedSignal().connect([this, sceneInfo, refActionGroup](sdk::main::ISceneObject* pObject) {
+		viewSceneEditor->executeInMainThread(
+			[pObject, this, sceneInfo, refActionGroup](const std::promise<void> & /*pPromise*/) {
+				const auto object = ui::EditorSceneObject::create(pObject, modelSceneEditor->getProject());
+
+
+				object->getActionGroup(refActionGroup);
+				sceneInfo->addToplevelSceneObject(pObject->getUuid(), object);
+				//viewSceneEditor->getMainWidget().activate_action("win.object.SceneObject1.open.graphicScript");
+			});
 	});
+	viewSceneEditor->getMainWidget().insert_action_group("win", refActionGroup);
 
 	auto sdk = project->getEditorSdkLib();
 
@@ -324,7 +339,7 @@ sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() {
 	modelSceneEditor->setEditorCameraObject(cameraObject.get());
 
 	modelSceneEditor->setScene(scene);
-	viewSceneEditor->onSceneReady(modelSceneEditor->getToplevelObjects());
+	viewSceneEditor->onSceneReady(sceneInfo->getToplevelObjects());
 	return nullptr;
 }
 

@@ -34,7 +34,7 @@ ScenesInfo::ScenesInfo(const std::shared_ptr<Project> &pProject) : GeneratedFile
 	setContextMenu(menu);
 }
 
-void ScenesInfo::getActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) {
+void ScenesInfo::onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) {
 
 	pActionGroup->add_action("scene.add.scene3d", [this] {
 		auto projectSelf = getProject();
