@@ -37,6 +37,10 @@ SceneObject::SceneObject() {
 	counter++;
 }
 
+SceneObject::~SceneObject() = default;
+
+std::shared_ptr<ISceneObject> SceneObject::create() { return std::shared_ptr<ISceneObject>(new SceneObject()); }
+
 utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 												  const std::shared_ptr<Extension> &pExtension) {
 	if (!pExtension) {
@@ -57,7 +61,7 @@ utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 		return msg;
 	} else {
 		pExtension->setObject(this);
-		if (inited) {
+		/*if (inited) {
 			try {
 				if (auto msg = pExtension->onInit()) {
 					pExtension->setObject(nullptr);
@@ -74,8 +78,9 @@ utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 				msg->addInfoLine("Extension typename: {}", Utils::getTypeName(pExtension.get()));
 				return msg;
 			}
-		}
+		}*/
 		pExtension->setName(pName);
+		onExtensionAddedSignal(pExtension);
 		extensions.emplace_hint(iter, pName, std::move(pExtension));
 	}
 	return nullptr;
@@ -90,6 +95,7 @@ utils::ReportMessagePtr SceneObject::removeExtension(const std::string &pName, s
 		return msg;
 	} else {
 		std::shared_ptr<Extension> ext = std::move(iter->second);
+		onExtensionRemovedSignal(pExtension);
 		extensions.erase(iter);
 		try {
 			if (auto msg = ext->onDeinit()) {
@@ -132,12 +138,20 @@ utils::ReportMessagePtr SceneObject::init() {
 
 		auto createFunc =
 			reinterpret_cast<std::shared_ptr<IScript> (*)()>(dlsym(main, ("create" + scriptName).c_str()));
-		script = createFunc();
-		script->setObject(this);
-		script->setup();
+		if (createFunc) {
+			script = createFunc();
+			script->setObject(this);
+			script->setup();
+		} else {
+			utils::Logger::error("Unable to load script: {}", scriptName);
+		}
 	}
 	inited = true;
 	return nullptr;
+}
+
+void SceneObject::deinit() {
+	for (const auto &extension: extensions) { extension.second->onDeinit(); }
 }
 
 void SceneObject::render() const {

@@ -25,29 +25,30 @@
 #include <mvp/creatingProject/IViewCreatingProject.h>
 #include <ui/widgetWindows/LogView.h>
 
+#include "mvp/ThreadDispatcher.h"
+
 namespace mer::editor::mvp {
 
 
-class ProjectCreatingWindow final : public Gtk::Window, public IViewCreatingProject {
+class ProjectCreatingWindow final : public Gtk::Window, public IViewCreatingProject, public ThreadDispatcher {
 
 	ui::LogView logView;
 	Gtk::ToggleButton cancelButton;
 	std::vector<std::shared_ptr<Gtk::TextBuffer>> buffers;
+	std::shared_ptr<IWidgetContext> context;
 
 
 public:
-	explicit ProjectCreatingWindow();
+	explicit ProjectCreatingWindow(const std::shared_ptr<IWidgetContext> &pContext);
 
 private:
 	void addMessageToLog(const std::string &pMessage) override;
 
 	void reportError(sdk::utils::ReportMessagePtr pMessage) override;
 
-	void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) override {
-		pWindow->set_application(get_application());
-	}
+	void closeView() override;
 
-	void closeWindow() override { close(); }
+	void openView() override;
 };
 } // namespace mer::editor::mvp
 

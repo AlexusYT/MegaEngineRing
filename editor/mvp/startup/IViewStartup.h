@@ -22,11 +22,13 @@
 #ifndef IVIEWSTARTUP_H
 #define IVIEWSTARTUP_H
 
+#include "mvp/IView.h"
+
 namespace mer::editor::mvp {
 
-class IViewStartup {
+class IViewStartup : public IView {
 public:
-	virtual ~IViewStartup() = default;
+	~IViewStartup() override = default;
 
 	virtual sigc::connection connectNewProjectClickSignal(const sigc::slot<void()> &pSlot) const = 0;
 
@@ -66,10 +68,6 @@ public:
 		const std::string &pInitialFolder,
 		const sigc::slot<void(const std::shared_ptr<Gio::AsyncResult> &, const std::shared_ptr<Gtk::FileDialog> &)>
 			&pSlot) = 0;
-
-	virtual void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) = 0;
-
-	virtual void closeWindow() = 0;
 };
 } // namespace mer::editor::mvp
 

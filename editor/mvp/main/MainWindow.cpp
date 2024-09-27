@@ -20,15 +20,14 @@
 //
 #include "MainWindow.h"
 
-#include <ui/widgetWindows/CenterWindow.h>
-#include <ui/widgetWindows/projectExplorer/ProjectExplorerWindow.h>
-
 #include "Globals.h"
-#include "graphic/viewport/OpenGL.h"
+#include "IPresenterMain.h"
+#include "mvp/contexts/IWidgetContext.h"
 #include "project/Project.h"
+#include "ui/customWidgets/multipaned/MultiPanedPanel.h"
 
 namespace mer::editor::mvp {
-std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<project::Project> &pProject,
+std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<IWidgetContext> &pContext,
 											   sdk::utils::ReportMessagePtr &pReportMessage) {
 	const auto builder = Gtk::Builder::create();
 	try {
@@ -41,8 +40,7 @@ std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<project::Pr
 		return nullptr;
 	}
 
-	auto viewMain =
-		std::shared_ptr<MainWindow>(Gtk::Builder::get_widget_derived<MainWindow>(builder, "MainWindow", pProject));
+	auto viewMain = std::make_shared<MainWindow>(builder, pContext);
 	if (!viewMain) {
 		pReportMessage = sdk::utils::ReportMessage::create();
 		pReportMessage->setTitle("Failed to init main window");
@@ -53,22 +51,17 @@ std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<project::Pr
 	return viewMain;
 }
 
-MainWindow::MainWindow(BaseObjectType* pCobject, const Glib::RefPtr<Gtk::Builder> &pBuilder,
-					   std::shared_ptr<project::Project> pProject)
-	: Window(pCobject), project(std::move(pProject)), projectExplorerWindow{(project.get())}, builder(pBuilder),
-	  notebook(nullptr) {
-	set_visible();
+MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::shared_ptr<IWidgetContext> &pContext)
+	: context(pContext) {
 
-	/*auto* area = builder->get_widget<Gtk::GLArea>("OpenGLRenderer");
-	render = OpenGL::create(area);
-	render->init();*/
 
-	notebook = builder->get_widget<Gtk::Notebook>("noteboook_logs");
-	notebook->append_page(logs[0], "CMake");
-	notebook->append_page(logs[1], "Сборка");
-	notebook->append_page(logs[2], "Запуск");
+	set_size_request(800, 600);
+	maximize();
 
-	auto* popoverMenu = builder->get_widget<Gtk::PopoverMenu>("popoverMenu");
+	Gtk::HeaderBar* bar = pBuilder->get_widget<Gtk::HeaderBar>("header");
+	bar->unparent();
+	set_titlebar(*bar);
+	/*auto* popoverMenu = builder->get_widget<Gtk::PopoverMenu>("popoverMenu");
 
 	const auto menu = Gio::Menu::create();
 	const auto fileSubmenu = Gio::Menu::create();
@@ -76,35 +69,96 @@ MainWindow::MainWindow(BaseObjectType* pCobject, const Glib::RefPtr<Gtk::Builder
 
 	const auto projectItem = Gio::MenuItem::create("dddddd", "app.CreateProject");
 
-	/*mainWindow->get_application()
-		->add_action("CreateProject")
-		->signal_activate()
-		.connect([this](const Glib::VariantBase &variantBase) {
-			auto* window = createProjectWindow.get();
-			window->mainWindow = this;
-			window->window->set_transient_for(*this->mainWindow);
-			window->window->show();
-		});*/
-
 	createSubmenu->append_item(projectItem);
 	fileSubmenu->append_submenu("Создать", createSubmenu);
 	fileSubmenu->append("Открыть...");
 	menu->append_submenu("Файл", fileSubmenu);
-	popoverMenu->set_menu_model(menu);
-
-	auto* topPaned = builder->get_widget<Gtk::Paned>("paned_top");
-	topPaned->set_end_child(centerWindow);
-
-	auto* leftTopNotebook = builder->get_widget<Gtk::Notebook>("notebook_leftTop");
-	leftTopNotebook->append_page(projectExplorerWindow, "Структура проекта");
-	projectExplorerWindow.setEntrySelectionChanged(
-		[this](ui::ProjectExplorerEntry* pEntry) { centerWindow.openEntry(pEntry); });
+	popoverMenu->set_menu_model(menu);*/
 
 
 	keyController = Gtk::EventControllerKey::create();
 	add_controller(keyController);
+	set_child(multiPaned);
+	/*auto motionController = Gtk::EventControllerMotion::create();
+	motionController->signal_motion().connect([this](double x, double y) {
+		auto widget = multiPaned.pick(x, y, Gtk::PickFlags::INSENSITIVE | Gtk::PickFlags::NON_TARGETABLE);
+		if (!widget) return;
+		hoveredWidget = widget->get_ancestor(Gtk::Frame::get_base_type());
+	});
+	add_controller(motionController);*/
+
+	auto actionGroupObject = Gio::SimpleActionGroup::create();
+	actionGroupObject->add_action_with_parameter(
+		"selected.extension.new", Glib::Variant<std::string>::variant_type(), [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<std::string>>(pBase);
+			if (presenter) presenter->addExtension(var.get());
+		});
+	actionGroupObject->add_action_with_parameter(
+		"manage.new.object", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<uintptr_t>>(pBase);
+			ExplorerObject* object = reinterpret_cast<ExplorerObject*>(var.get());
+			if (presenter) presenter->createObject(object);
+		});
+	actionGroupObject->add_action_with_parameter(
+		"manage.remove.object", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<uintptr_t>>(pBase);
+			ExplorerObject* object = reinterpret_cast<ExplorerObject*>(var.get());
+			if (presenter) presenter->removeObject(object);
+		});
+	actionGroupObject->add_action_with_parameter(
+		"open", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<uintptr_t>>(pBase);
+			ExplorerObject* object = reinterpret_cast<ExplorerObject*>(var.get());
+			if (presenter) presenter->selectObject(object);
+		});
+	insert_action_group("object", actionGroupObject);
+	auto actionGroupFile = Gio::SimpleActionGroup::create();
+	actionGroupFile->add_action_with_parameter(
+		"open", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->openFile(var.get().raw());
+		});
+	actionGroupFile->add_action_with_parameter(
+		"manage.new.scene", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createScene(var.get().raw());
+		});
+	actionGroupFile->add_action_with_parameter(
+		"manage.new.script", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createScript(var.get().raw());
+		});
+
+	actionGroupFile->add_action_with_parameter(
+		"manage.new.folder", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createDirectory(var.get().raw());
+		});
+	actionGroupFile->add_action_with_parameter(
+		"manage.rename", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->renameFile(var.get().raw());
+		});
+	actionGroupFile->add_action_with_parameter(
+		"manage.delete", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->deleteFile(var.get().raw());
+		});
+	actionGroupFile->add_action_with_parameter(
+		"manage.showInFiles", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->showInFiles(var.get().raw());
+		});
+	insert_action_group("file", actionGroupFile);
+	set_visible();
 }
 
 MainWindow::~MainWindow() {}
+
+void MainWindow::openView() { context->addWidget(this); }
+
+void MainWindow::closeView() { context->removeWidget(); }
+
+ui::MultiPaned* MainWindow::getMultiPaned() { return &multiPaned;}
 
 }

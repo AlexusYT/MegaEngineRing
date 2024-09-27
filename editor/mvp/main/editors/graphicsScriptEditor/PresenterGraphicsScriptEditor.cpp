@@ -186,7 +186,9 @@ PresenterGraphicsScriptEditor::PresenterGraphicsScriptEditor(
 		true);
 }
 
-PresenterGraphicsScriptEditor::operator Gtk::Widget&() { return viewGraphicsScriptEditor->getMainWidget(); }
+void PresenterGraphicsScriptEditor::run() { viewGraphicsScriptEditor->openView(); }
+
+void PresenterGraphicsScriptEditor::stop() { viewGraphicsScriptEditor->closeView(); }
 
 } // namespace mer::editor::mvp
 

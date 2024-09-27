@@ -50,5 +50,7 @@ PresenterAppInfo::PresenterAppInfo(const std::shared_ptr<IViewAppInfo> &pViewApp
 		});
 }
 
-PresenterAppInfo::operator Gtk::Widget&() { return viewAppInfo->getMainWidget(); }
+void PresenterAppInfo::run() { viewAppInfo->openView(); }
+
+void PresenterAppInfo::stop() { viewAppInfo->closeView(); }
 } // namespace mer::editor::mvp

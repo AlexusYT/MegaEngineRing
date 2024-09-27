@@ -3,12 +3,6 @@ add_library(
         MegaEngineEditor_lib OBJECT
         GameEngine.cpp
         mvp/main/MainWindow.cpp
-        graphic/viewport/OpenGL.cpp
-        graphic/viewport/OpenGL.h
-        graphic/viewport/OpenGLFwd.h
-        graphic/viewport/Camera.cpp
-        graphic/viewport/Camera.h
-        graphic/viewport/CameraFwd.h
         graphic/shaders/ShadersList.cpp
         graphic/shaders/ShadersList.h
         graphic/ProgramWideSettings.cpp
@@ -45,21 +39,19 @@ add_library(
         project/sceneObjects/EditorSceneObject.h
         ui/customWidgets/TreeWidget.cpp
         ui/customWidgets/TreeWidget.h
-        ui/widgetWindows/TreeObjectWindow.cpp
-        ui/widgetWindows/TreeObjectWindow.h
+        mvp/main/treeObjectWindow/ViewObjectsTree.cpp
+        mvp/main/treeObjectWindow/ViewObjectsTree.h
         ui/utils/ErrorDialog.cpp
         ui/utils/ErrorDialog.h
-        ui/widgetWindows/objectProperties/ObjectPropertiesWindow.cpp
-        ui/widgetWindows/objectProperties/ObjectPropertiesWindow.h
-        ui/widgetWindows/CenterWindow.cpp
-        ui/widgetWindows/CenterWindow.h
-        ui/widgetWindows/projectExplorer/ProjectExplorerWindow.cpp
-        ui/widgetWindows/projectExplorer/ProjectExplorerWindow.h
+        mvp/main/objectProperties/ViewObjectProperties.cpp
+        mvp/main/objectProperties/ViewObjectProperties.h
+        mvp/main/centerWindow/ViewCenterWindow.cpp
+        mvp/main/centerWindow/ViewCenterWindow.h
+        mvp/main/projectExplorer/ViewProjectExplorer.cpp
+        mvp/main/projectExplorer/ViewProjectExplorer.h
         ui/widgetWindows/projectExplorer/ProjectExplorerEntry.cpp
         ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h
-        mvp/main/editors/IEditorPresenter.h
-        mvp/main/editors/CppEditor.cpp
-        mvp/main/editors/CppEditor.h
+        mvp/main/editors/IPresenterSceneEditor.h
         project/generatedFiles/ApplicationInfo.cpp
         project/generatedFiles/ApplicationInfo.h
         project/generators/cpp/CppGenerator.cpp
@@ -102,17 +94,10 @@ add_library(
         mvp/main/PresenterMain.h
         mvp/ThreadDispatcher.cpp
         mvp/ThreadDispatcher.h
-        ui/widgetWindows/projectExplorer/FileEntry.h
-        ui/widgetWindows/projectExplorer/DirectoryEntry.h
         project/generatedFiles/GeneratedFileEntry.cpp
         project/generatedFiles/GeneratedFileEntry.h
-        project/generatedFiles/ScenesInfo.cpp
-        project/generatedFiles/ScenesInfo.h
         project/SceneTypeRegister.cpp
         project/SceneTypeRegister.h
-        project/generatedFiles/SceneInfo.cpp
-        project/generatedFiles/SceneInfo.h
-        ui/widgetWindows/projectExplorer/FileEntry.cpp
         mvp/main/editors/appInfo/AppInfoEditor.cpp
         mvp/main/editors/appInfo/AppInfoEditor.h
         mvp/main/editors/appInfo/IViewAppInfo.h
@@ -144,8 +129,8 @@ add_library(
         cmdOptions/options/SdkVersionOption.h
         cmdOptions/options/ResPathOption.cpp
         cmdOptions/options/ResPathOption.h
-        ui/widgetWindows/objectProperties/ObjectPropertyEntry.cpp
-        ui/widgetWindows/objectProperties/ObjectPropertyEntry.h
+        mvp/main/objectProperties/ObjectPropertyEntry.cpp
+        mvp/main/objectProperties/ObjectPropertyEntry.h
         project/scripting/ScriptParser.cpp
         project/scripting/ScriptParser.h
         project/scripting/ScriptNode.cpp
@@ -168,6 +153,71 @@ add_library(
         project/scripting/ExtensionScriptNode.h
         project/scripting/FakeScriptNode.cpp
         project/scripting/FakeScriptNode.h
+        mvp/ApplicationController.cpp
+        mvp/ApplicationController.h
+        mvp/IApplicationController.h
+        mvp/contexts/IWidgetContext.h
+        mvp/contexts/ApplicationContext.cpp
+        mvp/contexts/ApplicationContext.h
+        mvp/PresenterBase.cpp
+        mvp/PresenterBase.h
+        mvp/main/projectExplorer/IViewProjectExplorer.h
+        mvp/main/projectExplorer/IModelProjectExplorer.h
+        mvp/main/projectExplorer/ModelProjectExplorer.cpp
+        mvp/main/projectExplorer/ModelProjectExplorer.h
+        mvp/main/projectExplorer/IPresenterProjectExplorer.h
+        mvp/main/projectExplorer/PresenterProjectExplorer.cpp
+        mvp/main/projectExplorer/PresenterProjectExplorer.h
+        mvp/main/centerWindow/IViewCenterWindow.h
+        mvp/main/centerWindow/IModelCenterWindow.h
+        mvp/main/centerWindow/ModelCenterWindow.cpp
+        mvp/main/centerWindow/ModelCenterWindow.h
+        mvp/main/centerWindow/IPresenterCenterWindow.h
+        mvp/main/centerWindow/PresenterCenterWindow.cpp
+        mvp/main/centerWindow/PresenterCenterWindow.h
+        mvp/main/centerWindow/ITab.h
+        mvp/main/centerWindow/TabPlaceholder.cpp
+        mvp/main/centerWindow/TabPlaceholder.h
+        mvp/main/centerWindow/ITabPlaceholder.h
+        mvp/main/editors/sceneEditor/ModelSceneEditor.cpp
+        mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.cpp
+        mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.h
+        project/Sdk.cpp
+        project/Sdk.h
+        mvp/main/editors/sceneEditor/explorerObjects/RootExplorerObject.h
+        mvp/main/editors/sceneEditor/explorerObjects/SceneExplorerObject.cpp
+        mvp/main/editors/sceneEditor/explorerObjects/SceneExplorerObject.h
+        mvp/main/editors/sceneEditor/ResourcesContext.cpp
+        mvp/main/editors/sceneEditor/ResourcesContext.h
+        ui/customWidgets/CustomTreeView.cpp
+        ui/customWidgets/CustomTreeView.h
+        ui/customWidgets/TreeElementBase.h
+        ui/customWidgets/CustomSignalListItemFactory.h
+        ui/customWidgets/CustomSignalListItemFactory.cpp
+        ui/customWidgets/multipaned/MultiPaned.cpp
+        ui/customWidgets/multipaned/MultiPaned.h
+        mvp/contexts/MultiPanedContext.cpp
+        mvp/contexts/MultiPanedContext.h
+        ui/customWidgets/multipaned/MultiPanedPanel.cpp
+        ui/customWidgets/multipaned/MultiPanedPanel.h
+        ui/customWidgets/multipaned/MultiPanedSide.h
+        mvp/main/projectExplorer/entries/ProjectExplorerElement.cpp
+        mvp/main/projectExplorer/entries/ProjectExplorerElement.h
+        mvp/main/IPresenterMain.h
+        project/LoadedScene.cpp
+        project/LoadedScene.h
+        mvp/main/treeObjectWindow/IViewObjectsTree.h
+        mvp/main/treeObjectWindow/IModelObjectsTree.h
+        mvp/main/treeObjectWindow/ModelObjectsTree.h
+        mvp/main/treeObjectWindow/IPresenterObjectsTree.h
+        mvp/main/treeObjectWindow/PresenterObjectsTree.cpp
+        mvp/main/treeObjectWindow/PresenterObjectsTree.h
+        mvp/main/objectProperties/IViewObjectProperties.h
+        mvp/main/objectProperties/IModelObjectProperties.h
+        mvp/main/objectProperties/ModelObjectProperties.h
+        mvp/main/objectProperties/IPresenterObjectProperties.h
+        mvp/main/objectProperties/PresenterObjectProperties.cpp
+        mvp/main/objectProperties/PresenterObjectProperties.h
 
 )
 

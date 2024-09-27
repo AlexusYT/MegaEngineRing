@@ -21,12 +21,12 @@
 
 #include "ProjectCreatingWindow.h"
 
-#include <thread>
-
+#include "mvp/contexts/IWidgetContext.h"
 #include "ui/widgetWindows/LogView.h"
 
 namespace mer::editor::mvp {
-ProjectCreatingWindow::ProjectCreatingWindow() : cancelButton("Отмена") {
+ProjectCreatingWindow::ProjectCreatingWindow(const std::shared_ptr<IWidgetContext> &pContext)
+	: cancelButton("Отмена"), context(pContext) {
 	Gtk::Box box(Gtk::Orientation::VERTICAL);
 	set_child(box);
 	Gtk::Label label("Подготовка проекта к работе. Наберитесь терпения. Это займет несколько минут...");
@@ -48,8 +48,12 @@ void ProjectCreatingWindow::addMessageToLog(const std::string &pMessage) {
 	logView.scrollToEnd();
 }
 
-void ProjectCreatingWindow::reportError(sdk::utils::ReportMessagePtr pMessage) {
-	sdk::utils::Logger::error(pMessage);
+void ProjectCreatingWindow::reportError(sdk::utils::ReportMessagePtr pMessage) { sdk::utils::Logger::error(pMessage); }
+
+void ProjectCreatingWindow::closeView() { context->removeWidget(); }
+
+void ProjectCreatingWindow::openView(){
+context->addWidget(this);
 }
 
 }

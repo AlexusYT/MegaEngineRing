@@ -21,18 +21,26 @@
 
 #ifndef PRESENTERMAIN_H
 #define PRESENTERMAIN_H
-#include <mvp/IPresenter.h>
+#include "IPresenterMain.h"
+
+namespace mer::editor::project {
+class LoadedScene;
+}
 
 namespace mer::editor::mvp {
+class PresenterCenterWindow;
+class PresenterProjectExplorer;
 class IViewMain;
 class IModelMain;
 } // namespace mer::editor::mvp
 
 namespace mer::editor::mvp {
 
-class PresenterMain : public IPresenter {
+class PresenterMain : public IPresenterMain {
 	std::shared_ptr<IViewMain> viewMain;
 	std::shared_ptr<IModelMain> modelMain;
+	std::shared_ptr<PresenterProjectExplorer> presenterProjectExplorer;
+	std::shared_ptr<project::LoadedScene> loadedScene;
 
 public:
 	PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const std::shared_ptr<IModelMain> &pModelMain);
@@ -44,11 +52,40 @@ private:
 
 	void build(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
 
-	void run(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
+	void runProject(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
 
 	void logMessage(int pId, const std::string &pMessage) const;
 
 	void logError(int pId, const std::string &pMessage) const;
+
+	void displayError(const sdk::utils::ReportMessagePtr &pMsg);
+
+public:
+	void run() override;
+
+	void stop() override;
+
+	void addExtension(const std::string &pExtensionName) override;
+
+	void selectObject(ExplorerObject* pObjectToSelect) override;
+
+	void createObject(ExplorerObject* pParentObject) override;
+
+	void removeObject(ExplorerObject* pObjectToRemove) override;
+
+	void openFile(const std::filesystem::path &pPathToFile) override;
+
+	void createScene(const std::filesystem::path &pPathToCreate) override;
+
+	void createScript(const std::filesystem::path &pPathToCreate) override;
+
+	void createDirectory(const std::filesystem::path &pPathToCreate) override;
+
+	void renameFile(const std::filesystem::path &pPathToRemove) override;
+
+	void deleteFile(const std::filesystem::path &pPathToDelete) override;
+
+	void showInFiles(const std::filesystem::path &pPathToShow) override;
 };
 
 } // namespace mer::editor::mvp

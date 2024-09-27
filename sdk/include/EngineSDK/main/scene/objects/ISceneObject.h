@@ -50,7 +50,15 @@ public:
 
 	virtual utils::ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) = 0;
 
+	virtual sigc::connection connectOnExtensionAdded(
+		const sigc::slot<void(const std::shared_ptr<Extension> &pNewExt)> &pSlot) = 0;
+
+	virtual sigc::connection connectOnExtensionRemoved(
+		const sigc::slot<void(const std::shared_ptr<Extension> &pExtToRemove)> &pSlot) = 0;
+
 	virtual utils::ReportMessagePtr init() = 0;
+
+	virtual void deinit() = 0;
 
 	virtual void render() const = 0;
 
@@ -64,6 +72,8 @@ public:
 
 	virtual void setScene(IScene* pScene) = 0;
 
+	virtual void setUuid(const std::shared_ptr<UUID> &pUuid) = 0;
+
 	virtual UUID* getUuid() = 0;
 
 	virtual const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const = 0;
@@ -75,6 +85,9 @@ public:
 	[[nodiscard]] virtual const std::string &getName() const = 0;
 
 	virtual void setName(const std::string &pName) = 0;
+
+	virtual sigc::connection connectOnNameChanged(
+		const sigc::slot<void(const std::string &pOldName, const std::string &pNewName)> &pSlot) = 0;
 
 	[[nodiscard]] virtual const std::string &getScriptName() const = 0;
 

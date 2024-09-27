@@ -23,9 +23,22 @@
 #define IPRESENTER_H
 
 namespace mer::editor::mvp {
+class IView;
+class ApplicationController;
+
 class IPresenter {
 public:
 	virtual ~IPresenter() = default;
+
+	virtual void run() = 0;
+
+	virtual void stop() = 0;
+
+	virtual void addView(const std::shared_ptr<IView> & /*pNewView*/) {}
+
+	[[nodiscard]] virtual ApplicationController* getAppController() const = 0;
+
+	virtual void setAppController(ApplicationController* pAppController) = 0;
 };
 
 } // namespace mer::editor::mvp

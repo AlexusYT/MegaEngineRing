@@ -37,7 +37,7 @@ class EditorSceneObject;
 }
 
 namespace mer::editor::project {
-class GraphicsScript : public GeneratedFileEntry {
+class GraphicsScript : public GeneratedFileEntry, public mvp::ITab {
 	int64_t scriptId;
 	ui::EditorSceneObject* sceneObject;
 	std::unordered_map<std::string /*name*/, std::shared_ptr<ScriptNode>> scriptNodes;
@@ -127,7 +127,7 @@ public:
 
 	sdk::utils::ReportMessagePtr removeAllConnections(const ScriptNode* pNode);
 
-	std::shared_ptr<mvp::IEditorPresenter> openEditor() override;
+	std::shared_ptr<mvp::IPresenter> createEditorPresenter(const std::shared_ptr<mvp::TabPlaceholder> &pPlaceholder) override;
 
 	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<ScriptNode>> &getScriptNodes() const {
 		return scriptNodes;

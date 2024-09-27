@@ -22,6 +22,8 @@
 
 #include <EngineSDK/main/scene/objects/extensions/Extension.h>
 
+#include <nlohmann/json.hpp>
+
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "EngineUtils/utils/Logger.h"
@@ -43,6 +45,10 @@ void Extension::onMouseButtonStateChanged(utils::MouseButton /*pButton*/, bool /
 										  double /*pY*/) const {}
 
 void Extension::onEnabledChanged() {}
+
+void Extension::onSerialize(nlohmann::json & /*pJson*/) {}
+
+void Extension::onDeserialize(const nlohmann::json & /*pJson*/) {}
 
 void Extension::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
 	if (auto msg = ExtensionRegistry::getTypeNameFor(pExt, pNameOut)) { utils::Logger::error(msg); }

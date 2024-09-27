@@ -21,52 +21,64 @@
 
 #ifndef MODELSCENEEDITOR_H
 #define MODELSCENEEDITOR_H
+
 #include "IModelSceneEditor.h"
 
+namespace mer::sdk::utils {
+enum class MouseButton;
+}
+
+namespace mer::editor::project {
+class LoadedScene;
+}
+
 namespace mer::editor::mvp {
+class ResourcesContext;
+
 class ModelSceneEditor : public IModelSceneEditor {
-	std::shared_ptr<project::Project> project;
-	project::SceneInfo* sceneInfo{};
-	sdk::main::ICamera* primaryCamera{};
-	sdk::main::ICamera* editorCamera{};
-	sdk::main::ISceneObject* editorCameraObject{};
-
-	std::shared_ptr<sdk::main::IScene> scene;
-	bool simMode{};
-
+	std::shared_ptr<project::LoadedScene> loadedScene;
 
 public:
-	ModelSceneEditor() {}
+	ModelSceneEditor();
 
-	[[nodiscard]] const std::shared_ptr<project::Project> &getProject() const override { return project; }
+	void setLoadedScene(const std::shared_ptr<project::LoadedScene> &pLoadedScene) { loadedScene = pLoadedScene; }
 
-	void setProject(const std::shared_ptr<project::Project> &pProject) override { project = pProject; }
+	sigc::connection connectOnLoadingSignal(const sigc::slot<void()> &pSlot) const override;
 
-	[[nodiscard]] project::SceneInfo* getSceneInfo() const override { return sceneInfo; }
+	sigc::connection connectOnLoadedSignal(const sigc::slot<void()> &pSlot) const override;
 
-	void setSceneInfo(project::SceneInfo* const pSceneInfo) override { sceneInfo = pSceneInfo; }
+	bool hasScene() const override;
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::IScene> &getScene() const override { return scene; }
+	bool hasResourcesContext() const override;
 
-	void setScene(const std::shared_ptr<sdk::main::IScene> &pScene) override { scene = pScene; }
+	void initScene() override;
 
-	[[nodiscard]] bool isSimMode() const override { return simMode; }
+	void render() override;
 
-	void setSimMode(const bool pSimMode) override { simMode = pSimMode; }
+	void setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext) const override;
 
-	[[nodiscard]] sdk::main::ICamera* getPrimaryCamera() const override { return primaryCamera; }
+	void setName(const std::string &pName) override;
 
-	void setPrimaryCamera(sdk::main::ICamera* const pPrimaryCamera) override { primaryCamera = pPrimaryCamera; }
+	const std::string &getName() const override;
 
-	[[nodiscard]] sdk::main::ICamera* getEditorCamera() const override { return editorCamera; }
+	sigc::connection connectNameChanged(const sigc::slot<void(const std::string &pName)> &pSlot) override;
 
-	void setEditorCamera(sdk::main::ICamera* const pEditorCamera) override { editorCamera = pEditorCamera; }
+	void createObject(const std::string &pName) override;
 
-	[[nodiscard]] sdk::main::ISceneObject* getEditorCameraObject() const override { return editorCameraObject; }
+	void removeObject(sdk::main::ISceneObject* pObjectToRemove) override;
 
-	void setEditorCameraObject(sdk::main::ISceneObject* const pEditorCameraObject) override {
-		editorCameraObject = pEditorCameraObject;
-	}
+	void renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const override;
+
+	void saveObject(sdk::main::ISceneObject* pObject) override;
+
+
+	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const override;
+
+	[[nodiscard]] const std::shared_ptr<sdk::main::IScene> &getScene() const override;
+
+	void onCursorPosChanged(double pX, double pY) override;
+
+	void onMouseButtonStateChanged(sdk::utils::MouseButton pButton, bool pPressed, double pX, double pY) override;
 };
 } // namespace mer::editor::mvp
 #endif //MODELSCENEEDITOR_H

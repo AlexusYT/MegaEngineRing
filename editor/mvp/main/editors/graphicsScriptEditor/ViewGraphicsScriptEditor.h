@@ -23,10 +23,11 @@
 #define VIEWGRAPHICSSCRIPTEDITOR_H
 #include "IViewGraphicsScriptEditor.h"
 #include "canvas/CanvasWidget.h"
+#include "mvp/ThreadDispatcher.h"
 
 namespace mer::editor::mvp {
 
-class ViewGraphicsScriptEditor : public IViewGraphicsScriptEditor {
+class ViewGraphicsScriptEditor : public IViewGraphicsScriptEditor, public ThreadDispatcher {
 	CanvasWidget canvas;
 	std::shared_ptr<Gtk::EventControllerKey> keyEventController;
 	std::shared_ptr<Gtk::EventControllerMotion> mouseMotion;
@@ -83,6 +84,10 @@ public:
 	void redrawCanvas() override;
 
 	[[nodiscard]] double getCanvasZoom() const override;
+
+	void openView() override;
+
+	void closeView() override;
 };
 
 } // namespace mer::editor::mvp

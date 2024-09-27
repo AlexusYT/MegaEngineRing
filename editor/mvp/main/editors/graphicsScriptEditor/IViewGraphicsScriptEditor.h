@@ -22,14 +22,14 @@
 #ifndef IVIEWGRAPHICSSCRIPTEDITOR_H
 #define IVIEWGRAPHICSSCRIPTEDITOR_H
 
-#include "mvp/ThreadDispatcher.h"
+#include "mvp/IView.h"
 
 namespace mer::editor::mvp {
 class CanvasElement;
 
-class IViewGraphicsScriptEditor : public ThreadDispatcher {
+class IViewGraphicsScriptEditor : public IView {
 public:
-	virtual ~IViewGraphicsScriptEditor() = default;
+	~IViewGraphicsScriptEditor() override = default;
 
 	virtual Gtk::Widget &getMainWidget() = 0;
 

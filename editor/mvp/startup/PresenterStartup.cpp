@@ -31,6 +31,9 @@
 #include <mvp/main/PresenterMain.h>
 #include <project/Project.h>
 
+#include "mvp/ApplicationController.h"
+#include "mvp/contexts/ApplicationContext.h"
+
 namespace mer::editor::mvp {
 PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 								   const std::shared_ptr<IModelStartup> &pModel)
@@ -126,6 +129,10 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 	});
 }
 
+void PresenterStartup::run() { view->openView(); }
+
+void PresenterStartup::stop() { view->closeView(); }
+
 sdk::utils::ReportMessagePtr PresenterStartup::initProject(const std::shared_ptr<project::Project> &pProject) {
 
 	if (auto msg = pProject->openDatabase()) return msg;
@@ -134,35 +141,30 @@ sdk::utils::ReportMessagePtr PresenterStartup::initProject(const std::shared_ptr
 	return nullptr;
 }
 
-void PresenterStartup::openProjectCreatingWindow(const std::shared_ptr<project::Project> &pProject) const {
-	auto projectCreatingWindow = std::make_shared<ProjectCreatingWindow>();
+void PresenterStartup::openProjectCreatingWindow(const std::shared_ptr<project::Project> &pProject) {
+	auto appControllerSelf = getAppController();
+	auto projectCreatingWindow =
+		std::make_shared<ProjectCreatingWindow>(ApplicationContext::create(appControllerSelf->getApp()));
 	auto modelCreatingProject = std::make_shared<ModelCreatingProject>();
 	modelCreatingProject->setProject(pProject);
 	const auto presenter = std::make_shared<PresenterCreatingProject>(projectCreatingWindow, modelCreatingProject);
 
-	projectCreatingWindow->set_visible();
-
-	view->addWindow(projectCreatingWindow);
+	appControllerSelf->run(presenter);
+	appControllerSelf->stop(this);
 	presenter->runTasks();
-	ui::GameEngine::addWindow(presenter);
-
-	view->closeWindow();
 }
 
-void PresenterStartup::openMainWindow(const std::shared_ptr<project::Project> &pProject) const {
+void PresenterStartup::openMainWindow(const std::shared_ptr<project::Project> &pProject) {
 
+	auto appControllerSelf = getAppController();
 	sdk::utils::ReportMessagePtr msg;
-	auto viewMain = MainWindow::create(pProject, msg);
+	auto viewMain = MainWindow::create(ApplicationContext::create(appControllerSelf->getApp()), msg);
 	if (msg) return sdk::utils::Logger::error(msg);
 	auto modelMain = std::make_shared<ModelMain>();
 	modelMain->setProject(pProject);
 	const auto presenter = std::make_shared<PresenterMain>(viewMain, modelMain);
 
-	viewMain->set_visible();
-
-	view->addWindow(viewMain);
-	ui::GameEngine::addWindow(presenter);
-
-	view->closeWindow();
+	appControllerSelf->run(presenter);
+	appControllerSelf->stop(this);
 }
 }

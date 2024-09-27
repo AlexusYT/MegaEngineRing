@@ -23,30 +23,33 @@
 #define IVIEWMAIN_H
 #include <mvp/IView.h>
 
+namespace mer::editor::ui {
+class ProjectExplorerEntry;
+class MultiPaned;
+} // namespace mer::editor::ui
+
 namespace mer::editor::mvp {
+class IPresenterMain;
+
 class IViewMain : public IView {
 public:
-	virtual sigc::connection connectReloadCmakeClickedSignal(const sigc::slot<void()> &pSlot) const = 0;
-
-	virtual sigc::connection connectRunClickedSignal(const sigc::slot<void()> &pSlot) const = 0;
-
 	virtual sigc::connection connectKeyPressedSignal(
 		const sigc::slot<bool(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const = 0;
 
 	virtual sigc::connection connectKeyReleasedSignal(
 		const sigc::slot<void(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const = 0;
 
-	virtual void switchLogPage(int pId) const = 0;
-
-	virtual void addLogMessage(int pId, const Glib::ustring &pMessage) = 0;
-
-	virtual void clearLogMessage(int pId) = 0;
-
 	virtual void setWindowTitle(const std::string &pTitle) = 0;
 
 	virtual void addActionGroup(const std::string &pName, const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) = 0;
 
 	virtual void reportError(const sdk::utils::ReportMessagePtr &pError) = 0;
+
+	virtual ui::MultiPaned* getMultiPaned() = 0;
+
+	virtual void setPresenter(IPresenterMain* pPresenter) = 0;
+
+	virtual Gtk::Window* getWindow() = 0;
 };
 } // namespace mer::editor::mvp
 

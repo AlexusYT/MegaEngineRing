@@ -22,14 +22,14 @@
 #ifndef PRESENTERCREATINGPROJECT_H
 #define PRESENTERCREATINGPROJECT_H
 
-#include <mvp/IPresenter.h>
+#include "mvp/PresenterBase.h"
 
 namespace mer::editor::mvp {
 struct ProjectCreatingTask;
 class IModelCreatingProject;
 class IViewCreatingProject;
 
-class PresenterCreatingProject : public IPresenter {
+class PresenterCreatingProject : public PresenterBase {
 	std::shared_ptr<IViewCreatingProject> view;
 	std::shared_ptr<IModelCreatingProject> model;
 
@@ -55,7 +55,7 @@ public:
 	void runTasks();
 
 private:
-	void runTasksImpl() const;
+	void runTasksImpl();
 
 	sdk::utils::ReportMessagePtr generateFiles(const std::filesystem::path &pPath) const;
 
@@ -71,13 +71,18 @@ private:
 	};
 
 	static sdk::utils::ReportMessagePtr parseLibrariesScript(std::stringstream &pLog,
-																 std::unordered_map<std::string, Library> &pLibraries);
+	std::unordered_map<std::string, Library> &pLibraries);
 
 	static std::string getLine(std::stringstream &pLog);
 
 	void logMessage(const std::string &pMessage) const;
 
 	void logError(sdk::utils::ReportMessagePtr pError) const;
+
+public:
+	void run() override;
+
+	void stop() override;
 };
 } // namespace mer::editor::mvp
 

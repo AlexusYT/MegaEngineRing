@@ -23,23 +23,25 @@
 #define IVIEWSCENEEDITOR_H
 #include <mvp/ThreadDispatcher.h>
 
+#include "mvp/IView.h"
 
+namespace mer::editor::mvp {
+class ResourcesContext;
+class ExplorerObject;
+class IPresenterSceneEditor;
+} // namespace mer::editor::mvp
 class ObjectPropertyEntry;
 
 namespace mer::editor::project {
 class Project;
 }
 
-namespace mer::editor::ui {
-class EditorSceneObject;
-}
-
 namespace mer::editor::mvp {
-class IViewSceneEditor : public ThreadDispatcher {
+class IViewSceneEditor : public ThreadDispatcher, public IView {
 public:
-	virtual ~IViewSceneEditor() = default;
+	~IViewSceneEditor() override = default;
 
-	virtual Gtk::Widget &getMainWidget() = 0;
+	virtual void setPresenter(IPresenterSceneEditor* pPresenter) = 0;
 
 	virtual sigc::connection connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) = 0;
 
@@ -48,6 +50,8 @@ public:
 	virtual sigc::connection connectUnrealize(const sigc::slot<void()> &pSlot) = 0;
 
 	virtual sigc::connection connectResize(const sigc::slot<void(int pWidth, int pHeight)> &pSlot) = 0;
+
+	virtual void queueResize() = 0;
 
 	virtual sigc::connection connectKeyPressedSignal(
 		const sigc::slot<bool(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const = 0;
@@ -64,11 +68,9 @@ public:
 	virtual sigc::connection connectMouseButtonReleasedSignal(
 		const sigc::slot<void(unsigned int pButton, double pX, double pY)> &pSlot) const = 0;
 
-	virtual void setOnObjectSelectedSlot(const sigc::slot<void(ui::EditorSceneObject*)> &pSlot) = 0;
-
 	virtual void makeCurrent() = 0;
 
-	virtual const Glib::RefPtr<Gdk::GLContext> &getSharedContext() const = 0;
+	virtual const std::shared_ptr<ResourcesContext> &getResourcesContext() const = 0;
 
 	virtual void redraw() = 0;
 
@@ -76,15 +78,9 @@ public:
 
 	virtual void emitResize() = 0;
 
-	virtual void onLoadingStarted() = 0;
-
-	virtual void onLoadingStopped(const sdk::utils::ReportMessagePtr &pError) = 0;
-
-	virtual void onSceneReady(const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &pTopLevelObjects) = 0;
-
-	virtual void onObjectSelectionChanged(const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &pEntries) = 0;
-
 	virtual sigc::connection connectSimToggledSignal(const sigc::slot<void()> &pSlot) const = 0;
+
+	virtual void setTitle(const std::string &pTitle) = 0;
 
 	virtual void toggleSimMode(bool pMode = true) = 0;
 

@@ -21,8 +21,13 @@
 
 #ifndef PRESENTERSCENEEDITOR_H
 #define PRESENTERSCENEEDITOR_H
+#include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "EngineSDK/utils/ModifierKeys.h"
-#include "mvp/main/editors/IEditorPresenter.h"
+#include "mvp/main/editors/IPresenterSceneEditor.h"
+
+namespace mer::editor::mvp {
+class ExplorerObject;
+}
 
 namespace mer::sdk::main {
 class IApplication;
@@ -32,30 +37,24 @@ namespace mer::editor::mvp {
 class IViewSceneEditor;
 class IModelSceneEditor;
 
-class PresenterSceneEditor : public IEditorPresenter {
-	std::shared_ptr<IViewSceneEditor> viewSceneEditor;
+class PresenterSceneEditor : public IPresenterSceneEditor {
+	std::unordered_map<std::shared_ptr<IViewSceneEditor>, std::vector<sigc::connection>> views;
 	std::shared_ptr<IModelSceneEditor> modelSceneEditor;
-	sigc::signal<void(const std::string &pName)> tabHeaderChanged;
-	std::shared_ptr<sdk::main::IApplication> application;
 
 public:
-	PresenterSceneEditor(const std::shared_ptr<IViewSceneEditor> &pViewSceneEditor,
-						 const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor);
+	explicit PresenterSceneEditor(const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor);
 
-	operator Gtk::Widget&() override;
+	~PresenterSceneEditor() override;
 
-	sigc::connection connectTabHeaderChanged(const sigc::slot<void(const std::string &pName)> &pSlot) override {
-
-		return tabHeaderChanged.connect(pSlot);
-	}
 
 private:
-	void notifyLoadingStarted() const;
-	void notifyLoadingStopped(const sdk::utils::ReportMessagePtr &pError);
-
-	sdk::utils::ReportMessagePtr loadScene();
+	void addView(const std::shared_ptr<IView> &) override;
 
 	static sdk::utils::ModifierKeys convertToModifierKeys(const Gdk::ModifierType &pState);
+
+	void run() override;
+
+	void stop() override;
 };
 } // namespace mer::editor::mvp
 

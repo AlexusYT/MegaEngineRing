@@ -181,6 +181,11 @@ glm::vec2 ObjModelLoader::getVec2(const std::string &pLine) {
 	return {};
 }
 
+std::shared_ptr<FileModelRequest> FileModelRequest::create(const std::string &pName,
+const std::filesystem::path &pFilePath) {
+	return std::shared_ptr<FileModelRequest>(new FileModelRequest(pName, pFilePath));
+}
+
 utils::ReportMessagePtr FileModelRequest::getStream(std::shared_ptr<std::istream> &pStreamOut) {
 
 	auto file = std::make_shared<std::ifstream>();

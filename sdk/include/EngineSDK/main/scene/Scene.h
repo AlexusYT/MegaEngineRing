@@ -40,11 +40,16 @@ class Scene : public IScene {
 	std::vector<std::shared_ptr<ISceneObject>> objects;
 	sigc::signal<void(int pWidth, int pHeight)> onWindowSizeChangedSignal;
 	sigc::signal<void(ISceneObject* pObject)> onObjectAddedSignal;
+	sigc::signal<void(ISceneObject* pObject)> onObjectRemovedSignal;
 	ICamera* currentCamera;
 	IApplication* application;
 
 public:
 	Scene();
+
+	~Scene() override;
+
+	static std::shared_ptr<Scene> create();
 
 	void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const override;
 
@@ -70,6 +75,10 @@ public:
 		return onObjectAddedSignal;
 	}
 
+	[[nodiscard]] sigc::signal<void(ISceneObject* pObject)> &getOnObjectRemovedSignal() override {
+		return onObjectRemovedSignal;
+	}
+
 	[[nodiscard]] ICamera* getCurrentCamera() const override { return currentCamera; }
 
 	[[nodiscard]] IApplication* getApplication() const override { return application; }
@@ -83,7 +92,11 @@ protected:
 
 	sdk::utils::ReportMessagePtr initScene() override;
 
+	void deinitScene() override;
+
 	void addObject(const std::shared_ptr<ISceneObject> &pObject) override;
+
+	void removeObject(ISceneObject* pObjectToRemove) override;
 
 private:
 	void setResources(IResources* pResources) final;

@@ -23,16 +23,19 @@
 #define PROJECT_H
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <future>
-#include <mvp/creatingProject/ProjectCreatingTask.h>
-#include <ui/widgetWindows/projectExplorer/DirectoryEntry.h>
-#include <ui/widgetWindows/projectExplorer/FileEntry.h>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
 
 #include "generatedFiles/ApplicationInfo.h"
 #include "generatedFiles/GeneratedFiles.h"
-#include "generators/cpp/CppGenerator.h"
 #include "sceneObjects/EditorSceneObject.h"
-#include "toolchain/ToolchainUtils.h"
+
+namespace mer::editor::project {
+class Sdk;
+}
+
+namespace mer::sdk::main {
+class Application;
+}
 
 namespace mer::editor::ui {
 class ProjectExplorerEntry;
@@ -40,30 +43,26 @@ class ProjectExplorerEntry;
 
 namespace mer::editor::project {
 class ScriptParser;
-class ScenesInfo;
 
 class Project : public std::enable_shared_from_this<Project> {
 	std::filesystem::path projectPath;
 	std::filesystem::path projectBuildPath;
+	std::filesystem::path projectSourcesPath;
 	std::string projectName;
 
 	Glib::RefPtr<Gio::ListStore<ui::ProjectExplorerEntry>> projectExplorerEntries;
-	std::shared_ptr<ui::ProjectExplorerEntry> filesystemEntries;
 	std::shared_ptr<SQLite::Database> database;
 	std::shared_ptr<GeneratedFiles> engineFileEntries;
 	std::shared_ptr<ApplicationInfo> applicationInfo;
-	std::shared_ptr<ScenesInfo> scenesInfo;
 	std::shared_ptr<ScriptParser> scriptParser;
 
 	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onErrorSignal;
 	std::atomic<bool> editorLibLoading{};
 	std::atomic<sdk::utils::ReportMessagePtr> editorLibError{nullptr};
-	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onEditorLibLoadedSignal;
-	sigc::signal<void()> onEditorLibLoadingSignal;
 
-	void* editorLib{};
+	std::shared_ptr<Sdk> editorSdkLib{};
 
-	void* editorSdkLib{};
+	std::shared_ptr<sdk::main::Application> application;
 	Project();
 
 public:
@@ -87,8 +86,6 @@ public:
 
 	using CallbackSlot = sigc::slot<void(const std::string &pLogLine)>;
 
-	void requestRebuildEditorLib();
-
 	int reloadCMake(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const;
 
 	int build(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
@@ -111,7 +108,10 @@ public:
 	void setProjectPath(const std::filesystem::path &pProjectPath) {
 		projectPath = pProjectPath;
 		projectBuildPath = pProjectPath / "build/dev";
+		projectSourcesPath = pProjectPath / "source";
 	}
+
+	[[nodiscard]] const std::filesystem::path &getProjectSourcesPath() const { return projectSourcesPath; }
 
 	[[nodiscard]] const std::string &getProjectName() const { return projectName; }
 
@@ -127,24 +127,13 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<SQLite::Database> &getDatabase() const { return database; }
 
-	[[nodiscard]] void* getEditorLib() const { return editorLib; }
-
 	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
 		return onErrorSignal.connect(pSlot);
 	}
 
-	sigc::connection connectOnEditorLibLoadedSignal(
-		const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
-		return onEditorLibLoadedSignal.connect(pSlot);
-	}
+	[[nodiscard]] std::shared_ptr<Sdk> getEditorSdkLib() const { return editorSdkLib; }
 
-	sigc::connection connectOnEditorLibLoadingSignal(const sigc::slot<void()> &pSlot) {
-		return onEditorLibLoadingSignal.connect(pSlot);
-	}
-
-	[[nodiscard]] void* getEditorSdkLib() const { return editorSdkLib; }
-
-	void setEditorSdkLib(void* const pEditorSdkLib) { editorSdkLib = pEditorSdkLib; }
+	void setEditorSdkLib(const std::shared_ptr<Sdk> &pEditorSdkLib);
 
 	[[nodiscard]] const std::atomic<bool> &getEditorLibLoading() const { return editorLibLoading; }
 
@@ -155,27 +144,6 @@ public:
 	[[nodiscard]] const std::shared_ptr<ScriptParser> &getScriptParser() const { return scriptParser; }
 
 	void setScriptParser(const std::shared_ptr<ScriptParser> &pScriptParser) { scriptParser = pScriptParser; }
-
-private:
-	void editorLibLoadStarted();
-
-	void editorLibLoadFinished();
-
-	void editorLibLoadErrored(const sdk::utils::ReportMessagePtr &pError);
-
-	static std::shared_ptr<ui::ProjectExplorerEntry> getDirectoryEntry(const std::filesystem::path &pPath) {
-		auto explorerEntry = ui::DirectoryEntry::create(pPath.filename());
-		for (const auto &entry: std::filesystem::directory_iterator(pPath)) {
-			auto entryPath = entry.path();
-			if (entry.is_directory()) {
-				explorerEntry->addChildEntry(getDirectoryEntry(entry.path()));
-			} else {
-				explorerEntry->addChildEntry(ui::FileEntry::create(entryPath.filename()));
-			}
-		}
-		explorerEntry->sortChildren();
-		return explorerEntry;
-	}
 };
 } // namespace mer::editor::project
 

@@ -29,318 +29,93 @@
 
 #include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/resources/IResources.h"
-#include "EngineSDK/main/scene/ISceneDataInjector.h"
-#include "EngineSDK/main/scene/Scene.h"
+#include "EngineSDK/main/resources/models/ObjModelRequest.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/utils/KeyboardKey.h"
+#include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
 #include "EngineSDK/utils/MouseButton.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
 #include "project/Project.h"
-#include "project/generatedFiles/SceneInfo.h"
 #include "project/sceneObjects/EditorSceneObject.h"
+
+namespace mer::sdk::main {
+class CameraMouseExtension;
+class OrbitCameraExtension;
+} // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
 
-class ResourcesContext : public sdk::main::IResources {
-	std::list<std::pair<std::shared_ptr<sdk::main::ResourceRequest>, ResourceSlot>> queue;
-	std::mutex queueMutex;
-	std::shared_ptr<sdk::main::ILoadedResources> resources;
-	std::condition_variable cv;
 
-	std::shared_ptr<Gdk::GLContext> sharedContext;
-	std::jthread thread;
-	sdk::main::IApplication* application{};
+PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor)
+	: modelSceneEditor(pModelSceneEditor) {
 
-public:
-	explicit ResourcesContext(const std::shared_ptr<Gdk::GLContext> &pSharedContext)
-		: sharedContext(pSharedContext), thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) {
-		thread.detach();
-	}
-
-	~ResourcesContext() override {
-		thread.request_stop();
-		cv.notify_one();
-	}
-
-	void enqueueResourceLoading(const std::shared_ptr<sdk::main::ResourceRequest> &pRequest,
-								const ResourceSlot &pSlot) override {
-
-		std::lock_guard lock(queueMutex);
-		queue.emplace_back(pRequest, pSlot);
-		cv.notify_one();
-	}
-
-	void resourceLoop(const std::stop_token &pToken) {
-		while (!pToken.stop_requested()) {
-			sharedContext->make_current();
-			std::unique_lock lck(queueMutex);
-			cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
-			for (auto &[request, slot]: queue) {
-				sdk::utils::ReportMessagePtr error;
-				std::shared_ptr<sdk::main::IResource> resource;
-				try {
-					error = resources->executeRequest(request, resource);
-				} catch (...) {
-					error = sdk::utils::ReportMessage::create();
-					error->setTitle("Failed to load resource");
-					error->setMessage("Exception thrown while executing request");
-				}
-				try {
-					slot(resource, error);
-				} catch (...) {
-					auto msg = sdk::utils::ReportMessage::create();
-					msg->setTitle("Failed to load resource");
-					msg->setMessage("Exception thrown in callback");
-
-					if (error) {
-						sdk::utils::Logger::error(error);
-						msg->addInfoLine("Additional error reported earlier");
-					}
-					sdk::utils::Logger::error(msg);
-				}
+	modelSceneEditor->connectOnLoadedSignal([this] {
+		for (auto view: views) {
+			if (!modelSceneEditor->hasResourcesContext()) {
+				modelSceneEditor->setupResourcesContext(view.first->getResourcesContext());
 			}
-			queue.clear();
+			view.first->executeInMainThread(
+				[this, view](const std::promise<void> & /*pPromise*/) { view.first->redraw(); });
+
+			view.first->queueResize();
 		}
-	}
-
-	[[nodiscard]] sdk::main::IApplication* getApplication() const override { return application; }
-
-	void setApplication(sdk::main::IApplication* pApplication) override { application = pApplication; }
-
-	void setResources(const std::shared_ptr<sdk::main::ILoadedResources> &pResources) { resources = pResources; }
-};
-
-std::shared_ptr<ResourcesContext> loadedResources;
-
-PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEditor> &pViewSceneEditor,
-										   const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor)
-	: viewSceneEditor(pViewSceneEditor), modelSceneEditor(pModelSceneEditor) {
-
-	viewSceneEditor->connectRealize([this] {
-		auto project = modelSceneEditor->getProject();
-		if (project->getEditorLibLoading()) {
-			notifyLoadingStarted();
-		} else {
-			if (const sdk::utils::ReportMessagePtr msg = project->getEditorLibError()) notifyLoadingStopped(msg);
-			else
-				notifyLoadingStopped(nullptr);
-		}
-		project->connectOnEditorLibLoadingSignal(sigc::mem_fun(*this, &PresenterSceneEditor::notifyLoadingStarted));
-		project->connectOnEditorLibLoadedSignal(sigc::mem_fun(*this, &PresenterSceneEditor::notifyLoadingStopped));
-
-		viewSceneEditor->connectKeyPressedSignal(
-			[this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
-				const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
-				const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
-				if (!modelSceneEditor->isSimMode()) {
-					if (const auto object = modelSceneEditor->getEditorCameraObject())
-						object->onKeyStateChanged(key, true, mods);
-					return false;
-				}
-
-				if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, true, mods);
-				return true;
-			});
-
-		viewSceneEditor->connectKeyReleasedSignal(
-			[this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
-				const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
-				if (key == sdk::utils::KeyboardKey::KEY_F2)
-					viewSceneEditor->toggleSimMode(!modelSceneEditor->isSimMode());
-
-				const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
-				if (!modelSceneEditor->isSimMode()) {
-					if (const auto object = modelSceneEditor->getEditorCameraObject())
-						object->onKeyStateChanged(key, false, mods);
-				} else {
-					if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, false, mods);
-				}
-			});
-		viewSceneEditor->connectMouseButtonPressedSignal([this](unsigned int pButton, double pX, double pY) {
-			const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
-			if (!modelSceneEditor->isSimMode()) {
-				if (const auto object = modelSceneEditor->getEditorCameraObject())
-					object->onMouseButtonStateChanged(btn, true, pX, pY);
-			} else {
-				if (const auto scene = modelSceneEditor->getScene())
-					scene->onMouseButtonStateChanged(btn, true, pX, pY);
-			}
-		});
-		viewSceneEditor->connectMouseButtonReleasedSignal(
-			[this](unsigned int pButton, const double pX, const double pY) {
-				const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
-				if (!modelSceneEditor->isSimMode()) {
-					if (const auto object = modelSceneEditor->getEditorCameraObject())
-						object->onMouseButtonStateChanged(btn, false, pX, pY);
-				} else {
-					if (const auto scene = modelSceneEditor->getScene())
-						scene->onMouseButtonStateChanged(btn, false, pX, pY);
-				}
-			});
+		modelSceneEditor->initScene();
 	});
+}
 
-	viewSceneEditor->connectSimToggledSignal([this] {
-		bool simMode = viewSceneEditor->isSimMode();
-		auto scene = modelSceneEditor->getScene();
-		if (simMode) {
-			scene->switchCamera(modelSceneEditor->getPrimaryCamera());
-		} else {
-			scene->switchCamera(modelSceneEditor->getEditorCamera());
-		}
-		modelSceneEditor->setSimMode(simMode);
-	});
+PresenterSceneEditor::~PresenterSceneEditor() {}
 
-	viewSceneEditor->connectUnrealize([this] {
-		viewSceneEditor->makeCurrent();
-		try {
-			viewSceneEditor->throwIfError();
+void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
+	const auto view = std::dynamic_pointer_cast<IViewSceneEditor>(pNewView);
+	if (!view) return;
+	view->setPresenter(this);
+	std::vector<sigc::connection> conns;
 
-			modelSceneEditor->setScene(nullptr);
-			loadedResources = nullptr;
-			application->deinitEngine();
-		} catch (const Gdk::GLError &gle) {
-			std::cerr << "An error occured making the context current during unrealize" << std::endl;
-			std::cerr << gle.domain() << "-" << gle.code() << "-" << gle.what() << std::endl;
+	view->connectRealize([this, view] {
+		if (!modelSceneEditor->hasScene()) return;
+		if (!modelSceneEditor->hasResourcesContext()) {
+			modelSceneEditor->setupResourcesContext(view->getResourcesContext());
+			modelSceneEditor->initScene();
 		}
 	});
-	viewSceneEditor->connectRender([this](const Glib::RefPtr<Gdk::GLContext> & /*pContext*/) {
-		if (auto scene = modelSceneEditor->getScene().get()) scene->render();
-		viewSceneEditor->executeInMainThread(
-			[this](const std::promise<void> & /*pPromise*/) { viewSceneEditor->redraw(); });
-		return true;
-	});
-	viewSceneEditor->connectResize([this](const int pWidth, const int pHeight) {
+	view->connectResize([this](const int pWidth, const int pHeight) {
 		if (const auto scene = modelSceneEditor->getScene()) scene->resize(pWidth, pHeight);
 	});
-	viewSceneEditor->connectCursorMovedSignal([this](const double pX, const double pY) {
-		if (!modelSceneEditor->isSimMode()) {
-			if (const auto object = modelSceneEditor->getEditorCameraObject()) object->onCursorPosChanged(pX, pY);
-		} else {
-			if (const auto scene = modelSceneEditor->getScene()) { scene->onCursorPosChanged(pX, pY); }
-		}
+	view->connectRender([this, view](const std::shared_ptr<Gdk::GLContext> &pContext) {
+		pContext->make_current();
+		if (!modelSceneEditor->hasScene()) return true;
+		modelSceneEditor->render();
+		view->executeInMainThread([this, view](const std::promise<void> & /*pPromise*/) { view->redraw(); });
+		return true;
 	});
 
-	viewSceneEditor->setOnObjectSelectedSlot([this](const ui::EditorSceneObject* pObject) {
-		viewSceneEditor->onObjectSelectionChanged(pObject->getPropertyEntries());
+	view->connectCursorMovedSignal(
+		[this](const double pX, const double pY) { modelSceneEditor->onCursorPosChanged(pX, pY); });
+	view->connectMouseButtonPressedSignal([this](unsigned int pButton, double pX, double pY) {
+		const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
+		modelSceneEditor->onMouseButtonStateChanged(btn, true, pX, pY);
 	});
-}
-
-PresenterSceneEditor::operator Gtk::Widget&() { return viewSceneEditor->getMainWidget(); }
-
-void PresenterSceneEditor::notifyLoadingStarted() const {
-
-	modelSceneEditor->getSceneInfo()->resetSceneInfo();
-	sdk::main::SceneObject::resetCounter();
-	modelSceneEditor->setScene(nullptr);
-	modelSceneEditor->setEditorCamera(nullptr);
-	modelSceneEditor->setPrimaryCamera(nullptr);
-	modelSceneEditor->setEditorCameraObject(nullptr);
-	viewSceneEditor->executeInMainThread(
-		[this](const std::promise<void> & /*pPromise*/) { viewSceneEditor->onLoadingStarted(); });
-}
-
-void PresenterSceneEditor::notifyLoadingStopped(const sdk::utils::ReportMessagePtr &pError) {
-	sdk::utils::ReportMessagePtr error = !pError ? loadScene() : pError;
-	viewSceneEditor->executeInMainThread([this, error](const std::promise<void> & /*pPromise*/) {
-		viewSceneEditor->redraw();
-		viewSceneEditor->emitResize();
-		viewSceneEditor->onLoadingStopped(error);
+	view->connectMouseButtonReleasedSignal([this](unsigned int pButton, const double pX, const double pY) {
+		const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
+		modelSceneEditor->onMouseButtonStateChanged(btn, false, pX, pY);
 	});
-}
 
-sdk::utils::ReportMessagePtr PresenterSceneEditor::loadScene() {
-	auto sceneInfo = modelSceneEditor->getSceneInfo();
-	auto functionName = "load" + sceneInfo->getName();
-	auto project = modelSceneEditor->getProject();
-	auto func = dlsym(project->getEditorLib(), functionName.c_str());
-	if (!func) {
-		auto msg = sdk::utils::ReportMessage::create();
-		msg->setTitle("Failed to get scene entry point");
-		msg->addInfoLine("Function name: {}", functionName);
-		msg->addInfoLine("Scene name: {}", sceneInfo->getName());
-		msg->addInfoLine("Error: {}", dlerror());
-		return msg;
-	}
-	auto startFunc = reinterpret_cast<sdk::main::ISceneDataInjector* (*) ()>(func);
-	std::shared_ptr<sdk::main::ISceneDataInjector> sceneInjector;
-	viewSceneEditor->makeCurrent();
-	try {
-
-		sceneInjector = std::shared_ptr<sdk::main::ISceneDataInjector>(startFunc());
-	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
-		msg->setTitle("Failed to get scene entry point");
-		msg->setMessage("Load function thrown an exception");
-		msg->addInfoLine("Function name: {}", functionName);
-		msg->addInfoLine("Scene name: {}", sceneInfo->getName());
-		return msg;
-	}
-	if (!sceneInjector) {
-		auto msg = sdk::utils::ReportMessage::create();
-		msg->setTitle("Failed to get scene entry point");
-		msg->setMessage("Load function returned nullptr");
-		msg->addInfoLine("Function name: {}", functionName);
-		msg->addInfoLine("Scene name: {}", sceneInfo->getName());
-		return msg;
-	}
-	auto scene = sceneInjector->getScene();
-	const Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
-	scene->getOnObjectAddedSignal().connect([this, sceneInfo, refActionGroup](sdk::main::ISceneObject* pObject) {
-		viewSceneEditor->executeInMainThread(
-			[pObject, this, sceneInfo, refActionGroup](const std::promise<void> & /*pPromise*/) {
-				const auto object = ui::EditorSceneObject::create(pObject, modelSceneEditor->getProject());
-
-
-				object->getActionGroup(refActionGroup);
-				sceneInfo->addToplevelSceneObject(pObject->getUuid(), object);
-				//viewSceneEditor->getMainWidget().activate_action("win.object.SceneObject1.open.graphicScript");
-			});
+	view->connectKeyPressedSignal([this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
+		const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
+		const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
+		if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, true, mods);
+		return true;
 	});
-	viewSceneEditor->getMainWidget().insert_action_group("win", refActionGroup);
 
-	auto sdk = project->getEditorSdkLib();
+	view->connectKeyReleasedSignal([this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
+		const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
+		const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
+		if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, false, mods);
+	});
 
-
-	auto appCreateMethod = reinterpret_cast<std::shared_ptr<sdk::main::Application> (*)()>(
-		dlsym(sdk, "_ZN3mer3sdk4main11Application6createEv"));
-	if (!appCreateMethod) {
-		auto msg = sdk::utils::ReportMessage::create();
-		msg->setTitle("Failed to get Application::create method");
-		msg->setMessage("Unable to find Application::create() method in sdk library");
-		msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
-		return msg;
-	}
-
-
-	application = appCreateMethod();
-	application->initEngine();
-	application->getApplicationSettings()->setRunDirectory(project->getProjectPath());
-
-	loadedResources = std::make_shared<ResourcesContext>(viewSceneEditor->getSharedContext());
-	scene->setResources(loadedResources.get());
-	void* sym = dlsym(sdk, "_ZN3mer3sdk4main15LoadedResources6createEPNS1_10IResourcesE");
-	const auto resources =
-		reinterpret_cast<std::shared_ptr<sdk::main::ILoadedResources> (*)(sdk::main::IResources* pResources)>(sym)(
-			loadedResources.get());
-	loadedResources->setResources(resources);
-	loadedResources->setApplication(application.get());
-
-	if (auto msg = scene->initScene()) return msg;
-	modelSceneEditor->setPrimaryCamera(scene->getCurrentCamera());
-	std::shared_ptr<sdk::main::ISceneObject> cameraObject;
-	std::shared_ptr<sdk::main::ICamera> editorCamera;
-	sceneInjector->setupEditorCamera(cameraObject, editorCamera);
-
-	scene->switchCamera(editorCamera.get());
-	scene->addObject(cameraObject);
-	modelSceneEditor->setEditorCamera(editorCamera.get());
-	modelSceneEditor->setEditorCameraObject(cameraObject.get());
-
-	modelSceneEditor->setScene(scene);
-	viewSceneEditor->onSceneReady(sceneInfo->getToplevelObjects());
-	return nullptr;
+	view->openView();
+	views.emplace(view, conns);
 }
 
 sdk::utils::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::ModifierType &pState) {
@@ -356,5 +131,11 @@ sdk::utils::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::
 		mods |= ModifierKeys::MOD_CAPS_LOCK;
 	}
 	return ModifierKeys(mods);
+}
+
+void PresenterSceneEditor::run() {}
+
+void PresenterSceneEditor::stop() {
+	for (auto view: views) view.first->closeView();
 }
 } // namespace mer::editor::mvp

@@ -21,7 +21,35 @@
 
 #include "StartupWindow.h"
 
+#include "Globals.h"
+#include "mvp/contexts/IWidgetContext.h"
+
 namespace mer::editor::mvp {
+
+StartupWindow::StartupWindow(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
+
+	builder = Gtk::Builder::create();
+	try {
+		builder->add_from_file(Globals::getResourcesPath() / "CreateOpenProject.ui");
+	} catch (...) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to init window");
+		msg->setMessage("Error while loading UI from file");
+		sdk::utils::Logger::error(msg);
+		return;
+	}
+	window = builder->get_widget<Gtk::ApplicationWindow>("window_createOpenProj");
+	if (!window) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to init window");
+		msg->setMessage("Window not found");
+		msg->addInfoLine("Window name: window_createOpenProj");
+		sdk::utils::Logger::error(msg);
+		return;
+	}
+	window->set_visible();
+}
+
 std::shared_ptr<Gtk::FileDialog> StartupWindow::showFolderChooserDialog(
 	const std::string &pInitialFolder,
 	const sigc::slot<void(const std::shared_ptr<Gio::AsyncResult> &, const std::shared_ptr<Gtk::FileDialog> &)>
@@ -32,7 +60,7 @@ std::shared_ptr<Gtk::FileDialog> StartupWindow::showFolderChooserDialog(
 	dialog->set_initial_folder(Gio::File::create_for_path(pInitialFolder));
 
 	// Show the dialog and wait for a user response:
-	dialog->select_folder(*this, sigc::bind(pSlot, dialog));
+	dialog->select_folder(*window, sigc::bind(pSlot, dialog));
 	return dialog;
 }
 
@@ -50,6 +78,11 @@ void StartupWindow::showFileChooserDialog(
 	dialog->set_filters(result);
 	dialog->set_initial_folder(Gio::File::create_for_path(pInitialFolder));
 
-	dialog->open(*this, sigc::bind(pSlot, dialog));
+	dialog->open(*window, sigc::bind(pSlot, dialog));
 }
+
+void StartupWindow::closeView() { context->removeWidget(); }
+
+void StartupWindow::openView() { context->addWidget(this->window); }
+
 } // namespace mer::editor::mvp

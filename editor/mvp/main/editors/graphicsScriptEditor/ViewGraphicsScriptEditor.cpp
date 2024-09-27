@@ -77,6 +77,10 @@ void ViewGraphicsScriptEditor::redrawCanvas() { canvas.queue_draw(); }
 
 double ViewGraphicsScriptEditor::getCanvasZoom() const { return canvas.getZoom(); }
 
+void ViewGraphicsScriptEditor::openView() {}
+
+void ViewGraphicsScriptEditor::closeView() {}
+
 
 } // namespace mer::editor::mvp
 

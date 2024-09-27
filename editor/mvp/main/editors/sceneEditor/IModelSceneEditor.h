@@ -28,45 +28,67 @@ class EditorSceneObject;
 class UUID;
 
 namespace mer::sdk::main {
+class Extension;
 class IScene;
-}
+class ICamera;
+class ISceneObject;
+} // namespace mer::sdk::main
 
 namespace mer::editor::project {
+class Sdk;
 class Project;
-class SceneInfo;
 } // namespace mer::editor::project
 
+namespace mer::sdk::utils {
+enum class MouseButton;
+}
+
+namespace SQLite {
+class Database;
+}
+
 namespace mer::editor::mvp {
+class ResourcesContext;
+
 class IModelSceneEditor {
 public:
 	virtual ~IModelSceneEditor() = default;
-	[[nodiscard]] virtual const std::shared_ptr<project::Project> &getProject() const = 0;
 
-	virtual void setProject(const std::shared_ptr<project::Project> &pProject) = 0;
+	virtual sigc::connection connectOnLoadingSignal(const sigc::slot<void()> &pSlot) const = 0;
 
-	[[nodiscard]] virtual project::SceneInfo* getSceneInfo() const = 0;
+	virtual sigc::connection connectOnLoadedSignal(const sigc::slot<void()> &pSlot) const = 0;
 
-	virtual void setSceneInfo(project::SceneInfo* const pSceneInfo) = 0;
+	virtual bool hasScene() const = 0;
+
+	virtual bool hasResourcesContext() const = 0;
+
+	virtual void setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext) const = 0;
+
+	virtual void initScene() = 0;
+
+	virtual void render() = 0;
+
+	virtual void setName(const std::string &pName) = 0;
+
+	[[nodiscard]] virtual const std::string &getName() const = 0;
+
+	virtual sigc::connection connectNameChanged(const sigc::slot<void(const std::string &pName)> &pSlot) = 0;
+
+	virtual void createObject(const std::string &pName) = 0;
+
+	virtual void removeObject(sdk::main::ISceneObject* pObjectToRemove) = 0;
+
+	virtual void renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const = 0;
+
+	virtual void saveObject(sdk::main::ISceneObject* pObject) = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<project::Sdk> &getSdk() const = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<sdk::main::IScene> &getScene() const = 0;
 
-	virtual void setScene(const std::shared_ptr<sdk::main::IScene> &pScene) = 0;
+	virtual void onCursorPosChanged(double pX, double pY) = 0;
 
-	[[nodiscard]] virtual bool isSimMode() const = 0;
-
-	virtual void setSimMode(bool pSimMode) = 0;
-
-	[[nodiscard]] virtual sdk::main::ICamera* getPrimaryCamera() const = 0;
-
-	void virtual setPrimaryCamera(sdk::main::ICamera* pPrimaryCamera) = 0;
-
-	[[nodiscard]] virtual sdk::main::ICamera* getEditorCamera() const = 0;
-
-	virtual void setEditorCamera(sdk::main::ICamera* pEditorCamera) = 0;
-
-	[[nodiscard]] virtual sdk::main::ISceneObject* getEditorCameraObject() const = 0;
-
-	virtual void setEditorCameraObject(sdk::main::ISceneObject* const pEditorCameraObject) = 0;
+	virtual void onMouseButtonStateChanged(sdk::utils::MouseButton pButton, bool pPressed, double pX, double pY) = 0;
 };
 } // namespace mer::editor::mvp
 

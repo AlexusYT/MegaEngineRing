@@ -23,8 +23,11 @@
 
 #include <project/generatedFiles/ApplicationInfo.h>
 
+#include "mvp/main/centerWindow/IPresenterCenterWindow.h"
+#include "mvp/main/centerWindow/TabPlaceholder.h"
+
 namespace mer::editor::mvp {
-AppInfoEditor::AppInfoEditor() {
+AppInfoEditor::AppInfoEditor(const std::shared_ptr<TabPlaceholder> &pPlaceholder) : placeholder(pPlaceholder) {
 	Gtk::ScrolledWindow scrolledWindow;
 	scrolledWindow.set_child(tree);
 	scrolledWindow.set_expand();
@@ -111,7 +114,12 @@ AppInfoEditor::AppInfoEditor() {
 	}*/
 }
 
-void AppInfoEditor::addWindow(const std::shared_ptr<Gtk::Window> & /*pWindow*/) {}
+void AppInfoEditor::closeView() { placeholder->removeWidget(); }
+
+void AppInfoEditor::openView() {
+	placeholder->addWidget(&main);
+	placeholder->setTitle("Настройки приложения");
+}
 
 void AppInfoEditor::setSlotCreateModel(const ui::TreeWidget::SlotCreateModel &pSlotCreateModel) {
 	tree.setSlotCreateModel(pSlotCreateModel);
