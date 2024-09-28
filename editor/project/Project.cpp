@@ -21,29 +21,23 @@
 
 #include "Project.h"
 
-#include <dlfcn.h>
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
 
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "generatedFiles/ApplicationInfo.h"
-#include "generatedFiles/ScenesInfo.h"
 #include "generators/cpp/CppCustomStatement.h"
-#include "generators/cpp/CppGenerator.h"
 #include "generators/cpp/CppHeaderFile.h"
 #include "generators/cpp/CppMethod.h"
 #include "scripting/ScriptParser.h"
 #include "toolchain/ToolchainSettings.h"
-#include "ui/widgetWindows/projectExplorer/DirectoryEntry.h"
+#include "toolchain/ToolchainUtils.h"
 
 namespace mer::editor::project {
 Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()) {
-
 	scriptParser = std::make_shared<ScriptParser>();
 }
 
-Project::~Project() {
-	if (editorLib) dlclose(editorLib);
-}
+Project::~Project() {}
 
 sdk::utils::ReportMessagePtr Project::openDatabase() {
 
@@ -62,14 +56,9 @@ void Project::initProject() {
 
 	scriptParser->setProject(shared_from_this());
 
-	filesystemEntries = getDirectoryEntry(projectPath);
-	filesystemEntries->setName("Файлы сборки");
-	projectExplorerEntries->append(filesystemEntries);
 	applicationInfo = ApplicationInfo::create(shared_from_this());
 	engineFileEntries = GeneratedFiles::create(shared_from_this());
-	engineFileEntries->addChildEntry(applicationInfo);
-	scenesInfo = ScenesInfo::create(shared_from_this());
-	engineFileEntries->addChildEntry(scenesInfo);
+	//engineFileEntries->addChildEntry(applicationInfo);
 	projectExplorerEntries->append(engineFileEntries);
 }
 
@@ -77,8 +66,6 @@ sdk::utils::ReportMessagePtr Project::loadProject() {
 
 	if (auto msg = engineFileEntries->loadDatabase()) return msg;
 	if (auto msg = saveFiles()) return msg;
-
-	requestRebuildEditorLib();
 	return nullptr;
 }
 
@@ -95,7 +82,6 @@ sdk::utils::ReportMessagePtr Project::saveProject() {
 	if (auto msg = engineFileEntries->saveDatabase()) return msg;
 	sdk::utils::Logger::info("Project saved");
 
-	requestRebuildEditorLib();
 	return nullptr;
 }
 
@@ -136,50 +122,7 @@ mer::sdk::utils::ReportMessagePtr Project::generateMainFile() const {
 
 Glib::RefPtr<Gio::SimpleActionGroup> Project::getActionGroups() const {
 	const Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
-	scenesInfo->getActionGroup(refActionGroup);
 	return refActionGroup;
-}
-
-void Project::requestRebuildEditorLib() {
-	std::thread([this] {
-		editorLibLoadStarted();
-		int result = reloadCMake([](const std::string &pLine) { sdk::utils::Logger::info(pLine); },
-								 [](const std::string &pLine) { sdk::utils::Logger::error(pLine); });
-		if (result != 0) {
-
-			auto msg = sdk::utils::ReportMessage::create();
-			msg->setTitle("Failed to open editor library");
-			msg->setMessage("Cmake failed");
-			editorLibLoadErrored(msg);
-			return;
-		}
-		using namespace std::chrono_literals;
-		std::this_thread::sleep_for(1s);
-		result = build(
-			"_EDITOR_TMP_", [](const std::string &pLine) { sdk::utils::Logger::info(pLine); },
-			[](const std::string &pLine) { sdk::utils::Logger::error(pLine); });
-		if (result != 0) {
-
-			auto msg = sdk::utils::ReportMessage::create();
-			msg->setTitle("Failed to open editor library");
-			msg->setMessage("Library compilation failed");
-			editorLibLoadErrored(msg);
-			return;
-		}
-		if (editorLib) dlclose(editorLib);
-		auto path = (getProjectBuildPath() / "lib_EDITOR_TMP_.so").string();
-		editorLib = dlopen((path).c_str(), RTLD_LAZY | RTLD_GLOBAL);
-		if (!editorLib) {
-			auto msg = sdk::utils::ReportMessage::create();
-			msg->setTitle("Failed to open editor library");
-			msg->setMessage("The function dlopen() returned error");
-			msg->addInfoLine("Path: {}", path);
-			msg->addInfoLine("Error: {}", Utils::parseDlError(dlerror()));
-			editorLibLoadErrored(msg);
-			return;
-		}
-		editorLibLoadFinished();
-	}).detach();
 }
 
 int Project::reloadCMake(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
@@ -213,22 +156,6 @@ int Project::runDebug(const CallbackSlot &pCoutCallback, const CallbackSlot &pCe
 	return ToolchainUtils::executeSync(projectPath, "gdb", command, pCoutCallback, pCerrCallback);
 }
 
-void Project::editorLibLoadStarted() {
+void Project::setEditorSdkLib(const std::shared_ptr<Sdk> &pEditorSdkLib) { editorSdkLib = pEditorSdkLib; }
 
-	editorLibLoading = true;
-	editorLibError = nullptr;
-	onEditorLibLoadingSignal();
-}
-
-void Project::editorLibLoadFinished() {
-	editorLibLoading = false;
-	editorLibError = nullptr;
-	onEditorLibLoadedSignal(nullptr);
-}
-
-void Project::editorLibLoadErrored(const sdk::utils::ReportMessagePtr &pError) {
-	editorLibLoading = false;
-	editorLibError = pError;
-	onEditorLibLoadedSignal(pError);
-}
 } // namespace mer::editor::project

@@ -68,6 +68,8 @@ public:
 	explicit FileModelRequest(const std::string &pName, const std::filesystem::path &pFilePath)
 		: ModelRequest(pName), filePath(pFilePath) {}
 
+	static std::shared_ptr<FileModelRequest> create(const std::string &pName, const std::filesystem::path &pFilePath);
+
 	utils::ReportMessagePtr getStream(std::shared_ptr<std::istream> &pStreamOut) override;
 
 	[[nodiscard]] const std::filesystem::path &getFilePath() const { return filePath; }

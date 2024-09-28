@@ -61,7 +61,7 @@
             </object>
         </child>
         <child type="titlebar">
-            <object class="GtkHeaderBar">
+            <object class="GtkHeaderBar" id="header">
                 <child>
                     <object class="GtkMenuButton">
                         <property name="icon-name">open-menu-symbolic</property>

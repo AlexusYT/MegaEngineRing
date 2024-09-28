@@ -21,16 +21,19 @@
 
 #ifndef IVIEW_H
 #define IVIEW_H
-#include "ThreadDispatcher.h"
 
 namespace mer::editor::mvp {
-class IView : public ThreadDispatcher {
+class IWidgetContext;
+}
+
+namespace mer::editor::mvp {
+class IView {
 public:
 	virtual ~IView() = default;
 
-	virtual void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) = 0;
+	virtual void openView() = 0;
 
-	virtual void closeWindow() = 0;
+	virtual void closeView() = 0;
 };
 } // namespace mer::editor::mvp
 

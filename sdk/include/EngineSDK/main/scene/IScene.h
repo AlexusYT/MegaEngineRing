@@ -46,8 +46,6 @@ class IResources;
 class ProgramWideShaderBuffer;
 
 class IScene {
-	friend class MainWindow;
-	friend class editor::mvp::PresenterSceneEditor;
 
 public:
 	virtual ~IScene() = default;
@@ -56,6 +54,8 @@ public:
 
 	virtual sdk::utils::ReportMessagePtr initScene() = 0;
 
+	virtual void deinitScene() = 0;
+
 	[[nodiscard]] virtual IResources* getResources() const = 0;
 
 	virtual void onResourceLoadingError(const std::shared_ptr<ResourceRequest> &pRequest,
@@ -63,11 +63,15 @@ public:
 
 	virtual void addObject(const std::shared_ptr<ISceneObject> &pObject) = 0;
 
+	virtual void removeObject(ISceneObject* pObjectToRemove) = 0;
+
 	[[nodiscard]] virtual const std::shared_ptr<ProgramWideShaderBuffer> &getProgramBuffer() const = 0;
 
 	[[nodiscard]] virtual const std::vector<std::shared_ptr<ISceneObject>> &getObjects() const = 0;
 
 	[[nodiscard]] virtual sigc::signal<void(ISceneObject* pObject)> &getOnObjectAddedSignal() = 0;
+
+	[[nodiscard]] virtual sigc::signal<void(ISceneObject* pObject)> &getOnObjectRemovedSignal() = 0;
 
 	[[nodiscard]] virtual ICamera* getCurrentCamera() const = 0;
 
@@ -84,7 +88,6 @@ public:
 
 	virtual void setApplication(IApplication* pApplication) = 0;
 
-private:
 	virtual void setResources(IResources* pResources) = 0;
 
 	virtual void render() = 0;

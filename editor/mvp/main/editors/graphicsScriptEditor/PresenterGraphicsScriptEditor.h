@@ -21,14 +21,13 @@
 
 #ifndef PRESENTERGRAPHICSSCRIPTEDITOR_H
 #define PRESENTERGRAPHICSSCRIPTEDITOR_H
-
-#include "mvp/main/editors/IEditorPresenter.h"
+#include "mvp/PresenterBase.h"
 
 namespace mer::editor::mvp {
 class IModelGraphicsScriptEditor;
 class IViewGraphicsScriptEditor;
 
-class PresenterGraphicsScriptEditor : public IEditorPresenter {
+class PresenterGraphicsScriptEditor : public PresenterBase {
 	std::shared_ptr<IViewGraphicsScriptEditor> viewGraphicsScriptEditor;
 	std::shared_ptr<IModelGraphicsScriptEditor> modelGraphicsScriptEditor;
 	sigc::signal<void(const std::string &pName)> tabHeaderChanged;
@@ -39,11 +38,9 @@ public:
 	PresenterGraphicsScriptEditor(const std::shared_ptr<IViewGraphicsScriptEditor> &pViewGraphicsScriptEditor,
 								  const std::shared_ptr<IModelGraphicsScriptEditor> &pModelGraphicsScriptEditor);
 
-	operator Gtk::Widget&() override;
+	void run() override;
 
-	sigc::connection connectTabHeaderChanged(const sigc::slot<void(const std::string &pName)> &pSlot) override {
-		return tabHeaderChanged.connect(pSlot);
-	}
+	void stop() override;
 };
 
 } // namespace mer::editor::mvp

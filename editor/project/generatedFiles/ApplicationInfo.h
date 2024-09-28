@@ -23,6 +23,7 @@
 #define APPLICATIONINFO_H
 
 #include "GeneratedFileEntry.h"
+#include "mvp/main/centerWindow/ITab.h"
 
 namespace mer::editor::mvp {
 class AppInfoEditor;
@@ -59,7 +60,7 @@ public:
 	void setValue(const std::string &pValue) { value = pValue; }
 };
 
-class ApplicationInfo : public GeneratedFileEntry {
+class ApplicationInfo : public GeneratedFileEntry, public mvp::ITab {
 	friend mvp::AppInfoEditor;
 
 
@@ -99,7 +100,8 @@ public:
 
 	sdk::utils::ReportMessagePtr writeFile() const;
 
-	std::shared_ptr<mvp::IEditorPresenter> openEditor() override;
+	std::shared_ptr<mvp::IPresenter> createEditorPresenter(
+		const std::shared_ptr<mvp::TabPlaceholder> &pPlaceholder) override;
 
 	[[nodiscard]] const Glib::RefPtr<Gio::ListStore<AppInfoProperty>> &getPropertiesList() const {
 		return propertiesList;

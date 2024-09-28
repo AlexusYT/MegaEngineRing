@@ -28,12 +28,15 @@
 
 namespace mer::sdk::main {
 class SceneDataInjector : public ISceneDataInjector {
-	std::shared_ptr<IScene> scene;
+	IScene* scene;
 
 public:
+
 	explicit SceneDataInjector(IScene* pScene) : scene(pScene) {}
 
-	[[nodiscard]] const std::shared_ptr<IScene> &getScene() const override { return scene; }
+	static std::shared_ptr<SceneDataInjector> create(IScene* pScene);
+
+	[[nodiscard]] IScene* getScene() const override { return scene; }
 
 	std::shared_ptr<SceneObject> newObject() override;
 

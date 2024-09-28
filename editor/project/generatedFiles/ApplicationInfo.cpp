@@ -167,10 +167,11 @@ sdk::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
 	return sourceFile.writeFile(getProject()->getProjectPath() / getSourcePath());
 }
 
-std::shared_ptr<mvp::IEditorPresenter> ApplicationInfo::openEditor() {
+std::shared_ptr<mvp::IPresenter> ApplicationInfo::createEditorPresenter(
+	const std::shared_ptr<mvp::TabPlaceholder> &pPlaceholder) {
 	auto modelAppInfo = std::make_shared<mvp::ModelAppInfo>();
 	modelAppInfo->setInfo(this);
-	auto viewAppInfo = std::make_shared<mvp::AppInfoEditor>();
+	auto viewAppInfo = std::make_shared<mvp::AppInfoEditor>(pPlaceholder);
 
 
 	return std::make_shared<mvp::PresenterAppInfo>(viewAppInfo, modelAppInfo);

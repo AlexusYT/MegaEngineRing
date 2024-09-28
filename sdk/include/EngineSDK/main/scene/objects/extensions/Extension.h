@@ -21,6 +21,7 @@
 
 #ifndef EXTENSION_H
 #define EXTENSION_H
+#include <nlohmann/json_fwd.hpp>
 #include <sigc++/signal.h>
 
 #include "EngineSDK/main/resources/Resources.h"
@@ -102,6 +103,17 @@ public:
 
 	void setHeader(const std::string &pHeader) { header = pHeader; }
 
+	void serialize(nlohmann::json &pJson) { onSerialize(pJson); }
+
+	void deserialize(const nlohmann::json &pJson) { onDeserialize(pJson); }
+
+	virtual utils::ReportMessagePtr onInit() { return nullptr; }
+
+	virtual utils::ReportMessagePtr onDeinit() {
+		freeConnectionStorage();
+		return nullptr;
+	}
+
 protected:
 	//TODO Documentation
 	/**
@@ -114,6 +126,7 @@ protected:
 	void enqueueResourceLoading(const std::shared_ptr<ClassT> &pRequest,
 								const sigc::slot<void(const std::shared_ptr<typename ClassT::ResourceT> &pResource,
 													  const utils::ReportMessagePtr &pError)> &pSlot) {
+
 		getScene()->enqueueResourceLoading(
 			pRequest, [pSlot](const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError) {
 				pSlot(std::dynamic_pointer_cast<typename ClassT::ResourceT>(pResource), pError);
@@ -128,13 +141,6 @@ protected:
 		for (auto &connection: connectionStorage) {
 			if (connection.connected()) connection.disconnect();
 		}
-	}
-
-	virtual utils::ReportMessagePtr onInit() { return nullptr; }
-
-	virtual utils::ReportMessagePtr onDeinit() {
-		freeConnectionStorage();
-		return nullptr;
 	}
 
 	virtual void onRender() {}
@@ -158,6 +164,10 @@ protected:
 
 	virtual void onEnabledChanged();
 
+
+	virtual void onSerialize(nlohmann::json &pJson);
+
+	virtual void onDeserialize(const nlohmann::json &pJson);
 
 private:
 	void setObject(SceneObject* const pObject) { object = pObject; }

@@ -83,7 +83,7 @@ sdk::utils::ReportMessagePtr GraphicsScript::removeAllConnections(const ScriptNo
 	return nullptr;
 }
 
-std::shared_ptr<mvp::IEditorPresenter> GraphicsScript::openEditor() {
+std::shared_ptr<mvp::IPresenter> GraphicsScript::createEditorPresenter(const std::shared_ptr<mvp::TabPlaceholder> &/*pPlaceholder*/) {
 
 	auto model = std::make_shared<mvp::ModelGraphicsScriptEditor>();
 	model->setScript(this);

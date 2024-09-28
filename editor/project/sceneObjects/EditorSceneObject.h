@@ -26,11 +26,14 @@
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "project/generatedFiles/GeneratedFiles.h"
 
+namespace mer::editor::mvp {
+class ObjectPropertyEntry;
+}
+
 namespace mer::editor::project {
 class Project;
 class GraphicsScript;
 } // namespace mer::editor::project
-class ObjectPropertyEntry;
 
 namespace mer::sdk::main {
 class ISceneObject;
@@ -39,7 +42,7 @@ class ISceneObject;
 namespace mer::editor::ui {
 class EditorSceneObject : public project::GeneratedFiles {
 	std::shared_ptr<Gio::ListStore<EditorSceneObject>> childrenUi;
-	std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> propertyEntries;
+	std::shared_ptr<Gio::ListStore<mvp::ObjectPropertyEntry>> propertyEntries;
 
 	std::shared_ptr<project::GraphicsScript> graphicsScript;
 	sdk::main::ISceneObject* nativeObject{};
@@ -77,7 +80,7 @@ public:
 
 	[[nodiscard]] sdk::main::ISceneObject* getNativeObject() const { return nativeObject; }
 
-	[[nodiscard]] const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &getPropertyEntries() const {
+	[[nodiscard]] const std::shared_ptr<Gio::ListStore<mvp::ObjectPropertyEntry>> &getPropertyEntries() const {
 		return propertyEntries;
 	}
 

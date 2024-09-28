@@ -30,7 +30,10 @@ class AppInfoProperty;
 } // namespace mer::editor::project
 
 namespace mer::editor::mvp {
+class TabPlaceholder;
+
 class AppInfoEditor : public IViewAppInfo {
+	std::shared_ptr<TabPlaceholder> placeholder;
 	ValueChangedSlot valueChangedSlot;
 	std::unordered_map<Glib::RefPtr<Gtk::ListItem>, sigc::connection> connections;
 	Gtk::Box main;
@@ -38,11 +41,11 @@ class AppInfoEditor : public IViewAppInfo {
 
 
 public:
-	AppInfoEditor();
+	AppInfoEditor(const std::shared_ptr<TabPlaceholder> &pPlaceholder);
 
-	void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) override;
+	void closeView() override;
 
-	void closeWindow() override {}
+	void openView() override;
 
 	void setSlotCreateModel(const ui::TreeWidget::SlotCreateModel &pSlotCreateModel) override;
 

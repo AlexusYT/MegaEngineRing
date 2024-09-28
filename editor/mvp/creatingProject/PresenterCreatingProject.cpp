@@ -34,17 +34,31 @@
 #include <thread>
 #include <utility>
 
+#include "mvp/ApplicationController.h"
+#include "mvp/contexts/ApplicationContext.h"
+
 namespace mer::editor::mvp {
 PresenterCreatingProject::PresenterCreatingProject(std::shared_ptr<IViewCreatingProject> pView,
 												   std::shared_ptr<IModelCreatingProject> pModel)
 	: view(std::move(pView)), model(std::move(pModel)) {}
 
 void PresenterCreatingProject::runTasks() {
-	std::thread thread(&PresenterCreatingProject::runTasksImpl, this);
-	thread.detach();
+	//std::thread thread(&PresenterCreatingProject::runTasksImpl, this);
+	const auto project = model->getProject();
+	if (auto msg = project->saveProject()) return logError(std::move(msg));
+
+	auto appControllerSelf = getAppController();
+	sdk::utils::ReportMessagePtr msg;
+	auto viewMain = MainWindow::create(ApplicationContext::create(appControllerSelf->getApp()), msg);
+	if (msg) return logError(std::move(msg));
+	auto modelMain = std::make_shared<ModelMain>();
+	modelMain->setProject(project);
+	appControllerSelf->run(std::make_shared<PresenterMain>(viewMain, modelMain));
+	appControllerSelf->stop(this);
+	//thread.detach();
 }
 
-void PresenterCreatingProject::runTasksImpl() const {
+void PresenterCreatingProject::runTasksImpl() {
 	try {
 		const auto project = model->getProject();
 
@@ -57,17 +71,16 @@ void PresenterCreatingProject::runTasksImpl() const {
 
 		logMessage("Готово");
 
-		view->executeInMainThread([this, project](const std::promise<void> & /*pPromise*/) {
+		/*TODO view->executeInMainThread([this, project](const std::promise<void> & ) {
+			auto appControllerSelf = getAppController();
 			sdk::utils::ReportMessagePtr msg;
-			auto viewMain = MainWindow::create(project, msg);
+			auto viewMain = MainWindow::create(appControllerSelf->getApp(), msg);
 			if (msg) return logError(std::move(msg));
 			auto modelMain = std::make_shared<ModelMain>();
 			modelMain->setProject(project);
-			const auto presenterMain = std::make_shared<PresenterMain>(viewMain, modelMain);
-			ui::GameEngine::addWindow(presenterMain);
-			view->addWindow(viewMain);
-			view->closeWindow();
-		});
+			appControllerSelf->run(std::make_shared<PresenterMain>(viewMain, modelMain));
+			appControllerSelf->stop(this);
+		});*/
 
 	} catch (...) {
 		auto msg = sdk::utils::ReportMessage::create();
@@ -243,15 +256,22 @@ std::string PresenterCreatingProject::getLine(std::stringstream &pLog) {
 	return line;
 }
 
-void PresenterCreatingProject::logMessage(const std::string &pMessage) const {
-	view->executeInMainThread(
-		[pMessage, this](const std::promise<void> & /*pPromise*/) { view->addMessageToLog(pMessage + "\n"); });
+void PresenterCreatingProject::logMessage(const std::string & /*pMessage*/) const {
+	/* TODO view->executeInMainThread(
+		[pMessage, this](const std::promise<void> & ) { view->addMessageToLog(pMessage + "\n"); });*/
 }
 
-void PresenterCreatingProject::logError(sdk::utils::ReportMessagePtr pError)const{
-	view->executeInMainThread([&pError, this](const std::promise<void> &/*pPromise*/) {
+void PresenterCreatingProject::logError(sdk::utils::ReportMessagePtr /*pError*/) const {
+	/*TODO view->executeInMainThread(
+		[&pError, this](const std::promise<void> & ) {
 		view->reportError(std::move(pError));
-	});
+	});*/
+}
+void PresenterCreatingProject::run(){
+	view->openView();
+}
+void PresenterCreatingProject::stop(){
+view->closeView();
 }
 
 } // namespace mer::editor::mvp

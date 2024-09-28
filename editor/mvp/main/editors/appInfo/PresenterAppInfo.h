@@ -21,13 +21,13 @@
 
 #ifndef PRESENTERAPPINFO_H
 #define PRESENTERAPPINFO_H
-#include <mvp/main/editors/IEditorPresenter.h>
+#include "mvp/PresenterBase.h"
 
 namespace mer::editor::mvp {
 class IViewAppInfo;
 class IModelAppInfo;
 
-class PresenterAppInfo : public IEditorPresenter {
+class PresenterAppInfo : public PresenterBase {
 	std::shared_ptr<IViewAppInfo> viewAppInfo;
 	std::shared_ptr<IModelAppInfo> modelAppInfo;
 	sigc::signal<void(const std::string &pName)> tabHeaderChanged;
@@ -36,11 +36,10 @@ public:
 	PresenterAppInfo(const std::shared_ptr<IViewAppInfo> &pViewAppInfo,
 					 const std::shared_ptr<IModelAppInfo> &pModelAppInfo);
 
-	operator Gtk::Widget&() override;
 
-	sigc::connection connectTabHeaderChanged(const sigc::slot<void(const std::string &pName)> &pSlot) override {
-		return tabHeaderChanged.connect(pSlot);
-	}
+	void run() override;
+
+	void stop() override;
 };
 
 } // namespace mer::editor::mvp

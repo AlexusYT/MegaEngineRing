@@ -23,45 +23,27 @@
 #define MAINWINDOW_H
 
 #include <mvp/main/IViewMain.h>
-#include <ui/widgetWindows/CenterWindow.h>
-#include <ui/widgetWindows/LogView.h>
-#include <ui/widgetWindows/projectExplorer/ProjectExplorerWindow.h>
+#include <mvp/main/centerWindow/ViewCenterWindow.h>
 
-#include "graphic/viewport/OpenGLFwd.h"
-#include "project/ProjectFwd.h"
+#include "ui/customWidgets/multipaned/MultiPaned.h"
 
 namespace mer::editor::mvp {
 class MainWindow : public IViewMain, public Gtk::Window {
-	std::vector<ui::LogView> logs{3};
+	std::shared_ptr<IWidgetContext> context;
 
-	std::shared_ptr<project::Project> project;
-
-	ui::ProjectExplorerWindow projectExplorerWindow;
-	ui::CenterWindow centerWindow;
-	Glib::RefPtr<Gtk::Builder> builder;
 	Glib::RefPtr<Gtk::EventControllerKey> keyController;
-
+	ui::MultiPaned multiPaned;
+	IPresenterMain* presenter{};
 
 public:
-	static std::shared_ptr<MainWindow> create(const std::shared_ptr<project::Project> &pProject,
+	static std::shared_ptr<MainWindow> create(const std::shared_ptr<IWidgetContext> &pContext,
 											  sdk::utils::ReportMessagePtr &pReportMessage);
 
 	bool reloadUi = false;
-	OpenGLUPtr render;
 
-	Gtk::Notebook* notebook;
-	explicit MainWindow(BaseObjectType* pCobject, const Glib::RefPtr<Gtk::Builder> &pBuilder,
-						std::shared_ptr<project::Project> pProject);
+	explicit MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::shared_ptr<IWidgetContext> &pContext);
 
 	~MainWindow() override;
-
-	sigc::connection connectReloadCmakeClickedSignal(const sigc::slot<void()> &pSlot) const override {
-		return builder->get_widget<Gtk::Button>("btn_reloadCMake")->signal_clicked().connect(pSlot);
-	}
-
-	sigc::connection connectRunClickedSignal(const sigc::slot<void()> &pSlot) const override {
-		return builder->get_widget<Gtk::Button>("btn_run")->signal_clicked().connect(pSlot);
-	}
 
 	sigc::connection connectKeyPressedSignal(
 		const sigc::slot<bool(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const override {
@@ -71,21 +53,6 @@ public:
 	sigc::connection connectKeyReleasedSignal(
 		const sigc::slot<void(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const override {
 		return keyController->signal_key_released().connect(pSlot, false);
-	}
-
-	void switchLogPage(const int pId) const override { notebook->set_current_page(pId); }
-
-	void addLogMessage(const int pId, const Glib::ustring &pMessage) override {
-		auto &log = logs[static_cast<size_t>(pId)];
-		const auto buffer = log.getBuffer();
-		buffer->insert_markup(buffer->end(), pMessage);
-		log.scrollToEnd();
-	}
-
-	void clearLogMessage(const int pId) override {
-		auto &log = logs[static_cast<size_t>(pId)];
-		const auto buffer = log.getBuffer();
-		buffer->set_text("");
 	}
 
 	void setWindowTitle(const std::string &pTitle) override {
@@ -102,9 +69,15 @@ public:
 		if (pError) sdk::utils::Logger::error(pError);
 	}
 
-	void addWindow(const std::shared_ptr<Gtk::Window> & /*pWindow*/) override {}
+	void openView() override;
 
-	void closeWindow() override {}
+	void closeView() override;
+
+	ui::MultiPaned* getMultiPaned() override;
+
+	void setPresenter(IPresenterMain* pPresenter) override { presenter = pPresenter; }
+
+	Gtk::Window* getWindow() override { return this; }
 
 protected:
 };

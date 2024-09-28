@@ -33,7 +33,7 @@ class ISceneDataInjector {
 public:
 	virtual ~ISceneDataInjector() = default;
 
-	[[nodiscard]] virtual const std::shared_ptr<IScene> &getScene() const = 0;
+	[[nodiscard]] virtual IScene* getScene() const = 0;
 
 	virtual std::shared_ptr<SceneObject> newObject() = 0;
 

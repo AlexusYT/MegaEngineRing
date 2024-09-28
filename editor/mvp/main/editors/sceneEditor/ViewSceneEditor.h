@@ -23,31 +23,31 @@
 #define VIEWSCENEEDITOR_H
 
 #include "IViewSceneEditor.h"
-#include "ui/widgetWindows/TreeObjectWindow.h"
-#include "ui/widgetWindows/objectProperties/ObjectPropertiesWindow.h"
 
 namespace mer::editor::mvp {
-class IViewMain;
+class IPresenterSceneEditor;
+class ResourcesContext;
+} // namespace mer::editor::mvp
+
+namespace mer::editor::mvp {
 
 class ViewSceneEditor : public IViewSceneEditor {
-	Gtk::Paned mainWidget;
+	std::shared_ptr<IWidgetContext> context;
+	IPresenterSceneEditor* presenter{};
+	Gtk::Box mainWidget{Gtk::Orientation::VERTICAL};
 
-	ui::TreeObjectWindow objectWindow;
-	ui::ObjectPropertiesWindow propertiesWindow;
+	std::shared_ptr<ResourcesContext> resourcesContext;
 
 	Gtk::GLArea area;
-	Gtk::Box loadingBox{Gtk::Orientation::VERTICAL};
-	Gtk::Label loadingErrorLabel;
 	Gtk::Switch modeSwitch;
-	Glib::RefPtr<Gtk::EventControllerMotion> motionController;
+	std::shared_ptr<Gtk::EventControllerMotion> motionController;
 	std::shared_ptr<Gtk::GestureClick> gestureClick;
-	IViewMain* viewMain{};
-	Glib::RefPtr<Gdk::GLContext> sharedContext;
+	std::shared_ptr<Gtk::EventControllerKey> keyController;
 
 public:
-	ViewSceneEditor();
+	explicit ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext);
 
-	Gtk::Widget &getMainWidget() override { return mainWidget; }
+	void setPresenter(IPresenterSceneEditor* pPresenter) override { presenter = pPresenter; }
 
 	sigc::connection connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) override;
 
@@ -56,6 +56,8 @@ public:
 	sigc::connection connectUnrealize(const sigc::slot<void()> &pSlot) override;
 
 	sigc::connection connectResize(const sigc::slot<void(int pWidth, int pHeight)> &pSlot) override;
+
+	void queueResize() override { area.queue_resize(); }
 
 	sigc::connection connectKeyPressedSignal(
 		const sigc::slot<bool(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const override;
@@ -85,13 +87,11 @@ public:
 			false);
 	}
 
-	void setOnObjectSelectedSlot(const ui::TreeObjectWindow::SlotEntrySelectionChanged &pSlot) override {
-		objectWindow.setEntrySelectionChanged(pSlot);
-	}
-
 	void makeCurrent() override;
 
-	[[nodiscard]] const Glib::RefPtr<Gdk::GLContext> &getSharedContext() const override { return sharedContext; }
+	[[nodiscard]] const std::shared_ptr<ResourcesContext> &getResourcesContext() const override {
+		return resourcesContext;
+	}
 
 	void redraw() override;
 
@@ -99,25 +99,19 @@ public:
 
 	void emitResize() override;
 
-	void onLoadingStarted() override;
-
-	void onLoadingStopped(const sdk::utils::ReportMessagePtr &pError) override;
-
-	void onSceneReady(const std::shared_ptr<Gio::ListStore<ui::EditorSceneObject>> &pTopLevelObjects) override {
-		objectWindow.setTopLevelObjects(pTopLevelObjects);
-	}
-
-	void onObjectSelectionChanged(const std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> &pEntries) override {
-		propertiesWindow.setEntries(pEntries);
-	}
-
 	sigc::connection connectSimToggledSignal(const sigc::slot<void()> &pSlot) const override {
 		return modeSwitch.property_active().signal_changed().connect(pSlot);
 	}
 
+	void setTitle(const std::string &pTitle) override;
+
 	void toggleSimMode(const bool pMode = true) override { modeSwitch.set_active(pMode); }
 
 	bool isSimMode() const override { return modeSwitch.get_active(); }
+
+	void openView() override;
+
+	void closeView() override;
 };
 } // namespace mer::editor::mvp
 

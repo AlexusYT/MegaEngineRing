@@ -21,10 +21,10 @@
 
 #ifndef PRESENTERSTARTUP_H
 #define PRESENTERSTARTUP_H
-#include <mvp/IPresenter.h>
 
 #include "IModelStartup.h"
 #include "IViewStartup.h"
+#include "mvp/PresenterBase.h"
 
 namespace mer::editor::project {
 class Project;
@@ -34,7 +34,7 @@ namespace mer::editor::mvp {
 class IModelStartup;
 class IViewStartup;
 
-class PresenterStartup : public IPresenter {
+class PresenterStartup : public PresenterBase{
 
 
 	std::shared_ptr<IViewStartup> view;
@@ -43,12 +43,16 @@ class PresenterStartup : public IPresenter {
 public:
 	PresenterStartup(const std::shared_ptr<IViewStartup> &pView, const std::shared_ptr<IModelStartup> &pModel);
 
+	void run() override;
+
+	void stop() override;
+
 private:
 	static sdk::utils::ReportMessagePtr initProject(const std::shared_ptr<project::Project> &pProject);
 
-	void openProjectCreatingWindow(const std::shared_ptr<project::Project> &pProject) const;
+	void openProjectCreatingWindow(const std::shared_ptr<project::Project> &pProject);
 
-	void openMainWindow(const std::shared_ptr<project::Project> &pProject) const;
+	void openMainWindow(const std::shared_ptr<project::Project> &pProject);
 };
 } // namespace mer::editor::mvp
 

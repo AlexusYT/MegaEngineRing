@@ -25,15 +25,15 @@
 #include <mvp/startup/IViewStartup.h>
 
 namespace mer::editor::mvp {
-class StartupWindow final : public Gtk::Window, public IViewStartup {
 
+class StartupWindow final : public IViewStartup {
+	std::shared_ptr<IWidgetContext> context{};
+
+	Gtk::Window* window;
 	Glib::RefPtr<Gtk::Builder> builder{};
 
 public:
-	StartupWindow(BaseObjectType* pCobject, const Glib::RefPtr<Gtk::Builder> &pBuilder)
-		: Window(pCobject), builder(pBuilder) {
-		set_visible();
-	}
+	explicit StartupWindow(const std::shared_ptr<IWidgetContext> &pContext);
 
 	sigc::connection connectNewProjectClickSignal(const sigc::slot<void()> &pSlot) const override {
 		return builder->get_widget<Gtk::Button>("btn_newProject")->signal_clicked().connect(pSlot);
@@ -100,11 +100,9 @@ public:
 		const sigc::slot<void(const std::shared_ptr<Gio::AsyncResult> &, const std::shared_ptr<Gtk::FileDialog> &)>
 			&pSlot) override;
 
-	void addWindow(const std::shared_ptr<Gtk::Window> &pWindow) override {
-		pWindow->set_application(get_application());
-	}
+	void closeView() override;
 
-	void closeWindow() override { close(); }
+	void openView() override;
 
 	/*void openMainWindow(project::ProjectUPtr pProject) {
 

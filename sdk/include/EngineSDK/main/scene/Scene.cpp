@@ -31,6 +31,13 @@
 namespace mer::sdk::main {
 Scene::Scene() : programBuffer(std::make_shared<ProgramWideShaderBuffer>()) {}
 
+Scene::~Scene() {
+	Scene::deinitScene();
+	objects.clear();
+}
+
+std::shared_ptr<Scene> Scene::create() { return std::shared_ptr<Scene>(new Scene()); }
+
 void Scene::setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const {
 	programBuffer->setViewProjMatrix(pViewProjMatrix);
 }
@@ -49,7 +56,10 @@ void Scene::switchCamera(ICamera* pNewCamera) {
 	pNewCamera->updateMatrix();
 }
 
-void Scene::beforeRender() { renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT); }
+void Scene::beforeRender() {
+	renderer::GL::setClearColor(0.2f, 0.2f, 0.2f, 0);
+	renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT);
+}
 
 sdk::utils::ReportMessagePtr Scene::initScene() {
 	for (const auto &object: objects) {
@@ -59,10 +69,26 @@ sdk::utils::ReportMessagePtr Scene::initScene() {
 	return nullptr;
 }
 
+void Scene::deinitScene() {
+	for (const auto &object: objects) { object->deinit(); }
+}
+
 void Scene::addObject(const std::shared_ptr<ISceneObject> &pObject) {
 	pObject->setScene(this);
+
+	if (auto msg = pObject->init()) {
+		utils::Logger::warn("Object shouldn't report about errors. Ignoring");
+		utils::Logger::error(msg);
+	}
 	objects.emplace_back(pObject);
 	onObjectAddedSignal(pObject.get());
+}
+
+void Scene::removeObject(ISceneObject* pObjectToRemove) {
+	erase_if(objects, [&pObjectToRemove](const std::shared_ptr<ISceneObject> &pObject) {
+		return pObject.get() == pObjectToRemove;
+	});
+	onObjectRemovedSignal(pObjectToRemove);
 }
 
 void Scene::setResources(IResources* pResources) { resources = pResources; }

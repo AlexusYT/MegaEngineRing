@@ -21,8 +21,6 @@
 
 #include "GameEngine.h"
 
-#include <dlfcn.h>
-#include <getopt.h>
 #include <mvp/startup/ModelStartup.h>
 #include <mvp/startup/PresenterStartup.h>
 #include <unordered_set>
@@ -30,12 +28,15 @@
 
 #include "Globals.h"
 #include "cmdOptions/EngineOptionGroup.h"
+#include "mvp/ApplicationController.h"
+#include "mvp/IApplicationController.h"
+#include "mvp/contexts/ApplicationContext.h"
 #include "mvp/startup/StartupWindow.h"
 
 namespace mer::editor::ui {
 
 class GameEngineImpl {
-	static inline std::shared_ptr<Gtk::Application> application;
+	static inline std::shared_ptr<mvp::IApplicationController> appController;
 	static inline std::unordered_set<std::shared_ptr<mvp::IPresenter>> windows;
 
 
@@ -46,13 +47,18 @@ public:
 		signal(SIGSEGV, signals);
 
 
-		application = Gtk::Application::create("org.gtkmm.example");
+		appController = std::make_shared<mvp::ApplicationController>();
+		std::shared_ptr<Gtk::Application> application = Gtk::Application::create("org.gtkmm.example");
+
+		appController->setApp(application);
 		utils::EngineOptionGroup group;
 		application->add_option_group(group);
+
 		application->signal_activate().connect(&GameEngineImpl::startup);
 		application->register_application();
 		auto result = application->run(pArgc, pArgv);
 		windows.clear();
+		appController.reset();
 		return result;
 	}
 
@@ -124,17 +130,6 @@ public:
 		Logger::info("Detected SDK: {}", sdk.string());
 		Globals::setSdk(sdk);
 
-		auto builder = Gtk::Builder::create();
-		try {
-			builder->add_from_file(Globals::getResourcesPath() / "CreateOpenProject.ui");
-		} catch (...) {
-			auto msg = ReportMessage::create();
-			msg->setTitle("Failed to init window");
-			msg->setMessage("Error while loading UI from file");
-			Logger::error(msg);
-			return;
-		}
-
 
 		const std::shared_ptr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
 		cssProvider->signal_parsing_error().connect(
@@ -146,24 +141,15 @@ public:
 		try {
 			cssProvider->load_from_path(Globals::getResourcesPath() / "style.css");
 		} catch (Glib::Error &e) { Logger::error("Failed to load style {}", e.what()); }
-		Gtk::StyleContext::add_provider_for_display(Gdk::Display::get_default(), cssProvider,
-													GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		Gtk::StyleProvider::add_provider_for_display(Gdk::Display::get_default(), cssProvider,
+													 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-		auto tmpWindow = std::shared_ptr<mvp::StartupWindow>(
-			Gtk::Builder::get_widget_derived<mvp::StartupWindow>(builder, "window_createOpenProj"));
-		if (!tmpWindow) {
-			auto msg = ReportMessage::create();
-			msg->setTitle("Failed to init window");
-			msg->setMessage("Window not found");
-			msg->addInfoLine("Window name: window_createOpenProj");
-			Logger::error(msg);
-			return;
-		}
+		auto window = std::make_shared<mvp::StartupWindow>(mvp::ApplicationContext::create(appController->getApp()));
+
 		auto model = std::make_shared<mvp::ModelStartup>();
-		auto presenter = std::make_shared<mvp::PresenterStartup>(tmpWindow, model);
-
-		application->add_window(*tmpWindow);
-		addWindow(presenter);
+		auto presenter = std::make_shared<mvp::PresenterStartup>(window, model);
+		appController->run(presenter);
+		//addWindow(presenter);
 
 
 		//application->add_window(*window->getCreateProjectWindow()->window);

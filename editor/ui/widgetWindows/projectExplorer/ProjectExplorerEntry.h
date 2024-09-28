@@ -23,12 +23,14 @@
 #define FILESYSTEMENTRY_H
 
 namespace mer::editor::mvp {
-class IEditorPresenter;
+class IPresenterCenterWindow;
+class IPresenter;
+class IPresenterSceneEditor;
 class IEditor;
+class ViewCenterWindow;
 } // namespace mer::editor::mvp
 
 namespace mer::editor::ui {
-class CenterWindow;
 
 enum class EntryKind { FILE, DIRECTORY, SCENE };
 
@@ -38,7 +40,7 @@ class ProjectExplorerEntry : public Glib::Object {
 	std::string image;
 	Glib::RefPtr<Gio::ListStore<ProjectExplorerEntry>> children;
 	Glib::RefPtr<Gio::Menu> contextMenu;
-	CenterWindow* centerWindow{};
+	mvp::ViewCenterWindow* centerWindow{};
 	bool databaseSaveRequired{true};
 	bool fileSaveRequired{};
 
@@ -101,9 +103,9 @@ public:
 
 	void setFileSaveRequired(const bool pFileSaveRequired = true) { fileSaveRequired = pFileSaveRequired; }
 
-	[[nodiscard]] CenterWindow* getCenterWindow() const { return centerWindow; }
+	[[nodiscard]] mvp::ViewCenterWindow* getCenterWindow() const { return centerWindow; }
 
-	void setCenterWindow(CenterWindow* pCenterWindow) { centerWindow = pCenterWindow; }
+	void setCenterWindow(mvp::ViewCenterWindow* pCenterWindow) { centerWindow = pCenterWindow; }
 
 	virtual void onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> & /*pActionGroup*/) {}
 
@@ -157,7 +159,10 @@ public:
 
 	virtual std::filesystem::path getSourcePath() const { return {}; }
 
-	virtual std::shared_ptr<mvp::IEditorPresenter> openEditor() { return nullptr; }
+	/*virtual std::shared_ptr<mvp::IPresenter> createEditorPresenter(
+		const std::shared_ptr<mvp::IPresenterCenterWindow> & pCenterWindow) {
+		return nullptr;
+	}*/
 
 private:
 	virtual sdk::utils::ReportMessagePtr onLoadDatabase() { return nullptr; }

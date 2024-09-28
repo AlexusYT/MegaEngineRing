@@ -22,6 +22,9 @@
 #ifndef MODELRENDEREXTENSION_H
 #define MODELRENDEREXTENSION_H
 
+#include <nlohmann/detail/macro_scope.hpp>
+#include <nlohmann/json_fwd.hpp>
+
 #include "Extension.h"
 
 namespace mer::sdk::main {
@@ -37,10 +40,10 @@ class ShaderProgram;
 
 namespace mer::sdk::main {
 class ModelRenderExtension : public Extension {
-	std::shared_ptr<renderer::ShaderProgram> shader{};
-	std::shared_ptr<ShaderProgramRequest> shaderRequest;
-	std::shared_ptr<ModelResource> model{};
-	std::pair<std::shared_ptr<ModelRequest>, std::string> modelRequest;
+	DECLARE_PROPERTY(std::shared_ptr<renderer::ShaderProgram>, Shader);
+	ADD_PROPERTY_SET_EVENT(ModelRenderExtension, Shader, "Shader", "");
+	DECLARE_PROPERTY(std::shared_ptr<ModelResource>, Model);
+	ADD_PROPERTY_SET_EVENT(ModelRenderExtension, Model, "Model", "");
 
 	uint32_t vao{};
 	uint32_t vbo{};
@@ -54,18 +57,27 @@ public:
 
 	EXT_TYPE_NAME("ModelRenderExtension")
 
-	[[nodiscard]] const std::shared_ptr<ShaderProgramRequest> &getShaderRequest() const { return shaderRequest; }
+	void setModelRequest(const std::shared_ptr<ModelRequest> &pModelRequest, const std::string &pModelObjectName);
 
-	void setShaderRequest(const std::shared_ptr<ShaderProgramRequest> &pShaderRequest) {
-		shaderRequest = pShaderRequest;
+	[[nodiscard]] const std::shared_ptr<renderer::ShaderProgram> &getShader() const { return propertyShader; }
+
+	void setShader(const std::shared_ptr<renderer::ShaderProgram> &pShader) { propertyShader = pShader; }
+
+	[[nodiscard]] ValueChangedArgs<const std::shared_ptr<renderer::ShaderProgram> &> &getOnShaderChanged() {
+		return onShaderChanged;
 	}
 
-	void setModelRequest(const std::shared_ptr<ModelRequest> &pModelRequest, const std::string &pModelObjectName) {
-		modelRequest = std::make_pair(pModelRequest, pModelObjectName);
-	}
+	[[nodiscard]] const std::shared_ptr<ModelResource> &getModel() const { return propertyModel; }
 
+	void setModel(const std::shared_ptr<ModelResource> &pModel) { propertyModel = pModel; }
+
+	[[nodiscard]] ValueChangedArgs<const std::shared_ptr<ModelResource> &> &getOnModelChanged() {
+		return onModelChanged;
+	}
 
 protected:
+	void onSerialize(nlohmann::json &pJson) override;
+	void onDeserialize(const nlohmann::json &pJson) override;
 	utils::ReportMessagePtr onInit() override;
 
 	utils::ReportMessagePtr onDeinit() override;

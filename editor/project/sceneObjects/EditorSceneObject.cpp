@@ -21,16 +21,17 @@
 
 #include "EditorSceneObject.h"
 
+#include "../../mvp/main/objectProperties/ObjectPropertyEntry.h"
+#include "EditorSceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "mvp/main/centerWindow/ViewCenterWindow.h"
 #include "project/generatedFiles/GraphicsScript.h"
-#include "ui/widgetWindows/CenterWindow.h"
-#include "ui/widgetWindows/objectProperties/ObjectPropertyEntry.h"
 
 namespace mer::editor::ui {
 EditorSceneObject::EditorSceneObject(sdk::main::ISceneObject* const pNativeObject,
 									 std::shared_ptr<project::Project> pProject)
 	: GeneratedFiles(pProject), childrenUi(Gio::ListStore<EditorSceneObject>::create()),
-	  propertyEntries(Gio::ListStore<ObjectPropertyEntry>::create()), nativeObject(pNativeObject) {
+	  propertyEntries(Gio::ListStore<mvp::ObjectPropertyEntry>::create()), nativeObject(pNativeObject) {
 
 	graphicsScript = std::make_shared<project::GraphicsScript>(this, pProject);
 
@@ -51,14 +52,14 @@ EditorSceneObject::EditorSceneObject(sdk::main::ISceneObject* const pNativeObjec
 	positionProp->setSetterFunc(sigc::mem_fun(*pNativeObject, &sdk::main::ISceneObject::setPosition));
 	basicGroup->addChild(positionProp);
 
-	propertyEntries->append(ObjectPropertyEntry::create(basicGroup));
+	propertyEntries->append(mvp::ObjectPropertyEntry::create(basicGroup));
 
 	for (const auto &extension: pNativeObject->getExtensions()) {
 		auto group = std::make_shared<sdk::main::ExtensionPropertyGroup>();
 		group->setName(extension.second->getTypeName());
 		sdk::main::ExtensionProperties properties = extension.second->getProperties();
 		for (const auto &extensionPropertyBase: properties) { group->addChild(extensionPropertyBase); }
-		propertyEntries->append(ObjectPropertyEntry::create(group));
+		propertyEntries->append(mvp::ObjectPropertyEntry::create(group));
 	}
 }
 

@@ -41,8 +41,11 @@ class IScene;
 class SceneObject : public ISceneObject {
 	std::shared_ptr<UUID> uuid;
 	std::string name;
+	sigc::signal<void(const std::string &pOldName, const std::string &pNewName)> onNameChangedSignal;
 	IScene* scene{};
 	std::map<std::string, std::shared_ptr<Extension>> extensions;
+	sigc::signal<void(const std::shared_ptr<Extension> &pNewExt)> onExtensionAddedSignal;
+	sigc::signal<void(const std::shared_ptr<Extension> &pExtToRemove)> onExtensionRemovedSignal;
 	bool inited{};
 	std::shared_ptr<IScript> script;
 	std::string scriptName;
@@ -53,6 +56,10 @@ class SceneObject : public ISceneObject {
 
 public:
 	SceneObject();
+
+	~SceneObject() override;
+
+	static std::shared_ptr<ISceneObject> create();
 	/**
 	 * \brief 
 	 * \param[in] pName
@@ -65,6 +72,16 @@ public:
 	utils::ReportMessagePtr removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension) override;
 
 	utils::ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) override;
+
+	sigc::connection connectOnExtensionAdded(
+		const sigc::slot<void(const std::shared_ptr<Extension> &pNewExt)> &pSlot) override {
+		return onExtensionAddedSignal.connect(pSlot);
+	}
+
+	sigc::connection connectOnExtensionRemoved(
+		const sigc::slot<void(const std::shared_ptr<Extension> &pExtToRemove)> &pSlot) override {
+		return onExtensionRemovedSignal.connect(pSlot);
+	}
 
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const override {
 		return extensions;
@@ -84,7 +101,18 @@ public:
 
 	[[nodiscard]] const std::string &getName() const override { return name; }
 
-	void setName(const std::string &pName) override { name = pName; }
+	void setName(const std::string &pName) override {
+		if (name == pName) return;
+		const auto oldName = name;
+		name = pName;
+		onNameChangedSignal(oldName, name);
+	}
+
+	sigc::connection connectOnNameChanged(
+		const sigc::slot<void(const std::string &pOldName, const std::string &pNewName)> &pSlot) override {
+		pSlot("", name);
+		return onNameChangedSignal.connect(pSlot);
+	}
 
 	[[nodiscard]] const std::string &getScriptName() const override { return scriptName; }
 
@@ -94,6 +122,8 @@ public:
 
 private:
 	utils::ReportMessagePtr init() override;
+
+	void deinit() override;
 
 	void render() const override;
 
@@ -106,6 +136,8 @@ private:
 	void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const override;
 
 	void setScene(IScene* const pScene) override { scene = pScene; }
+
+	void setUuid(const std::shared_ptr<UUID> &pUuid) override { uuid = pUuid; }
 
 	UUID* getUuid() override { return uuid.get(); }
 };
