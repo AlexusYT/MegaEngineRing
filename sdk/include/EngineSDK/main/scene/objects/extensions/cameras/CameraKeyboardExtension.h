@@ -28,78 +28,34 @@
 
 namespace mer::sdk::main {
 class CameraKeyboardExtension : public Extension {
-	DECLARE_PROPERTY_DEF(float, Speed, 1.4f);
-	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, Speed, "Movement speed", "");
-
-	DECLARE_PROPERTY_DEF(utils::KeyboardKey, ForwardKey, utils::KeyboardKey::KEY_W);
-	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, ForwardKey, "Move forward key", "");
-	DECLARE_PROPERTY_DEF(utils::KeyboardKey, StrafeLeftKey, utils::KeyboardKey::KEY_A);
-	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, StrafeLeftKey, "Move left key", "");
-	DECLARE_PROPERTY_DEF(utils::KeyboardKey, BackwardKey, utils::KeyboardKey::KEY_S);
-	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, BackwardKey, "Move back key", "");
-	DECLARE_PROPERTY_DEF(utils::KeyboardKey, StrafeRightKey, utils::KeyboardKey::KEY_D);
-	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, StrafeRightKey, "Move right key", "");
-
-	DECLARE_PROPERTY(glm::vec2, Angle);
-	ADD_PROPERTY_SET_EVENT(CameraKeyboardExtension, Angle, "View angle", "");
-
 
 	bool fwdPressed{}, bwdPressed{}, strafeLeftPressed{}, strafeRightPressed{};
 
 
 protected:
-	CameraKeyboardExtension() = default;
+	CameraKeyboardExtension()
+		: propertySpeed(this, "Speed"), propertyForwardKey(this, "ForwardKey"),
+		  propertyStrafeLeftKey(this, "StrafeLeftKey"), propertyBackwardKey(this, "BackwardKey"),
+		  propertyStrafeRightKey(this, "StrafeLeftKey"), propertyAngle(this, "Angle") {
+		propertySpeed = 1.4f;
+		propertyForwardKey = utils::KeyboardKey::KEY_W;
+		propertyStrafeLeftKey = utils::KeyboardKey::KEY_A;
+		propertyBackwardKey = utils::KeyboardKey::KEY_S;
+		propertyStrafeRightKey = utils::KeyboardKey::KEY_D;
+	}
 
 public:
+	ExtensionProperty<float> propertySpeed;
+	ExtensionProperty<utils::KeyboardKey> propertyForwardKey;
+	ExtensionProperty<utils::KeyboardKey> propertyStrafeLeftKey;
+	ExtensionProperty<utils::KeyboardKey> propertyBackwardKey;
+	ExtensionProperty<utils::KeyboardKey> propertyStrafeRightKey;
+
+	ExtensionProperty<glm::vec2> propertyAngle;
+
 	METHOD_CREATE(CameraKeyboardExtension)
 
 	EXT_TYPE_NAME("CameraKeyboardExtension")
-
-	[[nodiscard]] ValueChangedArgs<const utils::KeyboardKey &> &getOnForwardKeyChanged() { return onForwardKeyChanged; }
-
-	[[nodiscard]] ValueChangedArgs<const utils::KeyboardKey &> &getOnStrafeLeftKeyChanged() {
-		return onStrafeLeftKeyChanged;
-	}
-
-	[[nodiscard]] ValueChangedArgs<const utils::KeyboardKey &> &getOnBackwardKeyChanged() {
-		return onBackwardKeyChanged;
-	}
-
-	[[nodiscard]] ValueChangedArgs<const utils::KeyboardKey &> &getOnStrafeRightKeyChanged() {
-		return onStrafeRightKeyChanged;
-	}
-
-	[[nodiscard]] utils::KeyboardKey getForwardKey() const { return propertyForwardKey; }
-
-	void setForwardKey(const utils::KeyboardKey pForwardKey) { propertyForwardKey = pForwardKey; }
-
-	[[nodiscard]] utils::KeyboardKey getStrafeLeftKey() const { return propertyStrafeLeftKey; }
-
-	void setStrafeLeftKey(const utils::KeyboardKey pStrafeLeftKey) { propertyStrafeLeftKey = pStrafeLeftKey; }
-
-	[[nodiscard]] utils::KeyboardKey getBackwardKey() const { return propertyBackwardKey; }
-
-	void setBackwardKey(const utils::KeyboardKey pBackwardKey) { propertyBackwardKey = pBackwardKey; }
-
-	[[nodiscard]] utils::KeyboardKey getStrafeRightKey() const { return propertyStrafeRightKey; }
-
-	void setStrafeRightKey(const utils::KeyboardKey pStrafeRightKey) { propertyStrafeRightKey = pStrafeRightKey; }
-
-	[[nodiscard]] float getSpeed() const { return propertySpeed; }
-
-	void setSpeed(const float pSpeed) {
-		propertySpeed = pSpeed;
-		onSpeedChanged(pSpeed);
-	}
-
-	[[nodiscard]] ValueChangedArgs<const float &> &getOnSpeedChanged() { return onSpeedChanged; }
-
-	[[nodiscard]] const glm::vec2 &getAngle() const { return propertyAngle; }
-
-	void setAngle(const glm::vec2 &pPropertyAngle) { propertyAngle = pPropertyAngle; }
-
-	[[nodiscard]] ValueChangedArgs<const glm::vec2 &> &getOnAngleChanged() { return onAngleChanged; }
-
 
 protected:
 	void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) override;

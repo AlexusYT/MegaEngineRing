@@ -22,18 +22,31 @@
 #include "EngineSDK/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.h"
 
 #include <glm/ext/matrix_clip_space.hpp>
+#include <sigc++/adaptors/hide.h>
 
 #include "EngineSDK/main/scene/objects/extensions/Extension.h"
 
 namespace mer::sdk::main {
 PerspectiveProjectionCameraMod::PerspectiveProjectionCameraMod()
-	: propertyFov(glm::radians(60.0f)), propertyZNear(0.1f), propertyZFar(1000.0f) {}
+	: propertyAspect(this, "Aspect"), propertyFov(this, "Fov"), propertyZNear(this, "ZNear"),
+	  propertyZFar(this, "ZFar"), propertyProjMatrix(this, "ProjMatrix") {
+	propertyAspect.getEvent().connect([this](const float &) { updateProjMatrix(); });
+	propertyFov = glm::radians(60.0f);
+	auto updateProjMatrixSlot = hide(sigc::mem_fun(*this, &PerspectiveProjectionCameraMod::updateProjMatrix));
+	propertyFov.getEvent().connect(updateProjMatrixSlot);
+	propertyZNear = 0.1f;
+	propertyZNear.getEvent().connect(updateProjMatrixSlot);
+	propertyZFar = 1000.0f;
+	propertyZFar.getEvent().connect(updateProjMatrixSlot);
+	propertyProjMatrix = glm::mat4(1.0f);
+	propertyProjMatrix.getEvent().connect(
+		sigc::mem_fun(*this, &PerspectiveProjectionCameraMod::projectionMatrixChanged));
+}
 
 void PerspectiveProjectionCameraMod::projectionMatrixChanged(const glm::mat4 & /*pNewMatrix*/) {}
 
 void PerspectiveProjectionCameraMod::updateProjMatrix() {
-	propertyProjMatrix = glm::perspective(propertyFov, propertyAspect, propertyZNear, propertyZFar);
-	onProjMatrixChanged(propertyProjMatrix);
-	projectionMatrixChanged(propertyProjMatrix);
+	propertyProjMatrix = glm::perspective(propertyFov.getValue(), propertyAspect.getValue(), propertyZNear.getValue(),
+										  propertyZFar.getValue());
 }
 } // namespace mer::sdk::main

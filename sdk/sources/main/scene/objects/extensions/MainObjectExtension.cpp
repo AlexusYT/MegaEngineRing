@@ -16,36 +16,11 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 31.08.24.
+// Created by alexus on 28.09.24.
 //
 
-#ifndef EXPLOREROBJECT_H
-#define EXPLOREROBJECT_H
-#include "ui/customWidgets/TreeElementBase.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 
-namespace mer::editor::mvp {
-class ObjectExtensionEntry;
-
-class ExplorerObject : public ui::TreeElementBase {
-	ExplorerObject* parent;
-
-public:
-	~ExplorerObject() override = default;
-
-	ExplorerObject();
-
-	[[nodiscard]] virtual const std::string &getName() const = 0;
-
-	virtual void setName(const std::string &pName) = 0;
-
-	void addChild(const std::shared_ptr<ExplorerObject> &pChild);
-
-	void removeChild(const std::shared_ptr<ExplorerObject> &pChild) const;
-
-	void clearChildren() const;
-
-	virtual std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> getPropertyEntries() const = 0;
-};
-} // namespace mer::editor::mvp
-
-#endif //EXPLOREROBJECT_H
+namespace mer::sdk::main {
+MainObjectExtension::MainObjectExtension() : propertyName(this, "Name"), propertyPosition(this, "Position") {}
+} // namespace mer::sdk::main

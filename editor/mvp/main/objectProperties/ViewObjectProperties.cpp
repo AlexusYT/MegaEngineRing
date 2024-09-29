@@ -21,8 +21,10 @@
 
 #include "ViewObjectProperties.h"
 
-#include "EngineSDK/main/scene/objects/extensions/ExtensionProperties.h"
+#include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
+#include "EngineSDK/main/scene/objects/extensions/ExtensionPropertyBase.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "EngineSDK/utils/KeyboardKey.h"
 #include "ObjectPropertyEntry.h"
 #include "mvp/contexts/IWidgetContext.h"
@@ -36,6 +38,7 @@ ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext>
 	addBtn.set_label("Add");
 	auto menu = Gio::Menu::create();
 	for (auto extension: sdk::main::ExtensionRegistry::getExtensions()) {
+		if (extension.first == sdk::main::MainObjectExtension::typeName()) continue;
 		auto item = Gio::MenuItem::create(extension.first, "");
 
 		item->set_action_and_target("object.selected.extension.new",
@@ -49,6 +52,21 @@ ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext>
 	removeBtn.set_sensitive(false);
 	buttonBox.append(addBtn);
 	buttonBox.append(removeBtn);
+	removeBtn.signal_clicked().connect([this] {
+		auto selectedItem = propertiesTree->getSelectedItem();
+		sdk::main::Extension* extToRemove{};
+		if (const auto property = std::dynamic_pointer_cast<ObjectPropertyEntry>(selectedItem)) {
+			extToRemove = property->getExtension();
+		} else if (const auto extension = std::dynamic_pointer_cast<ObjectExtensionEntry>(selectedItem)) {
+			extToRemove = extension->getNativeExtension();
+		}
+		if (!extToRemove) return;
+		const auto variant = Glib::Variant<uintptr_t>::create(reinterpret_cast<uintptr_t>(extToRemove));
+
+		mainWidget.activate_action("object.extension.remove", variant);
+		propertiesTree->unselect();
+		removeBtn.set_sensitive(false);
+	});
 	mainWidget.set_orientation(Gtk::Orientation::VERTICAL);
 	mainWidget.append(buttonBox);
 	propertiesTree = Gtk::make_managed<ui::CustomTreeView>();
@@ -66,12 +84,11 @@ ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext>
 	propertiesTree->append_column(valueColumn);
 
 	propertiesTree->setSlotSelectionChanged([this](Glib::ObjectBase* pObjectBase) {
-		if (/*auto entry =*/dynamic_cast<ObjectPropertyEntry*>(pObjectBase)) {
-			//removeBtn.set_sensitive(true);
-			/*
-			auto element = dynamic_cast<ExplorerObject*>(pObjectBase);
-			const auto variant = Glib::Variant<uintptr_t>::create(reinterpret_cast<uintptr_t>(element));
-			tree->activate_action("object.open", variant);*/
+		auto mainExtTypeName = sdk::main::MainObjectExtension::typeName();
+		if (auto entry = dynamic_cast<ObjectPropertyEntry*>(pObjectBase)) {
+			removeBtn.set_sensitive(entry->getExtension()->getTypeName() != mainExtTypeName);
+		} else if (auto ext = dynamic_cast<ObjectExtensionEntry*>(pObjectBase)) {
+			removeBtn.set_sensitive(ext->getNativeExtension()->getTypeName() != mainExtTypeName);
 		}
 		//if (entrySelectionChanged) entrySelectionChanged(dynamic_cast<ObjectPropertyEntryBase*>(pObjectBase));
 	});
@@ -81,24 +98,15 @@ void ViewObjectProperties::setObject(ExplorerObject* pObject) {
 	addBtn.set_sensitive(pObject != nullptr);
 	propertiesTree->setSlotCreateModel(
 		[this, pObject](const Glib::RefPtr<Glib::ObjectBase> &pItem) -> Glib::RefPtr<Gio::ListModel> {
-			auto col = std::dynamic_pointer_cast<ObjectPropertyEntry>(pItem);
-			std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> result;
-			if (col) {
-				if (auto group =
-						std::dynamic_pointer_cast<sdk::main::ExtensionPropertyGroup>(col->getNativeProperty())) {
-					result = Gio::ListStore<ObjectPropertyEntry>::create();
-					for (const auto &extensionPropertyBase: group->getChildren())
-						result->append(ObjectPropertyEntry::create(extensionPropertyBase));
-				}
-			} else {
+			if (const auto col = std::dynamic_pointer_cast<ObjectExtensionEntry>(pItem))
+				//
+				return col->getChildren();
+			if (std::dynamic_pointer_cast<ObjectPropertyEntry>(pItem)) return nullptr;
+			if (pObject) return pObject->getPropertyEntries();
 
-				if (pObject) result = pObject->getPropertyEntries();
-				else
-					result = Gio::ListStore<ObjectPropertyEntry>::create();
-			}
-
-			return result;
+			return Gio::ListStore<ObjectExtensionEntry>::create();
 		});
+	propertiesTree->unselect();
 }
 
 std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createNameColumn() {
@@ -115,7 +123,7 @@ std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createNameColumn() 
 		const auto row = std::dynamic_pointer_cast<Gtk::TreeListRow>(pListItem->get_item());
 		if (!row) return;
 
-		const auto col = std::dynamic_pointer_cast<ObjectPropertyEntry>(row->get_item());
+		const auto col = std::dynamic_pointer_cast<ObjectPropertyEntryBase>(row->get_item());
 		if (!col) return;
 		auto* const expander = dynamic_cast<Gtk::TreeExpander*>(pListItem->get_child());
 		if (!expander) return;
@@ -123,7 +131,7 @@ std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createNameColumn() 
 		expander->set_hide_expander(false);
 		auto* label = dynamic_cast<Gtk::Label*>(expander->get_child());
 		if (!label) return;
-		label->set_text(col->getNativeProperty()->getName());
+		label->set_text(col->getName());
 	});
 
 	return Gtk::ColumnViewColumn::create("Name", factory);
@@ -138,67 +146,63 @@ Gtk::Entry* createEntry() {
 
 template<typename ClassT>
 	requires std::is_same_v<ClassT, float>
-void createWigets(const std::shared_ptr<sdk::main::ExtensionProperty<ClassT>> &pProperty,
-				  std::vector<Gtk::Widget*> &pWidgetsOut) {
+void createWidgets(sdk::main::ExtensionProperty<ClassT>* pProperty, std::vector<Gtk::Widget*> &pWidgetsOut) {
 	auto* entry = createEntry();
-	entry->set_text(std::to_string(pProperty->getGetterFunc()()));
-	entry->signal_changed().connect([entry, pProperty] { pProperty->getSetterFunc()(std::stof(entry->get_text())); });
+	entry->set_text(std::to_string(pProperty->getValue()));
+	entry->signal_changed().connect([entry, pProperty] { pProperty->setValue(std::stof(entry->get_text())); });
 	pWidgetsOut.emplace_back(entry);
 }
 
 template<typename ClassT>
 	requires std::is_same_v<ClassT, std::string>
-void createWigets(const std::shared_ptr<sdk::main::ExtensionProperty<ClassT>> &pProperty,
-				  std::vector<Gtk::Widget*> &pWidgetsOut) {
+void createWidgets(sdk::main::ExtensionProperty<ClassT>* pProperty, std::vector<Gtk::Widget*> &pWidgetsOut) {
 	auto* entry = createEntry();
-	entry->set_text(pProperty->getGetterFunc()());
-	entry->signal_changed().connect([entry, pProperty] { pProperty->getSetterFunc()(entry->get_text()); });
+	entry->set_text(pProperty->getValue());
+	entry->signal_changed().connect([entry, pProperty] { pProperty->setValue(entry->get_text()); });
 	pWidgetsOut.emplace_back(entry);
 }
 
 template<typename ClassT, int L, typename T, glm::qualifier Q = glm::defaultp>
 	requires std::is_same_v<ClassT, glm::vec<L, T, Q>>
-void createWigets(const std::shared_ptr<sdk::main::ExtensionProperty<ClassT>> &pProperty,
-				  std::vector<Gtk::Widget*> &pWidgetsOut) {
-	auto getter = pProperty->getGetterFunc();
-	auto vec = getter();
+void createWidgets(sdk::main::ExtensionProperty<ClassT>* pProperty, std::vector<Gtk::Widget*> &pWidgetsOut) {
+	auto vec = pProperty->getValue();
 	if constexpr (L > 0) {
 		auto* entryX = createEntry();
 		entryX->set_text(std::to_string(vec.x));
-		entryX->signal_changed().connect([entryX, pProperty, getter] {
-			auto vec3 = getter();
+		entryX->signal_changed().connect([entryX, pProperty] {
+			auto vec3 = pProperty->getValue();
 			vec3.x = std::stof(entryX->get_text(), nullptr);
-			pProperty->getSetterFunc()(vec3);
+			pProperty->setValue(vec3);
 		});
 		pWidgetsOut.emplace_back(entryX);
 	}
 	if constexpr (L > 1) {
 		auto* entryY = createEntry();
 		entryY->set_text(std::to_string(vec.y));
-		entryY->signal_changed().connect([entryY, pProperty, getter] {
-			auto vec3 = getter();
+		entryY->signal_changed().connect([entryY, pProperty] {
+			auto vec3 = pProperty->getValue();
 			vec3.y = std::stof(entryY->get_text(), nullptr);
-			pProperty->getSetterFunc()(vec3);
+			pProperty->setValue(vec3);
 		});
 		pWidgetsOut.emplace_back(entryY);
 	}
 	if constexpr (L > 2) {
 		auto* entryZ = createEntry();
 		entryZ->set_text(std::to_string(vec.z));
-		entryZ->signal_changed().connect([entryZ, pProperty, getter] {
-			auto vec3 = getter();
+		entryZ->signal_changed().connect([entryZ, pProperty] {
+			auto vec3 = pProperty->getValue();
 			vec3.z = std::stof(entryZ->get_text(), nullptr);
-			pProperty->getSetterFunc()(vec3);
+			pProperty->setValue(vec3);
 		});
 		pWidgetsOut.emplace_back(entryZ);
 	}
 	if constexpr (L > 3) {
 		auto* entryW = createEntry();
 		entryW->set_text(std::to_string(vec.w));
-		entryW->signal_changed().connect([entryW, pProperty, getter] {
-			auto vec3 = getter();
+		entryW->signal_changed().connect([entryW, pProperty] {
+			auto vec3 = pProperty->getValue();
 			vec3.w = std::stof(entryW->get_text(), nullptr);
-			pProperty->getSetterFunc()(vec3);
+			pProperty->setValue(vec3);
 		});
 		pWidgetsOut.emplace_back(entryW);
 	}
@@ -206,8 +210,7 @@ void createWigets(const std::shared_ptr<sdk::main::ExtensionProperty<ClassT>> &p
 
 template<typename ClassT>
 	requires std::is_same_v<ClassT, sdk::utils::KeyboardKey>
-void createWigets(const std::shared_ptr<sdk::main::ExtensionProperty<ClassT>> & /*pProperty*/,
-				  std::vector<Gtk::Widget*> &pWidgetsOut) {
+void createWidgets(sdk::main::ExtensionProperty<ClassT>* /*pProperty*/, std::vector<Gtk::Widget*> &pWidgetsOut) {
 	auto* widget = Gtk::make_managed<Gtk::Label>();
 	widget->set_label("Work in progress");
 	pWidgetsOut.emplace_back(widget);
@@ -234,30 +237,27 @@ std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createValueColumn()
 			child->unparent();
 		}
 		std::vector<Gtk::Widget*> widgets;
-		if (std::dynamic_pointer_cast<sdk::main::ExtensionPropertyGroup>(property)) { return; }
 
-		if (auto prop = std::dynamic_pointer_cast<sdk::main::ExtensionProperty<std::string>>(property)) {
-			createWigets(prop, widgets);
+		if (auto prop = dynamic_cast<sdk::main::ExtensionProperty<std::string>*>(property)) {
+			createWidgets(prop, widgets);
 		}
-		if (auto prop = std::dynamic_pointer_cast<sdk::main::ExtensionProperty<float>>(property)) {
-			createWigets(prop, widgets);
+		if (auto prop = dynamic_cast<sdk::main::ExtensionProperty<float>*>(property)) { createWidgets(prop, widgets); }
+		if (auto prop = dynamic_cast<sdk::main::ExtensionProperty<glm::vec3>*>(property)) {
+			using vecT = glm::vec3;
+			createWidgets<vecT, vecT::length(), vecT::value_type>(prop, widgets);
 		}
-		if (auto prop = std::dynamic_pointer_cast<sdk::main::ExtensionProperty<glm::vec3>>(property)) {
-			using vecT = decltype(prop)::element_type::PropertyT;
-			createWigets<vecT, vecT::length(), vecT::value_type>(prop, widgets);
+		if (auto prop = dynamic_cast<sdk::main::ExtensionProperty<glm::vec2>*>(property)) {
+			using vecT = glm::vec2;
+			createWidgets<vecT, vecT::length(), vecT::value_type>(prop, widgets);
 		}
-		if (auto prop = std::dynamic_pointer_cast<sdk::main::ExtensionProperty<glm::vec2>>(property)) {
-			using vecT = decltype(prop)::element_type::PropertyT;
-			createWigets<vecT, vecT::length(), vecT::value_type>(prop, widgets);
-		}
-		if (auto prop = std::dynamic_pointer_cast<sdk::main::ExtensionProperty<sdk::utils::KeyboardKey>>(property)) {
-			createWigets(prop, widgets);
+		if (auto prop = dynamic_cast<sdk::main::ExtensionProperty<sdk::utils::KeyboardKey>*>(property)) {
+			createWidgets(prop, widgets);
 		}
 		if (widgets.empty()) {
 			auto* widget = Gtk::make_managed<Gtk::Label>();
-			widget->set_label("Missing widgets for " + Utils::getTypeName(property.get()));
+			widget->set_label("Missing widgets for " + Utils::getTypeName(property));
 			widget->set_wrap();
-			widget->set_wrap_mode(Pango::WrapMode::WORD);
+			widget->set_wrap_mode(Pango::WrapMode::CHAR);
 			widgets.emplace_back(widget);
 		}
 		for (auto widget: widgets) { box->append(*widget); }

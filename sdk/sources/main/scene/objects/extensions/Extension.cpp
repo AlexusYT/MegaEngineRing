@@ -46,12 +46,16 @@ void Extension::onMouseButtonStateChanged(utils::MouseButton /*pButton*/, bool /
 
 void Extension::onEnabledChanged() {}
 
-void Extension::onSerialize(nlohmann::json & /*pJson*/) {}
-
-void Extension::onDeserialize(const nlohmann::json & /*pJson*/) {}
-
 void Extension::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
 	if (auto msg = ExtensionRegistry::getTypeNameFor(pExt, pNameOut)) { utils::Logger::error(msg); }
+}
+
+void Extension::addProperty(ExtensionPropertyBase* pProperty) { properties.push_back(pProperty); }
+
+void Extension::removeProperty(ExtensionPropertyBase* pProperty) { erase(properties, pProperty); }
+
+void Extension::propertyChanged(ExtensionPropertyBase* pProperty) {
+	if (object) object->notifyExtensionPropertyChanged(this, pProperty);
 }
 
 } // namespace mer::sdk::main

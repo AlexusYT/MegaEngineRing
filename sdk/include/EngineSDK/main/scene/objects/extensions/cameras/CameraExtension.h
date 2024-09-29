@@ -23,60 +23,36 @@
 #define CAMERAEXTENSION_H
 #include <glm/mat4x4.hpp>
 
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
 #include "ICamera.h"
 #include "PerspectiveProjectionCameraMod.h"
 
 namespace mer::sdk::main {
-class CameraExtension : public Extension, public PerspectiveProjectionCameraMod, public ICamera {
-
-	DECLARE_PROPERTY(glm::mat4, Matrix);
-	ADD_PROPERTY_EVENT(CameraExtension, Matrix, "Projection-View matrix", "");
-
-	DECLARE_PROPERTY(glm::vec3, Direction);
-	ADD_PROPERTY_EVENT(CameraExtension, Direction, "View direction", "");
-
-	DECLARE_PROPERTY(glm::vec2, Angle);
-	ADD_PROPERTY_SET_EVENT(CameraExtension, Angle, "View angle", "");
+class CameraExtension : public PerspectiveProjectionCameraMod, public ICamera {
 
 protected:
 	CameraExtension();
 
 public:
+	ExtensionProperty<glm::mat4> propertyMatrix;
+	ExtensionProperty<glm::vec3> propertyDirection;
+	ExtensionProperty<glm::vec2> propertyAngle;
+
 	METHOD_CREATE(CameraExtension)
 
 	EXT_TYPE_NAME("CameraExtension")
 
 	[[nodiscard]] const glm::mat4 &getMatrix() const override { return propertyMatrix; }
 
-	[[nodiscard]] ValueChangedArgs<const glm::mat4 &> &getOnMatrixChanged() override { return onMatrixChanged; }
+	[[nodiscard]] sigc::signal<void(const glm::mat4 &)> &getOnMatrixChanged() override {
+		return propertyMatrix.getEvent();
+	}
 
-	[[nodiscard]] const glm::vec3 &getDirection() const { return propertyDirection; }
-
-	[[nodiscard]] ValueChangedArgs<const glm::vec3 &> &getOnDirectionChanged() { return onDirectionChanged; }
-
-	[[nodiscard]] ValueChangedArgs<const glm::vec2 &> &getOnAngleChanged() { return onAngleChanged; }
-
-	[[nodiscard]] const glm::vec2 &getAngle() const { return propertyAngle; }
-
-	void setAngle(const glm::vec2 &pAngle);
-
-	void addAngle(const glm::vec2 &pAngleToAdd) { setAngle(getAngle() + pAngleToAdd); }
+	void addAngle(const glm::vec2 &pAngleToAdd) { propertyAngle = propertyAngle + pAngleToAdd; }
 
 
 protected:
 	utils::ReportMessagePtr onInit() override;
 
-	void setMatrix(const glm::mat4 &pMatrix) {
-		propertyMatrix = pMatrix;
-		onMatrixChanged(pMatrix);
-	}
-
-	void setDirection(const glm::vec3 &pDirection) {
-		propertyDirection = pDirection;
-		onDirectionChanged(pDirection);
-		updateMatrix();
-	}
 
 	void onWindowSizeChanged(int pWidth, int pHeight) override;
 

@@ -225,13 +225,17 @@ void PresenterMain::selectObject(ExplorerObject* pObjectToSelect) { loadedScene-
 
 void PresenterMain::createObject(ExplorerObject* /*pParentObject*/) {
 	if (!loadedScene->hasScene()) return;
-	loadedScene->addObject("Object");
+	loadedScene->addObject();
 }
 
 void PresenterMain::removeObject(ExplorerObject* pObjectToRemove) {
 	if (auto element = dynamic_cast<SceneExplorerObject*>(pObjectToRemove)) {
 		loadedScene->removeObject(element->getObject());
 	}
+}
+
+void PresenterMain::removeExtension(sdk::main::Extension* pExtensionToRemove) {
+	loadedScene->removeExtension(pExtensionToRemove);
 }
 
 void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {

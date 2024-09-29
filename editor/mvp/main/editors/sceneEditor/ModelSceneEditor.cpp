@@ -55,7 +55,7 @@ sigc::connection ModelSceneEditor::connectNameChanged(const sigc::slot<void(cons
 	return loadedScene->connectNameChanged(pSlot);
 }
 
-void ModelSceneEditor::createObject(const std::string &pName) { return loadedScene->addObject(pName); }
+void ModelSceneEditor::createObject() { return loadedScene->addObject(); }
 
 void ModelSceneEditor::removeObject(sdk::main::ISceneObject* pObjectToRemove) {
 	loadedScene->removeObject(pObjectToRemove);

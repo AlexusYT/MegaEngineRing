@@ -25,39 +25,43 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/polar_coordinates.hpp>
+#include <sigc++/adaptors/hide.h>
 
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 
-CameraExtension::CameraExtension() { setDirection(euclidean(radians(propertyAngle))); }
-
-void CameraExtension::setAngle(const glm::vec2 &pAngle) {
-	if (propertyAngle == pAngle) return;
-	glm::vec2 angleTmp = pAngle;
-	constexpr float delta = 0.001f;
-	if (angleTmp.x > 90.0f - delta) angleTmp.x = 90.0f - delta;
-	if (angleTmp.x < -90.0f + delta) angleTmp.x = -90.0f + delta;
-	if (angleTmp.y > 360) angleTmp.y -= 360;
-	if (angleTmp.y < 0) angleTmp.y += 360;
-	if (propertyAngle == angleTmp) return;
-	propertyAngle = angleTmp;
-	onAngleChanged(propertyAngle);
-	setDirection(euclidean(radians(angleTmp)));
+CameraExtension::CameraExtension()
+	: propertyMatrix(this, "Matrix"), propertyDirection(this, "Direction"), propertyAngle(this, "Angle") {
+	propertyDirection.getEvent().connect(sigc::hide(sigc::mem_fun(*this, &CameraExtension::updateMatrix)));
+	propertyDirection = euclidean(radians(propertyAngle.getValue()));
+	propertyAngle.getReturnOverride().connect([this](const glm::vec2 &pAngle) {
+		if (propertyAngle == pAngle) return pAngle;
+		glm::vec2 angleTmp = pAngle;
+		constexpr float delta = 0.001f;
+		if (angleTmp.x > 90.0f - delta) angleTmp.x = 90.0f - delta;
+		if (angleTmp.x < -90.0f + delta) angleTmp.x = -90.0f + delta;
+		if (angleTmp.y > 360) angleTmp.y -= 360;
+		if (angleTmp.y < 0) angleTmp.y += 360;
+		return angleTmp;
+	});
+	propertyAngle.getEvent().connect(
+		[this](const glm::vec2 &pAngle) { propertyDirection = euclidean(radians(pAngle)); });
 }
 
 utils::ReportMessagePtr CameraExtension::onInit() {
 
 	const auto &objectSelf = getObject();
-	putConnectionToStorage(
-		objectSelf->getOnPositionChangedSignal().connect(sigc::mem_fun(*this, &CameraExtension::updateMatrix)));
+	putConnectionToStorage(objectSelf->getMainExtension()->propertyPosition.getEvent().connect(
+		hide(sigc::mem_fun(*this, &CameraExtension::updateMatrix))));
 	return nullptr;
 }
 
 void CameraExtension::onWindowSizeChanged(const int pWidth, const int pHeight) {
 	if (pHeight <= 0) return;
-	setAspect(static_cast<float>(pWidth) / static_cast<float>(pHeight));
+	propertyAspect = static_cast<float>(pWidth) / static_cast<float>(pHeight);
 }
 
 void CameraExtension::projectionMatrixChanged(const glm::mat4 & /*pNewMatrix*/) { updateMatrix(); }
@@ -65,8 +69,8 @@ void CameraExtension::projectionMatrixChanged(const glm::mat4 & /*pNewMatrix*/) 
 void CameraExtension::updateMatrix() {
 	const auto &objectSelf = getObject();
 	if (!objectSelf) return;
-	const auto position = objectSelf->getPosition();
-	setMatrix(getProjMatrix() * lookAt(position, position + propertyDirection, {0, 1, 0}));
+	const auto position = objectSelf->getMainExtension()->propertyPosition.getValue();
+	propertyMatrix = getProjMatrix() * lookAt(position, position + propertyDirection.getValue(), {0, 1, 0});
 }
 
 } // namespace mer::sdk::main

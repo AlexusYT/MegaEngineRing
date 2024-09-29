@@ -50,6 +50,6 @@ protected:
 
 TEST_F(CameraExtensionTestsFixture, MatrixUpdate) {
 	auto mat = ext->getMatrix();
-	ext->setAngle({0.2f, 20.5f});
+	ext->propertyAngle = glm::vec2(0.2f, 20.5f);
 	EXPECT_NE(mat, ext->getMatrix());
 }

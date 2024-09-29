@@ -36,7 +36,7 @@ public:
 
 	void setName(const std::string &pName) override { name = pName; }
 
-	std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> getPropertyEntries() const override { return nullptr; }
+	std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> getPropertyEntries() const override { return nullptr; }
 
 	Glib::RefPtr<Gio::MenuModel> getMenu() override {
 		return nullptr;

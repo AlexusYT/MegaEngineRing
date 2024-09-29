@@ -16,36 +16,29 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 31.08.24.
+// Created by alexus on 29.09.24.
 //
 
-#ifndef EXPLOREROBJECT_H
-#define EXPLOREROBJECT_H
-#include "ui/customWidgets/TreeElementBase.h"
+#ifndef PROPERTYJSONSERIALIZER_H
+#define PROPERTYJSONSERIALIZER_H
 
-namespace mer::editor::mvp {
-class ObjectExtensionEntry;
+#include <nlohmann/json.hpp>
 
-class ExplorerObject : public ui::TreeElementBase {
-	ExplorerObject* parent;
+namespace mer::sdk::utils {
+template<class T>
+struct PropertyJsonSerializer {
 
-public:
-	~ExplorerObject() override = default;
+	template<std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
+	static nlohmann::json serialize(const T &pValue) {
+		return pValue;
+	}
 
-	ExplorerObject();
-
-	[[nodiscard]] virtual const std::string &getName() const = 0;
-
-	virtual void setName(const std::string &pName) = 0;
-
-	void addChild(const std::shared_ptr<ExplorerObject> &pChild);
-
-	void removeChild(const std::shared_ptr<ExplorerObject> &pChild) const;
-
-	void clearChildren() const;
-
-	virtual std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> getPropertyEntries() const = 0;
+	template<std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
+	static T deserialize(const nlohmann::json &pJson) {
+		return pJson.get<T>();
+	}
 };
-} // namespace mer::editor::mvp
+} // namespace mer::sdk::utils
 
-#endif //EXPLOREROBJECT_H
+
+#endif //PROPERTYJSONSERIALIZER_H

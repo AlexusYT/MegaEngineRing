@@ -21,7 +21,6 @@
 
 #ifndef SCENEOBJECT_H
 #define SCENEOBJECT_H
-#include <glm/vec3.hpp>
 #include <map>
 #include <memory>
 #include <sigc++/signal.h>
@@ -40,18 +39,16 @@ class IScene;
 
 class SceneObject : public ISceneObject {
 	std::shared_ptr<UUID> uuid;
-	std::string name;
-	sigc::signal<void(const std::string &pOldName, const std::string &pNewName)> onNameChangedSignal;
 	IScene* scene{};
+	MainObjectExtension* mainExtension;
 	std::map<std::string, std::shared_ptr<Extension>> extensions;
 	sigc::signal<void(const std::shared_ptr<Extension> &pNewExt)> onExtensionAddedSignal;
 	sigc::signal<void(const std::shared_ptr<Extension> &pExtToRemove)> onExtensionRemovedSignal;
+	sigc::signal<void(Extension* pExtension, ExtensionPropertyBase* pProperty)> onExtensionPropertyChangedSignal;
 	bool inited{};
 	std::shared_ptr<IScript> script;
 	std::string scriptName;
 
-	glm::vec3 position{};
-	sigc::signal<void()> onPositionChangedSignal;
 	static inline uint64_t counter;
 
 public:
@@ -83,36 +80,22 @@ public:
 		return onExtensionRemovedSignal.connect(pSlot);
 	}
 
+	sigc::connection connectOnExtensionPropertyChanged(
+		const sigc::slot<void(Extension* pExtension, ExtensionPropertyBase* pProperty)> &pSlot) final {
+		return onExtensionPropertyChangedSignal.connect(pSlot);
+	}
+
+	void notifyExtensionPropertyChanged(Extension* pExtension, ExtensionPropertyBase* pProperty) final {
+		onExtensionPropertyChangedSignal(pExtension, pProperty);
+	}
+
+	[[nodiscard]] MainObjectExtension* getMainExtension() const final { return mainExtension; }
+
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const override {
 		return extensions;
 	}
 
 	[[nodiscard]] IScene* getScene() const { return scene; }
-
-	[[nodiscard]] const glm::vec3 &getPosition() const override { return position; }
-
-	void setPosition(const glm::vec3 &pPosition) override {
-		if (pPosition == position) return;
-		position = pPosition;
-		onPositionChangedSignal();
-	}
-
-	[[nodiscard]] sigc::signal<void()> &getOnPositionChangedSignal() { return onPositionChangedSignal; }
-
-	[[nodiscard]] const std::string &getName() const override { return name; }
-
-	void setName(const std::string &pName) override {
-		if (name == pName) return;
-		const auto oldName = name;
-		name = pName;
-		onNameChangedSignal(oldName, name);
-	}
-
-	sigc::connection connectOnNameChanged(
-		const sigc::slot<void(const std::string &pOldName, const std::string &pNewName)> &pSlot) override {
-		pSlot("", name);
-		return onNameChangedSignal.connect(pSlot);
-	}
 
 	[[nodiscard]] const std::string &getScriptName() const override { return scriptName; }
 

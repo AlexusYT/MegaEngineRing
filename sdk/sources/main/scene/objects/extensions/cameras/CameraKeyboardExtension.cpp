@@ -28,6 +28,7 @@
 #include <glm/vec3.hpp>
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 
@@ -42,20 +43,21 @@ void CameraKeyboardExtension::onKeyStateChanged(const utils::KeyboardKey pKey, c
 void CameraKeyboardExtension::onRender() {
 	if (fwdPressed || bwdPressed || strafeLeftPressed || strafeRightPressed) {
 		const auto &objectSelf = getObject();
-		const float angleYRad = glm::radians(propertyAngle.y);
+		const float angleYRad = glm::radians(propertyAngle.getValue().y);
 		const float angleYRight = angleYRad - 3.14f / 2.0f;
 		const glm::vec3 right =
-			glm::normalize(glm::vec3(std::sin(angleYRight), 0.0f, std::cos(angleYRight))) * propertySpeed;
+			glm::normalize(glm::vec3(std::sin(angleYRight), 0.0f, std::cos(angleYRight))) * propertySpeed.getValue();
 
 		const glm::vec3 fwdBwd =
-			glm::normalize(glm::vec3(std::sin(angleYRad), 0.0f, std::cos(angleYRad))) * propertySpeed;
-		auto position = objectSelf->getPosition();
+			glm::normalize(glm::vec3(std::sin(angleYRad), 0.0f, std::cos(angleYRad))) * propertySpeed.getValue();
+		auto &propertyPosition = objectSelf->getMainExtension()->propertyPosition;
+		auto position = propertyPosition.getValue();
 		if (fwdPressed) { position += fwdBwd; }
 		if (bwdPressed) { position -= fwdBwd; }
 
 		if (strafeRightPressed) position += right;
 		if (strafeLeftPressed) position -= right;
-		objectSelf->setPosition(position);
+		propertyPosition = position;
 	}
 }
 } // namespace mer::sdk::main
