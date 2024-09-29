@@ -21,6 +21,7 @@
 
 #ifndef KEYBOARDKEY_H
 #define KEYBOARDKEY_H
+#include "PropertyJsonSerializer.h"
 
 namespace mer::sdk::utils {
 enum class KeyboardKey {
@@ -93,6 +94,13 @@ enum class KeyboardKey {
 	KEY_F12 = 96,
 
 };
-}
+
+template<>
+struct PropertyJsonSerializer<KeyboardKey> {
+	static nlohmann::json serialize(const KeyboardKey &pValue) { return static_cast<int>(pValue); }
+
+	static KeyboardKey deserialize(const nlohmann::json &pValue) { return static_cast<KeyboardKey>(pValue.get<int>()); }
+};
+} // namespace mer::sdk::utils
 
 #endif //KEYBOARDKEY_H

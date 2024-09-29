@@ -40,44 +40,24 @@ class ShaderProgram;
 
 namespace mer::sdk::main {
 class ModelRenderExtension : public Extension {
-	DECLARE_PROPERTY(std::shared_ptr<renderer::ShaderProgram>, Shader);
-	ADD_PROPERTY_SET_EVENT(ModelRenderExtension, Shader, "Shader", "");
-	DECLARE_PROPERTY(std::shared_ptr<ModelResource>, Model);
-	ADD_PROPERTY_SET_EVENT(ModelRenderExtension, Model, "Model", "");
 
 	uint32_t vao{};
 	uint32_t vbo{};
 	uint32_t ebo{};
 
 protected:
-	ModelRenderExtension() = default;
+	ModelRenderExtension() : propertyShader(this, "Shader"), propertyModel(this, "Model") {}
 
 public:
+	ExtensionProperty<std::shared_ptr<renderer::ShaderProgram>> propertyShader;
+	ExtensionProperty<std::shared_ptr<ModelResource>> propertyModel;
+
 	METHOD_CREATE(ModelRenderExtension)
 
 	EXT_TYPE_NAME("ModelRenderExtension")
 
-	void setModelRequest(const std::shared_ptr<ModelRequest> &pModelRequest, const std::string &pModelObjectName);
-
-	[[nodiscard]] const std::shared_ptr<renderer::ShaderProgram> &getShader() const { return propertyShader; }
-
-	void setShader(const std::shared_ptr<renderer::ShaderProgram> &pShader) { propertyShader = pShader; }
-
-	[[nodiscard]] ValueChangedArgs<const std::shared_ptr<renderer::ShaderProgram> &> &getOnShaderChanged() {
-		return onShaderChanged;
-	}
-
-	[[nodiscard]] const std::shared_ptr<ModelResource> &getModel() const { return propertyModel; }
-
-	void setModel(const std::shared_ptr<ModelResource> &pModel) { propertyModel = pModel; }
-
-	[[nodiscard]] ValueChangedArgs<const std::shared_ptr<ModelResource> &> &getOnModelChanged() {
-		return onModelChanged;
-	}
-
 protected:
-	void onSerialize(nlohmann::json &pJson) override;
-	void onDeserialize(const nlohmann::json &pJson) override;
+
 	utils::ReportMessagePtr onInit() override;
 
 	utils::ReportMessagePtr onDeinit() override;

@@ -35,7 +35,7 @@ utils::ReportMessagePtr OrbitCameraExtension::onInit() { return nullptr; }
 
 void OrbitCameraExtension::onWindowSizeChanged(const int pWidth, const int pHeight) {
 	if (pHeight <= 0) return;
-	setAspect(static_cast<float>(pWidth) / static_cast<float>(pHeight));
+	propertyAspect = static_cast<float>(pWidth) / static_cast<float>(pHeight);
 }
 
 void OrbitCameraExtension::projectionMatrixChanged(const glm::mat4 & /*pNewMatrix*/) { updateMatrix(); }
@@ -44,14 +44,15 @@ void OrbitCameraExtension::updateMatrix() {
 
 	float dist = 25;
 	glm::vec3 globalUp{0, 1, 0};
-	glm::mat4 rotationMatrix = glm::yawPitchRoll(glm::radians(propertyAngle.y), glm::radians(propertyAngle.x), 0.0f);
+	auto &angle = propertyAngle.getValue();
+	glm::mat4 rotationMatrix = glm::yawPitchRoll(glm::radians(angle.y), glm::radians(angle.x), 0.0f);
 
 	auto position = propertyTargetPosition + glm::vec3(rotationMatrix * glm::vec4(0, 0, dist, 0.0f));
 	//auto look = glm::normalize(targetPosition - position);
 	auto up = glm::vec3(rotationMatrix * glm::vec4(globalUp, 0.0f));
 	/*auto right = glm::cross(look, up);
 	auto V = glm::lookAt(position, target, up);*/
-	setMatrix(getProjMatrix() * lookAt(position, propertyTargetPosition, up));
+	propertyMatrix = getProjMatrix() * lookAt(position, propertyTargetPosition.getValue(), up);
 }
 
 } // namespace mer::sdk::main

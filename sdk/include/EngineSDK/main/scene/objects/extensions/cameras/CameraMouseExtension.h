@@ -27,42 +27,20 @@
 
 namespace mer::sdk::main {
 class CameraMouseExtension : public Extension {
-	DECLARE_PROPERTY(glm::vec2, MouseSensitivity);
-	ADD_PROPERTY_SET_EVENT(CameraMouseExtension, MouseSensitivity, "Mouse sensitivity", "");
-	DECLARE_PROPERTY(glm::vec2, Angle);
-	ADD_PROPERTY_EVENT(CameraMouseExtension, Angle, "View angle", "");
-
 	std::optional<glm::dvec2> lastCursorPos{};
 
 protected:
-	CameraMouseExtension() : propertyMouseSensitivity(0.6f) {}
+	CameraMouseExtension() : propertyMouseSensitivity(this, "MouseSensitivity"), propertyAngle(this, "Angle") {
+		propertyMouseSensitivity.setValue(glm::vec2(0.6f));
+	}
 
 public:
+	ExtensionProperty<glm::vec2> propertyMouseSensitivity;
+	ExtensionProperty<glm::vec2> propertyAngle;
+
 	METHOD_CREATE(CameraMouseExtension)
 
 	EXT_TYPE_NAME("CameraMouseExtension")
-
-	[[nodiscard]] const glm::vec2 &getMouseSensitivity() const { return propertyMouseSensitivity; }
-
-	void setMouseSensitivity(const glm::vec2 &pMouseSensitivity) {
-		if (propertyMouseSensitivity == pMouseSensitivity) return;
-		propertyMouseSensitivity = pMouseSensitivity;
-		onMouseSensitivityChanged(pMouseSensitivity);
-	}
-
-	[[nodiscard]] ValueChangedArgs<const glm::vec2 &> &getOnMouseSensitivityChanged() {
-		return onMouseSensitivityChanged;
-	}
-
-	[[nodiscard]] const glm::vec2 &getAngle() const { return propertyAngle; }
-
-	void setAngle(const glm::vec2 &pPropertyAngle) {
-		if (pPropertyAngle == propertyAngle) return;
-		propertyAngle = pPropertyAngle;
-		onAngleChanged(pPropertyAngle);
-	}
-
-	[[nodiscard]] ValueChangedArgs<const glm::vec2 &> &getOnAngleChanged() { return onAngleChanged; }
 
 protected:
 	void onCursorPosChanged(const double pX, const double pY) override {
@@ -70,7 +48,7 @@ protected:
 		const glm::dvec2 pos{pX, pY};
 		if (lastCursorPos) {
 			const glm::vec2 delta = lastCursorPos.value() - pos;
-			setAngle(propertyAngle + propertyMouseSensitivity * glm::vec2(delta.y, delta.x));
+			propertyAngle = propertyAngle + propertyMouseSensitivity.getValue() * glm::vec2(delta.y, delta.x);
 		}
 		lastCursorPos = pos;
 	}

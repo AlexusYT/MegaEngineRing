@@ -26,10 +26,9 @@
 
 #include "EngineSDK/main/resources/Resources.h"
 #include "EngineSDK/main/scene/IScene.h"
-#include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/ReportMessageFwd.h"
-#include "ExtensionProperties.h"
-#include "PropertiesForExtension.h"
+#include "ExtensionProperty.h"
+#include "IPropertyProvider.h"
 
 namespace mer::sdk::utils {
 class ModifierKeys;
@@ -46,7 +45,8 @@ class SceneObject;
 #define EXT_TYPE_NAME(__TYPE_NAME)                                                                                     \
 	static const char* typeName() { return __TYPE_NAME; }
 
-class Extension : public virtual PropertiesForExtension {
+class Extension : public virtual IPropertyProvider {
+	std::vector<ExtensionPropertyBase*> properties;
 	friend SceneObject;
 	SceneObject* object{};
 	std::vector<sigc::connection> connectionStorage;
@@ -77,7 +77,9 @@ public:
 		return ptr;
 	}
 
-	virtual ~Extension() = default;
+	~Extension() override = default;
+
+	[[nodiscard]] const std::vector<ExtensionPropertyBase*> &getProperties() const { return properties; }
 
 	[[nodiscard]] SceneObject* getObject() const { return object; }
 
@@ -103,9 +105,13 @@ public:
 
 	void setHeader(const std::string &pHeader) { header = pHeader; }
 
-	void serialize(nlohmann::json &pJson) { onSerialize(pJson); }
+	void serialize(nlohmann::json &pJson) {
+		for (auto property: properties) { property->serialize(pJson); }
+	}
 
-	void deserialize(const nlohmann::json &pJson) { onDeserialize(pJson); }
+	void deserialize(const nlohmann::json &pJson) {
+		for (auto property: properties) { property->deserialize(pJson); }
+	}
 
 	virtual utils::ReportMessagePtr onInit() { return nullptr; }
 
@@ -153,26 +159,18 @@ protected:
 
 	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const;
 
-	template<typename T, typename T1 = std::remove_cvref_t<T>, typename ClassT>
-	std::shared_ptr<ExtensionProperty<T1>> createProperty(const std::string &pName, const std::string &pDescription,
-														  T (ClassT::*pGetterFunc)() const,
-														  void (ClassT::*pSetterFunc)(T)) {
-		return std::make_shared<ExtensionProperty<T1>>(
-			pName, pDescription, sigc::mem_fun<T, ClassT>(*dynamic_cast<ClassT*>(this), pGetterFunc),
-			sigc::mem_fun<void, ClassT>(*dynamic_cast<ClassT*>(this), pSetterFunc));
-	}
-
 	virtual void onEnabledChanged();
-
-
-	virtual void onSerialize(nlohmann::json &pJson);
-
-	virtual void onDeserialize(const nlohmann::json &pJson);
 
 private:
 	void setObject(SceneObject* const pObject) { object = pObject; }
 
 	static void getTypeNameFor(Extension* pExt, std::string &pNameOut);
+
+	void addProperty(ExtensionPropertyBase* pProperty) override;
+
+	void removeProperty(ExtensionPropertyBase* pProperty) override;
+
+	void propertyChanged(ExtensionPropertyBase* pProperty) override;
 };
 } // namespace mer::sdk::main
 

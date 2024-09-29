@@ -50,6 +50,14 @@ namespace mer::editor::mvp {
 PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor)
 	: modelSceneEditor(pModelSceneEditor) {
 
+	modelSceneEditor->connectOnLoadingSignal([this] {
+		for (auto view: views) {
+			if (!modelSceneEditor->hasResourcesContext()) {
+				modelSceneEditor->setupResourcesContext(view.first->getResourcesContext());
+				return;
+			}
+		}
+	});
 	modelSceneEditor->connectOnLoadedSignal([this] {
 		for (auto view: views) {
 			if (!modelSceneEditor->hasResourcesContext()) {

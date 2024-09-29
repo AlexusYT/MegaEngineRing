@@ -39,6 +39,7 @@ EditorSceneObject::EditorSceneObject(sdk::main::ISceneObject* const pNativeObjec
 	menuOpenScript->append("Open Visual Script", "win.object." + getObjectName() + ".open.graphicScript");
 	setContextMenu(menuOpenScript);
 
+	/*
 	auto basicGroup = std::make_shared<sdk::main::ExtensionPropertyGroup>();
 	basicGroup->setName("Basic properties");
 	auto nameProp = std::make_shared<sdk::main::ExtensionProperty<std::string>>();
@@ -60,7 +61,7 @@ EditorSceneObject::EditorSceneObject(sdk::main::ISceneObject* const pNativeObjec
 		sdk::main::ExtensionProperties properties = extension.second->getProperties();
 		for (const auto &extensionPropertyBase: properties) { group->addChild(extensionPropertyBase); }
 		propertyEntries->append(mvp::ObjectPropertyEntry::create(group));
-	}
+	}*/
 }
 
 void EditorSceneObject::onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) {

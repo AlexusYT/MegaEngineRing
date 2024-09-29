@@ -21,36 +21,72 @@
 
 #ifndef OBJECTPROPERTYENTRY_H
 #define OBJECTPROPERTYENTRY_H
+#include "EngineSDK/main/scene/objects/extensions/Extension.h"
 #include "ui/customWidgets/TreeElementBase.h"
 
+
+class ObjectPropertyEntry;
+
 namespace mer::sdk::main {
+class Extension;
 class ExtensionPropertyBase;
-}
+} // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
-class ObjectPropertyEntry : public ui::TreeElementBase {
-	std::shared_ptr<sdk::main::ExtensionPropertyBase> nativeProperty;
+class ObjectPropertyEntryBase : public ui::TreeElementBase {
+public:
+	explicit ObjectPropertyEntryBase(const std::shared_ptr<Gio::ListModel> &pChildren) : TreeElementBase(pChildren) {}
+
+	virtual const std::string &getName() = 0;
+};
+
+class ObjectPropertyEntry : public ObjectPropertyEntryBase {
+	sdk::main::Extension* extension;
+	sdk::main::ExtensionPropertyBase* nativeProperty;
 
 protected:
-	explicit ObjectPropertyEntry(const std::shared_ptr<sdk::main::ExtensionPropertyBase> &pNativeProperty)
-		: TreeElementBase(Gio::ListStore<ObjectPropertyEntry>::create()), nativeProperty(pNativeProperty) {}
+	explicit ObjectPropertyEntry(sdk::main::ExtensionPropertyBase* pNativeProperty, sdk::main::Extension* pExtension)
+		: ObjectPropertyEntryBase(nullptr), extension(pExtension), nativeProperty(pNativeProperty) {}
 
 public:
-	static std::shared_ptr<ObjectPropertyEntry> create(
-		const std::shared_ptr<sdk::main::ExtensionPropertyBase> &pProp) {
-		return Glib::make_refptr_for_instance(new ObjectPropertyEntry(pProp));
+	static std::shared_ptr<ObjectPropertyEntry> create(sdk::main::ExtensionPropertyBase* pProp,
+													   sdk::main::Extension* pExtension) {
+		return Glib::make_refptr_for_instance(new ObjectPropertyEntry(pProp, pExtension));
 	}
 
-	std::shared_ptr<Gio::MenuModel> getMenu() override{ return nullptr; }
+	std::shared_ptr<Gio::MenuModel> getMenu() override { return nullptr; }
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::ExtensionPropertyBase> &getNativeProperty() const {
-		return nativeProperty;
-	}
+	[[nodiscard]] sdk::main::ExtensionPropertyBase* getNativeProperty() const { return nativeProperty; }
 
-	void setNativeProperty(const std::shared_ptr<sdk::main::ExtensionPropertyBase> &pNativeProperty) {
-		nativeProperty = pNativeProperty;
-	}
+	const std::string &getName() override { return nativeProperty->getPropertyName(); }
+
+	[[nodiscard]] sdk::main::Extension* getExtension() const { return extension; }
 };
+
+class ObjectExtensionEntry : public ObjectPropertyEntryBase {
+	sdk::main::Extension* nativeExtension{};
+
+protected:
+	explicit ObjectExtensionEntry(sdk::main::Extension* pNativeExtension)
+		: ObjectPropertyEntryBase(Gio::ListStore<ObjectPropertyEntry>::create()), nativeExtension(pNativeExtension) {
+		const auto childrenSelf = std::dynamic_pointer_cast<Gio::ListStore<ObjectPropertyEntry>>(getChildren());
+		for (const auto property: pNativeExtension->getProperties()) {
+			childrenSelf->append(ObjectPropertyEntry::create(property, pNativeExtension));
+		}
+	}
+
+public:
+	static std::shared_ptr<ObjectExtensionEntry> create(sdk::main::Extension* pNativeExtension) {
+		return make_refptr_for_instance(new ObjectExtensionEntry(pNativeExtension));
+	}
+
+	std::shared_ptr<Gio::MenuModel> getMenu() override { return nullptr; }
+
+	const std::string &getName() override { return nativeExtension->getName(); }
+
+	[[nodiscard]] sdk::main::Extension* getNativeExtension() const { return nativeExtension; }
+};
+
 } // namespace mer::editor::mvp
 
 #endif //OBJECTPROPERTYENTRY_H

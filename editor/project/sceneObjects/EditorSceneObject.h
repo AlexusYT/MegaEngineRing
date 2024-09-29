@@ -24,6 +24,7 @@
 #include <EngineUtils/utils/UUID.h>
 
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "project/generatedFiles/GeneratedFiles.h"
 
 namespace mer::editor::mvp {
@@ -72,9 +73,9 @@ public:
 		return false;
 	}
 
-	[[nodiscard]] const std::string &getObjectName() const { return nativeObject->getName(); }
+	[[nodiscard]] const std::string &getObjectName() const { return nativeObject->getMainExtension()->propertyName; }
 
-	void setObjectName(const std::string &pName) { nativeObject->setName(pName); }
+	void setObjectName(const std::string &pName) { nativeObject->getMainExtension()->propertyName = pName; }
 
 	void setNativeObject(sdk::main::ISceneObject* pNativeObject) { nativeObject = pNativeObject; }
 

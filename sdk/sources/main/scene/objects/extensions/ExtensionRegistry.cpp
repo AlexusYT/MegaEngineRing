@@ -22,6 +22,7 @@
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 
 #include "EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h"
@@ -34,6 +35,7 @@
 namespace mer::sdk::main {
 
 void ExtensionRegistry::init() {
+	registerClass<MainObjectExtension>();
 	registerClass<BasicRenderExtension>();
 	registerClass<CameraExtension>();
 	registerClass<CameraKeyboardExtension>();

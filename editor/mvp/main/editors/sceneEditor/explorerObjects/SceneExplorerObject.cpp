@@ -23,12 +23,13 @@
 
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/Extension.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionProperties.h"
+#include "EngineSDK/main/scene/objects/extensions/ExtensionPropertyBase.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "mvp/main/objectProperties/ObjectPropertyEntry.h"
 
 namespace mer::editor::mvp {
 SceneExplorerObject::SceneExplorerObject(sdk::main::ISceneObject* pObject)
-	: propertyEntries(Gio::ListStore<ObjectPropertyEntry>::create()) {
+	: propertyEntries(Gio::ListStore<ObjectExtensionEntry>::create()) {
 	setObject(pObject);
 }
 
@@ -36,11 +37,11 @@ std::shared_ptr<SceneExplorerObject> SceneExplorerObject::create(sdk::main::ISce
 	return Glib::make_refptr_for_instance(new SceneExplorerObject(pObject));
 }
 
-const std::string &SceneExplorerObject::getName() const { return object->getName(); }
+const std::string &SceneExplorerObject::getName() const { return object->getMainExtension()->propertyName; }
 
-void SceneExplorerObject::setName(const std::string &pName) { object->setName(pName); }
+void SceneExplorerObject::setName(const std::string &pName) { object->getMainExtension()->propertyName = pName; }
 
-std::shared_ptr<Gio::ListStore<ObjectPropertyEntry>> SceneExplorerObject::getPropertyEntries() const {
+std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> SceneExplorerObject::getPropertyEntries() const {
 	return propertyEntries;
 }
 
@@ -55,8 +56,8 @@ void SceneExplorerObject::setObject(sdk::main::ISceneObject* pObject) {
 			name = pNewName;
 		}));*/
 
-	auto basicGroup = std::make_shared<sdk::main::ExtensionPropertyGroup>();
-	basicGroup->setName("Basic properties");
+	/*auto basicGroup = std::make_shared<sdk::main::ExtensionPropertyGroup>();
+	basicGroup->setPropertyName("Basic properties");
 	auto nameProp = std::make_shared<sdk::main::ExtensionProperty<std::string>>();
 	nameProp->setName("Object name");
 	nameProp->setGetterFunc(sigc::mem_fun(*object, &sdk::main::ISceneObject::getName));
@@ -68,12 +69,23 @@ void SceneExplorerObject::setObject(sdk::main::ISceneObject* pObject) {
 	positionProp->setSetterFunc(sigc::mem_fun(*object, &sdk::main::ISceneObject::setPosition));
 	basicGroup->addChild(positionProp);
 
-	propertyEntries->append(ObjectPropertyEntry::create(basicGroup));
+	propertyEntries->append(ObjectPropertyEntry::create(basicGroup));*/
 
 	for (const auto &extension: object->getExtensions()) { addExtension(extension.second); }
 
 	connections.push_back(object->connectOnExtensionAdded(
 		[this](const std::shared_ptr<sdk::main::Extension> &pNewExt) { addExtension(pNewExt); }));
+	connections.push_back(
+		object->connectOnExtensionRemoved([this](const std::shared_ptr<sdk::main::Extension> &pNewExt) {
+			for (uint32_t i = 0; i < propertyEntries->get_n_items(); i++) {
+				auto entry = propertyEntries->get_item(i);
+				if (!entry || !entry->getNativeExtension()) continue;
+				if (entry->getNativeExtension() == pNewExt.get()) {
+					propertyEntries->remove(i);
+					break;
+				}
+			}
+		}));
 }
 
 Glib::RefPtr<Gio::MenuModel> SceneExplorerObject::getMenu() {
@@ -85,13 +97,12 @@ Glib::RefPtr<Gio::MenuModel> SceneExplorerObject::getMenu() {
 }
 
 void SceneExplorerObject::addExtension(const std::shared_ptr<sdk::main::Extension> &pExtension) const {
-	auto group = std::make_shared<sdk::main::ExtensionPropertyGroup>();
-	group->setName(pExtension->getTypeName());
-	for (sdk::main::ExtensionProperties properties = pExtension->getProperties();
-		 const auto &extensionPropertyBase: properties) {
+	/*auto group = std::make_shared<sdk::main::ExtensionPropertyGroup>();
+	group->setPropertyName(pExtension->getTypeName());
+	for (auto properties = pExtension->getProperties(); const auto &extensionPropertyBase: properties) {
 		group->addChild(extensionPropertyBase);
-	}
-	propertyEntries->append(ObjectPropertyEntry::create(group));
+	}*/
+	propertyEntries->append(ObjectExtensionEntry::create(pExtension.get()));
 }
 
 std::shared_ptr<Gio::MenuItem> SceneExplorerObject::createItem(const std::string &pName, const std::string &pAction,

@@ -23,6 +23,10 @@
 #define IPRESENTERMAIN_H
 #include "mvp/PresenterBase.h"
 
+namespace mer::sdk::main {
+class Extension;
+}
+
 namespace mer::editor::mvp {
 class ExplorerObject;
 
@@ -35,6 +39,8 @@ public:
 	virtual void createObject(ExplorerObject* pParentObject) = 0;
 
 	virtual void removeObject(ExplorerObject* pObjectToRemove) = 0;
+
+	virtual void removeExtension(sdk::main::Extension* pExtensionToRemove) = 0;
 
 	virtual void openFile(const std::filesystem::path &pPathToFile) = 0;
 

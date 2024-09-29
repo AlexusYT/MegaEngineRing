@@ -28,7 +28,9 @@
 #include "EngineSDK/main/scene/IScene.h"
 #include "EngineSDK/main/scene/ISceneDataInjector.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
+#include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "EngineUtils/utils/UUID.h"
 #include "Sdk.h"
 #include "mvp/main/editors/sceneEditor/ResourcesContext.h"
@@ -63,6 +65,7 @@ void LoadedScene::render() const { scene->render(); }
 sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 
 	unload();
+	scene = sdk->createScene();
 	onLoadingSignal();
 	setName("Untitled Scene");
 	databaseLocked = true;
@@ -81,7 +84,6 @@ sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPat
 		databaseLocked = false;
 		return msg;
 	}
-	scene = sdk->createScene();
 	connections.push_back(scene->getOnObjectAddedSignal().connect([this](sdk::main::ISceneObject* pObject) {
 		if (pObject == cameraObject.get()) return;
 		auto explorerObject = mvp::SceneExplorerObject::create(pObject);
@@ -161,37 +163,42 @@ sdk::utils::ReportMessagePtr LoadedScene::readObjects() {
 		//language=sql
 		SQLite::Statement statement(*database, "SELECT * FROM Objects");
 		while (statement.executeStep()) {
-			std::string objectName = statement.getColumn(1);
-			auto object = createObject(objectName);
-			object->setUuid(UUID::parse(statement.getColumn(2)));
-			nlohmann::json json = nlohmann::json::parse(statement.getColumn(3).getString());
+			auto object = sdk->createSceneObject();
+			object->setUuid(UUID::parse(statement.getColumn(1)));
+			scene->addObject(object);
+			nlohmann::json json = nlohmann::json::parse(statement.getColumn(2).getString());
 			if (json.is_array()) {
 				for (const auto &ext: json) {
 					if (ext.is_object()) {
-						auto extName = ext["name"].get<std::string>();
-						auto extType = ext["type"].get<std::string>();
-						addExtension(object.get(), extType, extName);
+						sdk::main::Extension* extension;
+						auto extType = ext.at("ExtensionType").get<std::string>();
+						if (extType == sdk::main::MainObjectExtension::typeName()) {
+							extension = object->getMainExtension();
+						} else {
+							auto extName = ext.at("ExtensionName").get<std::string>();
+							extension = addExtension(object.get(), extType, extName).get();
+						}
+						extension->deserialize(ext);
 					}
 				}
 			}
+			object->connectOnExtensionPropertyChanged(
+				[this, object](sdk::main::Extension* /*pExtension*/, sdk::main::ExtensionPropertyBase* /*pProperty*/) {
+					std::thread([this, object] { saveObject(object.get()); }).detach();
+				});
 		}
 	} catch (...) {
 		auto msg = sdk::utils::ReportMessage::create();
-		msg->setTitle("Failed to parse scene settings");
+		msg->setTitle("Failed to parse scene objects");
 		msg->setMessage("Exception occurred while querying the data");
 		return msg;
 	}
 	return nullptr;
 }
 
-void LoadedScene::addObject(const std::string &pName) {
-	auto obj = createObject(pName);
+void LoadedScene::addObject() {
+	auto obj = createObject();
 	obj->init();
-	//addExtension(obj.get(), "ModelRenderExtension", "render");
-	//auto render = sdk->newExtensionInstance<sdk::main::ModelRenderExtension>();
-	//render->setShaderRequest(sdk->getDefaultShaderProgram());
-	//render->setModelRequest(sdk->createFileModelRequest("TestModel", "Resources/Cube.obj"), "Cube");
-	//pObject->addExtension("render", render);
 	addObjectToDatabase(obj);
 }
 
@@ -203,8 +210,18 @@ void LoadedScene::removeObject(sdk::main::ISceneObject* pObjectToRemove) {
 	}).detach();
 }
 
+void LoadedScene::removeExtension(const sdk::main::Extension* pExtensionToRemove) const {
+	auto obj = pExtensionToRemove->getObject();
+	if (!obj) return;
+
+	std::shared_ptr<sdk::main::Extension> removedExtension;
+	obj->removeExtension(pExtensionToRemove->getName(), removedExtension);
+
+	std::thread([this, obj] { saveObject(obj); }).detach();
+}
+
 void LoadedScene::renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const {
-	pObject->setName(pNewName);
+	pObject->getMainExtension()->propertyName = pNewName;
 	std::thread([this, pObject] { saveObject(pObject); }).detach();
 }
 
@@ -224,19 +241,18 @@ void LoadedScene::saveObject(sdk::main::ISceneObject* pObject) const {
 	nlohmann::json json;
 	for (auto [extName, ext]: pObject->getExtensions()) {
 		nlohmann::json arrayElement;
-		arrayElement["name"] = ext->getName();
-		arrayElement["type"] = ext->getTypeName();
+		arrayElement["ExtensionName"] = ext->getName();
+		arrayElement["ExtensionType"] = ext->getTypeName();
 		ext->serialize(arrayElement);
 		json.emplace_back(arrayElement);
 	}
 	try {
 		//language=sql
 		SQLite::Statement statement(*database, R"(
-UPDATE Objects SET Name = ?, Extensions = ? WHERE UUID = ?
+UPDATE Objects SET Extensions = ? WHERE UUID = ?
 )");
-		statement.bind(1, pObject->getName());
-		statement.bind(2, json.dump(4));
-		statement.bind(3, pObject->getUuid()->toString());
+		statement.bind(1, json.dump(4));
+		statement.bind(2, pObject->getUuid()->toString());
 		statement.executeStep();
 		statement.clearBindings();
 		statement.reset();
@@ -257,15 +273,22 @@ void LoadedScene::addObjectToDatabase(const std::shared_ptr<sdk::main::ISceneObj
 			return;
 		}
 	}
+	nlohmann::json json;
+	for (auto [extName, ext]: pObject->getExtensions()) {
+		nlohmann::json arrayElement;
+		arrayElement["ExtensionName"] = ext->getName();
+		arrayElement["ExtensionType"] = ext->getTypeName();
+		ext->serialize(arrayElement);
+		json.emplace_back(arrayElement);
+	}
 
 	try {
 		//language=sql
 		SQLite::Statement statement(*database, R"(
-INSERT INTO Objects (Name, UUID, Extensions) VALUES (?, ?, ?)
+INSERT INTO Objects (UUID, Extensions) VALUES (?, ?)
 )");
-		statement.bind(1, pObject->getName());
-		statement.bind(2, pObject->getUuid()->toString());
-		statement.bind(3, "null");
+		statement.bind(1, pObject->getUuid()->toString());
+		statement.bind(2, json.dump(4));
 		statement.executeStep();
 		statement.clearBindings();
 		statement.reset();
@@ -295,24 +318,6 @@ void LoadedScene::removeObjectFromDatabase(sdk::main::ISceneObject* pObject) con
 	}
 }
 
-void LoadedScene::renameObjectInDatabase(const std::string &pOldName, const std::string &pNewName) const {
-	if (!database->tableExists("Objects")) return;
-	try {
-		//language=sql
-		SQLite::Statement statement(*database, R"(UPDATE Objects SET Name = ? WHERE Name = ?)");
-		statement.bind(1, pNewName);
-		statement.bind(2, pOldName);
-		statement.executeStep();
-		statement.clearBindings();
-		statement.reset();
-	} catch (...) {
-		const auto msg = sdk::utils::ReportMessage::create();
-		msg->setTitle("Failed to rename the object in the table");
-		msg->setMessage("Exception occurred while executing query");
-		onErrorOccurred(msg);
-	}
-}
-
 sdk::utils::ReportMessagePtr LoadedScene::createObjectsTable() const {
 	try {
 		//language=sql
@@ -321,7 +326,6 @@ sdk::utils::ReportMessagePtr LoadedScene::createObjectsTable() const {
     Id    INTEGER
         CONSTRAINT Objects_pk
             PRIMARY KEY AUTOINCREMENT,
-    Name  TEXT    NOT NULL,
     UUID  TEXT    NOT NULL,
     Extensions  TEXT    NOT NULL
 );
@@ -350,13 +354,12 @@ void LoadedScene::selectObject(mvp::ExplorerObject* pObjectToSelect) {
 	onSelectionChanged(selectedObject);
 }
 
-std::shared_ptr<sdk::main::ISceneObject> LoadedScene::createObject(const std::string &pName) const {
+std::shared_ptr<sdk::main::ISceneObject> LoadedScene::createObject() const {
 	auto object = sdk->createSceneObject();
-	object->setName(pName);
-
-	object->connectOnNameChanged([this, object](const std::string & /*pOldName*/, const std::string & /*pNewName*/) {
-		std::thread([this, object] { saveObject(object.get()); }).detach();
-	});
+	object->connectOnExtensionPropertyChanged(
+		[this, object](sdk::main::Extension* /*pExtension*/, sdk::main::ExtensionPropertyBase* /*pProperty*/) {
+			std::thread([this, object] { saveObject(object.get()); }).detach();
+		});
 	scene->addObject(object);
 	return object;
 }

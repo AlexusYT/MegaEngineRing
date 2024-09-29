@@ -65,6 +65,8 @@ void CustomTreeView::setSlotCreateModel(const SlotCreateModel &pSlotCreateModel)
 	set_model(singleSelection);
 }
 
+void CustomTreeView::unselect() { get_model()->unselect_all(); }
+
 void CustomTreeView::onLeftClick(int pNPress, double /*x*/, double /*y*/) {
 	if (pNPress == 2) {
 

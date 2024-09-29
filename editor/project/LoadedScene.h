@@ -118,9 +118,11 @@ public:
 		return onNameChanged.connect(pSlot);
 	}
 
-	void addObject(const std::string &pName);
+	void addObject();
 
 	void removeObject(sdk::main::ISceneObject* pObjectToRemove);
+
+	void removeExtension(const sdk::main::Extension* pExtensionToRemove) const;
 
 	void renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const;
 
@@ -142,8 +144,6 @@ public:
 
 	void removeObjectFromDatabase(sdk::main::ISceneObject* pObject) const;
 
-	void renameObjectInDatabase(const std::string &pOldName, const std::string &pNewName) const;
-
 	[[nodiscard]] const std::shared_ptr<Sdk> &getSdk() const { return sdk; }
 
 	[[nodiscard]] const std::shared_ptr<sdk::main::IScene> &getScene() const { return scene; }
@@ -157,7 +157,7 @@ public:
 	[[nodiscard]] mvp::ExplorerObject* getSelectedObject() const { return selectedObject; }
 
 private:
-	std::shared_ptr<sdk::main::ISceneObject> createObject(const std::string &pName) const;
+	std::shared_ptr<sdk::main::ISceneObject> createObject() const;
 
 	sdk::utils::ReportMessagePtr createObjectsTable() const;
 };

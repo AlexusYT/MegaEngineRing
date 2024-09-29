@@ -74,7 +74,7 @@ public:
 
 	virtual sigc::connection connectNameChanged(const sigc::slot<void(const std::string &pName)> &pSlot) = 0;
 
-	virtual void createObject(const std::string &pName) = 0;
+	virtual void createObject() = 0;
 
 	virtual void removeObject(sdk::main::ISceneObject* pObjectToRemove) = 0;
 

@@ -26,14 +26,18 @@
 #include "EngineSDK/main/scripting/IScript.h"
 #include "EngineUtils/utils/ReportMessage.h"
 #include "EngineUtils/utils/UUID.h"
+#include "extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 
 SceneObject::SceneObject() {
+	auto mainExt = MainObjectExtension::create();
+	SceneObject::addExtension("Main", mainExt);
+	mainExtension = mainExt.get();
 	uuid = UUID::create();
 	//TODO make this smarter (avoid dups and missing names)
 
-	name = std::format("SceneObject{}", counter);
+	mainExtension->propertyName = std::format("SceneObject{}", counter);
 	counter++;
 }
 
@@ -95,7 +99,7 @@ utils::ReportMessagePtr SceneObject::removeExtension(const std::string &pName, s
 		return msg;
 	} else {
 		std::shared_ptr<Extension> ext = std::move(iter->second);
-		onExtensionRemovedSignal(pExtension);
+		onExtensionRemovedSignal(ext);
 		extensions.erase(iter);
 		try {
 			if (auto msg = ext->onDeinit()) {

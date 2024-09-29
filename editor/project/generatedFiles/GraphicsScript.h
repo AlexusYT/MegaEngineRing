@@ -50,17 +50,12 @@ public:
 		: GeneratedFileEntry(pProject), sceneObject(pSceneObject) {
 		setName(sceneObject->getObjectName() + "Script");
 		for (auto [extName, extension]: sceneObject->getNativeObject()->getExtensions()) {
-			sdk::main::ExtensionProperties props = extension->getProperties();
+			auto props = extension->getProperties();
 
 			auto node = std::make_shared<ExtensionScriptNode>();
 			for (auto property: props) {
-				if (const auto prop = std::dynamic_pointer_cast<sdk::main::ExtensionPropertyBase>(property)) {
-					if (auto method = prop->getSetterName(); !method.empty())
-						node->addNewSlot("set" + property->getName(), method, SlotConnectionType::SETTER);
-					if (auto method = prop->getEventName(); !method.empty())
-						node->addNewSlot("event" + property->getName(), method, SlotConnectionType::CALLBACK);
-				}
-				//
+				node->addNewSlot(property->getPropertyName(), "setValue", SlotConnectionType::SETTER);
+				node->addNewSlot(property->getPropertyName(), "getValue", SlotConnectionType::CALLBACK);
 			}
 			node->setExtension(extension.get());
 			node->setName(extName);
@@ -127,7 +122,8 @@ public:
 
 	sdk::utils::ReportMessagePtr removeAllConnections(const ScriptNode* pNode);
 
-	std::shared_ptr<mvp::IPresenter> createEditorPresenter(const std::shared_ptr<mvp::TabPlaceholder> &pPlaceholder) override;
+	std::shared_ptr<mvp::IPresenter> createEditorPresenter(
+		const std::shared_ptr<mvp::TabPlaceholder> &pPlaceholder) override;
 
 	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<ScriptNode>> &getScriptNodes() const {
 		return scriptNodes;

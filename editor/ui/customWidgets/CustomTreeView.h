@@ -63,6 +63,8 @@ public:
 		return row->get_item();
 	}
 
+	void unselect();
+
 	[[nodiscard]] const SlotSelectionChanged &getSlotSelectionChanged() const { return selectionChanged; }
 
 	void setSlotSelectionChanged(const SlotSelectionChanged &pSelectionChanged) {

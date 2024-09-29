@@ -89,6 +89,12 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 
 	auto actionGroupObject = Gio::SimpleActionGroup::create();
 	actionGroupObject->add_action_with_parameter(
+		"extension.remove", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<uintptr_t>>(pBase);
+			auto ext = reinterpret_cast<sdk::main::Extension*>(var.get());
+			if (presenter) presenter->removeExtension(ext);
+		});
+	actionGroupObject->add_action_with_parameter(
 		"selected.extension.new", Glib::Variant<std::string>::variant_type(), [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<std::string>>(pBase);
 			if (presenter) presenter->addExtension(var.get());

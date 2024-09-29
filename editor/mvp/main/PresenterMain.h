@@ -73,6 +73,8 @@ public:
 
 	void removeObject(ExplorerObject* pObjectToRemove) override;
 
+	void removeExtension(sdk::main::Extension* pExtensionToRemove) override;
+
 	void openFile(const std::filesystem::path &pPathToFile) override;
 
 	void createScene(const std::filesystem::path &pPathToCreate) override;

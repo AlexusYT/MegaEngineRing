@@ -63,7 +63,7 @@ public:
 
 	sigc::connection connectNameChanged(const sigc::slot<void(const std::string &pName)> &pSlot) override;
 
-	void createObject(const std::string &pName) override;
+	void createObject() override;
 
 	void removeObject(sdk::main::ISceneObject* pObjectToRemove) override;
 

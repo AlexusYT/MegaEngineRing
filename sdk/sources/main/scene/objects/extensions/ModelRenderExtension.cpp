@@ -25,7 +25,6 @@
 #include <EngineSDK/main/resources/MultipleResource.h>
 #include <EngineSDK/main/resources/models/ModelResource.h>
 #include <EngineSDK/main/resources/models/ObjModelRequest.h>
-#include <EngineSDK/main/resources/shaders/ShaderProgramRequest.h>
 #include <EngineSDK/renderer/shaders/ShaderProgram.h>
 
 #include <epoxy/gl.h>
@@ -37,50 +36,7 @@
 
 namespace mer::sdk::main {
 
-void ModelRenderExtension::setModelRequest(const std::shared_ptr<ModelRequest> & /*pModelRequest*/,
-										   const std::string & /*pModelObjectName*/) {
-	/*enqueueResourceLoading(pModelRequest, [this, pModelObjectName](const std::shared_ptr<MultipleResource> &pModel,
-																   const utils::ReportMessagePtr &pError) {
-		if (pError) {
-			utils::Logger::error(pError);
-			return;
-		}
-
-		if (auto iter = pModel->find(pModelObjectName); iter == pModel->end()) {
-
-			auto msg = utils::ReportMessage::create();
-			msg->setTitle("Failed to get model object with specified name");
-			msg->setMessage("No model object resource with such name");
-			msg->addInfoLine("Resource name: {}", pModelObjectName);
-			utils::Logger::error(msg);
-		} else {
-			if (auto modelObject = std::dynamic_pointer_cast<ModelResource>(iter->second)) {
-				model = modelObject;
-			} else {
-				auto msg = utils::ReportMessage::create();
-				msg->setTitle("Failed to get model object with specified name");
-				msg->setMessage("Resource type is incorrect");
-				msg->addInfoLine("Resource name: {}", pModelObjectName);
-				msg->addInfoLine("Actual type is: {}", Utils::getTypeName(iter->second.get()));
-				msg->addInfoLine("Expected type is: {}", Utils::getTypeName(iter->second.get()));
-				utils::Logger::error(msg);
-			}
-		}
-	});*/
-}
-
-void ModelRenderExtension::onSerialize(nlohmann::json &pJson) {
-	pJson["propertyModel"] = propertyModel ? propertyModel->getName() : "null";
-	pJson["propertyShader"] = "null";
-}
-
-void ModelRenderExtension::onDeserialize(const nlohmann::json & /*pJson*/) {
-	//pJson.at("propertyModel").get_to(pType.propertyModel);
-	//pJson.at("propertyShader").get_to(pType.propertyShader);
-}
-
 utils::ReportMessagePtr ModelRenderExtension::onInit() {
-
 
 	enqueueResourceLoading(
 		BuiltInProgramRequest::getDefaultProgram(),
@@ -130,7 +86,7 @@ utils::ReportMessagePtr ModelRenderExtension::onDeinit() {
 }
 
 void ModelRenderExtension::onRender() {
-	if (!propertyShader || !propertyModel) return;
+	if (!propertyShader.getValue() || !propertyModel.getValue()) return;
 	static bool b{};
 	if (!b) {
 		propertyShader->attachSsbo(getObject()->getScene()->getProgramBuffer(), "ProgramWideSettings", 0);

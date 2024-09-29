@@ -25,7 +25,6 @@
 #include <EngineUtils/utils/ReportMessageFwd.h>
 #include <map>
 
-
 class UUID;
 
 namespace mer::sdk::utils {
@@ -35,6 +34,8 @@ enum class KeyboardKey;
 } // namespace mer::sdk::utils
 
 namespace mer::sdk::main {
+class ExtensionPropertyBase;
+class MainObjectExtension;
 class Extension;
 class IScene;
 
@@ -55,6 +56,12 @@ public:
 
 	virtual sigc::connection connectOnExtensionRemoved(
 		const sigc::slot<void(const std::shared_ptr<Extension> &pExtToRemove)> &pSlot) = 0;
+
+
+	virtual sigc::connection connectOnExtensionPropertyChanged(
+		const sigc::slot<void(Extension* pExtension, ExtensionPropertyBase* pProperty)> &pSlot) = 0;
+
+	virtual void notifyExtensionPropertyChanged(Extension* pExtension, ExtensionPropertyBase* pProperty) = 0;
 
 	virtual utils::ReportMessagePtr init() = 0;
 
@@ -78,16 +85,7 @@ public:
 
 	virtual const std::map<std::string, std::shared_ptr<Extension>> &getExtensions() const = 0;
 
-	[[nodiscard]] virtual const glm::vec3 &getPosition() const = 0;
-
-	virtual void setPosition(const glm::vec3 &pPosition) = 0;
-
-	[[nodiscard]] virtual const std::string &getName() const = 0;
-
-	virtual void setName(const std::string &pName) = 0;
-
-	virtual sigc::connection connectOnNameChanged(
-		const sigc::slot<void(const std::string &pOldName, const std::string &pNewName)> &pSlot) = 0;
+	[[nodiscard]] virtual MainObjectExtension* getMainExtension() const = 0;
 
 	[[nodiscard]] virtual const std::string &getScriptName() const = 0;
 

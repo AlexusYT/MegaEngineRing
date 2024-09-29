@@ -29,13 +29,14 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/scene/objects/extensions/cameras/CameraKeyboardExtension.cpp
         sources/main/scene/objects/extensions/ExtensionRegistry.cpp
         sources/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.cpp
-        sources/main/scene/objects/extensions/ExtensionProperties.cpp
         sources/main/scene/objects/extensions/OrbitCameraExtension.cpp
         sources/main/scene/SceneDataInjector.cpp
         sources/main/resources/models/ObjModelRequest.cpp
         sources/main/resources/models/ModelResource.cpp
         sources/main/scene/objects/extensions/ModelRenderExtension.cpp
         sources/main/scripting/Script.cpp
+        sources/main/scene/objects/extensions/MainObjectExtension.cpp
+        sources/utils/PropertyJsonSerializers.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -79,7 +80,7 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h
         include/EngineSDK/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.h
         include/EngineSDK/main/scene/objects/extensions/cameras/IProjectionCameraMod.h
-        include/EngineSDK/main/scene/objects/extensions/ExtensionProperties.h
+        include/EngineSDK/main/scene/objects/extensions/ExtensionPropertyBase.h
         include/EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h
         include/EngineSDK/main/scene/ISceneDataInjector.h
         include/EngineSDK/main/scene/SceneDataInjector.h
@@ -93,7 +94,11 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/IApplication.h
         include/EngineSDK/main/scripting/IScript.h
         include/EngineSDK/main/scripting/Script.h
-        include/EngineSDK/main/scene/objects/extensions/PropertiesForExtension.h
+        include/EngineSDK/main/scene/objects/extensions/IPropertyProvider.h
+        include/EngineSDK/main/scene/objects/extensions/ExtensionProperty.h
+        include/EngineSDK/main/scene/objects/extensions/MainObjectExtension.h
+        include/EngineSDK/utils/PropertyJsonSerializers.h
+        include/EngineSDK/utils/PropertyJsonSerializer.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
