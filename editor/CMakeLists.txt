@@ -218,6 +218,12 @@ add_library(
         mvp/main/objectProperties/IPresenterObjectProperties.h
         mvp/main/objectProperties/PresenterObjectProperties.cpp
         mvp/main/objectProperties/PresenterObjectProperties.h
+        mvp/resourceCreation/IModelResourceCreation.h
+        mvp/resourceCreation/ModelResourceCreation.cpp
+        mvp/resourceCreation/ModelResourceCreation.h
+        mvp/resourceCreation/IViewResourceCreation.h
+        mvp/resourceCreation/ViewResourceCreation.cpp
+        mvp/resourceCreation/ViewResourceCreation.h
 
 )
 

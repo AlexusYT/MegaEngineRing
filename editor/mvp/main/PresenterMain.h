@@ -77,6 +77,8 @@ public:
 
 	void openFile(const std::filesystem::path &pPathToFile) override;
 
+	void createResource(const std::filesystem::path &pPathToCreate) override;
+
 	void createScene(const std::filesystem::path &pPathToCreate) override;
 
 	void createScript(const std::filesystem::path &pPathToCreate) override;

@@ -244,6 +244,8 @@ void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 		if (const auto msg = loadedScene->load(pPathToFile)) { displayError(msg); }
 }
 
+void PresenterMain::createResource(const std::filesystem::path &pPathToCreate) {}
+
 void PresenterMain::createScene(const std::filesystem::path &pPathToCreate) {
 	std::filesystem::path pathToCreate = !is_directory(pPathToCreate) ? pPathToCreate.parent_path() : pPathToCreate;
 	int id = 0;

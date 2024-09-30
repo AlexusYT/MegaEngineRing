@@ -125,6 +125,11 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 			if (presenter) presenter->openFile(var.get().raw());
 		});
 	actionGroupFile->add_action_with_parameter(
+		"manage.new.resource", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createResource(var.get().raw());
+		});
+	actionGroupFile->add_action_with_parameter(
 		"manage.new.scene", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
 			if (presenter) presenter->createScene(var.get().raw());

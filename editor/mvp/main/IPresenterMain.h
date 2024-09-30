@@ -44,6 +44,8 @@ public:
 
 	virtual void openFile(const std::filesystem::path &pPathToFile) = 0;
 
+	virtual void createResource(const std::filesystem::path &pPathToCreate) = 0;
+
 	virtual void createScene(const std::filesystem::path &pPathToCreate) = 0;
 
 	virtual void createScript(const std::filesystem::path &pPathToCreate) = 0;

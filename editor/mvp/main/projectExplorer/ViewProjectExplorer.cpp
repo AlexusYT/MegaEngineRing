@@ -116,6 +116,7 @@ void ViewProjectExplorer::onPathChanged(const std::filesystem::path &pPath) cons
 	auto menu = Gio::Menu::create();
 	const auto variant = Glib::Variant<Glib::ustring>::create(pPath.string());
 	const auto menuNew = Gio::Menu::create();
+	menuNew->append_item(createItem("Resource", "file.manage.new.resource", variant));
 	menuNew->append_item(createItem("Scene", "file.manage.new.scene", variant));
 	menuNew->append_item(createItem("Script", "file.manage.new.script", variant));
 	const auto menuManage = Gio::Menu::create();
