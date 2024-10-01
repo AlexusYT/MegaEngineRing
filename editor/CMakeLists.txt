@@ -224,6 +224,12 @@ add_library(
         mvp/resourceCreation/IViewResourceCreation.h
         mvp/resourceCreation/ViewResourceCreation.cpp
         mvp/resourceCreation/ViewResourceCreation.h
+        mvp/resourceCreation/IPresenterResourceCreation.h
+        mvp/resourceCreation/PresenterResourceCreation.cpp
+        mvp/resourceCreation/PresenterResourceCreation.h
+        mvp/resourceCreation/readers/FileResourceReader.h
+        mvp/resourceCreation/readers/ObjFileResourceReader.cpp
+        mvp/resourceCreation/readers/ObjFileResourceReader.h
 
 )
 

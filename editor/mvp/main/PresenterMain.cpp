@@ -38,7 +38,11 @@
 #include "editors/sceneEditor/explorerObjects/ExplorerObject.h"
 #include "editors/sceneEditor/explorerObjects/SceneExplorerObject.h"
 #include "mvp/ApplicationController.h"
+#include "mvp/contexts/ApplicationContext.h"
 #include "mvp/contexts/MultiPanedContext.h"
+#include "mvp/resourceCreation/ModelResourceCreation.h"
+#include "mvp/resourceCreation/PresenterResourceCreation.h"
+#include "mvp/resourceCreation/ViewResourceCreation.h"
 #include "objectProperties/ModelObjectProperties.h"
 #include "objectProperties/PresenterObjectProperties.h"
 #include "objectProperties/ViewObjectProperties.h"
@@ -244,7 +248,18 @@ void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 		if (const auto msg = loadedScene->load(pPathToFile)) { displayError(msg); }
 }
 
-void PresenterMain::createResource(const std::filesystem::path &pPathToCreate) {}
+void PresenterMain::createResource(const std::filesystem::path & /*pPathToCreate*/) {
+	sdk::utils::ReportMessagePtr msg;
+	auto view = ViewResourceCreation::create(ApplicationContext::create(getAppController()->getApp()), msg);
+	if (!view) {
+		displayError(msg);
+		return;
+	}
+	auto model = std::make_shared<ModelResourceCreation>();
+
+	auto presenter = std::make_shared<PresenterResourceCreation>(model, view);
+	getAppController()->run(presenter);
+}
 
 void PresenterMain::createScene(const std::filesystem::path &pPathToCreate) {
 	std::filesystem::path pathToCreate = !is_directory(pPathToCreate) ? pPathToCreate.parent_path() : pPathToCreate;

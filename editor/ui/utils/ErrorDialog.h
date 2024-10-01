@@ -61,9 +61,17 @@ class ErrorDialog {
 	inline static std::unique_ptr<DetailsDialog> errorDetailsDialog;
 
 public:
-	static void showErrorDialog(Gtk::Root* pRoot, mer::sdk::utils::ReportMessagePtr &pMessage) {
-		message.swap(pMessage);
+	static void showErrorDialog(Gtk::Root* pRoot, const mer::sdk::utils::ReportMessagePtr &pMessage) {
+		showErrorDialog(dynamic_cast<Gtk::Window*>(pRoot), pMessage);
+	}
+
+	static void showErrorDialog(Gtk::Window* pRootWindow, const mer::sdk::utils::ReportMessagePtr &pMessage) {
 		mer::sdk::utils::Logger::error(message);
+		if (!pRootWindow) {
+			mer::sdk::utils::Logger::error("Unable to show error dialog: pRootWindow is nullptr");
+			return;
+		}
+		message = pMessage;
 		Glib::RefPtr<Gtk::AlertDialog> dialog = Gtk::AlertDialog::create();
 
 		dialog->set_message(message->getTitle());
@@ -72,8 +80,8 @@ public:
 		dialog->set_buttons({"Подробнее", "Закрыть"});
 		dialog->set_default_button(0);
 		dialog->set_cancel_button(1);
-		Gtk::Window* rootWindow(dynamic_cast<Gtk::Window*>(pRoot));
-		dialog->choose(*rootWindow, sigc::bind(&onDialogButtonsClicked, dialog, rootWindow));
+
+		dialog->choose(*pRootWindow, sigc::bind(&onDialogButtonsClicked, dialog, pRootWindow));
 	}
 
 private:

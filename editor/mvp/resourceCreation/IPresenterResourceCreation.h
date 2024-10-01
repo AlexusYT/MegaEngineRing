@@ -19,14 +19,19 @@
 // Created by alexus on 30.09.24.
 //
 
-#include "ModelResourceCreation.h"
-
-#include "IPresenterResourceCreation.h"
+#ifndef IPRESENTERRESOURCECREATION_H
+#define IPRESENTERRESOURCECREATION_H
+#include "mvp/PresenterBase.h"
 
 namespace mer::editor::mvp {
-void ModelResourceCreation::setPathToFile(const std::filesystem::path &pPathToFile) {
-	if (pathToFile == pPathToFile) return;
-	pathToFile = pPathToFile;
-	if (presenter) presenter->onPathToFileChanged();
-}
+
+class IPresenterResourceCreation : public PresenterBase {
+public:
+	virtual void chooseFileClicked() = 0;
+
+	virtual void onPathToFileChanged() = 0;
+};
+
 } // namespace mer::editor::mvp
+
+#endif //IPRESENTERRESOURCECREATION_H

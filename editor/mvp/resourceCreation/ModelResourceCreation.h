@@ -24,8 +24,22 @@
 #include "IModelResourceCreation.h"
 
 namespace mer::editor::mvp {
+class IPresenterResourceCreation;
+}
 
-class ModelResourceCreation : public IModelResourceCreation {};
+namespace mer::editor::mvp {
+
+class ModelResourceCreation : public IModelResourceCreation {
+	IPresenterResourceCreation* presenter{};
+	std::filesystem::path pathToFile;
+
+public:
+	void setPresenter(IPresenterResourceCreation* pPresenter) override { presenter = pPresenter; }
+
+	void setPathToFile(const std::filesystem::path &pPathToFile) override;
+
+	[[nodiscard]] const std::filesystem::path &getPathToFile() const override { return pathToFile; }
+};
 
 } // namespace mer::editor::mvp
 

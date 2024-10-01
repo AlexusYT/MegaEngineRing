@@ -23,8 +23,19 @@
 #define IMODELRESOURCECREATION_H
 
 namespace mer::editor::mvp {
+class IPresenterResourceCreation;
 
-class IModelResourceCreation {};
+class IModelResourceCreation {
+
+public:
+	virtual ~IModelResourceCreation() = default;
+
+	virtual void setPresenter(IPresenterResourceCreation* pPresenter) = 0;
+
+	virtual void setPathToFile(const std::filesystem::path &pPathToFile) = 0;
+
+	[[nodiscard]] virtual const std::filesystem::path &getPathToFile() const = 0;
+};
 
 } // namespace mer::editor::mvp
 

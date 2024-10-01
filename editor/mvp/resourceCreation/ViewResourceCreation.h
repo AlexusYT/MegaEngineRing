@@ -25,15 +25,44 @@
 
 namespace mer::editor::mvp {
 
-class ViewResourceCreation : public IViewResourceCreation {
+class ViewResourceCreation : public IViewResourceCreation, Gtk::Window {
+	IPresenterResourceCreation* presenter{};
 	std::shared_ptr<IWidgetContext> context;
+	std::shared_ptr<Gtk::Builder> builder;
+
+
+	explicit ViewResourceCreation(const std::shared_ptr<IWidgetContext> &pContext,
+								  const std::shared_ptr<Gtk::Builder> &pBuilder);
 
 public:
-	explicit ViewResourceCreation(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {}
+	static std::shared_ptr<ViewResourceCreation> create(const std::shared_ptr<IWidgetContext> &pContext,
+														sdk::utils::ReportMessagePtr &pMsg);
 
 	void openView() override;
 
 	void closeView() override;
+
+	void setPresenter(IPresenterResourceCreation* pPresenter) override { presenter = pPresenter; }
+
+	sigc::connection connectChooseFile(const sigc::slot<void(Gtk::Entry::IconPosition)> &pSlot) const override {
+		return builder->get_widget<Gtk::Entry>("filePathEntry")->signal_icon_release().connect(pSlot);
+	}
+
+	void showFileDialog(const std::shared_ptr<Gtk::FileDialog> &pDialog,
+						const sigc::slot<void(std::shared_ptr<Gio::AsyncResult> &pResult)> &pSlot) override {
+
+		pDialog->open(*this, pSlot);
+	}
+
+	void displayError(const sdk::utils::ReportMessagePtr &pError) override;
+
+	void displayChosenPath(const std::string &pPath) override;
+
+	void displayResourceName(const std::string &pName) override;
+
+	void switchTo(const std::string &pTabName) override;
+
+	void displayMessage(const std::string &pMessage) override;
 };
 
 } // namespace mer::editor::mvp

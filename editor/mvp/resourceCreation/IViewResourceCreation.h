@@ -24,8 +24,31 @@
 #include "mvp/IView.h"
 
 namespace mer::editor::mvp {
+class IPresenterResourceCreation;
+}
 
-class IViewResourceCreation : public IView {};
+namespace mer::editor::mvp {
+
+class IViewResourceCreation : public IView {
+public:
+	virtual void setPresenter(IPresenterResourceCreation* pPresenter) = 0;
+
+	virtual sigc::connection connectChooseFile(const sigc::slot<void(Gtk::Entry::IconPosition)> &pSlot) const = 0;
+
+
+	virtual void showFileDialog(const std::shared_ptr<Gtk::FileDialog> &pDialog,
+								const sigc::slot<void(std::shared_ptr<Gio::AsyncResult> &pResult)> &pSlot) = 0;
+
+	virtual void displayError(const sdk::utils::ReportMessagePtr &pError) = 0;
+
+	virtual void displayChosenPath(const std::string &pPath) = 0;
+
+	virtual void displayResourceName(const std::string &pName) = 0;
+
+	virtual void switchTo(const std::string &pTabName) = 0;
+
+	virtual void displayMessage(const std::string &pMessage) = 0;
+};
 
 } // namespace mer::editor::mvp
 
