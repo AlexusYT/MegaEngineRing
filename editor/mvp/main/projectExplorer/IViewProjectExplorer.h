@@ -25,6 +25,7 @@
 #include "mvp/IView.h"
 
 namespace mer::editor::mvp {
+class IPresenterProjectExplorer;
 class ProjectExplorerElement;
 
 class IViewProjectExplorer : public IView {
@@ -32,7 +33,17 @@ public:
 	virtual void setSlotCreateModel(
 		const sigc::slot<std::shared_ptr<Gio::ListModel>(const std::shared_ptr<Glib::ObjectBase> &)> &pSlot) = 0;
 
+	virtual void setSelectionChangedSlot(const sigc::slot<void(ProjectExplorerElement* pElement)> &pSlot) = 0;
+
+	virtual void setSelectOnDoubleClick(bool pSelectOnDoubleClick = true) = 0;
+
 	virtual void onPathChanged(const std::filesystem::path &pPath) const = 0;
+
+	virtual void selectByUri(const std::filesystem::path &pPath) = 0;
+
+	[[nodiscard]] virtual IPresenterProjectExplorer* getPresenter() const = 0;
+
+	virtual void setPresenter(IPresenterProjectExplorer* pPresenter) = 0;
 };
 } // namespace mer::editor::mvp
 

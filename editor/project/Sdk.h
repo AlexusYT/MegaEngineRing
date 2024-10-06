@@ -25,12 +25,15 @@
 #include <typeinfo>
 
 namespace mer::sdk::main {
+class FileSystemResourceBundle;
+class IResourceLoaders;
+class IModel3DResource;
+class IModel3DObject;
 class ISceneDataInjector;
 class Application;
 class ILoadedResources;
-class IResources;
+class IResourceLoadExecutor;
 class Extension;
-class ModelRequest;
 class ShaderProgramRequest;
 class IScene;
 class ISceneObject;
@@ -42,40 +45,59 @@ class Sdk {
 	std::shared_ptr<sdk::main::ISceneObject> (*createSceneObjectFunc)();
 	std::shared_ptr<sdk::main::IScene> (*createSceneFunc)();
 	const std::shared_ptr<sdk::main::ShaderProgramRequest> &(*defaultShaderProgramFunc)();
-	std::shared_ptr<sdk::main::ModelRequest> (*createFileModelRequestFunc)(const std::string &pName,
-																		   const std::filesystem::path &pFilePath);
 	void (*initExtensionRegistryFunc)();
 	std::shared_ptr<sdk::main::Extension> (*newExtensionInstanceFunc)(const std::string &pName);
-	std::shared_ptr<sdk::main::ILoadedResources> (*createLoadedResourcesFunc)(sdk::main::IResources* pResources);
+	std::shared_ptr<sdk::main::ILoadedResources> (*createLoadedResourcesFunc)();
 	std::shared_ptr<sdk::main::Application> (*createApplicationFunc)();
 	std::shared_ptr<sdk::main::ISceneDataInjector> (*createSceneInjectorFunc)(sdk::main::IScene* pScene);
+	std::shared_ptr<sdk::main::IModel3DObject> (*createModel3DObjectFunc)();
+	std::shared_ptr<sdk::main::IModel3DResource> (*createModel3DResourceFunc)();
+	std::shared_ptr<sdk::main::IResourceLoaders> (*getResourceLoadersInstanceFunc)();
+	std::shared_ptr<sdk::main::FileSystemResourceBundle> (*createFileSystemResourceBundleFunc)(
+		const std::filesystem::path &pSearchPath);
 	std::string mainNamespace{};
-	explicit Sdk(void* pHandler);
 
+	explicit Sdk(void* pHandler);
 
 public:
 	static std::shared_ptr<Sdk> create(const std::string &pSdkPath, sdk::utils::ReportMessagePtr &pReportMessageOut);
 
 	~Sdk();
 
-	std::shared_ptr<sdk::main::ISceneObject> createSceneObject() const;
+	std::shared_ptr<sdk::main::ISceneObject> createSceneObject() const { return createSceneObjectFunc(); }
 
-	std::shared_ptr<sdk::main::IScene> createScene() const;
+	std::shared_ptr<sdk::main::IScene> createScene() const { return createSceneFunc(); }
 
-	const std::shared_ptr<sdk::main::ShaderProgramRequest> &getDefaultShaderProgram() const;
+	const std::shared_ptr<sdk::main::ShaderProgramRequest> &getDefaultShaderProgram() const {
+		return defaultShaderProgramFunc();
+	}
 
-	std::shared_ptr<sdk::main::ModelRequest> createFileModelRequest(const std::string &pName,
-																	const std::filesystem::path &pFilePath) const;
+	std::shared_ptr<sdk::main::ILoadedResources> createLoadedResources() const { return createLoadedResourcesFunc(); }
 
-	std::shared_ptr<sdk::main::ILoadedResources> createLoadedResources(sdk::main::IResources* pResources) const;
+	void initExtensionRegistry() const { initExtensionRegistryFunc(); }
 
-	void initExtensionRegistry();
+	std::shared_ptr<sdk::main::Extension> newExtensionInstance(const std::string &pName) const {
+		return newExtensionInstanceFunc(pName);
+	}
 
-	std::shared_ptr<sdk::main::Extension> newExtensionInstance(const std::string &pName) const;
+	std::shared_ptr<sdk::main::Application> createApplication() const { return createApplicationFunc(); }
 
-	std::shared_ptr<sdk::main::Application> createApplication() const;
+	std::shared_ptr<sdk::main::ISceneDataInjector> createSceneInjector(sdk::main::IScene* pScene) const {
+		return createSceneInjectorFunc(pScene);
+	}
 
-	std::shared_ptr<sdk::main::ISceneDataInjector> createSceneInjector(sdk::main::IScene* pScene) const;
+	std::shared_ptr<sdk::main::IModel3DObject> createModel3DObject() const { return createModel3DObjectFunc(); }
+
+	std::shared_ptr<sdk::main::IModel3DResource> createModel3DResource() const { return createModel3DResourceFunc(); }
+
+	std::shared_ptr<sdk::main::IResourceLoaders> getResourceLoadersInstance() const {
+		return getResourceLoadersInstanceFunc();
+	}
+
+	std::shared_ptr<sdk::main::FileSystemResourceBundle> createFileSystemResourceBundle(
+		const std::filesystem::path &pSearchPath) const {
+		return createFileSystemResourceBundleFunc(pSearchPath);
+	}
 
 	template<typename ClassT>
 	std::shared_ptr<ClassT> newExtensionInstance() {

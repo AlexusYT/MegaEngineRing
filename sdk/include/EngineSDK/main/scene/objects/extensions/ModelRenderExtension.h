@@ -25,47 +25,39 @@
 #include <nlohmann/detail/macro_scope.hpp>
 #include <nlohmann/json_fwd.hpp>
 
+#include "EngineSDK/main/render/RenderInstance.h"
+#include "EngineSDK/main/render/RenderInstanceData.h"
 #include "Extension.h"
-
-namespace mer::sdk::main {
-class ShaderProgramRequest;
-class ModelRequest;
-class BuiltInProgramRequest;
-class ModelResource;
-} // namespace mer::sdk::main
 
 namespace mer::sdk::renderer {
 class ShaderProgram;
 }
 
 namespace mer::sdk::main {
-class ModelRenderExtension : public Extension {
+class IModel3DObject;
 
-	uint32_t vao{};
-	uint32_t vbo{};
-	uint32_t ebo{};
+class ModelRenderExtension : public Extension, public RenderInstance {
+
+	RenderInstanceData data;
 
 protected:
-	ModelRenderExtension() : propertyShader(this, "Shader"), propertyModel(this, "Model") {}
+	ModelRenderExtension() : propertyModel(this, "Model") {}
 
 public:
-	ExtensionProperty<std::shared_ptr<renderer::ShaderProgram>> propertyShader;
-	ExtensionProperty<std::shared_ptr<ModelResource>> propertyModel;
+	ExtensionProperty<std::shared_ptr<IModel3DObject>> propertyModel;
 
 	METHOD_CREATE(ModelRenderExtension)
 
 	EXT_TYPE_NAME("ModelRenderExtension")
 
-protected:
+	const RenderInstanceData &getRenderInstanceData() override { return data; }
 
+protected:
 	utils::ReportMessagePtr onInit() override;
 
 	utils::ReportMessagePtr onDeinit() override;
 
 	void onRender() override;
-
-private:
-	void setupBuffers();
 };
 } // namespace mer::sdk::main
 

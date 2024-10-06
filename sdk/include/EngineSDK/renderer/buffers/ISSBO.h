@@ -33,7 +33,7 @@ class ISSBO {
 public:
 	virtual ~ISSBO() = default;
 
-	virtual void setData(const void* pData, int64_t pSize, BufferUsageEnum pUsage) const = 0;
+	virtual void setData(const void* pData, int64_t pSize, BufferUsageEnum pUsage) = 0;
 
 	virtual void bind() const = 0;
 
@@ -43,7 +43,19 @@ public:
 
 	virtual void bindBufferBase(uint32_t pBinding) = 0;
 
+	virtual void unbindBufferBase(uint32_t pBinding) = 0;
+
 	virtual void bufferSubData(int32_t pOffset, int64_t pSize, const void* pData) = 0;
+
+	virtual void reallocate(int64_t pNewSize, const void* pNewData) = 0;
+
+	[[nodiscard]] virtual int64_t getSize() const = 0;
+
+	[[nodiscard]] virtual const void* getData() const = 0;
+
+	virtual void setUsage(BufferUsageEnum pUsage) = 0;
+
+	[[nodiscard]] virtual const BufferUsageEnum &getUsage() const = 0;
 };
 } // namespace mer::sdk::renderer
 

@@ -32,15 +32,14 @@ namespace mer::editor::mvp {
 ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
 
 	treeView = Gtk::make_managed<ui::CustomTreeView>();
+	treeView->set_halign(Gtk::Align::START);
 	mainScrolledWindow.set_child(*treeView);
 	mainScrolledWindow.set_has_frame(true);
-	treeView->setSelectOnDoubleClick();
+	ViewProjectExplorer::setSelectOnDoubleClick(true);
 	addNameColumn();
 	addTypeColumn();
-	treeView->setSlotSelectionChanged([this](Glib::ObjectBase* pObjectBase) {
-		const auto element = dynamic_cast<ProjectExplorerElement*>(pObjectBase);
-		if (!element) return;
-		auto str = element->getPath().string();
+	ViewProjectExplorer::setSelectionChangedSlot([this](const ProjectExplorerElement* pElement) {
+		auto str = pElement->getPath().string();
 		treeView->activate_action("file.open", Glib::Variant<Glib::ustring>::create(str));
 	});
 }
@@ -48,6 +47,19 @@ ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &
 void ViewProjectExplorer::setSlotCreateModel(
 	const sigc::slot<std::shared_ptr<Gio::ListModel>(const std::shared_ptr<Glib::ObjectBase> &)> &pSlot) {
 	treeView->setSlotCreateModel(pSlot);
+}
+
+void ViewProjectExplorer::setSelectionChangedSlot(const sigc::slot<void(ProjectExplorerElement* pElement)> &pSlot) {
+
+	treeView->setSlotSelectionChanged([this, pSlot](Glib::ObjectBase* pObjectBase) {
+		const auto element = dynamic_cast<ProjectExplorerElement*>(pObjectBase);
+		if (!element) return;
+		pSlot(element);
+	});
+}
+
+void ViewProjectExplorer::setSelectOnDoubleClick(const bool pSelectOnDoubleClick) {
+	treeView->setSelectOnDoubleClick(pSelectOnDoubleClick);
 }
 
 void ViewProjectExplorer::openView() { context->addWidget(&mainScrolledWindow); }
@@ -100,11 +112,12 @@ void ViewProjectExplorer::addTypeColumn() const {
 		if (!col) return;
 		auto* label = dynamic_cast<Gtk::Label*>(pListItem->get_child());
 		if (!label) return;
-		if (col->isDirectory()) label->set_text("Folder");
-		else if (col->isScene())
-			label->set_text("Scene");
-		else
-			label->set_text("");
+		switch (col->getType()) {
+			case ExplorerElementType::DIRECTORY: label->set_text("Folder"); break;
+			case ExplorerElementType::SCENE: label->set_text("Scene"); break;
+			case ExplorerElementType::RESOURCE_MODEL: label->set_text("Model"); break;
+			default:; label->set_text("");
+		}
 	});
 
 	const auto column = Gtk::ColumnViewColumn::create("Type", factory);
@@ -126,11 +139,44 @@ void ViewProjectExplorer::onPathChanged(const std::filesystem::path &pPath) cons
 	treeView->setMenu(menu);
 }
 
+void ViewProjectExplorer::selectByUri(const std::filesystem::path &pPath) {
+	auto selection = std::dynamic_pointer_cast<Gtk::SingleSelection>(treeView->get_model());
+	if (!selection) return;
+	for (uint32_t i = 0, maxI = selection->get_n_items(); i < maxI; ++i) {
+		auto row = selection->get_typed_object<Gtk::TreeListRow>(i);
+		if (!row) return;
+
+		auto pos = getPositionByUri(pPath, row);
+		if (!pos) continue;
+		selection->select_item(pos.value(), true);
+	}
+}
+
 std::shared_ptr<Gio::MenuItem> ViewProjectExplorer::createItem(const std::string &pName, const std::string &pAction,
 															   const Glib::Variant<Glib::ustring> &pVariant) {
 
 	std::shared_ptr<Gio::MenuItem> item = Gio::MenuItem::create(pName, "");
 	item->set_action_and_target(pAction, pVariant);
 	return item;
+}
+
+std::optional<uint32_t> ViewProjectExplorer::getPositionByUri(const std::filesystem::path &pPath,
+															  const std::shared_ptr<Gtk::TreeListRow> &pRow) {
+
+	auto item = std::dynamic_pointer_cast<ProjectExplorerElement>(pRow->get_item());
+	if (!item) return {};
+	auto relativePath = item->getRelativePath();
+	if (relativePath == pPath) return pRow->get_position();
+
+	pRow->set_expanded(true);
+	auto children = pRow->get_children();
+
+	for (uint32_t i = 0, maxI = children->get_n_items(); i < maxI; ++i) {
+		auto row = pRow->get_child_row(i);
+		if (!row) return {};
+		return getPositionByUri(pPath, row);
+	}
+	pRow->set_expanded(false);
+	return {};
 }
 } // namespace mer::editor::mvp

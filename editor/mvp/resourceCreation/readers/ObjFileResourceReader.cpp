@@ -23,6 +23,10 @@
 
 #include <regex>
 
+#include "EngineSDK/main/resources/models/IModel3DObject.h"
+#include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "project/Sdk.h"
+
 namespace mer::editor::mvp {
 
 
@@ -58,8 +62,8 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 		if (line.starts_with("o ")) {
 			hasObject = true;
 			object = std::make_shared<Obj>();
-			objects.emplace_back(object);
 			object->name = line.substr(2);
+			objects.emplace(object->name, object);
 		} else if (line.starts_with("v ")) {
 			hasVertex = true;
 			model.vertices.emplace_back(getVec3(line));
@@ -104,15 +108,62 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 	return nullptr;
 }
 
+std::shared_ptr<sdk::main::IModel3DResource> ObjFileResourceReader::generateResource(
+	const std::vector<std::string> &pObjectsToSave) const {
+	std::map<VertexInfo, uint16_t> vertexToOutIndex;
+	auto resource = sdk->createModel3DResource();
+	for (auto objectName: pObjectsToSave) {
+		const auto obj = objects.at(objectName);
+		std::vector<glm::vec3> vertices;
+		std::vector<glm::vec2> uvs;
+		std::vector<glm::vec3> normals;
+		std::vector<uint16_t> indices;
+		for (auto face: obj->faces) {
+			for (auto vertexInfo: face) {
+				auto it = vertexToOutIndex.find(vertexInfo);
+				if (it == vertexToOutIndex.end()) {
+					vertices.emplace_back(vertexInfo.vertexCoord);
+					uvs.emplace_back(vertexInfo.texCoord);
+					normals.emplace_back(vertexInfo.normalCoord);
+					uint16_t newIndex = static_cast<uint16_t>(vertices.size()) - 1;
+					indices.emplace_back(newIndex);
+					vertexToOutIndex[vertexInfo] = newIndex;
+				} else {
+					indices.emplace_back(it->second);
+				}
+			}
+		}
+
+		auto o = sdk->createModel3DObject();
+		o->setVertices(vertices);
+		o->setUvs(uvs);
+		o->setNormals(normals);
+		o->setIndices(indices);
+		o->setName(objectName);
+
+		resource->addModelObject(o);
+	}
+	return resource;
+}
+
 glm::vec3 ObjFileResourceReader::getVec3(const std::string &pLine) {
 	//language=regexp
 	std::regex regex(R"((-?\d\.\d*) (-?\d\.\d*) (-?\d\.\d*))");
 	std::smatch matches;
 	if (std::regex_search(pLine, matches, regex)) {
-		glm::vec3 vertex;
-		vertex.x = std::stof(matches.str(1));
-		vertex.y = std::stof(matches.str(2));
-		vertex.z = std::stof(matches.str(3));
+		glm::vec3 vertex{};
+		{
+			std::string str = matches.str(1);
+			/*auto [ptr, ec] =*/std::from_chars(str.data(), str.data() + str.size(), vertex.x);
+		}
+		{
+			std::string str = matches.str(2);
+			/*auto [ptr, ec] =*/std::from_chars(str.data(), str.data() + str.size(), vertex.y);
+		}
+		{
+			std::string str = matches.str(3);
+			/*auto [ptr, ec] =*/std::from_chars(str.data(), str.data() + str.size(), vertex.z);
+		}
 		return vertex;
 	}
 	return {};
@@ -124,8 +175,14 @@ glm::vec2 ObjFileResourceReader::getVec2(const std::string &pLine) {
 	std::smatch matches;
 	if (std::regex_search(pLine, matches, regex)) {
 		glm::vec2 vertex;
-		vertex.x = std::stof(matches.str(1));
-		vertex.y = std::stof(matches.str(2));
+		{
+			std::string str = matches.str(1);
+			/*auto [ptr, ec] =*/std::from_chars(str.data(), str.data() + str.size(), vertex.x);
+		}
+		{
+			std::string str = matches.str(2);
+			/*auto [ptr, ec] =*/std::from_chars(str.data(), str.data() + str.size(), vertex.y);
+		}
 		return vertex;
 	}
 	return {};

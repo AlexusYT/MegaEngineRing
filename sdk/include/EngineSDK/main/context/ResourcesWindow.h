@@ -23,21 +23,21 @@
 #define RESOURCESWINDOW_H
 
 #ifndef EDITOR_SDK
-	#include "EngineSDK/main/resources/IResources.h"
+	#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
 	#include "EngineSDK/main/resources/Resources.h"
 	#include "EngineSDK/main/scene/IScene.h"
 	#include "Window.h"
 	#include <thread>
 
 namespace mer::sdk::main {
-class ResourceRequests;
 class ILoadedResources;
 } // namespace mer::sdk::main
 
 namespace mer::sdk::main {
-class ResourcesWindow : public Window, public IResources {
-	std::list<std::pair<std::shared_ptr<ResourceRequest>, ResourceSlot>> queue;
+class ResourcesWindow : public Window, public IResourceLoadExecutor {
+	std::list<std::pair<std::string, LoadingFinishedSlot>> queue;
 	std::mutex queueMutex;
+	std::mutex waitMutex;
 
 	std::shared_ptr<ILoadedResources> resources;
 	std::jthread thread;
@@ -49,16 +49,18 @@ protected:
 public:
 	static auto create() { return std::shared_ptr<ResourcesWindow>(new (std::nothrow) ResourcesWindow()); }
 
-	std::shared_ptr<Resources> executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
-											   const std::shared_ptr<IScene> &pScene) const;
+	std::pair<std::shared_ptr<IResource>, utils::ReportMessagePtr> loadResourceSync(
+		const std::string &pResourceUri) override;
 
-	void enqueueResourceLoading(const std::shared_ptr<ResourceRequest> &pRequest, const ResourceSlot &pSlot) override;
+	void loadResourceAsync(const std::string &pResourceUri, const LoadingFinishedSlot &pSlot) override;
 
 	void requestStopThread();
 
 	[[nodiscard]] IApplication* getApplication() const override { return application; }
 
 	void setApplication(IApplication* pApplication) override { application = pApplication; }
+
+	const std::shared_ptr<ILoadedResources> &getResources() override { return resources; }
 
 private:
 	void resourceLoop(const std::stop_token &pToken);

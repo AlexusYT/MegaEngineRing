@@ -25,7 +25,7 @@
 
 #include <sigc++/signal.h>
 
-#include "EngineSDK/main/resources/IResources.h"
+#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
 #include "EngineSDK/main/resources/ResourceRequest.h"
 #include "EngineSDK/utils/MouseButton.h"
 #include "IScene.h"
@@ -35,7 +35,7 @@ class ICamera;
 class ISceneObject;
 
 class Scene : public IScene {
-	IResources* resources;
+	IResourceLoadExecutor* resourceExecutor;
 	std::shared_ptr<ProgramWideShaderBuffer> programBuffer;
 	std::vector<std::shared_ptr<ISceneObject>> objects;
 	sigc::signal<void(int pWidth, int pHeight)> onWindowSizeChangedSignal;
@@ -43,6 +43,7 @@ class Scene : public IScene {
 	sigc::signal<void(ISceneObject* pObject)> onObjectRemovedSignal;
 	ICamera* currentCamera;
 	IApplication* application;
+	bool inited{};
 
 public:
 	Scene();
@@ -53,15 +54,25 @@ public:
 
 	void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const override;
 
-	[[nodiscard]] IResources* getResources() const final { return resources; }
+	[[nodiscard]] IResourceLoadExecutor* getResourceExecutor() const final { return resourceExecutor; }
 
-	void onResourceLoadingError(const std::shared_ptr<ResourceRequest> &pRequest,
-								const sdk::utils::ReportMessagePtr &pError) override;
+private:
+	void setResourceExecutor(IResourceLoadExecutor* pResources) final { resourceExecutor = pResources; }
 
-	void enqueueResourceLoading(const std::shared_ptr<ResourceRequest> &pRequest,
-								const IResources::ResourceSlot &pSlot) const override {
-		resources->enqueueResourceLoading(pRequest, pSlot);
+public:
+	std::shared_ptr<IResource> loadResourceSync(const std::string &pName) final {
+		auto [resource, error] = resourceExecutor->loadResourceSync(pName);
+		if (!resource) { onResourceLoadingError(pName, error); }
+		return resource;
 	}
+
+	void loadResourceAsync(const std::string &pResourceUri,
+						   const IResourceLoadExecutor::LoadingFinishedSlot &pSlot) const override {
+		resourceExecutor->loadResourceAsync(pResourceUri, pSlot);
+	}
+
+	void onResourceLoadingError(const std::string &pResourceUri, const utils::ReportMessagePtr &pError) override;
+
 
 	void switchCamera(ICamera* pNewCamera) override;
 
@@ -99,8 +110,6 @@ protected:
 	void removeObject(ISceneObject* pObjectToRemove) override;
 
 private:
-	void setResources(IResources* pResources) final;
-
 	void render() final;
 
 	void resize(int pWidth, int pHeight) override;

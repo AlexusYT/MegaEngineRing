@@ -48,6 +48,14 @@ public:
 	virtual void switchTo(const std::string &pTabName) = 0;
 
 	virtual void displayMessage(const std::string &pMessage) = 0;
+
+	virtual void displayObjects(const std::vector<std::string> &pObjects) = 0;
+
+	virtual void setStackVisibility(bool pState) = 0;
+
+	virtual void setSaveButtonSensitivity(bool pState) const = 0;
+
+	virtual std::vector<std::string> getSelectedObjects() = 0;
 };
 
 } // namespace mer::editor::mvp

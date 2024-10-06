@@ -230,6 +230,19 @@ add_library(
         mvp/resourceCreation/readers/FileResourceReader.h
         mvp/resourceCreation/readers/ObjFileResourceReader.cpp
         mvp/resourceCreation/readers/ObjFileResourceReader.h
+        mvp/resourceCreation/savers/Model3DResourceSaver.cpp
+        mvp/resourceCreation/savers/Model3DResourceSaver.h
+        mvp/resourceSelection/IModelResourceSelection.h
+        mvp/resourceSelection/ModelResourceSelection.cpp
+        mvp/resourceSelection/ModelResourceSelection.h
+        mvp/resourceSelection/IViewResourceSelection.h
+        mvp/resourceSelection/ViewResourceSelection.h
+        mvp/resourceSelection/ViewResourceSelection.cpp
+        mvp/resourceSelection/IPresenterResourceSelection.h
+        mvp/resourceSelection/PresenterResourceSelection.h
+        mvp/resourceSelection/PresenterResourceSelection.cpp
+        mvp/contexts/ViewportContext.cpp
+        mvp/contexts/ViewportContext.h
 
 )
 

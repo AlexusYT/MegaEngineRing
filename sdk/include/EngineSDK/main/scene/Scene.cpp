@@ -21,6 +21,7 @@
 
 #include "Scene.h"
 
+#include "EngineSDK/main/resources/LoadedResources.h"
 #include "EngineSDK/main/resources/shaders/BuiltInProgramRequest.h"
 #include "EngineSDK/renderer/GL.h"
 #include "EngineUtils/utils/Logger.h"
@@ -42,8 +43,7 @@ void Scene::setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const {
 	programBuffer->setViewProjMatrix(pViewProjMatrix);
 }
 
-void Scene::onResourceLoadingError(const std::shared_ptr<ResourceRequest> & /*pRequest*/,
-								   const sdk::utils::ReportMessagePtr &pError) {
+void Scene::onResourceLoadingError(const std::string & /*pRequest*/, const sdk::utils::ReportMessagePtr &pError) {
 
 	sdk::utils::Logger::error(pError);
 }
@@ -62,10 +62,11 @@ void Scene::beforeRender() {
 }
 
 sdk::utils::ReportMessagePtr Scene::initScene() {
+	if (inited) return nullptr;
 	for (const auto &object: objects) {
 		if (auto msg = object->init()) return msg;
 	}
-
+	inited = true;
 	return nullptr;
 }
 
@@ -76,9 +77,11 @@ void Scene::deinitScene() {
 void Scene::addObject(const std::shared_ptr<ISceneObject> &pObject) {
 	pObject->setScene(this);
 
-	if (auto msg = pObject->init()) {
-		utils::Logger::warn("Object shouldn't report about errors. Ignoring");
-		utils::Logger::error(msg);
+	if (inited) {
+		if (auto msg = pObject->init()) {
+			utils::Logger::warn("Object shouldn't report about errors. Ignoring");
+			utils::Logger::error(msg);
+		}
 	}
 	objects.emplace_back(pObject);
 	onObjectAddedSignal(pObject.get());
@@ -91,10 +94,10 @@ void Scene::removeObject(ISceneObject* pObjectToRemove) {
 	onObjectRemovedSignal(pObjectToRemove);
 }
 
-void Scene::setResources(IResources* pResources) { resources = pResources; }
-
 void Scene::render() {
 	beforeRender();
+	programBuffer->bindBufferBase(0);
+	resourceExecutor->getResources()->render();
 	for (const auto &object: objects) { object->render(); }
 	afterRender();
 }

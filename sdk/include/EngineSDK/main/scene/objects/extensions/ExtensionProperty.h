@@ -93,19 +93,19 @@ public:
 
 	[[nodiscard]] sigc::signal<T(const T &)> &getReturnOverride() { return valueChanging; }
 
-	void serialize(nlohmann::json &pJson) override;
+	void serialize(nlohmann::json &pJson, Extension* pExtension) override;
 
-	void deserialize(const nlohmann::json &pJson) override;
+	void deserialize(const nlohmann::json &pJson, Extension* pExtension) override;
 };
 
 template<typename T>
-void ExtensionProperty<T>::serialize(nlohmann::json &pJson) {
-	pJson[getPropertyName()] = utils::PropertyJsonSerializer<T>::serialize(value);
+void ExtensionProperty<T>::serialize(nlohmann::json &pJson, Extension* pExtension) {
+	pJson[getPropertyName()] = utils::PropertyJsonSerializer<T>::serialize(value, pExtension);
 }
 
 template<typename T>
-void ExtensionProperty<T>::deserialize(const nlohmann::json &pJson) {
-	value = utils::PropertyJsonSerializer<T>::deserialize(pJson.at(getPropertyName()));
+void ExtensionProperty<T>::deserialize(const nlohmann::json &pJson, Extension* pExtension) {
+	value = utils::PropertyJsonSerializer<T>::deserialize(pJson.at(getPropertyName()), pExtension);
 }
 
 

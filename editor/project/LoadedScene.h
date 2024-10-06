@@ -32,6 +32,7 @@ class ExplorerObject;
 } // namespace mer::editor::mvp
 
 namespace mer::sdk::main {
+class IResourceLoadExecutor;
 class Application;
 class Extension;
 class ISceneObject;
@@ -81,6 +82,7 @@ public:
 
 	bool hasResourcesContext() const;
 
+	sdk::main::IResourceLoadExecutor* getResourceLoadExecutor() const;
 	void setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) const;
 
 	void connectErrorOccurred(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
@@ -155,6 +157,8 @@ public:
 	void selectObject(mvp::ExplorerObject* pObjectToSelect);
 
 	[[nodiscard]] mvp::ExplorerObject* getSelectedObject() const { return selectedObject; }
+
+	[[nodiscard]] const std::shared_ptr<sdk::main::Application> &getApp() const { return app; }
 
 private:
 	std::shared_ptr<sdk::main::ISceneObject> createObject() const;

@@ -22,14 +22,13 @@
 #include "PresenterSceneEditor.h"
 
 #include <EngineSDK/main/resources/LoadedResources.h>
-#include <EngineSDK/main/resources/ResourceRequests.h>
 #include <EngineSDK/main/scene/IScene.h>
 
 #include <dlfcn.h>
 
 #include "EngineSDK/main/Application.h"
-#include "EngineSDK/main/resources/IResources.h"
-#include "EngineSDK/main/resources/models/ObjModelRequest.h"
+#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/main/resources/models/Model3DLoader.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"

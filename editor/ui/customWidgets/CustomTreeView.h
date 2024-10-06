@@ -29,7 +29,7 @@ class CustomTreeView : public Gtk::ColumnView {
 
 public:
 	using SlotContextMenuRequested = sigc::slot<std::shared_ptr<Gio::Menu>(TreeElementBase* pObjectBase)>;
-	using SlotSelectionChanged = sigc::slot<void(Glib::ObjectBase* pObjectBase)>;
+	using SlotSelectionChanged = sigc::slot<void(TreeElementBase* pObjectBase)>;
 	using SlotCreateModel = Gtk::TreeListModel::SlotCreateModel;
 
 private:
@@ -86,6 +86,8 @@ protected:
 	}
 
 	void onLeftClick(int pNPress, double pX, double pY);
+
+	TreeElementBase* getElementAt(double pX, double pY);
 
 	std::shared_ptr<Gio::MenuModel> getMenuAt(double pX, double pY);
 };

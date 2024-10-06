@@ -23,15 +23,24 @@
 #define MODELRESOURCECREATION_H
 #include "IModelResourceCreation.h"
 
-namespace mer::editor::mvp {
-class IPresenterResourceCreation;
+namespace mer::editor::project {
+class Sdk;
 }
+
+namespace mer::editor::mvp {
+class FileResourceReader;
+class IPresenterResourceCreation;
+} // namespace mer::editor::mvp
 
 namespace mer::editor::mvp {
 
 class ModelResourceCreation : public IModelResourceCreation {
 	IPresenterResourceCreation* presenter{};
 	std::filesystem::path pathToFile;
+	std::filesystem::path pathToResource;
+	std::filesystem::path relativePathToResource;
+	std::string resourceName;
+	std::shared_ptr<project::Sdk> sdk;
 
 public:
 	void setPresenter(IPresenterResourceCreation* pPresenter) override { presenter = pPresenter; }
@@ -39,6 +48,22 @@ public:
 	void setPathToFile(const std::filesystem::path &pPathToFile) override;
 
 	[[nodiscard]] const std::filesystem::path &getPathToFile() const override { return pathToFile; }
+
+	[[nodiscard]] const std::filesystem::path &getPathToResource() const override { return pathToResource; }
+
+	void setPathToResource(const std::filesystem::path &pPathToResource) override { pathToResource = pPathToResource; }
+
+	[[nodiscard]] const std::string &getResourceName() const override { return resourceName; }
+
+	void setResourceName(const std::string &pResourceName) override { resourceName = pResourceName; }
+
+	void setSdk(const std::shared_ptr<project::Sdk> &pSdk) override { sdk = pSdk; }
+
+	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const override { return sdk; }
+
+	void setRelativePathToResource(const std::filesystem::path &pPath) override { relativePathToResource = pPath; }
+
+	[[nodiscard]] const std::filesystem::path &getRelativePathToResource() const override { return relativePathToResource; }
 };
 
 } // namespace mer::editor::mvp

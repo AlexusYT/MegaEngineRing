@@ -21,22 +21,57 @@
 
 #include "ResourcesContext.h"
 
-#include "EngineSDK/main/resources/LoadedResources.h"
+#include <future>
 
-void mer::editor::mvp::ResourcesContext::resourceLoop(const std::stop_token &pToken) {
+#include "EngineSDK/main/IApplication.h"
+#include "EngineSDK/main/resources/LoadedResources.h"
+#include "EngineSDK/main/resources/ResourceLoaders.h"
+#include "Globals.h"
+#include "project/Sdk.h"
+
+namespace mer::editor::mvp {
+std::pair<std::shared_ptr<sdk::main::IResource>, sdk::utils::ReportMessagePtr> ResourcesContext::loadResourceSync(
+	const std::string &pResourceUri) {
+
+	std::promise<std::pair<std::shared_ptr<sdk::main::IResource>, sdk::utils::ReportMessagePtr>> promise;
+	loadResourceAsync(pResourceUri, [&promise](const std::shared_ptr<sdk::main::IResource> &pResource,
+											   const sdk::utils::ReportMessagePtr &pError) {
+		auto result = std::make_pair(pResource, pError);
+		promise.set_value(result);
+	});
+	auto future = promise.get_future();
+	future.wait();
+	return future.get();
+}
+
+void ResourcesContext::resourceLoop(const std::stop_token &pToken) {
 	while (!pToken.stop_requested()) {
 		sharedContext->make_current();
-		std::unique_lock lck(queueMutex);
+		std::unique_lock lck(waitMutex);
 		cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
-		for (auto &[request, slot]: queue) {
+		for (auto &[resourceUri, slot]: queue) {
 			sdk::utils::ReportMessagePtr error;
-			std::shared_ptr<sdk::main::IResource> resource;
-			try {
-				error = resources->executeRequest(request, resource);
-			} catch (...) {
-				error = sdk::utils::ReportMessage::create();
-				error->setTitle("Failed to load resource");
-				error->setMessage("Exception thrown while executing request");
+			std::shared_ptr<sdk::main::IResource> resource = resources->getResource(resourceUri);
+			if (!resource) {
+
+				std::string uri;
+				try {
+					if (resourceUri.starts_with("_builtin_")) {
+						auto uriPath = std::filesystem::path(resourceUri);
+						auto path = Globals::getDataPath() / uriPath.lexically_relative("_builtin_").string();
+						uri = path.string();
+					} else {
+						uri = resourceUri;
+					}
+					error =
+						sdk->getResourceLoadersInstance()->load(this, application->getResourceBundle(), uri, resource);
+					if (resource) resources->addResource(resourceUri, resource);
+				} catch (...) {
+					error = sdk::utils::ReportMessage::create();
+					error->setTitle("Failed to load resource");
+					error->setMessage("Exception thrown while executing request");
+					error->addInfoLine("Resource URI: {}", uri);
+				}
 			}
 			try {
 				slot(resource, error);
@@ -52,6 +87,8 @@ void mer::editor::mvp::ResourcesContext::resourceLoop(const std::stop_token &pTo
 				sdk::utils::Logger::error(msg);
 			}
 		}
+		std::lock_guard lock(queueMutex);
 		queue.clear();
 	}
 }
+} // namespace mer::editor::mvp

@@ -28,7 +28,6 @@
 namespace mer::sdk::main {
 class ResourceRequest {
 	friend class LoadedResources;
-	friend class LazyResource;
 	std::vector<std::shared_ptr<ResourceRequest>> required;
 
 protected:
@@ -52,8 +51,6 @@ private:
 
 	[[nodiscard]] const std::vector<std::shared_ptr<ResourceRequest>> &getRequired() const { return required; }
 };
-
-class LazyRequest : public ResourceRequest {};
 
 class RegularRequest : public ResourceRequest {};
 } // namespace mer::sdk::main

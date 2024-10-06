@@ -24,17 +24,21 @@
 
 #include <nlohmann/json.hpp>
 
+namespace mer::sdk::main {
+class Extension;
+}
+
 namespace mer::sdk::utils {
 template<class T>
 struct PropertyJsonSerializer {
 
 	template<std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
-	static nlohmann::json serialize(const T &pValue) {
+	static nlohmann::json serialize(const T &pValue, main::Extension* /*pExtension*/) {
 		return pValue;
 	}
 
 	template<std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
-	static T deserialize(const nlohmann::json &pJson) {
+	static T deserialize(const nlohmann::json &pJson, main::Extension* /*pExtension*/) {
 		return pJson.get<T>();
 	}
 };

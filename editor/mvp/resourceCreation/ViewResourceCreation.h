@@ -29,6 +29,7 @@ class ViewResourceCreation : public IViewResourceCreation, Gtk::Window {
 	IPresenterResourceCreation* presenter{};
 	std::shared_ptr<IWidgetContext> context;
 	std::shared_ptr<Gtk::Builder> builder;
+	Gtk::ListView* objectsListView;
 
 
 	explicit ViewResourceCreation(const std::shared_ptr<IWidgetContext> &pContext,
@@ -63,7 +64,16 @@ public:
 	void switchTo(const std::string &pTabName) override;
 
 	void displayMessage(const std::string &pMessage) override;
+
+	void displayObjects(const std::vector<std::string> &pObjects) override;
+
+	void setStackVisibility(bool pState) override;
+
+	void setSaveButtonSensitivity(bool pState) const override;
+
+	std::vector<std::string> getSelectedObjects() override;
 };
+
 
 } // namespace mer::editor::mvp
 

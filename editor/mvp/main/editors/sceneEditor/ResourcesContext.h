@@ -24,22 +24,28 @@
 #include <condition_variable>
 #include <thread>
 
-#include "EngineSDK/main/resources/IResources.h"
+#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
+
+namespace mer::editor::project {
+class Sdk;
+}
 
 namespace mer::sdk::main {
 class ILoadedResources;
 }
 
 namespace mer::editor::mvp {
-class ResourcesContext : public sdk::main::IResources {
-	std::list<std::pair<std::shared_ptr<sdk::main::ResourceRequest>, ResourceSlot>> queue;
+class ResourcesContext : public sdk::main::IResourceLoadExecutor {
+	std::list<std::pair<std::string, LoadingFinishedSlot>> queue;
 	std::mutex queueMutex;
+	std::mutex waitMutex;
 	std::shared_ptr<sdk::main::ILoadedResources> resources;
 	std::condition_variable cv;
 
 	std::shared_ptr<Gdk::GLContext> sharedContext;
 	std::jthread thread;
 	sdk::main::IApplication* application{};
+	std::shared_ptr<project::Sdk> sdk;
 
 public:
 	explicit ResourcesContext(const std::shared_ptr<Gdk::GLContext> &pSharedContext)
@@ -52,11 +58,13 @@ public:
 		cv.notify_one();
 	}
 
-	void enqueueResourceLoading(const std::shared_ptr<sdk::main::ResourceRequest> &pRequest,
-								const ResourceSlot &pSlot) override {
+	std::pair<std::shared_ptr<sdk::main::IResource>, sdk::utils::ReportMessagePtr> loadResourceSync(
+		const std::string &pResourceUri) override;
+
+	void loadResourceAsync(const std::string &pResourceUri, const LoadingFinishedSlot &pSlot) override {
 
 		std::lock_guard lock(queueMutex);
-		queue.emplace_back(pRequest, pSlot);
+		queue.emplace_back(pResourceUri, pSlot);
 		cv.notify_one();
 	}
 
@@ -67,6 +75,12 @@ public:
 	void setApplication(sdk::main::IApplication* pApplication) override { application = pApplication; }
 
 	void setResources(const std::shared_ptr<sdk::main::ILoadedResources> &pResources) { resources = pResources; }
+
+	const std::shared_ptr<sdk::main::ILoadedResources> &getResources() override { return resources; }
+
+	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const { return sdk; }
+
+	void setSdk(const std::shared_ptr<project::Sdk> &pSdk) { sdk = pSdk; }
 };
 } // namespace mer::editor::mvp
 

@@ -28,10 +28,12 @@
 #include "IApplication.h"
 #include "IApplicationSettings.h"
 
+
 namespace mer::sdk::main {
 
 class Application : public IApplication {
 	std::shared_ptr<IApplicationSettings> applicationSettings;
+	std::shared_ptr<IResourceBundle> resourceBundle;
 
 	Application() = default;
 
@@ -42,7 +44,6 @@ public:
 
 	void deinitEngine() override;
 
-
 	int runMainLoop(int argc, char* argv[]) override;
 
 	[[nodiscard]] const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const override {
@@ -51,6 +52,12 @@ public:
 
 	void setApplicationSettings(const std::shared_ptr<IApplicationSettings> &pApplicationSettings) override {
 		applicationSettings = pApplicationSettings;
+	}
+
+	[[nodiscard]] const std::shared_ptr<IResourceBundle> &getResourceBundle() const override { return resourceBundle; }
+
+	void setResourceBundle(const std::shared_ptr<IResourceBundle> &pResourceBundle) override {
+		resourceBundle = pResourceBundle;
 	}
 
 private:

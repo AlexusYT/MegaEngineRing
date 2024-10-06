@@ -65,6 +65,8 @@ public:
 
 	void stop() override;
 
+	void selectResourceForProperty(sdk::main::ExtensionPropertyBase* pProperty) override;
+
 	void addExtension(const std::string &pExtensionName) override;
 
 	void selectObject(ExplorerObject* pObjectToSelect) override;

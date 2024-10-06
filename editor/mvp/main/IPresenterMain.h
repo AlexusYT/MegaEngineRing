@@ -24,14 +24,17 @@
 #include "mvp/PresenterBase.h"
 
 namespace mer::sdk::main {
+class ExtensionPropertyBase;
 class Extension;
-}
+} // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
 class ExplorerObject;
 
 class IPresenterMain : public PresenterBase {
 public:
+	virtual void selectResourceForProperty(sdk::main::ExtensionPropertyBase* pProperty) = 0;
+
 	virtual void addExtension(const std::string &pExtensionName) = 0;
 
 	virtual void selectObject(ExplorerObject* pObjectToSelect) = 0;

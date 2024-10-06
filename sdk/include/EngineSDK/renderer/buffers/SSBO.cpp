@@ -28,8 +28,12 @@ SSBO::SSBO() { glGenBuffers(1, &name); }
 
 SSBO::~SSBO() { glDeleteBuffers(1, &name); }
 
-void SSBO::setData(const void* pData, const int64_t pSize, const BufferUsageEnum pUsage) const {
+void SSBO::setData(const void* pData, const int64_t pSize, const BufferUsageEnum pUsage) {
 	bind();
+	data = pData;
+	size = pSize;
+	usage = pUsage;
+
 	glBufferData(GL_SHADER_STORAGE_BUFFER, pSize, pData, pUsage);
 }
 
@@ -39,10 +43,30 @@ void SSBO::unbind() const {}
 
 uint32_t SSBO::native() const { return name; }
 
-void SSBO::bindBufferBase(const uint32_t pBinding) { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name); }
+void SSBO::bindBufferBase(const uint32_t pBinding) {
+
+	baseIndex = pBinding;
+
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name);
+}
+
+void SSBO::unbindBufferBase(const uint32_t pBinding) { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, 0); }
 
 void SSBO::bufferSubData(int32_t pOffset, int64_t pSize, const void* pData) {
 	bind();
 	glBufferSubData(GL_SHADER_STORAGE_BUFFER, pOffset, pSize, pData);
+}
+
+void SSBO::reallocate(int64_t pNewSize, const void* pNewData) {
+
+	data = pNewData;
+	size = pNewSize;
+	if (name != 0) {
+		unbindBufferBase(baseIndex);
+		glDeleteBuffers(1, &name);
+	}
+	glGenBuffers(1, &name);
+	setData(pNewData, pNewSize, usage);
+	bindBufferBase(baseIndex);
 }
 } // namespace mer::sdk::renderer

@@ -22,14 +22,22 @@
 #include "ProjectExplorerElement.h"
 
 namespace mer::editor::mvp {
-ProjectExplorerElement::ProjectExplorerElement(const std::filesystem::path &pPath, const bool pDirectory)
-	: TreeElementBase(Gio::ListStore<ProjectExplorerElement>::create()), directory(pDirectory), path(pPath) {
+ProjectExplorerElement::ProjectExplorerElement(const std::filesystem::path &pPath,
+											   const std::filesystem::path &pRootPath, const bool pDirectory)
+	: TreeElementBase(Gio::ListStore<ProjectExplorerElement>::create()), directory(pDirectory), path(pPath),
+	  rootPath(pRootPath) {
 
+	auto ext = path.extension();
+	if (directory) type = ExplorerElementType::DIRECTORY;
+	else if (ext == ".enscene")
+		type = ExplorerElementType::SCENE;
+	else if (ext == ".enmodel")
+		type = ExplorerElementType::RESOURCE_MODEL;
 	fileMonitor = Gio::File::create_for_path(path)->monitor_directory();
 
-	fileMonitor->signal_changed().connect([this](const std::shared_ptr<Gio::File> &pFile,
-												 const std::shared_ptr<Gio::File> & /*pOtherFile*/,
-												 const Gio::FileMonitor::Event &pEventType) {
+	fileMonitor->signal_changed().connect([this, pRootPath](const std::shared_ptr<Gio::File> &pFile,
+															const std::shared_ptr<Gio::File> & /*pOtherFile*/,
+															const Gio::FileMonitor::Event &pEventType) {
 		const auto childrenSelf = std::dynamic_pointer_cast<Gio::ListStore<ProjectExplorerElement>>(getChildren());
 		const auto file = std::filesystem::path(pFile->get_path());
 		if (pEventType == Gio::FileMonitor::Event::DELETED) {
@@ -40,7 +48,7 @@ ProjectExplorerElement::ProjectExplorerElement(const std::filesystem::path &pPat
 				}
 			}
 		}
-		if (pEventType == Gio::FileMonitor::Event::CREATED) { addChild(create(file, is_directory(file))); }
+		if (pEventType == Gio::FileMonitor::Event::CREATED) { addChild(create(file, pRootPath, is_directory(file))); }
 	});
 }
 
@@ -79,6 +87,7 @@ std::shared_ptr<Gio::MenuModel> ProjectExplorerElement::getMenu() {
 	auto menu = Gio::Menu::create();
 	const auto variant = Glib::Variant<Glib::ustring>::create(path.string());
 	const auto menuNew = Gio::Menu::create();
+	menuNew->append_item(createItem("Resource", "file.manage.new.resource", variant));
 	menuNew->append_item(createItem("Scene", "file.manage.new.scene", variant));
 	menuNew->append_item(createItem("Script", "file.manage.new.script", variant));
 	const auto menuManage = Gio::Menu::create();

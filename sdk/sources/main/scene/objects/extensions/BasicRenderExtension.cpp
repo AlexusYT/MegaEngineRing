@@ -30,7 +30,7 @@
 
 namespace mer::sdk::main {
 utils::ReportMessagePtr BasicRenderExtension::onInit() {
-	enqueueResourceLoading(
+	/*enqueueResourceLoading(
 		BuiltInProgramRequest::getDefaultProgram(),
 		[this](const std::shared_ptr<renderer::ShaderProgram> &pProgram, const utils::ReportMessagePtr &pError) {
 			if (pError) {
@@ -38,7 +38,7 @@ utils::ReportMessagePtr BasicRenderExtension::onInit() {
 				return;
 			}
 			shader = pProgram;
-		});
+		});*/
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glBindVertexArray(vao);

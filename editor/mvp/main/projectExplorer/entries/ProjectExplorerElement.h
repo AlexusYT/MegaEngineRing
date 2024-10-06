@@ -24,17 +24,28 @@
 #include "ui/customWidgets/TreeElementBase.h"
 
 namespace mer::editor::mvp {
+enum class ExplorerElementType {
+	NONE = 0,
+	DIRECTORY,
+	SCENE,
+	RESOURCE_MODEL,
+	RESOURCE_MODEL_OBJECT,
+};
+
 class ProjectExplorerElement : public ui::TreeElementBase {
 	bool directory{};
 	ProjectExplorerElement* parent{};
 	std::filesystem::path path{};
+	std::filesystem::path rootPath{};
 	std::shared_ptr<Gio::FileMonitor> fileMonitor;
+	ExplorerElementType type;
 
 public:
-	ProjectExplorerElement(const std::filesystem::path &pPath, bool pDirectory);
+	ProjectExplorerElement(const std::filesystem::path &pPath, const std::filesystem::path &pRootPath, bool pDirectory);
 
-	static std::shared_ptr<ProjectExplorerElement> create(const std::filesystem::path &pPath, const bool pDirectory) {
-		return Glib::make_refptr_for_instance(new ProjectExplorerElement(pPath, pDirectory));
+	static std::shared_ptr<ProjectExplorerElement> create(
+		const std::filesystem::path &pPath, const std::filesystem::path &pRootPath, const bool pDirectory) {
+		return Glib::make_refptr_for_instance(new ProjectExplorerElement(pPath, pRootPath, pDirectory));
 	}
 
 	void addChild(const std::shared_ptr<ProjectExplorerElement> &pChild);
@@ -45,13 +56,15 @@ public:
 
 	std::shared_ptr<Gio::MenuModel> getMenu() override;
 
-	[[nodiscard]] bool isDirectory() const { return directory; }
+	[[nodiscard]] ExplorerElementType getType() const { return type; }
 
-	[[nodiscard]] bool isScene() const { return path.extension() == ".enscene"; }
+	[[nodiscard]] bool isDirectory() const { return directory; }
 
 	[[nodiscard]] ProjectExplorerElement* getParent() const { return parent; }
 
 	[[nodiscard]] Glib::ustring getName() const { return path.stem().string(); }
+
+	[[nodiscard]] std::filesystem::path getRelativePath() const { return relative(path, rootPath); }
 
 	[[nodiscard]] const std::filesystem::path &getPath() const { return path; }
 

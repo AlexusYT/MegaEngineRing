@@ -16,35 +16,36 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 27.02.24.
+// Created by alexus on 26.03.24.
 //
 
-#ifndef IRESOURCES_H
-#define IRESOURCES_H
-#include <sigc++/functors/slot.h>
+#ifndef MODEL3DLOADER_H
+#define MODEL3DLOADER_H
 
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/main/resources/ResourceLoader.h"
 
 namespace mer::sdk::main {
-class IApplication;
-class ResourceRequest;
-class IResource;
-
-class IResources {
+class Model3DLoader : public ResourceLoader {
 public:
-	using ResourceSlot =
-		sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>;
+	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
+								 std::shared_ptr<IResource> &pResourceOut) override;
 
-	virtual ~IResources() = default;
+	static std::string readString(const std::shared_ptr<std::istream> &pStream);
 
-	virtual void enqueueResourceLoading(const std::shared_ptr<ResourceRequest> &pRequest,
-										const ResourceSlot &pSlot) = 0;
+	template<typename T>
+	static void readArray(const std::shared_ptr<std::istream> &pStream, std::vector<T> &pArray) {
+		uint16_t size = 0;
+		pStream->read(reinterpret_cast<std::istream::char_type*>(&size), sizeof(size));
+		pArray.resize(size);
+		pStream->read(reinterpret_cast<std::istream::char_type*>(pArray.data()),
+					  static_cast<long int>(size * sizeof(T)));
+	}
 
-	[[nodiscard]] virtual IApplication* getApplication() const = 0;
-
-	virtual void setApplication(IApplication* pApplication) = 0;
+private:
+	std::string getFileExtension() override { return "enmodel"; }
 };
+
 } // namespace mer::sdk::main
 
 
-#endif //IRESOURCES_H
+#endif //MODEL3DLOADER_H

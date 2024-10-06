@@ -22,103 +22,45 @@
 #include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
 
 #include <EngineSDK/main/buffers/ProgramWideShaderBuffer.h>
-#include <EngineSDK/main/resources/MultipleResource.h>
-#include <EngineSDK/main/resources/models/ModelResource.h>
-#include <EngineSDK/main/resources/models/ObjModelRequest.h>
 #include <EngineSDK/renderer/shaders/ShaderProgram.h>
 
 #include <epoxy/gl.h>
+#include <glm/ext/matrix_transform.hpp>
 #include <nlohmann/json.hpp>
 
+#include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/resources/shaders/BuiltInProgramRequest.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
 
 utils::ReportMessagePtr ModelRenderExtension::onInit() {
+	auto pos = getObject()->getMainExtension()->propertyPosition;
 
-	enqueueResourceLoading(
-		BuiltInProgramRequest::getDefaultProgram(),
-		[this](const std::shared_ptr<renderer::ShaderProgram> &pProgram, const utils::ReportMessagePtr &pError) {
-			if (pError) {
-				utils::Logger::error(pError);
-				return;
-			}
-			propertyShader = pProgram;
-		});
-	enqueueResourceLoading(
-		FileModelRequest::create("TestModel", "Resources/Cube.obj"),
-		[this](const std::shared_ptr<MultipleResource> &pModel, const utils::ReportMessagePtr &pError) {
-			if (pError) {
-				utils::Logger::error(pError);
-				return;
-			}
+	data.modelViewMatrix = glm::translate(glm::mat4(1.0f), pos.getValue());
+	pos.getEvent().connect([this](const glm::vec3 &pPos) {
+		data.modelViewMatrix = glm::translate(glm::mat4(1.0f), pPos);
+		notifyDataChanged();
+	});
 
-			if (auto iter = pModel->find("Cube"); iter == pModel->end()) {
+	if (propertyModel.getValue()) propertyModel->addRenderInstance(this);
 
-				auto msg = utils::ReportMessage::create();
-				msg->setTitle("Failed to get model object with specified name");
-				msg->setMessage("No model object resource with such name");
-				msg->addInfoLine("Resource name: {}", "Cube");
-				utils::Logger::error(msg);
-			} else {
-				if (auto modelObject = std::dynamic_pointer_cast<ModelResource>(iter->second)) {
-					propertyModel = modelObject;
-				} else {
-					auto msg = utils::ReportMessage::create();
-					msg->setTitle("Failed to get model object with specified name");
-					msg->setMessage("Resource type is incorrect");
-					msg->addInfoLine("Resource name: {}", "Cube");
-					msg->addInfoLine("Actual type is: {}", Utils::getTypeName(iter->second.get()));
-					msg->addInfoLine("Expected type is: {}", Utils::getTypeName(iter->second.get()));
-					utils::Logger::error(msg);
-				}
-			}
-		});
+	propertyModel.getReturnOverride().connect([this](const std::shared_ptr<IModel3DObject> &pObj) {
+		if (const auto val = propertyModel.getValue()) val->removeRenderInstance(this);
+		return pObj;
+	});
+	propertyModel.getEvent().connect([this](const std::shared_ptr<IModel3DObject> &pObj) {
+		if (!pObj) return;
+		pObj->addRenderInstance(this);
+	});
 	return nullptr;
 }
 
-utils::ReportMessagePtr ModelRenderExtension::onDeinit() {
-	glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
-	return nullptr;
-}
+utils::ReportMessagePtr ModelRenderExtension::onDeinit() { return nullptr; }
 
-void ModelRenderExtension::onRender() {
-	if (!propertyShader.getValue() || !propertyModel.getValue()) return;
-	static bool b{};
-	if (!b) {
-		propertyShader->attachSsbo(getObject()->getScene()->getProgramBuffer(), "ProgramWideSettings", 0);
-		setupBuffers();
-		b = true;
-	}
-	propertyShader->use();
-	glBindVertexArray(vao);
+void ModelRenderExtension::onRender() {}
 
-	glDrawElements(GL_TRIANGLES, static_cast<int32_t>(propertyModel->getIndices().size()), GL_UNSIGNED_SHORT, nullptr);
-	glBindVertexArray(0);
-}
-
-void ModelRenderExtension::setupBuffers() {
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	auto &indices = propertyModel->getIndices();
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<int32_t>(indices.size() * sizeof(uint16_t)), indices.data(),
-				 GL_STATIC_DRAW);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	auto &vertices = propertyModel->getVertices();
-	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(vertices.size() * sizeof(glm::vec3)), vertices.data(),
-				 GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*) 0);
-	glEnableVertexAttribArray(0);
-	glBindVertexArray(0);
-}
 
 } // namespace mer::sdk::main

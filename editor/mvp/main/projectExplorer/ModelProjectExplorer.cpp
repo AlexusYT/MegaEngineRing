@@ -31,18 +31,19 @@ ModelProjectExplorer::ModelProjectExplorer(const std::filesystem::path &pPath) {
 void ModelProjectExplorer::setRootPath(const std::filesystem::path &pPath) {
 	path = pPath;
 	if (!exists(pPath)) create_directories(pPath);
-	elements = getDirectoryEntry(pPath);
+	elements = getDirectoryEntry(pPath, pPath);
 }
 
-std::shared_ptr<ProjectExplorerElement> ModelProjectExplorer::getDirectoryEntry(const std::filesystem::path &pPath) {
-	auto explorerEntry = ProjectExplorerElement::create(pPath, true);
+std::shared_ptr<ProjectExplorerElement> ModelProjectExplorer::getDirectoryEntry(
+	const std::filesystem::path &pPath, const std::filesystem::path &pRootPath) {
+	auto explorerEntry = ProjectExplorerElement::create(pPath, pRootPath, true);
 	for (const auto &entry: std::filesystem::directory_iterator(pPath)) {
 		auto entryPath = entry.path();
 		if (entryPath.filename().string().starts_with('.')) continue;
 		if (entry.is_directory()) {
-			explorerEntry->addChild(getDirectoryEntry(entry.path()));
+			explorerEntry->addChild(getDirectoryEntry(entry.path(), pRootPath));
 		} else {
-			explorerEntry->addChild(ProjectExplorerElement::create(entryPath, false));
+			explorerEntry->addChild(ProjectExplorerElement::create(entryPath, pRootPath, false));
 		}
 	}
 	explorerEntry->sort();

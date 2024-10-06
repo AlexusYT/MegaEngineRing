@@ -49,46 +49,19 @@ std::shared_ptr<Sdk> Sdk::create(const std::string &pSdkPath, sdk::utils::Report
 	return ptr;
 }
 
-std::shared_ptr<sdk::main::ISceneObject> Sdk::createSceneObject() const { return createSceneObjectFunc(); }
-
-std::shared_ptr<sdk::main::IScene> Sdk::createScene() const { return createSceneFunc(); }
-
-const std::shared_ptr<sdk::main::ShaderProgramRequest> &Sdk::getDefaultShaderProgram() const {
-	return defaultShaderProgramFunc();
-}
-
-std::shared_ptr<sdk::main::ModelRequest> Sdk::createFileModelRequest(const std::string &pName,
-																	 const std::filesystem::path &pFilePath) const {
-	return createFileModelRequestFunc(pName, pFilePath);
-}
-
-std::shared_ptr<sdk::main::ILoadedResources> Sdk::createLoadedResources(sdk::main::IResources* pResources) const {
-	return createLoadedResourcesFunc(pResources);
-}
-
-void Sdk::initExtensionRegistry() { initExtensionRegistryFunc(); }
-
-std::shared_ptr<sdk::main::Extension> Sdk::newExtensionInstance(const std::string &pName) const {
-	return newExtensionInstanceFunc(pName);
-}
-
-std::shared_ptr<sdk::main::Application> Sdk::createApplication() const { return createApplicationFunc(); }
-
-std::shared_ptr<sdk::main::ISceneDataInjector> Sdk::createSceneInjector(sdk::main::IScene* pScene) const {
-	return createSceneInjectorFunc(pScene);
-}
-
 sdk::utils::ReportMessagePtr Sdk::initSymbols() {
 	if (auto msg = getSymbol("SceneObject", "create", createSceneObjectFunc)) return msg;
 	if (auto msg = getSymbol("Scene", "create", createSceneFunc)) return msg;
 	if (auto msg = getSymbol("BuiltInProgramRequest", "getDefaultProgram", defaultShaderProgramFunc)) return msg;
-	if (auto msg = getSymbol("FileModelRequest", "create", createFileModelRequestFunc)) return msg;
 	if (auto msg = getSymbol("ExtensionRegistry", "init", initExtensionRegistryFunc)) return msg;
 	if (auto msg = getSymbol("ExtensionRegistry", "newInstance", newExtensionInstanceFunc)) return msg;
-	if (auto msg = getSymbol("LoadedResources", "create", createLoadedResourcesFunc, {"PNS1_10IResourcesE"}))
-		return msg;
+	if (auto msg = getSymbol("LoadedResources", "create", createLoadedResourcesFunc)) return msg;
 	if (auto msg = getSymbol("Application", "create", createApplicationFunc)) return msg;
 	if (auto msg = getSymbol("SceneDataInjector", "create", createSceneInjectorFunc, {"PNS1_6ISceneE"})) return msg;
+	if (auto msg = getSymbol("Model3DObject", "create", createModel3DObjectFunc)) return msg;
+	if (auto msg = getSymbol("Model3DResource", "create", createModel3DResourceFunc)) return msg;
+	if (auto msg = getSymbol("ResourceLoaders", "getInstance", getResourceLoadersInstanceFunc)) return msg;
+	if (auto msg = getSymbol("FileSystemResourceBundle", "create", createFileSystemResourceBundleFunc)) return msg;
 
 	return nullptr;
 }

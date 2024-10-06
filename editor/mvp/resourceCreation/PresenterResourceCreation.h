@@ -24,8 +24,9 @@
 #include "IPresenterResourceCreation.h"
 
 namespace mer::editor::mvp {
+class FileResourceReader;
 class IViewResourceCreation;
-}
+} // namespace mer::editor::mvp
 
 namespace mer::editor::mvp {
 class IModelResourceCreation;
@@ -36,13 +37,21 @@ namespace mer::editor::mvp {
 class PresenterResourceCreation : public IPresenterResourceCreation {
 	std::shared_ptr<IModelResourceCreation> model;
 	std::shared_ptr<IViewResourceCreation> view;
+	std::shared_ptr<FileResourceReader> resourceReader;
 
 public:
 	PresenterResourceCreation(const std::shared_ptr<IModelResourceCreation> &pModel,
 							  const std::shared_ptr<IViewResourceCreation> &pView);
 
 	void chooseFileClicked() override;
+
+	void onResourceNameChanged(const std::string &pNewName) override;
+
 	void onPathToFileChanged() override;
+
+	void saveClicked() override;
+
+	void onCancelClicked() override;
 
 	void run() override;
 

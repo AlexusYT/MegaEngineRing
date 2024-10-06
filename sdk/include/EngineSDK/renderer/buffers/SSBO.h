@@ -27,14 +27,19 @@
 namespace mer::sdk::renderer {
 
 class SSBO : public ISSBO {
-	uint32_t name;
+	uint32_t name{};
+	int64_t size{};
+	const void* data{};
+	BufferUsageEnum usage;
+	uint32_t baseIndex{};
+
 
 public:
 	SSBO();
 
 	~SSBO() override;
 
-	void setData(const void* pData, int64_t pSize, BufferUsageEnum pUsage) const override;
+	void setData(const void* pData, int64_t pSize, BufferUsageEnum pUsage) override;
 
 	void bind() const override;
 
@@ -44,7 +49,19 @@ public:
 
 	void bindBufferBase(uint32_t pBinding) override;
 
-	virtual void bufferSubData(int32_t pOffset, int64_t pSize, const void* pData);
+	void unbindBufferBase(uint32_t pBinding) override;
+
+	void bufferSubData(int32_t pOffset, int64_t pSize, const void* pData) override;
+
+	void reallocate(int64_t pNewSize, const void* pNewData) override;
+
+	[[nodiscard]] int64_t getSize() const override { return size; }
+
+	[[nodiscard]] const void* getData() const override { return data; }
+
+	void setUsage(const BufferUsageEnum pUsage) override { usage = pUsage; }
+
+	[[nodiscard]] const BufferUsageEnum &getUsage() const override { return usage; }
 };
 
 } // namespace mer::sdk::renderer

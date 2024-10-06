@@ -22,6 +22,10 @@
 #ifndef IMODELRESOURCECREATION_H
 #define IMODELRESOURCECREATION_H
 
+namespace mer::editor::project {
+class Sdk;
+}
+
 namespace mer::editor::mvp {
 class IPresenterResourceCreation;
 
@@ -35,6 +39,22 @@ public:
 	virtual void setPathToFile(const std::filesystem::path &pPathToFile) = 0;
 
 	[[nodiscard]] virtual const std::filesystem::path &getPathToFile() const = 0;
+
+	[[nodiscard]] virtual const std::filesystem::path &getPathToResource() const = 0;
+
+	virtual void setPathToResource(const std::filesystem::path &pPathToResource) = 0;
+
+	[[nodiscard]] virtual const std::string &getResourceName() const = 0;
+
+	virtual void setResourceName(const std::string &pResourceName) = 0;
+
+	virtual void setSdk(const std::shared_ptr<project::Sdk> &pSdk) = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<project::Sdk> &getSdk() const = 0;
+
+	virtual void setRelativePathToResource(const std::filesystem::path &pPath) = 0;
+
+	[[nodiscard]] virtual const std::filesystem::path &getRelativePathToResource() const = 0;
 };
 
 } // namespace mer::editor::mvp

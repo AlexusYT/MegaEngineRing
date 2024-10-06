@@ -28,9 +28,9 @@
 
 namespace mer::sdk::main {
 
-utils::ReportMessagePtr BuiltInShaderLoader::load(const std::shared_ptr<ResourceRequest> &pRequest,
-												  const std::shared_ptr<Resources> & /*pDependencies*/,
-												  std::shared_ptr<IResource> &pResourceOut) {
+utils::ReportMessagePtr BuiltInShaderLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/, std::shared_ptr<std::istream> & /*pStream*/,
+												  std::shared_ptr<IResource> & /*pResourceOut*/) {
+#if 0
 	std::shared_ptr<renderer::Shader> result;
 	if (auto fragRequest = std::dynamic_pointer_cast<BuiltInFragmentShaderRequest>(pRequest)) {
 		result = std::make_shared<renderer::FragmentShader>();
@@ -129,6 +129,7 @@ void main(){
 		return msg;
 	}
 	pResourceOut = result;
+#endif
 	return nullptr;
 }
 

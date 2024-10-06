@@ -29,7 +29,13 @@ class IPresenterResourceCreation : public PresenterBase {
 public:
 	virtual void chooseFileClicked() = 0;
 
+	virtual void onResourceNameChanged(const std::string &pNewName) = 0;
+
 	virtual void onPathToFileChanged() = 0;
+
+	virtual void saveClicked() = 0;
+
+	virtual void onCancelClicked() = 0;
 };
 
 } // namespace mer::editor::mvp

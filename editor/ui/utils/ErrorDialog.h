@@ -66,7 +66,7 @@ public:
 	}
 
 	static void showErrorDialog(Gtk::Window* pRootWindow, const mer::sdk::utils::ReportMessagePtr &pMessage) {
-		mer::sdk::utils::Logger::error(message);
+		mer::sdk::utils::Logger::error(pMessage);
 		if (!pRootWindow) {
 			mer::sdk::utils::Logger::error("Unable to show error dialog: pRootWindow is nullptr");
 			return;
@@ -77,9 +77,9 @@ public:
 		dialog->set_message(message->getTitle());
 		dialog->set_detail(message->getMessage());
 		dialog->set_modal();
-		dialog->set_buttons({"Подробнее", "Закрыть"});
+		dialog->set_buttons({"Закрыть", "Подробнее"});
 		dialog->set_default_button(0);
-		dialog->set_cancel_button(1);
+		dialog->set_cancel_button(0);
 
 		dialog->choose(*pRootWindow, sigc::bind(&onDialogButtonsClicked, dialog, pRootWindow));
 	}

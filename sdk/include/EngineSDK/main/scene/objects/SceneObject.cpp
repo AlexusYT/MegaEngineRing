@@ -65,7 +65,7 @@ utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 		return msg;
 	} else {
 		pExtension->setObject(this);
-		/*if (inited) {
+		if (inited) {
 			try {
 				if (auto msg = pExtension->onInit()) {
 					pExtension->setObject(nullptr);
@@ -82,7 +82,7 @@ utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 				msg->addInfoLine("Extension typename: {}", Utils::getTypeName(pExtension.get()));
 				return msg;
 			}
-		}*/
+		}
 		pExtension->setName(pName);
 		onExtensionAddedSignal(pExtension);
 		extensions.emplace_hint(iter, pName, std::move(pExtension));
@@ -131,6 +131,7 @@ utils::ReportMessagePtr SceneObject::transferExtensionTo(const std::string &pNam
 }
 
 utils::ReportMessagePtr SceneObject::init() {
+	if (inited) return nullptr;
 
 	for (const auto &extension: extensions) {
 		if (auto msg = extension.second->onInit()) return msg;

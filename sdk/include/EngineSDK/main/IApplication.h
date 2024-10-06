@@ -22,7 +22,10 @@
 #ifndef IAPPLICATION_H
 #define IAPPLICATION_H
 
+#include "EngineUtils/utils/ReportMessageFwd.h"
+
 namespace mer::sdk::main {
+class IResourceBundle;
 class IApplicationSettings;
 
 class IApplication {
@@ -36,9 +39,14 @@ public:
 
 	virtual int runMainLoop(int argc, char* argv[]) = 0;
 
+
 	[[nodiscard]] virtual const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const = 0;
 
 	virtual void setApplicationSettings(const std::shared_ptr<IApplicationSettings> &pApplicationSettings) = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<IResourceBundle> &getResourceBundle() const = 0;
+
+	virtual void setResourceBundle(const std::shared_ptr<IResourceBundle> &pResourceBundle) = 0;
 };
 } // namespace mer::sdk::main
 

@@ -30,7 +30,10 @@ class TreeElementBase : public Glib::Object {
 public:
 	explicit TreeElementBase(const std::shared_ptr<Gio::ListModel> &pChildren) : children(pChildren) {}
 
-	void notifyChanged() const { onShowExpanderSlot(children->get_n_items() != 0); }
+	void notifyChanged() const {
+		if (!children) return;
+		onShowExpanderSlot(children->get_n_items() != 0);
+	}
 
 	void setOnShowExpanderSlot(const sigc::slot<void(bool)> &pOnShowExpanderSlot) {
 		onShowExpanderSlot = pOnShowExpanderSlot;

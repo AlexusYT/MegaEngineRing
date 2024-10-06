@@ -39,7 +39,8 @@ public:
 	[[nodiscard]] const std::shared_ptr<ProjectExplorerElement> &getElements() const override { return elements; }
 
 private:
-	static std::shared_ptr<ProjectExplorerElement> getDirectoryEntry(const std::filesystem::path &pPath);
+	static std::shared_ptr<ProjectExplorerElement> getDirectoryEntry(const std::filesystem::path &pPath,
+																	 const std::filesystem::path &pRootPath);
 };
 } // namespace mer::editor::mvp
 

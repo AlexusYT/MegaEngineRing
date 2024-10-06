@@ -16,36 +16,41 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 29.03.24.
+// Created by alexus on 27.02.24.
 //
 
-#ifndef MULTIPLERESOURCE_H
-#define MULTIPLERESOURCE_H
-#include <memory>
-#include <string>
-#include <unordered_map>
+#ifndef IRESOURCES_H
+#define IRESOURCES_H
+#include <sigc++/functors/slot.h>
 
-#include "IResource.h"
+#include "EngineUtils/utils/ReportMessageFwd.h"
 
 namespace mer::sdk::main {
-class MultipleResource : public IResource, public std::unordered_map<std::string, std::shared_ptr<IResource>> {
+class ILoadedResources;
+class IApplication;
+class ResourceRequest;
+class IResource;
 
+class IResourceLoadExecutor {
 public:
-	bool contains(const std::string &pName) { return find(pName) != end(); }
+	using LoadingFinishedSlot =
+		sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>;
 
-	bool contains(const std::string &pName, iterator &pIteratorOut) {
+	virtual ~IResourceLoadExecutor() = default;
 
-		pIteratorOut = find(pName);
-		return pIteratorOut != end();
-	}
 
-	template<typename ClassT>
-	std::shared_ptr<ClassT> get(const std::string &pName) {
+	virtual std::pair<std::shared_ptr<IResource>, utils::ReportMessagePtr> loadResourceSync(
+		const std::string &pResourceUri) = 0;
 
-		if (const auto iter = find(pName); iter != end()) { return std::dynamic_pointer_cast<ClassT>(iter->second); }
-		return nullptr;
-	}
+	virtual void loadResourceAsync(const std::string &pResourceUri, const LoadingFinishedSlot &pSlot) = 0;
+
+	[[nodiscard]] virtual IApplication* getApplication() const = 0;
+
+	virtual void setApplication(IApplication* pApplication) = 0;
+
+	virtual const std::shared_ptr<ILoadedResources> &getResources() = 0;
 };
 } // namespace mer::sdk::main
 
-#endif //MULTIPLERESOURCE_H
+
+#endif //IRESOURCES_H

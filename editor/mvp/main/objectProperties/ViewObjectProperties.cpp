@@ -21,6 +21,8 @@
 
 #include "ViewObjectProperties.h"
 
+#include "EngineSDK/main/resources/models/IModel3DObject.h"
+#include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionPropertyBase.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
@@ -29,6 +31,9 @@
 #include "ObjectPropertyEntry.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.h"
+#include "mvp/resourceSelection/ModelResourceSelection.h"
+#include "mvp/resourceSelection/ViewResourceSelection.h"
+#include "ui/customWidgets/CustomSignalListItemFactory.h"
 #include "ui/customWidgets/CustomTreeView.h"
 
 namespace mer::editor::mvp {
@@ -78,6 +83,7 @@ ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext>
 
 	const auto nameColumn = createNameColumn();
 	nameColumn->set_resizable(true);
+	nameColumn->set_fixed_width(100);
 	propertiesTree->append_column(nameColumn);
 	const auto valueColumn = createValueColumn();
 	valueColumn->set_resizable(true);
@@ -110,12 +116,13 @@ void ViewObjectProperties::setObject(ExplorerObject* pObject) {
 }
 
 std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createNameColumn() {
-	const auto factory = Gtk::SignalListItemFactory::create();
+	const auto factory = ui::CustomSignalListItemFactory::create();
 	factory->signal_setup().connect([](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
 		auto* expander = Gtk::make_managed<Gtk::TreeExpander>();
 		auto* label = Gtk::make_managed<Gtk::Label>();
 		label->set_halign(Gtk::Align::END);
 		label->set_margin(3);
+		label->set_ellipsize(Pango::EllipsizeMode::END);
 		expander->set_child(*label);
 		pListItem->set_child(*expander);
 	});
@@ -144,13 +151,26 @@ Gtk::Entry* createEntry() {
 	return entry;
 }
 
+Gtk::SpinButton* createSpinButton(const double pValue, const double pMinValue = std::numeric_limits<double>::lowest(),
+								  const double pMaxValue = std::numeric_limits<double>::max()) {
+
+	auto* spin = Gtk::make_managed<Gtk::SpinButton>();
+	spin->set_adjustment(Gtk::Adjustment::create(pValue, pMinValue, pMaxValue));
+	spin->set_digits(3);
+	spin->set_size_request();
+	spin->set_width_chars(6);
+	spin->set_update_policy(Gtk::SpinButton::UpdatePolicy::IF_VALID);
+
+	return spin;
+}
+
 template<typename ClassT>
 	requires std::is_same_v<ClassT, float>
 void createWidgets(sdk::main::ExtensionProperty<ClassT>* pProperty, std::vector<Gtk::Widget*> &pWidgetsOut) {
-	auto* entry = createEntry();
-	entry->set_text(std::to_string(pProperty->getValue()));
-	entry->signal_changed().connect([entry, pProperty] { pProperty->setValue(std::stof(entry->get_text())); });
-	pWidgetsOut.emplace_back(entry);
+	auto* spin = createSpinButton(static_cast<double>(pProperty->getValue()));
+	spin->signal_value_changed().connect(
+		[spin, pProperty] { pProperty->setValue(static_cast<ClassT>(spin->get_value())); });
+	pWidgetsOut.emplace_back(spin);
 }
 
 template<typename ClassT>
@@ -167,44 +187,40 @@ template<typename ClassT, int L, typename T, glm::qualifier Q = glm::defaultp>
 void createWidgets(sdk::main::ExtensionProperty<ClassT>* pProperty, std::vector<Gtk::Widget*> &pWidgetsOut) {
 	auto vec = pProperty->getValue();
 	if constexpr (L > 0) {
-		auto* entryX = createEntry();
-		entryX->set_text(std::to_string(vec.x));
-		entryX->signal_changed().connect([entryX, pProperty] {
-			auto vec3 = pProperty->getValue();
-			vec3.x = std::stof(entryX->get_text(), nullptr);
-			pProperty->setValue(vec3);
+		auto* spin = createSpinButton(static_cast<double>(vec.x));
+		spin->signal_value_changed().connect([spin, pProperty] {
+			auto vecValue = pProperty->getValue();
+			vecValue.x = static_cast<T>(spin->get_value());
+			pProperty->setValue(vecValue);
 		});
-		pWidgetsOut.emplace_back(entryX);
+		pWidgetsOut.emplace_back(spin);
 	}
 	if constexpr (L > 1) {
-		auto* entryY = createEntry();
-		entryY->set_text(std::to_string(vec.y));
-		entryY->signal_changed().connect([entryY, pProperty] {
-			auto vec3 = pProperty->getValue();
-			vec3.y = std::stof(entryY->get_text(), nullptr);
-			pProperty->setValue(vec3);
+		auto* spin = createSpinButton(static_cast<double>(vec.y));
+		spin->signal_value_changed().connect([spin, pProperty] {
+			auto vecValue = pProperty->getValue();
+			vecValue.y = static_cast<T>(spin->get_value());
+			pProperty->setValue(vecValue);
 		});
-		pWidgetsOut.emplace_back(entryY);
+		pWidgetsOut.emplace_back(spin);
 	}
 	if constexpr (L > 2) {
-		auto* entryZ = createEntry();
-		entryZ->set_text(std::to_string(vec.z));
-		entryZ->signal_changed().connect([entryZ, pProperty] {
-			auto vec3 = pProperty->getValue();
-			vec3.z = std::stof(entryZ->get_text(), nullptr);
-			pProperty->setValue(vec3);
+		auto* spin = createSpinButton(static_cast<double>(vec.z));
+		spin->signal_value_changed().connect([spin, pProperty] {
+			auto vecValue = pProperty->getValue();
+			vecValue.z = static_cast<T>(spin->get_value());
+			pProperty->setValue(vecValue);
 		});
-		pWidgetsOut.emplace_back(entryZ);
+		pWidgetsOut.emplace_back(spin);
 	}
 	if constexpr (L > 3) {
-		auto* entryW = createEntry();
-		entryW->set_text(std::to_string(vec.w));
-		entryW->signal_changed().connect([entryW, pProperty] {
-			auto vec3 = pProperty->getValue();
-			vec3.w = std::stof(entryW->get_text(), nullptr);
-			pProperty->setValue(vec3);
+		auto* spin = createSpinButton(static_cast<double>(vec.w));
+		spin->signal_value_changed().connect([spin, pProperty] {
+			auto vecValue = pProperty->getValue();
+			vecValue.w = static_cast<T>(spin->get_value());
+			pProperty->setValue(vecValue);
 		});
-		pWidgetsOut.emplace_back(entryW);
+		pWidgetsOut.emplace_back(spin);
 	}
 }
 
@@ -216,10 +232,30 @@ void createWidgets(sdk::main::ExtensionProperty<ClassT>* /*pProperty*/, std::vec
 	pWidgetsOut.emplace_back(widget);
 }
 
+template<typename ClassT>
+	requires std::is_same_v<ClassT, std::shared_ptr<sdk::main::IModel3DObject>>
+void createWidgets(sdk::main::ExtensionProperty<ClassT>* pProperty, std::vector<Gtk::Widget*> &pWidgetsOut) {
+	auto obj = pProperty->getValue();
+	auto* label = Gtk::make_managed<Gtk::Label>();
+	if (obj) {
+		auto resource = obj->getIModelResource();
+		label->set_label((resource->asResource()->getResourceUri() / obj->getName()).string());
+	} else {
+		label->set_label("None");
+	}
+	pWidgetsOut.emplace_back(label);
+
+	auto* observeBtn = Gtk::make_managed<Gtk::Button>("...");
+	pWidgetsOut.emplace_back(observeBtn);
+	observeBtn->set_action_name("resource.select-for-property");
+	const auto variant = Glib::Variant<uintptr_t>::create(reinterpret_cast<uintptr_t>(pProperty));
+	observeBtn->set_action_target_value(variant);
+}
+
 std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createValueColumn() {
-	const auto factory = Gtk::SignalListItemFactory::create();
+	const auto factory = ui::CustomSignalListItemFactory::create();
 	factory->signal_setup().connect([](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
-		const auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+		const auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
 		box->set_margin(5);
 		pListItem->set_child(*box);
 	});
@@ -251,6 +287,10 @@ std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createValueColumn()
 			createWidgets<vecT, vecT::length(), vecT::value_type>(prop, widgets);
 		}
 		if (auto prop = dynamic_cast<sdk::main::ExtensionProperty<sdk::utils::KeyboardKey>*>(property)) {
+			createWidgets(prop, widgets);
+		}
+		if (auto prop =
+				dynamic_cast<sdk::main::ExtensionProperty<std::shared_ptr<sdk::main::IModel3DObject>>*>(property)) {
 			createWidgets(prop, widgets);
 		}
 		if (widgets.empty()) {

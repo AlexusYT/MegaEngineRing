@@ -21,9 +21,13 @@
 
 #include "PresenterResourceCreation.h"
 
+#include "EngineSDK/main/resources/IResource.h"
+#include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "IModelResourceCreation.h"
 #include "IViewResourceCreation.h"
+#include "mvp/ApplicationController.h"
 #include "readers/ObjFileResourceReader.h"
+#include "savers/Model3DResourceSaver.h"
 
 namespace mer::editor::mvp {
 PresenterResourceCreation::PresenterResourceCreation(const std::shared_ptr<IModelResourceCreation> &pModel,
@@ -64,20 +68,54 @@ void PresenterResourceCreation::chooseFileClicked() {
 	});
 }
 
+void PresenterResourceCreation::onResourceNameChanged(const std::string &pNewName) {
+	if (model->getResourceName() == pNewName) return;
+	model->setResourceName(pNewName);
+	auto path = model->getPathToResource() / (pNewName + ".enmodel");
+	if (exists(path)) {
+		view->displayMessage("Resource with the such name is already exists");
+		view->setSaveButtonSensitivity(false);
+		return;
+	}
+	view->displayMessage("");
+	view->setSaveButtonSensitivity(true);
+}
+
 void PresenterResourceCreation::onPathToFileChanged() {
 	auto path = model->getPathToFile();
+	auto reader = std::make_shared<ObjFileResourceReader>(path);
+	reader->setSdk(model->getSdk());
+	std::string fileExt = path.extension().string();
+	if (auto msg = reader->checkType()) {
+		view->displayMessage(msg->getReport(false));
+		view->setStackVisibility(false);
+	} else {
+		view->displayMessage("");
+		view->setStackVisibility(true);
+		view->switchTo("objModel");
+		auto objects = reader->getObjects() | std::views::keys;
+		view->displayObjects(std::vector(objects.begin(), objects.end()));
+		resourceReader = reader;
+	}
 	view->displayChosenPath(path.string());
 	view->displayResourceName(path.stem().string());
-	ObjFileResourceReader reader(path);
+}
 
-	std::string fileExt = path.extension().string();
-	if (auto msg = reader.checkType()) {
-		view->switchTo("message");
-		view->displayMessage(msg->getReport(false));
-	} else {
-		view->switchTo("objModel");
+void PresenterResourceCreation::saveClicked() {
+	if (auto objReader = std::dynamic_pointer_cast<ObjFileResourceReader>(resourceReader)) {
+		auto objects = view->getSelectedObjects();
+		auto resource = objReader->generateResource(objects);
+		auto resourceName = model->getResourceName() + ".enmodel";
+		resource->asResource()->setResourceUri(model->getRelativePathToResource() / resourceName);
+		if (auto msg = Model3DResourceSaver::saveToFile(model->getPathToResource() / resourceName, resource)) {
+			view->displayError(msg);
+		} else {
+			getAppController()->stop(this);
+		}
 	}
 }
+
+void PresenterResourceCreation::onCancelClicked() { getAppController()->stop(this); }
 
 void PresenterResourceCreation::run() { view->openView(); }
 

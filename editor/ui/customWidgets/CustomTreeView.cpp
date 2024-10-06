@@ -57,35 +57,69 @@ void CustomTreeView::setSlotCreateModel(const SlotCreateModel &pSlotCreateModel)
 	const auto treeListModel = Gtk::TreeListModel::create(root, slotCreateModel, false, false);
 
 	const auto singleSelection = Gtk::SingleSelection::create(treeListModel);
+	auto prop = singleSelection->property_selected_item();
+	prop.signal_changed().connect([this, prop] {
+		if (!selectOnDoubleClick) {
+			auto selectedItem = prop.get_value();
+			if (!selectedItem) return;
+			auto row = std::dynamic_pointer_cast<Gtk::TreeListRow>(selectedItem);
+			if (!row) return;
+			auto element = std::dynamic_pointer_cast<TreeElementBase>(row->get_item());
+			if (!element) return;
+			selectionChanged(element.get());
+		}
+	});
 	singleSelection->signal_selection_changed().connect([this](guint, guint) {
-		if (!selectOnDoubleClick) selectionChanged(getSelectedItem().get());
+		//if (!selectOnDoubleClick) selectionChanged(getSelectedItem().get());
 	});
 	singleSelection->set_autoselect(false);
 	singleSelection->set_can_unselect(true);
+	singleSelection->set_selected(GTK_INVALID_LIST_POSITION);
 	set_model(singleSelection);
 }
 
 void CustomTreeView::unselect() { get_model()->unselect_all(); }
 
-void CustomTreeView::onLeftClick(int pNPress, double /*x*/, double /*y*/) {
+void CustomTreeView::onLeftClick(int pNPress, double pX, double pY) {
 	if (pNPress == 2) {
 
 		const auto selection = std::dynamic_pointer_cast<Gtk::SingleSelection>(get_model());
+		if (!selection) return;
 		auto row = std::dynamic_pointer_cast<Gtk::TreeListRow>(selection->get_selected_item());
+		if (!row) return;
+		auto selectedElement = std::dynamic_pointer_cast<TreeElementBase>(row->get_item());
+		if (!selectedElement) return;
+		auto elementAtPos = getElementAt(pX, pY);
+		if (elementAtPos != selectedElement.get()) return;
 		if (row->is_expandable()) { row->set_expanded(!row->get_expanded()); }
-		if (selectOnDoubleClick) { selectionChanged(getSelectedItem().get()); }
+
+		if (selectOnDoubleClick) { selectionChanged(elementAtPos); }
 	}
 }
 
-std::shared_ptr<Gio::MenuModel> CustomTreeView::getMenuAt(const double pX, const double pY) {
+TreeElementBase* CustomTreeView::getElementAt(double pX, double pY) {
 
 	const auto child = this->pick(pX, pY, Gtk::PickFlags::INSENSITIVE | Gtk::PickFlags::NON_TARGETABLE);
 	if (!child) return nullptr;
 	const auto cell = child->get_ancestor(g_type_from_name("GtkListItemWidget"));
 	if (!cell) return nullptr;
-	const auto view = cell->get_first_child();
-	if (!view) return nullptr;
-	const auto data = static_cast<TreeElementBase*>(view->get_data("contextSelectedElement"));
+	auto widget = cell->get_first_child();
+	if (!widget) return nullptr;
+	void* data{};
+	/*if (auto expander = dynamic_cast<Gtk::TreeExpander*>(widget)) {
+		auto expChild = expander->get_child();
+		if (!expChild) return nullptr;
+		data = expChild->get_data("contextSelectedElement");
+	} else*/
+	data = widget->get_data("contextSelectedElement");
+	if (!data) return nullptr;
+	const auto element = static_cast<TreeElementBase*>(data);
+	return element;
+}
+
+std::shared_ptr<Gio::MenuModel> CustomTreeView::getMenuAt(const double pX, const double pY) {
+
+	const auto data = getElementAt(pX, pY);
 	if (!data) return nullptr;
 	return data->getMenu();
 }

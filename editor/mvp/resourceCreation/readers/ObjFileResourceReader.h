@@ -22,10 +22,19 @@
 #ifndef OBJFILERESOURCEREADER_H
 #define OBJFILERESOURCEREADER_H
 #include "FileResourceReader.h"
-#include "project/sceneObjects/EditorSceneObject.h"
+
+namespace mer::sdk::main {
+class IModel3DResource;
+}
+
+namespace mer::editor::project {
+class Sdk;
+}
 
 namespace mer::editor::mvp {
 class ObjFileResourceReader : public FileResourceReader {
+	std::shared_ptr<project::Sdk> sdk;
+
 	struct VertexInfo {
 		glm::vec3 vertexCoord;
 		glm::vec3 normalCoord;
@@ -41,7 +50,7 @@ class ObjFileResourceReader : public FileResourceReader {
 		std::vector<Face> faces;
 	};
 
-	std::vector<std::shared_ptr<Obj>> objects;
+	std::unordered_map<std::string, std::shared_ptr<Obj>> objects;
 
 
 public:
@@ -49,7 +58,13 @@ public:
 
 	sdk::utils::ReportMessagePtr checkType() override;
 
-	[[nodiscard]] const std::vector<std::shared_ptr<Obj>> &getObjects() const { return objects; }
+	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<Obj>> &getObjects() const { return objects; }
+
+	std::shared_ptr<sdk::main::IModel3DResource> generateResource(const std::vector<std::string> &pObjectsToSave) const;
+
+	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const { return sdk; }
+
+	void setSdk(const std::shared_ptr<project::Sdk> &pSdk) { sdk = pSdk; }
 
 private:
 	static glm::vec3 getVec3(const std::string &pLine);

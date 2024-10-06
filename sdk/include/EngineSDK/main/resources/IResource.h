@@ -19,8 +19,9 @@
 // Created by alexus on 01.02.24.
 //
 
-#ifndef RESOURCE_H
-#define RESOURCE_H
+#ifndef IRESOURCE_H
+#define IRESOURCE_H
+#include <filesystem>
 
 namespace mer::sdk::main {
 
@@ -29,8 +30,13 @@ protected:
 	virtual ~IResource() = default;
 
 public:
+	virtual const std::filesystem::path &getResourceUri() = 0;
+
+	[[nodiscard]] virtual std::string getResourceName() const = 0;
+
+	virtual void setResourceUri(const std::filesystem::path &pResourceUri) = 0;
 };
 
 } // namespace mer::sdk::main
 
-#endif //RESOURCE_H
+#endif //IRESOURCE_H
