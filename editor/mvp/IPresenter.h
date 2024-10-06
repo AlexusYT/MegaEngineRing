@@ -34,12 +34,18 @@ public:
 
 	virtual void stop() = 0;
 
-	virtual void addView(const std::shared_ptr<IView> & /*pNewView*/) {}
+	virtual void addView(const std::shared_ptr<IView> &pNewView);
+
+	virtual void removeView(const std::shared_ptr<IView> &pOldView);
 
 	[[nodiscard]] virtual ApplicationController* getAppController() const = 0;
 
 	virtual void setAppController(ApplicationController* pAppController) = 0;
 };
+
+inline void IPresenter::addView(const std::shared_ptr<IView> &/*pNewView*/) {}
+
+inline void IPresenter::removeView(const std::shared_ptr<IView> &/*pOldView*/) {}
 
 } // namespace mer::editor::mvp
 

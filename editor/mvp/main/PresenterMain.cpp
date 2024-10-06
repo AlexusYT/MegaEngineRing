@@ -38,7 +38,14 @@
 #include "editors/sceneEditor/explorerObjects/ExplorerObject.h"
 #include "editors/sceneEditor/explorerObjects/SceneExplorerObject.h"
 #include "mvp/ApplicationController.h"
+#include "mvp/contexts/ApplicationContext.h"
 #include "mvp/contexts/MultiPanedContext.h"
+#include "mvp/resourceCreation/ModelResourceCreation.h"
+#include "mvp/resourceCreation/PresenterResourceCreation.h"
+#include "mvp/resourceCreation/ViewResourceCreation.h"
+#include "mvp/resourceSelection/ModelResourceSelection.h"
+#include "mvp/resourceSelection/PresenterResourceSelection.h"
+#include "mvp/resourceSelection/ViewResourceSelection.h"
 #include "objectProperties/ModelObjectProperties.h"
 #include "objectProperties/PresenterObjectProperties.h"
 #include "objectProperties/ViewObjectProperties.h"
@@ -186,7 +193,7 @@ void PresenterMain::run() {
 		auto presenterObjectsTree = std::make_shared<PresenterObjectsTree>(modelObjectsTree);
 		getAppController()->run(presenterObjectsTree);
 		paned->addPresenter(presenterObjectsTree);
-		auto objectTree = paned->splitAt(sceneEditor, presenterObjectsTree, Gtk::Orientation::VERTICAL, 0.9f);
+		auto objectTree = paned->splitAt(sceneEditor, presenterObjectsTree, Gtk::Orientation::VERTICAL, 0.8f);
 
 		auto modelObjectProperties = std::make_shared<ModelObjectProperties>();
 		modelObjectProperties->setLoadedScene(loadedScene);
@@ -212,6 +219,22 @@ void PresenterMain::stop() {
 
 	getAppController()->stop(presenterProjectExplorer.get());
 	viewMain->closeView();
+}
+
+void PresenterMain::selectResourceForProperty(sdk::main::ExtensionPropertyBase* pProperty) {
+
+	auto model = std::make_shared<ModelResourceSelection>();
+	model->setPropertyBase(pProperty);
+	model->setLoadedScene(loadedScene);
+	sdk::utils::ReportMessagePtr msg;
+	auto view = ViewResourceSelection::create(ApplicationContext::create(getAppController()->getApp()), msg);
+	if (!view) {
+		displayError(msg);
+		return;
+	}
+	presenterProjectExplorer->addView(view->getExplorer());
+	auto presenter = std::make_shared<PresenterResourceSelection>(model, view);
+	getAppController()->run(presenter);
 }
 
 void PresenterMain::addExtension(const std::string &pExtensionName) {
@@ -242,6 +265,26 @@ void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 	if (!pPathToFile.has_extension()) return;
 	if (pPathToFile.extension() == ".enscene")
 		if (const auto msg = loadedScene->load(pPathToFile)) { displayError(msg); }
+}
+
+void PresenterMain::createResource(const std::filesystem::path &pPathToCreate) {
+	auto pathToCreate = is_directory(pPathToCreate) ? pPathToCreate : pPathToCreate.parent_path();
+	sdk::utils::ReportMessagePtr msg;
+	auto view = ViewResourceCreation::create(ApplicationContext::create(getAppController()->getApp()), msg);
+	if (!view) {
+		displayError(msg);
+		return;
+	}
+	auto model = std::make_shared<ModelResourceCreation>();
+	model->setPathToResource(pathToCreate);
+	auto root = modelMain->getProject()->getProjectPath() / "data";
+	if (pathToCreate == root) {
+		model->setRelativePathToResource("");
+	} else
+		model->setRelativePathToResource(relative(pathToCreate, root));
+	model->setSdk(modelMain->getProject()->getEditorSdkLib());
+	auto presenter = std::make_shared<PresenterResourceCreation>(model, view);
+	getAppController()->run(presenter);
 }
 
 void PresenterMain::createScene(const std::filesystem::path &pPathToCreate) {

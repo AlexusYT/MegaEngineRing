@@ -30,7 +30,7 @@ enum class ShaderTypeEnum;
 }
 
 namespace mer::sdk::renderer {
-class Shader : public IShader, public main::IResource {
+class Shader : public IShader {
 	uint32_t name;
 
 protected:

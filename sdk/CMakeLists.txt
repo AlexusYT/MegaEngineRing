@@ -14,7 +14,6 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/resources/ResourceRequest.cpp
         include/EngineSDK/main/resources/shaders/BuiltInShaderRequest.cpp
         include/EngineSDK/main/resources/ResourceLoader.cpp
-        include/EngineSDK/main/resources/ResourceRequests.cpp
         include/EngineSDK/main/resources/Resources.cpp
         include/EngineSDK/main/scene/Scene.cpp
         include/EngineSDK/renderer/shaders/ShaderProgram.cpp
@@ -31,12 +30,17 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.cpp
         sources/main/scene/objects/extensions/OrbitCameraExtension.cpp
         sources/main/scene/SceneDataInjector.cpp
-        sources/main/resources/models/ObjModelRequest.cpp
-        sources/main/resources/models/ModelResource.cpp
+        sources/main/resources/models/Model3DLoader.cpp
         sources/main/scene/objects/extensions/ModelRenderExtension.cpp
         sources/main/scripting/Script.cpp
         sources/main/scene/objects/extensions/MainObjectExtension.cpp
         sources/utils/PropertyJsonSerializers.cpp
+        include/EngineSDK/main/resources/models/Model3DResource.cpp
+        include/EngineSDK/main/resources/models/Model3DObject.cpp
+        include/EngineSDK/main/render/RenderInstance.cpp
+        include/EngineSDK/main/resources/FileSystemResourceBundle.cpp
+        include/EngineSDK/main/resources/ResourceLoaders.cpp
+        include/EngineSDK/main/resources/Resource.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -51,7 +55,6 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/renderer/shaders/VertexShader.h
         include/EngineSDK/renderer/shaders/FragmentShader.h
         include/EngineSDK/main/resources/ResourceLoader.h
-        include/EngineSDK/main/resources/ResourceRequests.h
         include/EngineSDK/main/resources/IResource.h
         include/EngineSDK/main/resources/Resources.h
         include/EngineSDK/main/scene/Scene.h
@@ -73,7 +76,7 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/SceneObject.h
         include/EngineSDK/main/scene/objects/extensions/Extension.h
         include/EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h
-        include/EngineSDK/main/resources/IResources.h
+        include/EngineSDK/main/resources/IResourceLoadExecutor.h
         include/EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h
         include/EngineSDK/main/scene/objects/extensions/cameras/CameraKeyboardExtension.h
         include/EngineSDK/main/scene/objects/extensions/cameras/CameraMouseExtension.h
@@ -86,9 +89,7 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/SceneDataInjector.h
         include/EngineSDK/utils/MouseButton.h
         include/EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h
-        include/EngineSDK/main/resources/models/ObjModelRequest.h
-        include/EngineSDK/main/resources/models/ModelResource.h
-        include/EngineSDK/main/resources/MultipleResource.h
+        include/EngineSDK/main/resources/models/Model3DLoader.h
         include/EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h
         include/EngineSDK/main/resources/shaders/ShaderProgramRequest.h
         include/EngineSDK/main/IApplication.h
@@ -99,6 +100,20 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/extensions/MainObjectExtension.h
         include/EngineSDK/utils/PropertyJsonSerializers.h
         include/EngineSDK/utils/PropertyJsonSerializer.h
+        include/EngineSDK/main/resources/models/Model3DResource.h
+        include/EngineSDK/main/render/IRenderInstance.h
+        include/EngineSDK/main/render/RenderInstanceData.h
+        include/EngineSDK/main/resources/models/Model3DObject.h
+        include/EngineSDK/main/resources/models/IModel3DObject.h
+        include/EngineSDK/main/resources/models/IModel3DResource.h
+        include/EngineSDK/main/render/RenderInstance.h
+        include/EngineSDK/main/render/IInstancedRender.h
+        include/EngineSDK/main/resources/IResourceBundle.h
+        include/EngineSDK/main/resources/FileSystemResourceBundle.h
+        include/EngineSDK/main/resources/ResourceLoaders.h
+        include/EngineSDK/main/resources/IResourceLoaders.h
+        include/EngineSDK/main/render/IRenderable.h
+        include/EngineSDK/main/resources/Resource.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

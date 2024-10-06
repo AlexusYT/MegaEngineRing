@@ -106,11 +106,11 @@ public:
 	void setHeader(const std::string &pHeader) { header = pHeader; }
 
 	void serialize(nlohmann::json &pJson) {
-		for (auto property: properties) { property->serialize(pJson); }
+		for (auto property: properties) { property->serialize(pJson, this); }
 	}
 
 	void deserialize(const nlohmann::json &pJson) {
-		for (auto property: properties) { property->deserialize(pJson); }
+		for (auto property: properties) { property->deserialize(pJson, this); }
 	}
 
 	virtual utils::ReportMessagePtr onInit() { return nullptr; }
@@ -120,27 +120,30 @@ public:
 		return nullptr;
 	}
 
-protected:
 	//TODO Documentation
 	/**
 	 * @brief NON BLOCKING!
 	 * @tparam ClassT
-	 * @param pRequest
+	 * @param pResourceUri
 	 * @param pSlot NOT in a main context
 	 */
-	template<RequestRegularConcept ClassT>
-	void enqueueResourceLoading(const std::shared_ptr<ClassT> &pRequest,
-								const sigc::slot<void(const std::shared_ptr<typename ClassT::ResourceT> &pResource,
-													  const utils::ReportMessagePtr &pError)> &pSlot) {
+	void loadResourceAsync(
+		const std::string &pResourceUri,
+		const sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>
+			&pSlot) const {
 
-		getScene()->enqueueResourceLoading(
-			pRequest, [pSlot](const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError) {
-				pSlot(std::dynamic_pointer_cast<typename ClassT::ResourceT>(pResource), pError);
-			});
+		getScene()->loadResourceAsync(pResourceUri,
+									  [pSlot](const std::shared_ptr<IResource> &pResource,
+											  const utils::ReportMessagePtr &pError) { pSlot(pResource, pError); });
+	}
+
+	std::shared_ptr<IResource> loadResourceSync(const std::string &pResourceUri) const {
+		return getScene()->loadResourceSync(pResourceUri);
 	}
 
 	IScene* getScene() const;
 
+protected:
 	void putConnectionToStorage(const sigc::connection &pConnection) { connectionStorage.emplace_back(pConnection); }
 
 	void freeConnectionStorage() {

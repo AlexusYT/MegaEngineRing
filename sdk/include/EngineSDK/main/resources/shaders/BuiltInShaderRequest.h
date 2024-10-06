@@ -33,9 +33,11 @@ class FragmentShader;
 namespace mer::sdk::main {
 class BuiltInShaderLoader : public ResourceLoader {
 public:
-	utils::ReportMessagePtr load(const std::shared_ptr<ResourceRequest> &pRequest,
-								 const std::shared_ptr<Resources> &pDependencies,
+	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 								 std::shared_ptr<IResource> &pResourceOut) override;
+
+private:
+	std::string getFileExtension() override { throw std::runtime_error("Not implemented"); }
 };
 
 class BuiltInShaderRequest : public RegularRequest {

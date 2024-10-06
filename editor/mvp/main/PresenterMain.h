@@ -65,6 +65,8 @@ public:
 
 	void stop() override;
 
+	void selectResourceForProperty(sdk::main::ExtensionPropertyBase* pProperty) override;
+
 	void addExtension(const std::string &pExtensionName) override;
 
 	void selectObject(ExplorerObject* pObjectToSelect) override;
@@ -76,6 +78,8 @@ public:
 	void removeExtension(sdk::main::Extension* pExtensionToRemove) override;
 
 	void openFile(const std::filesystem::path &pPathToFile) override;
+
+	void createResource(const std::filesystem::path &pPathToCreate) override;
 
 	void createScene(const std::filesystem::path &pPathToCreate) override;
 

@@ -22,13 +22,12 @@
 #ifndef SHADERPROGRAM_H
 #define SHADERPROGRAM_H
 
-#include <EngineSDK/main/resources/IResource.h>
-
+#include "EngineSDK/main/resources/Resource.h"
 #include "EngineSDK/renderer/shaders/IShaderProgram.h"
 
 namespace mer::sdk::renderer {
 
-class ShaderProgram : public IShaderProgram, public main::IResource {
+class ShaderProgram : public IShaderProgram, public main::Resource {
 	inline static const ShaderProgram* usedProgram{};
 	uint32_t name;
 	std::vector<std::shared_ptr<IShader>> attachedShaders;

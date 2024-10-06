@@ -62,7 +62,7 @@ public:
 
 	void setStacktrace(const std::stacktrace &pStacktrace = std::stacktrace::current()) { stacktrace = pStacktrace; }
 
-	[[nodiscard]] std::string getReport() const {
+	[[nodiscard]] std::string getReport(const bool pShowStacktrace = true) const {
 		std::stringstream ss;
 		ss << (title.empty() ? "Untitled report" : title) << "\n";
 		ss << "Message: " << message << "\n";
@@ -78,7 +78,7 @@ public:
 		}
 		ss << "Additional info:\n";
 		for (const auto &infoLine: infoLines) { ss << "\t" << infoLine << "\n"; }
-		ss << "Stacktrace: \n" << stacktrace;
+		if (pShowStacktrace) ss << "Stacktrace: \n" << stacktrace;
 		return ss.str();
 	}
 };

@@ -97,9 +97,13 @@ enum class KeyboardKey {
 
 template<>
 struct PropertyJsonSerializer<KeyboardKey> {
-	static nlohmann::json serialize(const KeyboardKey &pValue) { return static_cast<int>(pValue); }
+	static nlohmann::json serialize(const KeyboardKey &pValue, main::Extension* /*pExtension*/) {
+		return static_cast<int>(pValue);
+	}
 
-	static KeyboardKey deserialize(const nlohmann::json &pValue) { return static_cast<KeyboardKey>(pValue.get<int>()); }
+	static KeyboardKey deserialize(const nlohmann::json &pValue, main::Extension* /*pExtension*/) {
+		return static_cast<KeyboardKey>(pValue.get<int>());
+	}
 };
 } // namespace mer::sdk::utils
 

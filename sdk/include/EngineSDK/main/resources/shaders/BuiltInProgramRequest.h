@@ -27,11 +27,22 @@
 namespace mer::sdk::main {
 class BuiltInProgramRequest final : public ShaderProgramRequest {
 
+public:
 	class BuiltInProgramLoader : public ResourceLoader {
 	public:
-		utils::ReportMessagePtr load(const std::shared_ptr<ResourceRequest> &pRequest,
-									 const std::shared_ptr<Resources> &pDependencies,
+		utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 									 std::shared_ptr<IResource> &pResourceOut) override;
+
+	private:
+		std::string getFileExtension() override { return "enshader"; }
+
+		std::string readString(const std::shared_ptr<std::istream> &pStream) {
+			size_t size = 0;
+			pStream->read(reinterpret_cast<std::istream::char_type*>(&size), sizeof(size));
+			std::string name(size, 0);
+			pStream->read(name.data(), static_cast<long int>(size));
+			return name;
+		}
 	};
 
 	static std::shared_ptr<BuiltInProgramRequest> defaultProgram;

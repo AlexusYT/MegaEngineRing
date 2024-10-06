@@ -31,6 +31,7 @@
 #ifndef EDITOR_SDK
 	#include "EngineSDK/main/context/MainWindow.h"
 #endif
+#include "EngineSDK/main/resources/ResourceLoaders.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 
 #ifndef EDITOR_SDK
@@ -51,11 +52,15 @@ utils::ReportMessagePtr Application::initEngine() {
 	if (auto msg = setupGlfw()) return msg;
 #else
 	ExtensionRegistry::init();
+	ResourceLoaders::getInstance();
 #endif
 	return nullptr;
 }
 
-void Application::deinitEngine() { ExtensionRegistry::deinit(); }
+void Application::deinitEngine() {
+	ExtensionRegistry::deinit();
+	ResourceLoaders::clearLoaders();
+}
 
 void Application::initSigHandlers() {
 	struct sigaction sig;

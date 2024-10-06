@@ -23,7 +23,6 @@
 #define MAINWINDOW_H
 
 #ifndef EDITOR_SDK
-	#include "EngineSDK/main/resources/ResourceRequests.h"
 	#include "EngineSDK/main/scene/IScene.h"
 	#include "Window.h"
 

@@ -25,6 +25,7 @@
 #include <nlohmann/json.hpp>
 
 #include "EngineSDK/main/Application.h"
+#include "EngineSDK/main/resources/FileSystemResourceBundle.h"
 #include "EngineSDK/main/scene/IScene.h"
 #include "EngineSDK/main/scene/ISceneDataInjector.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
@@ -45,16 +46,20 @@ LoadedScene::LoadedScene(const std::shared_ptr<Sdk> &pSdk) : sdk(pSdk), mainObje
 
 void LoadedScene::setRunDirectory(const std::filesystem::path &pPath) const {
 	app->getApplicationSettings()->setRunDirectory(pPath);
+	app->setResourceBundle(sdk->createFileSystemResourceBundle(pPath / "data"));
 }
 
 bool LoadedScene::hasScene() const { return scene != nullptr; }
 
-bool LoadedScene::hasResourcesContext() const { return scene->getResources() != nullptr; }
+bool LoadedScene::hasResourcesContext() const { return getResourceLoadExecutor() != nullptr; }
+
+sdk::main::IResourceLoadExecutor* LoadedScene::getResourceLoadExecutor() const { return scene->getResourceExecutor(); }
 
 void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) const {
-	scene->setResources(pResourcesContext.get());
-	const auto resources = sdk->createLoadedResources(pResourcesContext.get());
+	scene->setResourceExecutor(pResourcesContext.get());
+	const auto resources = sdk->createLoadedResources();
 	pResourcesContext->setResources(resources);
+	pResourcesContext->setSdk(sdk);
 	pResourcesContext->setApplication(app.get());
 }
 
@@ -229,7 +234,7 @@ std::shared_ptr<sdk::main::Extension> LoadedScene::addExtension(
 	sdk::main::ISceneObject* pObject, const std::string &pType, const std::string &pName) const {
 	const auto ext = sdk->newExtensionInstance(pType);
 	pObject->addExtension(pName, ext);
-	if (hasResourcesContext()) ext->onInit();
+	//if (hasResourcesContext()) ext->onInit();
 	onExtensionAdded(ext.get());
 	std::thread([this, pObject] { saveObject(pObject); }).detach();
 	return ext;

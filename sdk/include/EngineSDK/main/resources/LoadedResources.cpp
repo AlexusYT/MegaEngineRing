@@ -21,86 +21,31 @@
 
 #include "LoadedResources.h"
 
-#include "EngineSDK/main/scene/IScene.h"
-#include "EngineUtils/utils/ReportMessage.h"
-#include "IResources.h"
-#include "ResourceRequest.h"
-#include "ResourceRequests.h"
-#include "Resources.h"
+#include "EngineSDK/main/render/IRenderable.h"
+#include "IResource.h"
 
 namespace mer::sdk::main {
-LoadedResources::LoadedResources(IResources* pResources) : iResources(pResources) {}
+LoadedResources::LoadedResources() = default;
 
-std::shared_ptr<ILoadedResources> LoadedResources::create(IResources* pResources) {
-	return std::shared_ptr<ILoadedResources>(new LoadedResources(pResources));
+std::shared_ptr<ILoadedResources> LoadedResources::create() {
+	return std::shared_ptr<ILoadedResources>(new LoadedResources());
 }
 
-std::shared_ptr<Resources> LoadedResources::executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
-															const std::shared_ptr<IScene> &pScene) {
-	auto resourcesOut = std::make_shared<Resources>();
-	for (auto &requests = pRequests->getRequests(); const auto &[name, request]: requests) {
-		processingRequests.clear();
-		std::shared_ptr<IResource> res;
-		if (auto error = processRequest(request, res)) {
-			pScene->onResourceLoadingError(request, error);
-		} else
-			resourcesOut->resources.emplace(name, res);
+void LoadedResources::addResource(const std::string &pResourceUri, const std::shared_ptr<IResource> &pResource) {
+	std::lock_guard lock(mutex);
+	resources.insert_or_assign(pResourceUri, pResource);
+	if (auto renderable = std::dynamic_pointer_cast<IRenderable>(pResource)) {
+		renderables.insert_or_assign(pResourceUri, std::make_pair(renderable, false));
 	}
-	return resourcesOut;
 }
 
-utils::ReportMessagePtr LoadedResources::executeRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-														std::shared_ptr<IResource> &pResourceOut) {
-	processingRequests.clear();
-	if (auto error = processRequest(pRequest, pResourceOut)) { return error; }
-	return nullptr;
-}
-
-utils::ReportMessagePtr LoadedResources::processRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-														std::shared_ptr<IResource> &pResourceOut) {
-
-	if (const auto iter = resources.find(pRequest->getName()); iter != resources.end()) {
-		pResourceOut = iter->second;
-		return nullptr;
-	}
-
-	if (std::ranges::find(processingRequests, pRequest->getName()) != processingRequests.end()) {
-		auto msg = utils::ReportMessage::create();
-		msg->setTitle("Failed to process request");
-		msg->setMessage("Cyclic dependencies have been found");
-		for (auto reqIter = processingRequests.begin(); reqIter != processingRequests.end(); ++reqIter) {
-			auto iterNext = reqIter;
-			std::advance(iterNext, 1);
-			if (iterNext == processingRequests.end())
-				msg->addInfoLine("Request {} required {}", *reqIter, pRequest->getName());
-			else
-				msg->addInfoLine("Request {} required {}", *reqIter, *iterNext);
+void LoadedResources::render() {
+	for (auto &[name, renderable]: renderables) {
+		if (!renderable.second) {
+			renderable.first->setupRender();
+			renderable.second = true;
 		}
-		return msg;
+		renderable.first->render();
 	}
-	processingRequests.emplace_back(pRequest->getName());
-
-	const auto dependencies = std::make_shared<Resources>();
-	for (const auto &resourceRequest: pRequest->getRequired()) {
-		std::shared_ptr<IResource> res;
-		if (auto error = processRequest(resourceRequest, res)) return error;
-		dependencies->resources.emplace(resourceRequest->getName(), res);
-		resources.emplace(resourceRequest->getName(), res);
-	}
-
-	if (auto error = executeRequest(dependencies, pRequest, pResourceOut)) { return error; }
-	resources.emplace(pRequest->getName(), pResourceOut);
-	return nullptr;
-}
-
-utils::ReportMessagePtr LoadedResources::executeRequest(const std::shared_ptr<Resources> &pDependencies,
-														const std::shared_ptr<ResourceRequest> &pRequest,
-														std::shared_ptr<IResource> &pResourceOut) const {
-
-	const auto loader = pRequest->getLoader();
-	const auto iLoader = std::dynamic_pointer_cast<IResourceLoader>(loader);
-	iLoader->setApplication(iResources->getApplication());
-	if (auto error = loader->load(pRequest, pDependencies, pResourceOut)) { return error; }
-	return nullptr;
 }
 } // namespace mer::sdk::main

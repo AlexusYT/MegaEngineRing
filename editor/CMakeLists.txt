@@ -218,6 +218,31 @@ add_library(
         mvp/main/objectProperties/IPresenterObjectProperties.h
         mvp/main/objectProperties/PresenterObjectProperties.cpp
         mvp/main/objectProperties/PresenterObjectProperties.h
+        mvp/resourceCreation/IModelResourceCreation.h
+        mvp/resourceCreation/ModelResourceCreation.cpp
+        mvp/resourceCreation/ModelResourceCreation.h
+        mvp/resourceCreation/IViewResourceCreation.h
+        mvp/resourceCreation/ViewResourceCreation.cpp
+        mvp/resourceCreation/ViewResourceCreation.h
+        mvp/resourceCreation/IPresenterResourceCreation.h
+        mvp/resourceCreation/PresenterResourceCreation.cpp
+        mvp/resourceCreation/PresenterResourceCreation.h
+        mvp/resourceCreation/readers/FileResourceReader.h
+        mvp/resourceCreation/readers/ObjFileResourceReader.cpp
+        mvp/resourceCreation/readers/ObjFileResourceReader.h
+        mvp/resourceCreation/savers/Model3DResourceSaver.cpp
+        mvp/resourceCreation/savers/Model3DResourceSaver.h
+        mvp/resourceSelection/IModelResourceSelection.h
+        mvp/resourceSelection/ModelResourceSelection.cpp
+        mvp/resourceSelection/ModelResourceSelection.h
+        mvp/resourceSelection/IViewResourceSelection.h
+        mvp/resourceSelection/ViewResourceSelection.h
+        mvp/resourceSelection/ViewResourceSelection.cpp
+        mvp/resourceSelection/IPresenterResourceSelection.h
+        mvp/resourceSelection/PresenterResourceSelection.h
+        mvp/resourceSelection/PresenterResourceSelection.cpp
+        mvp/contexts/ViewportContext.cpp
+        mvp/contexts/ViewportContext.h
 
 )
 

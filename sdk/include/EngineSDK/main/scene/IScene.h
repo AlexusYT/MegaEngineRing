@@ -42,7 +42,7 @@ class ICamera;
 class ISceneObject;
 class ResourceRequest;
 class IResource;
-class IResources;
+class IResourceLoadExecutor;
 class ProgramWideShaderBuffer;
 
 class IScene {
@@ -56,10 +56,18 @@ public:
 
 	virtual void deinitScene() = 0;
 
-	[[nodiscard]] virtual IResources* getResources() const = 0;
+	[[nodiscard]] virtual IResourceLoadExecutor* getResourceExecutor() const = 0;
 
-	virtual void onResourceLoadingError(const std::shared_ptr<ResourceRequest> &pRequest,
-										const sdk::utils::ReportMessagePtr &pError) = 0;
+	virtual void setResourceExecutor(IResourceLoadExecutor* pResources) = 0;
+
+	virtual std::shared_ptr<IResource> loadResourceSync(const std::string &pName) = 0;
+
+	virtual void loadResourceAsync(
+		const std::string &pResourceUri,
+		const sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>
+			&pSlot) const = 0;
+
+	virtual void onResourceLoadingError(const std::string &pResourceUri, const utils::ReportMessagePtr &pError) = 0;
 
 	virtual void addObject(const std::shared_ptr<ISceneObject> &pObject) = 0;
 
@@ -75,20 +83,11 @@ public:
 
 	[[nodiscard]] virtual ICamera* getCurrentCamera() const = 0;
 
-	virtual void enqueueResourceLoading(
-		const std::shared_ptr<ResourceRequest> &pRequest,
-		const sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>
-			&pSlot) const = 0;
-
-
 	virtual void switchCamera(ICamera* pNewCamera) = 0;
-
 
 	[[nodiscard]] virtual IApplication* getApplication() const = 0;
 
 	virtual void setApplication(IApplication* pApplication) = 0;
-
-	virtual void setResources(IResources* pResources) = 0;
 
 	virtual void render() = 0;
 

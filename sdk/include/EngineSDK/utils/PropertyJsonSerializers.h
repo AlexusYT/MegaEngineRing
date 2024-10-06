@@ -31,8 +31,8 @@ class ShaderProgram;
 }
 
 namespace mer::sdk::main {
-class ModelResource;
-}
+class IModel3DObject;
+} // namespace mer::sdk::main
 
 namespace mer::sdk::utils {
 
@@ -40,44 +40,47 @@ namespace mer::sdk::utils {
 //
 template<>
 struct PropertyJsonSerializer<glm::vec4> {
-	static nlohmann::json serialize(const glm::vec4 &pValue);
-	static glm::vec4 deserialize(const nlohmann::json &pJson);
+	static nlohmann::json serialize(const glm::vec4 &pValue, main::Extension* pExtension);
+	static glm::vec4 deserialize(const nlohmann::json &pJson, main::Extension* pExtension);
 };
 
 template<>
 struct PropertyJsonSerializer<glm::vec3> {
-	static nlohmann::json serialize(const glm::vec3 &pValue);
-	static glm::vec3 deserialize(const nlohmann::json &pJson);
+	static nlohmann::json serialize(const glm::vec3 &pValue, main::Extension* pExtension);
+	static glm::vec3 deserialize(const nlohmann::json &pJson, main::Extension* pExtension);
 };
 
 template<>
 struct PropertyJsonSerializer<glm::vec2> {
-	static nlohmann::json serialize(const glm::vec2 &pValue);
-	static glm::vec2 deserialize(const nlohmann::json &pJson);
+	static nlohmann::json serialize(const glm::vec2 &pValue, main::Extension* pExtension);
+	static glm::vec2 deserialize(const nlohmann::json &pJson, main::Extension* pExtension);
 };
 
 template<>
 struct PropertyJsonSerializer<glm::mat4> {
-	static nlohmann::json serialize(const glm::mat4 &pValue);
-	static glm::mat4 deserialize(const nlohmann::json &pJson);
+	static nlohmann::json serialize(const glm::mat4 &pValue, main::Extension* pExtension);
+	static glm::mat4 deserialize(const nlohmann::json &pJson, main::Extension* pExtension);
 };
 
 template<>
 struct PropertyJsonSerializer<std::string> {
-	static nlohmann::json serialize(const std::string &pValue);
-	static std::string deserialize(const nlohmann::json &pJson);
+	static nlohmann::json serialize(const std::string &pValue, main::Extension* pExtension);
+	static std::string deserialize(const nlohmann::json &pJson, main::Extension* pExtension);
 };
 
 template<>
-struct PropertyJsonSerializer<std::shared_ptr<main::ModelResource>> {
-	static nlohmann::json serialize(const std::shared_ptr<main::ModelResource> &pValue);
-	static std::shared_ptr<main::ModelResource> deserialize(const nlohmann::json &pJson);
+struct PropertyJsonSerializer<std::shared_ptr<main::IModel3DObject>> {
+	static nlohmann::json serialize(const std::shared_ptr<main::IModel3DObject> &pValue, main::Extension* pExtension);
+	static std::shared_ptr<main::IModel3DObject> deserialize(const nlohmann::json &pJson,
+															 const main::Extension* pExtension);
 };
 
 template<>
 struct PropertyJsonSerializer<std::shared_ptr<renderer::ShaderProgram>> {
-	static nlohmann::json serialize(const std::shared_ptr<renderer::ShaderProgram> &pValue);
-	static std::shared_ptr<renderer::ShaderProgram> deserialize(const nlohmann::json &pJson);
+	static nlohmann::json serialize(const std::shared_ptr<renderer::ShaderProgram> &pValue,
+									main::Extension* pExtension);
+	static std::shared_ptr<renderer::ShaderProgram> deserialize(const nlohmann::json &pJson,
+																main::Extension* pExtension);
 };
 } // namespace mer::sdk::utils
 

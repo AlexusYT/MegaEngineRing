@@ -24,6 +24,7 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
 namespace mer::sdk::main {
+class IResourceLoadExecutor;
 class IApplication;
 class IResource;
 class ResourceRequest;
@@ -32,12 +33,13 @@ class Resources;
 class IResourceLoader {
 public:
 	virtual ~IResourceLoader() = default;
-	virtual utils::ReportMessagePtr load(const std::shared_ptr<ResourceRequest> &pRequest,
-										 const std::shared_ptr<Resources> &pDependencies,
+	virtual utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 										 std::shared_ptr<IResource> &pResourceOut) = 0;
 	[[nodiscard]] virtual IApplication* getApplication() const = 0;
 
 	virtual void setApplication(IApplication* pApplication) = 0;
+
+	virtual std::string getFileExtension() = 0;
 };
 
 class ResourceLoader : public IResourceLoader {

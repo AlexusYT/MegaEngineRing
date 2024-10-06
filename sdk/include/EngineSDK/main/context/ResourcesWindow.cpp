@@ -20,7 +20,10 @@
 //
 
 #include <condition_variable>
+#include <future>
 
+#include "EngineSDK/main/IApplication.h"
+#include "EngineSDK/main/resources/ResourceLoaders.h"
 #include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/ReportMessage.h"
 #ifndef EDITOR_SDK
@@ -32,21 +35,30 @@ namespace mer::sdk::main {
 std::condition_variable cv;
 
 ResourcesWindow::ResourcesWindow()
-	: resources(LoadedResources::create(this)),
+	: resources(LoadedResources::create()),
 	  thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) {
 	thread.detach();
 }
 
-std::shared_ptr<Resources> ResourcesWindow::executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
-															const std::shared_ptr<IScene> &pScene) const {
-	return resources->executeRequests(pRequests, pScene);
+std::pair<std::shared_ptr<IResource>, utils::ReportMessagePtr> ResourcesWindow::loadResourceSync(
+	const std::string &pResourceUri) {
+
+	std::lock_guard lock(queueMutex);
+	std::promise<std::pair<std::shared_ptr<IResource>, utils::ReportMessagePtr>> promise;
+
+	queue.emplace_back(pResourceUri,
+					   [&promise](const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError) {
+						   auto result = std::make_pair(pResource, pError);
+						   promise.set_value(result);
+					   });
+	cv.notify_one();
+	return promise.get_future().get();
 }
 
-void ResourcesWindow::enqueueResourceLoading(const std::shared_ptr<ResourceRequest> &pRequest,
-											 const ResourceSlot &pSlot) {
+void ResourcesWindow::loadResourceAsync(const std::string &pResourceUri, const LoadingFinishedSlot &pSlot) {
 	{
 		std::lock_guard lock(queueMutex);
-		queue.emplace_back(pRequest, pSlot);
+		queue.emplace_back(pResourceUri, pSlot);
 	}
 	cv.notify_one();
 }
@@ -55,19 +67,24 @@ void ResourcesWindow::requestStopThread() { thread.request_stop(); }
 
 void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 	while (!pToken.stop_requested()) {
-		std::unique_lock lck(queueMutex);
-		cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
+		std::unique_lock lck(waitMutex);
+		cv.wait(lck, [this, pToken] { return !queue.empty() || pToken.stop_requested(); });
 		getContext()->makeCurrent();
-		for (auto &[request, slot]: queue) {
+		for (auto &[resourceUri, slot]: queue) {
 			utils::ReportMessagePtr error;
-			std::shared_ptr<IResource> resource;
-			try {
-				error = resources->executeRequest(request, resource);
-			} catch (...) {
-				error = utils::ReportMessage::create();
-				error->setTitle("Failed to load resource");
-				error->setMessage("Exception thrown while executing request");
+			std::shared_ptr<IResource> resource = resources->getResource(resourceUri);
+			if (!resource) {
+				try {
+					error = ResourceLoaders::getInstance()->load(this, application->getResourceBundle(), resourceUri,
+																 resource);
+					resources->addResource(resourceUri, resource);
+				} catch (...) {
+					error = utils::ReportMessage::create();
+					error->setTitle("Failed to load resource");
+					error->setMessage("Exception thrown while executing request");
+				}
 			}
+
 			try {
 				slot(resource, error);
 			} catch (...) {
@@ -82,6 +99,7 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 				utils::Logger::error(msg);
 			}
 		}
+		std::lock_guard lock(queueMutex);
 		queue.clear();
 	}
 }

@@ -32,6 +32,7 @@ namespace mer::editor::mvp {
 class ProjectExplorerElement;
 
 class ViewProjectExplorer : public IViewProjectExplorer {
+	IPresenterProjectExplorer* presenter{};
 	Gtk::ScrolledWindow mainScrolledWindow;
 	ui::CustomTreeView* treeView;
 	std::shared_ptr<IWidgetContext> context;
@@ -41,6 +42,10 @@ public:
 
 	void setSlotCreateModel(
 		const sigc::slot<std::shared_ptr<Gio::ListModel>(const std::shared_ptr<Glib::ObjectBase> &)> &pSlot) override;
+
+	void setSelectionChangedSlot(const sigc::slot<void(ProjectExplorerElement* pElement)> &pSlot) override;
+
+	void setSelectOnDoubleClick(const bool pSelectOnDoubleClick) override;
 
 	void openView() override;
 
@@ -53,9 +58,19 @@ private:
 
 	void onPathChanged(const std::filesystem::path &pPath) const override;
 
+	void selectByUri(const std::filesystem::path &pPath) override;
+
 	static std::shared_ptr<Gio::MenuItem> createItem(const std::string &pName, const std::string &pAction,
 													 const Glib::Variant<Glib::ustring> &pVariant);
+
+	static std::optional<uint32_t> getPositionByUri(const std::filesystem::path &pPath,
+													const std::shared_ptr<Gtk::TreeListRow> &pRow);
+
+	[[nodiscard]] IPresenterProjectExplorer* getPresenter() const override { return presenter; }
+
+	void setPresenter(IPresenterProjectExplorer* pPresenter) override { presenter = pPresenter; }
 };
+
 } // namespace mer::editor::mvp
 
 #endif //PROJECTEXPORERWINDOW_H

@@ -40,7 +40,7 @@ public:
 
 	void addView(const std::shared_ptr<IView> &pNewView) override;
 
-	void removeView(const std::shared_ptr<IViewProjectExplorer> &pViewProjectExplorer);
+	void removeView(const std::shared_ptr<IView> &pOldView) override;
 
 	void run() override;
 

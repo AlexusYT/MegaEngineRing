@@ -29,7 +29,10 @@
 namespace mer::editor::mvp {
 PresenterProjectExplorer::PresenterProjectExplorer(const std::shared_ptr<IModelProjectExplorer> &pModel)
 	: model(pModel) {
-	for (auto view: views) { view->onPathChanged(model->getRootPath()); }
+	for (auto view: views) {
+		view->onPathChanged(model->getRootPath());
+		view->setPresenter(this);
+	}
 }
 
 void PresenterProjectExplorer::setEntrySelectionChanged(
@@ -45,13 +48,12 @@ void PresenterProjectExplorer::addView(const std::shared_ptr<IView> &pNewView) {
 		return model->getElements()->getChildren();
 	});
 	view->onPathChanged(model->getRootPath());
+	view->setPresenter(this);
 	views.push_back(view);
 	view->openView();
 }
 
-void PresenterProjectExplorer::removeView(const std::shared_ptr<IViewProjectExplorer> &pViewProjectExplorer) {
-	erase(views, pViewProjectExplorer);
-}
+void PresenterProjectExplorer::removeView(const std::shared_ptr<IView> &pOldView) { erase(views, pOldView); }
 
 void PresenterProjectExplorer::run() {
 	for (const auto &viewProjectExplorer: views) viewProjectExplorer->openView();

@@ -26,71 +26,104 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-#include "EngineSDK/main/resources/models/ModelResource.h"
+#include "EngineSDK/main/resources/models/Model3DObject.h"
+#include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/main/scene/objects/extensions/Extension.h"
 #include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
-nlohmann::json mer::sdk::utils::PropertyJsonSerializer<glm::vec<4, float>>::serialize(const glm::vec4 &pValue) {
+nlohmann::json mer::sdk::utils::PropertyJsonSerializer<glm::vec<4, float>>::serialize(const glm::vec4 &pValue,
+																					  main::Extension* /*pExtension*/) {
 	return {pValue.x, pValue.y, pValue.z, pValue.w};
 }
 
-glm::vec4 mer::sdk::utils::PropertyJsonSerializer<glm::vec<4, float>>::deserialize(const nlohmann::json &pJson) {
+glm::vec4 mer::sdk::utils::PropertyJsonSerializer<glm::vec<4, float>>::deserialize(const nlohmann::json &pJson,
+																				   main::Extension* /*pExtension*/) {
 	return glm::vec4(pJson.at(0), pJson.at(1), pJson.at(2), pJson.at(3));
 }
 
-nlohmann::json mer::sdk::utils::PropertyJsonSerializer<glm::vec<3, float>>::serialize(const glm::vec3 &pValue) {
+nlohmann::json mer::sdk::utils::PropertyJsonSerializer<glm::vec<3, float>>::serialize(const glm::vec3 &pValue,
+																					  main::Extension* /*pExtension*/) {
 	return {pValue.x, pValue.y, pValue.z};
 }
 
-glm::vec3 mer::sdk::utils::PropertyJsonSerializer<glm::vec<3, float>>::deserialize(const nlohmann::json &pJson) {
+glm::vec3 mer::sdk::utils::PropertyJsonSerializer<glm::vec<3, float>>::deserialize(const nlohmann::json &pJson,
+																				   main::Extension* /*pExtension*/) {
 	return glm::vec3(pJson.at(0), pJson.at(1), pJson.at(2));
 }
 
-nlohmann::json mer::sdk::utils::PropertyJsonSerializer<glm::vec<2, float>>::serialize(const glm::vec2 &pValue) {
+nlohmann::json mer::sdk::utils::PropertyJsonSerializer<glm::vec<2, float>>::serialize(const glm::vec2 &pValue,
+																					  main::Extension* /*pExtension*/) {
 	return {pValue.x, pValue.y};
 }
 
-glm::vec2 mer::sdk::utils::PropertyJsonSerializer<glm::vec<2, float>>::deserialize(const nlohmann::json &pJson) {
+glm::vec2 mer::sdk::utils::PropertyJsonSerializer<glm::vec<2, float>>::deserialize(const nlohmann::json &pJson,
+																				   main::Extension* /*pExtension*/) {
 	return glm::vec2(pJson.at(0), pJson.at(1));
 }
 
-nlohmann::json mer::sdk::utils::PropertyJsonSerializer<glm::mat<4, 4, float>>::serialize(const glm::mat4 &pValue) {
+nlohmann::json mer::sdk::utils::PropertyJsonSerializer<glm::mat<4, 4, float>>::serialize(const glm::mat4 &pValue,
+																						 main::Extension* pExtension) {
 	nlohmann::json result;
-	for (int i = 0; i < 4; i++) { result.push_back(PropertyJsonSerializer<glm::mat4::col_type>::serialize(pValue[i])); }
-	return result;
-}
-
-glm::mat4 mer::sdk::utils::PropertyJsonSerializer<glm::mat<4, 4, float>>::deserialize(const nlohmann::json &pJson) {
-	glm::mat4 result;
 	for (int i = 0; i < 4; i++) {
-		result[i] = PropertyJsonSerializer<glm::mat4::col_type>::deserialize(pJson.at(static_cast<size_t>(i)));
+		result.push_back(PropertyJsonSerializer<glm::mat4::col_type>::serialize(pValue[i], pExtension));
 	}
 	return result;
 }
 
-nlohmann::json mer::sdk::utils::PropertyJsonSerializer<std::string>::serialize(const std::string &pValue) {
+glm::mat4 mer::sdk::utils::PropertyJsonSerializer<glm::mat<4, 4, float>>::deserialize(const nlohmann::json &pJson,
+																					  main::Extension* pExtension) {
+	glm::mat4 result;
+	for (int i = 0; i < 4; i++) {
+		result[i] =
+			PropertyJsonSerializer<glm::mat4::col_type>::deserialize(pJson.at(static_cast<size_t>(i)), pExtension);
+	}
+	return result;
+}
+
+nlohmann::json mer::sdk::utils::PropertyJsonSerializer<std::string>::serialize(const std::string &pValue,
+																			   main::Extension* /*pExtension*/) {
 	return pValue;
 }
 
-std::string mer::sdk::utils::PropertyJsonSerializer<std::string>::deserialize(const nlohmann::json &pJson) {
+std::string mer::sdk::utils::PropertyJsonSerializer<std::string>::deserialize(const nlohmann::json &pJson,
+																			  main::Extension* /*pExtension*/) {
 	return pJson.get<std::string>();
 }
 
-nlohmann::json mer::sdk::utils::PropertyJsonSerializer<std::shared_ptr<mer::sdk::main::ModelResource>>::serialize(
-	const std::shared_ptr<main::ModelResource> &pValue) {
-	return pValue ? pValue->getName() : "null";
+nlohmann::json mer::sdk::utils::PropertyJsonSerializer<std::shared_ptr<mer::sdk::main::IModel3DObject>>::serialize(
+	const std::shared_ptr<main::IModel3DObject> &pValue, main::Extension* /*pExtension*/) {
+	if (!pValue) return "null";
+	auto resource = pValue->getIModelResource();
+	if (!resource) return "null";
+	return {{"Resource", resource->asResource()->getResourceUri().string()}, {"Name", pValue->getName()}};
 }
 
-std::shared_ptr<mer::sdk::main::ModelResource> mer::sdk::utils::PropertyJsonSerializer<
-	std::shared_ptr<mer::sdk::main::ModelResource>>::deserialize(const nlohmann::json & /*pJson*/) {
+std::shared_ptr<mer::sdk::main::IModel3DObject> mer::sdk::utils::PropertyJsonSerializer<
+	std::shared_ptr<mer::sdk::main::IModel3DObject>>::deserialize(const nlohmann::json &pJson,
+																  const main::Extension* pExtension) {
+	if (pJson.is_string() && pJson.get<std::string>() == "null") return nullptr;
+	std::string resourceUri = pJson.at("Resource").get<std::string>();
+	auto resource = pExtension->loadResourceSync(resourceUri);
+	if (auto model = std::dynamic_pointer_cast<main::Model3DResource>(resource)) {
+		std::string name = pJson.at("Name").get<std::string>();
+		auto obj = model->getModelObject(name);
+		if (!obj) return nullptr;
+		/*auto shaderResource = pExtension->loadResourceSync("_builtin_/shaders/DefaultInstancedProgram.enshader");
+		if (auto shader = std::dynamic_pointer_cast<renderer::ShaderProgram>(shaderResource)) {
+			obj->setShader(shader);
+		}*/
+		return obj;
+	}
 	return nullptr;
 }
 
 nlohmann::json mer::sdk::utils::PropertyJsonSerializer<std::shared_ptr<mer::sdk::renderer::ShaderProgram>>::serialize(
-	const std::shared_ptr<renderer::ShaderProgram> &) {
+	const std::shared_ptr<renderer::ShaderProgram> &, main::Extension* /*pExtension*/) {
 	return "Shader";
 }
 
 std::shared_ptr<mer::sdk::renderer::ShaderProgram> mer::sdk::utils::PropertyJsonSerializer<
-	std::shared_ptr<mer::sdk::renderer::ShaderProgram>>::deserialize(const nlohmann::json & /*pJson*/) {
+	std::shared_ptr<mer::sdk::renderer::ShaderProgram>>::deserialize(const nlohmann::json & /*pJson*/,
+																	 main::Extension* /*pExtension*/) {
 	return nullptr;
 }

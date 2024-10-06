@@ -21,53 +21,50 @@
 
 #ifndef LOADEDRESOURCES_H
 #define LOADEDRESOURCES_H
+#include <mutex>
 #include <unordered_map>
 
-#include "EngineUtils/utils/ReportMessageFwd.h"
-#include "Resources.h"
-
 namespace mer::sdk::main {
-class IResources;
-class IScene;
-enum class ResourceLoadingPolicy;
-class ResourceRequest;
+class IRenderable;
 class IResource;
-class ResourceRequests;
 
 class ILoadedResources {
 public:
 	virtual ~ILoadedResources() = default;
-	virtual std::shared_ptr<Resources> executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
-													   const std::shared_ptr<IScene> &pScene) = 0;
-	virtual utils::ReportMessagePtr executeRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-												   std::shared_ptr<IResource> &pResourceOut) = 0;
+
+	virtual void addResource(const std::string &pResourceUri, const std::shared_ptr<IResource> &pResource) = 0;
+
+	virtual std::shared_ptr<IResource> getResource(const std::string &pResourceUri) = 0;
+
+	virtual void render() = 0;
 };
 
 class LoadedResources : public ILoadedResources {
 	std::unordered_map<std::string, std::shared_ptr<IResource>> resources;
-	std::vector<std::string> processingRequests;
-	IResources* iResources;
+	std::unordered_map<std::string, std::pair<std::shared_ptr<IRenderable>, bool /*inited*/>> renderables;
+	std::mutex mutex;
 
 
-	LoadedResources(IResources* pResources);
+	LoadedResources();
 
 public:
-	static std::shared_ptr<ILoadedResources> create(IResources* pResources);
+	static std::shared_ptr<ILoadedResources> create();
 
 	~LoadedResources() override = default;
-	std::shared_ptr<Resources> executeRequests(const std::shared_ptr<ResourceRequests> &pRequests,
-											   const std::shared_ptr<IScene> &pScene) override;
 
-	utils::ReportMessagePtr executeRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-										   std::shared_ptr<IResource> &pResourceOut) override;
+	void addResource(const std::string &pResourceUri, const std::shared_ptr<IResource> &pResource) override;
+
+	std::shared_ptr<IResource> getResource(const std::string &pResourceUri) override {
+
+		std::lock_guard lock(mutex);
+		const auto it = resources.find(pResourceUri);
+		if (it == resources.end()) return nullptr;
+		return it->second;
+	}
+
+	void render() override;
 
 private:
-	utils::ReportMessagePtr processRequest(const std::shared_ptr<ResourceRequest> &pRequest,
-										   std::shared_ptr<IResource> &pResourceOut);
-
-	utils::ReportMessagePtr executeRequest(const std::shared_ptr<Resources> &pDependencies,
-										   const std::shared_ptr<ResourceRequest> &pRequest,
-										   std::shared_ptr<IResource> &pResourceOut) const;
 };
 
 } // namespace mer::sdk::main

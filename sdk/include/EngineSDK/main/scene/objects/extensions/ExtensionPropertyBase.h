@@ -47,10 +47,14 @@ public:
 
 	void setPropertyDescription(const std::string &pDescription) { description = pDescription; }
 
-	virtual void serialize(nlohmann::json & /*pJson*/) {}
+	virtual void serialize(nlohmann::json &pJson, Extension* pExtension);
 
-	virtual void deserialize(const nlohmann::json & /*pJson*/) {}
+	virtual void deserialize(const nlohmann::json &pJson, Extension* pExtension);
 };
+
+inline void ExtensionPropertyBase::serialize(nlohmann::json & /*pJson*/, Extension* /*pExtension*/) {}
+
+inline void ExtensionPropertyBase::deserialize(const nlohmann::json & /*pJson*/, Extension* /*pExtension*/) {}
 } // namespace mer::sdk::main
 
 

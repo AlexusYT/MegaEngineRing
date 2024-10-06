@@ -86,7 +86,15 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 		hoveredWidget = widget->get_ancestor(Gtk::Frame::get_base_type());
 	});
 	add_controller(motionController);*/
+	auto actionGroupResource = Gio::SimpleActionGroup::create();
+	actionGroupResource->add_action_with_parameter(
+		"select-for-property", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<uintptr_t>>(pBase);
+			auto ext = reinterpret_cast<sdk::main::ExtensionPropertyBase*>(var.get());
+			if (presenter) presenter->selectResourceForProperty(ext);
+		});
 
+	insert_action_group("resource", actionGroupResource);
 	auto actionGroupObject = Gio::SimpleActionGroup::create();
 	actionGroupObject->add_action_with_parameter(
 		"extension.remove", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
@@ -123,6 +131,11 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 		"open", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
 			if (presenter) presenter->openFile(var.get().raw());
+		});
+	actionGroupFile->add_action_with_parameter(
+		"manage.new.resource", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createResource(var.get().raw());
 		});
 	actionGroupFile->add_action_with_parameter(
 		"manage.new.scene", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
