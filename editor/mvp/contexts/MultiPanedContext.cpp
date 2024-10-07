@@ -26,8 +26,7 @@
 namespace mer::editor::mvp {
 void MultiPanedContext::addWidget(Gtk::Widget* pWidget) { widget = pWidget; }
 
-void MultiPanedContext::removeWidget() { /*multiPaned->remove(*widget);*/
-}
+void MultiPanedContext::removeWidget() { multiPaned->remove(widget); }
 
 void MultiPanedContext::setTitle(const std::string &pTitle) { widget->set_name(pTitle); }
 } // namespace mer::editor::mvp

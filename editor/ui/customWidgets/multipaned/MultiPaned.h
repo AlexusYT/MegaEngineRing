@@ -35,7 +35,8 @@ class MultiPanedPanel;
 class MultiPanedPanelDivider;
 
 class MultiPaned : public Gtk::Widget {
-	friend class MultiPanedPanel;
+	friend MultiPanedPanel;
+	friend MultiPanedPanelDivider;
 	std::vector<std::shared_ptr<MultiPanedPanelDivider>> dividers;
 	std::vector<std::shared_ptr<MultiPanedPanel>> panels;
 	sigc::slot<void(const Widget* pParentWidget, MultiPanedPanel* pPanel)> createWidgetSlot;
@@ -52,26 +53,12 @@ public:
 
 	~MultiPaned() override;
 
-	// This signal handler is called only if MyContainer is a managed widget.
-	void onContainerDestroy();
-
-	Widget* getWidget() { return get_first_child(); }
-
 	Widget* splitAt(Widget* pParentWidget, const std::shared_ptr<mvp::IPresenter> &pPresenter,
-					const Gtk::Orientation pOrientation, const float pTargetChildSize = 0.5f) {
-		if (auto widget = dynamic_cast<MultiPanedPanel*>(pParentWidget))
-			return splitAtImpl(widget, pPresenter, pOrientation, pTargetChildSize).second;
-		return nullptr;
-	}
+					Gtk::Orientation pOrientation, float pTargetChildSize = 0.5f);
 
-	Gtk::SizeRequestMode get_request_mode_vfunc() const override { return Gtk::SizeRequestMode::HEIGHT_FOR_WIDTH; }
+	Widget* setRoot(const std::shared_ptr<mvp::IPresenter> &pPresenter);
 
-	// Discover the total amount of minimum space and natural space needed by
-	// this container and its children.
-	void measure_vfunc(Gtk::Orientation pOrientation, int pForSize, int &pMinimum, int &pNatural, int &pMinimumBaseline,
-					   int &pNaturalBaseline) const override;
-
-	void size_allocate_vfunc(int pWidth, int pHeight, int pBaseline) override;
+	void remove(Widget* pWidget);
 
 	sigc::connection connectCreateWidgetSignal(
 		const sigc::slot<std::shared_ptr<mvp::IView>(const mvp::IPresenter* pPresenter,
@@ -81,16 +68,24 @@ public:
 
 	void addPresenter(const std::shared_ptr<mvp::IPresenter> &pPresenter) { presenters.push_back(pPresenter); }
 
-	Widget* setRoot(const std::shared_ptr<mvp::IPresenter> &pPresenter);
-
-	//void remove(const Gtk::Widget &pWidget);
 
 private:
+	void onDividerRemoved(MultiPanedPanelDivider* pDivider);
+
+	void onContainerDestroy();
+
+	Gtk::SizeRequestMode get_request_mode_vfunc() const override { return Gtk::SizeRequestMode::HEIGHT_FOR_WIDTH; }
+
+	void measure_vfunc(Gtk::Orientation pOrientation, int pForSize, int &pMinimum, int &pNatural, int &pMinimumBaseline,
+					   int &pNaturalBaseline) const override;
+
+	void size_allocate_vfunc(int pWidth, int pHeight, int pBaseline) override;
+
 	MultiPanedPanelDivider* getDividerAt(double pX, double pY);
 
 	MultiPanedPanel* getPanelAt(double pX, double pY);
 
-	Gtk::Widget* createWidget(const std::shared_ptr<mvp::IPresenter> &pPresenter);
+	std::shared_ptr<MultiPanedPanel> createPanel(const std::shared_ptr<mvp::IPresenter> &pPresenter);
 
 	std::pair<std::shared_ptr<MultiPanedPanelDivider>, MultiPanedPanel*> splitAtImpl(
 		MultiPanedPanel* pParentWidget, const std::shared_ptr<mvp::IPresenter> &pPresenter,
