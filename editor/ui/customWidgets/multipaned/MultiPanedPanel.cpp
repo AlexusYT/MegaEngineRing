@@ -32,6 +32,13 @@ MultiPanedPanelDivider::MultiPanedPanelDivider() : ObjectBase("MultiPanedPanelDi
 	neighbors.emplace(MultiPanedSide::TOP, std::list<MultiPanedPanel*>());
 }
 
+MultiPanedPanelDivider::~MultiPanedPanelDivider() {
+	for (auto &[side, neighbor]: neighbors) {
+		while (!neighbor.empty()) { neighbor.back()->removeDivider(MultiPanedPanel::getOppositeSide(side)); }
+	}
+	unparent();
+}
+
 // ReSharper disable once CppInconsistentNaming
 GType MultiPanedPanelDivider::get_type() {
 	if (gtype) return gtype;
@@ -55,6 +62,77 @@ void MultiPanedPanelDivider::updateDrag(const float pX, const float pY) {
 	} else {
 		setPosY(draggingPos + pY);
 	}
+}
+
+void MultiPanedPanelDivider::removePanel(const MultiPanedSide pSide, MultiPanedPanel* pPanel) {
+	//
+	neighbors[pSide].remove(pPanel);
+}
+
+void MultiPanedPanelDivider::mergeWith(const MultiPanedSide pOtherSide, MultiPanedPanelDivider* pOther) {
+	/*if (!pOther) {
+		neighbors[pOtherSide].back()->removeDivider(MultiPanedPanel::getOppositeSide(pOtherSide));
+		return;
+	}*/
+	for (auto [side, panels]: pOther->neighbors) {
+		if (side == MultiPanedPanel::getOppositeSide(pOtherSide)) continue;
+		for (auto panel: panels) {
+			//
+			panel->setDivider(MultiPanedPanel::getOppositeSide(side), this);
+		}
+	}
+
+	auto paned = dynamic_cast<MultiPaned*>(get_parent());
+	if (!paned) return;
+	paned->onDividerRemoved(pOther);
+}
+
+float MultiPanedPanelDivider::getPosX() const {
+
+	//float len = 0.0f;
+	if (getOrientation() == Gtk::Orientation::HORIZONTAL) {
+
+		float topPos = std::numeric_limits<float>::max();
+		for (auto panel: neighbors.at(MultiPanedSide::TOP)) { topPos = std::min(panel->getPosX(), topPos); }
+		float bottomPos = std::numeric_limits<float>::max();
+		for (auto panel: neighbors.at(MultiPanedSide::BOTTOM)) { bottomPos = std::min(panel->getPosX(), bottomPos); }
+		return std::min(topPos, bottomPos);
+	}
+	return posX;
+}
+
+float MultiPanedPanelDivider::getPosY() const {
+
+	if (getOrientation() == Gtk::Orientation::VERTICAL) {
+
+		float leftPos = std::numeric_limits<float>::max();
+		for (auto panel: neighbors.at(MultiPanedSide::LEFT)) { leftPos = std::min(panel->getPosY(), leftPos); }
+		float rightPos = std::numeric_limits<float>::max();
+		for (auto panel: neighbors.at(MultiPanedSide::RIGHT)) { rightPos = std::min(panel->getPosY(), rightPos); }
+		return std::min(leftPos, rightPos);
+	}
+	return posY;
+}
+
+float MultiPanedPanelDivider::getLength() const {
+
+	float len = 0.0f;
+	if (getOrientation() == Gtk::Orientation::HORIZONTAL) {
+
+		float topLen{};
+		for (auto panel: neighbors.at(MultiPanedSide::TOP)) { topLen += panel->getWidth(); }
+		float bottomLen{};
+		for (auto panel: neighbors.at(MultiPanedSide::BOTTOM)) { bottomLen += panel->getWidth(); }
+		len = std::max(topLen, bottomLen);
+	} else {
+
+		float leftLen{};
+		for (auto panel: neighbors.at(MultiPanedSide::LEFT)) { leftLen += panel->getHeight(); }
+		float rightLen{};
+		for (auto panel: neighbors.at(MultiPanedSide::RIGHT)) { rightLen += panel->getHeight(); }
+		len = std::max(leftLen, rightLen);
+	}
+	return len;
 }
 
 void MultiPanedPanelDivider::size_allocate_vfunc(int /*pWidth*/, int /*pHeight*/, int /*pBaseline*/) {}
@@ -110,6 +188,63 @@ MultiPanedPanel::MultiPanedPanel(Widget* pWidget)
 			set_cursor();
 	});
 	add_controller(motion);
+}
+
+MultiPanedPanel::~MultiPanedPanel() {
+	if (widget) widget->unparent();
+
+	if (presenter && view) { presenter->removeView(view); }
+	auto top = dividers[MultiPanedSide::TOP];
+	auto bottom = dividers[MultiPanedSide::BOTTOM];
+	auto left = dividers[MultiPanedSide::LEFT];
+	auto right = dividers[MultiPanedSide::RIGHT];
+	if (top) top->removePanel(MultiPanedSide::BOTTOM, this);
+	if (bottom) bottom->removePanel(MultiPanedSide::TOP, this);
+	if (left) left->removePanel(MultiPanedSide::RIGHT, this);
+	if (right) right->removePanel(MultiPanedSide::LEFT, this);
+	auto paned = dynamic_cast<MultiPaned*>(get_parent());
+	if (!paned) return;
+	//Merge the largest divider with the shortest one
+	if (top && bottom) {
+		auto topSize = top->getLength();
+		auto bottomSize = bottom->getLength();
+		if (topSize < bottomSize) {
+			bottom->mergeWith(MultiPanedSide::TOP, top);
+		} else {
+
+			top->mergeWith(MultiPanedSide::BOTTOM, bottom);
+		}
+	} else if (left && right) {
+		auto leftSize = left->getLength();
+		auto rightSize = right->getLength();
+		if (leftSize < rightSize) {
+			right->mergeWith(MultiPanedSide::LEFT, left);
+		} else {
+			left->mergeWith(MultiPanedSide::RIGHT, right);
+		}
+	}
+	//Special cases. Here we have only two dividers. We need to remove the shortest one.
+	else if (bottom && bottom->getLength() != 1) {
+		paned->onDividerRemoved(bottom);
+	} else if (top && top->getLength() != 1) {
+		paned->onDividerRemoved(top);
+	} else if (left && left->getLength() != 1) {
+		paned->onDividerRemoved(left);
+	} else if (right && right->getLength() != 1) {
+		paned->onDividerRemoved(right);
+	}
+	//Special cases. One divider left. Removing it.
+	else if (bottom) {
+		paned->onDividerRemoved(bottom);
+	} else if (top) {
+		paned->onDividerRemoved(top);
+	} else if (left) {
+		paned->onDividerRemoved(left);
+	} else if (right) {
+		paned->onDividerRemoved(right);
+	}
+
+	unparent();
 }
 
 // ReSharper disable once CppInconsistentNaming

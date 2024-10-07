@@ -28,7 +28,7 @@ namespace mer::editor::ui {
 
 
 MultiPaned::MultiPaned() {
-	signal_destroy().connect(mem_fun(*this, &MultiPaned::onContainerDestroy));
+	//signal_destroy().connect(mem_fun(*this, &MultiPaned::onContainerDestroy));
 
 	auto drag = Gtk::GestureDrag::create();
 	drag->signal_drag_begin().connect([this](const double pX, const double pY) {
@@ -56,9 +56,35 @@ MultiPaned::MultiPaned() {
 }
 
 MultiPaned::~MultiPaned() {
-	if (!gobj()) return;
+	panels.clear();
+	//if (!gobj()) return;
 
-	while (Widget* child = get_first_child()) child->unparent();
+	//while (Widget* child = get_first_child()) child->unparent();
+}
+
+Gtk::Widget* MultiPaned::splitAt(Widget* pParentWidget, const std::shared_ptr<mvp::IPresenter> &pPresenter,
+								 const Gtk::Orientation pOrientation, const float pTargetChildSize) {
+	if (auto widget = dynamic_cast<MultiPanedPanel*>(pParentWidget))
+		return splitAtImpl(widget, pPresenter, pOrientation, pTargetChildSize).second;
+	return nullptr;
+}
+
+Gtk::Widget* MultiPaned::setRoot(const std::shared_ptr<mvp::IPresenter> &pPresenter) {
+	auto panel = createPanel(pPresenter);
+	if (!panel) return nullptr;
+	return panel.get();
+}
+
+void MultiPaned::remove(Widget* pWidget) {
+	if (panels.size() <= 1) return;
+	MultiPanedPanel* panel = dynamic_cast<MultiPanedPanel*>(pWidget);
+	if (!panel)
+		if (auto panelWidget = dynamic_cast<MultiPanedPanel*>(pWidget->get_parent())) { panel = panelWidget; }
+	if (panel) erase_if(panels, [panel](auto pPanel) { return panel == pPanel.get(); });
+}
+
+void MultiPaned::onDividerRemoved(MultiPanedPanelDivider* pDivider) {
+	erase_if(dividers, [pDivider](auto pDividerSelf) { return pDividerSelf.get() == pDivider; });
 }
 
 void MultiPaned::onContainerDestroy() {
@@ -113,18 +139,6 @@ void MultiPaned::size_allocate_vfunc(const int pWidth, const int pHeight, const 
 	allocationSelf = get_allocation();
 }
 
-Gtk::Widget* MultiPaned::setRoot(const std::shared_ptr<mvp::IPresenter> &pPresenter) {
-	auto widget = createWidget(pPresenter);
-	if (!widget) return nullptr;
-
-	const auto panel = std::make_shared<MultiPanedPanel>(widget);
-	panel->presenter = pPresenter;
-	panel->name = widget->get_name();
-	panels.push_back(panel);
-	panel->insert_at_end(*this);
-	return panel.get();
-}
-
 MultiPanedPanelDivider* MultiPaned::getDividerAt(const double pX, const double pY) {
 	const auto pickedWidget = pick(pX, pY, Gtk::PickFlags::INSENSITIVE | Gtk::PickFlags::NON_TARGETABLE);
 	if (!pickedWidget) return nullptr;
@@ -145,29 +159,37 @@ MultiPanedPanel* MultiPaned::getPanelAt(const double pX, const double pY) {
 	return panel;
 }
 
-Gtk::Widget* MultiPaned::createWidget(const std::shared_ptr<mvp::IPresenter> &pPresenter) {
+std::shared_ptr<MultiPanedPanel> MultiPaned::createPanel(const std::shared_ptr<mvp::IPresenter> &pPresenter) {
 	const std::shared_ptr<mvp::MultiPanedContext> context = mvp::MultiPanedContext::create(this);
 	const auto view = createWidgetSignal(pPresenter.get(), context);
 	if (!view) return nullptr;
 	pPresenter->addView(view);
-	return context->getWidget();
+
+	auto widget = context->getWidget();
+	if (!widget) {
+		pPresenter->removeView(view);
+		return nullptr;
+	}
+
+	const auto panel = std::make_shared<MultiPanedPanel>(widget);
+	panel->view = view;
+	panel->presenter = pPresenter;
+	panel->name = widget->get_name();
+	panels.push_back(panel);
+	panel->insert_at_end(*this);
+	return panel;
 }
 
 std::pair<std::shared_ptr<MultiPanedPanelDivider>, MultiPanedPanel*> MultiPaned::splitAtImpl(
 	MultiPanedPanel* pParentWidget, const std::shared_ptr<mvp::IPresenter> &pPresenter,
 	const Gtk::Orientation pOrientation, const float pTargetChildSize) {
 
-	auto widget = createWidget(pPresenter);
-	if (!widget) return {};
+	auto panel = createPanel(pPresenter);
+	if (!panel) return {};
 
-	const auto panel = std::make_shared<MultiPanedPanel>(widget);
-	panel->presenter = pPresenter;
-	panel->name = widget->get_name();
 	auto divider = pParentWidget->splitAt(panel.get(), pTargetChildSize, pOrientation);
 	dividers.push_back(divider);
 	divider->insert_at_end(*this);
-	panels.push_back(panel);
-	panel->insert_at_end(*this);
 
 	return std::make_pair(divider, panel.get());
 }

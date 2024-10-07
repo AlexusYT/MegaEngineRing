@@ -26,6 +26,7 @@
 namespace mer::editor::ui {
 
 CustomTreeView::CustomTreeView() {
+	signal_destroy().connect([this] { popoverMenu.unparent(); });
 	popoverMenu.set_parent(*this);
 	auto rightClick = Gtk::GestureClick::create();
 	rightClick->set_button(GDK_BUTTON_SECONDARY);
@@ -48,7 +49,10 @@ CustomTreeView::CustomTreeView() {
 	add_controller(leftClick);
 }
 
-CustomTreeView::~CustomTreeView() { popoverMenu.unparent(); }
+CustomTreeView::~CustomTreeView() {
+	//
+	popoverMenu.unparent();
+}
 
 void CustomTreeView::setSlotCreateModel(const SlotCreateModel &pSlotCreateModel) {
 	slotCreateModel = pSlotCreateModel;

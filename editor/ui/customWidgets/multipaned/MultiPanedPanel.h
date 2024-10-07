@@ -21,10 +21,12 @@
 
 #ifndef MULTIPANEDPANEL_H
 #define MULTIPANEDPANEL_H
+#include "MultiPanedSide.h"
 
 namespace mer::editor::mvp {
+class IView;
 class IPresenter;
-}
+} // namespace mer::editor::mvp
 
 namespace mer::editor::ui {
 class MultiPanedPanel;
@@ -42,6 +44,8 @@ class MultiPanedPanelDivider : public Gtk::Widget {
 public:
 	MultiPanedPanelDivider();
 
+	~MultiPanedPanelDivider() override;
+
 	// ReSharper disable once CppInconsistentNaming
 	static GType get_type() G_GNUC_CONST;
 
@@ -51,7 +55,9 @@ public:
 
 	void addPanel(const MultiPanedSide pSide, MultiPanedPanel* pPanel) { neighbors[pSide].push_back(pPanel); }
 
-	void removePanel(const MultiPanedSide pSide, MultiPanedPanel* pPanel) { neighbors[pSide].remove(pPanel); }
+	void removePanel(const MultiPanedSide pSide, MultiPanedPanel* pPanel);
+
+	void mergeWith(const MultiPanedSide pOtherSide, MultiPanedPanelDivider* pOther);
 
 	[[nodiscard]] Gtk::Orientation getOrientation() const { return orientation; }
 
@@ -63,15 +69,15 @@ public:
 			set_cursor("sb_h_double_arrow");
 	}
 
-	[[nodiscard]] float getPosX() const { return posX; }
+	[[nodiscard]] float getPosX() const;
 
 	void setPosX(const float pPosX) { posX = pPosX; }
 
-	[[nodiscard]] float getPosY() const { return posY; }
+	[[nodiscard]] float getPosY() const;
 
 	void setPosY(const float pPosY) { posY = pPosY; }
 
-	[[nodiscard]] float getLength() const { return length; }
+	[[nodiscard]] float getLength() const;
 
 	void setLength(const float pLength) { length = pLength; }
 
@@ -90,15 +96,19 @@ class MultiPanedPanel : public Gtk::Widget {
 	std::string name;
 	friend class MultiPaned;
 	Widget* widget{};
+	std::shared_ptr<mvp::IView> view{};
 	std::map<MultiPanedSide, MultiPanedPanelDivider*> dividers{};
 	Corner cloningCorner{};
 	bool cloningInProgress{};
 	std::shared_ptr<mvp::IPresenter> presenter;
 
-	MultiPanedPanel() : ObjectBase("MultiPanedPanelDivider") {}
+	//MultiPanedPanel() : ObjectBase("MultiPanedPanelDivider") {}
 
 public:
 	explicit MultiPanedPanel(Gtk::Widget* pWidget);
+
+	~MultiPanedPanel() override;
+
 	// ReSharper disable once CppInconsistentNaming
 	static GType get_type() G_GNUC_CONST;
 
@@ -118,6 +128,13 @@ public:
 		if (oldDivider) { oldDivider->removePanel(oppositeSide, this); }
 		oldDivider = pDivider;
 		pDivider->addPanel(oppositeSide, this);
+	}
+
+	void removeDivider(const MultiPanedSide pSide) {
+		const auto oppositeSide = getOppositeSide(pSide);
+		auto &divider = dividers[pSide];
+		divider->removePanel(oppositeSide, this);
+		divider = nullptr;
 	}
 
 	std::shared_ptr<MultiPanedPanelDivider> splitAt(MultiPanedPanel* pChildPanel, float pTargetChildSize,
@@ -140,7 +157,6 @@ public:
 
 	[[nodiscard]] float getEndPosY() const;
 
-private:
 	static MultiPanedSide getOppositeSide(MultiPanedSide pSide);
 
 protected:
