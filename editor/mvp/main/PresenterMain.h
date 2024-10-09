@@ -60,6 +60,10 @@ private:
 
 	void displayError(const sdk::utils::ReportMessagePtr &pMsg);
 
+	std::string getTypeName() override {
+		return "PresenterMain";
+	}
+
 public:
 	void run() override;
 

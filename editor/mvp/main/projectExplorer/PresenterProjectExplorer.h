@@ -45,6 +45,10 @@ public:
 	void run() override;
 
 	void stop() override;
+
+	std::string getTypeName() override {
+		return "PresenterProjectExplorer";
+	}
 };
 } // namespace mer::editor::mvp
 

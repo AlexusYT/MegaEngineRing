@@ -174,7 +174,6 @@ void PresenterMain::run() {
 			std::make_shared<ModelProjectExplorer>(modelMain->getProject()->getProjectPath() / "data");
 		presenterProjectExplorer = std::make_shared<PresenterProjectExplorer>(modelProjectExplorer);
 		getAppController()->run(presenterProjectExplorer);
-		paned->addPresenter(presenterProjectExplorer);
 		auto rootWidget = paned->setRoot(presenterProjectExplorer);
 
 		loadedScene = std::make_shared<project::LoadedScene>(project->getEditorSdkLib());
@@ -185,22 +184,24 @@ void PresenterMain::run() {
 		modelSceneEditor->setLoadedScene(loadedScene);
 		auto presenterSceneEditor = std::make_shared<PresenterSceneEditor>(modelSceneEditor);
 		getAppController()->run(presenterSceneEditor);
-		paned->addPresenter(presenterSceneEditor);
 		auto sceneEditor = paned->splitAt(rootWidget, presenterSceneEditor, Gtk::Orientation::VERTICAL, 0.13f);
 
 		auto modelObjectsTree = std::make_shared<ModelObjectsTree>();
 		modelObjectsTree->setLoadedScene(loadedScene);
 		auto presenterObjectsTree = std::make_shared<PresenterObjectsTree>(modelObjectsTree);
 		getAppController()->run(presenterObjectsTree);
-		paned->addPresenter(presenterObjectsTree);
 		auto objectTree = paned->splitAt(sceneEditor, presenterObjectsTree, Gtk::Orientation::VERTICAL, 0.8f);
 
 		auto modelObjectProperties = std::make_shared<ModelObjectProperties>();
 		modelObjectProperties->setLoadedScene(loadedScene);
 		auto presenterObjectProperties = std::make_shared<PresenterObjectProperties>(modelObjectProperties);
 		getAppController()->run(presenterObjectProperties);
-		paned->addPresenter(presenterObjectProperties);
 		paned->splitAt(objectTree, presenterObjectProperties, Gtk::Orientation::HORIZONTAL, 0.5f);
+
+		/*
+		auto json = paned->exportToJson();
+		sdk::utils::Logger::out(json->dump(4));
+		if (auto msg = paned->importFromJson(json, getAppController())) { sdk::utils::Logger::error(msg); }*/
 	}
 
 

@@ -41,6 +41,10 @@ public:
 	void run() override;
 
 	void stop() override;
+
+	std::string getTypeName() override {
+		return "PresenterGraphicsScriptEditor";
+	}
 };
 
 } // namespace mer::editor::mvp

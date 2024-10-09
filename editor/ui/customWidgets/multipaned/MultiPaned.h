@@ -21,6 +21,9 @@
 
 #ifndef MULTIPANED_H
 #define MULTIPANED_H
+#include <nlohmann/json_fwd.hpp>
+
+#include "EngineUtils/utils/UUID.h"
 #include "MultiPanedPanel.h"
 #include "mvp/IPresenter.h"
 
@@ -37,12 +40,11 @@ class MultiPanedPanelDivider;
 class MultiPaned : public Gtk::Widget {
 	friend MultiPanedPanel;
 	friend MultiPanedPanelDivider;
-	std::vector<std::shared_ptr<MultiPanedPanelDivider>> dividers;
-	std::vector<std::shared_ptr<MultiPanedPanel>> panels;
+	std::unordered_map<UUID, std::shared_ptr<MultiPanedPanelDivider>> dividers;
+	std::unordered_map<UUID, std::shared_ptr<MultiPanedPanel>> panels;
 	sigc::slot<void(const Widget* pParentWidget, MultiPanedPanel* pPanel)> createWidgetSlot;
 	MultiPanedPanelDivider* draggingDivider{};
 	Gtk::Allocation allocationSelf;
-	std::vector<std::shared_ptr<mvp::IPresenter>> presenters;
 
 	sigc::signal<std::shared_ptr<mvp::IView>(const mvp::IPresenter* pPresenter,
 											 const std::shared_ptr<mvp::MultiPanedContext> &pContext)>
@@ -66,11 +68,13 @@ public:
 		return createWidgetSignal.connect(pSlot);
 	}
 
-	void addPresenter(const std::shared_ptr<mvp::IPresenter> &pPresenter) { presenters.push_back(pPresenter); }
+	sdk::utils::ReportMessagePtr importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
+												mvp::ApplicationController* pAppController);
 
+	std::shared_ptr<nlohmann::json> exportToJson() const;
 
 private:
-	void onDividerRemoved(MultiPanedPanelDivider* pDivider);
+	void onDividerRemoved(const MultiPanedPanelDivider* pDivider);
 
 	void onContainerDestroy();
 

@@ -27,7 +27,7 @@
 
 namespace mer::editor::mvp {
 class ApplicationController : public IApplicationController {
-	std::unordered_map<IPresenter*, std::shared_ptr<IPresenter>> presenters;
+	std::unordered_map<std::string /*typeName*/, std::shared_ptr<IPresenter>> presenters;
 	std::shared_ptr<Gtk::Application> app;
 
 public:
@@ -38,6 +38,12 @@ public:
 	void run(const std::shared_ptr<IPresenter> &pPresenter) override;
 
 	void stop(IPresenter* pPresenter) override;
+
+	std::shared_ptr<IPresenter> getPresenterByName(const std::string &pName) override {
+		const auto iter = presenters.find(pName);
+		if (iter == presenters.end()) { return nullptr; }
+		return iter->second;
+	}
 
 	[[nodiscard]] const std::shared_ptr<Gtk::Application> &getApp() const final { return app; }
 

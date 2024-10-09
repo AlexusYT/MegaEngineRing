@@ -34,6 +34,8 @@ public:
 
 	virtual void stop(IPresenter* pPresenter) = 0;
 
+	virtual std::shared_ptr<IPresenter> getPresenterByName(const std::string &pName) = 0;
+
 	[[nodiscard]] virtual const std::shared_ptr<Gtk::Application> &getApp() const = 0;
 
 	virtual void setApp(const std::shared_ptr<Gtk::Application> &pApp) = 0;

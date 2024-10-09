@@ -45,6 +45,10 @@ public:
 	void stop() override;
 
 	void addView(const std::shared_ptr<IView> &) override;
+
+	std::string getTypeName() override {
+		return "PresenterObjectProperties";
+	}
 };
 
 } // namespace mer::editor::mvp

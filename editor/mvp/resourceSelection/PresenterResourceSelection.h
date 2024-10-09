@@ -56,6 +56,10 @@ public:
 	void run() override;
 
 	void stop() override;
+
+	std::string getTypeName() override {
+		return "PresenterResourceSelection";
+	}
 };
 
 } // namespace mer::editor::mvp

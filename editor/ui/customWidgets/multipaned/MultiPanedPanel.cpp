@@ -21,6 +21,7 @@
 
 #include "MultiPanedPanel.h"
 
+#include "EngineUtils/utils/UUID.h"
 #include "MultiPaned.h"
 #include "MultiPanedSide.h"
 
@@ -30,6 +31,7 @@ MultiPanedPanelDivider::MultiPanedPanelDivider() : ObjectBase("MultiPanedPanelDi
 	neighbors.emplace(MultiPanedSide::BOTTOM, std::list<MultiPanedPanel*>());
 	neighbors.emplace(MultiPanedSide::LEFT, std::list<MultiPanedPanel*>());
 	neighbors.emplace(MultiPanedSide::TOP, std::list<MultiPanedPanel*>());
+	uuid = UUID::create();
 }
 
 MultiPanedPanelDivider::~MultiPanedPanelDivider() {
@@ -58,9 +60,9 @@ void MultiPanedPanelDivider::beginDrag(const float /*pX*/, const float /*pY*/) {
 
 void MultiPanedPanelDivider::updateDrag(const float pX, const float pY) {
 	if (orientation == Gtk::Orientation::VERTICAL) {
-		setPosX(draggingPos + pX);
+		setPos(draggingPos + pX);
 	} else {
-		setPosY(draggingPos + pY);
+		setPos(draggingPos + pY);
 	}
 }
 
@@ -98,7 +100,7 @@ float MultiPanedPanelDivider::getPosX() const {
 		for (auto panel: neighbors.at(MultiPanedSide::BOTTOM)) { bottomPos = std::min(panel->getPosX(), bottomPos); }
 		return std::min(topPos, bottomPos);
 	}
-	return posX;
+	return pos;
 }
 
 float MultiPanedPanelDivider::getPosY() const {
@@ -111,7 +113,7 @@ float MultiPanedPanelDivider::getPosY() const {
 		for (auto panel: neighbors.at(MultiPanedSide::RIGHT)) { rightPos = std::min(panel->getPosY(), rightPos); }
 		return std::min(leftPos, rightPos);
 	}
-	return posY;
+	return pos;
 }
 
 float MultiPanedPanelDivider::getLength() const {
@@ -154,6 +156,7 @@ enum class MultiPanedPanel::Corner { NONE = 0, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT,
 
 MultiPanedPanel::MultiPanedPanel(Widget* pWidget)
 	: ObjectBase("MultiPanedPanel"), widget(pWidget), cloningCorner(Corner::NONE) {
+	uuid = UUID::create();
 	if (!pWidget) return;
 	dividers.emplace(MultiPanedSide::RIGHT, nullptr);
 	dividers.emplace(MultiPanedSide::BOTTOM, nullptr);
@@ -298,12 +301,10 @@ std::shared_ptr<MultiPanedPanelDivider> MultiPanedPanel::splitAt(
 	auto divider = std::make_shared<MultiPanedPanelDivider>();
 	divider->setOrientation(pOrientation);
 	if (pOrientation == Gtk::Orientation::VERTICAL) {
-		divider->setPosY(this->getPosY());
-		divider->setLength(this->getHeight());
 		if (const auto parentLeftDivider = this->getDivider(MultiPanedSide::LEFT)) {
-			divider->setPosX(parentLeftDivider->getPosX() + this->getWidth() * pTargetChildSize);
+			divider->setPos(parentLeftDivider->getPosX() + this->getWidth() * pTargetChildSize);
 		} else
-			divider->setPosX(this->getWidth() * pTargetChildSize);
+			divider->setPos(this->getWidth() * pTargetChildSize);
 		pChildPanel->setDivider(MultiPanedSide::LEFT, divider.get());
 		if (const auto parentDivider = this->getDivider(MultiPanedSide::BOTTOM)) {
 			pChildPanel->setDivider(MultiPanedSide::BOTTOM, parentDivider);
@@ -317,13 +318,11 @@ std::shared_ptr<MultiPanedPanelDivider> MultiPanedPanel::splitAt(
 		this->setDivider(MultiPanedSide::RIGHT, divider.get());
 
 	} else {
-		divider->setPosX(this->getPosX());
-		divider->setLength(this->getWidth());
 
 		if (const auto parentDivider = this->getDivider(MultiPanedSide::TOP)) {
-			divider->setPosY(parentDivider->getPosY() + this->getHeight() * pTargetChildSize);
+			divider->setPos(parentDivider->getPosY() + this->getHeight() * pTargetChildSize);
 		} else
-			divider->setPosY(this->getHeight() * pTargetChildSize);
+			divider->setPos(this->getHeight() * pTargetChildSize);
 		pChildPanel->setDivider(MultiPanedSide::TOP, divider.get());
 		if (const auto parentDivider = this->getDivider(MultiPanedSide::BOTTOM)) {
 			pChildPanel->setDivider(MultiPanedSide::BOTTOM, parentDivider);
