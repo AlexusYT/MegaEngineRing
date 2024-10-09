@@ -47,6 +47,10 @@ public:
 
 	void stop() override;
 
+	std::string getTypeName() override {
+		return "PresenterStartup";
+	}
+
 private:
 	static sdk::utils::ReportMessagePtr initProject(const std::shared_ptr<project::Project> &pProject);
 

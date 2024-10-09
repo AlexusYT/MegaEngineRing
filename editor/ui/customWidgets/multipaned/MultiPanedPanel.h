@@ -23,6 +23,9 @@
 #define MULTIPANEDPANEL_H
 #include "MultiPanedSide.h"
 
+
+class UUID;
+
 namespace mer::editor::mvp {
 class IView;
 class IPresenter;
@@ -33,13 +36,14 @@ class MultiPanedPanel;
 enum class MultiPanedSide;
 
 class MultiPanedPanelDivider : public Gtk::Widget {
+	friend class MultiPaned;
 	Gtk::Orientation orientation = Gtk::Orientation::VERTICAL;
 	std::map<MultiPanedSide, std::list<MultiPanedPanel*>> neighbors{};
-	float posX{};
-	float posY{};
-	float length{};
+	float pos{};
 	float draggingPos{};
 	static inline GType gtype;
+	std::shared_ptr<UUID> uuid;
+
 
 public:
 	MultiPanedPanelDivider();
@@ -55,9 +59,9 @@ public:
 
 	void addPanel(const MultiPanedSide pSide, MultiPanedPanel* pPanel) { neighbors[pSide].push_back(pPanel); }
 
-	void removePanel(const MultiPanedSide pSide, MultiPanedPanel* pPanel);
+	void removePanel(MultiPanedSide pSide, MultiPanedPanel* pPanel);
 
-	void mergeWith(const MultiPanedSide pOtherSide, MultiPanedPanelDivider* pOther);
+	void mergeWith(MultiPanedSide pOtherSide, MultiPanedPanelDivider* pOther);
 
 	[[nodiscard]] Gtk::Orientation getOrientation() const { return orientation; }
 
@@ -71,15 +75,13 @@ public:
 
 	[[nodiscard]] float getPosX() const;
 
-	void setPosX(const float pPosX) { posX = pPosX; }
+	void setPos(const float pPos) { pos = pPos; }
 
 	[[nodiscard]] float getPosY() const;
 
-	void setPosY(const float pPosY) { posY = pPosY; }
-
 	[[nodiscard]] float getLength() const;
 
-	void setLength(const float pLength) { length = pLength; }
+	[[nodiscard]] const std::shared_ptr<UUID> &getUuid() const { return uuid; }
 
 protected:
 	Gtk::SizeRequestMode get_request_mode_vfunc() const override { return Gtk::SizeRequestMode::HEIGHT_FOR_WIDTH; }
@@ -91,21 +93,20 @@ protected:
 };
 
 class MultiPanedPanel : public Gtk::Widget {
+	friend class MultiPaned;
 	static inline GType gtype;
 	enum class Corner;
 	std::string name;
-	friend class MultiPaned;
 	Widget* widget{};
 	std::shared_ptr<mvp::IView> view{};
 	std::map<MultiPanedSide, MultiPanedPanelDivider*> dividers{};
 	Corner cloningCorner{};
 	bool cloningInProgress{};
 	std::shared_ptr<mvp::IPresenter> presenter;
-
-	//MultiPanedPanel() : ObjectBase("MultiPanedPanelDivider") {}
+	std::shared_ptr<UUID> uuid;
 
 public:
-	explicit MultiPanedPanel(Gtk::Widget* pWidget);
+	explicit MultiPanedPanel(Widget* pWidget);
 
 	~MultiPanedPanel() override;
 
@@ -158,6 +159,8 @@ public:
 	[[nodiscard]] float getEndPosY() const;
 
 	static MultiPanedSide getOppositeSide(MultiPanedSide pSide);
+
+	[[nodiscard]] const std::shared_ptr<UUID> &getUuid() const { return uuid; }
 
 protected:
 	Gtk::SizeRequestMode get_request_mode_vfunc() const override {

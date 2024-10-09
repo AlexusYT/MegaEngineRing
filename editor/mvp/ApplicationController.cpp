@@ -27,19 +27,19 @@ namespace mer::editor::mvp {
 ApplicationController::ApplicationController() {}
 
 ApplicationController::~ApplicationController() {
-	for (auto presenter: presenters) presenter.first->stop();
+	for (auto presenter: presenters) presenter.second->stop();
 	presenters.clear();
 }
 
 void ApplicationController::run(const std::shared_ptr<IPresenter> &pPresenter) {
 	pPresenter->setAppController(this);
 	pPresenter->run();
-	presenters.emplace(pPresenter.get(), pPresenter);
+	presenters.emplace(pPresenter->getTypeName(), pPresenter);
 }
 
 void ApplicationController::stop(IPresenter* pPresenter) {
 	pPresenter->stop();
-	presenters.erase(pPresenter);
+	presenters.erase(pPresenter->getTypeName());
 }
 
 } // namespace mer::editor::mvp

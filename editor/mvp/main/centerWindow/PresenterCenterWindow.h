@@ -59,6 +59,10 @@ private:
 	void onTabTitleChanging(TabPlaceholder* pPlaceholder, const std::string &pTitle) override;
 
 	void onTabRemoving(TabPlaceholder* pPlaceholder) override;
+
+	std::string getTypeName() override {
+		return "PresenterCenterWindow";
+	}
 };
 
 } // namespace mer::editor::mvp

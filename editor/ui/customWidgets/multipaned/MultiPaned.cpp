@@ -21,7 +21,11 @@
 
 #include "MultiPaned.h"
 
+#include <nlohmann/json.hpp>
+
+#include "EngineUtils/utils/UUID.h"
 #include "MultiPanedPanel.h"
+#include "mvp/ApplicationController.h"
 #include "mvp/contexts/MultiPanedContext.h"
 
 namespace mer::editor::ui {
@@ -64,28 +68,156 @@ MultiPaned::~MultiPaned() {
 
 Gtk::Widget* MultiPaned::splitAt(Widget* pParentWidget, const std::shared_ptr<mvp::IPresenter> &pPresenter,
 								 const Gtk::Orientation pOrientation, const float pTargetChildSize) {
-	if (auto widget = dynamic_cast<MultiPanedPanel*>(pParentWidget))
+	if (const auto widget = dynamic_cast<MultiPanedPanel*>(pParentWidget))
 		return splitAtImpl(widget, pPresenter, pOrientation, pTargetChildSize).second;
 	return nullptr;
 }
 
 Gtk::Widget* MultiPaned::setRoot(const std::shared_ptr<mvp::IPresenter> &pPresenter) {
-	auto panel = createPanel(pPresenter);
+	const auto panel = createPanel(pPresenter);
 	if (!panel) return nullptr;
+	panels.emplace(*panel->getUuid(), panel);
+	panel->insert_at_end(*this);
 	return panel.get();
 }
 
 void MultiPaned::remove(Widget* pWidget) {
 	if (panels.size() <= 1) return;
-	MultiPanedPanel* panel = dynamic_cast<MultiPanedPanel*>(pWidget);
+	auto panel = dynamic_cast<MultiPanedPanel*>(pWidget);
 	if (!panel)
-		if (auto panelWidget = dynamic_cast<MultiPanedPanel*>(pWidget->get_parent())) { panel = panelWidget; }
-	if (panel) erase_if(panels, [panel](auto pPanel) { return panel == pPanel.get(); });
+		if (const auto panelWidget = dynamic_cast<MultiPanedPanel*>(pWidget->get_parent())) { panel = panelWidget; }
+	if (panel) panels.erase(*panel->getUuid());
 }
 
-void MultiPaned::onDividerRemoved(MultiPanedPanelDivider* pDivider) {
-	erase_if(dividers, [pDivider](auto pDividerSelf) { return pDividerSelf.get() == pDivider; });
+sdk::utils::ReportMessagePtr MultiPaned::importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
+														mvp::ApplicationController* pAppController) {
+
+	try {
+		std::unordered_map<UUID, std::shared_ptr<MultiPanedPanelDivider>> newDividers;
+		for (auto jsonDivider: pJson->at("Dividers")) {
+			auto divider = std::make_shared<MultiPanedPanelDivider>();
+			sdk::utils::ReportMessagePtr uuidError;
+			divider->uuid = UUID::parse(jsonDivider.at("Uuid").get<std::string>(), uuidError);
+			if (uuidError) {
+				uuidError->setTitle("Failed to parse UUID for divider while importing the layout");
+				return uuidError;
+			}
+			divider->setPos(jsonDivider.at("Pos").get<float>());
+			divider->setOrientation(jsonDivider.at("Orientation").get<std::string>() == "Vertical"
+										? Gtk::Orientation::VERTICAL
+										: Gtk::Orientation::HORIZONTAL);
+			newDividers.emplace(*divider->getUuid(), divider);
+		}
+		std::unordered_map<UUID, std::shared_ptr<MultiPanedPanel>> newPanels;
+		for (auto jsonPanel: pJson->at("Panels")) {
+			std::string presenterName = jsonPanel.at("Presenter").get<std::string>();
+			auto presenter = pAppController->getPresenterByName(presenterName);
+
+			//TODO Use default presenter for this case.
+			if (!presenter) {
+				auto msg = sdk::utils::ReportMessage::create();
+				msg->setTitle("Error while importing the layout");
+				msg->setMessage("Presenter with such name does not exist");
+				msg->addInfoLine("Missing presenter name: {}", presenterName);
+				sdk::utils::Logger::error(msg);
+				continue;
+			}
+
+			//TODO Use default presenter for this case.
+			auto panel = createPanel(presenter);
+			if (!panel) {
+				auto msg = sdk::utils::ReportMessage::create();
+				msg->setTitle("Error while importing the layout");
+				msg->setMessage("Presenter failed to create a widget or view");
+				msg->addInfoLine("Presenter name: {}", presenterName);
+				sdk::utils::Logger::error(msg);
+				continue;
+			}
+			panel->presenter = presenter;
+			std::string uuid = jsonPanel.at("Uuid").get<std::string>();
+			sdk::utils::ReportMessagePtr uuidError;
+			panel->uuid = UUID::parse(uuid, uuidError);
+			//TODO Use default presenter for this case.
+			if (uuidError) {
+				uuidError->setTitle("Failed to parse the UUID for panel while importing the layout");
+				uuidError->addInfoLine("Presenter name: {}", presenterName);
+				sdk::utils::Logger::error(uuidError);
+				continue;
+			}
+			auto sides = {std::make_pair("Top", MultiPanedSide::TOP), std::make_pair("Bottom", MultiPanedSide::BOTTOM),
+						  std::make_pair("Left", MultiPanedSide::LEFT), std::make_pair("Right", MultiPanedSide::RIGHT)};
+
+			auto dividersJson = jsonPanel.at("Dividers");
+			for (auto [name, side]: sides) {
+				if (auto dividerUuid = dividersJson.at(name).get<std::string>(); dividerUuid != "null") {
+					sdk::utils::ReportMessagePtr dividerUuidError;
+					auto divUuid = UUID::parse(dividerUuid, dividerUuidError);
+					if (dividerUuidError) {
+						dividerUuidError->setTitle("Failed to parse the UUID of the divider for panel");
+						dividerUuidError->addInfoLine("Presenter name: {}", presenterName);
+						dividerUuidError->addInfoLine("Divider location: {}", name);
+						sdk::utils::Logger::error(dividerUuidError);
+						return dividerUuidError;
+					}
+					panel->setDivider(side, newDividers.at(*divUuid).get());
+				}
+			}
+			newPanels.emplace(*panel->getUuid(), panel);
+		}
+
+		panels.swap(newPanels);
+		newPanels.clear();
+		dividers.swap(newDividers);
+		newDividers.clear();
+
+		for (auto panel: panels | std::views::values) { panel->set_parent(*this); }
+		for (auto divider: dividers | std::views::values) { divider->set_parent(*this); }
+	} catch (...) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to import layout");
+		msg->setMessage("Exception occurred");
+		return msg;
+	}
+
+	return nullptr;
 }
+
+std::shared_ptr<nlohmann::json> MultiPaned::exportToJson() const {
+	auto json = std::make_shared<nlohmann::json>();
+	nlohmann::json panelsDataArray;
+	for (const auto &[uuid, panel]: panels) {
+		nlohmann::json panelDataObject;
+		panelDataObject.emplace("Uuid", uuid.toString());
+		panelDataObject.emplace("Presenter", panel->presenter->getTypeName());
+
+		nlohmann::json dividersObject;
+		const auto leftDivider = panel->getDivider(MultiPanedSide::LEFT);
+		dividersObject.emplace("Left", leftDivider ? leftDivider->getUuid()->toString() : "null");
+		const auto rightDivider = panel->getDivider(MultiPanedSide::RIGHT);
+		dividersObject.emplace("Right", rightDivider ? rightDivider->getUuid()->toString() : "null");
+		const auto topDivider = panel->getDivider(MultiPanedSide::TOP);
+		dividersObject.emplace("Top", topDivider ? topDivider->getUuid()->toString() : "null");
+		const auto bottomDivider = panel->getDivider(MultiPanedSide::BOTTOM);
+		dividersObject.emplace("Bottom", bottomDivider ? bottomDivider->getUuid()->toString() : "null");
+
+		panelDataObject.emplace("Dividers", dividersObject);
+		panelsDataArray.emplace_back(panelDataObject);
+	}
+	json->emplace("Panels", panelsDataArray);
+	nlohmann::json dividersDataArray;
+	for (const auto &[uuid, divider]: dividers) {
+		nlohmann::json dividerDataObject;
+		dividerDataObject.emplace("Uuid", uuid.toString());
+		dividerDataObject.emplace("Pos", divider->pos);
+		dividerDataObject.emplace("Orientation",
+								  divider->orientation == Gtk::Orientation::VERTICAL ? "Vertical" : "Horizontal");
+		dividersDataArray.emplace_back(dividerDataObject);
+	}
+	json->emplace("Dividers", dividersDataArray);
+	return json;
+}
+
+void MultiPaned::onDividerRemoved(const MultiPanedPanelDivider* pDivider) { dividers.erase(*pDivider->getUuid()); }
 
 void MultiPaned::onContainerDestroy() {
 	while (Widget* child = get_first_child()) child->unparent();
@@ -112,7 +244,7 @@ void MultiPaned::size_allocate_vfunc(const int pWidth, const int pHeight, const 
 	const float widthSelf = static_cast<float>(pWidth);
 	const float heightSelf = static_cast<float>(pHeight);
 
-	for (const auto &panel: panels) {
+	for (const auto &panel: panels | std::views::values) {
 		Gtk::Allocation allocation;
 
 		allocation.set_x(static_cast<int>(panel->getPosX() * widthSelf) + 2);
@@ -122,7 +254,7 @@ void MultiPaned::size_allocate_vfunc(const int pWidth, const int pHeight, const 
 		panel->size_allocate(allocation, pBaseline);
 	}
 
-	for (const auto &divider: dividers) {
+	for (const auto &divider: dividers | std::views::values) {
 		Gtk::Allocation allocation;
 		allocation.set_x(static_cast<int>(divider->getPosX() * widthSelf) - 2);
 		allocation.set_y(static_cast<int>(divider->getPosY() * heightSelf) - 2);
@@ -175,8 +307,6 @@ std::shared_ptr<MultiPanedPanel> MultiPaned::createPanel(const std::shared_ptr<m
 	panel->view = view;
 	panel->presenter = pPresenter;
 	panel->name = widget->get_name();
-	panels.push_back(panel);
-	panel->insert_at_end(*this);
 	return panel;
 }
 
@@ -184,11 +314,13 @@ std::pair<std::shared_ptr<MultiPanedPanelDivider>, MultiPanedPanel*> MultiPaned:
 	MultiPanedPanel* pParentWidget, const std::shared_ptr<mvp::IPresenter> &pPresenter,
 	const Gtk::Orientation pOrientation, const float pTargetChildSize) {
 
-	auto panel = createPanel(pPresenter);
+	const auto panel = createPanel(pPresenter);
 	if (!panel) return {};
+	panels.emplace(*panel->getUuid(), panel);
+	panel->insert_at_end(*this);
 
 	auto divider = pParentWidget->splitAt(panel.get(), pTargetChildSize, pOrientation);
-	dividers.push_back(divider);
+	dividers.emplace(*divider->getUuid(), divider);
 	divider->insert_at_end(*this);
 
 	return std::make_pair(divider, panel.get());

@@ -79,6 +79,10 @@ private:
 
 	void logError(sdk::utils::ReportMessagePtr pError) const;
 
+	std::string getTypeName() override {
+		return "PresenterCreatingProject";
+	}
+
 public:
 	void run() override;
 

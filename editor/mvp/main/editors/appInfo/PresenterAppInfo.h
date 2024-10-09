@@ -40,6 +40,10 @@ public:
 	void run() override;
 
 	void stop() override;
+
+	std::string getTypeName() override {
+		return "PresenterAppInfo";
+	}
 };
 
 } // namespace mer::editor::mvp
