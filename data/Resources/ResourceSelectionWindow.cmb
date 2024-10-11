@@ -13,9 +13,10 @@
 	(1,12,"GtkPaned",None,2,None,None,None,0,None,None),
 	(1,13,"GtkViewport","objectsViewport",12,None,None,None,0,None,None),
 	(1,14,"GtkOverlay",None,12,None,None,None,1,None,None),
-	(1,15,"GtkListView","objectsListView",14,None,None,None,0,None,None),
-	(1,16,"GtkLabel","noObjectsLabel",14,None,"overlay",None,1,None,None),
-	(1,17,"GtkButton","unsetBtn",3,None,None,None,0,None,None)
+	(1,16,"GtkLabel","noObjectsLabel",14,None,"overlay",None,0,None,None),
+	(1,17,"GtkButton","unsetBtn",3,None,None,None,0,None,None),
+	(1,18,"GtkScrolledWindow",None,14,None,None,None,1,None,None),
+	(1,19,"GtkListView","objectsListView",18,None,None,None,0,None,None)
   </object>
   <object_property>
 	(1,2,"GtkOrientable","orientation","vertical",None,None,None,None,None,None,None,None,None),
@@ -43,8 +44,7 @@
 	(1,12,"GtkWidget","margin-top","6",None,None,None,None,None,None,None,None,None),
 	(1,12,"GtkWidget","vexpand","True",None,None,None,None,None,None,None,None,None),
 	(1,12,"GtkWidget","vexpand-set","True",None,None,None,None,None,None,None,None,None),
-	(1,14,"GtkOverlay","child",None,None,None,None,None,15,None,None,None,None),
-	(1,15,"GtkWidget","width-request","100",None,None,None,None,None,None,None,None,None),
+	(1,14,"GtkOverlay","child",None,None,None,None,None,18,None,None,None,None),
 	(1,16,"GtkLabel","ellipsize","middle",None,None,None,None,None,None,None,None,None),
 	(1,16,"GtkLabel","label","No objects to diplay",None,None,None,None,None,None,None,None,None),
 	(1,16,"GtkWidget","halign","center",None,None,None,None,None,None,None,None,None),
