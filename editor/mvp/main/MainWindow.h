@@ -28,12 +28,14 @@
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 
 namespace mer::editor::mvp {
-class MainWindow : public IViewMain, public Gtk::Window {
+class PanedLayoutTab;
+
+class MainWindow : public IViewMain, public Gtk::Window, ThreadDispatcher {
 	std::shared_ptr<IWidgetContext> context;
 
 	Glib::RefPtr<Gtk::EventControllerKey> keyController;
-	ui::MultiPaned multiPaned;
 	IPresenterMain* presenter{};
+	Gtk::Notebook panedTabs;
 
 public:
 	static std::shared_ptr<MainWindow> create(const std::shared_ptr<IWidgetContext> &pContext,
@@ -73,11 +75,15 @@ public:
 
 	void closeView() override;
 
-	ui::MultiPaned* getMultiPaned() override;
-
 	void setPresenter(IPresenterMain* pPresenter) override { presenter = pPresenter; }
 
 	Gtk::Window* getWindow() override { return this; }
+
+	void setTabs(const std::vector<PanedLayoutTab> &pPanedLayoutTabs) override;
+
+	void openTab(int32_t pTabIndex) override;
+
+	ui::MultiPaned* getMultiPanedByIndex(int32_t pIndex) override;
 
 protected:
 };

@@ -1,0 +1,12 @@
+{
+	"CurrentTab": 0,
+	"Tabs": [
+		{
+			"Name": "Scene editor",
+			"AssociatedWith": [
+				"*.enscene"
+			],
+			"LayoutFile": "_builtin_/SceneEditorLayout.json"
+		}
+	]
+}

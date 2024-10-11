@@ -32,7 +32,7 @@ namespace mer::editor::ui {
 
 
 MultiPaned::MultiPaned() {
-	//signal_destroy().connect(mem_fun(*this, &MultiPaned::onContainerDestroy));
+	signal_destroy().connect(mem_fun(*this, &MultiPaned::onContainerDestroy));
 
 	auto drag = Gtk::GestureDrag::create();
 	drag->signal_drag_begin().connect([this](const double pX, const double pY) {
@@ -219,9 +219,7 @@ std::shared_ptr<nlohmann::json> MultiPaned::exportToJson() const {
 
 void MultiPaned::onDividerRemoved(const MultiPanedPanelDivider* pDivider) { dividers.erase(*pDivider->getUuid()); }
 
-void MultiPaned::onContainerDestroy() {
-	while (Widget* child = get_first_child()) child->unparent();
-}
+void MultiPaned::onContainerDestroy() { panels.clear(); }
 
 void MultiPaned::measure_vfunc(const Gtk::Orientation pOrientation, const int pForSize, int &pMinimum, int &pNatural,
 							   int &pMinimumBaseline, int &pNaturalBaseline) const {

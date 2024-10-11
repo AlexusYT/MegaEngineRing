@@ -27,6 +27,7 @@ class Project;
 }
 
 namespace mer::editor::mvp {
+class PanedLayoutTab;
 
 class IModelMain {
 public:
@@ -35,6 +36,14 @@ public:
 	[[nodiscard]] virtual const std::shared_ptr<project::Project> &getProject() const = 0;
 
 	virtual void setProject(const std::shared_ptr<project::Project> &pProject) = 0;
+
+	[[nodiscard]] virtual const std::vector<PanedLayoutTab> &getPanedLayoutTabs() const = 0;
+
+	virtual void setPanedLayoutTabs(const std::vector<PanedLayoutTab> &pPanedLayoutTabs) = 0;
+
+	[[nodiscard]] virtual int32_t getCurrentTab() const = 0;
+
+	virtual void setCurrentTab(int32_t pCurrentTab) = 0;
 };
 
 } // namespace mer::editor::mvp

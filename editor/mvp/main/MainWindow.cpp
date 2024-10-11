@@ -22,9 +22,9 @@
 
 #include "Globals.h"
 #include "IPresenterMain.h"
+#include "PanedLayoutTab.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "project/Project.h"
-#include "ui/customWidgets/multipaned/MultiPanedPanel.h"
 
 namespace mer::editor::mvp {
 std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<IWidgetContext> &pContext,
@@ -78,7 +78,34 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 
 	keyController = Gtk::EventControllerKey::create();
 	add_controller(keyController);
-	set_child(multiPaned);
+	set_child(panedTabs);
+	panedTabs.signal_switch_page().connect([this](Widget* /*pWidget*/, int32_t pIndex) {
+		const auto overlay = dynamic_cast<Gtk::Overlay*>(panedTabs.get_nth_page(pIndex));
+		if (!overlay) return;
+		const auto overlayBox = dynamic_cast<Gtk::Box*>(overlay->get_last_child());
+		if (!overlayBox) return;
+		const auto paned = dynamic_cast<ui::MultiPaned*>(overlay->get_child());
+		if (!paned) return;
+		if (paned->get_first_child()) {
+			overlayBox->set_visible(false);
+		} else {
+			overlayBox->set_visible(true);
+			presenter->readJsonForTab(pIndex, [this, pIndex](const sdk::utils::ReportMessagePtr &pError) {
+				const auto pageOverlay = dynamic_cast<Gtk::Overlay*>(panedTabs.get_nth_page(pIndex));
+				if (!pageOverlay) return;
+				const auto pageOverlayBox = dynamic_cast<Gtk::Box*>(pageOverlay->get_last_child());
+				if (!pageOverlayBox) return;
+				if (pError) {
+					if (auto spinner = dynamic_cast<Gtk::Spinner*>(pageOverlayBox->get_first_child()))
+						spinner->set_spinning(false);
+					if (auto label = dynamic_cast<Gtk::Label*>(pageOverlayBox->get_last_child()))
+						label->set_text(pError->getReport(false));
+				} else {
+					pageOverlayBox->set_visible(false);
+				}
+			});
+		}
+	});
 	/*auto motionController = Gtk::EventControllerMotion::create();
 	motionController->signal_motion().connect([this](double x, double y) {
 		auto widget = multiPaned.pick(x, y, Gtk::PickFlags::INSENSITIVE | Gtk::PickFlags::NON_TARGETABLE);
@@ -178,6 +205,34 @@ void MainWindow::openView() { context->addWidget(this); }
 
 void MainWindow::closeView() { context->removeWidget(); }
 
-ui::MultiPaned* MainWindow::getMultiPaned() { return &multiPaned;}
+void MainWindow::setTabs(const std::vector<PanedLayoutTab> &pPanedLayoutTabs) {
+	for (int32_t i = 0, maxI = panedTabs.get_n_pages(); i < maxI; i++) { panedTabs.remove_page(i); }
+	for (auto panedLayoutTab: pPanedLayoutTabs) {
+		const auto multiPanedTab = Gtk::make_managed<ui::MultiPaned>();
+		multiPanedTab->connectCreateWidgetSignal(sigc::mem_fun(*presenter, &IPresenterMain::createView));
+		Gtk::Overlay overlay;
+		overlay.set_child(*multiPanedTab);
+		Gtk::Box box(Gtk::Orientation::VERTICAL);
+		box.set_valign(Gtk::Align::CENTER);
+		box.set_halign(Gtk::Align::CENTER);
+		Gtk::Spinner spinner;
+		spinner.set_spinning();
+		box.append(spinner);
+		Gtk::Label label("Preparing the layout");
+		label.set_margin(6);
+		box.append(label);
+		overlay.add_overlay(box);
+		panedTabs.append_page(overlay, panedLayoutTab.getName());
+	}
+}
+
+void MainWindow::openTab(const int32_t pTabIndex) { panedTabs.set_current_page(pTabIndex); }
+
+ui::MultiPaned* MainWindow::getMultiPanedByIndex(const int32_t pIndex) {
+	auto overlay = dynamic_cast<Gtk::Overlay*>(panedTabs.get_nth_page(pIndex));
+	if (!overlay) return nullptr;
+	auto paned = dynamic_cast<ui::MultiPaned*>(overlay->get_child());
+	return paned;
+}
 
 }

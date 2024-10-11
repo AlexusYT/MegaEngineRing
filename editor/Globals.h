@@ -30,6 +30,7 @@ class Globals {
 	inline static std::filesystem::path sdk;
 	inline static std::filesystem::path resourcesPath;
 	inline static std::filesystem::path dataPath;
+	inline static std::filesystem::path configPath;
 
 public:
 	static void init();
@@ -61,6 +62,10 @@ public:
 	[[nodiscard]] static const std::filesystem::path &getDataPath() { return dataPath; }
 
 	static void setDataPath(const std::filesystem::path &pDataPath) { dataPath = pDataPath; }
+
+	[[nodiscard]] static const std::filesystem::path &getConfigPath() { return configPath; }
+
+	static void setConfigPath(const std::filesystem::path &pConfigPath) { configPath = pConfigPath; }
 };
 
 

@@ -243,6 +243,8 @@ add_library(
         mvp/resourceSelection/PresenterResourceSelection.cpp
         mvp/contexts/ViewportContext.cpp
         mvp/contexts/ViewportContext.h
+        mvp/main/PanedLayoutTab.cpp
+        mvp/main/PanedLayoutTab.h
 
 )
 

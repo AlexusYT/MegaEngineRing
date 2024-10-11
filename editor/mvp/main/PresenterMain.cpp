@@ -28,8 +28,7 @@
 #include <project/Project.h>
 
 #include "Globals.h"
-#include "centerWindow/ITab.h"
-#include "centerWindow/ModelCenterWindow.h"
+#include "PanedLayoutTab.h"
 #include "centerWindow/PresenterCenterWindow.h"
 #include "centerWindow/ViewCenterWindow.h"
 #include "editors/sceneEditor/ModelSceneEditor.h"
@@ -77,19 +76,51 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 		project->setEditorSdkLib(sdk);
 	}
 	viewMain->setWindowTitle("Game engine editor - " + project->getProjectName());
+	//TODO Rewrite to support Gio::Resource MER-40 and move it to model
+	auto layoutFile = Globals::getConfigPath() / "paned-layouts/Layouts.json";
+	if (!exists(layoutFile)) {
+		create_directories(layoutFile.parent_path());
+		auto internalLayoutFile = Globals::getResourcesPath() / "paned-layouts/Layouts.json";
+		std::error_code ec;
+		copy(internalLayoutFile, layoutFile, ec);
+		if (ec) {
+			auto msg = sdk::utils::ReportMessage::create();
+			msg->setTitle("Failed to copy Layouts file to user config directory");
+			msg->setMessage(ec.message());
+			msg->addInfoLine("Path to internal Layouts file: {}", internalLayoutFile.string());
+			msg->addInfoLine("Path to user Layouts file: {}", layoutFile.string());
+			msg->addInfoLine("Using internal file.");
+			displayError(msg);
+			layoutFile = internalLayoutFile;
+		}
+	}
+	std::shared_ptr<nlohmann::json> json = std::make_shared<nlohmann::json>();
+	try {
+		std::ifstream stream = std::ifstream(layoutFile);
+		stream.exceptions(std::_S_badbit | std::_S_failbit);
+		stream >> *json;
+	} catch (...) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to read layout file");
+		msg->setMessage("Exception occurred");
+		msg->addInfoLine("Path to Layouts file: {}", layoutFile.string());
+		displayError(msg);
+	}
+	try {
+		std::vector<PanedLayoutTab> panedLayoutTabs;
+		json->at("Tabs").get_to(panedLayoutTabs);
+		modelMain->setPanedLayoutTabs(panedLayoutTabs);
+		int32_t currentTab = 0;
+		json->at("CurrentTab").get_to(currentTab);
+		modelMain->setCurrentTab(currentTab);
+	} catch (...) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to read layout file");
+		msg->setMessage("Exception occurred");
+		msg->addInfoLine("Path to Layouts file: {}", layoutFile.string());
+		displayError(msg);
+	}
 
-	viewMain->getMultiPaned()->connectCreateWidgetSignal(
-		[](const IPresenter* pPresenter, const std::shared_ptr<MultiPanedContext> &pContext) -> std::shared_ptr<IView> {
-			if (dynamic_cast<const PresenterProjectExplorer*>(pPresenter))
-				return std::make_shared<ViewProjectExplorer>(pContext);
-			if (dynamic_cast<const PresenterSceneEditor*>(pPresenter))
-				return std::make_shared<ViewSceneEditor>(pContext);
-			if (dynamic_cast<const PresenterObjectsTree*>(pPresenter))
-				return std::make_shared<ViewObjectsTree>(pContext);
-			if (dynamic_cast<const PresenterObjectProperties*>(pPresenter))
-				return std::make_shared<ViewObjectProperties>(pContext);
-			return nullptr;
-		});
 	auto r = viewMain->connectKeyPressedSignal(
 		[this, project](const guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
 			if (pKeyCode == 39 && (pState & (Gdk::ModifierType::SHIFT_MASK | Gdk::ModifierType::CONTROL_MASK |
@@ -169,12 +200,10 @@ void PresenterMain::run() {
 	auto project = modelMain->getProject();
 	viewMain->openView();
 	{
-		auto paned = viewMain->getMultiPaned();
 		auto modelProjectExplorer =
 			std::make_shared<ModelProjectExplorer>(modelMain->getProject()->getProjectPath() / "data");
 		presenterProjectExplorer = std::make_shared<PresenterProjectExplorer>(modelProjectExplorer);
 		getAppController()->run(presenterProjectExplorer);
-		auto rootWidget = paned->setRoot(presenterProjectExplorer);
 
 		loadedScene = std::make_shared<project::LoadedScene>(project->getEditorSdkLib());
 		loadedScene->connectErrorOccurred([this](auto pMsg) { displayError(pMsg); });
@@ -184,25 +213,20 @@ void PresenterMain::run() {
 		modelSceneEditor->setLoadedScene(loadedScene);
 		auto presenterSceneEditor = std::make_shared<PresenterSceneEditor>(modelSceneEditor);
 		getAppController()->run(presenterSceneEditor);
-		auto sceneEditor = paned->splitAt(rootWidget, presenterSceneEditor, Gtk::Orientation::VERTICAL, 0.13f);
 
 		auto modelObjectsTree = std::make_shared<ModelObjectsTree>();
 		modelObjectsTree->setLoadedScene(loadedScene);
 		auto presenterObjectsTree = std::make_shared<PresenterObjectsTree>(modelObjectsTree);
 		getAppController()->run(presenterObjectsTree);
-		auto objectTree = paned->splitAt(sceneEditor, presenterObjectsTree, Gtk::Orientation::VERTICAL, 0.8f);
 
 		auto modelObjectProperties = std::make_shared<ModelObjectProperties>();
 		modelObjectProperties->setLoadedScene(loadedScene);
 		auto presenterObjectProperties = std::make_shared<PresenterObjectProperties>(modelObjectProperties);
 		getAppController()->run(presenterObjectProperties);
-		paned->splitAt(objectTree, presenterObjectProperties, Gtk::Orientation::HORIZONTAL, 0.5f);
-
-		/*
-		auto json = paned->exportToJson();
-		sdk::utils::Logger::out(json->dump(4));
-		if (auto msg = paned->importFromJson(json, getAppController())) { sdk::utils::Logger::error(msg); }*/
 	}
+
+	viewMain->setTabs(modelMain->getPanedLayoutTabs());
+	viewMain->openTab(modelMain->getCurrentTab());
 
 
 	//auto viewCenterWindow = std::make_shared<ViewCenterWindow>(getAppController()->getAppContext());
@@ -220,6 +244,60 @@ void PresenterMain::stop() {
 
 	getAppController()->stop(presenterProjectExplorer.get());
 	viewMain->closeView();
+}
+
+std::shared_ptr<IView> PresenterMain::createView(const IPresenter* pPresenter,
+												 const std::shared_ptr<MultiPanedContext> &pContext) {
+
+	if (dynamic_cast<const PresenterProjectExplorer*>(pPresenter))
+		return std::make_shared<ViewProjectExplorer>(pContext);
+	if (dynamic_cast<const PresenterSceneEditor*>(pPresenter)) return std::make_shared<ViewSceneEditor>(pContext);
+	if (dynamic_cast<const PresenterObjectsTree*>(pPresenter)) return std::make_shared<ViewObjectsTree>(pContext);
+	if (dynamic_cast<const PresenterObjectProperties*>(pPresenter))
+		return std::make_shared<ViewObjectProperties>(pContext);
+	return nullptr;
+}
+
+void PresenterMain::readJsonForTab(int32_t pIndex,
+								   const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pCallback) {
+	std::thread([this, pIndex, pCallback]() {
+		auto tabs = modelMain->getPanedLayoutTabs();
+		if (tabs.size() <= static_cast<uint64_t>(pIndex)) {
+			//Here we can offer the user to select the file themselves or reload Layouts.json file instead of displaying
+			//an error
+			auto msg = sdk::utils::ReportMessage::create();
+			msg->setTitle("Unable to read layout from JSON");
+			msg->setMessage("No layout info for specified tab in the Layout.json file");
+			msg->addInfoLine("Specified tab index: {}", pIndex);
+			msg->addInfoLine("Layout.json file only has {} tabs", tabs.size());
+			pCallback(msg);
+			return;
+		}
+		auto path = std::filesystem::path(tabs.at(static_cast<uint64_t>(pIndex)).getPath());
+		std::filesystem::path layoutFilePath;
+		if (path.string().starts_with("_builtin_")) {
+			layoutFilePath = Globals::getResourcesPath() / "paned-layouts" / path.filename();
+		} else {
+			layoutFilePath = Globals::getConfigPath() / "paned-layouts" / path;
+		}
+		std::shared_ptr<nlohmann::json> json = std::make_shared<nlohmann::json>();
+		try {
+			std::ifstream stream = std::ifstream(layoutFilePath);
+			stream.exceptions(std::_S_badbit | std::_S_failbit);
+			stream >> *json;
+		} catch (...) {
+			auto msg = sdk::utils::ReportMessage::create();
+			msg->setTitle("Unable to read layout from JSON");
+			msg->setMessage("Exception occurred while reading layout file for tab");
+			msg->addInfoLine("Specified tab index: {}", pIndex);
+			msg->addInfoLine("Path to the layout file: {}", layoutFilePath.string());
+			pCallback(msg);
+			return;
+		}
+
+		auto paned = viewMain->getMultiPanedByIndex(pIndex);
+		if (paned) pCallback(paned->importFromJson(json, getAppController()));
+	}).detach();
 }
 
 void PresenterMain::selectResourceForProperty(sdk::main::ExtensionPropertyBase* pProperty) {
