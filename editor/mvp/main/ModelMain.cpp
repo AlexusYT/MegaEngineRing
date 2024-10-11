@@ -21,4 +21,10 @@
 
 #include "ModelMain.h"
 
-namespace mer::editor::mvp {}
+namespace mer::editor::mvp {
+const std::vector<PanedLayoutTab> &ModelMain::getPanedLayoutTabs() const { return panedLayoutTabs; }
+
+void ModelMain::setPanedLayoutTabs(const std::vector<PanedLayoutTab> &pPanedLayoutTabs) {
+	panedLayoutTabs = pPanedLayoutTabs;
+}
+} // namespace mer::editor::mvp

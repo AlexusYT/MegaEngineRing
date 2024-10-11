@@ -29,6 +29,8 @@ void Globals::init() {
 	create_directories(logPath);
 	projectsPath = home / "MegaEngineProjects";
 	create_directories(projectsPath);
+	configPath = home / ".config/MegaEngineRing";
+	create_directories(configPath);
 
 	sdkPath = std::filesystem::path(SDK_PATH) / "sdk";
 

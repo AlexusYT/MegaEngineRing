@@ -29,6 +29,7 @@ class MultiPaned;
 } // namespace mer::editor::ui
 
 namespace mer::editor::mvp {
+class PanedLayoutTab;
 class IPresenterMain;
 
 class IViewMain : public IView {
@@ -45,11 +46,15 @@ public:
 
 	virtual void reportError(const sdk::utils::ReportMessagePtr &pError) = 0;
 
-	virtual ui::MultiPaned* getMultiPaned() = 0;
-
 	virtual void setPresenter(IPresenterMain* pPresenter) = 0;
 
 	virtual Gtk::Window* getWindow() = 0;
+
+	virtual void setTabs(const std::vector<PanedLayoutTab> &pPanedLayoutsTabs) = 0;
+
+	virtual void openTab(int32_t pTabIndex) = 0;
+
+	virtual ui::MultiPaned* getMultiPanedByIndex(int32_t pIndex) = 0;
 };
 } // namespace mer::editor::mvp
 

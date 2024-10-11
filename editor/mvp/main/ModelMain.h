@@ -22,15 +22,27 @@
 #ifndef MODELMAIN_H
 #define MODELMAIN_H
 #include "IModelMain.h"
+#include "PanedLayoutTab.h"
 
 namespace mer::editor::mvp {
 class ModelMain : public IModelMain {
 	std::shared_ptr<project::Project> project;
+	std::vector<PanedLayoutTab> panedLayoutTabs;
+
+	int32_t currentTab{};
 
 public:
 	[[nodiscard]] const std::shared_ptr<project::Project> &getProject() const override { return project; }
 
 	void setProject(const std::shared_ptr<project::Project> &pProject) override { project = pProject; }
+
+	[[nodiscard]] const std::vector<PanedLayoutTab> &getPanedLayoutTabs() const override;
+
+	void setPanedLayoutTabs(const std::vector<PanedLayoutTab> &pPanedLayoutTabs) override;
+
+	[[nodiscard]] int32_t getCurrentTab() const override { return currentTab; }
+
+	void setCurrentTab(const int32_t pCurrentTab) override { currentTab = pCurrentTab; }
 };
 } // namespace mer::editor::mvp
 
