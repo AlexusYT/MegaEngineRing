@@ -48,6 +48,9 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 	bool hasFace{};
 
 	Model model;
+	model.vertices.reserve(65536);
+	model.tCoords.reserve(65536);
+	model.normals.reserve(65536);
 	std::shared_ptr<Obj> object;
 	auto streamSelf = getStream();
 	while (!streamSelf->eof()) {
@@ -75,7 +78,7 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 			hasFace = true;
 			std::string s = line;
 			//language=regexp
-			std::regex regex(R"((\d+)\/(\d+)\/(\d+)\ ?)");
+			static std::regex regex(R"((\d+)\/(\d+)\/(\d+)\ ?)");
 			std::smatch matches;
 			Face face;
 			while (!s.empty()) {
@@ -94,6 +97,9 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 			//utils::Logger::out(line);
 		}
 	}
+	model.vertices.shrink_to_fit();
+	model.tCoords.shrink_to_fit();
+	model.normals.shrink_to_fit();
 
 	if (!hasObject || !hasVertex || !hasFace) {
 		auto msg = sdk::utils::ReportMessage::create();
@@ -148,7 +154,7 @@ std::shared_ptr<sdk::main::IModel3DResource> ObjFileResourceReader::generateReso
 
 glm::vec3 ObjFileResourceReader::getVec3(const std::string &pLine) {
 	//language=regexp
-	std::regex regex(R"((-?\d\.\d*) (-?\d\.\d*) (-?\d\.\d*))");
+	static std::regex regex(R"((-?\d\.\d*) (-?\d\.\d*) (-?\d\.\d*))");
 	std::smatch matches;
 	if (std::regex_search(pLine, matches, regex)) {
 		glm::vec3 vertex{};
@@ -171,7 +177,7 @@ glm::vec3 ObjFileResourceReader::getVec3(const std::string &pLine) {
 
 glm::vec2 ObjFileResourceReader::getVec2(const std::string &pLine) {
 	//language=regexp
-	std::regex regex(R"((-?\d\.\d*) (-?\d\.\d*))");
+	static std::regex regex(R"((-?\d\.\d*) (-?\d\.\d*))");
 	std::smatch matches;
 	if (std::regex_search(pLine, matches, regex)) {
 		glm::vec2 vertex;
