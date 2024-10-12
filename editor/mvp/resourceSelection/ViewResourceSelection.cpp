@@ -144,6 +144,10 @@ void ViewResourceSelection::displayObjects(const std::vector<std::string> &pObje
 		auto modelObject = SelectionObject::create(object);
 		objectsList->append(modelObject);
 	}
+	objectsList->sort(
+		[](const Glib::RefPtr<const SelectionObject> &pFirst, const Glib::RefPtr<const SelectionObject> &pSecond) {
+			return pFirst->getName().compare(pSecond->getName());
+		});
 	auto selectionModel = Gtk::SingleSelection::create(objectsList);
 	auto selectedItemProp = selectionModel->property_selected_item();
 	selectedItemProp.signal_changed().connect([selectedItemProp, this] {
