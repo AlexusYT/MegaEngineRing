@@ -143,6 +143,9 @@ public:
 
 	IScene* getScene() const;
 
+
+	bool notifyOnMouseScroll(double pDx, double pDy);
+
 protected:
 	void putConnectionToStorage(const sigc::connection &pConnection) { connectionStorage.emplace_back(pConnection); }
 
@@ -163,6 +166,8 @@ protected:
 	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const;
 
 	virtual void onEnabledChanged();
+
+	virtual bool onMouseScroll(double pDx, double pDy);
 
 private:
 	void setObject(SceneObject* const pObject) { object = pObject; }

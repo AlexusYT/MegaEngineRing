@@ -21,10 +21,11 @@
 
 #ifndef ISCRIPT_H
 #define ISCRIPT_H
-#include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
 namespace mer::sdk::main {
+class SceneObject;
+
 class IScript {
 public:
 	virtual ~IScript() = default;
@@ -36,7 +37,14 @@ public:
 	virtual void teardown() {}
 
 	virtual void setObject(SceneObject* pSceneObject) = 0;
+
+	virtual bool notifyOnMouseScroll(double pDx, double pDy) = 0;
+
+protected:
+	virtual bool onMouseScroll(double pDx, double pDy);
 };
+
+inline bool IScript::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
 } // namespace mer::sdk::main
 
 

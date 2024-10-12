@@ -32,6 +32,8 @@ namespace mer::editor::mvp {
 class IPresenterSceneEditor : public PresenterBase {
 public:
 	~IPresenterSceneEditor() override = default;
+
+	virtual bool onMouseScroll(double pDx, double pDy) = 0;
 };
 
 } // namespace mer::editor::mvp

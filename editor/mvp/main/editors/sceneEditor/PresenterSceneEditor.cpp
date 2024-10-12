@@ -140,6 +140,11 @@ sdk::utils::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::
 	return ModifierKeys(mods);
 }
 
+bool PresenterSceneEditor::onMouseScroll(double pDx, double pDy) {
+	if (const auto scene = modelSceneEditor->getScene()) return scene->notifyOnMouseScroll(pDx, pDy);
+	return false;
+}
+
 void PresenterSceneEditor::run() {}
 
 void PresenterSceneEditor::stop() {

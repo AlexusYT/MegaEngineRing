@@ -130,6 +130,19 @@ utils::ReportMessagePtr SceneObject::transferExtensionTo(const std::string &pNam
 	return nullptr;
 }
 
+void SceneObject::setScript(const std::shared_ptr<IScript> &pScript) {
+	if (!pScript && !script) return;
+	if (script) {
+		script->teardown();
+		script->setObject(nullptr);
+	}
+	if (pScript) {
+		script = pScript;
+		script->setObject(this);
+		if (inited) script->setup();
+	}
+}
+
 utils::ReportMessagePtr SceneObject::init() {
 	if (inited) return nullptr;
 
@@ -137,7 +150,7 @@ utils::ReportMessagePtr SceneObject::init() {
 		if (auto msg = extension.second->onInit()) return msg;
 	}
 
-	if (!scriptName.empty()) {
+	/*if (!scriptName.empty()) {
 
 		auto main = dlopen(nullptr, RTLD_LAZY);
 
@@ -145,12 +158,11 @@ utils::ReportMessagePtr SceneObject::init() {
 			reinterpret_cast<std::shared_ptr<IScript> (*)()>(dlsym(main, ("create" + scriptName).c_str()));
 		if (createFunc) {
 			script = createFunc();
-			script->setObject(this);
-			script->setup();
 		} else {
 			utils::Logger::error("Unable to load script: {}", scriptName);
 		}
-	}
+	}*/
+	if (script) { script->setup(); }
 	inited = true;
 	return nullptr;
 }
@@ -191,5 +203,12 @@ void SceneObject::onMouseButtonStateChanged(const utils::MouseButton pButton, co
 		if (!extension.second->isEnabled()) continue;
 		extension.second->onMouseButtonStateChanged(pButton, pPressed, pX, pY);
 	}
+}
+
+bool SceneObject::notifyOnMouseScroll(double pDx, double pDy) {
+	bool handled{};
+	for (const auto &ext: extensions | std::views::values) { handled = ext->notifyOnMouseScroll(pDx, pDy) || handled; }
+	if (script) handled = script->notifyOnMouseScroll(pDx, pDy) || handled;
+	return handled;
 }
 } // namespace mer::sdk::main

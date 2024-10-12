@@ -31,18 +31,13 @@ namespace mer::sdk::main {
 class OrbitCameraExtension : public PerspectiveProjectionCameraMod, public ICamera {
 
 protected:
-	OrbitCameraExtension()
-		: propertyMatrix(this, "Matrix"), propertyAngle(this, "Angle"), propertyTargetPosition(this, "TargetPosition") {
-		propertyMatrix.setValue(glm::mat4(1));
-		auto updateMatrixSlot = hide(sigc::mem_fun(*this, &OrbitCameraExtension::updateMatrix));
-		propertyTargetPosition.getEvent().connect(updateMatrixSlot);
-		propertyAngle.getEvent().connect(updateMatrixSlot);
-	}
+	OrbitCameraExtension();
 
 public:
 	ExtensionProperty<glm::mat4> propertyMatrix;
 	ExtensionProperty<glm::vec2> propertyAngle;
 	ExtensionProperty<glm::vec3> propertyTargetPosition;
+	ExtensionProperty<float> propertyDistance;
 
 	METHOD_CREATE(OrbitCameraExtension)
 

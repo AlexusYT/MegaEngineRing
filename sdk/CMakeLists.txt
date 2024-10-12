@@ -41,6 +41,7 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/resources/FileSystemResourceBundle.cpp
         include/EngineSDK/main/resources/ResourceLoaders.cpp
         include/EngineSDK/main/resources/Resource.cpp
+        include/EngineSDK/main/scene/EditorCameraScript.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -114,6 +115,7 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/IResourceLoaders.h
         include/EngineSDK/main/render/IRenderable.h
         include/EngineSDK/main/resources/Resource.h
+        include/EngineSDK/main/scene/EditorCameraScript.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

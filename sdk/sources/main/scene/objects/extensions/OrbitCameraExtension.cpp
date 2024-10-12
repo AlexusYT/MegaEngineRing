@@ -31,6 +31,17 @@
 namespace mer::sdk::main {
 
 
+OrbitCameraExtension::OrbitCameraExtension()
+	: propertyMatrix(this, "Matrix"), propertyAngle(this, "Angle"), propertyTargetPosition(this, "TargetPosition"),
+	  propertyDistance(this, "Distance") {
+	propertyMatrix.setValue(glm::mat4(1));
+	propertyDistance = 3.0f;
+	auto updateMatrixSlot = hide(sigc::mem_fun(*this, &OrbitCameraExtension::updateMatrix));
+	propertyTargetPosition.getEvent().connect(updateMatrixSlot);
+	propertyAngle.getEvent().connect(updateMatrixSlot);
+	propertyDistance.getEvent().connect(updateMatrixSlot);
+}
+
 utils::ReportMessagePtr OrbitCameraExtension::onInit() { return nullptr; }
 
 void OrbitCameraExtension::onWindowSizeChanged(const int pWidth, const int pHeight) {
@@ -42,12 +53,12 @@ void OrbitCameraExtension::projectionMatrixChanged(const glm::mat4 & /*pNewMatri
 
 void OrbitCameraExtension::updateMatrix() {
 
-	float dist = 25;
 	glm::vec3 globalUp{0, 1, 0};
 	auto &angle = propertyAngle.getValue();
 	glm::mat4 rotationMatrix = glm::yawPitchRoll(glm::radians(angle.y), glm::radians(angle.x), 0.0f);
 
-	auto position = propertyTargetPosition + glm::vec3(rotationMatrix * glm::vec4(0, 0, dist, 0.0f));
+	auto position =
+		propertyTargetPosition + glm::vec3(rotationMatrix * glm::vec4(0, 0, propertyDistance.getValue(), 0.0f));
 	//auto look = glm::normalize(targetPosition - position);
 	auto up = glm::vec3(rotationMatrix * glm::vec4(globalUp, 0.0f));
 	/*auto right = glm::cross(look, up);

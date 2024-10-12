@@ -119,6 +119,8 @@ private:
 	void onKeyChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) override;
 
 	void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) override;
+
+	bool notifyOnMouseScroll(double pDx, double pDy) final;
 };
 } // namespace mer::sdk::main
 

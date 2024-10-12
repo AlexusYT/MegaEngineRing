@@ -21,6 +21,7 @@
 
 #include "EngineSDK/main/scene/SceneDataInjector.h"
 
+#include "EngineSDK/main/scene/EditorCameraScript.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h"
@@ -54,6 +55,8 @@ void SceneDataInjector::setupEditorCamera(std::shared_ptr<ISceneObject> &pEditor
 	pEditorCamera->addExtension("camera", camera);
 	pCamera = camera;
 	pEditorCamera->getMainExtension()->propertyName = "EditorCamera";
+	auto editorCameraScript = std::make_shared<EditorCameraScript>();
+	pEditorCamera->setScript(editorCameraScript);
 	//pEditorCamera->setScriptName("EditorCameraScript");
 }
 } // namespace mer::sdk::main

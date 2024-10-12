@@ -98,7 +98,14 @@ public:
 	virtual void onKeyChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) = 0;
 
 	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) = 0;
+
+	virtual bool notifyOnMouseScroll(double pDx, double pDy) = 0;
+
+protected:
+	virtual bool onMouseScroll(double pDx, double pDy);
 };
+
+inline bool IScene::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
 } // namespace mer::sdk::main
 
 

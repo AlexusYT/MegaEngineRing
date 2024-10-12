@@ -16,25 +16,26 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 25.06.24.
+// Created by alexus on 11.10.24.
 //
 
-#ifndef SCRIPT_H
-#define SCRIPT_H
-#include "IScript.h"
+#ifndef EDITORCAMERASCRIPT_H
+#define EDITORCAMERASCRIPT_H
+#include "EngineSDK/main/scripting/Script.h"
 
 namespace mer::sdk::main {
-class Script : public IScript {
-	SceneObject* object{};
+class OrbitCameraExtension;
+
+class EditorCameraScript : public main::Script {
+	std::shared_ptr<OrbitCameraExtension> camera;
 
 public:
-	void setObject(SceneObject* pSceneObject) override { object = pSceneObject; }
+	utils::ReportMessagePtr setup() override;
 
-	[[nodiscard]] SceneObject* getObject() const { return object; }
-
-	bool notifyOnMouseScroll(const double pDx, const double pDy) final { return onMouseScroll(pDx, pDy); }
+protected:
+	inline bool onMouseScroll(double pDx, double pDy) override;
 };
+
 } // namespace mer::sdk::main
 
-
-#endif //SCRIPT_H
+#endif //EDITORCAMERASCRIPT_H
