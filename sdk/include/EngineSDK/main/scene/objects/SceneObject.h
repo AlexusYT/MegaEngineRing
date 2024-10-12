@@ -101,6 +101,10 @@ public:
 
 	void setScriptName(const std::string &pScriptName) override { scriptName = pScriptName; }
 
+	[[nodiscard]] const std::shared_ptr<IScript> &getScript() const override { return script; }
+
+	void setScript(const std::shared_ptr<IScript> &pScript) override;
+
 	static void resetCounter() { counter = 0; }
 
 private:
@@ -123,6 +127,8 @@ private:
 	void setUuid(const std::shared_ptr<UUID> &pUuid) override { uuid = pUuid; }
 
 	UUID* getUuid() override { return uuid.get(); }
+
+	bool notifyOnMouseScroll(double pDx, double pDy) final;
 };
 } // namespace mer::sdk::main
 

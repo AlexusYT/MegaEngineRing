@@ -16,25 +16,31 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 25.06.24.
+// Created by alexus on 11.10.24.
 //
 
-#ifndef SCRIPT_H
-#define SCRIPT_H
-#include "IScript.h"
+#include "EditorCameraScript.h"
+
+#include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
+#include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
-class Script : public IScript {
-	SceneObject* object{};
+utils::ReportMessagePtr EditorCameraScript::setup() {
 
-public:
-	void setObject(SceneObject* pSceneObject) override { object = pSceneObject; }
+	auto extensions = getObject()->getExtensions();
+	camera = std::dynamic_pointer_cast<OrbitCameraExtension>(extensions.at("camera"));
+	return Script::setup();
+}
 
-	[[nodiscard]] SceneObject* getObject() const { return object; }
+bool EditorCameraScript::onMouseScroll(double /*pDx*/, const double pDy) {
+	if (!camera) return false;
+	auto dy = static_cast<float>(pDy);
+	auto distance = camera->propertyDistance.getValue();
+	distance += dy * std::log10(distance + 1.1f);
+	if (distance < 0.0001f) distance = 0.0001f;
 
-	bool notifyOnMouseScroll(const double pDx, const double pDy) final { return onMouseScroll(pDx, pDy); }
-};
+	camera->propertyDistance = distance;
+	return true;
+}
 } // namespace mer::sdk::main
-
-
-#endif //SCRIPT_H

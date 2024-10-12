@@ -25,6 +25,7 @@
 
 #include "ResourcesContext.h"
 #include "mvp/main/centerWindow/TabPlaceholder.h"
+#include "mvp/main/editors/IPresenterSceneEditor.h"
 
 namespace mer::editor::mvp {
 ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
@@ -63,6 +64,15 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 
 	keyController = Gtk::EventControllerKey::create();
 	mainWidget.add_controller(keyController);
+	const auto scroll = Gtk::EventControllerScroll::create();
+	mainWidget.add_controller(scroll);
+	scroll->set_flags(Gtk::EventControllerScroll::Flags::BOTH_AXES);
+	scroll->signal_scroll().connect(
+		[this](const double pDx, const double pDy) {
+			if (presenter) return presenter->onMouseScroll(pDx, pDy);
+			return false;
+		},
+		true);
 }
 
 sigc::connection ViewSceneEditor::connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) {

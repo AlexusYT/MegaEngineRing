@@ -52,13 +52,14 @@ private:
 
 	static sdk::utils::ModifierKeys convertToModifierKeys(const Gdk::ModifierType &pState);
 
+	bool onMouseScroll(double pDx, double pDy) override;
+
+private:
 	void run() override;
 
 	void stop() override;
 
-	std::string getTypeName() override {
-		return "PresenterSceneEditor";
-	}
+	std::string getTypeName() override { return "PresenterSceneEditor"; }
 };
 } // namespace mer::editor::mvp
 

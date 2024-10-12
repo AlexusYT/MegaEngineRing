@@ -120,4 +120,10 @@ void Scene::onMouseButtonStateChanged(const utils::MouseButton pButton, const bo
 									  const double pY) {
 	for (const auto &object: objects) { object->onMouseButtonStateChanged(pButton, pPressed, pX, pY); }
 }
+
+bool Scene::notifyOnMouseScroll(double pDx, double pDy) {
+	bool handled{};
+	for (const auto &object: objects) handled = object->notifyOnMouseScroll(pDx, pDy) || handled;
+	return handled;
+}
 } // namespace mer::sdk::main

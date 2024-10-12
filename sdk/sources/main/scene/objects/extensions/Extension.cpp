@@ -34,6 +34,8 @@ Extension::Extension() {}
 
 IScene* Extension::getScene() const { return getObject()->getScene(); }
 
+bool Extension::notifyOnMouseScroll(double pDx, double pDy) { return onMouseScroll(pDx, pDy); }
+
 void Extension::onWindowSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
 
 void Extension::onCursorPosChanged(const double /*pX*/, const double /*pY*/) {}
@@ -45,6 +47,8 @@ void Extension::onMouseButtonStateChanged(utils::MouseButton /*pButton*/, bool /
 										  double /*pY*/) const {}
 
 void Extension::onEnabledChanged() {}
+
+bool Extension::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
 
 void Extension::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
 	if (auto msg = ExtensionRegistry::getTypeNameFor(pExt, pNameOut)) { utils::Logger::error(msg); }

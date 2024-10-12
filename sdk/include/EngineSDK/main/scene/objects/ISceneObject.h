@@ -34,6 +34,7 @@ enum class KeyboardKey;
 } // namespace mer::sdk::utils
 
 namespace mer::sdk::main {
+class IScript;
 class ExtensionPropertyBase;
 class MainObjectExtension;
 class Extension;
@@ -90,7 +91,18 @@ public:
 	[[nodiscard]] virtual const std::string &getScriptName() const = 0;
 
 	virtual void setScriptName(const std::string &pScriptName) = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<IScript> &getScript() const = 0;
+
+	virtual void setScript(const std::shared_ptr<IScript> &pScript) = 0;
+
+	virtual bool notifyOnMouseScroll(double pDx, double pDy) = 0;
+
+protected:
+	virtual bool onMouseScroll(double pDx, double pDy);
 };
+
+inline bool ISceneObject::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
 
 } // namespace mer::sdk::main
 
