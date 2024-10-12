@@ -245,6 +245,8 @@ add_library(
         mvp/contexts/ViewportContext.h
         mvp/main/PanedLayoutTab.cpp
         mvp/main/PanedLayoutTab.h
+        mvp/resourceCreation/readers/PngFileResourceReader.cpp
+        mvp/resourceCreation/readers/PngFileResourceReader.h
 
 )
 

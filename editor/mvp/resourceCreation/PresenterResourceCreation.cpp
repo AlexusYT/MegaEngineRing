@@ -23,10 +23,12 @@
 
 #include "EngineSDK/main/resources/IResource.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "EngineSDK/main/resources/textures/ITextureResource.h"
 #include "IModelResourceCreation.h"
 #include "IViewResourceCreation.h"
 #include "mvp/ApplicationController.h"
 #include "readers/ObjFileResourceReader.h"
+#include "readers/PngFileResourceReader.h"
 #include "savers/Model3DResourceSaver.h"
 
 namespace mer::editor::mvp {
@@ -83,19 +85,25 @@ void PresenterResourceCreation::onResourceNameChanged(const std::string &pNewNam
 
 void PresenterResourceCreation::onPathToFileChanged() {
 	auto path = model->getPathToFile();
-	auto reader = std::make_shared<ObjFileResourceReader>(path);
-	reader->setSdk(model->getSdk());
-	std::string fileExt = path.extension().string();
-	if (auto msg = reader->checkType()) {
-		view->displayMessage(msg->getReport(false));
-		view->setStackVisibility(false);
-	} else {
+	auto pngReader = std::make_shared<PngFileResourceReader>(path);
+	pngReader->setSdk(model->getSdk());
+	auto objReader = std::make_shared<ObjFileResourceReader>(path);
+	objReader->setSdk(model->getSdk());
+	if (auto msg = pngReader->checkType(); !msg) {
+		view->displayMessage("");
+		view->setStackVisibility(true);
+		resourceReader = objReader;
+	} else if (msg = objReader->checkType(); !msg) {
 		view->displayMessage("");
 		view->setStackVisibility(true);
 		view->switchTo("objModel");
-		auto objects = reader->getObjects() | std::views::keys;
+		auto objects = objReader->getObjects() | std::views::keys;
 		view->displayObjects(std::vector(objects.begin(), objects.end()));
-		resourceReader = reader;
+		resourceReader = objReader;
+	} else {
+		view->displayMessage(msg->getReport(false));
+		view->setStackVisibility(false);
+		sdk::utils::Logger::error(msg);
 	}
 	view->displayChosenPath(path.string());
 	view->displayResourceName(path.stem().string());
@@ -112,6 +120,11 @@ void PresenterResourceCreation::saveClicked() {
 		} else {
 			getAppController()->stop(this);
 		}
+	} else if (auto pngReader = std::dynamic_pointer_cast<PngFileResourceReader>(resourceReader)) {
+
+		auto resource = pngReader->generateResource();
+		auto resourceName = model->getResourceName() + ".entex";
+		resource->asResource()->setResourceUri(model->getRelativePathToResource() / resourceName);
 	}
 }
 

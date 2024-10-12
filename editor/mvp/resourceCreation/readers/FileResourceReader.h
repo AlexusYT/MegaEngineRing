@@ -22,10 +22,15 @@
 #ifndef FILERESOURCEREADER_H
 #define FILERESOURCEREADER_H
 
+namespace mer::editor::project {
+class Sdk;
+}
+
 namespace mer::editor::mvp {
 
 class FileResourceReader {
 	std::filesystem::path path;
+	std::shared_ptr<project::Sdk> sdk;
 
 	std::shared_ptr<std::ifstream> stream;
 
@@ -40,6 +45,10 @@ public:
 	[[nodiscard]] const std::filesystem::path &getPath() const { return path; }
 
 	[[nodiscard]] const std::shared_ptr<std::ifstream> &getStream() const { return stream; }
+
+	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const { return sdk; }
+
+	void setSdk(const std::shared_ptr<project::Sdk> &pSdk) { sdk = pSdk; }
 
 protected:
 	sdk::utils::ReportMessagePtr open() {

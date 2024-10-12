@@ -33,7 +33,6 @@ class Sdk;
 
 namespace mer::editor::mvp {
 class ObjFileResourceReader : public FileResourceReader {
-	std::shared_ptr<project::Sdk> sdk;
 
 	struct VertexInfo {
 		glm::vec3 vertexCoord;
@@ -62,9 +61,6 @@ public:
 
 	std::shared_ptr<sdk::main::IModel3DResource> generateResource(const std::vector<std::string> &pObjectsToSave) const;
 
-	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const { return sdk; }
-
-	void setSdk(const std::shared_ptr<project::Sdk> &pSdk) { sdk = pSdk; }
 
 private:
 	static glm::vec3 getVec3(const std::string &pLine);

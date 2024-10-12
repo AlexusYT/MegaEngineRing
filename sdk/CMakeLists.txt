@@ -42,6 +42,7 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/resources/ResourceLoaders.cpp
         include/EngineSDK/main/resources/Resource.cpp
         include/EngineSDK/main/scene/EditorCameraScript.cpp
+        sources/main/resources/textures/TextureResource.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -116,6 +117,13 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/render/IRenderable.h
         include/EngineSDK/main/resources/Resource.h
         include/EngineSDK/main/scene/EditorCameraScript.h
+        include/EngineSDK/main/resources/textures/ITextureResource.h
+        include/EngineSDK/main/resources/textures/TextureResource.h
+        include/EngineSDK/main/resources/textures/TextureMinFilter.h
+        include/EngineSDK/main/resources/textures/TextureMagFilter.h
+        include/EngineSDK/main/resources/textures/TextureBaseInternalFormat.h
+        include/EngineSDK/main/resources/textures/Texture2DImageFormat.h
+        include/EngineSDK/main/resources/textures/Texture2DType.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
@@ -129,6 +137,7 @@ target_link_libraries(MegaEngineSDK_static INTERFACE glfw)
 
 find_package(sigc++-3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_path(PNGPP_INCLUDE_DIRS "png++/color.hpp")
 function(setupTarget target)
     target_precompile_headers(${target}
             PRIVATE common.h
@@ -147,6 +156,7 @@ function(setupTarget target)
     target_link_libraries(${target} PRIVATE glm::glm)
     target_link_libraries(${target} PUBLIC stdc++exp MegaEngineUtils)
     target_link_libraries(${target} PRIVATE sigc-3.0)
+    target_include_directories(${target} PRIVATE ${PNGPP_INCLUDE_DIRS})
     set_property(TARGET ${target} PROPERTY OUTPUT_NAME MegaEngineSDK)
     set_property(TARGET ${target} PROPERTY PREFIX "")
 

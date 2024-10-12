@@ -62,6 +62,7 @@ sdk::utils::ReportMessagePtr Sdk::initSymbols() {
 	if (auto msg = getSymbol("Model3DResource", "create", createModel3DResourceFunc)) return msg;
 	if (auto msg = getSymbol("ResourceLoaders", "getInstance", getResourceLoadersInstanceFunc)) return msg;
 	if (auto msg = getSymbol("FileSystemResourceBundle", "create", createFileSystemResourceBundleFunc)) return msg;
+	if (auto msg = getSymbol("TextureResource", "create", createTextureResourceFunc)) return msg;
 
 	return nullptr;
 }
