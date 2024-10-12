@@ -117,7 +117,8 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 std::shared_ptr<sdk::main::IModel3DResource> ObjFileResourceReader::generateResource(
 	const std::vector<std::string> &pObjectsToSave) const {
 	std::map<VertexInfo, uint16_t> vertexToOutIndex;
-	auto resource = sdk->createModel3DResource();
+	auto sdkSelf = getSdk();
+	auto resource = sdkSelf->createModel3DResource();
 	for (auto objectName: pObjectsToSave) {
 		const auto obj = objects.at(objectName);
 		std::vector<glm::vec3> vertices;
@@ -140,7 +141,7 @@ std::shared_ptr<sdk::main::IModel3DResource> ObjFileResourceReader::generateReso
 			}
 		}
 
-		auto o = sdk->createModel3DObject();
+		auto o = sdkSelf->createModel3DObject();
 		o->setVertices(vertices);
 		o->setUvs(uvs);
 		o->setNormals(normals);

@@ -25,6 +25,7 @@
 #include <typeinfo>
 
 namespace mer::sdk::main {
+class ITextureResource;
 class FileSystemResourceBundle;
 class IResourceLoaders;
 class IModel3DResource;
@@ -52,6 +53,7 @@ class Sdk {
 	std::shared_ptr<sdk::main::ISceneDataInjector> (*createSceneInjectorFunc)(sdk::main::IScene* pScene);
 	std::shared_ptr<sdk::main::IModel3DObject> (*createModel3DObjectFunc)();
 	std::shared_ptr<sdk::main::IModel3DResource> (*createModel3DResourceFunc)();
+	std::shared_ptr<sdk::main::ITextureResource> (*createTextureResourceFunc)();
 	std::shared_ptr<sdk::main::IResourceLoaders> (*getResourceLoadersInstanceFunc)();
 	std::shared_ptr<sdk::main::FileSystemResourceBundle> (*createFileSystemResourceBundleFunc)(
 		const std::filesystem::path &pSearchPath);
@@ -89,6 +91,8 @@ public:
 	std::shared_ptr<sdk::main::IModel3DObject> createModel3DObject() const { return createModel3DObjectFunc(); }
 
 	std::shared_ptr<sdk::main::IModel3DResource> createModel3DResource() const { return createModel3DResourceFunc(); }
+
+	std::shared_ptr<sdk::main::ITextureResource> createTextureResource() const { return createTextureResourceFunc(); }
 
 	std::shared_ptr<sdk::main::IResourceLoaders> getResourceLoadersInstance() const {
 		return getResourceLoadersInstanceFunc();
