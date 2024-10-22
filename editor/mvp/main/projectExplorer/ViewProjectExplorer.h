@@ -60,9 +60,6 @@ private:
 
 	void selectByUri(const std::filesystem::path &pPath) override;
 
-	static std::shared_ptr<Gio::MenuItem> createItem(const std::string &pName, const std::string &pAction,
-													 const Glib::Variant<Glib::ustring> &pVariant);
-
 	static std::optional<uint32_t> getPositionByUri(const std::filesystem::path &pPath,
 													const std::shared_ptr<Gtk::TreeListRow> &pRow);
 

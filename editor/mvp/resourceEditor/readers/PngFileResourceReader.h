@@ -16,28 +16,35 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 30.09.24.
+// Created by alexus on 12.10.24.
 //
 
-#ifndef IPRESENTERRESOURCECREATION_H
-#define IPRESENTERRESOURCECREATION_H
-#include "mvp/PresenterBase.h"
+#ifndef PNGFILERESOURCEREADER_H
+#define PNGFILERESOURCEREADER_H
+
+#include <png++/types.hpp>
+
+#include "FileResourceReader.h"
+
+namespace mer::sdk::main {
+class ITextureResource;
+}
 
 namespace mer::editor::mvp {
 
-class IPresenterResourceCreation : public PresenterBase {
+class PngFileResourceReader : public FileResourceReader {
+	png::color_type colorType{};
+	uint32_t width{};
+	uint32_t height{};
+
 public:
-	virtual void chooseFileClicked() = 0;
+	explicit PngFileResourceReader(const std::filesystem::path &pPath) : FileResourceReader(pPath) {}
 
-	virtual void onResourceNameChanged(const std::string &pNewName) = 0;
+	sdk::utils::ReportMessagePtr checkType() override;
 
-	virtual void onPathToFileChanged() = 0;
-
-	virtual void saveClicked() = 0;
-
-	virtual void onCancelClicked() = 0;
+	void generateResourceData(const std::shared_ptr<sdk::main::ITextureResource> &pResource) const;
 };
 
 } // namespace mer::editor::mvp
 
-#endif //IPRESENTERRESOURCECREATION_H
+#endif //PNGFILERESOURCEREADER_H

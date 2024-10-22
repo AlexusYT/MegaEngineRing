@@ -30,6 +30,8 @@ enum class ExplorerElementType {
 	SCENE,
 	RESOURCE_MODEL,
 	RESOURCE_MODEL_OBJECT,
+	RESOURCE_TEXTURE,
+	RESOURCE_MATERIAL,
 };
 
 class ProjectExplorerElement : public ui::TreeElementBase {
@@ -69,10 +71,6 @@ public:
 	[[nodiscard]] const std::filesystem::path &getPath() const { return path; }
 
 	void setPath(const std::filesystem::path &pPath) { path = pPath; }
-
-private:
-	static std::shared_ptr<Gio::MenuItem> createItem(const std::string &pName, const std::string &pAction,
-													 const Glib::Variant<Glib::ustring> &pVariant);
 };
 } // namespace mer::editor::mvp
 

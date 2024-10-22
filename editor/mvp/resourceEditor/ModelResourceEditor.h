@@ -19,9 +19,9 @@
 // Created by alexus on 30.09.24.
 //
 
-#ifndef MODELRESOURCECREATION_H
-#define MODELRESOURCECREATION_H
-#include "IModelResourceCreation.h"
+#ifndef MODELRESOURCEEDITOR_H
+#define MODELRESOURCEEDITOR_H
+#include "IModelResourceEditor.h"
 
 namespace mer::editor::project {
 class Sdk;
@@ -29,25 +29,26 @@ class Sdk;
 
 namespace mer::editor::mvp {
 class FileResourceReader;
-class IPresenterResourceCreation;
+class IPresenterResourceEditor;
 } // namespace mer::editor::mvp
 
 namespace mer::editor::mvp {
 
-class ModelResourceCreation : public IModelResourceCreation {
-	IPresenterResourceCreation* presenter{};
-	std::filesystem::path pathToFile;
+class ModelResourceEditor : public IModelResourceEditor {
+	IPresenterResourceEditor* presenter{};
+	std::filesystem::path pathToDataDir;
 	std::filesystem::path pathToResource;
 	std::filesystem::path relativePathToResource;
 	std::string resourceName;
 	std::shared_ptr<project::Sdk> sdk;
+	std::shared_ptr<EditingResourceList> editingResources;
 
 public:
-	void setPresenter(IPresenterResourceCreation* pPresenter) override { presenter = pPresenter; }
+	void setPresenter(IPresenterResourceEditor* pPresenter) override { presenter = pPresenter; }
 
-	void setPathToFile(const std::filesystem::path &pPathToFile) override;
+	void setPathToDataDir(const std::filesystem::path &pPathToDataDir) override;
 
-	[[nodiscard]] const std::filesystem::path &getPathToFile() const override { return pathToFile; }
+	[[nodiscard]] const std::filesystem::path &getPathToDataDir() const override { return pathToDataDir; }
 
 	[[nodiscard]] const std::filesystem::path &getPathToResource() const override { return pathToResource; }
 
@@ -63,9 +64,19 @@ public:
 
 	void setRelativePathToResource(const std::filesystem::path &pPath) override { relativePathToResource = pPath; }
 
-	[[nodiscard]] const std::filesystem::path &getRelativePathToResource() const override { return relativePathToResource; }
+	[[nodiscard]] const std::filesystem::path &getRelativePathToResource() const override {
+		return relativePathToResource;
+	}
+
+	[[nodiscard]] const std::shared_ptr<EditingResourceList> &getEditingResources() const override {
+		return editingResources;
+	}
+
+	void setEditingResources(const std::shared_ptr<EditingResourceList> &pEditingResources) override {
+		editingResources = pEditingResources;
+	}
 };
 
 } // namespace mer::editor::mvp
 
-#endif //MODELRESOURCECREATION_H
+#endif //MODELRESOURCEEDITOR_H

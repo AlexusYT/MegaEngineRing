@@ -7,6 +7,14 @@
 				"*.enscene"
 			],
 			"LayoutFile": "_builtin_/SceneEditorLayout.json"
+		},
+		{
+			"Name": "Resource editor",
+			"AssociatedWith": [
+				"*.enmodel",
+				"*.entex"
+			],
+			"LayoutFile": "_builtin_/ResourceEditorLayout.json"
 		}
 	]
 }

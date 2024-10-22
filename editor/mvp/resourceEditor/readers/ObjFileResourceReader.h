@@ -24,8 +24,9 @@
 #include "FileResourceReader.h"
 
 namespace mer::sdk::main {
+class IModel3DObject;
 class IModel3DResource;
-}
+} // namespace mer::sdk::main
 
 namespace mer::editor::project {
 class Sdk;
@@ -59,7 +60,17 @@ public:
 
 	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<Obj>> &getObjects() const { return objects; }
 
+	std::vector<std::string> getObjectsName() const {
+
+		auto objectsKey = getObjects() | std::views::keys;
+		auto vec = std::vector(objectsKey.begin(), objectsKey.end());
+		std::ranges::sort(vec);
+		return vec;
+	}
+
 	std::shared_ptr<sdk::main::IModel3DResource> generateResource(const std::vector<std::string> &pObjectsToSave) const;
+
+	std::shared_ptr<sdk::main::IModel3DObject> generateObject(const std::string &pObjectToSave) const;
 
 
 private:

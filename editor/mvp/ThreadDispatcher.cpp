@@ -22,6 +22,7 @@
 #include "ThreadDispatcher.h"
 
 mer::editor::mvp::ThreadDispatcher::ThreadDispatcher() {
+	mainThread = std::this_thread::get_id();
 	dispatcher.connect([this] {
 		std::lock_guard lock(queueMutex);
 		for (const auto &[fst, snd]: dispatcherQueue) { fst(snd); }
@@ -32,6 +33,12 @@ mer::editor::mvp::ThreadDispatcher::ThreadDispatcher() {
 }
 
 std::future<void> mer::editor::mvp::ThreadDispatcher::executeInMainThread(const SlotT &pSlot) {
+
+	if (mainThread == std::this_thread::get_id()) {
+		auto prom = std::promise<void>();
+		pSlot(prom);
+		return prom.get_future();
+	}
 	std::lock_guard lock(queueMutex);
 	std::promise<void> &prom = dispatcherQueue.emplace_back(pSlot, std::promise<void>()).second;
 	if (!queueRunning) {

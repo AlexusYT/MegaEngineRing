@@ -19,19 +19,24 @@
 // Created by alexus on 30.09.24.
 //
 
-#ifndef IVIEWRESOURCECREATION_H
-#define IVIEWRESOURCECREATION_H
+#ifndef IVIEWRESOURCEEDITOR_H
+#define IVIEWRESOURCEEDITOR_H
+#include "EngineSDK/main/resources/IResource.h"
 #include "mvp/IView.h"
 
+namespace mer::sdk::main {
+class IModel3DObject;
+}
+
 namespace mer::editor::mvp {
-class IPresenterResourceCreation;
+class IPresenterResourceEditor;
 }
 
 namespace mer::editor::mvp {
 
-class IViewResourceCreation : public IView {
+class IViewResourceEditor : public IView {
 public:
-	virtual void setPresenter(IPresenterResourceCreation* pPresenter) = 0;
+	virtual void setPresenter(IPresenterResourceEditor* pPresenter) = 0;
 
 	virtual sigc::connection connectChooseFile(const sigc::slot<void(Gtk::Entry::IconPosition)> &pSlot) const = 0;
 
@@ -49,15 +54,20 @@ public:
 
 	virtual void displayMessage(const std::string &pMessage) = 0;
 
-	virtual void displayObjects(const std::vector<std::string> &pObjects) = 0;
+	virtual void displayObjects(const std::vector<std::shared_ptr<sdk::main::IModel3DObject>> &pObjects,
+								bool pFileObjects) = 0;
 
 	virtual void setStackVisibility(bool pState) = 0;
 
 	virtual void setSaveButtonSensitivity(bool pState) const = 0;
 
 	virtual std::vector<std::string> getSelectedObjects() = 0;
+
+	virtual void appendResource(const std::shared_ptr<sdk::main::IResource> &pNewResource) = 0;
+
+	virtual void selectResource(const std::shared_ptr<sdk::main::IResource> &pResource) = 0;
 };
 
 } // namespace mer::editor::mvp
 
-#endif //IVIEWRESOURCECREATION_H
+#endif //IVIEWRESOURCEEDITOR_H

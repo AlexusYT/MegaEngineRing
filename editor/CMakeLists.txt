@@ -218,20 +218,20 @@ add_library(
         mvp/main/objectProperties/IPresenterObjectProperties.h
         mvp/main/objectProperties/PresenterObjectProperties.cpp
         mvp/main/objectProperties/PresenterObjectProperties.h
-        mvp/resourceCreation/IModelResourceCreation.h
-        mvp/resourceCreation/ModelResourceCreation.cpp
-        mvp/resourceCreation/ModelResourceCreation.h
-        mvp/resourceCreation/IViewResourceCreation.h
-        mvp/resourceCreation/ViewResourceCreation.cpp
-        mvp/resourceCreation/ViewResourceCreation.h
-        mvp/resourceCreation/IPresenterResourceCreation.h
-        mvp/resourceCreation/PresenterResourceCreation.cpp
-        mvp/resourceCreation/PresenterResourceCreation.h
-        mvp/resourceCreation/readers/FileResourceReader.h
-        mvp/resourceCreation/readers/ObjFileResourceReader.cpp
-        mvp/resourceCreation/readers/ObjFileResourceReader.h
-        mvp/resourceCreation/savers/Model3DResourceSaver.cpp
-        mvp/resourceCreation/savers/Model3DResourceSaver.h
+        mvp/resourceEditor/IModelResourceEditor.h
+        mvp/resourceEditor/ModelResourceEditor.cpp
+        mvp/resourceEditor/ModelResourceEditor.h
+        mvp/resourceEditor/IViewResourceEditor.h
+        mvp/resourceEditor/ViewResourceEditor.cpp
+        mvp/resourceEditor/ViewResourceEditor.h
+        mvp/resourceEditor/IPresenterResourceEditor.h
+        mvp/resourceEditor/PresenterResourceEditor.cpp
+        mvp/resourceEditor/PresenterResourceEditor.h
+        mvp/resourceEditor/readers/FileResourceReader.h
+        mvp/resourceEditor/readers/ObjFileResourceReader.cpp
+        mvp/resourceEditor/readers/ObjFileResourceReader.h
+        mvp/resourceEditor/savers/Model3DResourceSaver.cpp
+        mvp/resourceEditor/savers/Model3DResourceSaver.h
         mvp/resourceSelection/IModelResourceSelection.h
         mvp/resourceSelection/ModelResourceSelection.cpp
         mvp/resourceSelection/ModelResourceSelection.h
@@ -245,8 +245,14 @@ add_library(
         mvp/contexts/ViewportContext.h
         mvp/main/PanedLayoutTab.cpp
         mvp/main/PanedLayoutTab.h
-        mvp/resourceCreation/readers/PngFileResourceReader.cpp
-        mvp/resourceCreation/readers/PngFileResourceReader.h
+        mvp/resourceEditor/readers/PngFileResourceReader.cpp
+        mvp/resourceEditor/readers/PngFileResourceReader.h
+        mvp/resourceEditor/EditingResourceList.cpp
+        mvp/resourceEditor/EditingResourceList.h
+        ui/utils/UiUtils.cpp
+        ui/utils/UiUtils.h
+        mvp/resourceEditor/savers/TextureResourceSaver.cpp
+        mvp/resourceEditor/savers/TextureResourceSaver.h
 
 )
 

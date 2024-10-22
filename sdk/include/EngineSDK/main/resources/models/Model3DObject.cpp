@@ -29,6 +29,7 @@
 
 namespace mer::sdk::main {
 
+
 Model3DObject::~Model3DObject() { Model3DObject::destroyRender(); }
 
 std::shared_ptr<IModel3DObject> Model3DObject::create() { return std::shared_ptr<Model3DObject>(new Model3DObject()); }
@@ -109,5 +110,15 @@ void Model3DObject::removeRenderInstance(IRenderInstance* pOldInstance) {
 void Model3DObject::onInstanceDataChanged(IRenderInstance* /*pInstance*/) {
 	instancesData.clear();
 	for (auto instance: instances) { instancesData.emplace_back(instance->getRenderInstanceData()); }
+}
+
+bool Model3DObject::operator<(const IModel3DObject &pRhs) const {
+	if (this->vertices < pRhs.getVertices()) return true;
+	if (pRhs.getVertices() < this->vertices) return false;
+	if (this->uvs < pRhs.getUvs()) return true;
+	if (pRhs.getUvs() < this->uvs) return false;
+	if (this->normals < pRhs.getNormals()) return true;
+	if (pRhs.getNormals() < this->normals) return false;
+	return this->indices < pRhs.getIndices();
 }
 } // namespace mer::sdk::main

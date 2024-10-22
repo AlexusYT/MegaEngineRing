@@ -35,11 +35,11 @@ utils::ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::s
 	auto uri = std::filesystem::path(pResourceUri);
 	std::filesystem::path resourcePath = !uri.has_root_directory() ? searchPath / pResourceUri : uri;
 
-	auto resourceName = resourcePath.stem();
+	auto resourceName = resourcePath.filename();
 	std::vector<std::filesystem::path> candidates;
 	for (const auto &entry: std::filesystem::directory_iterator(resourcePath.parent_path())) {
 		auto path = entry.path();
-		if (path.stem() == resourceName) { candidates.push_back(path); }
+		if (path.filename() == resourceName) { candidates.push_back(path); }
 	}
 	if (candidates.empty()) {
 		auto msg = utils::ReportMessage::create();

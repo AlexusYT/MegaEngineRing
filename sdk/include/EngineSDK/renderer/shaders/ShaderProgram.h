@@ -23,6 +23,7 @@
 #define SHADERPROGRAM_H
 
 #include "EngineSDK/main/resources/Resource.h"
+#include "EngineSDK/main/resources/ResourceType.h"
 #include "EngineSDK/renderer/shaders/IShaderProgram.h"
 
 namespace mer::sdk::renderer {
@@ -67,6 +68,8 @@ public:
 	void setUniform(const std::string &pName, const glm::vec4 &pValue) const override;
 
 	void setUniform(const std::string &pName, const glm::mat4 &pValue) const override;
+
+	mer::main::sdk::ResourceType getResourceType() override { return mer::main::sdk::ResourceType::MATERIAL; }
 };
 
 

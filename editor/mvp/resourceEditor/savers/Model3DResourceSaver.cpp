@@ -26,15 +26,17 @@
 
 namespace mer::editor::mvp {
 sdk::utils::ReportMessagePtr Model3DResourceSaver::saveToFile(
-	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::IModel3DResource> &pModel3DResource) {
+	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::IModel3DResource> &pResource) {
 
-	auto resourceUri = pModel3DResource->asResource()->getResourceUri();
+	auto dir = pPath.parent_path();
+	if (!exists(dir)) { create_directories(dir); }
+	auto resourceUri = pResource->asResource()->getResourceUri();
 	try {
 		std::ofstream file(pPath, std::ios::out | std::ios::binary);
 		file.exceptions(std::_S_badbit | std::_S_failbit);
 
 		writeString(file, resourceUri);
-		for (auto [objName, object]: pModel3DResource->getModelObjects()) {
+		for (auto [objName, object]: pResource->getModelObjects()) {
 			writeString(file, objName);
 			auto shader = object->getShader();
 			std::string shaderName;

@@ -20,9 +20,11 @@
 //
 #include "MainWindow.h"
 
+#include "EngineSDK/main/resources/ResourceType.h"
 #include "Globals.h"
 #include "IPresenterMain.h"
 #include "PanedLayoutTab.h"
+#include "editors/sceneEditor/ResourcesContext.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "project/Project.h"
 
@@ -90,21 +92,28 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 			overlayBox->set_visible(false);
 		} else {
 			overlayBox->set_visible(true);
-			presenter->readJsonForTab(pIndex, [this, pIndex](const sdk::utils::ReportMessagePtr &pError) {
-				const auto pageOverlay = dynamic_cast<Gtk::Overlay*>(panedTabs.get_nth_page(pIndex));
-				if (!pageOverlay) return;
-				const auto pageOverlayBox = dynamic_cast<Gtk::Box*>(pageOverlay->get_last_child());
-				if (!pageOverlayBox) return;
-				if (pError) {
-					if (auto spinner = dynamic_cast<Gtk::Spinner*>(pageOverlayBox->get_first_child()))
-						spinner->set_spinning(false);
-					if (auto label = dynamic_cast<Gtk::Label*>(pageOverlayBox->get_last_child()))
-						label->set_text(pError->getReport(false));
-				} else {
-					pageOverlayBox->set_visible(false);
-				}
-			});
+			if (presenter)
+				presenter->readJsonForTab(pIndex, [this, pIndex](const sdk::utils::ReportMessagePtr &pError) {
+					const auto pageOverlay = dynamic_cast<Gtk::Overlay*>(panedTabs.get_nth_page(pIndex));
+					if (!pageOverlay) return;
+					const auto pageOverlayBox = dynamic_cast<Gtk::Box*>(pageOverlay->get_last_child());
+					if (!pageOverlayBox) return;
+					if (pError) {
+						if (auto spinner = dynamic_cast<Gtk::Spinner*>(pageOverlayBox->get_first_child()))
+							spinner->set_spinning(false);
+						if (auto label = dynamic_cast<Gtk::Label*>(pageOverlayBox->get_last_child()))
+							label->set_text(pError->getReport(false));
+					} else {
+						pageOverlayBox->set_visible(false);
+					}
+				});
 		}
+	});
+	signal_realize().connect([this] {
+		const auto surface = this->get_native()->get_surface();
+		auto sharedContext = surface->create_gl_context();
+		sharedContext->realize();
+		resourcesContext = std::make_shared<ResourcesContext>(sharedContext);
 	});
 	/*auto motionController = Gtk::EventControllerMotion::create();
 	motionController->signal_motion().connect([this](double x, double y) {
@@ -153,32 +162,39 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 			if (presenter) presenter->selectObject(object);
 		});
 	insert_action_group("object", actionGroupObject);
+	auto actionGroupNew = Gio::SimpleActionGroup::create();
+	actionGroupNew->add_action_with_parameter(
+		"resource.model", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createResource(var.get().raw(), main::sdk::ResourceType::MODEL);
+		});
+	actionGroupNew->add_action_with_parameter(
+		"resource.texture", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createResource(var.get().raw(), main::sdk::ResourceType::TEXTURE);
+		});
+	actionGroupNew->add_action_with_parameter(
+		"scene", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createScene(var.get().raw());
+		});
+	actionGroupNew->add_action_with_parameter(
+		"script", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createScript(var.get().raw());
+		});
+
+	actionGroupNew->add_action_with_parameter(
+		"folder", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createDirectory(var.get().raw());
+		});
+	insert_action_group("new", actionGroupNew);
 	auto actionGroupFile = Gio::SimpleActionGroup::create();
 	actionGroupFile->add_action_with_parameter(
 		"open", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
 			if (presenter) presenter->openFile(var.get().raw());
-		});
-	actionGroupFile->add_action_with_parameter(
-		"manage.new.resource", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
-			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createResource(var.get().raw());
-		});
-	actionGroupFile->add_action_with_parameter(
-		"manage.new.scene", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
-			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createScene(var.get().raw());
-		});
-	actionGroupFile->add_action_with_parameter(
-		"manage.new.script", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
-			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createScript(var.get().raw());
-		});
-
-	actionGroupFile->add_action_with_parameter(
-		"manage.new.folder", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
-			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createDirectory(var.get().raw());
 		});
 	actionGroupFile->add_action_with_parameter(
 		"manage.rename", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
@@ -197,9 +213,15 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 		});
 	insert_action_group("file", actionGroupFile);
 	set_visible();
+	signal_close_request().connect(
+		[this]() {
+			if (presenter) presenter->onViewClosed();
+			return false;
+		},
+		false);
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() { presenter = nullptr; }
 
 void MainWindow::openView() { context->addWidget(this); }
 

@@ -16,35 +16,16 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 12.10.24.
+// Created by alexus on 14.10.24.
 //
 
-#ifndef PNGFILERESOURCEREADER_H
-#define PNGFILERESOURCEREADER_H
+#include "UiUtils.h"
 
-#include <png++/types.hpp>
-
-#include "FileResourceReader.h"
-
-namespace mer::sdk::main {
-class ITextureResource;
+namespace mer::editor::ui {
+std::shared_ptr<Gio::MenuItem> UiUtils::createMenuItem(const std::string &pName, const std::string &pAction,
+													   const Glib::VariantBase &pVariant) {
+	std::shared_ptr<Gio::MenuItem> item = Gio::MenuItem::create(pName, "");
+	item->set_action_and_target(pAction, pVariant);
+	return item;
 }
-
-namespace mer::editor::mvp {
-
-class PngFileResourceReader : public FileResourceReader {
-	png::color_type colorType;
-	uint32_t width;
-	uint32_t height;
-
-public:
-	explicit PngFileResourceReader(const std::filesystem::path &pPath) : FileResourceReader(pPath) {}
-
-	sdk::utils::ReportMessagePtr checkType() override;
-
-	std::shared_ptr<sdk::main::ITextureResource> generateResource() const;
-};
-
-} // namespace mer::editor::mvp
-
-#endif //PNGFILERESOURCEREADER_H
+} // namespace mer::editor::ui

@@ -23,7 +23,6 @@
 
 #include <mvp/main/MainWindow.h>
 
-#include "ResourcesContext.h"
 #include "mvp/main/centerWindow/TabPlaceholder.h"
 #include "mvp/main/editors/IPresenterSceneEditor.h"
 
@@ -45,11 +44,8 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 	area.signal_create_context().connect(
 		[this]() -> Glib::RefPtr<Gdk::GLContext> {
 			const auto surface = area.get_native()->get_surface();
-			auto sharedContext = surface->create_gl_context();
 			auto glContext = surface->create_gl_context();
-			sharedContext->realize();
 			glContext->realize();
-			resourcesContext = std::make_shared<ResourcesContext>(sharedContext);
 			return glContext;
 		},
 		false);
@@ -73,6 +69,12 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 			return false;
 		},
 		true);
+	Glib::signal_timeout().connect(
+		[this] {
+			area.queue_render();
+			return true;
+		},
+		16);
 }
 
 sigc::connection ViewSceneEditor::connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) {

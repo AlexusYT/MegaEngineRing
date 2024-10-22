@@ -116,41 +116,45 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 
 std::shared_ptr<sdk::main::IModel3DResource> ObjFileResourceReader::generateResource(
 	const std::vector<std::string> &pObjectsToSave) const {
-	std::map<VertexInfo, uint16_t> vertexToOutIndex;
 	auto sdkSelf = getSdk();
 	auto resource = sdkSelf->createModel3DResource();
-	for (auto objectName: pObjectsToSave) {
-		const auto obj = objects.at(objectName);
-		std::vector<glm::vec3> vertices;
-		std::vector<glm::vec2> uvs;
-		std::vector<glm::vec3> normals;
-		std::vector<uint16_t> indices;
-		for (auto face: obj->faces) {
-			for (auto vertexInfo: face) {
-				auto it = vertexToOutIndex.find(vertexInfo);
-				if (it == vertexToOutIndex.end()) {
-					vertices.emplace_back(vertexInfo.vertexCoord);
-					uvs.emplace_back(vertexInfo.texCoord);
-					normals.emplace_back(vertexInfo.normalCoord);
-					uint16_t newIndex = static_cast<uint16_t>(vertices.size()) - 1;
-					indices.emplace_back(newIndex);
-					vertexToOutIndex[vertexInfo] = newIndex;
-				} else {
-					indices.emplace_back(it->second);
-				}
+	for (auto objectName: pObjectsToSave) { resource->addModelObject(generateObject(objectName)); }
+	return resource;
+}
+
+std::shared_ptr<sdk::main::IModel3DObject> ObjFileResourceReader::generateObject(
+	const std::string &pObjectToSave) const {
+	auto sdkSelf = getSdk();
+	const auto obj = objects.at(pObjectToSave);
+	std::map<VertexInfo, uint16_t> vertexToOutIndex;
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> uvs;
+	std::vector<glm::vec3> normals;
+	std::vector<uint16_t> indices;
+	for (auto face: obj->faces) {
+		for (auto vertexInfo: face) {
+			auto it = vertexToOutIndex.find(vertexInfo);
+			if (it == vertexToOutIndex.end()) {
+				vertices.emplace_back(vertexInfo.vertexCoord);
+				uvs.emplace_back(vertexInfo.texCoord);
+				normals.emplace_back(vertexInfo.normalCoord);
+				uint16_t newIndex = static_cast<uint16_t>(vertices.size()) - 1;
+				indices.emplace_back(newIndex);
+				vertexToOutIndex[vertexInfo] = newIndex;
+			} else {
+				indices.emplace_back(it->second);
 			}
 		}
-
-		auto o = sdkSelf->createModel3DObject();
-		o->setVertices(vertices);
-		o->setUvs(uvs);
-		o->setNormals(normals);
-		o->setIndices(indices);
-		o->setName(objectName);
-
-		resource->addModelObject(o);
 	}
-	return resource;
+
+	auto o = sdkSelf->createModel3DObject();
+	o->setVertices(vertices);
+	o->setUvs(uvs);
+	o->setNormals(normals);
+	o->setIndices(indices);
+	o->setName(pObjectToSave);
+
+	return o;
 }
 
 glm::vec3 ObjFileResourceReader::getVec3(const std::string &pLine) {

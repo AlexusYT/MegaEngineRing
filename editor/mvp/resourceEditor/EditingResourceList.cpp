@@ -16,17 +16,28 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 30.09.24.
+// Created by alexus on 14.10.24.
 //
 
-#include "ModelResourceCreation.h"
+#include "EditingResourceList.h"
 
-#include "IPresenterResourceCreation.h"
+#include "EngineSDK/main/resources/LoadedResources.h"
+#include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "savers/Model3DResourceSaver.h"
 
 namespace mer::editor::mvp {
-void ModelResourceCreation::setPathToFile(const std::filesystem::path &pPathToFile) {
-	if (pathToFile == pPathToFile) return;
-	pathToFile = pPathToFile;
-	if (presenter) presenter->onPathToFileChanged();
+void EditingResourceList::loadResource(const std::filesystem::path &pUri) {
+	context->loadResourceAsync(pUri, [this](const std::shared_ptr<sdk::main::IResource> &pResource,
+											const sdk::utils::ReportMessagePtr &pError) {
+		if (pResource) addResource(pResource);
+		if (pError) sdk::utils::Logger::error(pError);
+	});
 }
+
+void EditingResourceList::deleteResource(const std::filesystem::path &pUri) {
+
+	resources.erase(pUri);
+	context->getResources()->removeResource(pUri);
+}
+
 } // namespace mer::editor::mvp

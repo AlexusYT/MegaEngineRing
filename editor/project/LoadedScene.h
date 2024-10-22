@@ -72,6 +72,7 @@ class LoadedScene {
 	mvp::ExplorerObject* selectedObject{};
 	sigc::signal<void(mvp::ExplorerObject* pSelectedObject)> onSelectionChanged;
 	std::vector<sigc::connection> connections;
+	std::shared_ptr<mvp::ResourcesContext> context;
 
 public:
 	explicit LoadedScene(const std::shared_ptr<Sdk> &pSdk);
@@ -83,7 +84,8 @@ public:
 	bool hasResourcesContext() const;
 
 	sdk::main::IResourceLoadExecutor* getResourceLoadExecutor() const;
-	void setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) const;
+
+	void setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext);
 
 	void connectErrorOccurred(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
 		onErrorOccurred.connect(pSlot);

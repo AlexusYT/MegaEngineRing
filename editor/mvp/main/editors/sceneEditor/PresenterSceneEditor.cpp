@@ -52,7 +52,7 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEdit
 	modelSceneEditor->connectOnLoadingSignal([this] {
 		for (auto view: views) {
 			if (!modelSceneEditor->hasResourcesContext()) {
-				modelSceneEditor->setupResourcesContext(view.first->getResourcesContext());
+				//modelSceneEditor->setupResourcesContext(view.first->getResourcesContext());
 				return;
 			}
 		}
@@ -60,7 +60,7 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEdit
 	modelSceneEditor->connectOnLoadedSignal([this] {
 		for (auto view: views) {
 			if (!modelSceneEditor->hasResourcesContext()) {
-				modelSceneEditor->setupResourcesContext(view.first->getResourcesContext());
+				//modelSceneEditor->setupResourcesContext(view.first->getResourcesContext());
 			}
 			view.first->executeInMainThread(
 				[this, view](const std::promise<void> & /*pPromise*/) { view.first->redraw(); });
@@ -82,7 +82,7 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 	view->connectRealize([this, view] {
 		if (!modelSceneEditor->hasScene()) return;
 		if (!modelSceneEditor->hasResourcesContext()) {
-			modelSceneEditor->setupResourcesContext(view->getResourcesContext());
+			//modelSceneEditor->setupResourcesContext(view->getResourcesContext());
 			modelSceneEditor->initScene();
 		}
 	});
@@ -93,7 +93,6 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 		pContext->make_current();
 		if (!modelSceneEditor->hasScene()) return true;
 		modelSceneEditor->render();
-		view->executeInMainThread([this, view](const std::promise<void> & /*pPromise*/) { view->redraw(); });
 		return true;
 	});
 

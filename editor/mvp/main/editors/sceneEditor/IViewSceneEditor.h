@@ -26,7 +26,6 @@
 #include "mvp/IView.h"
 
 namespace mer::editor::mvp {
-class ResourcesContext;
 class ExplorerObject;
 class IPresenterSceneEditor;
 } // namespace mer::editor::mvp
@@ -69,8 +68,6 @@ public:
 		const sigc::slot<void(unsigned int pButton, double pX, double pY)> &pSlot) const = 0;
 
 	virtual void makeCurrent() = 0;
-
-	virtual const std::shared_ptr<ResourcesContext> &getResourcesContext() const = 0;
 
 	virtual void redraw() = 0;
 

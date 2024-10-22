@@ -25,6 +25,7 @@
 #include <mvp/main/IViewMain.h>
 #include <mvp/main/centerWindow/ViewCenterWindow.h>
 
+#include "editors/sceneEditor/ResourcesContext.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 
 namespace mer::editor::mvp {
@@ -36,6 +37,7 @@ class MainWindow : public IViewMain, public Gtk::Window, ThreadDispatcher {
 	Glib::RefPtr<Gtk::EventControllerKey> keyController;
 	IPresenterMain* presenter{};
 	Gtk::Notebook panedTabs;
+	std::shared_ptr<ResourcesContext> resourcesContext;
 
 public:
 	static std::shared_ptr<MainWindow> create(const std::shared_ptr<IWidgetContext> &pContext,
@@ -84,6 +86,15 @@ public:
 	void openTab(int32_t pTabIndex) override;
 
 	ui::MultiPaned* getMultiPanedByIndex(int32_t pIndex) override;
+
+	[[nodiscard]] const std::shared_ptr<ResourcesContext> &getResourcesContext() const override {
+		return resourcesContext;
+	}
+
+	std::future<void> executeInMainThread(const sigc::slot<void(std::promise<void>)> &pSlot) override {
+		return ThreadDispatcher::executeInMainThread(pSlot);
+	}
+
 
 protected:
 };

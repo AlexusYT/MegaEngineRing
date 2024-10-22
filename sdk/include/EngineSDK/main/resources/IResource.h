@@ -23,6 +23,10 @@
 #define IRESOURCE_H
 #include <filesystem>
 
+namespace mer::main::sdk {
+enum class ResourceType;
+}
+
 namespace mer::sdk::main {
 
 class IResource {
@@ -35,6 +39,8 @@ public:
 	[[nodiscard]] virtual std::string getResourceName() const = 0;
 
 	virtual void setResourceUri(const std::filesystem::path &pResourceUri) = 0;
+
+	virtual mer::main::sdk::ResourceType getResourceType() = 0;
 };
 
 } // namespace mer::sdk::main

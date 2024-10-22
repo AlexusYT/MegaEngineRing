@@ -36,6 +36,13 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 	resource->setResourceUri(readString(pStream));
 	while (!pStream->eof()) {
 
+		try {
+			if (pStream->get() == std::istream::traits_type::eof()) {
+				//
+				break;
+			}
+			pStream->unget();
+		} catch (...) { break; }
 		auto object = Model3DObject::create();
 		object->setName(readString(pStream));
 		std::string shaderUri = readString(pStream);
@@ -60,25 +67,11 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 		readArray(pStream, indices);
 		object->setIndices(indices);
 		resource->addModelObject(object);
-		try {
-			if (pStream->get() == std::istream::traits_type::eof()) {
-				//
-				break;
-			}
-			pStream->unget();
-		} catch (...) { break; }
 	}
 	pResourceOut = resource;
 
 	return nullptr;
 }
 
-std::string Model3DLoader::readString(const std::shared_ptr<std::istream> &pStream) {
-	size_t size = 0;
-	pStream->read(reinterpret_cast<std::istream::char_type*>(&size), sizeof(size));
-	std::string name(size, 0);
-	pStream->read(name.data(), static_cast<long int>(size));
-	return name;
-}
 
 } // namespace mer::sdk::main

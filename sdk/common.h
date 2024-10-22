@@ -22,6 +22,26 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <glm/detail/type_vec1.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vector_relational.hpp>
+
+inline bool operator<(glm::vec3 pLhs, glm::vec3 pRhs) {
+	glm::vec3 nequ = glm::notEqual(pLhs, pRhs);
+	auto lt = glm::lessThan(pLhs, pRhs);
+	if (nequ[0]) return lt[0];
+	if (nequ[1]) return lt[1];
+	return lt[2];
+}
+
+inline bool operator<(glm::vec2 pLhs, glm::vec2 pRhs) {
+	glm::vec2 nequ = glm::notEqual(pLhs, pRhs);
+	auto lt = glm::lessThan(pLhs, pRhs);
+	if (nequ[0]) return lt[0];
+	return lt[1];
+}
+
 #include <filesystem>
 #include <fstream>
 #include <vector>

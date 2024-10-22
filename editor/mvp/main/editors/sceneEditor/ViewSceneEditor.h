@@ -26,7 +26,6 @@
 
 namespace mer::editor::mvp {
 class IPresenterSceneEditor;
-class ResourcesContext;
 } // namespace mer::editor::mvp
 
 namespace mer::editor::mvp {
@@ -35,8 +34,6 @@ class ViewSceneEditor : public IViewSceneEditor {
 	std::shared_ptr<IWidgetContext> context;
 	IPresenterSceneEditor* presenter{};
 	Gtk::Box mainWidget{Gtk::Orientation::VERTICAL};
-
-	std::shared_ptr<ResourcesContext> resourcesContext;
 
 	Gtk::GLArea area;
 	Gtk::Switch modeSwitch;
@@ -88,10 +85,6 @@ public:
 	}
 
 	void makeCurrent() override;
-
-	[[nodiscard]] const std::shared_ptr<ResourcesContext> &getResourcesContext() const override {
-		return resourcesContext;
-	}
 
 	void redraw() override;
 

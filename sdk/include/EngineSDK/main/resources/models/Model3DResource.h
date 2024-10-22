@@ -26,6 +26,7 @@
 #include <unordered_map>
 
 #include "EngineSDK/main/resources/Resource.h"
+#include "EngineSDK/main/resources/ResourceType.h"
 #include "IModel3DResource.h"
 
 namespace mer::sdk::main {
@@ -60,6 +61,8 @@ public:
 	}
 
 	IResource* asResource() override { return this; }
+
+	mer::main::sdk::ResourceType getResourceType() override { return mer::main::sdk::ResourceType::MODEL; }
 };
 
 } // namespace mer::sdk::main

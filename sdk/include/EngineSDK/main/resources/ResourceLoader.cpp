@@ -20,3 +20,13 @@
 //
 
 #include "ResourceLoader.h"
+namespace mer::sdk::main {
+std::string ResourceLoader::readString(const std::shared_ptr<std::istream> &pStream) {
+	size_t size = 0;
+	pStream->read(reinterpret_cast<std::istream::char_type*>(&size), sizeof(size));
+	std::string name(size, 0);
+	pStream->read(name.data(), static_cast<long int>(size));
+	return name;
+}
+
+}

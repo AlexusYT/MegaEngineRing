@@ -21,6 +21,8 @@
 
 #include "ProjectExplorerElement.h"
 
+#include "ui/utils/UiUtils.h"
+
 namespace mer::editor::mvp {
 ProjectExplorerElement::ProjectExplorerElement(const std::filesystem::path &pPath,
 											   const std::filesystem::path &pRootPath, const bool pDirectory)
@@ -33,6 +35,10 @@ ProjectExplorerElement::ProjectExplorerElement(const std::filesystem::path &pPat
 		type = ExplorerElementType::SCENE;
 	else if (ext == ".enmodel")
 		type = ExplorerElementType::RESOURCE_MODEL;
+	else if (ext == ".entex")
+		type = ExplorerElementType::RESOURCE_TEXTURE;
+	else if (ext == ".enmat")
+		type = ExplorerElementType::RESOURCE_MATERIAL;
 	fileMonitor = Gio::File::create_for_path(path)->monitor_directory();
 
 	fileMonitor->signal_changed().connect([this, pRootPath](const std::shared_ptr<Gio::File> &pFile,
@@ -86,27 +92,25 @@ std::shared_ptr<Gio::MenuModel> ProjectExplorerElement::getMenu() {
 
 	auto menu = Gio::Menu::create();
 	const auto variant = Glib::Variant<Glib::ustring>::create(path.string());
+	const auto menuNewResource = Gio::Menu::create();
+	menuNewResource->append_item(ui::UiUtils::createMenuItem("Model", "new.resource.model", variant));
+	menuNewResource->append_item(ui::UiUtils::createMenuItem("Material", "new.resource.material", variant));
+	menuNewResource->append_item(ui::UiUtils::createMenuItem("Texture", "new.resource.texture", variant));
 	const auto menuNew = Gio::Menu::create();
-	menuNew->append_item(createItem("Resource", "file.manage.new.resource", variant));
-	menuNew->append_item(createItem("Scene", "file.manage.new.scene", variant));
-	menuNew->append_item(createItem("Script", "file.manage.new.script", variant));
+	menuNew->append_submenu("Resource", menuNewResource);
+	menuNew->append_item(ui::UiUtils::createMenuItem("Folder", "new.folder", variant));
+	menuNew->append_item(ui::UiUtils::createMenuItem("Scene", "new.scene", variant));
+	menuNew->append_item(ui::UiUtils::createMenuItem("Script", "new.script", variant));
 	const auto menuManage = Gio::Menu::create();
-	menuManage->append_item(createItem("New folder", "file.manage.new.folder", variant));
 	menuManage->append_submenu("New", menuNew);
-	menuManage->append_item(createItem("Rename", "file.manage.rename", variant));
-	menuManage->append_item(createItem("Delete", "file.manage.delete", variant));
+	menuManage->append_item(ui::UiUtils::createMenuItem("Rename", "file.manage.rename", variant));
+	menuManage->append_item(ui::UiUtils::createMenuItem("Delete", "file.manage.delete", variant));
 	menu->append_section(menuManage);
 
 	const auto menuMisc = Gio::Menu::create();
-	menuMisc->append_item(createItem("Show in Files", "file.manage.showInFiles", variant));
+	menuMisc->append_item(ui::UiUtils::createMenuItem("Show in Files", "file.manage.showInFiles", variant));
 	menu->append_section(menuMisc);
 	return menu;
 }
 
-std::shared_ptr<Gio::MenuItem> ProjectExplorerElement::createItem(const std::string &pName, const std::string &pAction,
-																  const Glib::Variant<Glib::ustring> &pVariant) {
-	std::shared_ptr<Gio::MenuItem> item = Gio::MenuItem::create(pName, "");
-	item->set_action_and_target(pAction, pVariant);
-	return item;
-}
 } // namespace mer::editor::mvp

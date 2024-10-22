@@ -16,36 +16,14 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 02.10.24.
+// Created by alexus on 30.09.24.
 //
 
-#ifndef IMODEL3DRESOURCE_H
-#define IMODEL3DRESOURCE_H
+#include "ModelResourceEditor.h"
 
-#include "EngineSDK/main/render/IRenderable.h"
-
-namespace mer::sdk::main {
-class IModel3DObject;
-class IResource;
-
-class IModel3DResource : public IRenderable {
-public:
-	~IModel3DResource() override = default;
-
-	virtual std::shared_ptr<IModel3DObject> getModelObject(const std::string &pObjectName) = 0;
-
-	virtual void addModelObject(const std::shared_ptr<IModel3DObject> &pObject) = 0;
-
-	virtual void removeModelObject(const std::shared_ptr<IModel3DObject> &pObject) = 0;
-
-	virtual void removeModelObject(const std::string &pName) = 0;
-
-	[[nodiscard]] virtual const std::unordered_map<std::string, std::shared_ptr<IModel3DObject>> &getModelObjects()
-		const = 0;
-
-	virtual IResource* asResource() = 0;
-};
-
-} // namespace mer::sdk::main
-
-#endif //IMODEL3DRESOURCE_H
+namespace mer::editor::mvp {
+void ModelResourceEditor::setPathToDataDir(const std::filesystem::path &pPathToDataDir) {
+	if (pathToDataDir == pPathToDataDir) return;
+	pathToDataDir = pPathToDataDir;
+}
+} // namespace mer::editor::mvp

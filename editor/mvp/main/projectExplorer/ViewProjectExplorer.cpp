@@ -27,6 +27,7 @@
 #include "mvp/contexts/IWidgetContext.h"
 #include "ui/customWidgets/CustomSignalListItemFactory.h"
 #include "ui/customWidgets/CustomTreeView.h"
+#include "ui/utils/UiUtils.h"
 
 namespace mer::editor::mvp {
 ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
@@ -116,7 +117,9 @@ void ViewProjectExplorer::addTypeColumn() const {
 			case ExplorerElementType::DIRECTORY: label->set_text("Folder"); break;
 			case ExplorerElementType::SCENE: label->set_text("Scene"); break;
 			case ExplorerElementType::RESOURCE_MODEL: label->set_text("Model"); break;
-			default:; label->set_text("");
+			case ExplorerElementType::RESOURCE_TEXTURE: label->set_text("Texture"); break;
+			case ExplorerElementType::RESOURCE_MATERIAL: label->set_text("Material"); break;
+			default:; label->set_text("File");
 		}
 	});
 
@@ -128,14 +131,16 @@ void ViewProjectExplorer::addTypeColumn() const {
 void ViewProjectExplorer::onPathChanged(const std::filesystem::path &pPath) const {
 	auto menu = Gio::Menu::create();
 	const auto variant = Glib::Variant<Glib::ustring>::create(pPath.string());
+	const auto menuNewResource = Gio::Menu::create();
+	menuNewResource->append_item(ui::UiUtils::createMenuItem("Model", "new.resource.model", variant));
+	menuNewResource->append_item(ui::UiUtils::createMenuItem("Material", "new.resource.material", variant));
+	menuNewResource->append_item(ui::UiUtils::createMenuItem("Texture", "new.resource.texture", variant));
 	const auto menuNew = Gio::Menu::create();
-	menuNew->append_item(createItem("Resource", "file.manage.new.resource", variant));
-	menuNew->append_item(createItem("Scene", "file.manage.new.scene", variant));
-	menuNew->append_item(createItem("Script", "file.manage.new.script", variant));
-	const auto menuManage = Gio::Menu::create();
-	menuManage->append_item(createItem("New folder", "file.manage.new.folder", variant));
-	menuManage->append_submenu("New", menuNew);
-	menu->append_section(menuManage);
+	menuNew->append_submenu("Resource", menuNewResource);
+	menuNew->append_item(ui::UiUtils::createMenuItem("Folder", "new.folder", variant));
+	menuNew->append_item(ui::UiUtils::createMenuItem("Scene", "new.scene", variant));
+	menuNew->append_item(ui::UiUtils::createMenuItem("Script", "new.script", variant));
+	menu->append_submenu("New", menuNew);
 	treeView->setMenu(menu);
 }
 
@@ -150,14 +155,6 @@ void ViewProjectExplorer::selectByUri(const std::filesystem::path &pPath) {
 		if (!pos) continue;
 		selection->select_item(pos.value(), true);
 	}
-}
-
-std::shared_ptr<Gio::MenuItem> ViewProjectExplorer::createItem(const std::string &pName, const std::string &pAction,
-															   const Glib::Variant<Glib::ustring> &pVariant) {
-
-	std::shared_ptr<Gio::MenuItem> item = Gio::MenuItem::create(pName, "");
-	item->set_action_and_target(pAction, pVariant);
-	return item;
 }
 
 std::optional<uint32_t> ViewProjectExplorer::getPositionByUri(const std::filesystem::path &pPath,

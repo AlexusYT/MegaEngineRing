@@ -21,6 +21,7 @@
 
 #ifndef IVIEWMAIN_H
 #define IVIEWMAIN_H
+#include <future>
 #include <mvp/IView.h>
 
 namespace mer::editor::ui {
@@ -29,6 +30,7 @@ class MultiPaned;
 } // namespace mer::editor::ui
 
 namespace mer::editor::mvp {
+class ResourcesContext;
 class PanedLayoutTab;
 class IPresenterMain;
 
@@ -55,6 +57,10 @@ public:
 	virtual void openTab(int32_t pTabIndex) = 0;
 
 	virtual ui::MultiPaned* getMultiPanedByIndex(int32_t pIndex) = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<ResourcesContext> &getResourcesContext() const = 0;
+
+	virtual std::future<void> executeInMainThread(const sigc::slot<void(std::promise<void>)> &pSlot) = 0;
 };
 } // namespace mer::editor::mvp
 
