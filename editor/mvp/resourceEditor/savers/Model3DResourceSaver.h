@@ -30,8 +30,8 @@ namespace mer::editor::mvp {
 
 class Model3DResourceSaver {
 public:
-	static sdk::utils::ReportMessagePtr saveToFile(
-		const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::IModel3DResource> &pModel3DResource);
+	static sdk::utils::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
+												   const std::shared_ptr<sdk::main::IModel3DResource> &pResource);
 
 private:
 	static void writeString(std::ofstream &pStream, const std::string &pStr);

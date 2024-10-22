@@ -43,6 +43,7 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/resources/Resource.cpp
         include/EngineSDK/main/scene/EditorCameraScript.cpp
         sources/main/resources/textures/TextureResource.cpp
+        include/EngineSDK/main/resources/textures/TextureLoader.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -124,6 +125,8 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/textures/TextureBaseInternalFormat.h
         include/EngineSDK/main/resources/textures/Texture2DImageFormat.h
         include/EngineSDK/main/resources/textures/Texture2DType.h
+        include/EngineSDK/main/resources/ResourceType.h
+        include/EngineSDK/main/resources/textures/TextureLoader.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

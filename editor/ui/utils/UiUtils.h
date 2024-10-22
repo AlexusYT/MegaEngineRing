@@ -16,36 +16,20 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 02.10.24.
+// Created by alexus on 14.10.24.
 //
 
-#ifndef IMODEL3DRESOURCE_H
-#define IMODEL3DRESOURCE_H
+#ifndef UIUTILS_H
+#define UIUTILS_H
 
-#include "EngineSDK/main/render/IRenderable.h"
+namespace mer::editor::ui {
 
-namespace mer::sdk::main {
-class IModel3DObject;
-class IResource;
-
-class IModel3DResource : public IRenderable {
+class UiUtils {
 public:
-	~IModel3DResource() override = default;
-
-	virtual std::shared_ptr<IModel3DObject> getModelObject(const std::string &pObjectName) = 0;
-
-	virtual void addModelObject(const std::shared_ptr<IModel3DObject> &pObject) = 0;
-
-	virtual void removeModelObject(const std::shared_ptr<IModel3DObject> &pObject) = 0;
-
-	virtual void removeModelObject(const std::string &pName) = 0;
-
-	[[nodiscard]] virtual const std::unordered_map<std::string, std::shared_ptr<IModel3DObject>> &getModelObjects()
-		const = 0;
-
-	virtual IResource* asResource() = 0;
+	static std::shared_ptr<Gio::MenuItem> createMenuItem(const std::string &pName, const std::string &pAction,
+														 const Glib::VariantBase &pVariant);
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::editor::ui
 
-#endif //IMODEL3DRESOURCE_H
+#endif //UIUTILS_H

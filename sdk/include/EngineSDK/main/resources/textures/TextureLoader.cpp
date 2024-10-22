@@ -16,39 +16,22 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 12.10.24.
+// Created by alexus on 22.10.24.
 //
 
-#include "PngFileResourceReader.h"
+#include "TextureLoader.h"
 
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
-#include "EngineSDK/main/resources/textures/Texture2DImageFormat.h"
-#include "EngineSDK/main/resources/textures/Texture2DType.h"
-#include "EngineSDK/main/resources/textures/TextureBaseInternalFormat.h"
+#include "Texture2DImageFormat.h"
+#include "Texture2DType.h"
+#include "TextureResource.h"
 #include "png++/png.hpp"
-#include "project/Sdk.h"
 
-namespace mer::editor::mvp {
-sdk::utils::ReportMessagePtr PngFileResourceReader::checkType() {
-
-	if (auto msg = open()) {
-		msg->setTitle("Unable to prove that the file is the PNG File");
-		return msg;
-	}
-	png::reader<std::istream> reader(*getStream());
-	reader.read_info();
-	colorType = reader.get_color_type();
-	width = reader.get_width();
-	height = reader.get_height();
-	getStream()->seekg(0);
-
-	return nullptr;
-}
+namespace mer::sdk::main {
 
 template<typename PixelType>
 std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, std::istream &pStream) {
 	std::vector<PixelType> pixelsOut;
-	pixelsOut.reserve(pWidth * pHeight);
+	pixelsOut.resize(pWidth * pHeight);
 	png::image<PixelType> img(pStream);
 	auto &pixelBuffer = img.get_pixbuf();
 	for (uint32_t x = 0; x < pHeight; ++x) {
@@ -58,32 +41,40 @@ std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, s
 	return pixelsOut;
 }
 
-std::shared_ptr<sdk::main::ITextureResource> PngFileResourceReader::generateResource() const {
-	auto resource = getSdk()->createTextureResource();
+utils::ReportMessagePtr TextureLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
+											std::shared_ptr<std::istream> &pStream,
+											std::shared_ptr<IResource> &pResourceOut) {
+	auto resource = TextureResource::create();
+	resource->setResourceUri(readString(pStream));
 
-	using namespace sdk::main;
-	auto &streamSelf = *getStream();
+	png::reader reader(*pStream);
+	reader.read_info();
+	auto colorType = reader.get_color_type();
+	auto width = reader.get_width();
+	auto height = reader.get_height();
+	pStream->seekg(0);
 	switch (colorType) {
 
 		case png::color_type_gray:
-			resource->setData(get_data<png::gray_pixel>(width, height, streamSelf).data(), width, height,
+			resource->setData(get_data<png::gray_pixel>(width, height, *pStream).data(), width, height,
 							  Texture2DImageFormat::RED, Texture2DType::UNSIGNED_BYTE);
 			break;
 		case png::color_type_rgb:
-			resource->setData(get_data<png::gray_pixel>(width, height, streamSelf).data(), width, height,
+			resource->setData(get_data<png::rgb_pixel>(width, height, *pStream).data(), width, height,
 							  Texture2DImageFormat::RGB, Texture2DType::UNSIGNED_BYTE);
 			break;
 		case png::color_type_rgb_alpha:
-			resource->setData(get_data<png::gray_pixel>(width, height, streamSelf).data(), width, height,
+			resource->setData(get_data<png::rgba_pixel>(width, height, *pStream).data(), width, height,
 							  Texture2DImageFormat::RGBA, Texture2DType::UNSIGNED_BYTE);
 			break;
 		case png::color_type_gray_alpha:
-			resource->setData(get_data<png::gray_pixel>(width, height, streamSelf).data(), width, height,
+			resource->setData(get_data<png::ga_pixel>(width, height, *pStream).data(), width, height,
 							  Texture2DImageFormat::RG, Texture2DType::UNSIGNED_BYTE);
 			break;
 		default:;
 	}
-
-	return resource;
+	pResourceOut = resource;
+	return nullptr;
 }
-} // namespace mer::editor::mvp
+
+} // namespace mer::sdk::main

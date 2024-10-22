@@ -19,26 +19,27 @@
 // Created by alexus on 30.09.24.
 //
 
-#ifndef IMODELRESOURCECREATION_H
-#define IMODELRESOURCECREATION_H
+#ifndef IMODELRESOURCEEDITOR_H
+#define IMODELRESOURCEEDITOR_H
 
 namespace mer::editor::project {
 class Sdk;
 }
 
 namespace mer::editor::mvp {
-class IPresenterResourceCreation;
+class EditingResourceList;
+class IPresenterResourceEditor;
 
-class IModelResourceCreation {
+class IModelResourceEditor {
 
 public:
-	virtual ~IModelResourceCreation() = default;
+	virtual ~IModelResourceEditor() = default;
 
-	virtual void setPresenter(IPresenterResourceCreation* pPresenter) = 0;
+	virtual void setPresenter(IPresenterResourceEditor* pPresenter) = 0;
 
-	virtual void setPathToFile(const std::filesystem::path &pPathToFile) = 0;
+	virtual void setPathToDataDir(const std::filesystem::path &pPathToFile) = 0;
 
-	[[nodiscard]] virtual const std::filesystem::path &getPathToFile() const = 0;
+	[[nodiscard]] virtual const std::filesystem::path &getPathToDataDir() const = 0;
 
 	[[nodiscard]] virtual const std::filesystem::path &getPathToResource() const = 0;
 
@@ -55,8 +56,12 @@ public:
 	virtual void setRelativePathToResource(const std::filesystem::path &pPath) = 0;
 
 	[[nodiscard]] virtual const std::filesystem::path &getRelativePathToResource() const = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<EditingResourceList> &getEditingResources() const = 0;
+
+	virtual void setEditingResources(const std::shared_ptr<EditingResourceList> &pEditingResources) = 0;
 };
 
 } // namespace mer::editor::mvp
 
-#endif //IMODELRESOURCECREATION_H
+#endif //IMODELRESOURCEEDITOR_H

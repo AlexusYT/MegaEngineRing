@@ -55,8 +55,8 @@ bool LoadedScene::hasResourcesContext() const { return getResourceLoadExecutor()
 
 sdk::main::IResourceLoadExecutor* LoadedScene::getResourceLoadExecutor() const { return scene->getResourceExecutor(); }
 
-void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) const {
-	scene->setResourceExecutor(pResourcesContext.get());
+void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) {
+	context = pResourcesContext;
 	const auto resources = sdk->createLoadedResources();
 	pResourcesContext->setResources(resources);
 	pResourcesContext->setSdk(sdk);
@@ -71,6 +71,7 @@ sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPat
 
 	unload();
 	scene = sdk->createScene();
+	scene->setResourceExecutor(context.get());
 	onLoadingSignal();
 	setName("Untitled Scene");
 	databaseLocked = true;

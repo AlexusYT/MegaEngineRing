@@ -47,7 +47,9 @@ class ResourceLoader : public IResourceLoader {
 
 public:
 	[[nodiscard]] IApplication* getApplication() const override { return application; }
+protected:
 
+	static std::string readString(const std::shared_ptr<std::istream> &pStream);
 private:
 	void setApplication(IApplication* pApplication) override { application = pApplication; }
 };

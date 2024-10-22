@@ -25,6 +25,10 @@
 #include "IPresenterMain.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 
+namespace mer::editor::mvp {
+class EditingResourceList;
+}
+
 namespace mer::editor::project {
 class LoadedScene;
 }
@@ -43,6 +47,8 @@ class PresenterMain : public IPresenterMain {
 	std::shared_ptr<IModelMain> modelMain;
 	std::shared_ptr<PresenterProjectExplorer> presenterProjectExplorer;
 	std::shared_ptr<project::LoadedScene> loadedScene;
+	std::shared_ptr<EditingResourceList> editingResources;
+	std::vector<std::shared_ptr<IPresenter>> presenters;
 
 public:
 	PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const std::shared_ptr<IModelMain> &pModelMain);
@@ -88,7 +94,7 @@ public:
 
 	void openFile(const std::filesystem::path &pPathToFile) override;
 
-	void createResource(const std::filesystem::path &pPathToCreate) override;
+	void createResource(const std::filesystem::path &pPathToCreate, main::sdk::ResourceType pType) override;
 
 	void createScene(const std::filesystem::path &pPathToCreate) override;
 
@@ -101,7 +107,10 @@ public:
 	void deleteFile(const std::filesystem::path &pPathToDelete) override;
 
 	void showInFiles(const std::filesystem::path &pPathToShow) override;
+
+	void onViewClosed() override;
 };
+
 
 } // namespace mer::editor::mvp
 

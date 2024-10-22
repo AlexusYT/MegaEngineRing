@@ -102,6 +102,9 @@ public:
 
 	const std::shared_ptr<renderer::ShaderProgram> &getShader() const override { return shader; }
 
+	bool operator<(const IModel3DObject &pRhs) const override;
+
+
 private:
 	void onInstanceDataChanged(IRenderInstance* pInstance) override;
 };

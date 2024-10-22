@@ -1,0 +1,31 @@
+{
+	"Dividers": [
+		{
+			"Orientation": "Vertical",
+			"Pos": 0.12999999523162842,
+			"Uuid": "60fc2789-0d29-17fd-5603-f8c31ac51216"
+		}
+	],
+	"Panels": [
+		{
+			"Dividers": {
+				"Bottom": "null",
+				"Left": "60fc2789-0d29-17fd-5603-f8c31ac51216",
+				"Right": "null",
+				"Top": "null"
+			},
+			"Presenter": "PresenterResourceEditor",
+			"Uuid": "60eed8c3-0d29-17fd-efb7-3cac3d12623a"
+		},
+		{
+			"Dividers": {
+				"Bottom": "null",
+				"Left": "null",
+				"Right": "60fc2789-0d29-17fd-5603-f8c31ac51216",
+				"Top": "null"
+			},
+			"Presenter": "PresenterProjectExplorer",
+			"Uuid": "60dd3bec-0d29-17fd-6d98-289e6c6595c4"
+		}
+	]
+}

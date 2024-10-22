@@ -39,6 +39,12 @@ void LoadedResources::addResource(const std::string &pResourceUri, const std::sh
 	}
 }
 
+void LoadedResources::removeResource(const std::string &pResourceUri) {
+
+	resources.erase(pResourceUri);
+	renderables.erase(pResourceUri);
+}
+
 void LoadedResources::render() {
 	for (auto &[name, renderable]: renderables) {
 		if (!renderable.second) {

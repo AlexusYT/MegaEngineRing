@@ -22,6 +22,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <glm/glm.hpp>
+
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdouble-promotion"
 #pragma GCC diagnostic ignored "-Wextra-semi"
@@ -36,12 +39,12 @@
 #include <fstream>
 #include <glm/ext.hpp>
 #include <glm/ext/matrix_transform.hpp>
-#include <glm/glm.hpp>
 #include <iostream>
 #include <list>
 #include <ranges>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 
 #endif //COMMON_H

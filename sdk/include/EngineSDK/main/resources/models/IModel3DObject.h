@@ -69,6 +69,8 @@ public:
 	virtual void setShader(const std::shared_ptr<renderer::ShaderProgram> &pShader) = 0;
 
 	virtual const std::shared_ptr<renderer::ShaderProgram> &getShader() const = 0;
+
+	virtual bool operator<(const IModel3DObject &pElement) const = 0;
 };
 
 } // namespace mer::sdk::main

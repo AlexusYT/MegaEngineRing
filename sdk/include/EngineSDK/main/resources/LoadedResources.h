@@ -34,6 +34,8 @@ public:
 
 	virtual void addResource(const std::string &pResourceUri, const std::shared_ptr<IResource> &pResource) = 0;
 
+	virtual void removeResource(const std::string &pResourceUri) = 0;
+
 	virtual std::shared_ptr<IResource> getResource(const std::string &pResourceUri) = 0;
 
 	virtual void render() = 0;
@@ -53,6 +55,8 @@ public:
 	~LoadedResources() override = default;
 
 	void addResource(const std::string &pResourceUri, const std::shared_ptr<IResource> &pResource) override;
+
+	void removeResource(const std::string &pResourceUri) override;
 
 	std::shared_ptr<IResource> getResource(const std::string &pResourceUri) override {
 

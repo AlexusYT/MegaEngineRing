@@ -27,6 +27,9 @@
 #include <mvp/main/IViewMain.h>
 #include <project/Project.h>
 
+#include "EngineSDK/main/resources/ResourceType.h"
+#include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "EngineSDK/main/resources/textures/ITextureResource.h"
 #include "Globals.h"
 #include "PanedLayoutTab.h"
 #include "centerWindow/PresenterCenterWindow.h"
@@ -39,9 +42,10 @@
 #include "mvp/ApplicationController.h"
 #include "mvp/contexts/ApplicationContext.h"
 #include "mvp/contexts/MultiPanedContext.h"
-#include "mvp/resourceCreation/ModelResourceCreation.h"
-#include "mvp/resourceCreation/PresenterResourceCreation.h"
-#include "mvp/resourceCreation/ViewResourceCreation.h"
+#include "mvp/resourceEditor/EditingResourceList.h"
+#include "mvp/resourceEditor/ModelResourceEditor.h"
+#include "mvp/resourceEditor/PresenterResourceEditor.h"
+#include "mvp/resourceEditor/ViewResourceEditor.h"
 #include "mvp/resourceSelection/ModelResourceSelection.h"
 #include "mvp/resourceSelection/PresenterResourceSelection.h"
 #include "mvp/resourceSelection/ViewResourceSelection.h"
@@ -204,25 +208,40 @@ void PresenterMain::run() {
 			std::make_shared<ModelProjectExplorer>(modelMain->getProject()->getProjectPath() / "data");
 		presenterProjectExplorer = std::make_shared<PresenterProjectExplorer>(modelProjectExplorer);
 		getAppController()->run(presenterProjectExplorer);
+		presenters.push_back(presenterProjectExplorer);
 
 		loadedScene = std::make_shared<project::LoadedScene>(project->getEditorSdkLib());
 		loadedScene->connectErrorOccurred([this](auto pMsg) { displayError(pMsg); });
 		loadedScene->setRunDirectory(project->getProjectPath());
-
+		loadedScene->setupResourcesContext(viewMain->getResourcesContext());
 		auto modelSceneEditor = std::make_shared<ModelSceneEditor>();
 		modelSceneEditor->setLoadedScene(loadedScene);
 		auto presenterSceneEditor = std::make_shared<PresenterSceneEditor>(modelSceneEditor);
 		getAppController()->run(presenterSceneEditor);
+		presenters.push_back(presenterSceneEditor);
 
 		auto modelObjectsTree = std::make_shared<ModelObjectsTree>();
 		modelObjectsTree->setLoadedScene(loadedScene);
 		auto presenterObjectsTree = std::make_shared<PresenterObjectsTree>(modelObjectsTree);
 		getAppController()->run(presenterObjectsTree);
+		presenters.push_back(presenterObjectsTree);
 
 		auto modelObjectProperties = std::make_shared<ModelObjectProperties>();
 		modelObjectProperties->setLoadedScene(loadedScene);
 		auto presenterObjectProperties = std::make_shared<PresenterObjectProperties>(modelObjectProperties);
 		getAppController()->run(presenterObjectProperties);
+		presenters.push_back(presenterObjectProperties);
+
+		editingResources = std::make_shared<EditingResourceList>();
+		editingResources->setupResourcesContext(viewMain->getResourcesContext());
+
+		auto model = std::make_shared<ModelResourceEditor>();
+		model->setSdk(modelMain->getProject()->getEditorSdkLib());
+		model->setEditingResources(editingResources);
+		model->setPathToDataDir(project->getProjectDataPath());
+		auto presenter = std::make_shared<PresenterResourceEditor>(model);
+		getAppController()->run(presenter);
+		presenters.push_back(presenter);
 	}
 
 	viewMain->setTabs(modelMain->getPanedLayoutTabs());
@@ -242,7 +261,7 @@ void PresenterMain::run() {
 
 void PresenterMain::stop() {
 
-	getAppController()->stop(presenterProjectExplorer.get());
+	for (auto presenter: presenters) getAppController()->stop(presenter.get());
 	viewMain->closeView();
 }
 
@@ -255,6 +274,7 @@ std::shared_ptr<IView> PresenterMain::createView(const IPresenter* pPresenter,
 	if (dynamic_cast<const PresenterObjectsTree*>(pPresenter)) return std::make_shared<ViewObjectsTree>(pContext);
 	if (dynamic_cast<const PresenterObjectProperties*>(pPresenter))
 		return std::make_shared<ViewObjectProperties>(pContext);
+	if (dynamic_cast<const PresenterResourceEditor*>(pPresenter)) return ViewResourceEditor::create(pContext);
 	return nullptr;
 }
 
@@ -295,8 +315,11 @@ void PresenterMain::readJsonForTab(int32_t pIndex,
 			return;
 		}
 
-		auto paned = viewMain->getMultiPanedByIndex(pIndex);
-		if (paned) pCallback(paned->importFromJson(json, getAppController()));
+
+		viewMain->executeInMainThread([pCallback, pIndex, json, this](const std::promise<void> &) {
+			auto paned = viewMain->getMultiPanedByIndex(pIndex);
+			if (paned) { pCallback(paned->importFromJson(json, getAppController())); }
+		});
 	}).detach();
 }
 
@@ -342,28 +365,32 @@ void PresenterMain::removeExtension(sdk::main::Extension* pExtensionToRemove) {
 
 void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 	if (!pPathToFile.has_extension()) return;
-	if (pPathToFile.extension() == ".enscene")
+	auto ext = pPathToFile.extension().string();
+	if (ext == ".enscene")
 		if (const auto msg = loadedScene->load(pPathToFile)) { displayError(msg); }
+	if (ext == ".enmodel" || ext == ".entex") editingResources->loadResource(pPathToFile);
 }
 
-void PresenterMain::createResource(const std::filesystem::path &pPathToCreate) {
+void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, const main::sdk::ResourceType pType) {
 	auto pathToCreate = is_directory(pPathToCreate) ? pPathToCreate : pPathToCreate.parent_path();
-	sdk::utils::ReportMessagePtr msg;
-	auto view = ViewResourceCreation::create(ApplicationContext::create(getAppController()->getApp()), msg);
-	if (!view) {
-		displayError(msg);
-		return;
+	auto sdk = modelMain->getProject()->getEditorSdkLib();
+	std::shared_ptr<sdk::main::IResource> resource{};
+	switch (pType) {
+
+		case main::sdk::ResourceType::NONE: break;
+		case main::sdk::ResourceType::MODEL:
+			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk->createModel3DResource());
+			break;
+		case main::sdk::ResourceType::TEXTURE:
+			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk->createTextureResource());
+			break;
+		case main::sdk::ResourceType::MATERIAL: break;
 	}
-	auto model = std::make_shared<ModelResourceCreation>();
-	model->setPathToResource(pathToCreate);
-	auto root = modelMain->getProject()->getProjectPath() / "data";
-	if (pathToCreate == root) {
-		model->setRelativePathToResource("");
-	} else
-		model->setRelativePathToResource(relative(pathToCreate, root));
-	model->setSdk(modelMain->getProject()->getEditorSdkLib());
-	auto presenter = std::make_shared<PresenterResourceCreation>(model, view);
-	getAppController()->run(presenter);
+	std::filesystem::path uri = "/";
+	auto root = modelMain->getProject()->getProjectDataPath();
+	if (pathToCreate != "/" && pathToCreate != root) { uri /= relative(pathToCreate, root); }
+	resource->setResourceUri(uri);
+	editingResources->addResource(resource);
 }
 
 void PresenterMain::createScene(const std::filesystem::path &pPathToCreate) {
@@ -453,7 +480,12 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 				displayError(msg);
 				return;
 			}
-			if (pPathToDelete.extension() == ".enscene") { loadedScene->unload(); }
+			path uri = "/";
+			auto root = modelMain->getProject()->getProjectDataPath();
+			if (pPathToDelete != "/" && pPathToDelete != root) { uri /= relative(pPathToDelete, root); }
+			auto ext = pPathToDelete.extension().string();
+			if (ext == ".enscene") { loadedScene->unload(); }
+			if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") { editingResources->deleteResource(uri); }
 		}
 	};
 	dialog->choose(*viewMain->getWindow(), lambda);
@@ -484,4 +516,6 @@ void PresenterMain::showInFiles(const std::filesystem::path &pPathToShow) {
 		}
 	});
 }
+
+void PresenterMain::onViewClosed() { getAppController()->stop(this); }
 } // namespace mer::editor::mvp

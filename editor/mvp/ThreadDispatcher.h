@@ -33,6 +33,7 @@ private:
 	std::vector<std::pair<SlotT, std::promise<void>>> dispatcherQueue;
 	std::mutex queueMutex;
 	bool queueRunning{};
+	std::thread::id mainThread{};
 
 public:
 	ThreadDispatcher();

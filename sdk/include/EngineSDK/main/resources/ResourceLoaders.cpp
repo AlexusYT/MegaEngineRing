@@ -28,6 +28,7 @@
 #include "ResourceLoader.h"
 #include "models/Model3DLoader.h"
 #include "shaders/BuiltInProgramRequest.h"
+#include "textures/TextureLoader.h"
 
 namespace mer::sdk::main {
 utils::ReportMessagePtr ResourceLoaders::load(
@@ -71,6 +72,7 @@ void ResourceLoaders::addLoader(const std::shared_ptr<IResourceLoader> &pLoader)
 
 void ResourceLoaders::initLoaders() {
 	addLoader(std::make_shared<Model3DLoader>());
+	addLoader(std::make_shared<TextureLoader>());
 	addLoader(std::make_shared<BuiltInProgramRequest::BuiltInProgramLoader>());
 }
 

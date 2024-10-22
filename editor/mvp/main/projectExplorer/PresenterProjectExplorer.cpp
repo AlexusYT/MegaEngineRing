@@ -60,6 +60,6 @@ void PresenterProjectExplorer::run() {
 }
 
 void PresenterProjectExplorer::stop() {
-	for (const auto &viewProjectExplorer: views) viewProjectExplorer->closeView();
+	while (!views.empty()) { views.front()->closeView(); }
 }
 } // namespace mer::editor::mvp

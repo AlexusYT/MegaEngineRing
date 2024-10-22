@@ -48,6 +48,7 @@ class Project : public std::enable_shared_from_this<Project> {
 	std::filesystem::path projectPath;
 	std::filesystem::path projectBuildPath;
 	std::filesystem::path projectSourcesPath;
+	std::filesystem::path projectDataPath;
 	std::string projectName;
 
 	Glib::RefPtr<Gio::ListStore<ui::ProjectExplorerEntry>> projectExplorerEntries;
@@ -109,6 +110,7 @@ public:
 		projectPath = pProjectPath;
 		projectBuildPath = pProjectPath / "build/dev";
 		projectSourcesPath = pProjectPath / "source";
+		projectDataPath = pProjectPath / "data";
 	}
 
 	[[nodiscard]] const std::filesystem::path &getProjectSourcesPath() const { return projectSourcesPath; }
@@ -124,6 +126,10 @@ public:
 	[[nodiscard]] const std::filesystem::path &getProjectBuildPath() const { return projectBuildPath; }
 
 	void setProjectBuildPath(const std::filesystem::path &pProjectBuildPath) { projectBuildPath = pProjectBuildPath; }
+
+	[[nodiscard]] const std::filesystem::path &getProjectDataPath() const { return projectDataPath; }
+
+	void setProjectDataPath(const std::filesystem::path &pProjectDataPath) { projectDataPath = pProjectDataPath; }
 
 	[[nodiscard]] const std::shared_ptr<SQLite::Database> &getDatabase() const { return database; }
 

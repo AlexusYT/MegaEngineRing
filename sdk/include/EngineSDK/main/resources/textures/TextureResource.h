@@ -22,6 +22,7 @@
 #ifndef TEXTURERESOURCE_H
 #define TEXTURERESOURCE_H
 #include "EngineSDK/main/resources/Resource.h"
+#include "EngineSDK/main/resources/ResourceType.h"
 #include "ITextureResource.h"
 
 namespace mer::sdk::main {
@@ -81,6 +82,10 @@ public:
 	void setTextureBlock(uint32_t pTextureBlock) override { textureBlock = pTextureBlock; }
 
 	IResource* asResource() override { return this; }
+
+	mer::main::sdk::ResourceType getResourceType() override {
+		return mer::main::sdk::ResourceType::TEXTURE;
+	}
 };
 
 } // namespace mer::sdk::main

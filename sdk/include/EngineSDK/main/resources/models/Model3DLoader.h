@@ -30,8 +30,6 @@ public:
 	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 								 std::shared_ptr<IResource> &pResourceOut) override;
 
-	static std::string readString(const std::shared_ptr<std::istream> &pStream);
-
 	template<typename T>
 	static void readArray(const std::shared_ptr<std::istream> &pStream, std::vector<T> &pArray) {
 		uint16_t size = 0;
