@@ -26,10 +26,6 @@
 #include "mvp/PresenterBase.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 
-namespace mer::main::sdk {
-enum class ResourceType;
-}
-
 namespace mer::sdk::main {
 class ExtensionPropertyBase;
 class Extension;
@@ -60,7 +56,7 @@ public:
 
 	virtual void openFile(const std::filesystem::path &pPathToFile) = 0;
 
-	virtual void createResource(const std::filesystem::path &pPathToCreate, main::sdk::ResourceType pType) = 0;
+	virtual void createResource(const std::filesystem::path &pPathToCreate, sdk::main::ResourceType pType) = 0;
 
 	virtual void createScene(const std::filesystem::path &pPathToCreate) = 0;
 

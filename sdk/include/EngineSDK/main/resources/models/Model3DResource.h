@@ -62,7 +62,7 @@ public:
 
 	IResource* asResource() override { return this; }
 
-	mer::main::sdk::ResourceType getResourceType() override { return mer::main::sdk::ResourceType::MODEL; }
+	ResourceType getResourceType() override { return ResourceType::MODEL; }
 };
 
 } // namespace mer::sdk::main

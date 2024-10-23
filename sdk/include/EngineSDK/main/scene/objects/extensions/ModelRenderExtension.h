@@ -52,6 +52,10 @@ public:
 
 	const RenderInstanceData &getRenderInstanceData() override { return data; }
 
+	std::shared_ptr<renderer::ShaderProgram> getShader() override {
+		return nullptr;
+	}
+
 protected:
 	utils::ReportMessagePtr onInit() override;
 

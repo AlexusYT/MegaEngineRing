@@ -136,6 +136,9 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/light/LightInstance.h
         include/EngineSDK/main/light/LightInstanceData.h
         include/EngineSDK/main/light/LightSources.h
+        include/EngineSDK/main/resources/materials/IMaterialResource.h
+        include/EngineSDK/main/resources/materials/MaterialResource.cpp
+        include/EngineSDK/main/resources/materials/MaterialResource.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
