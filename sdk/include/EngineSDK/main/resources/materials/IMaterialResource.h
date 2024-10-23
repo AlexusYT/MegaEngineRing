@@ -16,16 +16,17 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 19.10.24.
+// Created by alexus on 22.10.24.
 //
 
-#ifndef RESOURCETYPE_H
-#define RESOURCETYPE_H
+#ifndef IMATERIALRESOURCE_H
+#define IMATERIALRESOURCE_H
+#include "EngineSDK/main/render/IRenderable.h"
 
 namespace mer::sdk::main {
 
-enum class ResourceType { NONE = 0, MODEL, TEXTURE, MATERIAL };
+class IMaterialResource : public IRenderable {};
 
 } // namespace mer::sdk::main
 
-#endif //RESOURCETYPE_H
+#endif //IMATERIALRESOURCE_H

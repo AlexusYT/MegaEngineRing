@@ -127,6 +127,9 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/textures/Texture2DType.h
         include/EngineSDK/main/resources/ResourceType.h
         include/EngineSDK/main/resources/textures/TextureLoader.h
+        include/EngineSDK/main/resources/materials/IMaterialResource.h
+        include/EngineSDK/main/resources/materials/MaterialResource.cpp
+        include/EngineSDK/main/resources/materials/MaterialResource.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

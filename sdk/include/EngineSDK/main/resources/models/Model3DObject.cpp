@@ -73,15 +73,20 @@ void Model3DObject::render() {
 	if (instancesData.empty()) return;
 	if (!shader) return;
 	instancesSsbo->bindBufferBase(1);
-	shader->use();
-	const int64_t bufSize = static_cast<int64_t>(instancesData.size() * sizeof(RenderInstanceData));
-	if (instancesSsbo->getSize() < bufSize) {
-		instancesSsbo->reallocate(bufSize, instancesData.data());
-	} else
-		instancesSsbo->bufferSubData(0, bufSize, instancesData.data());
 	glBindVertexArray(vao);
-	glDrawElementsInstanced(GL_TRIANGLES, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr,
-							static_cast<int>(instancesData.size()));
+	for (auto [instShader, instances]: instancesData) {
+		if (instances.empty()) continue;
+		if (!instShader) shader->use();
+		else
+			instShader->use();
+		const int64_t bufSize = static_cast<int64_t>(instances.size() * sizeof(RenderInstanceData));
+		if (instancesSsbo->getSize() < bufSize) {
+			instancesSsbo->reallocate(bufSize, instances.data());
+		} else
+			instancesSsbo->bufferSubData(0, bufSize, instances.data());
+		glDrawElementsInstanced(GL_TRIANGLES, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr,
+								static_cast<int>(instances.size()));
+	}
 	glBindVertexArray(0);
 	instancesSsbo->unbindBufferBase(1);
 }
@@ -109,7 +114,21 @@ void Model3DObject::removeRenderInstance(IRenderInstance* pOldInstance) {
 
 void Model3DObject::onInstanceDataChanged(IRenderInstance* /*pInstance*/) {
 	instancesData.clear();
-	for (auto instance: instances) { instancesData.emplace_back(instance->getRenderInstanceData()); }
+	for (auto instance: instances) {
+
+		auto instanceShader = instance->getShader();
+		//Use object shader if instance shader is not set
+		if (!instanceShader) {
+			if (!shader) continue;
+			instanceShader = shader;
+		}
+		auto instanceData = instance->getRenderInstanceData();
+		auto iter = instancesData.find(instanceShader);
+		if (iter == instancesData.end()) {
+			iter = instancesData.emplace(instanceShader, std::vector<RenderInstanceData>()).first;
+		}
+		iter->second.emplace_back(instanceData);
+	}
 }
 
 bool Model3DObject::operator<(const IModel3DObject &pRhs) const {

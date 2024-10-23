@@ -94,7 +94,7 @@ public:
 
 	void openFile(const std::filesystem::path &pPathToFile) override;
 
-	void createResource(const std::filesystem::path &pPathToCreate, main::sdk::ResourceType pType) override;
+	void createResource(const std::filesystem::path &pPathToCreate, sdk::main::ResourceType pType) override;
 
 	void createScene(const std::filesystem::path &pPathToCreate) override;
 

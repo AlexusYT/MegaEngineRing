@@ -94,7 +94,7 @@ void PresenterResourceEditor::onPathToFileChanged(IViewResourceEditor* pView, co
 	ResourceInfo* info = getResourceInfo(resource.get());
 	if (!info) return;
 	auto resourceType = resource->getResourceType();
-	if (resourceType == main::sdk::ResourceType::MODEL) {
+	if (resourceType == sdk::main::ResourceType::MODEL) {
 
 		auto objReader = std::make_shared<ObjFileResourceReader>(pPath);
 		objReader->setSdk(model->getSdk());
@@ -114,7 +114,7 @@ void PresenterResourceEditor::onPathToFileChanged(IViewResourceEditor* pView, co
 		std::ranges::set_difference(tmpList, info->fileObjects, std::back_inserter(info->fileObjects), comp);
 		info->srcFilePath = pPath;
 		pView->displayObjects(info->fileObjects, true);
-	} else if (resourceType == main::sdk::ResourceType::TEXTURE) {
+	} else if (resourceType == sdk::main::ResourceType::TEXTURE) {
 
 		auto reader = std::make_shared<PngFileResourceReader>(pPath);
 		reader->setSdk(model->getSdk());
@@ -155,10 +155,10 @@ void PresenterResourceEditor::savePathClicked(IViewResourceEditor* pView, const 
 	std::string extension;
 	switch (resource->getResourceType()) {
 
-		case main::sdk::ResourceType::MODEL: extension = ".enmodel"; break;
-		case main::sdk::ResourceType::TEXTURE: extension = ".entex"; break;
-		case main::sdk::ResourceType::MATERIAL: extension = ".enmat"; break;
-		case main::sdk::ResourceType::NONE: return;
+		case sdk::main::ResourceType::MODEL: extension = ".enmodel"; break;
+		case sdk::main::ResourceType::TEXTURE: extension = ".entex"; break;
+		case sdk::main::ResourceType::MATERIAL: extension = ".enmat"; break;
+		case sdk::main::ResourceType::NONE: return;
 	}
 
 	const auto newPath = pNewPath.starts_with("/") ? pNewPath.substr(1) : pNewPath;

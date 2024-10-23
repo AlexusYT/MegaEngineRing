@@ -83,9 +83,7 @@ public:
 
 	IResource* asResource() override { return this; }
 
-	mer::main::sdk::ResourceType getResourceType() override {
-		return mer::main::sdk::ResourceType::TEXTURE;
-	}
+	ResourceType getResourceType() override { return ResourceType::TEXTURE; }
 };
 
 } // namespace mer::sdk::main

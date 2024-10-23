@@ -69,7 +69,7 @@ public:
 
 	void setUniform(const std::string &pName, const glm::mat4 &pValue) const override;
 
-	mer::main::sdk::ResourceType getResourceType() override { return mer::main::sdk::ResourceType::MATERIAL; }
+	main::ResourceType getResourceType() override { return main::ResourceType::MATERIAL; }
 };
 
 

@@ -371,20 +371,20 @@ void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 	if (ext == ".enmodel" || ext == ".entex") editingResources->loadResource(pPathToFile);
 }
 
-void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, const main::sdk::ResourceType pType) {
+void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, const sdk::main::ResourceType pType) {
 	auto pathToCreate = is_directory(pPathToCreate) ? pPathToCreate : pPathToCreate.parent_path();
 	auto sdk = modelMain->getProject()->getEditorSdkLib();
 	std::shared_ptr<sdk::main::IResource> resource{};
 	switch (pType) {
 
-		case main::sdk::ResourceType::NONE: break;
-		case main::sdk::ResourceType::MODEL:
+		case sdk::main::ResourceType::NONE: break;
+		case sdk::main::ResourceType::MODEL:
 			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk->createModel3DResource());
 			break;
-		case main::sdk::ResourceType::TEXTURE:
+		case sdk::main::ResourceType::TEXTURE:
 			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk->createTextureResource());
 			break;
-		case main::sdk::ResourceType::MATERIAL: break;
+		case sdk::main::ResourceType::MATERIAL: break;
 	}
 	std::filesystem::path uri = "/";
 	auto root = modelMain->getProject()->getProjectDataPath();
