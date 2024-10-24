@@ -31,6 +31,10 @@
 #include "IScene.h"
 
 namespace mer::sdk::main {
+class ILightSources;
+}
+
+namespace mer::sdk::main {
 class ICamera;
 class ISceneObject;
 
@@ -44,6 +48,7 @@ class Scene : public IScene {
 	ICamera* currentCamera;
 	IApplication* application;
 	bool inited{};
+	std::shared_ptr<ILightSources> lightSources;
 
 public:
 	Scene();
@@ -93,6 +98,9 @@ public:
 	[[nodiscard]] ICamera* getCurrentCamera() const override { return currentCamera; }
 
 	[[nodiscard]] IApplication* getApplication() const override { return application; }
+
+	[[nodiscard]] const std::shared_ptr<ILightSources> &getLightSources() const { return lightSources; }
+
 
 protected:
 	void setApplication(IApplication* pApplication) override { application = pApplication; }

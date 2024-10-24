@@ -91,6 +91,11 @@ public:
 
 	[[nodiscard]] sigc::signal<void(const T &)> &getEvent() { return valueChanged; }
 
+	sigc::connection connectEvent(const sigc::slot<void(const T &)> &pSlot) {
+		pSlot(value);
+		return valueChanged.connect(pSlot);
+	}
+
 	[[nodiscard]] sigc::signal<T(const T &)> &getReturnOverride() { return valueChanging; }
 
 	void serialize(nlohmann::json &pJson, Extension* pExtension) override;

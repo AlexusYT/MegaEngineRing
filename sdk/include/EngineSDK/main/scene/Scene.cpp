@@ -21,16 +21,19 @@
 
 #include "Scene.h"
 
+#include "EngineSDK/main/light/ILightInstance.h"
+#include "EngineSDK/main/light/LightSources.h"
 #include "EngineSDK/main/resources/LoadedResources.h"
 #include "EngineSDK/main/resources/shaders/BuiltInProgramRequest.h"
 #include "EngineSDK/renderer/GL.h"
 #include "EngineUtils/utils/Logger.h"
 #include "actor/IActor.h"
 #include "objects/ISceneObject.h"
+#include "objects/extensions/Extension.h"
 #include "objects/extensions/cameras/ICamera.h"
 
 namespace mer::sdk::main {
-Scene::Scene() : programBuffer(std::make_shared<ProgramWideShaderBuffer>()) {}
+Scene::Scene() : programBuffer(std::make_shared<ProgramWideShaderBuffer>()), lightSources(LightSources::create()) {}
 
 Scene::~Scene() {
 	Scene::deinitScene();
@@ -83,6 +86,16 @@ void Scene::addObject(const std::shared_ptr<ISceneObject> &pObject) {
 			utils::Logger::error(msg);
 		}
 	}
+	pObject->connectOnExtensionAdded([this](const std::shared_ptr<Extension> &pExtension) {
+		if (auto lightInstance = std::dynamic_pointer_cast<ILightInstance>(pExtension)) {
+			lightSources->addLightInstance(lightInstance);
+		}
+	});
+	pObject->connectOnExtensionRemoved([this](const std::shared_ptr<Extension> &pExtension) {
+		if (auto lightInstance = std::dynamic_pointer_cast<ILightInstance>(pExtension)) {
+			lightSources->removeLightInstance(lightInstance);
+		}
+	});
 	objects.emplace_back(pObject);
 	onObjectAddedSignal(pObject.get());
 }

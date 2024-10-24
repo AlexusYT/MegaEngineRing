@@ -22,6 +22,7 @@
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 
 #include "EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h"
+#include "EngineSDK/main/scene/objects/extensions/LightExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
 #include "EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h"
@@ -43,6 +44,7 @@ void ExtensionRegistry::init() {
 	registerClass<OrbitCameraExtension>();
 	registerClass<MouseButtonExtension>();
 	registerClass<ModelRenderExtension>();
+	registerClass<LightExtension>();
 }
 
 void ExtensionRegistry::deinit() { extensions.clear(); }
