@@ -44,6 +44,9 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/scene/EditorCameraScript.cpp
         sources/main/resources/textures/TextureResource.cpp
         include/EngineSDK/main/resources/textures/TextureLoader.cpp
+        include/EngineSDK/main/scene/objects/extensions/LightExtension.cpp
+        include/EngineSDK/main/light/LightInstance.cpp
+        include/EngineSDK/main/light/LightSources.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -127,6 +130,12 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/textures/Texture2DType.h
         include/EngineSDK/main/resources/ResourceType.h
         include/EngineSDK/main/resources/textures/TextureLoader.h
+        include/EngineSDK/main/scene/objects/extensions/LightExtension.h
+        include/EngineSDK/main/light/ILightInstance.h
+        include/EngineSDK/main/light/ILightSources.h
+        include/EngineSDK/main/light/LightInstance.h
+        include/EngineSDK/main/light/LightInstanceData.h
+        include/EngineSDK/main/light/LightSources.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
