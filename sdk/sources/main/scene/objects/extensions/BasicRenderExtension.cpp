@@ -24,9 +24,10 @@
 #include <EngineUtils/utils/Logger.h>
 #include <epoxy/gl.h>
 
-#include "EngineSDK/main/resources/shaders/BuiltInProgramRequest.h"
+#include "EngineSDK/main/resources/shaders/ShaderProgramLoader.h"
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
 namespace mer::sdk::main {
 utils::ReportMessagePtr BasicRenderExtension::onInit() {

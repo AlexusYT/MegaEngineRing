@@ -25,6 +25,8 @@
 #include <EngineUtils/utils/ReportMessageFwd.h>
 #include <map>
 
+#include "EngineUtils/utils/PropertyBase.h"
+
 class UUID;
 
 namespace mer::sdk::utils {
@@ -35,7 +37,6 @@ enum class KeyboardKey;
 
 namespace mer::sdk::main {
 class IScript;
-class ExtensionPropertyBase;
 class MainObjectExtension;
 class Extension;
 class IScene;
@@ -60,9 +61,9 @@ public:
 
 
 	virtual sigc::connection connectOnExtensionPropertyChanged(
-		const sigc::slot<void(Extension* pExtension, ExtensionPropertyBase* pProperty)> &pSlot) = 0;
+		const sigc::slot<void(Extension* pExtension, utils::PropertyBase* pProperty)> &pSlot) = 0;
 
-	virtual void notifyExtensionPropertyChanged(Extension* pExtension, ExtensionPropertyBase* pProperty) = 0;
+	virtual void notifyExtensionPropertyChanged(Extension* pExtension, utils::PropertyBase* pProperty) = 0;
 
 	virtual utils::ReportMessagePtr init() = 0;
 

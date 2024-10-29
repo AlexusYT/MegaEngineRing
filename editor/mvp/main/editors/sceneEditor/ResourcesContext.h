@@ -24,6 +24,7 @@
 #include <condition_variable>
 #include <thread>
 
+#include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
 
 namespace mer::sdk::main {
@@ -53,10 +54,11 @@ public:
 		cv.notify_one();
 	}
 
-	std::pair<std::shared_ptr<sdk::main::IResource>, sdk::utils::ReportMessagePtr> loadResourceSync(
-		const std::string &pResourceUri) override;
+	std::shared_ptr<sdk::main::ResourceLoadResult> loadResourceSync(const std::string &pResourceUri) override;
 
-	void loadResourceAsync(const std::string &pResourceUri, const LoadingFinishedSlot &pSlot) override {
+	void loadResourceAsync(
+		const std::string &pResourceUri,
+		const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot) override {
 
 		std::lock_guard lock(queueMutex);
 		queue.emplace_back(pResourceUri, pSlot);
@@ -64,6 +66,9 @@ public:
 	}
 
 	void resourceLoop(const std::stop_token &pToken);
+
+	static void callSlot(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult,
+						 const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot);
 
 	[[nodiscard]] sdk::main::IApplication* getApplication() const override { return application; }
 

@@ -23,6 +23,7 @@
 
 #include "EditingResourceList.h"
 #include "EngineSDK/main/resources/IResource.h"
+#include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
@@ -32,6 +33,7 @@
 #include "mvp/ApplicationController.h"
 #include "readers/ObjFileResourceReader.h"
 #include "readers/PngFileResourceReader.h"
+#include "savers/MaterialResourceSaver.h"
 #include "savers/Model3DResourceSaver.h"
 #include "savers/TextureResourceSaver.h"
 
@@ -286,11 +288,14 @@ PresenterResourceEditor::ResourceInfo* PresenterResourceEditor::getResourceInfo(
 sdk::utils::ReportMessagePtr PresenterResourceEditor::saveResource(
 	const std::shared_ptr<sdk::main::IResource> &pResource) {
 	auto savePath = getDataPath() / pResource->getResourceUri();
-	if (auto modelRes = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
-		return Model3DResourceSaver::saveToFile(savePath, modelRes);
+	if (auto res = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
+		return Model3DResourceSaver::saveToFile(savePath, res);
 	}
-	if (auto textureRes = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
-		return TextureResourceSaver::saveToFile(savePath, textureRes);
+	if (auto res = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
+		return TextureResourceSaver::saveToFile(savePath, res);
+	}
+	if (auto res = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResource)) {
+		return MaterialResourceSaver::saveToFile(savePath, res);
 	}
 	return nullptr;
 }

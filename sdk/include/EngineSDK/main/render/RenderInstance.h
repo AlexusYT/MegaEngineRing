@@ -32,6 +32,8 @@ class RenderInstance : public IRenderInstance {
 public:
 	void notifyDataChanged() override;
 
+	void notifyMaterialChanged() override;
+
 	[[nodiscard]] IInstancedRender* getInstancedRender() const override { return instancedRender; }
 
 	void setInstancedRender(IInstancedRender* pInstancedRender) override { instancedRender = pInstancedRender; }

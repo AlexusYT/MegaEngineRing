@@ -21,6 +21,7 @@
 
 #include "TextureLoader.h"
 
+#include "EngineUtils/utils/ReportMessage.h"
 #include "Texture2DImageFormat.h"
 #include "Texture2DType.h"
 #include "TextureResource.h"
@@ -47,33 +48,59 @@ utils::ReportMessagePtr TextureLoader::load(IResourceLoadExecutor* /*pLoadExecut
 	auto resource = TextureResource::create();
 	resource->setResourceUri(readString(pStream));
 
-	png::reader reader(*pStream);
-	reader.read_info();
-	auto colorType = reader.get_color_type();
-	auto width = reader.get_width();
-	auto height = reader.get_height();
-	pStream->seekg(0);
-	switch (colorType) {
-
-		case png::color_type_gray:
-			resource->setData(get_data<png::gray_pixel>(width, height, *pStream).data(), width, height,
-							  Texture2DImageFormat::RED, Texture2DType::UNSIGNED_BYTE);
-			break;
-		case png::color_type_rgb:
-			resource->setData(get_data<png::rgb_pixel>(width, height, *pStream).data(), width, height,
-							  Texture2DImageFormat::RGB, Texture2DType::UNSIGNED_BYTE);
-			break;
-		case png::color_type_rgb_alpha:
-			resource->setData(get_data<png::rgba_pixel>(width, height, *pStream).data(), width, height,
-							  Texture2DImageFormat::RGBA, Texture2DType::UNSIGNED_BYTE);
-			break;
-		case png::color_type_gray_alpha:
-			resource->setData(get_data<png::ga_pixel>(width, height, *pStream).data(), width, height,
-							  Texture2DImageFormat::RG, Texture2DType::UNSIGNED_BYTE);
-			break;
-		default:;
-	}
 	pResourceOut = resource;
+	try {
+		if (pStream->get() == std::istream::traits_type::eof()) return nullptr;
+		pStream->unget();
+	} catch (...) { return nullptr; }
+	try {
+		auto pos = pStream->tellg();
+		png::reader reader(*pStream);
+		reader.read_info();
+		auto colorType = reader.get_color_type();
+		auto width = reader.get_width();
+		auto height = reader.get_height();
+		pStream->seekg(pos);
+		switch (colorType) {
+
+			case png::color_type_gray:
+				resource->setData(get_data<png::gray_pixel>(width, height, *pStream).data(), width, height,
+								  Texture2DImageFormat::RED, Texture2DType::UNSIGNED_BYTE);
+				break;
+			case png::color_type_rgb:
+				resource->setData(get_data<png::rgb_pixel>(width, height, *pStream).data(), width, height,
+								  Texture2DImageFormat::RGB, Texture2DType::UNSIGNED_BYTE);
+				break;
+			case png::color_type_rgb_alpha:
+				resource->setData(get_data<png::rgba_pixel>(width, height, *pStream).data(), width, height,
+								  Texture2DImageFormat::RGBA, Texture2DType::UNSIGNED_BYTE);
+				break;
+			case png::color_type_gray_alpha:
+				resource->setData(get_data<png::ga_pixel>(width, height, *pStream).data(), width, height,
+								  Texture2DImageFormat::RG, Texture2DType::UNSIGNED_BYTE);
+				break;
+			default:;
+		}
+	} catch (...) {
+		auto msg = utils::ReportMessage::create();
+		msg->setTitle("Failed to load texture resource");
+		msg->setMessage("Exception thrown while parsing");
+		return msg;
+	}
+	return nullptr;
+}
+
+utils::ReportMessagePtr TextureLoader::init(IResourceLoadExecutor* /*pLoadExecutor*/,
+											const std::shared_ptr<IResource> & /*pLoadedResource*/) {
+	/*auto texture = std::dynamic_pointer_cast<TextureResource>(pLoadedResource);
+	if (!texture) {
+		auto msg = utils::ReportMessage::create();
+		msg->setTitle("Failed to init texture resource");
+		msg->setMessage("Resource is not a texture resource");
+		msg->addInfoLine("Actual resource type: {}", Utils::getTypeName(pLoadedResource.get()));
+		return msg;
+	}
+	texture->setupRender();*/
 	return nullptr;
 }
 

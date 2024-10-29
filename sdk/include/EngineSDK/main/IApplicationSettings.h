@@ -22,7 +22,7 @@
 #ifndef IAPPLICATIONSETTINGS_H
 #define IAPPLICATIONSETTINGS_H
 
-#include <EngineSDK/utils/Property.h>
+#include <EngineUtils/utils/Property.h>
 
 namespace mer::sdk::main {
 

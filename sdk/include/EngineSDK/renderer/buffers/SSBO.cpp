@@ -34,7 +34,7 @@ void SSBO::setData(const void* pData, const int64_t pSize, const BufferUsageEnum
 	size = pSize;
 	usage = pUsage;
 
-	glBufferData(GL_SHADER_STORAGE_BUFFER, pSize, pData, pUsage);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, pSize, pData, usage);
 }
 
 void SSBO::bind() const { glBindBuffer(GL_SHADER_STORAGE_BUFFER, name); }

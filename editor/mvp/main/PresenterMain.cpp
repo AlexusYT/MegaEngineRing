@@ -28,6 +28,7 @@
 #include <project/Project.h>
 
 #include "EngineSDK/main/resources/ResourceType.h"
+#include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
 #include "EngineSDK/main/resources/textures/ITextureResource.h"
@@ -315,7 +316,7 @@ void PresenterMain::readJsonForTab(int32_t pIndex,
 	}).detach();
 }
 
-void PresenterMain::selectResourceForProperty(sdk::main::ExtensionPropertyBase* pProperty) {
+void PresenterMain::selectResourceForProperty(sdk::utils::PropertyBase* pProperty) {
 
 	auto model = std::make_shared<ModelResourceSelection>();
 	model->setPropertyBase(pProperty);
@@ -375,7 +376,9 @@ void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, c
 		case sdk::main::ResourceType::TEXTURE:
 			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::TextureResource::create());
 			break;
-		case sdk::main::ResourceType::MATERIAL: break;
+		case sdk::main::ResourceType::MATERIAL:
+			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk->createMaterialResource());
+			break;
 	}
 	std::filesystem::path uri = "/";
 	auto root = modelMain->getProject()->getProjectDataPath();

@@ -24,7 +24,6 @@
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionPropertyBase.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "EngineSDK/utils/KeyboardKey.h"

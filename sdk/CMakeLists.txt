@@ -12,12 +12,11 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/context/ResourcesWindow.cpp
         include/EngineSDK/main/context/ResourcesWindow.h
         include/EngineSDK/main/resources/ResourceRequest.cpp
-        include/EngineSDK/main/resources/shaders/BuiltInShaderRequest.cpp
         include/EngineSDK/main/resources/ResourceLoader.cpp
         include/EngineSDK/main/resources/Resources.cpp
         include/EngineSDK/main/scene/Scene.cpp
         include/EngineSDK/renderer/shaders/ShaderProgram.cpp
-        include/EngineSDK/main/resources/shaders/BuiltInProgramRequest.cpp
+        include/EngineSDK/main/resources/shaders/ShaderProgramLoader.cpp
         include/EngineSDK/main/buffers/ProgramWideShaderBuffer.cpp
         include/EngineSDK/renderer/GL.cpp
         include/EngineSDK/renderer/buffers/SSBO.cpp
@@ -46,16 +45,16 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/light/LightInstance.cpp
         include/EngineSDK/main/light/LightSources.cpp
         include/EngineSDK/main/resources/materials/MaterialResource.cpp
+        include/EngineSDK/main/resources/materials/MaterialLoader.cpp
+        include/EngineSDK/main/resources/ResourceLoadResult.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
         include/EngineSDK/main/IWindow.h
         include/EngineSDK/main/IApplicationSettings.h
         include/EngineSDK/main/DefaultApplicationSettings.h
-        include/EngineSDK/utils/Property.h
         include/EngineSDK/main/scene/IScene.h
         include/EngineSDK/main/resources/ResourceRequest.h
-        include/EngineSDK/main/resources/shaders/BuiltInShaderRequest.h
         include/EngineSDK/renderer/shaders/ShaderTypeEnum.h
         include/EngineSDK/renderer/shaders/VertexShader.h
         include/EngineSDK/renderer/shaders/FragmentShader.h
@@ -68,7 +67,7 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/renderer/buffers/ISSBO.h
         include/EngineSDK/renderer/buffers/SSBO.h
         include/EngineSDK/renderer/buffers/BufferUsageEnum.h
-        include/EngineSDK/main/resources/shaders/BuiltInProgramRequest.h
+        include/EngineSDK/main/resources/shaders/ShaderProgramLoader.h
         include/EngineSDK/main/buffers/ProgramWideShaderBuffer.h
         include/EngineSDK/renderer/shaders/IShader.h
         include/EngineSDK/renderer/shaders/Shader.h
@@ -88,17 +87,14 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h
         include/EngineSDK/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.h
         include/EngineSDK/main/scene/objects/extensions/cameras/IProjectionCameraMod.h
-        include/EngineSDK/main/scene/objects/extensions/ExtensionPropertyBase.h
         include/EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h
         include/EngineSDK/utils/MouseButton.h
         include/EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h
         include/EngineSDK/main/resources/models/Model3DLoader.h
         include/EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h
-        include/EngineSDK/main/resources/shaders/ShaderProgramRequest.h
         include/EngineSDK/main/IApplication.h
         include/EngineSDK/main/scripting/IScript.h
         include/EngineSDK/main/scripting/Script.h
-        include/EngineSDK/main/scene/objects/extensions/IPropertyProvider.h
         include/EngineSDK/main/scene/objects/extensions/ExtensionProperty.h
         include/EngineSDK/main/scene/objects/extensions/MainObjectExtension.h
         include/EngineSDK/utils/PropertyJsonSerializers.h
@@ -134,6 +130,10 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/light/LightSources.h
         include/EngineSDK/main/resources/materials/IMaterialResource.h
         include/EngineSDK/main/resources/materials/MaterialResource.h
+        include/EngineSDK/main/resources/materials/MaterialData.h
+        include/EngineSDK/main/resources/materials/MaterialLoader.h
+        include/EngineSDK/main/resources/ResourceLoadResult.h
+        include/EngineSDK/utils/ISerializable.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

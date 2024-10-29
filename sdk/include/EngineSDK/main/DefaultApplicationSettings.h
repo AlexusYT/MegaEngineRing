@@ -53,7 +53,7 @@ class DefaultApplicationSettings : public IApplicationSettings {
 	utils::Property<std::string> runDirectory;
 
 public:
-	DefaultApplicationSettings() = default;
+	DefaultApplicationSettings();
 
 	//TODO make replacing of the environment variables
 	sdk::utils::ReportMessagePtr init() override;

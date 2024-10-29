@@ -27,6 +27,9 @@
 #include "mvp/main/projectExplorer/entries/ProjectExplorerElement.h"
 #include "project/LoadedScene.h"
 
+namespace mer::sdk::utils {
+class PropertyBase;
+}
 namespace mer::editor::mvp {
 class FileResourceReader;
 class IPresenterResourceSelection;
@@ -36,7 +39,7 @@ namespace mer::editor::mvp {
 
 class ModelResourceSelection : public IModelResourceSelection {
 	IPresenterResourceSelection* presenter{};
-	sdk::main::ExtensionPropertyBase* propertyBase{};
+	sdk::utils::PropertyBase* propertyBase{};
 	std::shared_ptr<project::LoadedScene> loadedScene;
 	std::shared_ptr<sdk::main::IResource> selectedResource;
 	ExplorerElementType elementType{ExplorerElementType::NONE};
@@ -44,9 +47,9 @@ class ModelResourceSelection : public IModelResourceSelection {
 public:
 	void setPresenter(IPresenterResourceSelection* pPresenter) override { presenter = pPresenter; }
 
-	[[nodiscard]] sdk::main::ExtensionPropertyBase* getPropertyBase() const override { return propertyBase; }
+	[[nodiscard]] sdk::utils::PropertyBase* getPropertyBase() const override { return propertyBase; }
 
-	void setPropertyBase(sdk::main::ExtensionPropertyBase* pPropertyBase) override { propertyBase = pPropertyBase; }
+	void setPropertyBase(sdk::utils::PropertyBase* pPropertyBase) override { propertyBase = pPropertyBase; }
 
 	void setLoadedScene(const std::shared_ptr<project::LoadedScene> &pLoadedScene) override {
 		loadedScene = pLoadedScene;

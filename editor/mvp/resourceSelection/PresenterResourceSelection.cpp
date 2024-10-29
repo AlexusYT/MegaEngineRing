@@ -22,10 +22,10 @@
 #include "PresenterResourceSelection.h"
 
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/main/resources/ResourceLoadResult.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionPropertyBase.h"
 #include "IModelResourceSelection.h"
 #include "IViewResourceSelection.h"
 #include "mvp/ApplicationController.h"
@@ -87,18 +87,22 @@ void PresenterResourceSelection::onElementSelectionChanged(ProjectExplorerElemen
 		auto executor = loadedScene->getResourceLoadExecutor();
 		if (!executor) return;
 		executor->loadResourceAsync(
-			pElement->getRelativePath(), [this](const std::shared_ptr<sdk::main::IResource> &pResource,
-												const sdk::utils::ReportMessagePtr & /*pError*/) {
+			pElement->getRelativePath(), [this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
 				//TODO Display error
-				if (!pResource) return;
-				model->setSelectedResource(pResource);
+				if (pResult->isErrored()) {
+					sdk::utils::Logger::error(pResult->getError());
+					return;
+				}
+				if (!pResult->isReady()) return;
+				auto resourceResult = pResult->getResource();
+				model->setSelectedResource(resourceResult);
 
 				auto property = dynamic_cast<sdk::main::ExtensionProperty<std::shared_ptr<sdk::main::IModel3DObject>>*>(
 					model->getPropertyBase());
 				auto &currentObject = property->getValue();
 
 				bool hasCurrentObject{};
-				if (auto modelResource = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
+				if (auto modelResource = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(resourceResult)) {
 					std::vector<std::string> objects;
 					for (auto [name, object]: modelResource->getModelObjects()) {
 						if (currentObject && object == currentObject)

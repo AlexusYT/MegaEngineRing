@@ -26,9 +26,12 @@
 
 #include "EngineSDK/main/resources/textures/Texture2DImageFormat.h"
 #include "EngineSDK/main/resources/textures/Texture2DType.h"
+#include "EngineSDK/main/resources/textures/TextureMagFilter.h"
+#include "EngineSDK/main/resources/textures/TextureMinFilter.h"
+#include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
-TextureResource::TextureResource() {}
+TextureResource::TextureResource() : minFilter(TextureMinFilter::LINEAR), magFilter(TextureMagFilter::LINEAR) {}
 
 std::shared_ptr<TextureResource> TextureResource::create() {
 	return std::shared_ptr<TextureResource>(new TextureResource());
@@ -40,13 +43,28 @@ TextureResource::~TextureResource() {
 }
 
 void TextureResource::setupRender() {
-	glGenTextures(1, &id);
-	glActiveTexture(GL_TEXTURE0 + textureBlock);
+	//if (inited) return;
+	glCreateTextures(GL_TEXTURE_2D, 1, &id);
+	glTextureStorage2D(id, 1, GL_RGBA8, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+	glTextureSubImage2D(id,
+						// level, xoffset, yoffset, width, height
+						0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLenum>(format),
+						static_cast<GLenum>(type), data);
+	glGenerateTextureMipmap(id);
 	glBindTexture(GL_TEXTURE_2D, id);
-	glTexImage2D(GL_TEXTURE_2D, mipmapLevel, static_cast<GLint>(format), static_cast<GLsizei>(width),
-				 static_cast<GLsizei>(height), 0, static_cast<GLenum>(format), static_cast<GLenum>(type), data);
+	/*glGenTextures(1, &id);
+	//glActiveTexture(GL_TEXTURE0 + textureBlock);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(minFilter));
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(magFilter));
+	glTexImage2D(GL_TEXTURE_2D, mipmapLevel, static_cast<GLint>(format), static_cast<GLsizei>(width),
+				 static_cast<GLsizei>(height), 0, static_cast<GLenum>(format), static_cast<GLenum>(type), data);
+	glGenerateMipmap(GL_TEXTURE_2D);*/
+
+	textureHandle = glGetTextureHandleARB(id);
+	glMakeTextureHandleResidentARB(textureHandle);
+	utils::Logger::out("{}, {}", textureHandle, id);
+	//glBindTexture(GL_TEXTURE_2D, 0);
+	inited = true;
 }
 
 void TextureResource::render() {}
@@ -60,6 +78,7 @@ void TextureResource::setData(void* pData, uint32_t pWidth, uint32_t pHeight, Te
 	width = pWidth;
 	height = pHeight;
 	format = pFormat;
+	type = pType;
 	size_t components{};
 
 	switch (pFormat) {

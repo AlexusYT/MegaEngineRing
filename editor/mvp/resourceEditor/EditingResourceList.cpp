@@ -22,15 +22,18 @@
 #include "EditingResourceList.h"
 
 #include "EngineSDK/main/resources/LoadedResources.h"
+#include "EngineSDK/main/resources/ResourceLoadResult.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "savers/Model3DResourceSaver.h"
 
 namespace mer::editor::mvp {
 void EditingResourceList::loadResource(const std::filesystem::path &pUri) {
-	context->loadResourceAsync(pUri, [this](const std::shared_ptr<sdk::main::IResource> &pResource,
-											const sdk::utils::ReportMessagePtr &pError) {
-		if (pResource) addResource(pResource);
-		if (pError) sdk::utils::Logger::error(pError);
+	context->loadResourceAsync(pUri, [this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+		if (pResult->isErrored()) {
+			sdk::utils::Logger::error(pResult->getError());
+			return;
+		}
+		if (pResult->isReady()) addResource(pResult->getResource());
 	});
 }
 

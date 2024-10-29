@@ -23,13 +23,10 @@
 #define RESOURCELOADERS_H
 #include <unordered_map>
 
-#include "EngineUtils/utils/ReportMessageFwd.h"
 #include "IResourceLoaders.h"
 
 namespace mer::sdk::main {
-class IResourceBundle;
 class IResourceLoader;
-class IResource;
 
 class ResourceLoaders : public IResourceLoaders {
 	static inline std::shared_ptr<ResourceLoaders> instance;
@@ -38,10 +35,10 @@ class ResourceLoaders : public IResourceLoaders {
 public:
 	ResourceLoaders() = default;
 	~ResourceLoaders() override = default;
-	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, const std::shared_ptr<IResourceBundle> &pBundle,
-								 const std::string &pResourceUri, std::shared_ptr<IResource> &pResourceOut) override;
 
 	void addLoader(const std::shared_ptr<IResourceLoader> &pLoader) override;
+
+	std::shared_ptr<IResourceLoader> getLoader(const std::filesystem::path &pExtension) override;
 
 	void initLoaders() override;
 
