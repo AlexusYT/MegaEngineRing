@@ -38,6 +38,10 @@
 #include "mvp/main/editors/sceneEditor/explorerObjects/RootExplorerObject.h"
 #include "mvp/main/editors/sceneEditor/explorerObjects/SceneExplorerObject.h"
 
+namespace mer::sdk::utils {
+class PropertyBase;
+}
+
 namespace mer::editor::project {
 LoadedScene::LoadedScene(const std::shared_ptr<Sdk> &pSdk) : sdk(pSdk), mainObject(mvp::RootExplorerObject::create()) {
 	app = sdk->createApplication();
@@ -189,7 +193,7 @@ sdk::utils::ReportMessagePtr LoadedScene::readObjects() {
 				}
 			}
 			object->connectOnExtensionPropertyChanged(
-				[this, object](sdk::main::Extension* /*pExtension*/, sdk::main::ExtensionPropertyBase* /*pProperty*/) {
+				[this, object](sdk::main::Extension* /*pExtension*/, sdk::utils::PropertyBase* /*pProperty*/) {
 					std::thread([this, object] { saveObject(object.get()); }).detach();
 				});
 		}
@@ -363,7 +367,7 @@ void LoadedScene::selectObject(mvp::ExplorerObject* pObjectToSelect) {
 std::shared_ptr<sdk::main::ISceneObject> LoadedScene::createObject() const {
 	auto object = sdk->createSceneObject();
 	object->connectOnExtensionPropertyChanged(
-		[this, object](sdk::main::Extension* /*pExtension*/, sdk::main::ExtensionPropertyBase* /*pProperty*/) {
+		[this, object](sdk::main::Extension* /*pExtension*/, sdk::utils::PropertyBase* /*pProperty*/) {
 			std::thread([this, object] { saveObject(object.get()); }).detach();
 		});
 	scene->addObject(object);

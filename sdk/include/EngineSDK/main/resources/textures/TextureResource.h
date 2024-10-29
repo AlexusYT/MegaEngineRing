@@ -33,11 +33,13 @@ class TextureResource : public ITextureResource, public Resource {
 	uint32_t width{};
 	uint32_t height{};
 	int32_t mipmapLevel{};
-	TextureMinFilter minFilter{};
-	TextureMagFilter magFilter{};
+	TextureMinFilter minFilter;
+	TextureMagFilter magFilter;
 	Texture2DImageFormat format{};
 	Texture2DType type{};
 	uint32_t textureBlock{};
+	uint64_t textureHandle{};
+	bool inited{};
 
 	TextureResource();
 
@@ -84,6 +86,8 @@ public:
 	IResource* asResource() override { return this; }
 
 	ResourceType getResourceType() override { return ResourceType::TEXTURE; }
+
+	[[nodiscard]] uint64_t getTextureHandle() const override { return textureHandle; }
 };
 
 } // namespace mer::sdk::main

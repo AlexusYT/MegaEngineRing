@@ -24,17 +24,20 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
 namespace mer::sdk::main {
-class IResourceLoadExecutor;
 class IApplication;
 class IResource;
-class ResourceRequest;
-class Resources;
+class IResourceLoadExecutor;
 
 class IResourceLoader {
 public:
 	virtual ~IResourceLoader() = default;
+
 	virtual utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 										 std::shared_ptr<IResource> &pResourceOut) = 0;
+
+	virtual utils::ReportMessagePtr init(IResourceLoadExecutor* pLoadExecutor,
+										 const std::shared_ptr<IResource> &pLoadedResource) = 0;
+
 	[[nodiscard]] virtual IApplication* getApplication() const = 0;
 
 	virtual void setApplication(IApplication* pApplication) = 0;
@@ -47,9 +50,10 @@ class ResourceLoader : public IResourceLoader {
 
 public:
 	[[nodiscard]] IApplication* getApplication() const override { return application; }
-protected:
 
+protected:
 	static std::string readString(const std::shared_ptr<std::istream> &pStream);
+
 private:
 	void setApplication(IApplication* pApplication) override { application = pApplication; }
 };

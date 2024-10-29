@@ -25,6 +25,11 @@
 #include <typeinfo>
 
 namespace mer::sdk::main {
+class ResourceLoadResult;
+}
+
+namespace mer::sdk::main {
+class IMaterialResource;
 class ITextureResource;
 class FileSystemResourceBundle;
 class IResourceLoaders;
@@ -35,7 +40,6 @@ class Application;
 class ILoadedResources;
 class IResourceLoadExecutor;
 class Extension;
-class ShaderProgramRequest;
 class IScene;
 class ISceneObject;
 } // namespace mer::sdk::main
@@ -45,7 +49,6 @@ class Sdk {
 	void* handler{};
 	std::shared_ptr<sdk::main::ISceneObject> (*createSceneObjectFunc)();
 	std::shared_ptr<sdk::main::IScene> (*createSceneFunc)();
-	const std::shared_ptr<sdk::main::ShaderProgramRequest> &(*defaultShaderProgramFunc)();
 	void (*initExtensionRegistryFunc)();
 	std::shared_ptr<sdk::main::Extension> (*newExtensionInstanceFunc)(const std::string &pName);
 	std::shared_ptr<sdk::main::ILoadedResources> (*createLoadedResourcesFunc)();
@@ -54,9 +57,11 @@ class Sdk {
 	std::shared_ptr<sdk::main::IModel3DObject> (*createModel3DObjectFunc)();
 	std::shared_ptr<sdk::main::IModel3DResource> (*createModel3DResourceFunc)();
 	std::shared_ptr<sdk::main::ITextureResource> (*createTextureResourceFunc)();
+	std::shared_ptr<sdk::main::IMaterialResource> (*createMaterialResourceFunc)();
 	std::shared_ptr<sdk::main::IResourceLoaders> (*getResourceLoadersInstanceFunc)();
 	std::shared_ptr<sdk::main::FileSystemResourceBundle> (*createFileSystemResourceBundleFunc)(
 		const std::filesystem::path &pSearchPath);
+	std::shared_ptr<sdk::main::ResourceLoadResult> (*createResourceLoadResultFunc)();
 	std::string mainNamespace{};
 
 	explicit Sdk(void* pHandler);
@@ -69,10 +74,6 @@ public:
 	std::shared_ptr<sdk::main::ISceneObject> createSceneObject() const { return createSceneObjectFunc(); }
 
 	std::shared_ptr<sdk::main::IScene> createScene() const { return createSceneFunc(); }
-
-	const std::shared_ptr<sdk::main::ShaderProgramRequest> &getDefaultShaderProgram() const {
-		return defaultShaderProgramFunc();
-	}
 
 	std::shared_ptr<sdk::main::ILoadedResources> createLoadedResources() const { return createLoadedResourcesFunc(); }
 
@@ -94,6 +95,10 @@ public:
 
 	std::shared_ptr<sdk::main::ITextureResource> createTextureResource() const { return createTextureResourceFunc(); }
 
+	std::shared_ptr<sdk::main::IMaterialResource> createMaterialResource() const {
+		return createMaterialResourceFunc();
+	}
+
 	std::shared_ptr<sdk::main::IResourceLoaders> getResourceLoadersInstance() const {
 		return getResourceLoadersInstanceFunc();
 	}
@@ -101,6 +106,10 @@ public:
 	std::shared_ptr<sdk::main::FileSystemResourceBundle> createFileSystemResourceBundle(
 		const std::filesystem::path &pSearchPath) const {
 		return createFileSystemResourceBundleFunc(pSearchPath);
+	}
+
+	std::shared_ptr<sdk::main::ResourceLoadResult> createResourceLoadResult() const {
+		return createResourceLoadResultFunc();
 	}
 
 	template<typename ClassT>

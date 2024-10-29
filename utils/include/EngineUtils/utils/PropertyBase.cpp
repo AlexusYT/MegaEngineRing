@@ -16,34 +16,24 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 23.10.24.
+// Created by alexus on 28.10.24.
 //
 
-#ifndef ILIGHTSOURCES_H
-#define ILIGHTSOURCES_H
+#include "PropertyBase.h"
 
-namespace mer::sdk::renderer {
-class ISSBO;
+#include "IPropertyProvider.h"
+
+namespace mer::sdk::utils {
+PropertyBase::PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription)
+	: name(pName), description(pDescription), provider(pProvider) {
+	if (provider) provider->addProperty(this);
 }
 
-namespace mer::sdk::main {
-class ILightInstance;
+PropertyBase::~PropertyBase() {
+	if (provider) provider->removeProperty(this);
+}
 
-class ILightSources {
-public:
-	virtual ~ILightSources() = default;
-
-	[[nodiscard]] virtual const std::shared_ptr<renderer::ISSBO> &getLightSsbo() const = 0;
-
-	virtual void updateSsbo() = 0;
-
-	virtual void onInstanceDataChanged(ILightInstance* pInstance) = 0;
-
-	virtual void addLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) = 0;
-
-	virtual void removeLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) = 0;
-};
-
-} // namespace mer::sdk::main
-
-#endif //ILIGHTSOURCES_H
+void PropertyBase::notifyPropertyChanged() {
+	if (provider) provider->propertyChanged(this);
+}
+} // namespace mer::sdk::utils

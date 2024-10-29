@@ -253,6 +253,8 @@ add_library(
         ui/utils/UiUtils.h
         mvp/resourceEditor/savers/TextureResourceSaver.cpp
         mvp/resourceEditor/savers/TextureResourceSaver.h
+        mvp/resourceEditor/savers/MaterialResourceSaver.cpp
+        mvp/resourceEditor/savers/MaterialResourceSaver.h
 
 )
 

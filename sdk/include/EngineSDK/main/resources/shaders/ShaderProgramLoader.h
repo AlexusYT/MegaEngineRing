@@ -16,28 +16,27 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 29.03.24.
+// Created by alexus on 04.02.24.
 //
 
-#ifndef SHADERPROGRAMREQUEST_H
-#define SHADERPROGRAMREQUEST_H
-#include "EngineSDK/main/resources/ResourceRequest.h"
-
-namespace mer::sdk::renderer {
-class ShaderProgram;
-}
+#ifndef BUILTINPROGRAMREQUEST_H
+#define BUILTINPROGRAMREQUEST_H
+#include "EngineSDK/main/resources/ResourceLoader.h"
 
 namespace mer::sdk::main {
-class ShaderProgramRequest : public RegularRequest {
-	std::string name;
-
+class ShaderProgramLoader : public ResourceLoader {
 public:
-	using ResourceT = renderer::ShaderProgram;
+	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
+								 std::shared_ptr<IResource> &pResourceOut) override;
 
-	explicit ShaderProgramRequest(const std::string &pName) : name(pName) {}
+	utils::ReportMessagePtr init(IResourceLoadExecutor* pLoadExecutor,
+								 const std::shared_ptr<IResource> &pLoadedResource) override;
 
-	[[nodiscard]] std::string getName() const override { return name; }
+private:
+	std::string getFileExtension() override { return "enshader"; }
 };
+
 } // namespace mer::sdk::main
 
-#endif //SHADERPROGRAMREQUEST_H
+
+#endif //BUILTINPROGRAMREQUEST_H

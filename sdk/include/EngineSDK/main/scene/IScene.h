@@ -37,6 +37,7 @@ class PresenterSceneEditor;
 } // namespace mer::editor::mvp
 
 namespace mer::sdk::main {
+class ResourceLoadResult;
 class IApplication;
 class ICamera;
 class ISceneObject;
@@ -64,8 +65,7 @@ public:
 
 	virtual void loadResourceAsync(
 		const std::string &pResourceUri,
-		const sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>
-			&pSlot) const = 0;
+		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const = 0;
 
 	virtual void onResourceLoadingError(const std::string &pResourceUri, const utils::ReportMessagePtr &pError) = 0;
 

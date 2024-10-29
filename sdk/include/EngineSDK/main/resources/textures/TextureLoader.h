@@ -31,6 +31,9 @@ public:
 								 std::shared_ptr<IResource> &pResourceOut) override;
 
 
+	utils::ReportMessagePtr init(IResourceLoadExecutor* pLoadExecutor,
+								 const std::shared_ptr<IResource> &pLoadedResource) override;
+
 private:
 	std::string getFileExtension() override { return "entex"; }
 };

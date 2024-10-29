@@ -44,6 +44,28 @@ enum class Texture2DImageFormat {
 
 };
 
+inline const char* to_string(const Texture2DImageFormat pE) {
+	switch (pE) {
+		case Texture2DImageFormat::RED: return "RED";
+		case Texture2DImageFormat::RG: return "RG";
+		case Texture2DImageFormat::RGB: return "RGB";
+		case Texture2DImageFormat::BGR: return "BGR";
+		case Texture2DImageFormat::RGBA: return "RGBA";
+		case Texture2DImageFormat::BGRA: return "BGRA";
+		case Texture2DImageFormat::RED_INTEGER: return "RED_INTEGER";
+		case Texture2DImageFormat::RG_INTEGER: return "RG_INTEGER";
+		case Texture2DImageFormat::RGB_INTEGER: return "RGB_INTEGER";
+		case Texture2DImageFormat::BGR_INTEGER: return "BGR_INTEGER";
+		case Texture2DImageFormat::RGBA_INTEGER: return "RGBA_INTEGER";
+		case Texture2DImageFormat::BGRA_INTEGER: return "BGRA_INTEGER";
+		case Texture2DImageFormat::STENCIL_INDEX: return "STENCIL_INDEX";
+		case Texture2DImageFormat::DEPTH_COMPONENT: return "DEPTH_COMPONENT";
+		case Texture2DImageFormat::DEPTH_STENCIL: return "DEPTH_STENCIL";
+		default: return "unknown";
+	}
+}
+
+
 }
 
 #endif //TEXTURE2DIMAGEFORMAT_H

@@ -26,6 +26,7 @@
 #include <sigc++/signal.h>
 
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/main/resources/ResourceLoadResult.h"
 #include "EngineSDK/main/resources/ResourceRequest.h"
 #include "EngineSDK/utils/MouseButton.h"
 #include "IScene.h"
@@ -66,13 +67,14 @@ private:
 
 public:
 	std::shared_ptr<IResource> loadResourceSync(const std::string &pName) final {
-		auto [resource, error] = resourceExecutor->loadResourceSync(pName);
-		if (!resource) { onResourceLoadingError(pName, error); }
-		return resource;
+		auto result = resourceExecutor->loadResourceSync(pName);
+		if (result->isErrored()) { onResourceLoadingError(pName, result->getError()); }
+		return result->getResource();
 	}
 
-	void loadResourceAsync(const std::string &pResourceUri,
-						   const IResourceLoadExecutor::LoadingFinishedSlot &pSlot) const override {
+	void loadResourceAsync(
+		const std::string &pResourceUri,
+		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const override {
 		resourceExecutor->loadResourceAsync(pResourceUri, pSlot);
 	}
 

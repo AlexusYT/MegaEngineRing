@@ -26,6 +26,7 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
 namespace mer::sdk::main {
+class ResourceLoadResult;
 class ILoadedResources;
 class IApplication;
 class ResourceRequest;
@@ -33,16 +34,16 @@ class IResource;
 
 class IResourceLoadExecutor {
 public:
-	using LoadingFinishedSlot =
-		sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>;
+	using LoadingFinishedSlot = sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)>;
 
 	virtual ~IResourceLoadExecutor() = default;
 
 
-	virtual std::pair<std::shared_ptr<IResource>, utils::ReportMessagePtr> loadResourceSync(
-		const std::string &pResourceUri) = 0;
+	virtual std::shared_ptr<ResourceLoadResult> loadResourceSync(const std::string &pResourceUri) = 0;
 
-	virtual void loadResourceAsync(const std::string &pResourceUri, const LoadingFinishedSlot &pSlot) = 0;
+	virtual void loadResourceAsync(
+		const std::string &pResourceUri,
+		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) = 0;
 
 	[[nodiscard]] virtual IApplication* getApplication() const = 0;
 

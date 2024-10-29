@@ -22,6 +22,10 @@
 #include <EngineSDK/main/DefaultApplicationSettings.h>
 
 namespace mer::sdk::main {
+DefaultApplicationSettings::DefaultApplicationSettings()
+	: applicationName(nullptr, "ApplicationName"), applicationDisplayName(nullptr, "AppDisplayName"),
+	  logsDirectory(nullptr, "LogsDir"), runDirectory(nullptr, "RunDir") {}
+
 sdk::utils::ReportMessagePtr DefaultApplicationSettings::init() {
 	if (applicationName->empty()) setApplicationName("DefaultApplication");
 	if (applicationDisplayName->empty()) setApplicationDisplayName("Default Application");

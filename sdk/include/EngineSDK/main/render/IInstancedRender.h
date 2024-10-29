@@ -21,6 +21,7 @@
 
 #ifndef IINSTANCEDRENDER_H
 #define IINSTANCEDRENDER_H
+#include "RenderInstance.h"
 
 namespace mer::sdk::main {
 class IRenderInstance;
@@ -31,6 +32,8 @@ public:
 	virtual ~IInstancedRender() = default;
 
 	virtual void onInstanceDataChanged(IRenderInstance* pInstance) = 0;
+
+	virtual void onMaterialDataChanged(RenderInstance* pRenderInstance) = 0;
 };
 
 } // namespace mer::sdk::main

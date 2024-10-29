@@ -126,7 +126,7 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 	actionGroupResource->add_action_with_parameter(
 		"select-for-property", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<uintptr_t>>(pBase);
-			auto ext = reinterpret_cast<sdk::main::ExtensionPropertyBase*>(var.get());
+			auto ext = reinterpret_cast<sdk::utils::PropertyBase*>(var.get());
 			if (presenter) presenter->selectResourceForProperty(ext);
 		});
 

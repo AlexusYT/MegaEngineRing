@@ -39,6 +39,9 @@ public:
 					  static_cast<long int>(size * sizeof(T)));
 	}
 
+	utils::ReportMessagePtr init(IResourceLoadExecutor* pLoadExecutor,
+								 const std::shared_ptr<IResource> &pLoadedResource) override;
+
 private:
 	std::string getFileExtension() override { return "enmodel"; }
 };

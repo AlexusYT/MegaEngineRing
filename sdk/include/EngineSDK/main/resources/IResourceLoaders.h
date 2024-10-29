@@ -23,20 +23,16 @@
 #define IRESOURCELOADERS_H
 
 namespace mer::sdk::main {
-class IResourceLoadExecutor;
 class IResourceLoader;
-class IResourceBundle;
-class IResource;
 
 class IResourceLoaders {
 public:
 	virtual ~IResourceLoaders() = default;
 
-	virtual utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor,
-										 const std::shared_ptr<IResourceBundle> &pBundle,
-										 const std::string &pResourceUri, std::shared_ptr<IResource> &pResourceOut) = 0;
 
 	virtual void addLoader(const std::shared_ptr<IResourceLoader> &pLoader) = 0;
+
+	virtual std::shared_ptr<IResourceLoader> getLoader(const std::filesystem::path &pExtension) = 0;
 
 	virtual void initLoaders() = 0;
 };

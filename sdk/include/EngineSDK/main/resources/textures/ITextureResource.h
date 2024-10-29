@@ -63,6 +63,8 @@ public:
 	virtual void setTextureBlock(uint32_t pTextureBlock) = 0;
 
 	virtual IResource* asResource() = 0;
+
+	[[nodiscard]] virtual uint64_t getTextureHandle() const = 0;
 };
 
 } // namespace mer::sdk::main

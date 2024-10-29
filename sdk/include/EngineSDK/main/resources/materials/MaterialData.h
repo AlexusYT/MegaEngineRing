@@ -16,34 +16,25 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 23.10.24.
+// Created by alexus on 24.10.24.
 //
 
-#ifndef ILIGHTSOURCES_H
-#define ILIGHTSOURCES_H
-
-namespace mer::sdk::renderer {
-class ISSBO;
-}
+#ifndef MATERIALDATA_H
+#define MATERIALDATA_H
+#include <glm/vec4.hpp>
 
 namespace mer::sdk::main {
-class ILightInstance;
 
-class ILightSources {
-public:
-	virtual ~ILightSources() = default;
-
-	[[nodiscard]] virtual const std::shared_ptr<renderer::ISSBO> &getLightSsbo() const = 0;
-
-	virtual void updateSsbo() = 0;
-
-	virtual void onInstanceDataChanged(ILightInstance* pInstance) = 0;
-
-	virtual void addLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) = 0;
-
-	virtual void removeLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) = 0;
+struct MaterialData {
+	uint64_t baseColorUint{};
+	uint64_t padding{};
+	glm::vec4 baseColorMap{};
+	glm::vec4 normalMap{};
+	glm::vec4 metallicMap{};
+	glm::vec4 roughnessMap{};
+	glm::vec4 aoMap{};
 };
 
 } // namespace mer::sdk::main
 
-#endif //ILIGHTSOURCES_H
+#endif //MATERIALDATA_H

@@ -52,7 +52,6 @@ std::shared_ptr<Sdk> Sdk::create(const std::string &pSdkPath, sdk::utils::Report
 sdk::utils::ReportMessagePtr Sdk::initSymbols() {
 	if (auto msg = getSymbol("SceneObject", "create", createSceneObjectFunc)) return msg;
 	if (auto msg = getSymbol("Scene", "create", createSceneFunc)) return msg;
-	if (auto msg = getSymbol("BuiltInProgramRequest", "getDefaultProgram", defaultShaderProgramFunc)) return msg;
 	if (auto msg = getSymbol("ExtensionRegistry", "init", initExtensionRegistryFunc)) return msg;
 	if (auto msg = getSymbol("ExtensionRegistry", "newInstance", newExtensionInstanceFunc)) return msg;
 	if (auto msg = getSymbol("LoadedResources", "create", createLoadedResourcesFunc)) return msg;
@@ -60,10 +59,11 @@ sdk::utils::ReportMessagePtr Sdk::initSymbols() {
 	if (auto msg = getSymbol("SceneDataInjector", "create", createSceneInjectorFunc, {"PNS1_6ISceneE"})) return msg;
 	if (auto msg = getSymbol("Model3DObject", "create", createModel3DObjectFunc)) return msg;
 	if (auto msg = getSymbol("Model3DResource", "create", createModel3DResourceFunc)) return msg;
+	if (auto msg = getSymbol("MaterialResource", "create", createMaterialResourceFunc)) return msg;
 	if (auto msg = getSymbol("ResourceLoaders", "getInstance", getResourceLoadersInstanceFunc)) return msg;
 	if (auto msg = getSymbol("FileSystemResourceBundle", "create", createFileSystemResourceBundleFunc)) return msg;
 	if (auto msg = getSymbol("TextureResource", "create", createTextureResourceFunc)) return msg;
-
+	if (auto msg = getSymbol("ResourceLoadResult", "create", createResourceLoadResultFunc)) return msg;
 	return nullptr;
 }
 

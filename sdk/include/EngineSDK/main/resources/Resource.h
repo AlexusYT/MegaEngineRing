@@ -21,14 +21,19 @@
 
 #ifndef RESOURCE_H
 #define RESOURCE_H
+#include "EngineUtils/utils/IPropertyProvider.h"
 #include "IResource.h"
 
 namespace mer::sdk::main {
 
-class Resource : public IResource {
+class Resource : public IResource, public utils::IPropertyProvider {
 	std::filesystem::path resourceUri;
 
 public:
+	void addProperty(utils::PropertyBase* pProperty) override;
+	void removeProperty(utils::PropertyBase* pProperty) override;
+	void propertyChanged(utils::PropertyBase* pProperty) override;
+
 	const std::filesystem::path &getResourceUri() override { return resourceUri; }
 
 	[[nodiscard]] std::string getResourceName() const override { return resourceUri.stem(); }

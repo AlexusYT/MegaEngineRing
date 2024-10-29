@@ -23,13 +23,15 @@
 #include <future>
 
 #include "EngineSDK/main/IApplication.h"
+#include "EngineSDK/main/resources/IResourceBundle.h"
+#include "EngineSDK/main/resources/ResourceLoadResult.h"
+#include "EngineSDK/main/resources/ResourceLoader.h"
 #include "EngineSDK/main/resources/ResourceLoaders.h"
 #include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/ReportMessage.h"
 #ifndef EDITOR_SDK
-	#include "ResourcesWindow.h"
-
 	#include "EngineSDK/main/resources/LoadedResources.h"
+	#include "ResourcesWindow.h"
 
 namespace mer::sdk::main {
 std::condition_variable cv;
@@ -40,17 +42,13 @@ ResourcesWindow::ResourcesWindow()
 	thread.detach();
 }
 
-std::pair<std::shared_ptr<IResource>, utils::ReportMessagePtr> ResourcesWindow::loadResourceSync(
-	const std::string &pResourceUri) {
+std::shared_ptr<ResourceLoadResult> ResourcesWindow::loadResourceSync(const std::string &pResourceUri) {
 
 	std::lock_guard lock(queueMutex);
-	std::promise<std::pair<std::shared_ptr<IResource>, utils::ReportMessagePtr>> promise;
+	std::promise<const std::shared_ptr<ResourceLoadResult>> promise;
 
 	queue.emplace_back(pResourceUri,
-					   [&promise](const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError) {
-						   auto result = std::make_pair(pResource, pError);
-						   promise.set_value(result);
-					   });
+					   [&promise](const std::shared_ptr<ResourceLoadResult> &pResult) { promise.set_value(pResult); });
 	cv.notify_one();
 	return promise.get_future().get();
 }
@@ -71,32 +69,82 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 		cv.wait(lck, [this, pToken] { return !queue.empty() || pToken.stop_requested(); });
 		getContext()->makeCurrent();
 		for (auto &[resourceUri, slot]: queue) {
-			utils::ReportMessagePtr error;
-			std::shared_ptr<IResource> resource = resources->getResource(resourceUri);
-			if (!resource) {
-				try {
-					error = ResourceLoaders::getInstance()->load(this, application->getResourceBundle(), resourceUri,
-																 resource);
-					resources->addResource(resourceUri, resource);
-				} catch (...) {
-					error = utils::ReportMessage::create();
-					error->setTitle("Failed to load resource");
-					error->setMessage("Exception thrown while executing request");
-				}
+
+			auto result = ResourceLoadResult::create();
+			if (std::shared_ptr<IResource> resource = resources->getResource(resourceUri)) {
+				result->setResource(resource);
+				result->setState(ResourceLoadResult::State::READY);
+				result->setRequestedUri(resourceUri);
+				callSlot(result, slot);
+				continue;
 			}
 
+			std::filesystem::path uri;
 			try {
-				slot(resource, error);
+
+				if (!uri.has_extension()) {
+					auto msg = sdk::utils::ReportMessage::create();
+					msg->setTitle("Unable to load resource");
+					msg->setMessage("No resource extension in uri");
+					msg->addInfoLine("Resource URI: {}", uri.string());
+					msg->addInfoLine("Requested resource URI: {}", resourceUri);
+					result->setError(msg);
+					result->setRequestedUri(resourceUri);
+					callSlot(result, slot);
+					continue;
+				}
+
+				auto loader = ResourceLoaders::getInstance()->getLoader(uri.extension());
+				if (!loader) {
+					auto msg = sdk::utils::ReportMessage::create();
+					msg->setTitle("Unable to load resource");
+					msg->setMessage("No loader registered that can load such resource");
+					msg->addInfoLine("Resource URI: {}", uri.string());
+					result->setError(msg);
+					result->setRequestedUri(resourceUri);
+					callSlot(result, slot);
+					continue;
+				}
+
+				std::shared_ptr<std::istream> stream;
+				if (auto msg = application->getResourceBundle()->getResourceStream(uri, stream)) {
+					msg->setTitle("Unable to load resource");
+					result->setError(msg);
+					result->setRequestedUri(resourceUri);
+					callSlot(result, slot);
+					continue;
+				}
+				std::shared_ptr<IResource> resource;
+				if (auto msg = loader->load(this, stream, resource)) {
+					msg->setTitle("Unable to load resource");
+					result->setError(msg);
+					result->setRequestedUri(resourceUri);
+					callSlot(result, slot);
+					continue;
+				}
+				result->setResource(resource);
+				result->setRequestedUri(resourceUri);
+				result->setState(ResourceLoadResult::State::LOADED);
+				callSlot(result, slot);
+
+				if (auto msg = loader->init(this, resource)) {
+					msg->setTitle("Unable to load resource");
+					result->setError(msg);
+					result->setRequestedUri(resourceUri);
+					callSlot(result, slot);
+					continue;
+				}
+				resources->addResource(resourceUri, resource);
+				result->setState(ResourceLoadResult::State::READY);
+				callSlot(result, slot);
 			} catch (...) {
 				auto msg = sdk::utils::ReportMessage::create();
-				msg->setTitle("Failed to load resource");
-				msg->setMessage("Exception thrown in callback");
-
-				if (error) {
-					utils::Logger::error(error);
-					msg->addInfoLine("Additional error reported earlier");
-				}
-				utils::Logger::error(msg);
+				msg->setTitle("Unable to load resource");
+				msg->setMessage("Exception thrown while executing request");
+				msg->addInfoLine("Resource URI: {}", uri.string());
+				result->setError(msg);
+				result->setRequestedUri(resourceUri);
+				callSlot(result, slot);
 			}
 		}
 		std::lock_guard lock(queueMutex);
@@ -104,6 +152,23 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 	}
 }
 
+void ResourcesWindow::callSlot(const std::shared_ptr<ResourceLoadResult> &pResult,
+							   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) {
+	try {
+		pSlot(pResult);
+	} catch (...) {
+		auto msg = sdk::utils::ReportMessage::create();
+		msg->setTitle("Failed to send loading result to the callback");
+		msg->setMessage("Exception thrown in callback");
+		msg->addInfoLine("Result state: {}", pResult->getStateStr());
+		msg->addInfoLine("Requested resource URI: {}", pResult->getRequestedUri());
+		if (pResult->isErrored()) {
+			msg->addInfoLine("Result error reported earlier");
+			utils::Logger::error(pResult->getError());
+		}
+		utils::Logger::error(msg);
+	}
+}
 
 } // namespace mer::sdk::main
 #endif
