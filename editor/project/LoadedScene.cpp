@@ -26,27 +26,32 @@
 
 #include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/resources/FileSystemResourceBundle.h"
+#include "EngineSDK/main/resources/LoadedResources.h"
 #include "EngineSDK/main/scene/IScene.h"
-#include "EngineSDK/main/scene/ISceneDataInjector.h"
+#include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h"
+#include "EngineSDK/main/scene/objects/extensions/cameras/CameraMouseExtension.h"
+#include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
 #include "EngineUtils/utils/UUID.h"
-#include "Sdk.h"
+#include "mvp/main/editors/sceneEditor/EditorCameraScript.h"
 #include "mvp/main/editors/sceneEditor/ResourcesContext.h"
 #include "mvp/main/editors/sceneEditor/explorerObjects/RootExplorerObject.h"
 #include "mvp/main/editors/sceneEditor/explorerObjects/SceneExplorerObject.h"
 
 namespace mer::editor::project {
-LoadedScene::LoadedScene(const std::shared_ptr<Sdk> &pSdk) : sdk(pSdk), mainObject(mvp::RootExplorerObject::create()) {
-	app = sdk->createApplication();
+LoadedScene::LoadedScene() : mainObject(mvp::RootExplorerObject::create()) {
+	app = sdk::main::Application::create();
 	app->initEngine();
 }
 
 void LoadedScene::setRunDirectory(const std::filesystem::path &pPath) const {
 	app->getApplicationSettings()->setRunDirectory(pPath);
-	app->setResourceBundle(sdk->createFileSystemResourceBundle(pPath / "data"));
+	app->setResourceBundle(sdk::main::FileSystemResourceBundle::create(pPath / "data"));
 }
 
 bool LoadedScene::hasScene() const { return scene != nullptr; }
@@ -57,9 +62,8 @@ sdk::main::IResourceLoadExecutor* LoadedScene::getResourceLoadExecutor() const {
 
 void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) {
 	context = pResourcesContext;
-	const auto resources = sdk->createLoadedResources();
+	const auto resources = sdk::main::LoadedResources::create();
 	pResourcesContext->setResources(resources);
-	pResourcesContext->setSdk(sdk);
 	pResourcesContext->setApplication(app.get());
 }
 
@@ -70,7 +74,7 @@ void LoadedScene::render() const { scene->render(); }
 sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 
 	unload();
-	scene = sdk->createScene();
+	scene = sdk::main::Scene::create();
 	scene->setResourceExecutor(context.get());
 	onLoadingSignal();
 	setName("Untitled Scene");
@@ -115,9 +119,25 @@ sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPat
 		return msg;
 	}
 	onLoadedSignal();
-	auto injector = sdk->createSceneInjector(scene.get());
+
 	std::shared_ptr<sdk::main::ICamera> editorCamera;
-	injector->setupEditorCamera(cameraObject, editorCamera);
+	auto camera = sdk::main::OrbitCameraExtension::create();
+	auto cameraMouse = sdk::main::CameraMouseExtension::create();
+	cameraMouse->setEnabled(false);
+	auto mouseButton = sdk::main::MouseButtonExtension::create();
+	mouseButton->connectButtonSignal(sdk::utils::MouseButton::BUTTON_MIDDLE,
+									 [cameraMouse](sdk::utils::MouseButton /*pButton*/, bool pPressed, double /*pX*/,
+												   double /*pY*/) { cameraMouse->setEnabled(pPressed); });
+
+	cameraMouse->propertyAngle.getEvent().connect(camera->propertyAngle.getSetter());
+	cameraObject = sdk::main::SceneObject::create();
+	cameraObject->addExtension("cameraMouse", cameraMouse);
+	cameraObject->addExtension("mouseButton", mouseButton);
+	cameraObject->addExtension("camera", camera);
+	editorCamera = camera;
+	cameraObject->getMainExtension()->propertyName = "EditorCamera";
+	auto editorCameraScript = std::make_shared<mvp::EditorCameraScript>();
+	cameraObject->setScript(editorCameraScript);
 	//viewSceneEditor->makeCurrent();
 	scene->switchCamera(editorCamera.get());
 	scene->addObject(cameraObject);
@@ -169,7 +189,7 @@ sdk::utils::ReportMessagePtr LoadedScene::readObjects() {
 		//language=sql
 		SQLite::Statement statement(*database, "SELECT * FROM Objects");
 		while (statement.executeStep()) {
-			auto object = sdk->createSceneObject();
+			auto object = sdk::main::SceneObject::create();
 			object->setUuid(UUID::parse(statement.getColumn(1)));
 			scene->addObject(object);
 			nlohmann::json json = nlohmann::json::parse(statement.getColumn(2).getString());
@@ -233,7 +253,7 @@ void LoadedScene::renameObject(sdk::main::ISceneObject* pObject, const std::stri
 
 std::shared_ptr<sdk::main::Extension> LoadedScene::addExtension(
 	sdk::main::ISceneObject* pObject, const std::string &pType, const std::string &pName) const {
-	const auto ext = sdk->newExtensionInstance(pType);
+	const auto ext = sdk::main::ExtensionRegistry::newInstance(pType);
 	pObject->addExtension(pName, ext);
 	//if (hasResourcesContext()) ext->onInit();
 	onExtensionAdded(ext.get());
@@ -361,7 +381,7 @@ void LoadedScene::selectObject(mvp::ExplorerObject* pObjectToSelect) {
 }
 
 std::shared_ptr<sdk::main::ISceneObject> LoadedScene::createObject() const {
-	auto object = sdk->createSceneObject();
+	auto object = sdk::main::SceneObject::create();
 	object->connectOnExtensionPropertyChanged(
 		[this, object](sdk::main::Extension* /*pExtension*/, sdk::main::ExtensionPropertyBase* /*pProperty*/) {
 			std::thread([this, object] { saveObject(object.get()); }).detach();

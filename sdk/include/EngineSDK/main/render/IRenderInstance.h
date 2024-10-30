@@ -23,6 +23,10 @@
 #define IRENDERINSTANCE_H
 #include <sigc++/functors/slot.h>
 
+namespace mer::sdk::renderer {
+class ShaderProgram;
+}
+
 namespace sigc {
 struct connection;
 }

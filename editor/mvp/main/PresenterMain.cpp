@@ -21,15 +21,18 @@
 
 #include "PresenterMain.h"
 
-#include <dlfcn.h>
 #include <future>
 #include <mvp/main/IModelMain.h>
 #include <mvp/main/IViewMain.h>
+#include <nlohmann/json.hpp>
 #include <project/Project.h>
 
 #include "EngineSDK/main/resources/ResourceType.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "EngineSDK/main/resources/models/Model3DResource.h"
 #include "EngineSDK/main/resources/textures/ITextureResource.h"
+#include "EngineSDK/main/resources/textures/TextureResource.h"
+#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "Globals.h"
 #include "PanedLayoutTab.h"
 #include "centerWindow/PresenterCenterWindow.h"
@@ -53,7 +56,6 @@
 #include "objectProperties/PresenterObjectProperties.h"
 #include "objectProperties/ViewObjectProperties.h"
 #include "project/LoadedScene.h"
-#include "project/Sdk.h"
 #include "projectExplorer/ModelProjectExplorer.h"
 #include "projectExplorer/PresenterProjectExplorer.h"
 #include "projectExplorer/ViewProjectExplorer.h"
@@ -68,17 +70,8 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 	pViewMain->setPresenter(this);
 	auto project = modelMain->getProject();
 	project->connectOnErrorSignal(sigc::mem_fun(*viewMain, &IViewMain::reportError));
-	//TODO move to project
-	std::string path = Globals::getSdk() / "lib/MegaEngineSDK.so";
-	errno = 0;
-	sdk::utils::ReportMessagePtr errorMsg;
-	auto sdk = project::Sdk::create(path, errorMsg);
-	if (!sdk) {
-		project->errorOccurred(errorMsg);
-	} else {
-		sdk->initExtensionRegistry();
-		project->setEditorSdkLib(sdk);
-	}
+	//sdk::main::ExtensionRegistry::init();
+
 	viewMain->setWindowTitle("Game engine editor - " + project->getProjectName());
 	//TODO Rewrite to support Gio::Resource MER-40 and move it to model
 	auto layoutFile = Globals::getConfigPath() / "paned-layouts/Layouts.json";
@@ -210,7 +203,7 @@ void PresenterMain::run() {
 		getAppController()->run(presenterProjectExplorer);
 		presenters.push_back(presenterProjectExplorer);
 
-		loadedScene = std::make_shared<project::LoadedScene>(project->getEditorSdkLib());
+		loadedScene = std::make_shared<project::LoadedScene>();
 		loadedScene->connectErrorOccurred([this](auto pMsg) { displayError(pMsg); });
 		loadedScene->setRunDirectory(project->getProjectPath());
 		loadedScene->setupResourcesContext(viewMain->getResourcesContext());
@@ -236,7 +229,6 @@ void PresenterMain::run() {
 		editingResources->setupResourcesContext(viewMain->getResourcesContext());
 
 		auto model = std::make_shared<ModelResourceEditor>();
-		model->setSdk(modelMain->getProject()->getEditorSdkLib());
 		model->setEditingResources(editingResources);
 		model->setPathToDataDir(project->getProjectDataPath());
 		auto presenter = std::make_shared<PresenterResourceEditor>(model);
@@ -373,16 +365,15 @@ void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 
 void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, const sdk::main::ResourceType pType) {
 	auto pathToCreate = is_directory(pPathToCreate) ? pPathToCreate : pPathToCreate.parent_path();
-	auto sdk = modelMain->getProject()->getEditorSdkLib();
 	std::shared_ptr<sdk::main::IResource> resource{};
 	switch (pType) {
 
 		case sdk::main::ResourceType::NONE: break;
 		case sdk::main::ResourceType::MODEL:
-			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk->createModel3DResource());
+			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::Model3DResource::create());
 			break;
 		case sdk::main::ResourceType::TEXTURE:
-			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk->createTextureResource());
+			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::TextureResource::create());
 			break;
 		case sdk::main::ResourceType::MATERIAL: break;
 	}

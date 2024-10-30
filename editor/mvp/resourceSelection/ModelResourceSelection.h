@@ -27,10 +27,6 @@
 #include "mvp/main/projectExplorer/entries/ProjectExplorerElement.h"
 #include "project/LoadedScene.h"
 
-namespace mer::editor::project {
-class Sdk;
-}
-
 namespace mer::editor::mvp {
 class FileResourceReader;
 class IPresenterResourceSelection;

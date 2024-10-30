@@ -67,8 +67,6 @@ void ModelSceneEditor::renameObject(sdk::main::ISceneObject* pObject, const std:
 
 void ModelSceneEditor::saveObject(sdk::main::ISceneObject* pObject) { loadedScene->saveObject(pObject); }
 
-const std::shared_ptr<project::Sdk> &ModelSceneEditor::getSdk() const { return loadedScene->getSdk(); }
-
 const std::shared_ptr<sdk::main::IScene> &ModelSceneEditor::getScene() const { return loadedScene->getScene(); }
 
 void ModelSceneEditor::onCursorPosChanged(const double pX, const double pY) { loadedScene->onCursorPosChanged(pX, pY); }

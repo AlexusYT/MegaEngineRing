@@ -23,13 +23,12 @@
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineUtils/utils/Logger.h"
 
-namespace mer::sdk::main {
-utils::ReportMessagePtr EditorCameraScript::setup() {
+namespace mer::editor::mvp {
+sdk::utils::ReportMessagePtr EditorCameraScript::setup() {
 
 	auto extensions = getObject()->getExtensions();
-	camera = std::dynamic_pointer_cast<OrbitCameraExtension>(extensions.at("camera"));
+	camera = std::dynamic_pointer_cast<sdk::main::OrbitCameraExtension>(extensions.at("camera"));
 	return Script::setup();
 }
 
@@ -43,4 +42,4 @@ bool EditorCameraScript::onMouseScroll(double /*pDx*/, const double pDy) {
 	camera->propertyDistance = distance;
 	return true;
 }
-} // namespace mer::sdk::main
+} // namespace mer::editor::mvp

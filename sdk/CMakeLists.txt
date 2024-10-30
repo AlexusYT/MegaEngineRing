@@ -29,7 +29,6 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/scene/objects/extensions/ExtensionRegistry.cpp
         sources/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.cpp
         sources/main/scene/objects/extensions/OrbitCameraExtension.cpp
-        sources/main/scene/SceneDataInjector.cpp
         sources/main/resources/models/Model3DLoader.cpp
         sources/main/scene/objects/extensions/ModelRenderExtension.cpp
         sources/main/scripting/Script.cpp
@@ -41,12 +40,12 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/resources/FileSystemResourceBundle.cpp
         include/EngineSDK/main/resources/ResourceLoaders.cpp
         include/EngineSDK/main/resources/Resource.cpp
-        include/EngineSDK/main/scene/EditorCameraScript.cpp
         sources/main/resources/textures/TextureResource.cpp
         include/EngineSDK/main/resources/textures/TextureLoader.cpp
         include/EngineSDK/main/scene/objects/extensions/LightExtension.cpp
         include/EngineSDK/main/light/LightInstance.cpp
         include/EngineSDK/main/light/LightSources.cpp
+        include/EngineSDK/main/resources/materials/MaterialResource.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -91,8 +90,6 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/extensions/cameras/IProjectionCameraMod.h
         include/EngineSDK/main/scene/objects/extensions/ExtensionPropertyBase.h
         include/EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h
-        include/EngineSDK/main/scene/ISceneDataInjector.h
-        include/EngineSDK/main/scene/SceneDataInjector.h
         include/EngineSDK/utils/MouseButton.h
         include/EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h
         include/EngineSDK/main/resources/models/Model3DLoader.h
@@ -120,7 +117,6 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/IResourceLoaders.h
         include/EngineSDK/main/render/IRenderable.h
         include/EngineSDK/main/resources/Resource.h
-        include/EngineSDK/main/scene/EditorCameraScript.h
         include/EngineSDK/main/resources/textures/ITextureResource.h
         include/EngineSDK/main/resources/textures/TextureResource.h
         include/EngineSDK/main/resources/textures/TextureMinFilter.h
@@ -137,53 +133,47 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/light/LightInstanceData.h
         include/EngineSDK/main/light/LightSources.h
         include/EngineSDK/main/resources/materials/IMaterialResource.h
-        include/EngineSDK/main/resources/materials/MaterialResource.cpp
         include/EngineSDK/main/resources/materials/MaterialResource.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
-add_library(MegaEngineSDK_static STATIC ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
 target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
 target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
-find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(MegaEngineSDK_static INTERFACE glfw)
+#[[find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(MegaEngineSDK_static INTERFACE glfw)]]
 
 find_package(sigc++-3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_path(PNGPP_INCLUDE_DIRS "png++/color.hpp")
-function(setupTarget target)
-    target_precompile_headers(${target}
-            PRIVATE common.h
-    )
-    target_include_directories(
-            ${target} ${warning_guard}
-            PUBLIC
-            "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/include>"
-    )
-    target_include_directories(
-            ${target} ${warning_guard}
-            PUBLIC
-            "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
-    )
 
-    target_link_libraries(${target} PRIVATE glm::glm)
-    target_link_libraries(${target} PUBLIC stdc++exp MegaEngineUtils)
-    target_link_libraries(${target} PRIVATE sigc-3.0)
-    target_include_directories(${target} PRIVATE ${PNGPP_INCLUDE_DIRS})
-    set_property(TARGET ${target} PROPERTY OUTPUT_NAME MegaEngineSDK)
-    set_property(TARGET ${target} PROPERTY PREFIX "")
+target_precompile_headers(MegaEngineSDK_shared
+        PRIVATE common.h
+)
+target_include_directories(
+        MegaEngineSDK_shared ${warning_guard}
+        PUBLIC
+        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/include>"
+)
+target_include_directories(
+        MegaEngineSDK_shared ${warning_guard}
+        PUBLIC
+        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
+)
 
-endfunction()
-setupTarget(MegaEngineSDK_shared)
-setupTarget(MegaEngineSDK_static)
+target_link_libraries(MegaEngineSDK_shared PRIVATE glm::glm)
+target_link_libraries(MegaEngineSDK_shared PUBLIC stdc++exp MegaEngineUtils)
+target_link_libraries(MegaEngineSDK_shared PRIVATE sigc-3.0)
+target_include_directories(MegaEngineSDK_shared PRIVATE ${PNGPP_INCLUDE_DIRS})
+set_property(TARGET MegaEngineSDK_shared PROPERTY OUTPUT_NAME MegaEngineSDK)
+set_property(TARGET MegaEngineSDK_shared PROPERTY PREFIX "")
 
 add_custom_target(MegaEngineSDK)
-add_dependencies(MegaEngineSDK MegaEngineSDK_static MegaEngineSDK_shared MegaEngineUtils)
+add_dependencies(MegaEngineSDK MegaEngineSDK_shared MegaEngineUtils)
 
 install(
-        TARGETS MegaEngineSDK_static MegaEngineSDK_shared
+        TARGETS MegaEngineSDK_shared
         ARCHIVE
         DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
         COMPONENT sdk

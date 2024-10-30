@@ -16,30 +16,40 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 24.03.24.
+// Created by alexus on 22.03.24.
 //
 
-#ifndef ISCENEDATAINJECTOR_H
-#define ISCENEDATAINJECTOR_H
+#ifndef EXTENSIONPROPERTYBASE_H
+#define EXTENSIONPROPERTYBASE_H
+#include <string>
 
-namespace mer::sdk::main {
-class ICamera;
-class Extension;
-class SceneObject;
-class ISceneObject;
-class IScene;
+namespace mer::sdk::utils {
+class IPropertyProvider;
 
-class ISceneDataInjector {
+class PropertyBase {
+	std::string name;
+	std::string description;
+	IPropertyProvider* provider;
+
+protected:
+	PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription);
+
+	virtual ~PropertyBase();
+
 public:
-	virtual ~ISceneDataInjector() = default;
+	[[nodiscard]] const std::string &getPropertyName() const { return name; }
 
-	[[nodiscard]] virtual IScene* getScene() const = 0;
+	void setPropertyName(const std::string &pName) { name = pName; }
 
-	virtual std::shared_ptr<SceneObject> newObject() = 0;
+	[[nodiscard]] const std::string &getPropertyDescription() const { return description; }
 
-	virtual void setupEditorCamera(std::shared_ptr<ISceneObject> &pEditorCamera, std::shared_ptr<ICamera> &pCamera) = 0;
+	void setPropertyDescription(const std::string &pDescription) { description = pDescription; }
+
+protected:
+	void notifyPropertyChanged();
 };
-} // namespace mer::sdk::main
+
+} // namespace mer::sdk::utils
 
 
-#endif //ISCENEDATAINJECTOR_H
+#endif //EXTENSIONPROPERTYBASE_H

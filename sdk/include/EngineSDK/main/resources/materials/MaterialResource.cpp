@@ -29,4 +29,6 @@ std::shared_ptr<MaterialResource> MaterialResource::create() {
 }
 
 ResourceType MaterialResource::getResourceType() { return ResourceType::MATERIAL; }
+
+void MaterialResource::render() {}
 } // namespace mer::sdk::main

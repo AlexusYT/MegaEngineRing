@@ -39,17 +39,12 @@ class ISceneObject;
 class IScene;
 } // namespace mer::sdk::main
 
-namespace mer::editor::project {
-class Sdk;
-}
-
 namespace SQLite {
 class Database;
 }
 
 namespace mer::editor::project {
 class LoadedScene {
-	std::shared_ptr<Sdk> sdk;
 	std::string name;
 	std::shared_ptr<SQLite::Database> database;
 	sigc::signal<void(const std::string &pName)> onNameChanged;
@@ -75,7 +70,7 @@ class LoadedScene {
 	std::shared_ptr<mvp::ResourcesContext> context;
 
 public:
-	explicit LoadedScene(const std::shared_ptr<Sdk> &pSdk);
+	LoadedScene();
 
 	void setRunDirectory(const std::filesystem::path &pPath) const;
 
@@ -147,8 +142,6 @@ public:
 	void addObjectToDatabase(const std::shared_ptr<sdk::main::ISceneObject> &pObject) const;
 
 	void removeObjectFromDatabase(sdk::main::ISceneObject* pObject) const;
-
-	[[nodiscard]] const std::shared_ptr<Sdk> &getSdk() const { return sdk; }
 
 	[[nodiscard]] const std::shared_ptr<sdk::main::IScene> &getScene() const { return scene; }
 

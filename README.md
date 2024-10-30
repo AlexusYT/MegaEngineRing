@@ -2,7 +2,7 @@
 
 MegaEngineRing is a game engine, written on C++.
 
-As of February 20, 2024, the engine is at the concept stage.
+As of October 30, 2024, the engine is at the concept stage.
 
 The project consists of some components:
 
@@ -102,12 +102,17 @@ If you encounter any problems, please feel free to create a new issue.
 
 ### 4. Running
 
-Editor requires SDK to run. Normally it installs to `/usr/local/var/MegaEngineRing/sdk`. If SDK not found at this path,
-you can specify a path to SDK directory and SDK version manually.
+> MegaEngineSDK target now links to MegaEngineEditor directly, so no need to manually specify `--sdk-path` or
+`--sdk-version`
 
-* `--sdk-path` to set a path to SDK directory.
-* `--sdk-version` to set an SDK version. By default, it is randomly selected. Currently only `0.1.0` version is
-  available, so it's not a big problem.
+
+~~Editor requires SDK to run. Normally it installs to `/usr/local/var/MegaEngineRing/sdk`. If SDK not found at this
+path,
+you can specify a path to SDK directory and SDK version manually.~~
+
+* ~~`--sdk-path` to set a path to SDK directory.~~
+* ~~`--sdk-version` to set an SDK version. By default, it is randomly selected. Currently only `0.1.0` version is
+  available, so it's not a big problem.~~
 
 ### Another way
 

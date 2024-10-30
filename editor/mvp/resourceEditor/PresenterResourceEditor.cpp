@@ -97,7 +97,6 @@ void PresenterResourceEditor::onPathToFileChanged(IViewResourceEditor* pView, co
 	if (resourceType == sdk::main::ResourceType::MODEL) {
 
 		auto objReader = std::make_shared<ObjFileResourceReader>(pPath);
-		objReader->setSdk(model->getSdk());
 		if (auto msg = objReader->checkType(); msg) {
 			sdk::utils::Logger::error(msg);
 			return;
@@ -117,7 +116,6 @@ void PresenterResourceEditor::onPathToFileChanged(IViewResourceEditor* pView, co
 	} else if (resourceType == sdk::main::ResourceType::TEXTURE) {
 
 		auto reader = std::make_shared<PngFileResourceReader>(pPath);
-		reader->setSdk(model->getSdk());
 		if (auto msg = reader->checkType(); msg) {
 			sdk::utils::Logger::error(msg);
 			return;

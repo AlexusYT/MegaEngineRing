@@ -493,11 +493,7 @@ sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(const 
 				"vcpkg"
 			],
 			"cacheVariables": {
-				"BUILD_MCSS_DOCS": "ON",
-				"ENGINE_SDK_PATH": ")"
-			<< Globals::getSdkPath().string() << R"(",
-				"ENGINE_SDK_VERSION": ")"
-			<< Globals::getSdkVersion() << R"("
+				"BUILD_MCSS_DOCS": "ON"
 			}
 		},
 		{

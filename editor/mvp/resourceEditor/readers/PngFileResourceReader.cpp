@@ -26,7 +26,6 @@
 #include "EngineSDK/main/resources/textures/Texture2DType.h"
 #include "EngineSDK/main/resources/textures/TextureBaseInternalFormat.h"
 #include "png++/png.hpp"
-#include "project/Sdk.h"
 
 namespace mer::editor::mvp {
 sdk::utils::ReportMessagePtr PngFileResourceReader::checkType() {

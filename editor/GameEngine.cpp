@@ -100,37 +100,6 @@ public:
 			Logger::info("Using resources from the executable");
 		}
 
-
-		auto sdk = Globals::getSdkPath();
-		std::string version = Globals::getSdkVersion();
-		if (version.empty()) {
-			//TODO add regex check
-			for (auto entry: std::filesystem::directory_iterator(sdk)) { version = entry.path().filename(); }
-			Logger::warn("SDK version not specified. Using {}", version);
-			Globals::setSdkVersion(version);
-		}
-		sdk /= version;
-		if (!exists(sdk)) {
-			const auto msg = ReportMessage::create();
-			msg->setTitle("Failed to detect sdk");
-			msg->setMessage("No sdk directory");
-			msg->addInfoLine("Path to sdk: {}", sdk.string());
-			Logger::error(msg);
-			return;
-		}
-
-		if (!exists(sdk / "lib/MegaEngineSDK.a")) {
-			const auto msg = ReportMessage::create();
-			msg->setTitle("Failed to detect sdk");
-			msg->setMessage("File lib/MegaEngineSDK.a not found in sdk directory");
-			msg->addInfoLine("SDK directory: {}", sdk.string());
-			Logger::error(msg);
-			return;
-		}
-		Logger::info("Detected SDK: {}", sdk.string());
-		Globals::setSdk(sdk);
-
-
 		const std::shared_ptr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
 		cssProvider->signal_parsing_error().connect(
 			[](const Glib::RefPtr<const Gtk::CssSection> & /*section*/, const Glib::Error &pError) {

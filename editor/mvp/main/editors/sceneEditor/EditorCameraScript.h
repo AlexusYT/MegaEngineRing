@@ -25,17 +25,20 @@
 
 namespace mer::sdk::main {
 class OrbitCameraExtension;
+}
 
-class EditorCameraScript : public main::Script {
-	std::shared_ptr<OrbitCameraExtension> camera;
+namespace mer::editor::mvp {
+
+class EditorCameraScript : public sdk::main::Script {
+	std::shared_ptr<sdk::main::OrbitCameraExtension> camera;
 
 public:
-	utils::ReportMessagePtr setup() override;
+	sdk::utils::ReportMessagePtr setup() override;
 
 protected:
 	inline bool onMouseScroll(double pDx, double pDy) override;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::editor::mvp
 
 #endif //EDITORCAMERASCRIPT_H

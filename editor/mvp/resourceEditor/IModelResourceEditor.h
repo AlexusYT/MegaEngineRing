@@ -22,10 +22,6 @@
 #ifndef IMODELRESOURCEEDITOR_H
 #define IMODELRESOURCEEDITOR_H
 
-namespace mer::editor::project {
-class Sdk;
-}
-
 namespace mer::editor::mvp {
 class EditingResourceList;
 class IPresenterResourceEditor;
@@ -48,10 +44,6 @@ public:
 	[[nodiscard]] virtual const std::string &getResourceName() const = 0;
 
 	virtual void setResourceName(const std::string &pResourceName) = 0;
-
-	virtual void setSdk(const std::shared_ptr<project::Sdk> &pSdk) = 0;
-
-	[[nodiscard]] virtual const std::shared_ptr<project::Sdk> &getSdk() const = 0;
 
 	virtual void setRelativePathToResource(const std::filesystem::path &pPath) = 0;
 

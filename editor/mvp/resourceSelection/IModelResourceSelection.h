@@ -29,7 +29,6 @@ class IResource;
 
 namespace mer::editor::project {
 class LoadedScene;
-class Sdk;
 } // namespace mer::editor::project
 
 namespace mer::editor::mvp {

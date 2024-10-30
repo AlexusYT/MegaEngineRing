@@ -74,18 +74,18 @@ void Model3DObject::render() {
 	if (!shader) return;
 	instancesSsbo->bindBufferBase(1);
 	glBindVertexArray(vao);
-	for (auto [instShader, instances]: instancesData) {
-		if (instances.empty()) continue;
+	for (auto [instShader, inst]: instancesData) {
+		if (inst.empty()) continue;
 		if (!instShader) shader->use();
 		else
 			instShader->use();
-		const int64_t bufSize = static_cast<int64_t>(instances.size() * sizeof(RenderInstanceData));
+		const int64_t bufSize = static_cast<int64_t>(inst.size() * sizeof(RenderInstanceData));
 		if (instancesSsbo->getSize() < bufSize) {
-			instancesSsbo->reallocate(bufSize, instances.data());
+			instancesSsbo->reallocate(bufSize, inst.data());
 		} else
-			instancesSsbo->bufferSubData(0, bufSize, instances.data());
+			instancesSsbo->bufferSubData(0, bufSize, inst.data());
 		glDrawElementsInstanced(GL_TRIANGLES, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr,
-								static_cast<int>(instances.size()));
+								static_cast<int>(inst.size()));
 	}
 	glBindVertexArray(0);
 	instancesSsbo->unbindBufferBase(1);

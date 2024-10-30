@@ -28,9 +28,6 @@ class IModel3DObject;
 class IModel3DResource;
 } // namespace mer::sdk::main
 
-namespace mer::editor::project {
-class Sdk;
-}
 
 namespace mer::editor::mvp {
 class ObjFileResourceReader : public FileResourceReader {

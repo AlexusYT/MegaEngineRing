@@ -26,10 +26,6 @@
 
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
 
-namespace mer::editor::project {
-class Sdk;
-}
-
 namespace mer::sdk::main {
 class ILoadedResources;
 }
@@ -45,7 +41,6 @@ class ResourcesContext : public sdk::main::IResourceLoadExecutor {
 	std::shared_ptr<Gdk::GLContext> sharedContext;
 	std::jthread thread;
 	sdk::main::IApplication* application{};
-	std::shared_ptr<project::Sdk> sdk;
 
 public:
 	explicit ResourcesContext(const std::shared_ptr<Gdk::GLContext> &pSharedContext)
@@ -78,9 +73,6 @@ public:
 
 	const std::shared_ptr<sdk::main::ILoadedResources> &getResources() override { return resources; }
 
-	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const { return sdk; }
-
-	void setSdk(const std::shared_ptr<project::Sdk> &pSdk) { sdk = pSdk; }
 };
 } // namespace mer::editor::mvp
 
