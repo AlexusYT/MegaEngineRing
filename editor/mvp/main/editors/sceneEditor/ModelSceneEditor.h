@@ -71,9 +71,6 @@ public:
 
 	void saveObject(sdk::main::ISceneObject* pObject) override;
 
-
-	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const override;
-
 	[[nodiscard]] const std::shared_ptr<sdk::main::IScene> &getScene() const override;
 
 	void onCursorPosChanged(double pX, double pY) override;

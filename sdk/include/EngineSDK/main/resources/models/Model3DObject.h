@@ -25,6 +25,7 @@
 #include <glm/vec3.hpp>
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "EngineSDK/main/render/IInstancedRender.h"
@@ -53,7 +54,7 @@ class Model3DObject : public IModel3DObject, public IInstancedRender {
 	uint32_t vao{};
 
 	std::vector<IRenderInstance*> instances;
-	std::vector<RenderInstanceData> instancesData;
+	std::pmr::unordered_map<std::shared_ptr<renderer::ShaderProgram>, std::vector<RenderInstanceData>> instancesData;
 	std::shared_ptr<renderer::ShaderProgram> shader;
 	std::shared_ptr<renderer::ISSBO> instancesSsbo;
 

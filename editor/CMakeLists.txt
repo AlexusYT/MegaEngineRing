@@ -123,10 +123,6 @@ add_library(
         project/generators/cpp/CppClassMember.h
         project/generators/cpp/CppExternC.cpp
         project/generators/cpp/CppExternC.h
-        cmdOptions/options/SdkPathOption.cpp
-        cmdOptions/options/SdkPathOption.h
-        cmdOptions/options/SdkVersionOption.cpp
-        cmdOptions/options/SdkVersionOption.h
         cmdOptions/options/ResPathOption.cpp
         cmdOptions/options/ResPathOption.h
         mvp/main/objectProperties/ObjectPropertyEntry.cpp
@@ -182,8 +178,6 @@ add_library(
         mvp/main/editors/sceneEditor/ModelSceneEditor.cpp
         mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.cpp
         mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.h
-        project/Sdk.cpp
-        project/Sdk.h
         mvp/main/editors/sceneEditor/explorerObjects/RootExplorerObject.h
         mvp/main/editors/sceneEditor/explorerObjects/SceneExplorerObject.cpp
         mvp/main/editors/sceneEditor/explorerObjects/SceneExplorerObject.h
@@ -206,6 +200,8 @@ add_library(
         mvp/main/IPresenterMain.h
         project/LoadedScene.cpp
         project/LoadedScene.h
+        mvp/main/editors/sceneEditor/EditorCameraScript.cpp
+        mvp/main/editors/sceneEditor/EditorCameraScript.h
         mvp/main/treeObjectWindow/IViewObjectsTree.h
         mvp/main/treeObjectWindow/IModelObjectsTree.h
         mvp/main/treeObjectWindow/ModelObjectsTree.h
@@ -283,6 +279,7 @@ target_include_directories(
 )
 
 target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineUtils)
+target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineSDK_shared)
 
 target_compile_features(MegaEngineEditor_lib PUBLIC cxx_std_23)
 

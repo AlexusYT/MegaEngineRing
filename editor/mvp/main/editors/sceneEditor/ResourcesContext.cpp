@@ -27,7 +27,6 @@
 #include "EngineSDK/main/resources/LoadedResources.h"
 #include "EngineSDK/main/resources/ResourceLoaders.h"
 #include "Globals.h"
-#include "project/Sdk.h"
 
 namespace mer::editor::mvp {
 std::pair<std::shared_ptr<sdk::main::IResource>, sdk::utils::ReportMessagePtr> ResourcesContext::loadResourceSync(
@@ -63,8 +62,8 @@ void ResourcesContext::resourceLoop(const std::stop_token &pToken) {
 					} else {
 						uri = resourceUri;
 					}
-					error =
-						sdk->getResourceLoadersInstance()->load(this, application->getResourceBundle(), uri, resource);
+					error = sdk::main::ResourceLoaders::getInstance()->load(this, application->getResourceBundle(), uri,
+																			resource);
 					if (resource) resources->addResource(resourceUri, resource);
 				} catch (...) {
 					error = sdk::utils::ReportMessage::create();

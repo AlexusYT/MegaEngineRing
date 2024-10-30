@@ -156,6 +156,4 @@ int Project::runDebug(const CallbackSlot &pCoutCallback, const CallbackSlot &pCe
 	return ToolchainUtils::executeSync(projectPath, "gdb", command, pCoutCallback, pCerrCallback);
 }
 
-void Project::setEditorSdkLib(const std::shared_ptr<Sdk> &pEditorSdkLib) { editorSdkLib = pEditorSdkLib; }
-
 } // namespace mer::editor::project

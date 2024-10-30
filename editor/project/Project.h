@@ -29,10 +29,6 @@
 #include "generatedFiles/GeneratedFiles.h"
 #include "sceneObjects/EditorSceneObject.h"
 
-namespace mer::editor::project {
-class Sdk;
-}
-
 namespace mer::sdk::main {
 class Application;
 }
@@ -60,8 +56,6 @@ class Project : public std::enable_shared_from_this<Project> {
 	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onErrorSignal;
 	std::atomic<bool> editorLibLoading{};
 	std::atomic<sdk::utils::ReportMessagePtr> editorLibError{nullptr};
-
-	std::shared_ptr<Sdk> editorSdkLib{};
 
 	std::shared_ptr<sdk::main::Application> application;
 	Project();
@@ -136,10 +130,6 @@ public:
 	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
 		return onErrorSignal.connect(pSlot);
 	}
-
-	[[nodiscard]] std::shared_ptr<Sdk> getEditorSdkLib() const { return editorSdkLib; }
-
-	void setEditorSdkLib(const std::shared_ptr<Sdk> &pEditorSdkLib);
 
 	[[nodiscard]] const std::atomic<bool> &getEditorLibLoading() const { return editorLibLoading; }
 

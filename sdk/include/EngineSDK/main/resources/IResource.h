@@ -23,11 +23,8 @@
 #define IRESOURCE_H
 #include <filesystem>
 
-namespace mer::main::sdk {
-enum class ResourceType;
-}
-
 namespace mer::sdk::main {
+enum class ResourceType;
 
 class IResource {
 protected:
@@ -40,7 +37,7 @@ public:
 
 	virtual void setResourceUri(const std::filesystem::path &pResourceUri) = 0;
 
-	virtual mer::main::sdk::ResourceType getResourceType() = 0;
+	virtual ResourceType getResourceType() = 0;
 };
 
 } // namespace mer::sdk::main

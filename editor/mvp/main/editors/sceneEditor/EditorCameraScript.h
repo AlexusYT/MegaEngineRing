@@ -16,16 +16,29 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 19.10.24.
+// Created by alexus on 11.10.24.
 //
 
-#ifndef RESOURCETYPE_H
-#define RESOURCETYPE_H
+#ifndef EDITORCAMERASCRIPT_H
+#define EDITORCAMERASCRIPT_H
+#include "EngineSDK/main/scripting/Script.h"
 
 namespace mer::sdk::main {
+class OrbitCameraExtension;
+}
 
-enum class ResourceType { NONE = 0, MODEL, TEXTURE, MATERIAL };
+namespace mer::editor::mvp {
 
-} // namespace mer::sdk::main
+class EditorCameraScript : public sdk::main::Script {
+	std::shared_ptr<sdk::main::OrbitCameraExtension> camera;
 
-#endif //RESOURCETYPE_H
+public:
+	sdk::utils::ReportMessagePtr setup() override;
+
+protected:
+	inline bool onMouseScroll(double pDx, double pDy) override;
+};
+
+} // namespace mer::editor::mvp
+
+#endif //EDITORCAMERASCRIPT_H

@@ -35,7 +35,6 @@ class ISceneObject;
 } // namespace mer::sdk::main
 
 namespace mer::editor::project {
-class Sdk;
 class Project;
 } // namespace mer::editor::project
 
@@ -81,8 +80,6 @@ public:
 	virtual void renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const = 0;
 
 	virtual void saveObject(sdk::main::ISceneObject* pObject) = 0;
-
-	[[nodiscard]] virtual const std::shared_ptr<project::Sdk> &getSdk() const = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<sdk::main::IScene> &getScene() const = 0;
 

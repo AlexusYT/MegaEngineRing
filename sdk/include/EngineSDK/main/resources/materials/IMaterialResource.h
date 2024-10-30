@@ -16,31 +16,17 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 11.10.24.
+// Created by alexus on 22.10.24.
 //
 
-#include "EditorCameraScript.h"
-
-#include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineUtils/utils/Logger.h"
+#ifndef IMATERIALRESOURCE_H
+#define IMATERIALRESOURCE_H
+#include "EngineSDK/main/render/IRenderable.h"
 
 namespace mer::sdk::main {
-utils::ReportMessagePtr EditorCameraScript::setup() {
 
-	auto extensions = getObject()->getExtensions();
-	camera = std::dynamic_pointer_cast<OrbitCameraExtension>(extensions.at("camera"));
-	return Script::setup();
-}
+class IMaterialResource : public IRenderable {};
 
-bool EditorCameraScript::onMouseScroll(double /*pDx*/, const double pDy) {
-	if (!camera) return false;
-	auto dy = static_cast<float>(pDy);
-	auto distance = camera->propertyDistance.getValue();
-	distance += dy * std::log10(distance + 1.1f);
-	if (distance < 0.0001f) distance = 0.0001f;
-
-	camera->propertyDistance = distance;
-	return true;
-}
 } // namespace mer::sdk::main
+
+#endif //IMATERIALRESOURCE_H

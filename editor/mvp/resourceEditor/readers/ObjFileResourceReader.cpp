@@ -25,7 +25,8 @@
 
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
-#include "project/Sdk.h"
+#include "EngineSDK/main/resources/models/Model3DObject.h"
+#include "EngineSDK/main/resources/models/Model3DResource.h"
 
 namespace mer::editor::mvp {
 
@@ -116,15 +117,13 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 
 std::shared_ptr<sdk::main::IModel3DResource> ObjFileResourceReader::generateResource(
 	const std::vector<std::string> &pObjectsToSave) const {
-	auto sdkSelf = getSdk();
-	auto resource = sdkSelf->createModel3DResource();
+	auto resource = sdk::main::Model3DResource::create();
 	for (auto objectName: pObjectsToSave) { resource->addModelObject(generateObject(objectName)); }
 	return resource;
 }
 
 std::shared_ptr<sdk::main::IModel3DObject> ObjFileResourceReader::generateObject(
 	const std::string &pObjectToSave) const {
-	auto sdkSelf = getSdk();
 	const auto obj = objects.at(pObjectToSave);
 	std::map<VertexInfo, uint16_t> vertexToOutIndex;
 	std::vector<glm::vec3> vertices;
@@ -147,7 +146,7 @@ std::shared_ptr<sdk::main::IModel3DObject> ObjFileResourceReader::generateObject
 		}
 	}
 
-	auto o = sdkSelf->createModel3DObject();
+	auto o = sdk::main::Model3DObject::create();
 	o->setVertices(vertices);
 	o->setUvs(uvs);
 	o->setNormals(normals);

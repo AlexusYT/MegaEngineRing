@@ -166,12 +166,17 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 	actionGroupNew->add_action_with_parameter(
 		"resource.model", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createResource(var.get().raw(), main::sdk::ResourceType::MODEL);
+			if (presenter) presenter->createResource(var.get().raw(), sdk::main::ResourceType::MODEL);
 		});
 	actionGroupNew->add_action_with_parameter(
 		"resource.texture", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createResource(var.get().raw(), main::sdk::ResourceType::TEXTURE);
+			if (presenter) presenter->createResource(var.get().raw(), sdk::main::ResourceType::TEXTURE);
+	});
+	actionGroupNew->add_action_with_parameter(
+		"resource.material", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
+			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
+			if (presenter) presenter->createResource(var.get().raw(), sdk::main::ResourceType::MATERIAL);
 		});
 	actionGroupNew->add_action_with_parameter(
 		"scene", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {

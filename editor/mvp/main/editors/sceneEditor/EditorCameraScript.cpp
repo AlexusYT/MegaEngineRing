@@ -19,23 +19,27 @@
 // Created by alexus on 11.10.24.
 //
 
-#ifndef EDITORCAMERASCRIPT_H
-#define EDITORCAMERASCRIPT_H
-#include "EngineSDK/main/scripting/Script.h"
+#include "EditorCameraScript.h"
 
-namespace mer::sdk::main {
-class OrbitCameraExtension;
+#include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
 
-class EditorCameraScript : public main::Script {
-	std::shared_ptr<OrbitCameraExtension> camera;
+namespace mer::editor::mvp {
+sdk::utils::ReportMessagePtr EditorCameraScript::setup() {
 
-public:
-	utils::ReportMessagePtr setup() override;
+	auto extensions = getObject()->getExtensions();
+	camera = std::dynamic_pointer_cast<sdk::main::OrbitCameraExtension>(extensions.at("camera"));
+	return Script::setup();
+}
 
-protected:
-	inline bool onMouseScroll(double pDx, double pDy) override;
-};
+bool EditorCameraScript::onMouseScroll(double /*pDx*/, const double pDy) {
+	if (!camera) return false;
+	auto dy = static_cast<float>(pDy);
+	auto distance = camera->propertyDistance.getValue();
+	distance += dy * std::log10(distance + 1.1f);
+	if (distance < 0.0001f) distance = 0.0001f;
 
-} // namespace mer::sdk::main
-
-#endif //EDITORCAMERASCRIPT_H
+	camera->propertyDistance = distance;
+	return true;
+}
+} // namespace mer::editor::mvp

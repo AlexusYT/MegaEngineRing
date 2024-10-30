@@ -23,10 +23,6 @@
 #define MODELRESOURCEEDITOR_H
 #include "IModelResourceEditor.h"
 
-namespace mer::editor::project {
-class Sdk;
-}
-
 namespace mer::editor::mvp {
 class FileResourceReader;
 class IPresenterResourceEditor;
@@ -40,7 +36,6 @@ class ModelResourceEditor : public IModelResourceEditor {
 	std::filesystem::path pathToResource;
 	std::filesystem::path relativePathToResource;
 	std::string resourceName;
-	std::shared_ptr<project::Sdk> sdk;
 	std::shared_ptr<EditingResourceList> editingResources;
 
 public:
@@ -57,10 +52,6 @@ public:
 	[[nodiscard]] const std::string &getResourceName() const override { return resourceName; }
 
 	void setResourceName(const std::string &pResourceName) override { resourceName = pResourceName; }
-
-	void setSdk(const std::shared_ptr<project::Sdk> &pSdk) override { sdk = pSdk; }
-
-	[[nodiscard]] const std::shared_ptr<project::Sdk> &getSdk() const override { return sdk; }
 
 	void setRelativePathToResource(const std::filesystem::path &pPath) override { relativePathToResource = pPath; }
 

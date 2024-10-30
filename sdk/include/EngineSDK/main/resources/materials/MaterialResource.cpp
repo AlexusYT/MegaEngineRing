@@ -16,16 +16,19 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 19.10.24.
+// Created by alexus on 22.10.24.
 //
 
-#ifndef RESOURCETYPE_H
-#define RESOURCETYPE_H
+#include "MaterialResource.h"
+
+#include "EngineSDK/main/resources/ResourceType.h"
 
 namespace mer::sdk::main {
+std::shared_ptr<MaterialResource> MaterialResource::create() {
+	return std::shared_ptr<MaterialResource>(new MaterialResource());
+}
 
-enum class ResourceType { NONE = 0, MODEL, TEXTURE, MATERIAL };
+ResourceType MaterialResource::getResourceType() { return ResourceType::MATERIAL; }
 
+void MaterialResource::render() {}
 } // namespace mer::sdk::main
-
-#endif //RESOURCETYPE_H
