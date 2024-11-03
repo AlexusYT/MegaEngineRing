@@ -27,10 +27,23 @@
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "EngineUtils/utils/Logger.h"
+#include "EngineUtils/utils/PropertyBase.h"
 
 namespace mer::sdk::main {
 
 Extension::Extension() {}
+
+void Extension::serialize(nlohmann::json &pJson) {
+	for (const auto property: properties) {
+		if (const auto serializable = dynamic_cast<ISerializable*>(property)) serializable->serialize(pJson, this);
+	}
+}
+
+void Extension::deserialize(const nlohmann::json &pJson) {
+	for (const auto property: properties) {
+		if (const auto serializable = dynamic_cast<ISerializable*>(property)) serializable->deserialize(pJson, this);
+	}
+}
 
 IScene* Extension::getScene() const { return getObject()->getScene(); }
 
@@ -54,11 +67,11 @@ void Extension::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
 	if (auto msg = ExtensionRegistry::getTypeNameFor(pExt, pNameOut)) { utils::Logger::error(msg); }
 }
 
-void Extension::addProperty(ExtensionPropertyBase* pProperty) { properties.push_back(pProperty); }
+void Extension::addProperty(utils::PropertyBase* pProperty) { properties.push_back(pProperty); }
 
-void Extension::removeProperty(ExtensionPropertyBase* pProperty) { erase(properties, pProperty); }
+void Extension::removeProperty(utils::PropertyBase* pProperty) { erase(properties, pProperty); }
 
-void Extension::propertyChanged(ExtensionPropertyBase* pProperty) {
+void Extension::propertyChanged(utils::PropertyBase* pProperty) {
 	if (object) object->notifyExtensionPropertyChanged(this, pProperty);
 }
 

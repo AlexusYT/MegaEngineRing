@@ -21,8 +21,10 @@
 
 #ifndef TEXTURERESOURCE_H
 #define TEXTURERESOURCE_H
+
 #include "EngineSDK/main/resources/Resource.h"
 #include "EngineSDK/main/resources/ResourceType.h"
+#include "EngineUtils/utils/Property.h"
 #include "ITextureResource.h"
 
 namespace mer::sdk::main {
@@ -33,11 +35,13 @@ class TextureResource : public ITextureResource, public Resource {
 	uint32_t width{};
 	uint32_t height{};
 	int32_t mipmapLevel{};
-	TextureMinFilter minFilter{};
-	TextureMagFilter magFilter{};
+	TextureMinFilter minFilter;
+	TextureMagFilter magFilter;
 	Texture2DImageFormat format{};
 	Texture2DType type{};
 	uint32_t textureBlock{};
+	utils::Property<uint64_t> textureHandle;
+	bool inited{};
 
 	TextureResource();
 
@@ -84,6 +88,8 @@ public:
 	IResource* asResource() override { return this; }
 
 	ResourceType getResourceType() override { return ResourceType::TEXTURE; }
+
+	[[nodiscard]] utils::PropertyReadOnly<uint64_t> getTextureHandle() override { return textureHandle.getReadOnly(); }
 };
 
 } // namespace mer::sdk::main

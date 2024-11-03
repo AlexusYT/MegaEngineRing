@@ -16,34 +16,12 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 23.10.24.
+// Created by alexus on 30.10.24.
 //
 
-#ifndef ILIGHTSOURCES_H
-#define ILIGHTSOURCES_H
+#ifndef PROPERTYREADONLY_H
+#define PROPERTYREADONLY_H
+#include "Property.h"
 
-namespace mer::sdk::renderer {
-class ISSBO;
-}
-
-namespace mer::sdk::main {
-class ILightInstance;
-
-class ILightSources {
-public:
-	virtual ~ILightSources() = default;
-
-	[[nodiscard]] virtual const std::shared_ptr<renderer::ISSBO> &getLightSsbo() const = 0;
-
-	virtual void updateSsbo() = 0;
-
-	virtual void onInstanceDataChanged(ILightInstance* pInstance) = 0;
-
-	virtual void addLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) = 0;
-
-	virtual void removeLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) = 0;
-};
-
-} // namespace mer::sdk::main
-
-#endif //ILIGHTSOURCES_H
+namespace mer::sdk::utils {} // namespace mer::sdk::utils
+#endif						 //PROPERTYREADONLY_H

@@ -75,7 +75,7 @@ public:
 
 	void closeView() override;
 
-	void setPresenter(IPresenterResourceEditor* pPresenter) override { presenter = pPresenter; }
+	void setPresenter(IPresenterResourceEditor* pPresenter) override;
 
 	sigc::connection connectChooseFile(const sigc::slot<void(Gtk::Entry::IconPosition)> &pSlot) const override {
 		return builder->get_widget<Gtk::Entry>("filePathEntry")->signal_icon_release().connect(pSlot);

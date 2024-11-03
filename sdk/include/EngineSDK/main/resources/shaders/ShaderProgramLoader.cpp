@@ -19,25 +19,18 @@
 // Created by alexus on 04.02.24.
 //
 
-#include "BuiltInProgramRequest.h"
+#include "ShaderProgramLoader.h"
 
-#include <EngineSDK/main/resources/Resources.h>
-#include <EngineSDK/renderer/shaders/Shader.h>
-#include <EngineSDK/renderer/shaders/ShaderProgram.h>
-
-#include <EngineUtils/utils/ReportMessage.h>
-
-#include "BuiltInShaderRequest.h"
 #include "EngineSDK/renderer/shaders/FragmentShader.h"
+#include "EngineSDK/renderer/shaders/ShaderProgram.h"
 #include "EngineSDK/renderer/shaders/VertexShader.h"
+#include "EngineUtils/utils/ReportMessage.h"
 
 namespace mer::sdk::main {
 
-std::shared_ptr<BuiltInProgramRequest> BuiltInProgramRequest::defaultProgram;
-
-utils::ReportMessagePtr BuiltInProgramRequest::BuiltInProgramLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
-																		  std::shared_ptr<std::istream> &pStream,
-																		  std::shared_ptr<IResource> &pResourceOut) {
+utils::ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
+												  std::shared_ptr<std::istream> &pStream,
+												  std::shared_ptr<IResource> &pResourceOut) {
 	std::shared_ptr<renderer::ShaderProgram> program = std::make_shared<renderer::ShaderProgram>();
 	program->setResourceUri(readString(pStream));
 	uint8_t shadersCount;
@@ -79,36 +72,11 @@ utils::ReportMessagePtr BuiltInProgramRequest::BuiltInProgramLoader::load(IResou
 		return msg;
 	}
 	pResourceOut = program;
-	/*
-	auto program = std::make_shared<renderer::ShaderProgram>();
-	for (const auto &resource: pDependencies->getResources()) {
-		if (auto shader = std::dynamic_pointer_cast<renderer::Shader>(resource.second)) {
-			program->attachShader(shader);
-		}
-	}
-	program->link();
-	if (!program->getLinkStatus()) {
-
-		auto msg = utils::ReportMessage::create();
-		msg->setStacktrace();
-		msg->setTitle("Failed to link the builtin shader program");
-		msg->setMessage("Error in shader code detected");
-		msg->addInfoLine("Shader program name: {}", pRequest->getName());
-		std::string log;
-		program->getInfoLog(log);
-		msg->addInfoLine("Linker log: {}", log);
-		return msg;
-	}
-	pResourceOut = program;*/
 	return nullptr;
 }
 
-const std::shared_ptr<BuiltInProgramRequest> &BuiltInProgramRequest::getDefaultProgram() {
-	if (!defaultProgram) {
-		defaultProgram = std::shared_ptr<BuiltInProgramRequest>{new BuiltInProgramRequest("Default")};
-		defaultProgram->setRequired(BuiltInVertexShaderRequest::getDefault(),
-									BuiltInFragmentShaderRequest::getDefault());
-	}
-	return defaultProgram;
+utils::ReportMessagePtr ShaderProgramLoader::init(IResourceLoadExecutor* /*pLoadExecutor*/,
+												  const std::shared_ptr<IResource> & /*pLoadedResource*/) {
+	return nullptr;
 }
 } // namespace mer::sdk::main

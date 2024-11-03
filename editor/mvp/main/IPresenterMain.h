@@ -26,8 +26,11 @@
 #include "mvp/PresenterBase.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 
+namespace mer::sdk::utils {
+class PropertyBase;
+}
+
 namespace mer::sdk::main {
-class ExtensionPropertyBase;
 class Extension;
 } // namespace mer::sdk::main
 
@@ -42,7 +45,7 @@ public:
 	virtual void readJsonForTab(int32_t pIndex,
 								const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pCallback) = 0;
 
-	virtual void selectResourceForProperty(sdk::main::ExtensionPropertyBase* pProperty) = 0;
+	virtual void selectResourceForProperty(sdk::utils::PropertyBase* pProperty) = 0;
 
 	virtual void addExtension(const std::string &pExtensionName) = 0;
 

@@ -27,6 +27,7 @@
 
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
+#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 
@@ -40,6 +41,11 @@ OrbitCameraExtension::OrbitCameraExtension()
 	propertyTargetPosition.getEvent().connect(updateMatrixSlot);
 	propertyAngle.getEvent().connect(updateMatrixSlot);
 	propertyDistance.getEvent().connect(updateMatrixSlot);
+}
+
+ExtensionProperty<glm::vec3> &OrbitCameraExtension::getPosition() {
+	const auto &objectSelf = getObject();
+	return objectSelf->getMainExtension()->propertyPosition;
 }
 
 utils::ReportMessagePtr OrbitCameraExtension::onInit() { return nullptr; }
@@ -59,6 +65,7 @@ void OrbitCameraExtension::updateMatrix() {
 
 	auto position =
 		propertyTargetPosition + glm::vec3(rotationMatrix * glm::vec4(0, 0, propertyDistance.getValue(), 0.0f));
+	getPosition() = position;
 	//auto look = glm::normalize(targetPosition - position);
 	auto up = glm::vec3(rotationMatrix * glm::vec4(globalUp, 0.0f));
 	/*auto right = glm::cross(look, up);

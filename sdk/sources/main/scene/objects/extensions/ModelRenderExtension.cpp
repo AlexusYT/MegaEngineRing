@@ -21,29 +21,30 @@
 
 #include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
 
-#include <EngineSDK/main/buffers/ProgramWideShaderBuffer.h>
-#include <EngineSDK/renderer/shaders/ShaderProgram.h>
-
-#include <epoxy/gl.h>
 #include <glm/ext/matrix_transform.hpp>
-#include <nlohmann/json.hpp>
 
+#include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/shaders/BuiltInProgramRequest.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
-#include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
+
+std::optional<MaterialData> ModelRenderExtension::getMaterialData() {
+	auto &mat = propertyMaterial.getValue();
+	if (!mat) return {};
+	return mat->getData();
+}
 
 utils::ReportMessagePtr ModelRenderExtension::onInit() {
 	auto pos = getObject()->getMainExtension()->propertyPosition;
 
-	data.modelViewMatrix = glm::translate(glm::mat4(1.0f), pos.getValue());
-	pos.getEvent().connect([this](const glm::vec3 &pPos) {
+	pos.connectEvent([this](const glm::vec3 &pPos) {
 		data.modelViewMatrix = glm::translate(glm::mat4(1.0f), pPos);
+		data.normalMatrix = glm::transpose(glm::inverse(glm::mat3(data.modelViewMatrix)));
 		notifyDataChanged();
 	});
+
 
 	if (propertyModel.getValue()) propertyModel->addRenderInstance(this);
 
@@ -54,6 +55,12 @@ utils::ReportMessagePtr ModelRenderExtension::onInit() {
 	propertyModel.getEvent().connect([this](const std::shared_ptr<IModel3DObject> &pObj) {
 		if (!pObj) return;
 		pObj->addRenderInstance(this);
+	});
+	propertyMaterial.connectEvent([this](const std::shared_ptr<IMaterialResource> &pMaterial) {
+		if (pMaterial) {
+			pMaterial->connectOnDataChangedSignal([this] { notifyMaterialChanged(); });
+		}
+		notifyMaterialChanged();
 	});
 	return nullptr;
 }

@@ -44,7 +44,7 @@ class SceneObject : public ISceneObject {
 	std::map<std::string, std::shared_ptr<Extension>> extensions;
 	sigc::signal<void(const std::shared_ptr<Extension> &pNewExt)> onExtensionAddedSignal;
 	sigc::signal<void(const std::shared_ptr<Extension> &pExtToRemove)> onExtensionRemovedSignal;
-	sigc::signal<void(Extension* pExtension, ExtensionPropertyBase* pProperty)> onExtensionPropertyChangedSignal;
+	sigc::signal<void(Extension* pExtension, utils::PropertyBase* pProperty)> onExtensionPropertyChangedSignal;
 	bool inited{};
 	std::shared_ptr<IScript> script;
 	std::string scriptName;
@@ -81,11 +81,11 @@ public:
 	}
 
 	sigc::connection connectOnExtensionPropertyChanged(
-		const sigc::slot<void(Extension* pExtension, ExtensionPropertyBase* pProperty)> &pSlot) final {
+		const sigc::slot<void(Extension* pExtension, utils::PropertyBase* pProperty)> &pSlot) final {
 		return onExtensionPropertyChangedSignal.connect(pSlot);
 	}
 
-	void notifyExtensionPropertyChanged(Extension* pExtension, ExtensionPropertyBase* pProperty) final {
+	void notifyExtensionPropertyChanged(Extension* pExtension, utils::PropertyBase* pProperty) final {
 		onExtensionPropertyChangedSignal(pExtension, pProperty);
 	}
 

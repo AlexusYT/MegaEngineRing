@@ -22,8 +22,10 @@
 #include "EngineSDK/main/resources/models/Model3DLoader.h"
 
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/main/resources/ResourceLoadResult.h"
 #include "EngineSDK/main/resources/models/Model3DObject.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
 
@@ -46,9 +48,15 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 		auto object = Model3DObject::create();
 		object->setName(readString(pStream));
 		std::string shaderUri = readString(pStream);
-		pLoadExecutor->loadResourceAsync(shaderUri, [object](const std::shared_ptr<IResource> &pResource,
-															 const utils::ReportMessagePtr & /*pError*/) {
-			if (auto shader = std::dynamic_pointer_cast<renderer::ShaderProgram>(pResource)) object->setShader(shader);
+		pLoadExecutor->loadResourceAsync(shaderUri, [object](const std::shared_ptr<ResourceLoadResult> &pResult) {
+			if (pResult->isErrored()) {
+				utils::Logger::error(pResult->getError());
+				return;
+			}
+			if (pResult->isReady()) {
+				if (auto shader = std::dynamic_pointer_cast<renderer::ShaderProgram>(pResult->getResource()))
+					object->setShader(shader);
+			}
 		});
 
 		std::vector<glm::vec3> vertices;
@@ -70,6 +78,20 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 	}
 	pResourceOut = resource;
 
+	return nullptr;
+}
+
+utils::ReportMessagePtr Model3DLoader::init(IResourceLoadExecutor* /*pLoadExecutor*/,
+											const std::shared_ptr<IResource> & /*pLoadedResource*/) {
+	/*auto model = std::dynamic_pointer_cast<Model3DResource>(pLoadedResource);
+	if (!model) {
+		auto msg = utils::ReportMessage::create();
+		msg->setTitle("Failed to init model resource");
+		msg->setMessage("Resource is not a model resource");
+		msg->addInfoLine("Actual resource type: {}", Utils::getTypeName(pLoadedResource.get()));
+		return msg;
+	}
+	model->setupRender();*/
 	return nullptr;
 }
 

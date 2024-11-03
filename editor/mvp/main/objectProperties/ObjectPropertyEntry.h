@@ -29,7 +29,6 @@ class ObjectPropertyEntry;
 
 namespace mer::sdk::main {
 class Extension;
-class ExtensionPropertyBase;
 } // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
@@ -42,21 +41,21 @@ public:
 
 class ObjectPropertyEntry : public ObjectPropertyEntryBase {
 	sdk::main::Extension* extension;
-	sdk::main::ExtensionPropertyBase* nativeProperty;
+	sdk::utils::PropertyBase* nativeProperty;
 
 protected:
-	explicit ObjectPropertyEntry(sdk::main::ExtensionPropertyBase* pNativeProperty, sdk::main::Extension* pExtension)
+	explicit ObjectPropertyEntry(sdk::utils::PropertyBase* pNativeProperty, sdk::main::Extension* pExtension)
 		: ObjectPropertyEntryBase(nullptr), extension(pExtension), nativeProperty(pNativeProperty) {}
 
 public:
-	static std::shared_ptr<ObjectPropertyEntry> create(sdk::main::ExtensionPropertyBase* pProp,
+	static std::shared_ptr<ObjectPropertyEntry> create(sdk::utils::PropertyBase* pProp,
 													   sdk::main::Extension* pExtension) {
 		return Glib::make_refptr_for_instance(new ObjectPropertyEntry(pProp, pExtension));
 	}
 
 	std::shared_ptr<Gio::MenuModel> getMenu() override { return nullptr; }
 
-	[[nodiscard]] sdk::main::ExtensionPropertyBase* getNativeProperty() const { return nativeProperty; }
+	[[nodiscard]] sdk::utils::PropertyBase* getNativeProperty() const { return nativeProperty; }
 
 	const std::string &getName() override { return nativeProperty->getPropertyName(); }
 

@@ -21,50 +21,12 @@
 
 #include "ResourceLoaders.h"
 
-#include <filesystem>
-
-#include "EngineUtils/utils/ReportMessage.h"
-#include "IResourceBundle.h"
-#include "ResourceLoader.h"
+#include "materials/MaterialLoader.h"
 #include "models/Model3DLoader.h"
-#include "shaders/BuiltInProgramRequest.h"
+#include "shaders/ShaderProgramLoader.h"
 #include "textures/TextureLoader.h"
 
 namespace mer::sdk::main {
-utils::ReportMessagePtr ResourceLoaders::load(
-	IResourceLoadExecutor* pLoadExecutor, const std::shared_ptr<IResourceBundle> &pBundle,
-	const std::string &pResourceUri, std::shared_ptr<IResource> &pResourceOut) {
-	auto uri = std::filesystem::path(pResourceUri);
-	if (!uri.has_extension()) {
-		auto msg = utils::ReportMessage::create();
-		msg->setTitle("Unable to load resource");
-		msg->setMessage("No resource extension in uri");
-		msg->addInfoLine("Resource URI: {}", pResourceUri);
-		return msg;
-	}
-	auto extension = uri.extension().string().substr(1);
-	auto iter = loaders.find(extension);
-	if (iter == loaders.end()) {
-		auto msg = utils::ReportMessage::create();
-		msg->setTitle("Unable to load resource");
-		msg->setMessage("No loader registered that can load such resource");
-		msg->addInfoLine("Resource URI: {}", pResourceUri);
-		return msg;
-	}
-
-	std::shared_ptr<std::istream> stream;
-	if (auto msg = pBundle->getResourceStream(pResourceUri, stream)) {
-		msg->setTitle("Unable to load resource");
-		return msg;
-	}
-	std::shared_ptr<IResource> resource;
-	if (auto msg = iter->second->load(pLoadExecutor, stream, resource)) {
-		msg->setTitle("Unable to load resource");
-		return msg;
-	}
-	pResourceOut = resource;
-	return nullptr;
-}
 
 void ResourceLoaders::addLoader(const std::shared_ptr<IResourceLoader> &pLoader) {
 	loaders.emplace(pLoader->getFileExtension(), pLoader);
@@ -73,7 +35,14 @@ void ResourceLoaders::addLoader(const std::shared_ptr<IResourceLoader> &pLoader)
 void ResourceLoaders::initLoaders() {
 	addLoader(std::make_shared<Model3DLoader>());
 	addLoader(std::make_shared<TextureLoader>());
-	addLoader(std::make_shared<BuiltInProgramRequest::BuiltInProgramLoader>());
+	addLoader(std::make_shared<ShaderProgramLoader>());
+	addLoader(std::make_shared<MaterialLoader>());
+}
+
+std::shared_ptr<IResourceLoader> ResourceLoaders::getLoader(const std::filesystem::path &pExtension) {
+	const auto iter = loaders.find(pExtension.string().substr(1));
+	if (iter == loaders.end()) { return nullptr; }
+	return iter->second;
 }
 
 } // namespace mer::sdk::main

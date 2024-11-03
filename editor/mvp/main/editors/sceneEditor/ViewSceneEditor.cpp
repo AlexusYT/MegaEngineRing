@@ -45,12 +45,16 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 		[this]() -> Glib::RefPtr<Gdk::GLContext> {
 			const auto surface = area.get_native()->get_surface();
 			auto glContext = surface->create_gl_context();
+
+			glContext->set_debug_enabled(true);
 			glContext->realize();
 			return glContext;
 		},
 		false);
 	area.set_expand(true);
 	area.set_auto_render(true);
+	area.set_has_depth_buffer(true);
+
 	motionController = Gtk::EventControllerMotion::create();
 	area.add_controller(motionController);
 

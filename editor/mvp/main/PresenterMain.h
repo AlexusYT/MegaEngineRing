@@ -80,7 +80,7 @@ public:
 	void readJsonForTab(int32_t pIndex,
 						const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pCallback) override;
 
-	void selectResourceForProperty(sdk::main::ExtensionPropertyBase* pProperty) override;
+	void selectResourceForProperty(sdk::utils::PropertyBase* pProperty) override;
 
 	void addExtension(const std::string &pExtensionName) override;
 

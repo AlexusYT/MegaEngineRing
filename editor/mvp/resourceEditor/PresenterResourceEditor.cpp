@@ -23,6 +23,7 @@
 
 #include "EditingResourceList.h"
 #include "EngineSDK/main/resources/IResource.h"
+#include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
@@ -32,6 +33,7 @@
 #include "mvp/ApplicationController.h"
 #include "readers/ObjFileResourceReader.h"
 #include "readers/PngFileResourceReader.h"
+#include "savers/MaterialResourceSaver.h"
 #include "savers/Model3DResourceSaver.h"
 #include "savers/TextureResourceSaver.h"
 
@@ -41,11 +43,11 @@ PresenterResourceEditor::PresenterResourceEditor(const std::shared_ptr<IModelRes
 	model->setPresenter(this);
 	model->getEditingResources()->connectOnResourceAddedSignal(
 		[this](const std::shared_ptr<sdk::main::IResource> &pResource) {
+			resourcesInfo.emplace(pResource.get(), ResourceInfo());
 			for (auto &[view, info]: viewsInfo) {
 
 				view->appendResource(pResource);
-				resourcesInfo.emplace(pResource.get(), ResourceInfo());
-				onSelectionChanged(pResource, view);
+				view->selectResource(pResource);
 			}
 		});
 }
@@ -124,27 +126,6 @@ void PresenterResourceEditor::onPathToFileChanged(IViewResourceEditor* pView, co
 		saveResource(resource);
 	}
 	pView->displayChosenPath(pPath.string());
-
-	/*auto path = model->getPathToFile();
-	auto pngReader = std::make_shared<PngFileResourceReader>(path);
-	pngReader->setSdk(model->getSdk());
-	if (auto msg = pngReader->checkType(); !msg) {
-		view->displayMessage("");
-		view->setStackVisibility(true);
-		resourceReader = objReader;
-	} else if (msg = objReader->checkType(); !msg) {
-		view->displayMessage("");
-		view->setStackVisibility(true);
-		view->switchTo("objModel");
-		auto objects = objReader->getObjects() | std::views::keys;
-		view->displayObjects(std::vector(objects.begin(), objects.end()));
-		resourceReader = objReader;
-	} else {
-		view->displayMessage(msg->getReport(false));
-		view->setStackVisibility(false);
-		sdk::utils::Logger::error(msg);
-	}
-	view->displayResourceName(path.stem().string());*/
 }
 
 void PresenterResourceEditor::savePathClicked(IViewResourceEditor* pView, const std::string &pNewPath,
@@ -159,10 +140,10 @@ void PresenterResourceEditor::savePathClicked(IViewResourceEditor* pView, const 
 		case sdk::main::ResourceType::NONE: return;
 	}
 
-	const auto newPath = pNewPath.starts_with("/") ? pNewPath.substr(1) : pNewPath;
+	const auto newPath = std::filesystem::path(pNewPath.starts_with("/") ? pNewPath.substr(1) : pNewPath);
 	const auto dataPath = getDataPath();
 	auto oldUri = resource->getResourceUri().string();
-	resource->setResourceUri(dataPath / newPath / (pNewName + extension));
+	resource->setResourceUri(newPath / (pNewName + extension));
 	saveResource(resource);
 	auto oldPath = dataPath / (oldUri.starts_with("/") ? oldUri.substr(1) : oldUri);
 	if (is_regular_file(oldPath) && exists(oldPath)) remove(oldPath);
@@ -177,8 +158,10 @@ void PresenterResourceEditor::stop() {}
 void PresenterResourceEditor::addView(const std::shared_ptr<IView> &pNewView) {
 	auto view = std::dynamic_pointer_cast<IViewResourceEditor>(pNewView);
 	view->setPresenter(this);
+	view->openView();
 	auto &res = model->getEditingResources()->getResources();
 	ViewInfo info;
+	viewsInfo.emplace(view.get(), info);
 	if (!res.empty()) {
 		std::shared_ptr<sdk::main::IResource> lastResource;
 		for (const auto &resource: res | std::views::values) {
@@ -188,12 +171,9 @@ void PresenterResourceEditor::addView(const std::shared_ptr<IView> &pNewView) {
 
 		info.selectedResource = lastResource;
 
-		viewsInfo.emplace(view.get(), info);
 		view->selectResource(lastResource);
-	} else
-		viewsInfo.emplace(view.get(), info);
+	}
 	views.emplace_back(view);
-	view->openView();
 }
 
 void PresenterResourceEditor::removeView(const std::shared_ptr<IView> &pOldView) {
@@ -218,7 +198,6 @@ void PresenterResourceEditor::onSelectionChanged(const std::shared_ptr<sdk::main
 	info->selectedResource = pResource;
 	auto resInfo = getResourceInfo(pResource.get());
 	if (!resInfo) return;
-	pView->selectResource(pResource);
 	if (auto modelResource = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
 		pView->switchTo("model");
 		auto modelObj = modelResource->getModelObjects() | std::views::values;
@@ -231,6 +210,9 @@ void PresenterResourceEditor::onSelectionChanged(const std::shared_ptr<sdk::main
 		pView->displayChosenPath(resInfo->srcFilePath.string());
 	} else if (auto textureResource = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
 		pView->switchTo("texture");
+		pView->displayChosenPath(resInfo->srcFilePath.string());
+	} else if (auto materialResource = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResource)) {
+		pView->switchTo("material");
 		pView->displayChosenPath(resInfo->srcFilePath.string());
 	}
 }
@@ -286,11 +268,14 @@ PresenterResourceEditor::ResourceInfo* PresenterResourceEditor::getResourceInfo(
 sdk::utils::ReportMessagePtr PresenterResourceEditor::saveResource(
 	const std::shared_ptr<sdk::main::IResource> &pResource) {
 	auto savePath = getDataPath() / pResource->getResourceUri();
-	if (auto modelRes = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
-		return Model3DResourceSaver::saveToFile(savePath, modelRes);
+	if (auto res = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
+		return Model3DResourceSaver::saveToFile(savePath, res);
 	}
-	if (auto textureRes = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
-		return TextureResourceSaver::saveToFile(savePath, textureRes);
+	if (auto res = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
+		return TextureResourceSaver::saveToFile(savePath, res);
+	}
+	if (auto res = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResource)) {
+		return MaterialResourceSaver::saveToFile(savePath, res);
 	}
 	return nullptr;
 }

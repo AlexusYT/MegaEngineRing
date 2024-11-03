@@ -28,6 +28,7 @@ namespace mer::sdk::main {
 class RenderInstanceData {
 public:
 	glm::mat4 modelViewMatrix{1};
+	glm::mat4 normalMatrix{1};
 };
 
 } // namespace mer::sdk::main

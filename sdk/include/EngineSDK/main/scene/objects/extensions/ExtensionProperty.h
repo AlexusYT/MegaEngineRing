@@ -21,97 +21,45 @@
 
 #ifndef EXTENSIONPROPERTY_H
 #define EXTENSIONPROPERTY_H
-#include <sigc++/signal.h>
 
+#include "EngineSDK/utils/ISerializable.h"
 #include "EngineSDK/utils/PropertyJsonSerializers.h"
-#include "ExtensionPropertyBase.h"
+#include "EngineUtils/utils/Property.h"
 
 namespace mer::sdk::main {
 
 template<typename T>
-class ExtensionProperty : public ExtensionPropertyBase {
-	IPropertyProvider* provider;
-	T value{};
-	sigc::signal<void(const T &)> valueChanged;
-	sigc::signal<T(const T &)> valueChanging;
+class ExtensionProperty : public utils::Property<T>, public ISerializable {
 
 
 public:
-	using PropertyT = T;
-
-	ExtensionProperty(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription = {})
-		: ExtensionPropertyBase(pName, pDescription), provider(pProvider) {
-		pProvider->addProperty(this);
-	}
-
-	const T &getValue() const { return value; }
-
-	//operator T() { return getValue(); }
-
-	operator const T&() const { return value; }
-
-	const T &operator*() const { return value; }
-
-	T &operator*() { return value; }
-
-	void setValue(const T &pOther) {
-		if (valueChanging.empty()) value = pOther;
-		else
-			value = valueChanging(pOther);
-		provider->propertyChanged(this);
-		valueChanged(value);
-	}
+	ExtensionProperty(utils::IPropertyProvider* pProvider, const std::string &pName,
+					  const std::string &pDescription = {})
+		: utils::Property<T>(pProvider, pName, pDescription) {}
 
 	ExtensionProperty &operator=(const T &pOther) {
-		setValue(pOther);
+		utils::Property<T>::setValue(pOther);
 		return *this;
 	}
 
 	ExtensionProperty &operator=(T &&pOther) {
-		setValue(pOther);
+		utils::Property<T>::setValue(pOther);
 		return *this;
 	}
 
-	T &operator->() { return value; }
-
-	bool operator==(const T &pRhs) { return value == pRhs; }
-
-	bool operator!=(const T &pRhs) { return !(value == pRhs); }
-
-	template<typename T1>
-	T1 operator+(const T1 &pRhs) const {
-		return value + pRhs;
+	void serialize(nlohmann::json &pJson, Extension* pExtension) override {
+		pJson[this->utils::Property<T>::PropertyBase::getPropertyName()] =
+			utils::PropertyJsonSerializer<T>::serialize(utils::Property<T>::getValue(), pExtension);
 	}
 
-	[[nodiscard]] sigc::slot<T()> &getGetter() { return sigc::mem_fun(*this, &ExtensionProperty::getValue); }
-
-	[[nodiscard]] sigc::slot<void(const T &)> getSetter() {
-		return sigc::slot<void(const T &)>(sigc::mem_fun(*this, &ExtensionProperty::setValue));
+	void deserialize(const nlohmann::json &pJson, Extension* pExtension) override {
+		if (pJson.contains(this->utils::Property<T>::getPropertyName()))
+			utils::Property<T>::setValue(utils::PropertyJsonSerializer<T>::deserialize(
+				pJson.at(this->utils::Property<T>::getPropertyName()), pExtension));
+		else
+			utils::Property<T>::setValue({});
 	}
-
-	[[nodiscard]] sigc::signal<void(const T &)> &getEvent() { return valueChanged; }
-
-	sigc::connection connectEvent(const sigc::slot<void(const T &)> &pSlot) {
-		pSlot(value);
-		return valueChanged.connect(pSlot);
-	}
-
-	[[nodiscard]] sigc::signal<T(const T &)> &getReturnOverride() { return valueChanging; }
-
-	void serialize(nlohmann::json &pJson, Extension* pExtension) override;
-
-	void deserialize(const nlohmann::json &pJson, Extension* pExtension) override;
 };
-
-template<typename T>
-void ExtensionProperty<T>::serialize(nlohmann::json &pJson, Extension* pExtension) {
-	pJson[getPropertyName()] = utils::PropertyJsonSerializer<T>::serialize(value, pExtension);
-}
-
-template<typename T>
-void ExtensionProperty<T>::deserialize(const nlohmann::json &pJson, Extension* pExtension) {
-	value = utils::PropertyJsonSerializer<T>::deserialize(pJson.at(getPropertyName()), pExtension);
-}
 
 
 } // namespace mer::sdk::main

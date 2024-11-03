@@ -26,9 +26,9 @@
 
 #include "EngineSDK/main/resources/Resources.h"
 #include "EngineSDK/main/scene/IScene.h"
+#include "EngineUtils/utils/IPropertyProvider.h"
 #include "EngineUtils/utils/ReportMessageFwd.h"
 #include "ExtensionProperty.h"
-#include "IPropertyProvider.h"
 
 namespace mer::sdk::utils {
 class ModifierKeys;
@@ -45,8 +45,8 @@ class SceneObject;
 #define EXT_TYPE_NAME(__TYPE_NAME)                                                                                     \
 	static const char* typeName() { return __TYPE_NAME; }
 
-class Extension : public virtual IPropertyProvider {
-	std::vector<ExtensionPropertyBase*> properties;
+class Extension : public virtual utils::IPropertyProvider {
+	std::vector<utils::PropertyBase*> properties;
 	friend SceneObject;
 	SceneObject* object{};
 	std::vector<sigc::connection> connectionStorage;
@@ -79,7 +79,7 @@ public:
 
 	~Extension() override = default;
 
-	[[nodiscard]] const std::vector<ExtensionPropertyBase*> &getProperties() const { return properties; }
+	[[nodiscard]] const std::vector<utils::PropertyBase*> &getProperties() const { return properties; }
 
 	[[nodiscard]] SceneObject* getObject() const { return object; }
 
@@ -105,13 +105,9 @@ public:
 
 	void setHeader(const std::string &pHeader) { header = pHeader; }
 
-	void serialize(nlohmann::json &pJson) {
-		for (auto property: properties) { property->serialize(pJson, this); }
-	}
+	void serialize(nlohmann::json &pJson);
 
-	void deserialize(const nlohmann::json &pJson) {
-		for (auto property: properties) { property->deserialize(pJson, this); }
-	}
+	void deserialize(const nlohmann::json &pJson);
 
 	virtual utils::ReportMessagePtr onInit() { return nullptr; }
 
@@ -127,14 +123,11 @@ public:
 	 * @param pResourceUri
 	 * @param pSlot NOT in a main context
 	 */
-	void loadResourceAsync(
-		const std::string &pResourceUri,
-		const sigc::slot<void(const std::shared_ptr<IResource> &pResource, const utils::ReportMessagePtr &pError)>
-			&pSlot) const {
+	void loadResourceAsync(const std::string &pResourceUri,
+						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const {
 
 		getScene()->loadResourceAsync(pResourceUri,
-									  [pSlot](const std::shared_ptr<IResource> &pResource,
-											  const utils::ReportMessagePtr &pError) { pSlot(pResource, pError); });
+									  [pSlot](const std::shared_ptr<ResourceLoadResult> &pResult) { pSlot(pResult); });
 	}
 
 	std::shared_ptr<IResource> loadResourceSync(const std::string &pResourceUri) const {
@@ -174,11 +167,11 @@ private:
 
 	static void getTypeNameFor(Extension* pExt, std::string &pNameOut);
 
-	void addProperty(ExtensionPropertyBase* pProperty) override;
+	void addProperty(utils::PropertyBase* pProperty) override;
 
-	void removeProperty(ExtensionPropertyBase* pProperty) override;
+	void removeProperty(utils::PropertyBase* pProperty) override;
 
-	void propertyChanged(ExtensionPropertyBase* pProperty) override;
+	void propertyChanged(utils::PropertyBase* pProperty) override;
 };
 } // namespace mer::sdk::main
 

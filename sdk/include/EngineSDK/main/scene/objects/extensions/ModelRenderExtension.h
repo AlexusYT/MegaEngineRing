@@ -21,19 +21,12 @@
 
 #ifndef MODELRENDEREXTENSION_H
 #define MODELRENDEREXTENSION_H
-
-#include <nlohmann/detail/macro_scope.hpp>
-#include <nlohmann/json_fwd.hpp>
-
 #include "EngineSDK/main/render/RenderInstance.h"
 #include "EngineSDK/main/render/RenderInstanceData.h"
 #include "Extension.h"
 
-namespace mer::sdk::renderer {
-class ShaderProgram;
-}
-
 namespace mer::sdk::main {
+class IMaterialResource;
 class IModel3DObject;
 
 class ModelRenderExtension : public Extension, public RenderInstance {
@@ -41,10 +34,11 @@ class ModelRenderExtension : public Extension, public RenderInstance {
 	RenderInstanceData data;
 
 protected:
-	ModelRenderExtension() : propertyModel(this, "Model") {}
+	ModelRenderExtension() : propertyModel(this, "Model"), propertyMaterial(this, "Material") {}
 
 public:
 	ExtensionProperty<std::shared_ptr<IModel3DObject>> propertyModel;
+	ExtensionProperty<std::shared_ptr<IMaterialResource>> propertyMaterial;
 
 	METHOD_CREATE(ModelRenderExtension)
 
@@ -52,9 +46,9 @@ public:
 
 	const RenderInstanceData &getRenderInstanceData() override { return data; }
 
-	std::shared_ptr<renderer::ShaderProgram> getShader() override {
-		return nullptr;
-	}
+	std::optional<MaterialData> getMaterialData() override;
+
+	std::shared_ptr<renderer::ShaderProgram> getShader() override { return nullptr; }
 
 protected:
 	utils::ReportMessagePtr onInit() override;

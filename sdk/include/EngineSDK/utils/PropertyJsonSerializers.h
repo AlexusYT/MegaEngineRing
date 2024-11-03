@@ -26,6 +26,11 @@
 
 #include "PropertyJsonSerializer.h"
 
+namespace mer::sdk::main {
+class ITextureResource;
+class IMaterialResource;
+} // namespace mer::sdk::main
+
 namespace mer::sdk::renderer {
 class ShaderProgram;
 }
@@ -81,6 +86,21 @@ struct PropertyJsonSerializer<std::shared_ptr<renderer::ShaderProgram>> {
 									main::Extension* pExtension);
 	static std::shared_ptr<renderer::ShaderProgram> deserialize(const nlohmann::json &pJson,
 																main::Extension* pExtension);
+};
+
+template<>
+struct PropertyJsonSerializer<std::shared_ptr<main::ITextureResource>> {
+	static nlohmann::json serialize(const std::shared_ptr<main::ITextureResource> &pValue, main::Extension* pExtension);
+	static std::shared_ptr<main::ITextureResource> deserialize(const nlohmann::json &pJson,
+															   const main::Extension* pExtension);
+};
+
+template<>
+struct PropertyJsonSerializer<std::shared_ptr<main::IMaterialResource>> {
+	static nlohmann::json serialize(const std::shared_ptr<main::IMaterialResource> &pValue,
+									main::Extension* pExtension);
+	static std::shared_ptr<main::IMaterialResource> deserialize(const nlohmann::json &pJson,
+																const main::Extension* pExtension);
 };
 } // namespace mer::sdk::utils
 

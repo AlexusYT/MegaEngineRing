@@ -24,19 +24,12 @@
 #include <EngineSDK/main/resources/LoadedResources.h>
 #include <EngineSDK/main/scene/IScene.h>
 
-#include <dlfcn.h>
-
-#include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/resources/models/Model3DLoader.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
-#include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
 #include "EngineSDK/utils/MouseButton.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
 #include "project/Project.h"
-#include "project/sceneObjects/EditorSceneObject.h"
 
 namespace mer::sdk::main {
 class CameraMouseExtension;
@@ -49,19 +42,8 @@ namespace mer::editor::mvp {
 PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor)
 	: modelSceneEditor(pModelSceneEditor) {
 
-	modelSceneEditor->connectOnLoadingSignal([this] {
-		for (auto view: views) {
-			if (!modelSceneEditor->hasResourcesContext()) {
-				//modelSceneEditor->setupResourcesContext(view.first->getResourcesContext());
-				return;
-			}
-		}
-	});
 	modelSceneEditor->connectOnLoadedSignal([this] {
 		for (auto view: views) {
-			if (!modelSceneEditor->hasResourcesContext()) {
-				//modelSceneEditor->setupResourcesContext(view.first->getResourcesContext());
-			}
 			view.first->executeInMainThread(
 				[this, view](const std::promise<void> & /*pPromise*/) { view.first->redraw(); });
 

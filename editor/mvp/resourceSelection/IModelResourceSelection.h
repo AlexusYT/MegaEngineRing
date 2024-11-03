@@ -22,8 +22,11 @@
 #ifndef IMODELRESOURCESELECTION_H
 #define IMODELRESOURCESELECTION_H
 
+namespace mer::sdk::utils {
+class PropertyBase;
+} // namespace mer::sdk::utils
+
 namespace mer::sdk::main {
-class ExtensionPropertyBase;
 class IResource;
 } // namespace mer::sdk::main
 
@@ -42,9 +45,9 @@ public:
 
 	virtual void setPresenter(IPresenterResourceSelection* pPresenter) = 0;
 
-	[[nodiscard]] virtual sdk::main::ExtensionPropertyBase* getPropertyBase() const = 0;
+	[[nodiscard]] virtual sdk::utils::PropertyBase* getPropertyBase() const = 0;
 
-	virtual void setPropertyBase(sdk::main::ExtensionPropertyBase* pPropertyBase) = 0;
+	virtual void setPropertyBase(sdk::utils::PropertyBase* pPropertyBase) = 0;
 
 	virtual void setLoadedScene(const std::shared_ptr<project::LoadedScene> &pLoadedScene) = 0;
 

@@ -22,14 +22,31 @@
 #ifndef MATERIALRESOURCE_H
 #define MATERIALRESOURCE_H
 
+#include <glm/vec3.hpp>
+
+#include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/resources/Resource.h"
 #include "EngineSDK/main/resources/ResourceType.h"
 #include "IMaterialResource.h"
 
 namespace mer::sdk::main {
+enum class Texture2DImageFormat;
+class ITextureResource;
+} // namespace mer::sdk::main
+
+namespace mer::sdk::main {
 
 class MaterialResource : public IMaterialResource, public Resource {
-	MaterialResource() = default;
+	std::shared_ptr<ITextureResource> baseColorMap;
+	std::shared_ptr<ITextureResource> normalMap;
+	std::shared_ptr<ITextureResource> metallicMap;
+	std::shared_ptr<ITextureResource> roughnessMap;
+	std::shared_ptr<ITextureResource> aoMap;
+	MaterialData data;
+
+	sigc::signal<void()> onDataChangedSignal;
+
+	MaterialResource();
 
 public:
 	~MaterialResource() override = default;
@@ -39,7 +56,53 @@ public:
 	ResourceType getResourceType() override;
 
 	void render() override;
+
+	const MaterialData &getData() override { return data; }
+
+	[[nodiscard]] const std::shared_ptr<ITextureResource> &getBaseColorMap() const override { return baseColorMap; }
+
+	utils::ReportMessagePtr setBaseColorMap(const std::shared_ptr<ITextureResource> &pBaseColorMap) override;
+
+	[[nodiscard]] std::optional<glm::vec3> getBaseColor() override;
+
+	[[nodiscard]] const std::shared_ptr<ITextureResource> &getNormalMap() const override { return normalMap; }
+
+	utils::ReportMessagePtr setNormalMap(const std::shared_ptr<ITextureResource> &pNormalMap) override;
+
+	[[nodiscard]] std::optional<glm::vec3> getNormalColor() override;
+
+	[[nodiscard]] const std::shared_ptr<ITextureResource> &getMetallicMap() const override { return metallicMap; }
+
+	utils::ReportMessagePtr setMetallicMap(const std::shared_ptr<ITextureResource> &pMetallicMap) override;
+
+	[[nodiscard]] std::optional<float> getMetallicColor() override;
+
+	[[nodiscard]] const std::shared_ptr<ITextureResource> &getRoughnessMap() const override { return roughnessMap; }
+
+	utils::ReportMessagePtr setRoughnessMap(const std::shared_ptr<ITextureResource> &pRoughnessMap) override;
+
+	[[nodiscard]] std::optional<float> getRoughnessColor() override;
+
+	[[nodiscard]] const std::shared_ptr<ITextureResource> &getAoMap() const override { return aoMap; }
+
+	utils::ReportMessagePtr setAoMap(const std::shared_ptr<ITextureResource> &pAoMap) override;
+
+	[[nodiscard]] std::optional<float> getAoColor() override;
+
+	IResource* asResource() override { return this; }
+
+	sigc::connection connectOnDataChangedSignal(const sigc::slot<void()> &pSlot) override {
+		return onDataChangedSignal.connect(pSlot);
+	}
+
+private:
+	void connectHandlerChanged(const std::shared_ptr<ITextureResource> &pTextureResource, glm::vec4* pMap) const;
+	static glm::vec4 handleToVec(uint64_t pHandle);
+
+	static utils::ReportMessagePtr checkFormat(Texture2DImageFormat pFormat,
+											   const std::vector<Texture2DImageFormat> &pAcceptableFormats);
 };
+
 
 } // namespace mer::sdk::main
 

@@ -6,6 +6,8 @@ set(UTILS_SOURCES
         sources/utils/ConsoleColors.cpp
         sources/utils/Utils.cpp
         sources/utils/UUID.cpp
+        sources/utils/PropertyBase.cpp
+        sources/utils/Property.cpp
 )
 set(UTILS_HEADERS
         include/EngineUtils/utils/Logger.h
@@ -13,6 +15,10 @@ set(UTILS_HEADERS
         include/EngineUtils/utils/ReportMessageFwd.h
         include/EngineUtils/utils/Utils.h
         include/EngineUtils/utils/UUID.h
+        include/EngineUtils/utils/IPropertyProvider.h
+        include/EngineUtils/utils/PropertyBase.h
+        include/EngineUtils/utils/Property.h
+        include/EngineUtils/utils/PropertyReadOnly.h
 )
 
 add_library(MegaEngineUtils STATIC ${UTILS_SOURCES} ${UTILS_HEADERS})
@@ -23,9 +29,11 @@ target_include_directories(
         PUBLIC
         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
 )
+find_package(sigc++-3 CONFIG REQUIRED)
 
 target_compile_features(MegaEngineUtils PUBLIC cxx_std_23)
 target_link_libraries(MegaEngineUtils PRIVATE stdc++exp)
+target_link_libraries(MegaEngineUtils PRIVATE sigc-3.0)
 target_compile_options(MegaEngineUtils PRIVATE -fPIC)
 set_property(TARGET MegaEngineUtils PROPERTY OUTPUT_NAME MegaEngineUtils)
 set_property(TARGET MegaEngineUtils PROPERTY PREFIX "")

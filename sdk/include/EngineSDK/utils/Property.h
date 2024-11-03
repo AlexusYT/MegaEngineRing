@@ -25,6 +25,7 @@
 
 namespace mer::sdk::utils {
 
+/*
 template<typename T>
 class Property {
 public:
@@ -88,6 +89,7 @@ public:
 
 	[[nodiscard]] const SignalT &getSignalChanged() const { return signalChanged; }
 };
+*/
 
 } // namespace mer::sdk::utils
 
