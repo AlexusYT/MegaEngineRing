@@ -47,6 +47,8 @@ public:
 		return propertyMatrix.getEvent();
 	}
 
+	[[nodiscard]] ExtensionProperty<glm::vec3> &getPosition() override;
+
 	void addAngle(const glm::vec2 &pAngleToAdd) { propertyAngle = propertyAngle + pAngleToAdd; }
 
 

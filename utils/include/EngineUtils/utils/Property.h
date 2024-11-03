@@ -26,12 +26,68 @@
 #include "PropertyBase.h"
 
 namespace mer::sdk::utils {
+template<typename T>
+concept IsSharedPtr = requires { std::is_pointer_v<typename T::element_type>; };
+
+template<typename T>
+class PropertyReadOnly {
+	const T &value;
+	sigc::signal<void(const T &)> &valueChanged;
+	const sigc::slot<T()> &getter;
+
+
+public:
+	using PropertyT = T;
+
+	PropertyReadOnly() = delete;
+
+	PropertyReadOnly(const T &pValue, sigc::signal<void(const T &)> &pValueChanged, const sigc::slot<T()> &pGetter)
+		: value(pValue), valueChanged(pValueChanged), getter(pGetter) {}
+
+	const T &getValue() const { return value; }
+
+	operator const T&() const { return value; }
+
+	const T &operator*() const { return value; }
+
+	bool operator==(const T &pRhs) { return value == pRhs; }
+
+	bool operator!=(const T &pRhs) { return !(value == pRhs); }
+
+	auto operator->() const
+		requires IsSharedPtr<T>
+	{
+		return value.get();
+	}
+
+	auto operator->() const
+		requires requires { requires !IsSharedPtr<T>; }
+	{
+		return &value;
+	}
+
+	template<typename T1>
+	T1 operator+(const T1 &pRhs) const {
+		return value + pRhs;
+	}
+
+	[[nodiscard]] sigc::slot<T()> &getGetter() const { return getter; }
+
+	[[nodiscard]] const sigc::signal<void(const T &)> &getEvent() const { return valueChanged; }
+
+	sigc::connection connectEvent(const sigc::slot<void(const T &)> &pSlot) {
+		//pSlot(value);
+		return valueChanged.connect(pSlot);
+	}
+};
 
 template<typename T>
 class Property : public PropertyBase {
 	T value{};
 	sigc::signal<void(const T &)> valueChanged;
 	sigc::signal<T(const T &)> valueChanging;
+	sigc::slot<T()> getter;
+	sigc::slot<void(const T &)> setter;
 
 
 public:
@@ -40,11 +96,12 @@ public:
 	Property() = delete;
 
 	Property(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription = {})
-		: PropertyBase(pProvider, pName, pDescription) {}
+		: PropertyBase(pProvider, pName, pDescription) {
+		getter = sigc::mem_fun(*this, &Property::getValue);
+		setter = sigc::mem_fun(*this, &Property::setValue);
+	}
 
 	const T &getValue() const { return value; }
-
-	//operator T() { return getValue(); }
 
 	operator const T&() const { return value; }
 
@@ -73,30 +130,26 @@ public:
 
 	bool operator!=(const T &pRhs) { return !(value == pRhs); }
 
-	auto operator->()
-		requires requires { std::is_pointer_v<typename T::element_type>; }
+	auto operator->() const
+		requires IsSharedPtr<T>
 	{
 		return value.get();
 	}
 
-	/*
-	template<typename U>
-	T* operator->()
-		requires requires { !std::is_same_v<T, std::shared_ptr<U>>; }
+	auto operator->() const
+		requires requires { requires !IsSharedPtr<T>; }
 	{
 		return &value;
-	}*/
+	}
 
 	template<typename T1>
 	T1 operator+(const T1 &pRhs) const {
 		return value + pRhs;
 	}
 
-	[[nodiscard]] sigc::slot<T()> &getGetter() { return sigc::mem_fun(*this, &Property::getValue); }
+	[[nodiscard]] sigc::slot<T()> &getGetter() { return getter; }
 
-	[[nodiscard]] sigc::slot<void(const T &)> getSetter() {
-		return sigc::slot<void(const T &)>(sigc::mem_fun(*this, &Property::setValue));
-	}
+	[[nodiscard]] sigc::slot<void(const T &)> getSetter() { return setter; }
 
 	[[nodiscard]] sigc::signal<void(const T &)> &getEvent() { return valueChanged; }
 
@@ -111,6 +164,8 @@ public:
 		notifyPropertyChanged();
 		valueChanged(value);
 	}
+
+	PropertyReadOnly<T> getReadOnly() { return PropertyReadOnly<T>(value, valueChanged, getter); }
 };
 
 } // namespace mer::sdk::utils

@@ -26,7 +26,7 @@
 #include "EngineSDK/main/light/ILightInstance.h"
 #include "EngineSDK/main/light/LightSources.h"
 #include "EngineSDK/main/resources/LoadedResources.h"
-#include "EngineSDK/main/resources/shaders/ShaderProgramLoader.h"
+#include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
 #include "EngineSDK/renderer/GL.h"
 #include "EngineUtils/utils/Logger.h"
 #include "actor/IActor.h"
@@ -59,11 +59,13 @@ void Scene::switchCamera(ICamera* pNewCamera) {
 	if (!connection.empty()) connection.disconnect();
 	connection = pNewCamera->getOnMatrixChanged().connect(sigc::mem_fun(*this, &Scene::setViewProjMatrix));
 	pNewCamera->updateMatrix();
+	pNewCamera->getPosition().connectEvent(
+		[this](const glm::vec3 &pPosition) { programBuffer->setCameraPos(pPosition); });
 }
 
 void Scene::beforeRender() {
-	renderer::GL::setClearColor(0.2f, 0.2f, 0.2f, 0);
-	renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT);
+	renderer::GL::setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT | renderer::ClearBits::DEPTH_BUFFER_BIT);
 }
 
 sdk::utils::ReportMessagePtr Scene::initScene() {
@@ -187,6 +189,7 @@ void Scene::removeObject(ISceneObject* pObjectToRemove) {
 
 void Scene::render() {
 	beforeRender();
+	programBuffer->update();
 	programBuffer->bindBufferBase(0);
 	lightSources->updateSsbo();
 	lightSources->getLightSsbo()->bindBufferBase(3);

@@ -16,23 +16,24 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 24.10.24.
+// Created by alexus on 28.10.24.
 //
 
-#ifndef MATERIALDATA_H
-#define MATERIALDATA_H
-#include <glm/vec4.hpp>
+#include "../../include/EngineUtils/utils/PropertyBase.h"
 
-namespace mer::sdk::main {
+#include "../../include/EngineUtils/utils/IPropertyProvider.h"
 
-struct MaterialData {
-	glm::vec4 baseColorMap{};
-	glm::vec4 normalMap{};
-	glm::vec4 metallicMap{};
-	glm::vec4 roughnessMap{};
-	glm::vec4 aoMap{};
-};
+namespace mer::sdk::utils {
+PropertyBase::PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription)
+	: name(pName), description(pDescription), provider(pProvider) {
+	if (provider) provider->addProperty(this);
+}
 
-} // namespace mer::sdk::main
+PropertyBase::~PropertyBase() {
+	if (provider) provider->removeProperty(this);
+}
 
-#endif //MATERIALDATA_H
+void PropertyBase::notifyPropertyChanged() {
+	if (provider) provider->propertyChanged(this);
+}
+} // namespace mer::sdk::utils

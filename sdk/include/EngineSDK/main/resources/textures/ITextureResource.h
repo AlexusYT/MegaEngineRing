@@ -23,7 +23,13 @@
 #define ITEXTURERESOURCE_H
 #include "EngineSDK/main/render/IRenderable.h"
 
+namespace mer::sdk::utils {
+template<typename T>
+class PropertyReadOnly;
+}
+
 namespace mer::sdk::main {
+
 enum class Texture2DType;
 enum class Texture2DImageFormat;
 enum class TextureBaseInternalFormat;
@@ -64,7 +70,7 @@ public:
 
 	virtual IResource* asResource() = 0;
 
-	[[nodiscard]] virtual uint64_t getTextureHandle() const = 0;
+	[[nodiscard]] virtual utils::PropertyReadOnly<uint64_t> getTextureHandle() = 0;
 };
 
 } // namespace mer::sdk::main

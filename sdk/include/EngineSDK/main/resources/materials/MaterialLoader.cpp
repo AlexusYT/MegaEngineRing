@@ -28,12 +28,12 @@
 #include "MaterialResource.h"
 
 namespace mer::sdk::main {
-utils::ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecutor,
+utils::ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
 											 std::shared_ptr<std::istream> &pStream,
 											 std::shared_ptr<IResource> &pResourceOut) {
 	auto resource = MaterialResource::create();
 	resource->setResourceUri(readString(pStream));
-	pLoadExecutor->loadResourceAsync("baseColor.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
+	/*pLoadExecutor->loadResourceAsync("baseColor.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
 		if (pResult->isErrored()) {
 			utils::Logger::error(pResult->getError());
 		} else if (pResult->isReady()) {
@@ -42,7 +42,42 @@ utils::ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecuto
 			}
 		}
 	});
-
+	pLoadExecutor->loadResourceAsync("normal.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
+		if (pResult->isErrored()) {
+			utils::Logger::error(pResult->getError());
+		} else if (pResult->isReady()) {
+			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
+				if (auto msg = resource->setNormalMap(texture)) { utils::Logger::error(msg); }
+			}
+		}
+	});
+	pLoadExecutor->loadResourceAsync("metallic.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
+		if (pResult->isErrored()) {
+			utils::Logger::error(pResult->getError());
+		} else if (pResult->isReady()) {
+			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
+				if (auto msg = resource->setMetallicMap(texture)) { utils::Logger::error(msg); }
+			}
+		}
+	});
+	pLoadExecutor->loadResourceAsync("roughness.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
+		if (pResult->isErrored()) {
+			utils::Logger::error(pResult->getError());
+		} else if (pResult->isReady()) {
+			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
+				if (auto msg = resource->setRoughnessMap(texture)) { utils::Logger::error(msg); }
+			}
+		}
+	});
+	pLoadExecutor->loadResourceAsync("ao.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
+		if (pResult->isErrored()) {
+			utils::Logger::error(pResult->getError());
+		} else if (pResult->isReady()) {
+			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
+				if (auto msg = resource->setAoMap(texture)) { utils::Logger::error(msg); }
+			}
+		}
+	});*/
 
 	pResourceOut = resource;
 	return nullptr;

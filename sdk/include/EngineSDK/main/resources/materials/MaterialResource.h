@@ -30,8 +30,9 @@
 #include "IMaterialResource.h"
 
 namespace mer::sdk::main {
+enum class Texture2DImageFormat;
 class ITextureResource;
-}
+} // namespace mer::sdk::main
 
 namespace mer::sdk::main {
 
@@ -95,7 +96,11 @@ public:
 	}
 
 private:
+	void connectHandlerChanged(const std::shared_ptr<ITextureResource> &pTextureResource, glm::vec4* pMap) const;
 	static glm::vec4 handleToVec(uint64_t pHandle);
+
+	static utils::ReportMessagePtr checkFormat(Texture2DImageFormat pFormat,
+											   const std::vector<Texture2DImageFormat> &pAcceptableFormats);
 };
 
 

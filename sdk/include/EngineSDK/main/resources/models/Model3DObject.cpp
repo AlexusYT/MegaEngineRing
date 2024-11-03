@@ -135,7 +135,17 @@ void Model3DObject::onInstanceDataChanged(IRenderInstance* /*pInstance*/) {
 			instanceShader = shader;
 		}
 		auto instanceData = instance->getRenderInstanceData();
-		auto materialData = instance->getMaterialData().value();
+		auto materialDataOpt = instance->getMaterialData();
+		MaterialData materialData;
+		if (materialDataOpt.has_value()) {
+			materialData = materialDataOpt.value();
+		} else {
+			materialData.aoMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+			materialData.metallicMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+			materialData.roughnessMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+			materialData.normalMap = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+			materialData.baseColorMap = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+		}
 		auto iter = instancesData.find(instanceShader);
 		if (iter == instancesData.end()) {
 			iter = instancesData

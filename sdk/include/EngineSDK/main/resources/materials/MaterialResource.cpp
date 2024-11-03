@@ -23,6 +23,7 @@
 
 #include <glm/common.hpp>
 #include <glm/vec2.hpp>
+#include <numeric>
 
 #include "EngineSDK/main/resources/ResourceType.h"
 #include "EngineSDK/main/resources/textures/ITextureResource.h"
@@ -30,7 +31,13 @@
 #include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
-MaterialResource::MaterialResource() {}
+MaterialResource::MaterialResource() {
+	data.aoMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	data.metallicMap = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
+	data.roughnessMap = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
+	data.normalMap = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	data.baseColorMap = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+}
 
 std::shared_ptr<MaterialResource> MaterialResource::create() {
 	return std::shared_ptr<MaterialResource>(new MaterialResource());
@@ -45,34 +52,14 @@ utils::ReportMessagePtr MaterialResource::setBaseColorMap(const std::shared_ptr<
 		if (data.baseColorMap.w == 2.0f) data.baseColorMap = glm::vec4(1.0f);
 		return nullptr;
 	}
-	switch (auto format = pBaseColorMap->getFormat()) {
-
-		case Texture2DImageFormat::RGB: break;
-		case Texture2DImageFormat::BGR: break;
-		case Texture2DImageFormat::RGBA: break;
-		case Texture2DImageFormat::BGRA: break;
-		default:
-			auto msg = utils::ReportMessage::create();
-			msg->setTitle("Failed to set base color (albedo) map");
-			msg->setMessage("Unsupported texture format for that map type. Must be RGB or RGBA");
-			msg->addInfoLine("Trying to set texture with {} format", to_string(format));
-			return msg;
-	}
-	auto handle = pBaseColorMap->getTextureHandle() + 1;
-	if (handle == 0) {
-		auto msg = utils::ReportMessage::create();
+	if (auto msg = checkFormat(pBaseColorMap->getFormat(), {Texture2DImageFormat::RGB, Texture2DImageFormat::BGR,
+															Texture2DImageFormat::RGBA, Texture2DImageFormat::BGRA})) {
 		msg->setTitle("Failed to set base color (albedo) map");
-		msg->setMessage("OpenGL returned null handle");
-		msg->addInfoLine("Is the ARB_bindless_texture extension supported by your videocard?");
 		return msg;
 	}
-
-	data.baseColorUint = handle;
-	data.baseColorMap = handleToVec(handle);
-	auto test = glm::floatBitsToUint(glm::vec2(data.baseColorMap.x, data.baseColorMap.y));
-	utils::Logger::out("{} {}", test.x, test.y);
 	baseColorMap = pBaseColorMap;
-	onDataChangedSignal();
+	connectHandlerChanged(pBaseColorMap, &data.baseColorMap);
+
 	return nullptr;
 }
 
@@ -82,7 +69,18 @@ std::optional<glm::vec3> MaterialResource::getBaseColor() {
 }
 
 utils::ReportMessagePtr MaterialResource::setNormalMap(const std::shared_ptr<ITextureResource> &pNormalMap) {
+	if (!pNormalMap) {
+		if (data.normalMap.w == 2.0f) data.normalMap = glm::vec4(1.0f);
+		return nullptr;
+	}
+	if (auto msg = checkFormat(pNormalMap->getFormat(), {Texture2DImageFormat::RGB, Texture2DImageFormat::BGR,
+														 Texture2DImageFormat::RGBA, Texture2DImageFormat::BGRA})) {
+		msg->setTitle("Failed to set normal map");
+		return msg;
+	}
 	normalMap = pNormalMap;
+	connectHandlerChanged(pNormalMap, &data.normalMap);
+
 	return nullptr;
 }
 
@@ -92,7 +90,18 @@ std::optional<glm::vec3> MaterialResource::getNormalColor() {
 }
 
 utils::ReportMessagePtr MaterialResource::setMetallicMap(const std::shared_ptr<ITextureResource> &pMetallicMap) {
+
+	if (!pMetallicMap) {
+		if (data.metallicMap.w == 2.0f) data.metallicMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+		return nullptr;
+	}
+	if (auto msg = checkFormat(pMetallicMap->getFormat(), {Texture2DImageFormat::RED})) {
+		msg->setTitle("Failed to set metallic map");
+		return msg;
+	}
 	metallicMap = pMetallicMap;
+	connectHandlerChanged(pMetallicMap, &data.metallicMap);
+
 	return nullptr;
 }
 
@@ -102,7 +111,16 @@ std::optional<float> MaterialResource::getMetallicColor() {
 }
 
 utils::ReportMessagePtr MaterialResource::setRoughnessMap(const std::shared_ptr<ITextureResource> &pRoughnessMap) {
+	if (!pRoughnessMap) {
+		if (data.roughnessMap.w == 2.0f) data.roughnessMap = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
+		return nullptr;
+	}
+	if (auto msg = checkFormat(pRoughnessMap->getFormat(), {Texture2DImageFormat::RED})) {
+		msg->setTitle("Failed to set roughness map");
+		return msg;
+	}
 	roughnessMap = pRoughnessMap;
+	connectHandlerChanged(pRoughnessMap, &data.roughnessMap);
 	return nullptr;
 }
 
@@ -112,7 +130,16 @@ std::optional<float> MaterialResource::getRoughnessColor() {
 }
 
 utils::ReportMessagePtr MaterialResource::setAoMap(const std::shared_ptr<ITextureResource> &pAoMap) {
+	if (!pAoMap) {
+		if (data.aoMap.w == 2.0f) data.aoMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+		return nullptr;
+	}
+	if (auto msg = checkFormat(pAoMap->getFormat(), {Texture2DImageFormat::RED})) {
+		msg->setTitle("Failed to set ambient occlusion map");
+		return msg;
+	}
 	aoMap = pAoMap;
+	connectHandlerChanged(pAoMap, &data.aoMap);
 	return nullptr;
 }
 
@@ -121,10 +148,36 @@ std::optional<float> MaterialResource::getAoColor() {
 	return {data.aoMap.x};
 }
 
+void MaterialResource::connectHandlerChanged(const std::shared_ptr<ITextureResource> &pTextureResource,
+											 glm::vec4* pMap) const {
+	pTextureResource->getTextureHandle().connectEvent([this, pMap](const uint64_t pHandle) {
+		if (pHandle == 0) return;
+		*pMap = handleToVec(pHandle);
+		onDataChangedSignal();
+	});
+}
+
 glm::vec4 MaterialResource::handleToVec(const uint64_t pHandle) {
 	glm::uvec2 convertedHandle;
-	convertedHandle.y = pHandle & 0xFFFFFFFF;
-	convertedHandle.x = static_cast<unsigned>(pHandle >> 32) & 0xFFFFFFFF;
+	convertedHandle.x = pHandle & 0xFFFFFFFF;
+	convertedHandle.y = static_cast<unsigned>(pHandle >> 32) & 0xFFFFFFFF;
 	return glm::vec4(uintBitsToFloat(convertedHandle), 0.0f, 2.0f);
+}
+
+utils::ReportMessagePtr MaterialResource::checkFormat(const Texture2DImageFormat pFormat,
+													  const std::vector<Texture2DImageFormat> &pAcceptableFormats) {
+	if (pAcceptableFormats.empty()) return nullptr;
+	using namespace std::literals::string_literals;
+	for (const auto acceptableFormat: pAcceptableFormats) {
+		if (acceptableFormat == pFormat) return nullptr;
+	}
+	auto msg = utils::ReportMessage::create();
+	msg->setMessage("Unsupported texture format for that map type");
+	std::string initStr = "Available formats: "s + to_string(*pAcceptableFormats.begin());
+	std::string formatsStr = std::accumulate(++pAcceptableFormats.begin(), pAcceptableFormats.end(), std::move(initStr),
+											 [](const std::string &pA, auto &pB) { return pA + ", " + to_string(pB); });
+	msg->addInfoLine(formatsStr);
+	msg->addInfoLine("Trying to set texture with {} format", to_string(pFormat));
+	return msg;
 }
 } // namespace mer::sdk::main

@@ -187,6 +187,15 @@ void ViewResourceEditor::openView() { context->addWidget(widget); }
 
 void ViewResourceEditor::closeView() { context->removeWidget(); }
 
+void ViewResourceEditor::setPresenter(IPresenterResourceEditor* pPresenter) {
+	presenter = pPresenter;
+	auto iconReleaseSlot = hide(bind(sigc::mem_fun(*presenter, &IPresenterResourceEditor::chooseFileClicked), this));
+
+	builder->get_widget<Gtk::Entry>("modelFilePathEntry")->signal_icon_release().connect(iconReleaseSlot);
+	builder->get_widget<Gtk::Entry>("textureFilePathEntry")->signal_icon_release().connect(iconReleaseSlot);
+	//builder->get_widget<Gtk::Entry>("materialFilePathEntry")->signal_icon_release().connect(iconReleaseSlot);
+}
+
 void ViewResourceEditor::displayError(const sdk::utils::ReportMessagePtr &pError) {
 	mer::sdk::utils::Logger::error(pError);
 	//ErrorDialog::showErrorDialog(this, pError);
@@ -204,13 +213,8 @@ void ViewResourceEditor::displayResourceName(const std::string &pName) {
 
 void ViewResourceEditor::switchTo(const std::string &pTabName) {
 	executeInMainThread([this, pTabName](auto &) {
-		builder->get_widget<Gtk::Stack>("preferencesStack")->set_visible_child(pTabName);
-
-		if (auto entry = getFilePathEntry()) {
-			entry->signal_icon_release().connect([this](Gtk::Entry::IconPosition /*pPosition*/) {
-				if (presenter) presenter->chooseFileClicked(this);
-			});
-		}
+		if (preferencesStack->get_visible_child_name().raw() == pTabName) return;
+		preferencesStack->set_visible_child(pTabName);
 	});
 }
 
@@ -262,9 +266,7 @@ std::vector<std::string> ViewResourceEditor::getSelectedObjects() {
 }
 
 void ViewResourceEditor::appendResource(const std::shared_ptr<sdk::main::IResource> &pNewResource) {
-	//auto uri = pNewResource->getResourceUri();
-	//Gtk::ScrolledWindow stub;
-	//mainStack->add(stub, uri.string());
+
 	executeInMainThread([this, pNewResource](auto &) { openedList->append(OpenedResource::create(pNewResource)); });
 }
 

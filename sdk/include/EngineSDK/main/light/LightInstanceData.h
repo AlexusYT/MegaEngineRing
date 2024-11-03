@@ -30,6 +30,9 @@ public:
 	glm::vec4 position{};
 	glm::vec4 color{};
 	float power{};
+	uint32_t padding1{};
+	uint32_t padding2{};
+	uint32_t padding3{};
 };
 
 } // namespace mer::sdk::main

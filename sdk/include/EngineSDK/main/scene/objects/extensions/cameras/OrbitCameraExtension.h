@@ -49,6 +49,8 @@ public:
 
 	[[nodiscard]] const glm::mat4 &getMatrix() const override { return propertyMatrix; }
 
+	[[nodiscard]] ExtensionProperty<glm::vec3> &getPosition() override;
+
 	void addAngle(const glm::vec2 &pAngleToAdd) { propertyAngle = propertyAngle + pAngleToAdd; }
 
 

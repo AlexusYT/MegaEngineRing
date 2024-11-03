@@ -21,9 +21,10 @@
 
 #include "Resource.h"
 
-namespace mer {
-namespace sdk {
-namespace main {
-} // main
-} // sdk
-} // mer
+namespace mer::sdk::main {
+void Resource::addProperty(utils::PropertyBase* pProperty) { properties.push_back(pProperty); }
+
+void Resource::removeProperty(utils::PropertyBase* pProperty) { erase(properties, pProperty); }
+
+void Resource::propertyChanged(utils::PropertyBase* /*pProperty*/) {}
+} // namespace mer::sdk::main

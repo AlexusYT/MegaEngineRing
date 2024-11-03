@@ -16,24 +16,12 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 28.10.24.
+// Created by alexus on 30.10.24.
 //
 
-#include "PropertyBase.h"
+#ifndef PROPERTYREADONLY_H
+#define PROPERTYREADONLY_H
+#include "Property.h"
 
-#include "IPropertyProvider.h"
-
-namespace mer::sdk::utils {
-PropertyBase::PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription)
-	: name(pName), description(pDescription), provider(pProvider) {
-	if (provider) provider->addProperty(this);
-}
-
-PropertyBase::~PropertyBase() {
-	if (provider) provider->removeProperty(this);
-}
-
-void PropertyBase::notifyPropertyChanged() {
-	if (provider) provider->propertyChanged(this);
-}
-} // namespace mer::sdk::utils
+namespace mer::sdk::utils {} // namespace mer::sdk::utils
+#endif						 //PROPERTYREADONLY_H

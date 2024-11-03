@@ -21,17 +21,9 @@
 
 #ifndef MODELRENDEREXTENSION_H
 #define MODELRENDEREXTENSION_H
-
-#include <nlohmann/detail/macro_scope.hpp>
-#include <nlohmann/json_fwd.hpp>
-
 #include "EngineSDK/main/render/RenderInstance.h"
 #include "EngineSDK/main/render/RenderInstanceData.h"
 #include "Extension.h"
-
-namespace mer::sdk::renderer {
-class ShaderProgram;
-}
 
 namespace mer::sdk::main {
 class IMaterialResource;

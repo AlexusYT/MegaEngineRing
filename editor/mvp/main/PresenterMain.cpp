@@ -28,10 +28,8 @@
 #include <project/Project.h>
 
 #include "EngineSDK/main/resources/ResourceType.h"
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "EngineSDK/main/resources/materials/MaterialResource.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
 #include "EngineSDK/main/resources/textures/TextureResource.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "Globals.h"
@@ -361,7 +359,11 @@ void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 	auto ext = pPathToFile.extension().string();
 	if (ext == ".enscene")
 		if (const auto msg = loadedScene->load(pPathToFile)) { displayError(msg); }
-	if (ext == ".enmodel" || ext == ".entex") editingResources->loadResource(pPathToFile);
+	if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") {
+		auto dataPath = modelMain->getProject()->getProjectDataPath();
+		auto resourceUri = relative(pPathToFile, dataPath);
+		editingResources->loadResource(resourceUri);
+	}
 }
 
 void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, const sdk::main::ResourceType pType) {
@@ -377,7 +379,7 @@ void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, c
 			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::TextureResource::create());
 			break;
 		case sdk::main::ResourceType::MATERIAL:
-			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk->createMaterialResource());
+			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::MaterialResource::create());
 			break;
 	}
 	std::filesystem::path uri = "/";

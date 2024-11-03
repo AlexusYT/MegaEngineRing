@@ -21,19 +21,12 @@
 
 #include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
 
-#include <EngineSDK/main/buffers/ProgramWideShaderBuffer.h>
-#include <EngineSDK/renderer/shaders/ShaderProgram.h>
-
-#include <epoxy/gl.h>
 #include <glm/ext/matrix_transform.hpp>
-#include <nlohmann/json.hpp>
 
 #include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/shaders/ShaderProgramLoader.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
-#include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
 
@@ -48,6 +41,7 @@ utils::ReportMessagePtr ModelRenderExtension::onInit() {
 
 	pos.connectEvent([this](const glm::vec3 &pPos) {
 		data.modelViewMatrix = glm::translate(glm::mat4(1.0f), pPos);
+		data.normalMatrix = glm::transpose(glm::inverse(glm::mat3(data.modelViewMatrix)));
 		notifyDataChanged();
 	});
 

@@ -36,7 +36,7 @@ std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, s
 	png::image<PixelType> img(pStream);
 	auto &pixelBuffer = img.get_pixbuf();
 	for (uint32_t x = 0; x < pHeight; ++x) {
-		memcpy(&pixelsOut[static_cast<size_t>(x) * pWidth], pixelBuffer.get_row(x).data(),
+		memcpy(&pixelsOut[static_cast<size_t>(x) * pWidth], pixelBuffer.get_row(pHeight - x - 1).data(),
 			   static_cast<uint32_t>(pWidth * sizeof(PixelType)));
 	}
 	return pixelsOut;

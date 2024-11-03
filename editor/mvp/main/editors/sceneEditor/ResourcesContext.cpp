@@ -131,7 +131,7 @@ void ResourcesContext::resourceLoop(const std::stop_token &pToken) {
 		for (auto &[resourceUri, slot]: queue) {
 			sharedContext->make_current();
 
-			auto result = sdk->createResourceLoadResult();
+			auto result = sdk::main::ResourceLoadResult::create();
 			if (std::shared_ptr<sdk::main::IResource> resource = resources->getResource(resourceUri)) {
 				result->setResource(resource);
 				result->setState(sdk::main::ResourceLoadResult::State::READY);
@@ -162,7 +162,7 @@ void ResourcesContext::resourceLoop(const std::stop_token &pToken) {
 					continue;
 				}
 
-				auto loader = ResourceLoaders::getInstance()->getLoader(uri.extension());
+				auto loader = sdk::main::ResourceLoaders::getInstance()->getLoader(uri.extension());
 				if (!loader) {
 					auto msg = sdk::utils::ReportMessage::create();
 					msg->setTitle("Unable to load resource");
@@ -183,12 +183,23 @@ void ResourcesContext::resourceLoop(const std::stop_token &pToken) {
 					continue;
 				}
 				std::shared_ptr<sdk::main::IResource> resource;
+				auto startTime = std::chrono::steady_clock::now();
 				if (auto msg = loader->load(this, stream, resource)) {
 					msg->setTitle("Unable to load resource");
 					result->setError(msg);
 					result->setRequestedUri(resourceUri);
 					callSlot(result, slot);
 					continue;
+				}
+				auto endTime = std::chrono::steady_clock::now();
+				auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+				if (duration.count() > 500) {
+					auto msg = sdk::utils::ReportMessage::create();
+					msg->setTitle("Too long duration");
+					msg->setMessage("Resource loading took to long");
+					msg->addInfoLine("Resource URI: {}", uri.string());
+					msg->addInfoLine("Duration: {}ms", duration.count());
+					sdk::utils::Logger::warn(msg->getReport(false));
 				}
 				result->setResource(resource);
 				result->setRequestedUri(resourceUri);

@@ -22,25 +22,45 @@
 #ifndef PROGRAMWIDESHADERBUFFER_H
 #define PROGRAMWIDESHADERBUFFER_H
 #include <EngineSDK/renderer/buffers/SSBO.h>
+
 #include <glm/mat4x4.hpp>
 
 namespace mer::sdk::main {
 class ProgramWideShaderBuffer : public renderer::SSBO {
+	struct Data {
+		glm::mat4 viewProjMatrix{1};
+		glm::mat4 projectionMatrix{1};
+		glm::mat4 viewMatrix{1};
+		glm::vec3 camPos{0};
+	};
 
-	glm::mat4 viewProjMatrix{1};
+	Data data{};
+	bool dirty{};
 
 public:
 	ProgramWideShaderBuffer() {
 		SSBO::bind();
-		SSBO::setData(&viewProjMatrix, sizeof(viewProjMatrix), renderer::BufferUsageEnum::DYNAMIC_DRAW);
+		SSBO::setData(&data, sizeof(data), renderer::BufferUsageEnum::DYNAMIC_DRAW);
 	}
 
-	[[nodiscard]] const glm::mat4 &getViewProjMatrix() const { return viewProjMatrix; }
+	void update() {
+		if (!dirty) return;
+
+		bind();
+		bufferSubData(0, sizeof(data), &data);
+		dirty = false;
+	}
+
+	[[nodiscard]] const glm::mat4 &getViewProjMatrix() const { return data.viewProjMatrix; }
 
 	void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) {
-		viewProjMatrix = pViewProjMatrix;
-		bind();
-		bufferSubData(0, sizeof(viewProjMatrix), &viewProjMatrix);
+		data.viewProjMatrix = pViewProjMatrix;
+		dirty = true;
+	}
+
+	void setCameraPos(const glm::vec3 &pPosition) {
+		data.camPos = pPosition;
+		dirty = true;
 	}
 };
 } // namespace mer::sdk::main

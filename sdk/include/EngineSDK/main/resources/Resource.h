@@ -27,11 +27,14 @@
 namespace mer::sdk::main {
 
 class Resource : public IResource, public utils::IPropertyProvider {
+	std::vector<utils::PropertyBase*> properties;
 	std::filesystem::path resourceUri;
 
 public:
 	void addProperty(utils::PropertyBase* pProperty) override;
+
 	void removeProperty(utils::PropertyBase* pProperty) override;
+
 	void propertyChanged(utils::PropertyBase* pProperty) override;
 
 	const std::filesystem::path &getResourceUri() override { return resourceUri; }

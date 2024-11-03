@@ -31,7 +31,9 @@
 #include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
-TextureResource::TextureResource() : minFilter(TextureMinFilter::LINEAR), magFilter(TextureMagFilter::LINEAR) {}
+TextureResource::TextureResource()
+	: minFilter(TextureMinFilter::LINEAR), magFilter(TextureMagFilter::LINEAR),
+	  textureHandle(nullptr, "TextureHandle") {}
 
 std::shared_ptr<TextureResource> TextureResource::create() {
 	return std::shared_ptr<TextureResource>(new TextureResource());
@@ -44,26 +46,26 @@ TextureResource::~TextureResource() {
 
 void TextureResource::setupRender() {
 	//if (inited) return;
-	glCreateTextures(GL_TEXTURE_2D, 1, &id);
+	/*glCreateTextures(GL_TEXTURE_2D, 1, &id);
 	glTextureStorage2D(id, 1, GL_RGBA8, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 	glTextureSubImage2D(id,
 						// level, xoffset, yoffset, width, height
 						0, 0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLenum>(format),
 						static_cast<GLenum>(type), data);
-	glGenerateTextureMipmap(id);
+	glGenerateTextureMipmap(id);*/
+	glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
-	/*glGenTextures(1, &id);
 	//glActiveTexture(GL_TEXTURE0 + textureBlock);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(minFilter));
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(magFilter));
 	glTexImage2D(GL_TEXTURE_2D, mipmapLevel, static_cast<GLint>(format), static_cast<GLsizei>(width),
 				 static_cast<GLsizei>(height), 0, static_cast<GLenum>(format), static_cast<GLenum>(type), data);
-	glGenerateMipmap(GL_TEXTURE_2D);*/
+	glGenerateMipmap(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, /*static_cast<GLint>(minFilter)*/ GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(magFilter));
 
-	textureHandle = glGetTextureHandleARB(id);
-	glMakeTextureHandleResidentARB(textureHandle);
-	utils::Logger::out("{}, {}", textureHandle, id);
-	//glBindTexture(GL_TEXTURE_2D, 0);
+	auto handle = glGetTextureHandleARB(id);
+	glMakeTextureHandleResidentARB(handle);
+	textureHandle = handle;
+	glBindTexture(GL_TEXTURE_2D, 0);
 	inited = true;
 }
 

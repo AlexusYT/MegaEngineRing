@@ -19,7 +19,7 @@
 // Created by alexus on 28.10.24.
 //
 
-#include "Property.h"
+#include "../../include/EngineUtils/utils/Property.h"
 
 namespace mer {
 namespace sdk {

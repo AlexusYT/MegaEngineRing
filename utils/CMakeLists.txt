@@ -6,8 +6,8 @@ set(UTILS_SOURCES
         sources/utils/ConsoleColors.cpp
         sources/utils/Utils.cpp
         sources/utils/UUID.cpp
-        include/EngineUtils/utils/PropertyBase.cpp
-        include/EngineUtils/utils/Property.cpp
+        sources/utils/PropertyBase.cpp
+        sources/utils/Property.cpp
 )
 set(UTILS_HEADERS
         include/EngineUtils/utils/Logger.h
@@ -18,6 +18,7 @@ set(UTILS_HEADERS
         include/EngineUtils/utils/IPropertyProvider.h
         include/EngineUtils/utils/PropertyBase.h
         include/EngineUtils/utils/Property.h
+        include/EngineUtils/utils/PropertyReadOnly.h
 )
 
 add_library(MegaEngineUtils STATIC ${UTILS_SOURCES} ${UTILS_HEADERS})

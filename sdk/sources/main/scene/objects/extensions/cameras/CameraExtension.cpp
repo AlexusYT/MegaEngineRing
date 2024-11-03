@@ -51,11 +51,15 @@ CameraExtension::CameraExtension()
 		[this](const glm::vec2 &pAngle) { propertyDirection = euclidean(radians(pAngle)); });
 }
 
+ExtensionProperty<glm::vec3> &CameraExtension::getPosition() {
+	const auto &objectSelf = getObject();
+	return objectSelf->getMainExtension()->propertyPosition;
+}
+
 utils::ReportMessagePtr CameraExtension::onInit() {
 
-	const auto &objectSelf = getObject();
-	putConnectionToStorage(objectSelf->getMainExtension()->propertyPosition.getEvent().connect(
-		hide(sigc::mem_fun(*this, &CameraExtension::updateMatrix))));
+	putConnectionToStorage(
+		getPosition().getEvent().connect(hide(sigc::mem_fun(*this, &CameraExtension::updateMatrix))));
 	return nullptr;
 }
 

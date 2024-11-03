@@ -21,8 +21,10 @@
 
 #ifndef TEXTURERESOURCE_H
 #define TEXTURERESOURCE_H
+
 #include "EngineSDK/main/resources/Resource.h"
 #include "EngineSDK/main/resources/ResourceType.h"
+#include "EngineUtils/utils/Property.h"
 #include "ITextureResource.h"
 
 namespace mer::sdk::main {
@@ -38,7 +40,7 @@ class TextureResource : public ITextureResource, public Resource {
 	Texture2DImageFormat format{};
 	Texture2DType type{};
 	uint32_t textureBlock{};
-	uint64_t textureHandle{};
+	utils::Property<uint64_t> textureHandle;
 	bool inited{};
 
 	TextureResource();
@@ -87,7 +89,7 @@ public:
 
 	ResourceType getResourceType() override { return ResourceType::TEXTURE; }
 
-	[[nodiscard]] uint64_t getTextureHandle() const override { return textureHandle; }
+	[[nodiscard]] utils::PropertyReadOnly<uint64_t> getTextureHandle() override { return textureHandle.getReadOnly(); }
 };
 
 } // namespace mer::sdk::main

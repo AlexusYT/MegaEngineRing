@@ -25,7 +25,6 @@
 #include "EngineSDK/utils/ISerializable.h"
 #include "EngineSDK/utils/PropertyJsonSerializers.h"
 #include "EngineUtils/utils/Property.h"
-#include "EngineUtils/utils/PropertyBase.h"
 
 namespace mer::sdk::main {
 
