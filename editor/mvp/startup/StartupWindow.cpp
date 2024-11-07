@@ -28,9 +28,8 @@ namespace mer::editor::mvp {
 
 StartupWindow::StartupWindow(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
 
-	builder = Gtk::Builder::create();
 	try {
-		builder->add_from_file(Globals::getResourcesPath() / "CreateOpenProject.ui");
+		builder = Gtk::Builder::create_from_resource("/ui/CreateOpenProject.ui");
 	} catch (...) {
 		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to init window");

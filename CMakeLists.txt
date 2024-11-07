@@ -22,7 +22,6 @@ include(GNUInstallDirs)
 
 add_subdirectory(utils)
 add_subdirectory(sdk)
-add_subdirectory(data)
 add_subdirectory(editor)
 
 

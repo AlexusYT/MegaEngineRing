@@ -31,7 +31,4 @@ void Globals::init() {
 	create_directories(projectsPath);
 	configPath = home / ".config/MegaEngineRing";
 	create_directories(configPath);
-
-	dataPath = std::filesystem::path(RESOURCE_PATH) / "data";
-	resourcesPath = std::filesystem::path(RESOURCE_PATH) / "Resources";
 }

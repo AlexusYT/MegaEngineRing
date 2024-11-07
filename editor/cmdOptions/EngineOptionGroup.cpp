@@ -22,12 +22,10 @@
 #include "EngineOptionGroup.h"
 
 #include "options/LogPathOption.h"
-#include "options/ResPathOption.h"
 
 namespace mer::editor::utils {
 EngineOptionGroup::EngineOptionGroup() : OptionGroup("engine-options", "Engine options", "Engine options") {
 	optionEntries.emplace_back(std::make_unique<LogPathOption>(this));
-	optionEntries.emplace_back(std::make_unique<ResPathOption>(this));
 }
 
 EngineOptionGroup::~EngineOptionGroup() = default;

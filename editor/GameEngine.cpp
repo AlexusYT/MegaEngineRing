@@ -88,18 +88,6 @@ public:
 			Logger::error(msg);
 		});
 
-		if (!exists(Globals::getResourcesPath())) {
-			Logger::warn("There is no resources at: {}", Globals::getResourcesPath().parent_path().string());
-			auto path = std::filesystem::current_path();
-			Logger::info("Checking resources at the executable dir: {}", path.string());
-			if (!exists(path / "Resources")) {
-				Logger::error("No resources directory found. Exiting...");
-				return;
-			}
-			Globals::setResourcesPath(path / "Resources");
-			Logger::info("Using resources from the executable");
-		}
-
 		const std::shared_ptr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
 		cssProvider->signal_parsing_error().connect(
 			[](const Glib::RefPtr<const Gtk::CssSection> & /*section*/, const Glib::Error &pError) {
@@ -108,7 +96,7 @@ public:
 			},
 			true);
 		try {
-			cssProvider->load_from_path(Globals::getResourcesPath() / "style.css");
+			cssProvider->load_from_resource("css/style.css");
 		} catch (Glib::Error &e) { Logger::error("Failed to load style {}", e.what()); }
 		Gtk::StyleProvider::add_provider_for_display(Gdk::Display::get_default(), cssProvider,
 													 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);

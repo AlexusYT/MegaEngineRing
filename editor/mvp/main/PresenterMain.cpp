@@ -67,55 +67,13 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 	: viewMain(pViewMain), modelMain(pModelMain) {
 
 	pViewMain->setPresenter(this);
+	modelMain->setPresenter(this);
 	auto project = modelMain->getProject();
 	project->connectOnErrorSignal(sigc::mem_fun(*viewMain, &IViewMain::reportError));
-	//sdk::main::ExtensionRegistry::init();
 
 	viewMain->setWindowTitle("Game engine editor - " + project->getProjectName());
-	//TODO Rewrite to support Gio::Resource MER-40 and move it to model
-	auto layoutFile = Globals::getConfigPath() / "paned-layouts/Layouts.json";
-	if (!exists(layoutFile)) {
-		create_directories(layoutFile.parent_path());
-		auto internalLayoutFile = Globals::getResourcesPath() / "paned-layouts/Layouts.json";
-		std::error_code ec;
-		copy(internalLayoutFile, layoutFile, ec);
-		if (ec) {
-			auto msg = sdk::utils::ReportMessage::create();
-			msg->setTitle("Failed to copy Layouts file to user config directory");
-			msg->setMessage(ec.message());
-			msg->addInfoLine("Path to internal Layouts file: {}", internalLayoutFile.string());
-			msg->addInfoLine("Path to user Layouts file: {}", layoutFile.string());
-			msg->addInfoLine("Using internal file.");
-			displayError(msg);
-			layoutFile = internalLayoutFile;
-		}
-	}
-	std::shared_ptr<nlohmann::json> json = std::make_shared<nlohmann::json>();
-	try {
-		std::ifstream stream = std::ifstream(layoutFile);
-		stream.exceptions(std::_S_badbit | std::_S_failbit);
-		stream >> *json;
-	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
-		msg->setTitle("Failed to read layout file");
-		msg->setMessage("Exception occurred");
-		msg->addInfoLine("Path to Layouts file: {}", layoutFile.string());
-		displayError(msg);
-	}
-	try {
-		std::vector<PanedLayoutTab> panedLayoutTabs;
-		json->at("Tabs").get_to(panedLayoutTabs);
-		modelMain->setPanedLayoutTabs(panedLayoutTabs);
-		int32_t currentTab = 0;
-		json->at("CurrentTab").get_to(currentTab);
-		modelMain->setCurrentTab(currentTab);
-	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
-		msg->setTitle("Failed to read layout file");
-		msg->setMessage("Exception occurred");
-		msg->addInfoLine("Path to Layouts file: {}", layoutFile.string());
-		displayError(msg);
-	}
+
+	modelMain->loadLayoutsFile();
 
 	auto r = viewMain->connectKeyPressedSignal(
 		[this, project](const guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
@@ -192,6 +150,12 @@ void PresenterMain::logError(int /*pId*/, const std::string & /*pMessage*/) cons
 
 void PresenterMain::displayError(const sdk::utils::ReportMessagePtr &pMsg) { sdk::utils::Logger::error(pMsg); }
 
+void PresenterMain::onLayoutLoadFatal() { /*TODO_IMPLEMENT_ME();*/ }
+
+void PresenterMain::onPanedLayoutTabsChanged() { viewMain->setTabs(modelMain->getPanedLayoutTabs()); }
+
+void PresenterMain::onCurrentTabChanged() { viewMain->openTab(modelMain->getCurrentTab()); }
+
 void PresenterMain::run() {
 	auto project = modelMain->getProject();
 	viewMain->openView();
@@ -234,9 +198,6 @@ void PresenterMain::run() {
 		getAppController()->run(presenter);
 		presenters.push_back(presenter);
 	}
-
-	viewMain->setTabs(modelMain->getPanedLayoutTabs());
-	viewMain->openTab(modelMain->getCurrentTab());
 
 
 	//auto viewCenterWindow = std::make_shared<ViewCenterWindow>(getAppController()->getAppContext());
@@ -284,26 +245,47 @@ void PresenterMain::readJsonForTab(int32_t pIndex,
 			pCallback(msg);
 			return;
 		}
-		auto path = std::filesystem::path(tabs.at(static_cast<uint64_t>(pIndex)).getPath());
-		std::filesystem::path layoutFilePath;
-		if (path.string().starts_with("_builtin_")) {
-			layoutFilePath = Globals::getResourcesPath() / "paned-layouts" / path.filename();
-		} else {
-			layoutFilePath = Globals::getConfigPath() / "paned-layouts" / path;
-		}
 		std::shared_ptr<nlohmann::json> json = std::make_shared<nlohmann::json>();
-		try {
-			std::ifstream stream = std::ifstream(layoutFilePath);
-			stream.exceptions(std::_S_badbit | std::_S_failbit);
-			stream >> *json;
-		} catch (...) {
-			auto msg = sdk::utils::ReportMessage::create();
-			msg->setTitle("Unable to read layout from JSON");
-			msg->setMessage("Exception occurred while reading layout file for tab");
-			msg->addInfoLine("Specified tab index: {}", pIndex);
-			msg->addInfoLine("Path to the layout file: {}", layoutFilePath.string());
-			pCallback(msg);
-			return;
+		auto path = std::filesystem::path(tabs.at(static_cast<uint64_t>(pIndex)).getPath());
+		if (path.string().starts_with("_builtin_")) {
+			auto resourcePath = "/paned-layouts/" + path.filename().string();
+			if (!Gio::Resource::get_file_exists_global_nothrow(resourcePath)) {
+				auto msg = sdk::utils::ReportMessage::create();
+				msg->setTitle("Unable to read layout from JSON");
+				msg->setMessage("Specified builtin layout does not exist");
+				msg->addInfoLine("Looking for layout at {}", resourcePath);
+				pCallback(msg);
+			}
+			try {
+				auto resourceStream = Gio::Resource::lookup_data_global(resourcePath);
+				gsize size;
+				auto data = static_cast<const char*>(resourceStream->get_data(size));
+				*json = nlohmann::json::parse(std::string(data, size));
+			} catch (...) {
+				auto msg = sdk::utils::ReportMessage::create();
+				msg->setTitle("Unable to read layout from JSON");
+				msg->setMessage("Exception occurred while reading layout file for tab");
+				msg->addInfoLine("Looking for layout at {}", resourcePath);
+				pCallback(msg);
+			}
+
+		} else {
+			std::filesystem::path layoutFilePath;
+			layoutFilePath = Globals::getConfigPath() / "paned-layouts" / path;
+
+			try {
+				std::ifstream stream = std::ifstream(layoutFilePath);
+				stream.exceptions(std::_S_badbit | std::_S_failbit);
+				stream >> *json;
+			} catch (...) {
+				auto msg = sdk::utils::ReportMessage::create();
+				msg->setTitle("Unable to read layout from JSON");
+				msg->setMessage("Exception occurred while reading layout file for tab");
+				msg->addInfoLine("Specified tab index: {}", pIndex);
+				msg->addInfoLine("Path to the layout file: {}", layoutFilePath.string());
+				pCallback(msg);
+				return;
+			}
 		}
 
 

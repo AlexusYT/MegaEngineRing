@@ -27,11 +27,14 @@ class Project;
 }
 
 namespace mer::editor::mvp {
+class IPresenterMain;
 class PanedLayoutTab;
 
 class IModelMain {
 public:
 	virtual ~IModelMain() = default;
+
+	virtual void loadLayoutsFile() = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<project::Project> &getProject() const = 0;
 
@@ -44,6 +47,10 @@ public:
 	[[nodiscard]] virtual int32_t getCurrentTab() const = 0;
 
 	virtual void setCurrentTab(int32_t pCurrentTab) = 0;
+
+	[[nodiscard]]virtual  IPresenterMain* getPresenter() const  = 0;
+
+	virtual void setPresenter(IPresenterMain* pPresenter)  = 0;
 };
 
 } // namespace mer::editor::mvp
