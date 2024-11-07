@@ -25,8 +25,6 @@
 class Globals {
 	inline static std::filesystem::path logPath;
 	inline static std::filesystem::path projectsPath;
-	inline static std::filesystem::path resourcesPath;
-	inline static std::filesystem::path dataPath;
 	inline static std::filesystem::path configPath;
 
 public:
@@ -39,14 +37,6 @@ public:
 	[[nodiscard]] static const std::filesystem::path &getProjectsPath() { return projectsPath; }
 
 	static void setProjectsPath(const std::filesystem::path &pProjectsPath) { projectsPath = pProjectsPath; }
-
-	[[nodiscard]] static const std::filesystem::path &getResourcesPath() { return resourcesPath; }
-
-	static void setResourcesPath(const std::filesystem::path &pResourcesPath) { resourcesPath = pResourcesPath; }
-
-	[[nodiscard]] static const std::filesystem::path &getDataPath() { return dataPath; }
-
-	static void setDataPath(const std::filesystem::path &pDataPath) { dataPath = pDataPath; }
 
 	[[nodiscard]] static const std::filesystem::path &getConfigPath() { return configPath; }
 

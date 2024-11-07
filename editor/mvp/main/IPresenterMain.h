@@ -42,6 +42,14 @@ public:
 	virtual std::shared_ptr<IView> createView(const IPresenter* pPresenter,
 											  const std::shared_ptr<MultiPanedContext> &pContext) = 0;
 
+	virtual void displayError(const sdk::utils::ReportMessagePtr &pMsg) = 0;
+
+	virtual void onLayoutLoadFatal() = 0;
+
+	virtual void onPanedLayoutTabsChanged() = 0;
+
+	virtual void onCurrentTabChanged() = 0;
+
 	virtual void readJsonForTab(int32_t pIndex,
 								const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pCallback) = 0;
 

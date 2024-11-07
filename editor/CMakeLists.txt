@@ -1,6 +1,18 @@
 
+list(JOIN CMAKE_PROGRAM_PATH ":" PROGRAM_PATH)
+
+
+set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/data")
+add_custom_command(
+        OUTPUT resources.cpp
+        COMMAND export PATH="${PROGRAM_PATH};$ENV{PATH}"
+        COMMAND glib-compile-resources --target=resources.cpp --generate-source --internal --sourcedir="${RESOURCE_PATH}/css" --sourcedir="${RESOURCE_PATH}/ui" --sourcedir="${RESOURCE_PATH}/paned-layouts" --sourcedir="${RESOURCE_PATH}/_builtin_/shaders" "${RESOURCE_PATH}/resources.xml"
+        DEPENDS "${RESOURCE_PATH}/resources.xml"
+)
+
 add_library(
         MegaEngineEditor_lib OBJECT
+        resources.cpp
         GameEngine.cpp
         mvp/main/MainWindow.cpp
         graphic/shaders/ShadersList.cpp
@@ -123,8 +135,6 @@ add_library(
         project/generators/cpp/CppClassMember.h
         project/generators/cpp/CppExternC.cpp
         project/generators/cpp/CppExternC.h
-        cmdOptions/options/ResPathOption.cpp
-        cmdOptions/options/ResPathOption.h
         mvp/main/objectProperties/ObjectPropertyEntry.cpp
         mvp/main/objectProperties/ObjectPropertyEntry.h
         project/scripting/ScriptParser.cpp
@@ -251,6 +261,8 @@ add_library(
         mvp/resourceEditor/savers/TextureResourceSaver.h
         mvp/resourceEditor/savers/MaterialResourceSaver.cpp
         mvp/resourceEditor/savers/MaterialResourceSaver.h
+        StringInputStream.cpp
+        StringInputStream.h
 
 )
 
@@ -258,7 +270,6 @@ target_precompile_headers(MegaEngineEditor_lib
         PRIVATE common.h
 )
 
-configure_file("${PROJECT_SOURCE_DIR}/data/Resources.h.in" "Resources.h")
 target_include_directories(
         MegaEngineEditor_lib ${warning_guard}
         PUBLIC

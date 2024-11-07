@@ -170,8 +170,8 @@ ViewResourceEditor::ViewResourceEditor(const std::shared_ptr<IWidgetContext> &pC
 std::shared_ptr<ViewResourceEditor> ViewResourceEditor::create(const std::shared_ptr<IWidgetContext> &pContext) {
 	std::shared_ptr<Gtk::Builder> builder;
 	try {
-		builder = Gtk::Builder::create_from_file(
-			Globals::getResourcesPath() / "ResourceEditorWindow.ui",
+		builder = Gtk::Builder::create_from_resource(
+			"/ui/ResourceEditorWindow.ui",
 			std::vector<Glib::ustring>{"root", "modelEditor", "textureEditor", "materialEditor"});
 	} catch (...) {
 		auto msg = sdk::utils::ReportMessage::create();

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ // MegaEngineRing is a program that can speed up game development.
+  ~ // Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+  ~ //
+  ~ // This program is free software; you can redistribute it and/or modify
+  ~ // it under the terms of the GNU General Public License as published by
+  ~ // the Free Software Foundation; either version 2 of the License, or
+  ~ // (at your option) any later version.
+  ~ //
+  ~ // This program is distributed in the hope that it will be useful,
+  ~ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ // GNU General Public License for more details.
+  ~ //
+  ~ // You should have received a copy of the GNU General Public License along
+  ~ // with this program; if not, write to the Free Software Foundation, Inc.,
+  ~ // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+  -->
+
+<gresources>
+	<gresource prefix="/ui">
+		<file compressed="true">ResourceEditorWindow.ui</file>
+		<file compressed="true">ResourceSelectionWindow.ui</file>
+		<file compressed="true">CreateOpenProject.ui</file>
+		<file compressed="true">base.ui</file>
+	</gresource>
+	<gresource prefix="/paned-layouts">
+		<file compressed="true">Layouts.json</file>
+		<file compressed="true">ResourceEditorLayout.json</file>
+		<file compressed="true">SceneEditorLayout.json</file>
+	</gresource>
+	<gresource prefix="/css">
+		<file compressed="true">style.css</file>
+	</gresource>
+	<gresource prefix="/_builtin_/shaders">
+		<file compressed="true">DefaultInstancedProgram.enshader</file>
+	</gresource>
+</gresources>

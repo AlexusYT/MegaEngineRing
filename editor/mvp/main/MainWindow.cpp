@@ -33,7 +33,7 @@ std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<IWidgetCont
 											   sdk::utils::ReportMessagePtr &pReportMessage) {
 	const auto builder = Gtk::Builder::create();
 	try {
-		builder->add_from_file(Globals::getResourcesPath() / "base.ui");
+		builder->add_from_resource("/ui/base.ui");
 	} catch (...) {
 		pReportMessage = sdk::utils::ReportMessage::create();
 		pReportMessage->setTitle("Failed to init main window");
@@ -172,7 +172,7 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 		"resource.texture", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
 			if (presenter) presenter->createResource(var.get().raw(), sdk::main::ResourceType::TEXTURE);
-	});
+		});
 	actionGroupNew->add_action_with_parameter(
 		"resource.material", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);

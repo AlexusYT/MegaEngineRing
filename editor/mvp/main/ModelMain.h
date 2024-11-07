@@ -26,12 +26,15 @@
 
 namespace mer::editor::mvp {
 class ModelMain : public IModelMain {
+	IPresenterMain* presenter{};
 	std::shared_ptr<project::Project> project;
 	std::vector<PanedLayoutTab> panedLayoutTabs;
 
 	int32_t currentTab{};
 
 public:
+	void loadLayoutsFile() override;
+
 	[[nodiscard]] const std::shared_ptr<project::Project> &getProject() const override { return project; }
 
 	void setProject(const std::shared_ptr<project::Project> &pProject) override { project = pProject; }
@@ -42,7 +45,26 @@ public:
 
 	[[nodiscard]] int32_t getCurrentTab() const override { return currentTab; }
 
-	void setCurrentTab(const int32_t pCurrentTab) override { currentTab = pCurrentTab; }
+	void setCurrentTab(const int32_t pCurrentTab) override;
+
+	[[nodiscard]] IPresenterMain* getPresenter() const override { return presenter; }
+
+	void setPresenter(IPresenterMain* pPresenter) override { presenter = pPresenter; }
+
+private:
+	void tryCreateLayoutFile(const std::shared_ptr<Gio::AsyncResult> &pResult, const std::shared_ptr<Gio::File> &pFile);
+
+	void userLayoutsReadFinished(const std::string &pStrResult, const std::exception_ptr &pException,
+								 const std::shared_ptr<Gio::File> &pFile);
+
+	void readInternalLayouts(const std::shared_ptr<Gio::OutputStream> &pSaveTo = nullptr,
+							 const std::shared_ptr<Gio::File> &pUserFile = nullptr);
+
+	void internalLayoutsReadFinished(const std::string &pStrResult, const std::exception_ptr &pException,
+									 const std::shared_ptr<Gio::OutputStream> &pSaveTo,
+									 const std::shared_ptr<Gio::File> &pUserFile);
+
+	void parseLayoutsContent(const std::string &pContent, bool pUser);
 };
 } // namespace mer::editor::mvp
 

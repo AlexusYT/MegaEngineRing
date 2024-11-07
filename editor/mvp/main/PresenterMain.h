@@ -66,8 +66,15 @@ private:
 
 	void logError(int pId, const std::string &pMessage) const;
 
-	void displayError(const sdk::utils::ReportMessagePtr &pMsg);
+	void displayError(const sdk::utils::ReportMessagePtr &pMsg) override;
 
+	void onLayoutLoadFatal() override;
+
+	void onPanedLayoutTabsChanged() override;
+
+	void onCurrentTabChanged() override;
+
+private:
 	std::string getTypeName() override { return "PresenterMain"; }
 
 public:

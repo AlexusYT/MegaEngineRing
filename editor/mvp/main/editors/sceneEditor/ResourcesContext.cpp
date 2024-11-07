@@ -128,66 +128,77 @@ void ResourcesContext::resourceLoop(const std::stop_token &pToken) {
 	while (!pToken.stop_requested()) {
 		std::unique_lock lck(waitMutex);
 		cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
-		for (auto &[resourceUri, slot]: queue) {
+		for (auto &[uri, slot]: queue) {
 			sharedContext->make_current();
 
 			auto result = sdk::main::ResourceLoadResult::create();
-			if (std::shared_ptr<sdk::main::IResource> resource = resources->getResource(resourceUri)) {
+			if (std::shared_ptr<sdk::main::IResource> resource = resources->getResource(uri)) {
 				result->setResource(resource);
 				result->setState(sdk::main::ResourceLoadResult::State::READY);
-				result->setRequestedUri(resourceUri);
+				result->setRequestedUri(uri);
 				callSlot(result, slot);
 				continue;
 			}
 
-			std::filesystem::path uri;
+			std::filesystem::path uriPath = uri;
 			try {
-				if (resourceUri.starts_with("_builtin_")) {
-					auto uriPath = std::filesystem::path(resourceUri);
-					auto path = Globals::getDataPath() / uriPath.lexically_relative("_builtin_").string();
-					uri = path.string();
-				} else {
-					uri = resourceUri;
-				}
 
-				if (!uri.has_extension()) {
+				if (!uriPath.has_extension()) {
 					auto msg = sdk::utils::ReportMessage::create();
 					msg->setTitle("Unable to load resource");
 					msg->setMessage("No resource extension in uri");
-					msg->addInfoLine("Resource URI: {}", uri.string());
-					msg->addInfoLine("Requested resource URI: {}", resourceUri);
+					msg->addInfoLine("Resource URI: {}", uri);
 					result->setError(msg);
-					result->setRequestedUri(resourceUri);
+					result->setRequestedUri(uri);
 					callSlot(result, slot);
 					continue;
 				}
 
-				auto loader = sdk::main::ResourceLoaders::getInstance()->getLoader(uri.extension());
+				auto loader = sdk::main::ResourceLoaders::getInstance()->getLoader(uriPath.extension());
 				if (!loader) {
 					auto msg = sdk::utils::ReportMessage::create();
 					msg->setTitle("Unable to load resource");
 					msg->setMessage("No loader registered that can load such resource");
-					msg->addInfoLine("Resource URI: {}", uri.string());
+					msg->addInfoLine("Resource URI: {}", uri);
 					result->setError(msg);
-					result->setRequestedUri(resourceUri);
+					result->setRequestedUri(uri);
 					callSlot(result, slot);
 					continue;
 				}
 
 				std::shared_ptr<std::istream> stream;
-				if (auto msg = application->getResourceBundle()->getResourceStream(uri, stream)) {
-					msg->setTitle("Unable to load resource");
-					result->setError(msg);
-					result->setRequestedUri(resourceUri);
-					callSlot(result, slot);
-					continue;
+				if (uri.starts_with("_builtin_")) {
+					if (!Gio::Resource::get_file_exists_global_nothrow("/" + uri)) {
+						auto msg = sdk::utils::ReportMessage::create();
+						msg->setTitle("Failed to get resource stream");
+						msg->setMessage("Builtin resource not found");
+						msg->addInfoLine("Resource URI to search: {}", uri);
+						result->setError(msg);
+						result->setRequestedUri(uri);
+						callSlot(result, slot);
+					}
+					auto resourceBytes = Gio::Resource::lookup_data_global("/" + uri);
+					auto ss = std::make_shared<std::stringstream>();
+					unsigned long size = 0;
+					auto buf = static_cast<const char*>(resourceBytes->get_data(size));
+					ss->write(buf, static_cast<std::streamsize>(size));
+					stream = ss;
+				} else {
+
+					if (auto msg = application->getResourceBundle()->getResourceStream(uriPath, stream)) {
+						msg->setTitle("Unable to load resource");
+						result->setError(msg);
+						result->setRequestedUri(uri);
+						callSlot(result, slot);
+						continue;
+					}
 				}
 				std::shared_ptr<sdk::main::IResource> resource;
 				auto startTime = std::chrono::steady_clock::now();
 				if (auto msg = loader->load(this, stream, resource)) {
 					msg->setTitle("Unable to load resource");
 					result->setError(msg);
-					result->setRequestedUri(resourceUri);
+					result->setRequestedUri(uri);
 					callSlot(result, slot);
 					continue;
 				}
@@ -197,32 +208,32 @@ void ResourcesContext::resourceLoop(const std::stop_token &pToken) {
 					auto msg = sdk::utils::ReportMessage::create();
 					msg->setTitle("Too long duration");
 					msg->setMessage("Resource loading took to long");
-					msg->addInfoLine("Resource URI: {}", uri.string());
+					msg->addInfoLine("Resource URI: {}", uri);
 					msg->addInfoLine("Duration: {}ms", duration.count());
 					sdk::utils::Logger::warn(msg->getReport(false));
 				}
 				result->setResource(resource);
-				result->setRequestedUri(resourceUri);
+				result->setRequestedUri(uri);
 				result->setState(sdk::main::ResourceLoadResult::State::LOADED);
 				callSlot(result, slot);
 
 				if (auto msg = loader->init(this, resource)) {
 					msg->setTitle("Unable to load resource");
 					result->setError(msg);
-					result->setRequestedUri(resourceUri);
+					result->setRequestedUri(uri);
 					callSlot(result, slot);
 					continue;
 				}
-				resources->addResource(resourceUri, resource);
+				resources->addResource(uri, resource);
 				result->setState(sdk::main::ResourceLoadResult::State::READY);
 				callSlot(result, slot);
 			} catch (...) {
 				auto msg = sdk::utils::ReportMessage::create();
 				msg->setTitle("Unable to load resource");
 				msg->setMessage("Exception thrown while executing request");
-				msg->addInfoLine("Resource URI: {}", uri.string());
+				msg->addInfoLine("Resource URI: {}", uri);
 				result->setError(msg);
-				result->setRequestedUri(resourceUri);
+				result->setRequestedUri(uri);
 				callSlot(result, slot);
 			}
 		}

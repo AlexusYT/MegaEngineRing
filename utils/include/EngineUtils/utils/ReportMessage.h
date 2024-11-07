@@ -62,6 +62,8 @@ public:
 
 	void setStacktrace(const std::stacktrace &pStacktrace = std::stacktrace::current()) { stacktrace = pStacktrace; }
 
+	void setExceptionPtr(const std::exception_ptr &pExceptionPtr) { exceptionPtr = pExceptionPtr; }
+
 	[[nodiscard]] std::string getReport(const bool pShowStacktrace = true) const {
 		std::stringstream ss;
 		ss << (title.empty() ? "Untitled report" : title) << "\n";

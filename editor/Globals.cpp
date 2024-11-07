@@ -21,8 +21,6 @@
 
 #include "Globals.h"
 
-#include "Resources.h"
-
 void Globals::init() {
 	const std::filesystem::path home = getenv("HOME");
 	logPath = home / ".cache/MegaEngineRing/logs";
@@ -31,7 +29,4 @@ void Globals::init() {
 	create_directories(projectsPath);
 	configPath = home / ".config/MegaEngineRing";
 	create_directories(configPath);
-
-	dataPath = std::filesystem::path(RESOURCE_PATH) / "data";
-	resourcesPath = std::filesystem::path(RESOURCE_PATH) / "Resources";
 }

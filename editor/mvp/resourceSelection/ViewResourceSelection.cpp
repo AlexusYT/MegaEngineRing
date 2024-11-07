@@ -102,7 +102,7 @@ std::shared_ptr<ViewResourceSelection> ViewResourceSelection::create(const std::
 																	 sdk::utils::ReportMessagePtr &pMsg) {
 	std::shared_ptr<Gtk::Builder> builder;
 	try {
-		builder = Gtk::Builder::create_from_file(Globals::getResourcesPath() / "ResourceSelectionWindow.ui", "root");
+		builder = Gtk::Builder::create_from_resource("/ui/ResourceSelectionWindow.ui", "root");
 	} catch (...) {
 		pMsg = sdk::utils::ReportMessage::create();
 		pMsg->setTitle("Failed to load ui file");
