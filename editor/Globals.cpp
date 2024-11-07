@@ -21,8 +21,6 @@
 
 #include "Globals.h"
 
-#include "Resources.h"
-
 void Globals::init() {
 	const std::filesystem::path home = getenv("HOME");
 	logPath = home / ".cache/MegaEngineRing/logs";
