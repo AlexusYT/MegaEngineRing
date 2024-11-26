@@ -31,13 +31,16 @@ namespace mer::sdk::main {
 class FileSystemResourceBundle : public IResourceBundle {
 	std::filesystem::path searchPath{};
 
-	FileSystemResourceBundle(const std::filesystem::path &pSearchPath) : searchPath(pSearchPath) {}
+protected:
+	explicit FileSystemResourceBundle(const std::filesystem::path &pSearchPath) : searchPath(pSearchPath) {}
 
 public:
 	static std::shared_ptr<IResourceBundle> create(const std::filesystem::path &pSearchPath);
 
 	utils::ReportMessagePtr getResourceStream(const std::string &pResourceUri,
 											  std::shared_ptr<std::istream> &pStream) override;
+
+	void listResources(std::vector<std::string> &pUris) const override;
 };
 
 } // namespace mer::sdk::main

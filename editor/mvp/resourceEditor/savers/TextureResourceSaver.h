@@ -21,6 +21,7 @@
 
 #ifndef TEXTURERESOURCESAVER_H
 #define TEXTURERESOURCESAVER_H
+#include "ResourceSaverBase.h"
 
 namespace mer::sdk::main {
 class ITextureResource;
@@ -28,15 +29,13 @@ class ITextureResource;
 
 namespace mer::editor::mvp {
 
-class TextureResourceSaver {
+class TextureResourceSaver : public ResourceSaverBase {
 
 public:
 	static sdk::utils::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
-												   const std::shared_ptr<sdk::main::ITextureResource> &pResource);
+												   const std::shared_ptr<sdk::main::ITextureResource> &pTexture);
 
 private:
-	static void writeString(std::ofstream &pStream, const std::string &pStr);
-
 	template<typename T>
 	static void writeArray(std::ofstream &pStream, const std::vector<T> &pArray) {
 		//Object indices cannot be grater than 65535, we're using uint16_t instead of uint32_t or uint64_t to decrease

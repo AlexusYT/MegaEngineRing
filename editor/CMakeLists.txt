@@ -7,7 +7,7 @@ add_custom_command(
         OUTPUT resources.cpp
         COMMAND export PATH="${PROGRAM_PATH};$ENV{PATH}"
         COMMAND glib-compile-resources --target=resources.cpp --generate-source --internal --sourcedir="${RESOURCE_PATH}/css" --sourcedir="${RESOURCE_PATH}/ui" --sourcedir="${RESOURCE_PATH}/paned-layouts" --sourcedir="${RESOURCE_PATH}/_builtin_/shaders" "${RESOURCE_PATH}/resources.xml"
-        DEPENDS "${RESOURCE_PATH}/resources.xml"
+        DEPENDS "${RESOURCE_PATH}/resources.xml" "${RESOURCE_PATH}/ui"
 )
 
 add_library(
@@ -263,6 +263,32 @@ add_library(
         mvp/resourceEditor/savers/MaterialResourceSaver.h
         StringInputStream.cpp
         StringInputStream.h
+        ui/customWidgets/resourceSelector/ResourceSelectorWidget.cpp
+        ui/customWidgets/resourceSelector/ResourceSelectorWidget.h
+        ui/customWidgets/resourceSelector/ISourceSelection.h
+        ui/customWidgets/resourceSelector/SourceSelectionNone.cpp
+        ui/customWidgets/resourceSelector/SourceSelectionNone.h
+        ui/customWidgets/resourceSelector/resources/SourceSelectionModel3D.cpp
+        ui/customWidgets/resourceSelector/resources/SourceSelectionModel3D.h
+        mvp/main/objectProperties/PropertyRenderer.cpp
+        mvp/main/objectProperties/PropertyRenderer.h
+        mvp/main/objectProperties/PropertyRendererType.h
+        project/EditorFileSystemResourceBundle.cpp
+        project/EditorFileSystemResourceBundle.h
+        ui/customWidgets/resourceSelector/ISourceSelectionResult.h
+        ui/customWidgets/resourceSelector/SourceSelection.cpp
+        ui/customWidgets/resourceSelector/SourceSelection.h
+        ui/customWidgets/resourceSelector/resources/SourceSelectionMaterial.cpp
+        ui/customWidgets/resourceSelector/resources/SourceSelectionMaterial.h
+        ui/customWidgets/resourceSelector/resources/SourceSelectionResource.cpp
+        ui/customWidgets/resourceSelector/resources/SourceSelectionResource.h
+        ui/customWidgets/resourceSelector/resources/TypedSourceSelectionResult.h
+        ui/customWidgets/resourceSelector/resources/SourceSelectionTexture.cpp
+        ui/customWidgets/resourceSelector/resources/SourceSelectionTexture.h
+        ui/customWidgets/resourceSelector/SourceSelectionColor.cpp
+        ui/customWidgets/resourceSelector/SourceSelectionColor.h
+        mvp/resourceEditor/savers/ResourceSaverBase.cpp
+        mvp/resourceEditor/savers/ResourceSaverBase.h
 
 )
 

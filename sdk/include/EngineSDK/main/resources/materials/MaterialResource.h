@@ -22,27 +22,34 @@
 #ifndef MATERIALRESOURCE_H
 #define MATERIALRESOURCE_H
 
-#include <glm/vec3.hpp>
+#include <atomic>
+#include <sigc++/scoped_connection.h>
+#include <sigc++/signal.h>
 
-#include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/resources/Resource.h"
-#include "EngineSDK/main/resources/ResourceType.h"
 #include "IMaterialResource.h"
 
 namespace mer::sdk::main {
-enum class Texture2DImageFormat;
+class IMaterialComponent;
 class ITextureResource;
 } // namespace mer::sdk::main
 
 namespace mer::sdk::main {
 
 class MaterialResource : public IMaterialResource, public Resource {
-	std::shared_ptr<ITextureResource> baseColorMap;
-	std::shared_ptr<ITextureResource> normalMap;
-	std::shared_ptr<ITextureResource> metallicMap;
-	std::shared_ptr<ITextureResource> roughnessMap;
-	std::shared_ptr<ITextureResource> aoMap;
+
+	utils::Property<std::shared_ptr<IMaterialComponent>> baseColorMap;
+	sigc::scoped_connection baseColorMapConnection;
+	utils::Property<std::shared_ptr<IMaterialComponent>> normalMap;
+	sigc::scoped_connection normalMapConnection;
+	utils::Property<std::shared_ptr<IMaterialComponent>> metallicMap;
+	sigc::scoped_connection metallicMapConnection;
+	utils::Property<std::shared_ptr<IMaterialComponent>> roughnessMap;
+	sigc::scoped_connection roughnessMapConnection;
+	utils::Property<std::shared_ptr<IMaterialComponent>> aoMap;
+	sigc::scoped_connection aoMapConnection;
 	MaterialData data;
+	std::atomic<bool> dirty{false};
 
 	sigc::signal<void()> onDataChangedSignal;
 
@@ -59,48 +66,46 @@ public:
 
 	const MaterialData &getData() override { return data; }
 
-	[[nodiscard]] const std::shared_ptr<ITextureResource> &getBaseColorMap() const override { return baseColorMap; }
+	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAlbedo() override {
+		return baseColorMap.getReadOnly();
+	}
 
-	utils::ReportMessagePtr setBaseColorMap(const std::shared_ptr<ITextureResource> &pBaseColorMap) override;
+	void setAlbedo(const std::shared_ptr<IMaterialComponent> &pBaseColorMap) override;
 
-	[[nodiscard]] std::optional<glm::vec3> getBaseColor() override;
+	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getNormal() override {
+		return normalMap.getReadOnly();
+	}
 
-	[[nodiscard]] const std::shared_ptr<ITextureResource> &getNormalMap() const override { return normalMap; }
+	void setNormal(const std::shared_ptr<IMaterialComponent> &pNormalMap) override;
 
-	utils::ReportMessagePtr setNormalMap(const std::shared_ptr<ITextureResource> &pNormalMap) override;
+	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getMetallic() override {
+		return metallicMap.getReadOnly();
+	}
 
-	[[nodiscard]] std::optional<glm::vec3> getNormalColor() override;
+	void setMetallic(const std::shared_ptr<IMaterialComponent> &pMetallicMap) override;
 
-	[[nodiscard]] const std::shared_ptr<ITextureResource> &getMetallicMap() const override { return metallicMap; }
+	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getRoughness() override {
+		return roughnessMap.getReadOnly();
+	}
 
-	utils::ReportMessagePtr setMetallicMap(const std::shared_ptr<ITextureResource> &pMetallicMap) override;
+	void setRoughness(const std::shared_ptr<IMaterialComponent> &pRoughnessMap) override;
 
-	[[nodiscard]] std::optional<float> getMetallicColor() override;
+	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAo() override {
+		return aoMap.getReadOnly();
+	}
 
-	[[nodiscard]] const std::shared_ptr<ITextureResource> &getRoughnessMap() const override { return roughnessMap; }
-
-	utils::ReportMessagePtr setRoughnessMap(const std::shared_ptr<ITextureResource> &pRoughnessMap) override;
-
-	[[nodiscard]] std::optional<float> getRoughnessColor() override;
-
-	[[nodiscard]] const std::shared_ptr<ITextureResource> &getAoMap() const override { return aoMap; }
-
-	utils::ReportMessagePtr setAoMap(const std::shared_ptr<ITextureResource> &pAoMap) override;
-
-	[[nodiscard]] std::optional<float> getAoColor() override;
+	void setAo(const std::shared_ptr<IMaterialComponent> &pAoMap) override;
 
 	IResource* asResource() override { return this; }
 
 	sigc::connection connectOnDataChangedSignal(const sigc::slot<void()> &pSlot) override {
+		pSlot();
 		return onDataChangedSignal.connect(pSlot);
 	}
 
 private:
-	void connectHandlerChanged(const std::shared_ptr<ITextureResource> &pTextureResource, glm::vec4* pMap) const;
-	static glm::vec4 handleToVec(uint64_t pHandle);
-
-	static utils::ReportMessagePtr checkFormat(Texture2DImageFormat pFormat,
-											   const std::vector<Texture2DImageFormat> &pAcceptableFormats);
+	sigc::scoped_connection connectComponentValChanged(const std::shared_ptr<IMaterialComponent> &pComponent,
+													   glm::vec4* pMap);
 };
 
 

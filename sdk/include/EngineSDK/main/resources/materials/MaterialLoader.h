@@ -21,20 +21,30 @@
 
 #ifndef MATERIALLOADER_H
 #define MATERIALLOADER_H
+#include <sigc++/functors/slot.h>
+
 #include "EngineSDK/main/resources/ResourceLoader.h"
+
+namespace mer::sdk::main {
+class IMaterialComponent;
+}
 
 namespace mer::sdk::main {
 
 class MaterialLoader : public ResourceLoader {
 
 public:
+	std::shared_ptr<IResource> createResource() override;
+
 	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
-								 std::shared_ptr<IResource> &pResourceOut) override;
+								 const std::shared_ptr<IResource> &pResource) override;
 
 	std::string getFileExtension() override { return "enmat"; }
 
-	utils::ReportMessagePtr init(IResourceLoadExecutor* pLoadExecutor,
-								 const std::shared_ptr<IResource> &pLoadedResource) override;
+private:
+	static void readMaterialComponent(
+		const std::shared_ptr<std::istream> &pStream, IResourceLoadExecutor* pLoadExecutor,
+		const sigc::slot<void(const std::shared_ptr<IMaterialComponent> &pComponent)> &pSetter);
 };
 
 } // namespace mer::sdk::main

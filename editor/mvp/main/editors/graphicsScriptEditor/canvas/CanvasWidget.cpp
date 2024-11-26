@@ -92,15 +92,17 @@ sigc::connection CanvasWidget::connectDragEnd(const sigc::slot<void(double pX, d
 }
 
 void CanvasWidget::snapshot_vfunc(const Glib::RefPtr<Gtk::Snapshot> &pSnapshot) {
-	const auto allocation = get_allocation();
-	const auto width = allocation.get_width();
-	const auto height = allocation.get_height();
-	const Gdk::Rectangle rect(0, 0, width, height);
+	Gdk::Graphene::Rect rect;
+	if (auto bounds = compute_bounds(*this); bounds.has_value()) rect = bounds.value();
+
+	const auto width = static_cast<double>(rect.get_width());
+	const auto height = static_cast<double>(rect.get_height());
 
 	const std::shared_ptr<Cairo::Context> context = pSnapshot->append_cairo(rect);
 
 	Gdk::Cairo::set_source_rgba(context, background);
-	Gdk::Cairo::add_rectangle_to_path(context, rect);
+	const Gdk::Rectangle backgroundRect(0, 0, static_cast<int>(width), static_cast<int>(height));
+	Gdk::Cairo::add_rectangle_to_path(context, backgroundRect);
 	context->fill();
 
 	const double step = 100 * zoom;
@@ -146,8 +148,7 @@ void CanvasWidget::snapshot_vfunc(const Glib::RefPtr<Gtk::Snapshot> &pSnapshot) 
 
 void CanvasWidget::drawBottomText(const std::shared_ptr<Cairo::Context> &pContext, const std::string &pText,
 								  Cairo::TextExtents &pExtents) const {
-	const auto allocation = get_allocation();
-	const int width = allocation.get_width();
+	const int width = get_width();
 	//const int height = allocation.get_height();
 
 	glm::dvec2 lastPos;

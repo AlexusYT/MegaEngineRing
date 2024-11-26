@@ -22,42 +22,31 @@
 #include "Shader.h"
 
 #include <epoxy/gl.h>
+
+#include "EngineUtils/utils/ReportMessage.h"
 #include "ShaderTypeEnum.h"
 
 namespace mer::sdk::renderer {
-Shader::Shader(const ShaderTypeEnum pType) {
-	uint32_t type;
-	switch (pType) {
+Shader::Shader(const ShaderTypeEnum pType) : type(pType) {}
 
-		case ShaderTypeEnum::COMPUTE_SHADER: type = 0x91B9; break;
-		case ShaderTypeEnum::VERTEX_SHADER: type = 0x8B31; break;
-		case ShaderTypeEnum::TESS_CONTROL_SHADER: type = 0x8E88; break;
-		case ShaderTypeEnum::TESS_EVALUATION_SHADER: type = 0x8E87; break;
-		case ShaderTypeEnum::GEOMETRY_SHADER: type = 0x8DD9; break;
-		case ShaderTypeEnum::FRAGMENT_SHADER: type = 0x8B30; break;
-		default: type = 0;
+Shader::~Shader() { Shader::uninitialize(); }
+
+void Shader::setSource(const std::string &pSrc) { source = pSrc; }
+
+void Shader::getSource(std::string &pSrcOut) const {
+	if (!source.empty()) {
+		pSrcOut = source;
+		return;
 	}
-	name = glCreateShader(type);
-}
-
-Shader::~Shader() { glDeleteShader(name); }
-
-void Shader::setSource(const std::string &pSrc) const {
-	const int len = static_cast<int>(pSrc.length());
-	const char* srcTemp = pSrc.c_str();
-	glShaderSource(name, 1, &srcTemp, &len);
-}
-
-void Shader::getSource(std::string &srcOut) const {
 	const int sourceLen = getSourceLength();
-	srcOut.resize(static_cast<size_t>(sourceLen));
-	glGetShaderSource(name, sourceLen, nullptr, srcOut.data());
+	pSrcOut.resize(static_cast<size_t>(sourceLen));
+	glGetShaderSource(name, sourceLen, nullptr, pSrcOut.data());
 }
 
-void Shader::getInfoLog(std::string &logOut) const {
+void Shader::getInfoLog(std::string &pLogOut) const {
 	const int logLen = getInfoLogLength();
-	logOut.resize(static_cast<size_t>(logLen));
-	glGetShaderInfoLog(name, logLen, nullptr, logOut.data());
+	pLogOut.resize(static_cast<size_t>(logLen));
+	glGetShaderInfoLog(name, logLen, nullptr, pLogOut.data());
 }
 
 void Shader::compile() const { glCompileShader(name); }
@@ -102,5 +91,49 @@ int Shader::getSourceLength() const {
 	int out;
 	glGetShaderiv(name, GL_SHADER_SOURCE_LENGTH, &out);
 	return out;
+}
+
+utils::ReportMessagePtr Shader::onInitialize() {
+
+	uint32_t glType;
+	switch (type) {
+
+		case ShaderTypeEnum::COMPUTE_SHADER: glType = 0x91B9; break;
+		case ShaderTypeEnum::VERTEX_SHADER: glType = 0x8B31; break;
+		case ShaderTypeEnum::TESS_CONTROL_SHADER: glType = 0x8E88; break;
+		case ShaderTypeEnum::TESS_EVALUATION_SHADER: glType = 0x8E87; break;
+		case ShaderTypeEnum::GEOMETRY_SHADER: glType = 0x8DD9; break;
+		case ShaderTypeEnum::FRAGMENT_SHADER: glType = 0x8B30; break;
+		default: glType = 0;
+	}
+	name = glCreateShader(glType);
+	const int len = static_cast<int>(source.length());
+	const char* srcTemp = source.c_str();
+	glShaderSource(name, 1, &srcTemp, &len);
+	//source.clear();
+	compile();
+	if (!getCompileStatus()) {
+		auto msg = utils::ReportMessage::create();
+		msg->setTitle("Failed to compile the shader");
+		msg->setMessage("Error in shader code detected");
+		addReportInfo(msg);
+		std::string log;
+		getInfoLog(log);
+		msg->addInfoLine("Compilation log: \n{}", log);
+		return msg;
+	}
+	return nullptr;
+}
+
+void Shader::onUninitialize() {
+	if (name) {
+		glDeleteShader(name);
+		name = 0;
+	}
+}
+
+void Shader::addReportInfo(const utils::ReportMessagePtr &pMsg) {
+	pMsg->addInfoLine("Shader type: {}", to_string(type));
+	pMsg->addInfoLine("Is compiled: {}", getCompileStatus());
 }
 } // namespace mer::sdk::renderer

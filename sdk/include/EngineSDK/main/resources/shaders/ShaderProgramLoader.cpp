@@ -28,11 +28,12 @@
 
 namespace mer::sdk::main {
 
+std::shared_ptr<IResource> ShaderProgramLoader::createResource() { return std::make_shared<renderer::ShaderProgram>(); }
+
 utils::ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
 												  std::shared_ptr<std::istream> &pStream,
-												  std::shared_ptr<IResource> &pResourceOut) {
-	std::shared_ptr<renderer::ShaderProgram> program = std::make_shared<renderer::ShaderProgram>();
-	program->setResourceUri(readString(pStream));
+												  const std::shared_ptr<IResource> &pResource) {
+	auto program = std::dynamic_pointer_cast<renderer::ShaderProgram>(pResource);
 	uint8_t shadersCount;
 	pStream->read(reinterpret_cast<char*>(&shadersCount), sizeof(uint8_t));
 	for (uint8_t i = 0; i < shadersCount; i++) {
@@ -46,37 +47,9 @@ utils::ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoad
 		} else
 			continue;
 		shader->setSource(readString(pStream));
-		shader->compile();
-		if (!shader->getCompileStatus()) {
-			auto msg = utils::ReportMessage::create();
-			msg->setTitle("Failed to compile the shader");
-			msg->setMessage("Error in shader code detected");
-			msg->addInfoLine("Shader type: {}", shaderType == 0 ? "vertex" : "fragment");
-			std::string log;
-			shader->getInfoLog(log);
-			msg->addInfoLine("Compilation log: {}", log);
-			return msg;
-		}
 		program->attachShader(shader);
 	}
-	program->link();
-	if (!program->getLinkStatus()) {
 
-		auto msg = utils::ReportMessage::create();
-		msg->setStacktrace();
-		msg->setTitle("Failed to link the shader program");
-		msg->setMessage("Error in shader code detected");
-		std::string log;
-		program->getInfoLog(log);
-		msg->addInfoLine("Linker log: {}", log);
-		return msg;
-	}
-	pResourceOut = program;
-	return nullptr;
-}
-
-utils::ReportMessagePtr ShaderProgramLoader::init(IResourceLoadExecutor* /*pLoadExecutor*/,
-												  const std::shared_ptr<IResource> & /*pLoadedResource*/) {
 	return nullptr;
 }
 } // namespace mer::sdk::main

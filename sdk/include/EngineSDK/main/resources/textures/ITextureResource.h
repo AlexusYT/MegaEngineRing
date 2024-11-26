@@ -22,6 +22,7 @@
 #ifndef ITEXTURERESOURCE_H
 #define ITEXTURERESOURCE_H
 #include "EngineSDK/main/render/IRenderable.h"
+#include "EngineSDK/main/resources/materials/IMaterialComponent.h"
 
 namespace mer::sdk::utils {
 template<typename T>
@@ -37,7 +38,7 @@ enum class TextureMagFilter;
 enum class TextureMinFilter;
 class IResource;
 
-class ITextureResource : public IRenderable {
+class ITextureResource : public IRenderable, public IMaterialComponent {
 public:
 	[[nodiscard]] virtual void* getData() const = 0;
 

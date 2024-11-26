@@ -39,8 +39,8 @@ MultiPaned::MultiPaned() {
 		if (const auto panel = getPanelAt(pX, pY)) panel->beginDrag(pX, pY);
 		const auto divider = getDividerAt(pX, pY);
 		if (!divider) return;
-		const float x = static_cast<float>(pX / allocationSelf.get_width());
-		const float y = static_cast<float>(pY / allocationSelf.get_height());
+		const float x = static_cast<float>(pX / get_width());
+		const float y = static_cast<float>(pY / get_height());
 		divider->beginDrag(x, y);
 		draggingDivider = divider;
 	});
@@ -50,8 +50,8 @@ MultiPaned::MultiPaned() {
 		drag->get_start_point(startX, startY);
 		if (const auto panel = getPanelAt(startX + pX, startY + pY)) panel->updateDrag(pX, pY);
 		if (!draggingDivider) return;
-		const float x = static_cast<float>(pX / allocationSelf.get_width());
-		const float y = static_cast<float>(pY / allocationSelf.get_height());
+		const float x = static_cast<float>(pX / get_width());
+		const float y = static_cast<float>(pY / get_height());
 		draggingDivider->updateDrag(x, y);
 		queue_allocate();
 	});
@@ -266,7 +266,6 @@ void MultiPaned::size_allocate_vfunc(const int pWidth, const int pHeight, const 
 		}
 		divider->size_allocate(allocation, pBaseline);
 	}
-	allocationSelf = get_allocation();
 }
 
 MultiPanedPanelDivider* MultiPaned::getDividerAt(const double pX, const double pY) {

@@ -24,29 +24,19 @@
 #include <epoxy/gl.h>
 #include <glm/mat4x4.hpp>
 
-#include "EngineSDK/renderer/buffers/ISSBO.h"
-#include "IShader.h"
+#include "EngineSDK/main/resources/ResourceType.h"
+#include "EngineUtils/utils/ReportMessage.h"
+#include "Shader.h"
 
 namespace mer::sdk::renderer {
 
-ShaderProgram::ShaderProgram() { name = glCreateProgram(); }
+ShaderProgram::ShaderProgram() : name(0) {}
 
-ShaderProgram::~ShaderProgram() { glDeleteProgram(name); }
+ShaderProgram::~ShaderProgram() { ShaderProgram::uninitialize(); }
 
-void ShaderProgram::attachShader(const std::shared_ptr<IShader> &pShader) {
-	attachedShaders.emplace_back(pShader);
-	glAttachShader(name, pShader->native());
-}
+void ShaderProgram::attachShader(const std::shared_ptr<Shader> &pShader) { attachedShaders.emplace_back(pShader); }
 
-void ShaderProgram::attachSsbo(const std::shared_ptr<ISSBO> &pSsbo, const std::string &pBlockName,
-							   const uint32_t pBinding) {
-	buffers.emplace_back(pSsbo);
-	const uint32_t index = glGetProgramResourceIndex(name, 0x92E6, pBlockName.c_str());
-	glShaderStorageBlockBinding(name, index, pBinding);
-	pSsbo->bindBufferBase(pBinding);
-}
-
-void ShaderProgram::link() { glLinkProgram(name); }
+void ShaderProgram::link() const { glLinkProgram(name); }
 
 void ShaderProgram::validate() const { glValidateProgram(name); }
 
@@ -106,4 +96,41 @@ void ShaderProgram::setUniform(const std::string &pName, const glm::vec4 &pValue
 void ShaderProgram::setUniform(const std::string &pName, const glm::mat4 &pValue) const {
 	glUniformMatrix4fv(glGetUniformLocation(name, pName.c_str()), 1, GL_FALSE, &pValue[0][0]);
 }
+
+main::ResourceType ShaderProgram::getResourceType() { return main::ResourceType::SHADER; }
+
+utils::ReportMessagePtr ShaderProgram::onInitialize() {
+	name = glCreateProgram();
+	for (auto shader: attachedShaders) {
+		if (auto msg = shader->initialize()) { return msg; }
+		glAttachShader(name, shader->native());
+	}
+
+	link();
+	if (!getLinkStatus()) {
+
+		auto msg = utils::ReportMessage::create();
+		msg->setStacktrace();
+		msg->setTitle("Failed to link the shader program");
+		msg->setMessage("Error in shader code detected");
+		addReportInfo(msg);
+		std::string log;
+		getInfoLog(log);
+		msg->addInfoLine("Linker log: {}", log);
+		return msg;
+	}
+	return nullptr;
+}
+
+void ShaderProgram::onUninitialize() {
+	for (auto shader: attachedShaders) { shader->uninitialize(); }
+	if (name != 0) glDeleteProgram(name);
+}
+
+void ShaderProgram::addReportInfo(const utils::ReportMessagePtr &pMsg) {
+	Resource::addReportInfo(pMsg);
+	pMsg->addInfoLine("Attached shaders:");
+	for (auto shader: attachedShaders) { shader->addReportInfo(pMsg); }
+}
+
 } // namespace mer::sdk::renderer

@@ -23,6 +23,9 @@
 #define RESOURCELOADER_H
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
+
+class UUID;
+
 namespace mer::sdk::main {
 class IApplication;
 class IResource;
@@ -32,11 +35,15 @@ class IResourceLoader {
 public:
 	virtual ~IResourceLoader() = default;
 
-	virtual utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
-										 std::shared_ptr<IResource> &pResourceOut) = 0;
+	virtual std::shared_ptr<IResource> createResource() = 0;
 
-	virtual utils::ReportMessagePtr init(IResourceLoadExecutor* pLoadExecutor,
-										 const std::shared_ptr<IResource> &pLoadedResource) = 0;
+	virtual utils::ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
+											const std::shared_ptr<std::istream> &pShared,
+											const std::shared_ptr<IResource> &pResource) = 0;
+
+	virtual utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
+										 const std::shared_ptr<IResource> &pResource) = 0;
+
 
 	[[nodiscard]] virtual IApplication* getApplication() const = 0;
 
@@ -49,14 +56,41 @@ class ResourceLoader : public IResourceLoader {
 	IApplication* application{};
 
 public:
+	utils::ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
+									const std::shared_ptr<std::istream> &pStream,
+									const std::shared_ptr<IResource> &pResource) override;
+
 	[[nodiscard]] IApplication* getApplication() const override { return application; }
+
 
 protected:
 	static std::string readString(const std::shared_ptr<std::istream> &pStream);
+	template<typename T>
+		requires std::integral<T> || std::floating_point<T>
+	static T readNumber(const std::shared_ptr<std::istream> &pStream);
+	template<typename T>
+		requires std::integral<T> || std::floating_point<T>
+	static void readNumber(const std::shared_ptr<std::istream> &pStream, T &pNumOut);
+
+	static std::shared_ptr<UUID> readUuid(const std::shared_ptr<std::istream> &pStream);
 
 private:
 	void setApplication(IApplication* pApplication) override { application = pApplication; }
 };
+
+template<typename T>
+	requires std::integral<T> || std::floating_point<T>
+T ResourceLoader::readNumber(const std::shared_ptr<std::istream> &pStream) {
+	T val = 0;
+	readNumber(pStream, val);
+	return val;
+}
+
+template<typename T>
+	requires std::integral<T> || std::floating_point<T>
+void ResourceLoader::readNumber(const std::shared_ptr<std::istream> &pStream, T &pNumOut) {
+	pStream->read(reinterpret_cast<std::istream::char_type*>(&pNumOut), sizeof(pNumOut));
+}
 } // namespace mer::sdk::main
 
 

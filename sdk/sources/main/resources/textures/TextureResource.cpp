@@ -23,6 +23,7 @@
 
 #include <cstring>
 #include <epoxy/gl.h>
+#include <glm/common.hpp>
 
 #include "EngineSDK/main/resources/textures/Texture2DImageFormat.h"
 #include "EngineSDK/main/resources/textures/Texture2DType.h"
@@ -32,20 +33,19 @@
 
 namespace mer::sdk::main {
 TextureResource::TextureResource()
-	: minFilter(TextureMinFilter::LINEAR), magFilter(TextureMagFilter::LINEAR),
-	  textureHandle(nullptr, "TextureHandle") {}
+	: minFilter(TextureMinFilter::LINEAR), magFilter(TextureMagFilter::LINEAR), textureHandle(nullptr, "TextureHandle"),
+	  materialComponentVal(nullptr, "TextureComponent") {}
 
 std::shared_ptr<TextureResource> TextureResource::create() {
 	return std::shared_ptr<TextureResource>(new TextureResource());
 }
 
 TextureResource::~TextureResource() {
-	TextureResource::destroyRender();
+	TextureResource::onUninitialize();
 	if (data) free(data);
 }
 
-void TextureResource::setupRender() {
-	//if (inited) return;
+utils::ReportMessagePtr TextureResource::onInitialize() {
 	/*glCreateTextures(GL_TEXTURE_2D, 1, &id);
 	glTextureStorage2D(id, 1, GL_RGBA8, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 	glTextureSubImage2D(id,
@@ -65,13 +65,14 @@ void TextureResource::setupRender() {
 	auto handle = glGetTextureHandleARB(id);
 	glMakeTextureHandleResidentARB(handle);
 	textureHandle = handle;
+	materialComponentVal = handleToVec(handle);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	inited = true;
+	return nullptr;
 }
 
 void TextureResource::render() {}
 
-void TextureResource::destroyRender() {
+void TextureResource::onUninitialize() {
 	if (id) glDeleteTextures(1, &id);
 }
 
@@ -110,5 +111,12 @@ void TextureResource::setData(void* pData, uint32_t pWidth, uint32_t pHeight, Te
 	if (data) free(data);
 	data = malloc(size);
 	memcpy(data, pData, size);
+}
+
+glm::vec4 TextureResource::handleToVec(const uint64_t pHandle) {
+	glm::uvec2 convertedHandle;
+	convertedHandle.x = pHandle & 0xFFFFFFFF;
+	convertedHandle.y = static_cast<unsigned>(pHandle >> 32) & 0xFFFFFFFF;
+	return glm::vec4(glm::uintBitsToFloat(convertedHandle), 0.0f, 2.0f);
 }
 } // namespace mer::sdk::main

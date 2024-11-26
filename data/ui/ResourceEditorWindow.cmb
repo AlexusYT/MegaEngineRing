@@ -5,7 +5,7 @@
 	(1,None,"ResourceCreationWindow.ui","ResourceEditorWindow.ui",None,None,None,None,None,None,None)
   </ui>
   <ui_library>
-	(1,"gtk","4.10",None)
+	(1,"gtk","4.16",None)
   </ui_library>
   <object>
 	(1,1,"GtkWindow",None,None,None,None,None,0,None,None),
@@ -62,22 +62,10 @@
 	(1,381,"GtkStack","materialStack",361,None,None,None,1,None,None),
 	(1,382,"GtkStackPage",None,381,None,None,None,0,None,None),
 	(1,383,"GtkStackPage",None,381,None,None,None,1,None,None),
-	(1,384,"GtkGrid",None,383,None,None,None,0,None,None),
-	(1,386,"GtkLabel",None,384,None,None,None,4,None,None),
-	(1,387,"GtkDropDown",None,384,None,None,None,3,None,None),
-	(1,388,"GtkStringList",None,387,None,None,None,0,None,None),
-	(1,389,"GtkLabel",None,384,None,None,None,2,None,None),
-	(1,390,"GtkMenuButton",None,384,None,None,None,1,None,None),
-	(1,391,"GtkPopover",None,390,None,None,None,0,None,None),
-	(1,392,"GtkBox",None,391,None,None,None,0,None,None),
-	(1,393,"GtkStackSwitcher",None,392,None,None,None,0,None,None),
-	(1,394,"GtkStack","baseColorStack",392,None,None,None,1,None,None),
-	(1,395,"GtkStackPage",None,394,None,None,None,0,None,None),
-	(1,396,"GtkLabel",None,395,None,None,None,0,None,None),
-	(1,397,"GtkStackPage",None,394,None,None,None,1,None,None),
-	(1,398,"GtkLabel",None,397,None,None,None,0,None,None),
-	(1,399,"GtkStackPage",None,394,None,None,None,2,None,None),
-	(1,400,"GtkColorChooserWidget",None,399,None,None,None,0,None,None)
+	(1,384,"GtkGrid","materialGrid",383,None,None,None,0,None,None),
+	(1,386,"GtkLabel",None,384,None,None,None,1,None,None),
+	(1,387,"GtkDropDown",None,384,None,None,None,0,None,None),
+	(1,388,"GtkStringList",None,387,None,None,None,0,None,None)
   </object>
   <object_property>
 	(1,42,"GtkBox","spacing","6",None,None,None,None,None,None,None,None,None),
@@ -224,34 +212,7 @@
 	(1,386,"GtkWidget","hexpand-set","True",0,None,None,None,None,None,None,None,None),
 	(1,386,"GtkWidget","valign","center",0,None,None,None,None,None,None,None,None),
 	(1,387,"GtkDropDown","model",None,0,None,None,None,388,None,None,None,None),
-	(1,388,"GtkStringList","strings","Simple PBR",0,None,None,None,None,None,None,None,None),
-	(1,389,"GtkLabel","ellipsize","end",0,None,None,None,None,None,None,None,None),
-	(1,389,"GtkLabel","label","Base Color",0,None,None,None,None,None,None,None,None),
-	(1,389,"GtkWidget","halign","start",0,None,None,None,None,None,None,None,None),
-	(1,389,"GtkWidget","valign","center",0,None,None,None,None,None,None,None,None),
-	(1,390,"GtkMenuButton","popover",None,0,None,None,None,391,None,None,None,None),
-	(1,392,"GtkOrientable","orientation","vertical",0,None,None,None,None,None,None,None,None),
-	(1,393,"GtkOrientable","orientation","vertical",0,None,None,None,None,None,None,None,None),
-	(1,393,"GtkStackSwitcher","stack","394",0,None,None,None,None,None,None,None,None),
-	(1,394,"GtkStack","hhomogeneous","False",0,None,None,None,None,None,None,None,None),
-	(1,394,"GtkStack","interpolate-size","True",0,None,None,None,None,None,None,None,None),
-	(1,394,"GtkStack","transition-duration","400",0,None,None,None,None,None,None,None,None),
-	(1,394,"GtkStack","transition-type","crossfade",0,None,None,None,None,None,None,None,None),
-	(1,394,"GtkStack","vhomogeneous","False",0,None,None,None,None,None,None,None,None),
-	(1,394,"GtkWidget","margin-bottom","6",0,None,None,None,None,None,None,None,None),
-	(1,394,"GtkWidget","margin-top","6",0,None,None,None,None,None,None,None,None),
-	(1,395,"GtkStackPage","child",None,0,None,None,None,396,None,None,None,None),
-	(1,395,"GtkStackPage","name","none",0,None,None,None,None,None,None,None,None),
-	(1,395,"GtkStackPage","title","None",0,None,None,None,None,None,None,None,None),
-	(1,396,"GtkLabel","label","Empty Page",0,None,None,None,None,None,None,None,None),
-	(1,397,"GtkStackPage","child",None,0,None,None,None,398,None,None,None,None),
-	(1,397,"GtkStackPage","name","resource",0,None,None,None,None,None,None,None,None),
-	(1,397,"GtkStackPage","title","Resource",0,None,None,None,None,None,None,None,None),
-	(1,398,"GtkLabel","label","Empty Page",0,None,None,None,None,None,None,None,None),
-	(1,399,"GtkStackPage","child",None,0,None,None,None,400,None,None,None,None),
-	(1,399,"GtkStackPage","name","color",0,None,None,None,None,None,None,None,None),
-	(1,399,"GtkStackPage","title","Color",0,None,None,None,None,None,None,None,None),
-	(1,400,"GtkColorChooserWidget","show-editor","True",0,None,None,None,None,None,None,None,None)
+	(1,388,"GtkStringList","strings","Simple PBR",0,None,None,None,None,None,None,None,None)
   </object_property>
   <object_layout_property>
 	(1,277,278,"GtkGridLayoutChild","column","0",0,None,None,None),
@@ -290,9 +251,6 @@
 	(1,340,352,"GtkGridLayoutChild","column-span","2",None,None,None,None),
 	(1,340,352,"GtkGridLayoutChild","row","3",None,None,None,None),
 	(1,359,360,"GtkGridLayoutChild","column-span","3",None,None,None,None),
-	(1,384,387,"GtkGridLayoutChild","column","1",None,None,None,None),
-	(1,384,389,"GtkGridLayoutChild","row","1",None,None,None,None),
-	(1,384,390,"GtkGridLayoutChild","column","1",None,None,None,None),
-	(1,384,390,"GtkGridLayoutChild","row","1",None,None,None,None)
+	(1,384,387,"GtkGridLayoutChild","column","1",None,None,None,None)
   </object_layout_property>
 </cambalache-project>

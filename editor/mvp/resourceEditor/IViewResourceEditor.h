@@ -26,7 +26,8 @@
 
 namespace mer::sdk::main {
 class IModel3DObject;
-}
+class IMaterialResource;
+} // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
 class IPresenterResourceEditor;
@@ -65,7 +66,11 @@ public:
 
 	virtual void appendResource(const std::shared_ptr<sdk::main::IResource> &pNewResource) = 0;
 
+	virtual void removeResource(const std::shared_ptr<sdk::main::IResource> &pResource) = 0;
+
 	virtual void selectResource(const std::shared_ptr<sdk::main::IResource> &pResource) = 0;
+
+	virtual void displayMaterial(const std::shared_ptr<sdk::main::IMaterialResource> &pMaterialResource) = 0;
 };
 
 } // namespace mer::editor::mvp
