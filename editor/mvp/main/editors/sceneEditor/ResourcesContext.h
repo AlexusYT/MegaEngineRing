@@ -28,47 +28,58 @@
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
 
 namespace mer::sdk::main {
+class IResourceLoader;
 class ILoadedResources;
-}
+} // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
 class ResourcesContext : public sdk::main::IResourceLoadExecutor {
-	std::list<std::pair<std::string, LoadingFinishedSlot>> queue;
+	enum class RequestType { PRELOAD, LOAD };
+
+	struct Request {
+		std::filesystem::path uri;
+		RequestType type;
+		sigc::signal<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> callbackSignal;
+	};
+
 	std::mutex queueMutex;
+	std::unordered_map<std::filesystem::path, std::shared_ptr<Request>> queue;
 	std::mutex waitMutex;
 	std::shared_ptr<sdk::main::ILoadedResources> resources;
 	std::condition_variable cv;
 
 	std::shared_ptr<Gdk::GLContext> sharedContext;
-	std::jthread thread;
+	std::list<std::jthread> threads;
 	sdk::main::IApplication* application{};
+	std::mutex headersLengthMutex;
+	std::unordered_map<std::shared_ptr<sdk::main::IResource>, int64_t> headersLength;
+	std::mutex processingQueueMutex;
+	std::unordered_map<std::filesystem::path, std::shared_ptr<Request>> processingQueue;
 
 public:
-	explicit ResourcesContext(const std::shared_ptr<Gdk::GLContext> &pSharedContext)
-		: sharedContext(pSharedContext), thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) {
-		thread.detach();
+	explicit ResourcesContext(const std::shared_ptr<Gdk::GLContext> &pSharedContext) : sharedContext(pSharedContext) {
+		for (uint32_t i = 0, maxI = std::max(std::thread::hardware_concurrency() / 2, 1u); i < maxI; i++) {
+			threads.emplace_back([this](const std::stop_token &pToken) { this->loop(pToken); });
+		}
 	}
 
 	~ResourcesContext() override {
-		thread.request_stop();
-		cv.notify_one();
+		for (auto &thread: threads) { thread.request_stop(); }
+		cv.notify_all();
 	}
 
 	std::shared_ptr<sdk::main::ResourceLoadResult> loadResourceSync(const std::string &pResourceUri) override;
 
+
+	void preloadResources();
+
 	void loadResourceAsync(
 		const std::string &pResourceUri,
-		const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot) override {
+		const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot) override;
 
-		std::lock_guard lock(queueMutex);
-		queue.emplace_back(pResourceUri, pSlot);
-		cv.notify_one();
-	}
+	void loop(const std::stop_token &pToken);
 
-	void resourceLoop(const std::stop_token &pToken);
-
-	static void callSlot(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult,
-						 const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot);
+	void processRequest(const std::shared_ptr<Request> &pRequest);
 
 	[[nodiscard]] sdk::main::IApplication* getApplication() const override { return application; }
 
@@ -78,6 +89,13 @@ public:
 
 	const std::shared_ptr<sdk::main::ILoadedResources> &getResources() override { return resources; }
 
+private:
+	static void callSlot(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult,
+						 const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot);
+
+	static std::shared_ptr<sdk::main::IResourceLoader> getLoader(const std::shared_ptr<Request> &pRequest);
+
+	std::shared_ptr<std::istream> getResourceStream(const std::shared_ptr<Request> &pRequest) const;
 };
 } // namespace mer::editor::mvp
 

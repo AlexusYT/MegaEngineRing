@@ -47,6 +47,7 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/resources/materials/MaterialResource.cpp
         include/EngineSDK/main/resources/materials/MaterialLoader.cpp
         include/EngineSDK/main/resources/ResourceLoadResult.cpp
+        include/EngineSDK/main/resources/materials/ColorComponent.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -134,6 +135,10 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/materials/MaterialLoader.h
         include/EngineSDK/main/resources/ResourceLoadResult.h
         include/EngineSDK/utils/ISerializable.h
+        include/EngineSDK/main/render/IInitializable.h
+        include/EngineSDK/main/render/Initializable.h
+        include/EngineSDK/main/resources/materials/IMaterialComponent.h
+        include/EngineSDK/main/resources/materials/ColorComponent.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})

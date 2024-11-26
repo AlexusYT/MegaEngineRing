@@ -76,4 +76,15 @@ utils::ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::s
 
 	return nullptr;
 }
+
+void FileSystemResourceBundle::listResources(std::vector<std::string> &pUris) const {
+
+	for (const auto &entry: std::filesystem::recursive_directory_iterator(searchPath)) {
+		auto path = entry.path();
+		auto extension = path.extension();
+		if (extension == ".enmodel" || extension == ".enmat" || extension == ".entex") {
+			pUris.emplace_back(relative(path, searchPath).string());
+		}
+	}
+}
 } // namespace mer::sdk::main

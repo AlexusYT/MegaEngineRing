@@ -39,16 +39,23 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 	mainWidget.append(topBox);
 	mainWidget.append(area);
 
-	area.set_required_version(4, 0);
 
 	area.signal_create_context().connect(
 		[this]() -> Glib::RefPtr<Gdk::GLContext> {
-			const auto surface = area.get_native()->get_surface();
-			auto glContext = surface->create_gl_context();
+			try {
+				const auto surface = area.get_native()->get_surface();
+				auto glContext = surface->create_gl_context();
+				glContext->set_allowed_apis(Gdk::GLApi::GL);
 
-			glContext->set_debug_enabled(true);
-			glContext->realize();
-			return glContext;
+				glContext->set_required_version(4, 0);
+				glContext->set_debug_enabled(true);
+				glContext->set_forward_compatible();
+				glContext->realize();
+				return glContext;
+			} catch (Gdk::GLError &e) {
+				sdk::utils::Logger::out("{}", static_cast<int>(e.code()));
+				throw;
+			}
 		},
 		false);
 	area.set_expand(true);

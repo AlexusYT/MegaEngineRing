@@ -42,13 +42,13 @@ std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, s
 	return pixelsOut;
 }
 
+std::shared_ptr<IResource> TextureLoader::createResource() { return TextureResource::create(); }
+
 utils::ReportMessagePtr TextureLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
 											std::shared_ptr<std::istream> &pStream,
-											std::shared_ptr<IResource> &pResourceOut) {
-	auto resource = TextureResource::create();
-	resource->setResourceUri(readString(pStream));
+											const std::shared_ptr<IResource> &pResource) {
+	auto resource = std::dynamic_pointer_cast<TextureResource>(pResource);
 
-	pResourceOut = resource;
 	try {
 		if (pStream->get() == std::istream::traits_type::eof()) return nullptr;
 		pStream->unget();
@@ -87,20 +87,6 @@ utils::ReportMessagePtr TextureLoader::load(IResourceLoadExecutor* /*pLoadExecut
 		msg->setMessage("Exception thrown while parsing");
 		return msg;
 	}
-	return nullptr;
-}
-
-utils::ReportMessagePtr TextureLoader::init(IResourceLoadExecutor* /*pLoadExecutor*/,
-											const std::shared_ptr<IResource> & /*pLoadedResource*/) {
-	/*auto texture = std::dynamic_pointer_cast<TextureResource>(pLoadedResource);
-	if (!texture) {
-		auto msg = utils::ReportMessage::create();
-		msg->setTitle("Failed to init texture resource");
-		msg->setMessage("Resource is not a texture resource");
-		msg->addInfoLine("Actual resource type: {}", Utils::getTypeName(pLoadedResource.get()));
-		return msg;
-	}
-	texture->setupRender();*/
 	return nullptr;
 }
 

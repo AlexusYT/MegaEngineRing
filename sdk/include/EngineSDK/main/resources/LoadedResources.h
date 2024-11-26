@@ -21,6 +21,7 @@
 
 #ifndef LOADEDRESOURCES_H
 #define LOADEDRESOURCES_H
+#include <list>
 #include <mutex>
 #include <unordered_map>
 
@@ -32,18 +33,25 @@ class ILoadedResources {
 public:
 	virtual ~ILoadedResources() = default;
 
+	virtual void markResourceComplete(const std::string &pResourceUri) = 0;
+
 	virtual void addResource(const std::string &pResourceUri, const std::shared_ptr<IResource> &pResource) = 0;
 
 	virtual void removeResource(const std::string &pResourceUri) = 0;
 
 	virtual std::shared_ptr<IResource> getResource(const std::string &pResourceUri) = 0;
 
+	[[nodiscard]] virtual const std::unordered_map<std::string, std::shared_ptr<IResource>> &getResources() const = 0;
+
 	virtual void render() = 0;
 };
 
 class LoadedResources : public ILoadedResources {
 	std::unordered_map<std::string, std::shared_ptr<IResource>> resources;
-	std::unordered_map<std::string, std::pair<std::shared_ptr<IRenderable>, bool /*inited*/>> renderables;
+	std::list<std::shared_ptr<IResource>> resourcesToInit;
+	std::unordered_map<std::string, std::shared_ptr<IResource>> incompleteResources;
+	std::unordered_map<std::string, std::shared_ptr<IResource>> initializedResources;
+	std::list<std::shared_ptr<IRenderable>> renderables;
 	std::mutex mutex;
 
 
@@ -54,9 +62,13 @@ public:
 
 	~LoadedResources() override = default;
 
+	void markResourceComplete(const std::string &pResourceUri) override;
+
 	void addResource(const std::string &pResourceUri, const std::shared_ptr<IResource> &pResource) override;
 
 	void removeResource(const std::string &pResourceUri) override;
+
+	bool hasResource(const std::string &pResourceUri);
 
 	std::shared_ptr<IResource> getResource(const std::string &pResourceUri) override {
 
@@ -64,6 +76,10 @@ public:
 		const auto it = resources.find(pResourceUri);
 		if (it == resources.end()) return nullptr;
 		return it->second;
+	}
+
+	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<IResource>> &getResources() const override {
+		return resources;
 	}
 
 	void render() override;

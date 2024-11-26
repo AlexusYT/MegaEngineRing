@@ -31,6 +31,8 @@ public:
 
 	virtual utils::ReportMessagePtr getResourceStream(const std::string &pResourceUri,
 													  std::shared_ptr<std::istream> &pStream) = 0;
+
+	virtual void listResources(std::vector<std::string> &pUris) const = 0;
 };
 
 } // namespace mer::sdk::main

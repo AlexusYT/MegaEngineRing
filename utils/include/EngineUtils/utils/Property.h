@@ -76,7 +76,7 @@ public:
 	[[nodiscard]] const sigc::signal<void(const T &)> &getEvent() const { return valueChanged; }
 
 	sigc::connection connectEvent(const sigc::slot<void(const T &)> &pSlot) {
-		//pSlot(value);
+		pSlot(value);
 		return valueChanged.connect(pSlot);
 	}
 };
@@ -136,7 +136,19 @@ public:
 		return value.get();
 	}
 
+	auto operator->()
+		requires IsSharedPtr<T>
+	{
+		return value.get();
+	}
+
 	auto operator->() const
+		requires requires { requires !IsSharedPtr<T>; }
+	{
+		return &value;
+	}
+
+	auto operator->()
 		requires requires { requires !IsSharedPtr<T>; }
 	{
 		return &value;

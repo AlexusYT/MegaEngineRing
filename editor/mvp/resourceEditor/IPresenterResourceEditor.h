@@ -26,9 +26,14 @@
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "mvp/PresenterBase.h"
 
-namespace mer::sdk::main {
-class IResource;
+namespace mer::editor::ui {
+class ISourceSelectionResult;
 }
+
+namespace mer::sdk::main {
+class IResourceLoadExecutor;
+class IResource;
+} // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
 class IViewResourceEditor;
@@ -58,6 +63,19 @@ public:
 
 	virtual void addObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToRemove,
 						   IViewResourceEditor* pView) = 0;
+
+	virtual sdk::main::IResourceLoadExecutor* getResourceLoader() = 0;
+
+	virtual void onMaterialBaseColorChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+											IViewResourceEditor* pView) = 0;
+	virtual void onMaterialMetallicChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+										   IViewResourceEditor* pView) = 0;
+	virtual void onMaterialNormalChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+										 IViewResourceEditor* pView) = 0;
+	virtual void onMaterialRoughnessChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+											IViewResourceEditor* pView) = 0;
+	virtual void onMaterialAOChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+									 IViewResourceEditor* pView) = 0;
 };
 
 } // namespace mer::editor::mvp

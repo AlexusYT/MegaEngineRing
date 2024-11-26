@@ -105,7 +105,7 @@ TreeElementBase* CustomTreeView::getElementAt(double pX, double pY) {
 
 	const auto child = this->pick(pX, pY, Gtk::PickFlags::INSENSITIVE | Gtk::PickFlags::NON_TARGETABLE);
 	if (!child) return nullptr;
-	const auto cell = child->get_ancestor(g_type_from_name("GtkListItemWidget"));
+	const auto cell = child->get_ancestor(g_type_from_name("GtkColumnViewCellWidget"));
 	if (!cell) return nullptr;
 	auto widget = cell->get_first_child();
 	if (!widget) return nullptr;

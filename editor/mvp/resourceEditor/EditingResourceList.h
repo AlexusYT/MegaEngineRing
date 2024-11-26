@@ -21,7 +21,6 @@
 
 #ifndef EDITINGRESOURCELIST_H
 #define EDITINGRESOURCELIST_H
-#include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/resources/IResource.h"
 #include "mvp/main/editors/sceneEditor/ResourcesContext.h"
 
@@ -33,26 +32,28 @@ namespace mer::editor::mvp {
 
 class EditingResourceList {
 	std::shared_ptr<ResourcesContext> context;
-	std::map<std::string, std::shared_ptr<sdk::main::IResource>> resources;
+	std::map<std::shared_ptr<UUID>, std::shared_ptr<sdk::main::IResource>> resources;
+	sigc::signal<void(const std::shared_ptr<sdk::main::IResource> &pResource)> onResourceRemovedSignal;
 	sigc::signal<void(const std::shared_ptr<sdk::main::IResource> &pResource)> onResourceAddedSignal;
 
 public:
-	void addResource(const std::shared_ptr<sdk::main::IResource> &pResource) {
-		auto uri = pResource->getResourceUri().string();
-		auto iter = resources.find(uri);
-		if (iter != resources.end()) return;
-		resources.emplace(pResource->getResourceUri().string(), pResource);
-		onResourceAddedSignal(pResource);
-	}
+	void addResource(const std::shared_ptr<sdk::main::IResource> &pResource);
 
 	sigc::connection connectOnResourceAddedSignal(
 		const sigc::slot<void(const std::shared_ptr<sdk::main::IResource> &pResource)> &pSlot) {
 		return onResourceAddedSignal.connect(pSlot);
 	}
 
-	[[nodiscard]] const std::map<std::string, std::shared_ptr<sdk::main::IResource>> &getResources() const {
+	sigc::connection connectOnResourceRemovedSignal(
+		const sigc::slot<void(const std::shared_ptr<sdk::main::IResource> &pResource)> &pSlot) {
+		return onResourceRemovedSignal.connect(pSlot);
+	}
+
+	[[nodiscard]] const std::map<std::shared_ptr<UUID>, std::shared_ptr<sdk::main::IResource>> &getResources() const {
 		return resources;
 	}
+
+	[[nodiscard]] const std::shared_ptr<ResourcesContext> &getContext() const { return context; }
 
 	void setupResourcesContext(const std::shared_ptr<ResourcesContext> &pContext) { context = pContext; }
 

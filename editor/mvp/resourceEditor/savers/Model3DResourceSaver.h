@@ -21,6 +21,7 @@
 
 #ifndef MODEL3DRESOURCESAVER_H
 #define MODEL3DRESOURCESAVER_H
+#include "ResourceSaverBase.h"
 
 namespace mer::sdk::main {
 class IModel3DResource;
@@ -28,14 +29,12 @@ class IModel3DResource;
 
 namespace mer::editor::mvp {
 
-class Model3DResourceSaver {
+class Model3DResourceSaver : public ResourceSaverBase {
 public:
 	static sdk::utils::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
-												   const std::shared_ptr<sdk::main::IModel3DResource> &pResource);
+												   const std::shared_ptr<sdk::main::IModel3DResource> &pModel);
 
 private:
-	static void writeString(std::ofstream &pStream, const std::string &pStr);
-
 	template<typename T>
 	static void writeArray(std::ofstream &pStream, const std::vector<T> &pArray) {
 		//Object indices cannot be grater than 65535, we're using uint16_t instead of uint32_t or uint64_t to decrease

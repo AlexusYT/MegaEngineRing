@@ -166,9 +166,8 @@ MultiPanedPanel::MultiPanedPanel(Widget* pWidget)
 
 	const auto motion = Gtk::EventControllerMotion::create();
 	motion->signal_motion().connect([this](const double pX, const double pY) {
-		const auto allocation = get_allocation();
-		const auto width = static_cast<float>(allocation.get_width());
-		const auto height = static_cast<float>(allocation.get_height());
+		const auto width = static_cast<float>(get_width());
+		const auto height = static_cast<float>(get_height());
 		const float x = static_cast<float>(pX);
 		const float y = static_cast<float>(pY);
 

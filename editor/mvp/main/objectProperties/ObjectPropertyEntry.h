@@ -21,17 +21,19 @@
 
 #ifndef OBJECTPROPERTYENTRY_H
 #define OBJECTPROPERTYENTRY_H
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
 #include "ui/customWidgets/TreeElementBase.h"
 
-
-class ObjectPropertyEntry;
+namespace mer::sdk::utils {
+class PropertyBase;
+}
 
 namespace mer::sdk::main {
 class Extension;
 } // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
+class PropertyRenderer;
+
 class ObjectPropertyEntryBase : public ui::TreeElementBase {
 public:
 	explicit ObjectPropertyEntryBase(const std::shared_ptr<Gio::ListModel> &pChildren) : TreeElementBase(pChildren) {}
@@ -50,14 +52,16 @@ protected:
 public:
 	static std::shared_ptr<ObjectPropertyEntry> create(sdk::utils::PropertyBase* pProp,
 													   sdk::main::Extension* pExtension) {
-		return Glib::make_refptr_for_instance(new ObjectPropertyEntry(pProp, pExtension));
+		return make_refptr_for_instance(new ObjectPropertyEntry(pProp, pExtension));
 	}
 
 	std::shared_ptr<Gio::MenuModel> getMenu() override { return nullptr; }
 
 	[[nodiscard]] sdk::utils::PropertyBase* getNativeProperty() const { return nativeProperty; }
 
-	const std::string &getName() override { return nativeProperty->getPropertyName(); }
+	const std::string &getName() override;
+
+	std::shared_ptr<PropertyRenderer> getRenderer() const;
 
 	[[nodiscard]] sdk::main::Extension* getExtension() const { return extension; }
 };
@@ -66,13 +70,7 @@ class ObjectExtensionEntry : public ObjectPropertyEntryBase {
 	sdk::main::Extension* nativeExtension{};
 
 protected:
-	explicit ObjectExtensionEntry(sdk::main::Extension* pNativeExtension)
-		: ObjectPropertyEntryBase(Gio::ListStore<ObjectPropertyEntry>::create()), nativeExtension(pNativeExtension) {
-		const auto childrenSelf = std::dynamic_pointer_cast<Gio::ListStore<ObjectPropertyEntry>>(getChildren());
-		for (const auto property: pNativeExtension->getProperties()) {
-			childrenSelf->append(ObjectPropertyEntry::create(property, pNativeExtension));
-		}
-	}
+	explicit ObjectExtensionEntry(sdk::main::Extension* pNativeExtension);
 
 public:
 	static std::shared_ptr<ObjectExtensionEntry> create(sdk::main::Extension* pNativeExtension) {
@@ -81,7 +79,7 @@ public:
 
 	std::shared_ptr<Gio::MenuModel> getMenu() override { return nullptr; }
 
-	const std::string &getName() override { return nativeExtension->getName(); }
+	const std::string &getName() override;
 
 	[[nodiscard]] sdk::main::Extension* getNativeExtension() const { return nativeExtension; }
 };

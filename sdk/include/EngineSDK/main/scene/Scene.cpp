@@ -75,12 +75,13 @@ sdk::utils::ReportMessagePtr Scene::initScene() {
 	}
 	inited = true;
 	glEnable(GL_DEBUG_OUTPUT);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, false);
+	//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, false);
 	glDebugMessageCallback(
 		[](GLenum pSource, GLenum pType, GLuint pId, GLenum pSeverity, GLsizei pLength, const GLchar* pMessage,
 		   const void* /*pUserParam*/) {
-			if (pId == 131076) return;
-			if (pSeverity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+			//if (pId == 131076) return;
+			if (pId == 131185) return;
+			//if (pSeverity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
 			auto msg = utils::ReportMessage::create();
 			msg->setTitle("OpenGL error");
 			msg->setMessage(std::string(pMessage, static_cast<std::string::size_type>(pLength)));

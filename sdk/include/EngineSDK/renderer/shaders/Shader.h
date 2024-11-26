@@ -25,13 +25,18 @@
 #include <EngineSDK/main/resources/IResource.h>
 #include <EngineSDK/renderer/shaders/IShader.h>
 
+#include "EngineSDK/main/render/Initializable.h"
+#include "EngineUtils/utils/IReportable.h"
+
 namespace mer::sdk::renderer {
 enum class ShaderTypeEnum;
 }
 
 namespace mer::sdk::renderer {
-class Shader : public IShader {
+class Shader : public main::Initializable, public utils::IReportable {
 	uint32_t name;
+	ShaderTypeEnum type;
+	std::string source;
 
 protected:
 	explicit Shader(ShaderTypeEnum pType);
@@ -39,27 +44,33 @@ protected:
 public:
 	~Shader() override;
 
-	void setSource(const std::string &pSrc) const override;
+	void setSource(const std::string &pSrc);
 
-	void getSource(std::string &pSrcOut) const override;
+	void getSource(std::string &pSrcOut) const;
 
-	void getInfoLog(std::string &pLogOut) const override;
+	void getInfoLog(std::string &pLogOut) const;
 
-	void compile() const override;
+	void compile() const;
 
-	ShaderTypeEnum getShaderType() const override;
+	ShaderTypeEnum getShaderType() const;
 
-	int getNativeShaderType() const override;
+	int getNativeShaderType() const;
 
-	bool getDeleteStatus() const override;
+	bool getDeleteStatus() const;
 
-	bool getCompileStatus() const override;
+	bool getCompileStatus() const;
 
-	int getInfoLogLength() const override;
+	int getInfoLogLength() const;
 
-	int getSourceLength() const override;
+	int getSourceLength() const;
 
-	uint32_t native() const override { return name; }
+	uint32_t native() const { return name; }
+
+	utils::ReportMessagePtr onInitialize() override;
+
+	void onUninitialize() override;
+
+	void addReportInfo(const utils::ReportMessagePtr &pMsg) override;
 };
 } // namespace mer::sdk::renderer
 #endif //SHADER_H

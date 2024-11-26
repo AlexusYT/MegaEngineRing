@@ -23,10 +23,12 @@
 
 #include "EditingResourceList.h"
 #include "EngineSDK/main/resources/IResource.h"
+#include "EngineSDK/main/resources/LoadedResources.h"
+#include "EngineSDK/main/resources/ResourceLoadResult.h"
+#include "EngineSDK/main/resources/materials/ColorComponent.h"
 #include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
-#include "EngineSDK/main/resources/models/Model3DResource.h"
 #include "EngineSDK/main/resources/textures/ITextureResource.h"
 #include "IModelResourceEditor.h"
 #include "IViewResourceEditor.h"
@@ -36,6 +38,8 @@
 #include "savers/MaterialResourceSaver.h"
 #include "savers/Model3DResourceSaver.h"
 #include "savers/TextureResourceSaver.h"
+#include "ui/customWidgets/resourceSelector/SourceSelectionColor.h"
+#include "ui/customWidgets/resourceSelector/resources/SourceSelectionTexture.h"
 
 namespace mer::editor::mvp {
 PresenterResourceEditor::PresenterResourceEditor(const std::shared_ptr<IModelResourceEditor> &pModel) : model(pModel) {
@@ -49,6 +53,11 @@ PresenterResourceEditor::PresenterResourceEditor(const std::shared_ptr<IModelRes
 				view->appendResource(pResource);
 				view->selectResource(pResource);
 			}
+		});
+	model->getEditingResources()->connectOnResourceRemovedSignal(
+		[this](const std::shared_ptr<sdk::main::IResource> &pResource) {
+			resourcesInfo.erase(pResource.get());
+			for (auto &[view, info]: viewsInfo) { view->removeResource(pResource); }
 		});
 }
 
@@ -137,14 +146,18 @@ void PresenterResourceEditor::savePathClicked(IViewResourceEditor* pView, const 
 		case sdk::main::ResourceType::MODEL: extension = ".enmodel"; break;
 		case sdk::main::ResourceType::TEXTURE: extension = ".entex"; break;
 		case sdk::main::ResourceType::MATERIAL: extension = ".enmat"; break;
+		case sdk::main::ResourceType::SHADER:
 		case sdk::main::ResourceType::NONE: return;
 	}
 
+	auto res = model->getEditingResources()->getContext()->getResources();
 	const auto newPath = std::filesystem::path(pNewPath.starts_with("/") ? pNewPath.substr(1) : pNewPath);
 	const auto dataPath = getDataPath();
 	auto oldUri = resource->getResourceUri().string();
+	res->removeResource(oldUri);
 	resource->setResourceUri(newPath / (pNewName + extension));
-	saveResource(resource);
+	saveResource(resource, false);
+	res->addResource(resource->getResourceUri(), resource);
 	auto oldPath = dataPath / (oldUri.starts_with("/") ? oldUri.substr(1) : oldUri);
 	if (is_regular_file(oldPath) && exists(oldPath)) remove(oldPath);
 }
@@ -214,6 +227,7 @@ void PresenterResourceEditor::onSelectionChanged(const std::shared_ptr<sdk::main
 	} else if (auto materialResource = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResource)) {
 		pView->switchTo("material");
 		pView->displayChosenPath(resInfo->srcFilePath.string());
+		pView->displayMaterial(materialResource);
 	}
 }
 
@@ -252,6 +266,66 @@ void PresenterResourceEditor::addObject(const std::shared_ptr<sdk::main::IModel3
 	saveResource(resource);
 }
 
+sdk::main::IResourceLoadExecutor* PresenterResourceEditor::getResourceLoader() {
+
+	return model->getEditingResources()->getContext().get();
+}
+
+void PresenterResourceEditor::onMaterialBaseColorChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+														 IViewResourceEditor* pView) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+		const auto resource = getSelectedResource(pView);
+		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		if (!material) return;
+		material->setAlbedo(pComponent);
+		saveResource(resource);
+	});
+}
+
+void PresenterResourceEditor::onMaterialMetallicChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+														IViewResourceEditor* pView) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+		const auto resource = getSelectedResource(pView);
+		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		if (!material) return;
+		material->setMetallic(pComponent);
+		saveResource(resource);
+	});
+}
+
+void PresenterResourceEditor::onMaterialNormalChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+													  IViewResourceEditor* pView) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+		const auto resource = getSelectedResource(pView);
+		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		if (!material) return;
+		material->setNormal(pComponent);
+		saveResource(resource);
+	});
+}
+
+void PresenterResourceEditor::onMaterialRoughnessChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+														 IViewResourceEditor* pView) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+		const auto resource = getSelectedResource(pView);
+		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		if (!material) return;
+		material->setRoughness(pComponent);
+		saveResource(resource);
+	});
+}
+
+void PresenterResourceEditor::onMaterialAOChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+												  IViewResourceEditor* pView) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+		const auto resource = getSelectedResource(pView);
+		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		if (!material) return;
+		material->setAo(pComponent);
+		saveResource(resource);
+	});
+}
+
 PresenterResourceEditor::ViewInfo* PresenterResourceEditor::getViewInfo(IViewResourceEditor* pView) {
 
 	const auto iter = viewsInfo.find(pView);
@@ -266,17 +340,48 @@ PresenterResourceEditor::ResourceInfo* PresenterResourceEditor::getResourceInfo(
 }
 
 sdk::utils::ReportMessagePtr PresenterResourceEditor::saveResource(
-	const std::shared_ptr<sdk::main::IResource> &pResource) {
-	auto savePath = getDataPath() / pResource->getResourceUri();
+	const std::shared_ptr<sdk::main::IResource> &pResource, bool pIsComplete) {
+	auto uri = pResource->getResourceUri();
+	auto savePath = getDataPath() / uri;
+	sdk::utils::ReportMessagePtr error{};
 	if (auto res = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
-		return Model3DResourceSaver::saveToFile(savePath, res);
+		error = Model3DResourceSaver::saveToFile(savePath, res);
 	}
 	if (auto res = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
-		return TextureResourceSaver::saveToFile(savePath, res);
+		error = TextureResourceSaver::saveToFile(savePath, res);
 	}
 	if (auto res = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResource)) {
-		return MaterialResourceSaver::saveToFile(savePath, res);
+		error = MaterialResourceSaver::saveToFile(savePath, res);
+	}
+	if (error) return error;
+
+	if (pIsComplete && pResource->isIncomplete()) {
+
+		auto res = model->getEditingResources()->getContext()->getResources();
+		pResource->setIncomplete(false);
+		res->markResourceComplete(pResource->getResourceUri());
 	}
 	return nullptr;
+}
+
+void PresenterResourceEditor::getComponentFromResult(
+	const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+	const sigc::slot<void(const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent)> &pSlot) const {
+	if (const auto result = std::dynamic_pointer_cast<ui::SourceSelectionTexture::Result>(pResult)) {
+		auto texture = result->getSelectionResult();
+		auto context = model->getEditingResources()->getContext();
+		context->loadResourceAsync(
+			texture->asResource()->getResourceUri(),
+			[pSlot, this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pLoadResult) {
+				if (!pLoadResult->isReady()) return;
+				pSlot(std::dynamic_pointer_cast<sdk::main::IMaterialComponent>(pLoadResult->getResource()));
+			});
+		return;
+	}
+	if (const auto colorResult = std::dynamic_pointer_cast<ui::SourceSelectionColor::Result>(pResult)) {
+		pSlot(colorResult->getSelectionResult());
+		return;
+	}
+	pSlot(nullptr);
 }
 } // namespace mer::editor::mvp

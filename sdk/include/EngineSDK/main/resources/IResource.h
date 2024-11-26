@@ -23,21 +23,36 @@
 #define IRESOURCE_H
 #include <filesystem>
 
+#include "EngineUtils/utils/IReportable.h"
+
+
+class UUID;
+
 namespace mer::sdk::main {
 enum class ResourceType;
 
-class IResource {
+class IResource : public utils::IReportable {
 protected:
-	virtual ~IResource() = default;
+	~IResource() override = default;
 
 public:
 	virtual const std::filesystem::path &getResourceUri() = 0;
 
-	[[nodiscard]] virtual std::string getResourceName() const = 0;
+	[[nodiscard]] virtual const std::string &getResourceName() const = 0;
 
 	virtual void setResourceUri(const std::filesystem::path &pResourceUri) = 0;
 
+	[[nodiscard]] virtual const std::shared_ptr<UUID> &getUuid() const = 0;
+
+	virtual void setUuid(const std::shared_ptr<UUID> &pUuid) = 0;
+
 	virtual ResourceType getResourceType() = 0;
+
+	[[nodiscard]] virtual bool isInited() const = 0;
+
+	[[nodiscard]] virtual bool isIncomplete() const = 0;
+
+	virtual void setIncomplete(bool pIncomplete) = 0;
 };
 
 } // namespace mer::sdk::main

@@ -22,6 +22,8 @@
 #ifndef TEXTURERESOURCE_H
 #define TEXTURERESOURCE_H
 
+#include <glm/vec4.hpp>
+
 #include "EngineSDK/main/resources/Resource.h"
 #include "EngineSDK/main/resources/ResourceType.h"
 #include "EngineUtils/utils/Property.h"
@@ -41,7 +43,7 @@ class TextureResource : public ITextureResource, public Resource {
 	Texture2DType type{};
 	uint32_t textureBlock{};
 	utils::Property<uint64_t> textureHandle;
-	bool inited{};
+	utils::Property<glm::vec4> materialComponentVal;
 
 	TextureResource();
 
@@ -50,11 +52,13 @@ public:
 
 	~TextureResource() override;
 
-	void setupRender() override;
+protected:
+	utils::ReportMessagePtr onInitialize() override;
 
+	void onUninitialize() override;
+
+public:
 	void render() override;
-
-	void destroyRender() override;
 
 	[[nodiscard]] void* getData() const override { return data; }
 
@@ -90,6 +94,13 @@ public:
 	ResourceType getResourceType() override { return ResourceType::TEXTURE; }
 
 	[[nodiscard]] utils::PropertyReadOnly<uint64_t> getTextureHandle() override { return textureHandle.getReadOnly(); }
+
+	utils::PropertyReadOnly<glm::vec4> getComponentValueProperty() override {
+		return materialComponentVal.getReadOnly();
+	}
+
+private:
+	static glm::vec4 handleToVec(uint64_t pHandle);
 };
 
 } // namespace mer::sdk::main

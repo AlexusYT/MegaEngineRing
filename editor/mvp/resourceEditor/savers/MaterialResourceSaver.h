@@ -21,20 +21,23 @@
 
 #ifndef MATERIALRESOURCESAVER_H
 #define MATERIALRESOURCESAVER_H
+#include "ResourceSaverBase.h"
 
 namespace mer::sdk::main {
+class IMaterialComponent;
 class IMaterialResource;
 }
 
 namespace mer::editor::mvp {
 
-class MaterialResourceSaver {
+class MaterialResourceSaver : public ResourceSaverBase {
 public:
 	static sdk::utils::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
-												   const std::shared_ptr<sdk::main::IMaterialResource> &pResource);
+												   const std::shared_ptr<sdk::main::IMaterialResource> &pMaterial);
 
 private:
-	static void writeString(std::ofstream &pStream, const std::string &pStr);
+	static void writeComponent(std::ofstream &pStream,
+							   const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent);
 };
 
 } // namespace mer::editor::mvp

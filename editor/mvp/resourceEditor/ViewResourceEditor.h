@@ -24,9 +24,14 @@
 #include "IViewResourceEditor.h"
 #include "mvp/ThreadDispatcher.h"
 
-namespace mer::sdk::main {
-class IModel3DObject;
+namespace mer::editor::ui {
+class ResourceSelectorWidget;
 }
+
+namespace mer::sdk::main {
+class IMaterialResource;
+class IModel3DObject;
+} // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
 
@@ -64,6 +69,11 @@ class ViewResourceEditor : public IViewResourceEditor, ThreadDispatcher {
 	Gtk::MenuButton* selectHistoryMb{};
 	std::shared_ptr<Gtk::SingleSelection> selectionModel;
 	Gtk::Stack* preferencesStack;
+	ui::ResourceSelectorWidget* matBaseColorSelector;
+	ui::ResourceSelectorWidget* matMetallicSelector;
+	ui::ResourceSelectorWidget* matNormalSelector;
+	ui::ResourceSelectorWidget* matRoughnessSelector;
+	ui::ResourceSelectorWidget* matAoSelector;
 
 	explicit ViewResourceEditor(const std::shared_ptr<IWidgetContext> &pContext,
 								const std::shared_ptr<Gtk::Builder> &pBuilder);
@@ -108,6 +118,8 @@ public:
 
 	void appendResource(const std::shared_ptr<sdk::main::IResource> &pNewResource) override;
 
+	void removeResource(const std::shared_ptr<sdk::main::IResource> &pResource) override;
+
 	void selectResource(const std::shared_ptr<sdk::main::IResource> &pResource) override;
 
 private:
@@ -122,6 +134,10 @@ private:
 	void setupColumnView();
 
 	Gtk::Entry* getFilePathEntry() const;
+
+	void displayMaterial(const std::shared_ptr<sdk::main::IMaterialResource> &pMaterialResource) override;
+
+	ui::ResourceSelectorWidget* addNewSelector(const std::string &pLabelText, int pRowPos) const;
 };
 
 

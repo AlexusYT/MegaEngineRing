@@ -44,7 +44,6 @@ class MultiPaned : public Gtk::Widget {
 	std::unordered_map<UUID, std::shared_ptr<MultiPanedPanel>> panels;
 	sigc::slot<void(const Widget* pParentWidget, MultiPanedPanel* pPanel)> createWidgetSlot;
 	MultiPanedPanelDivider* draggingDivider{};
-	Gtk::Allocation allocationSelf;
 
 	sigc::signal<std::shared_ptr<mvp::IView>(const mvp::IPresenter* pPresenter,
 											 const std::shared_ptr<mvp::MultiPanedContext> &pContext)>

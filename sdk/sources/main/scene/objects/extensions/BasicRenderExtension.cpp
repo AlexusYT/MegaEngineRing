@@ -24,7 +24,6 @@
 #include <EngineUtils/utils/Logger.h>
 #include <epoxy/gl.h>
 
-#include "EngineSDK/main/resources/shaders/ShaderProgramLoader.h"
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/renderer/shaders/ShaderProgram.h"
@@ -67,7 +66,6 @@ void BasicRenderExtension::onRender() {
 	if (!shader) return;
 	static bool b{};
 	if (!b) {
-		shader->attachSsbo(getObject()->getScene()->getProgramBuffer(), "ProgramWideSettings", 0);
 		b = true;
 	}
 	shader->use();

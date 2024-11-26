@@ -353,7 +353,8 @@ void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, c
 	std::shared_ptr<sdk::main::IResource> resource{};
 	switch (pType) {
 
-		case sdk::main::ResourceType::NONE: break;
+		case sdk::main::ResourceType::SHADER:
+		case sdk::main::ResourceType::NONE: return;
 		case sdk::main::ResourceType::MODEL:
 			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::Model3DResource::create());
 			break;
@@ -460,7 +461,7 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 			}
 			path uri = "/";
 			auto root = modelMain->getProject()->getProjectDataPath();
-			if (pPathToDelete != "/" && pPathToDelete != root) { uri /= relative(pPathToDelete, root); }
+			if (pPathToDelete != "/" && pPathToDelete != root) { uri = relative(pPathToDelete, root); }
 			auto ext = pPathToDelete.extension().string();
 			if (ext == ".enscene") { loadedScene->unload(); }
 			if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") { editingResources->deleteResource(uri); }

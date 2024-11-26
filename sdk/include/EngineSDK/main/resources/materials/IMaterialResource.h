@@ -25,7 +25,13 @@
 #include "EngineSDK/main/render/IRenderable.h"
 #include "MaterialData.h"
 
+namespace mer::sdk::utils {
+template<typename T>
+class PropertyReadOnly;
+}
+
 namespace mer::sdk::main {
+class IMaterialComponent;
 class ITextureResource;
 class IResource;
 
@@ -35,35 +41,25 @@ public:
 
 	virtual const MaterialData &getData() = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<ITextureResource> &getBaseColorMap() const = 0;
+	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAlbedo() = 0;
 
-	utils::ReportMessagePtr virtual setBaseColorMap(const std::shared_ptr<ITextureResource> &pBaseColorMap) = 0;
+	void virtual setAlbedo(const std::shared_ptr<IMaterialComponent> &pBaseColorMap) = 0;
 
-	[[nodiscard]] virtual std::optional<glm::vec3> getBaseColor() = 0;
+	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getNormal() = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<ITextureResource> &getNormalMap() const = 0;
+	virtual void setNormal(const std::shared_ptr<IMaterialComponent> &pNormalMap) = 0;
 
-	virtual utils::ReportMessagePtr setNormalMap(const std::shared_ptr<ITextureResource> &pNormalMap) = 0;
+	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getMetallic() = 0;
 
-	[[nodiscard]] virtual std::optional<glm::vec3> getNormalColor() = 0;
+	virtual void setMetallic(const std::shared_ptr<IMaterialComponent> &pMetallicMap) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<ITextureResource> &getMetallicMap() const = 0;
+	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getRoughness() = 0;
 
-	virtual utils::ReportMessagePtr setMetallicMap(const std::shared_ptr<ITextureResource> &pMetallicMap) = 0;
+	virtual void setRoughness(const std::shared_ptr<IMaterialComponent> &pRoughnessMap) = 0;
 
-	[[nodiscard]] virtual std::optional<float> getMetallicColor() = 0;
+	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAo() = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<ITextureResource> &getRoughnessMap() const = 0;
-
-	virtual utils::ReportMessagePtr setRoughnessMap(const std::shared_ptr<ITextureResource> &pRoughnessMap) = 0;
-
-	[[nodiscard]] virtual std::optional<float> getRoughnessColor() = 0;
-
-	[[nodiscard]] virtual const std::shared_ptr<ITextureResource> &getAoMap() const = 0;
-
-	virtual utils::ReportMessagePtr setAoMap(const std::shared_ptr<ITextureResource> &pAoMap) = 0;
-
-	[[nodiscard]] virtual std::optional<float> getAoColor() = 0;
+	virtual void setAo(const std::shared_ptr<IMaterialComponent> &pAoMap) = 0;
 
 	virtual IResource* asResource() = 0;
 
