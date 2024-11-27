@@ -20,3 +20,25 @@
 //
 
 #include "ObjectPropertyEntry.h"
+
+#include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "PropertyRenderer.h"
+
+namespace mer::editor::mvp {
+const std::string &ObjectPropertyEntry::getName() { return nativeProperty->getPropertyName(); }
+
+std::shared_ptr<PropertyRenderer> ObjectPropertyEntry::getRenderer() const {
+	auto resourceLoader = extension->getScene()->getResourceExecutor();
+	return PropertyRenderer::create(nativeProperty, resourceLoader);
+}
+
+ObjectExtensionEntry::ObjectExtensionEntry(sdk::main::Extension* pNativeExtension)
+	: ObjectPropertyEntryBase(Gio::ListStore<ObjectPropertyEntry>::create()), nativeExtension(pNativeExtension) {
+	const auto childrenSelf = std::dynamic_pointer_cast<Gio::ListStore<ObjectPropertyEntry>>(getChildren());
+	for (const auto property: pNativeExtension->getProperties()) {
+		childrenSelf->append(ObjectPropertyEntry::create(property, pNativeExtension));
+	}
+}
+
+const std::string &ObjectExtensionEntry::getName() { return nativeExtension->getName(); }
+} // namespace mer::editor::mvp

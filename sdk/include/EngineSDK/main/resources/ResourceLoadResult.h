@@ -33,7 +33,7 @@ namespace mer::sdk::main {
 
 class ResourceLoadResult {
 public:
-	enum class State { NONE = 0, ERRORED, LOADED, READY };
+	enum class State { NONE = 0, ERRORED, PRELOADED, READY };
 
 private:
 	utils::ReportMessagePtr error{};
@@ -66,7 +66,7 @@ public:
 	std::string getStateStr() const {
 		switch (state) {
 			case State::ERRORED: return "ERRORED";
-			case State::LOADED: return "LOADED";
+			case State::PRELOADED: return "PRELOADED";
 			case State::READY: return "READY";
 			default: return "NONE";
 		}
@@ -76,7 +76,7 @@ public:
 
 	bool isErrored() const { return state == State::ERRORED; }
 
-	bool isLoaded() const { return state == State::LOADED; }
+	bool isPreLoaded() const { return state == State::PRELOADED; }
 
 	bool isReady() const { return state == State::READY; }
 };

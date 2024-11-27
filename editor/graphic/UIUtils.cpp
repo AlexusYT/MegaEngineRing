@@ -107,7 +107,7 @@ void UIUtils::getCubeIndices(std::vector<uint16_t> &indices, uint16_t offset) {
 	indices.push_back(offset + 0);
 	indices.push_back(offset + 1);
 }
-
+#if 0
 glm::mat4 UIUtils::buildModelViewMatrixP(const glm::mat4 &mat, const glm::vec3 &position) {
 	return glm::translate(mat, position);
 }
@@ -137,3 +137,4 @@ glm::mat4 UIUtils::buildModelViewMatrixPRS(const glm::mat4 &mat, const glm::vec3
 	return glm::translate(glm::mat4(1), position) * glm::eulerAngleYXZ(rotation.x, rotation.y, rotation.z) *
 		   glm::scale(mat, scale);
 }
+#endif

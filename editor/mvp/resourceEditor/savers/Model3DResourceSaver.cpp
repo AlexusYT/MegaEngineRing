@@ -26,17 +26,25 @@
 
 namespace mer::editor::mvp {
 sdk::utils::ReportMessagePtr Model3DResourceSaver::saveToFile(
-	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::IModel3DResource> &pResource) {
+	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::IModel3DResource> &pModel) {
 
 	auto dir = pPath.parent_path();
 	if (!exists(dir)) { create_directories(dir); }
-	auto resourceUri = pResource->asResource()->getResourceUri();
+	auto resource = pModel->asResource();
+	auto resourceUri = resource->getResourceUri();
 	try {
 		std::ofstream file(pPath, std::ios::out | std::ios::binary);
 		file.exceptions(std::_S_badbit | std::_S_failbit);
 
 		writeString(file, resourceUri);
-		for (auto [objName, object]: pResource->getModelObjects()) {
+		writeUuid(file, resource->getUuid());
+		auto objects = pModel->getModelObjects();
+		auto objCount = static_cast<uint16_t>(objects.size());
+		file.write(reinterpret_cast<const std::ostream::char_type*>(&objCount), sizeof(objCount));
+
+		for (const auto &objName: objects | std::views::keys) { writeString(file, objName); }
+
+		for (auto &[objName, object]: objects) {
 			writeString(file, objName);
 			auto shader = object->getShader();
 			std::string shaderName;
@@ -47,9 +55,7 @@ sdk::utils::ReportMessagePtr Model3DResourceSaver::saveToFile(
 			}
 			writeString(file, shaderName);
 
-			writeArray(file, object->getVertices());
-			writeArray(file, object->getUvs());
-			writeArray(file, object->getNormals());
+			writeArray(file, object->getData());
 			writeArray(file, object->getIndices());
 		}
 	} catch (...) {
@@ -61,13 +67,6 @@ sdk::utils::ReportMessagePtr Model3DResourceSaver::saveToFile(
 		return msg;
 	}
 	return nullptr;
-}
-
-void Model3DResourceSaver::writeString(std::ofstream &pStream, const std::string &pStr) {
-
-	auto nameSize = pStr.size();
-	pStream.write(reinterpret_cast<const std::ostream::char_type*>(&nameSize), sizeof(nameSize));
-	pStream.write(pStr.data(), static_cast<long int>(nameSize));
 }
 
 } // namespace mer::editor::mvp

@@ -147,9 +147,19 @@ std::shared_ptr<sdk::main::IModel3DObject> ObjFileResourceReader::generateObject
 	}
 
 	auto o = sdk::main::Model3DObject::create();
-	o->setVertices(vertices);
-	o->setUvs(uvs);
-	o->setNormals(normals);
+	std::vector<float> data;
+	data.reserve(vertices.size() * 3 + uvs.size() * 2 + normals.size() * 3);
+	for (auto i = 0ul, maxI = vertices.size(); i < maxI; ++i) {
+		data.emplace_back(vertices[i].x);
+		data.emplace_back(vertices[i].y);
+		data.emplace_back(vertices[i].z);
+		data.emplace_back(uvs[i].x);
+		data.emplace_back(uvs[i].y);
+		data.emplace_back(normals[i].x);
+		data.emplace_back(normals[i].y);
+		data.emplace_back(normals[i].z);
+	}
+	o->setData(data);
 	o->setIndices(indices);
 	o->setName(pObjectToSave);
 

@@ -21,32 +21,28 @@
 
 #ifndef MODEL3DOBJECT_H
 #define MODEL3DOBJECT_H
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 #include "EngineSDK/main/render/IInstancedRender.h"
+#include "EngineSDK/main/render/Initializable.h"
 #include "IModel3DObject.h"
 
-namespace mer::sdk::main {
-class Model3DResource;
+namespace mer::sdk::renderer {
+class ISSBO;
 }
 
 namespace mer::sdk::main {
+class Model3DResource;
 class RenderInstanceData;
 class IRenderInstance;
 
-class Model3DObject : public IModel3DObject, public IInstancedRender {
+class Model3DObject : public IModel3DObject, public IInstancedRender, public virtual Initializable {
 	IModel3DResource* resource;
-	uint32_t vertexBuffer{};
-	std::vector<glm::vec3> vertices;
-	uint32_t uvBuffer{};
-	std::vector<glm::vec2> uvs;
-	uint32_t normalsBuffer{};
-	std::vector<glm::vec3> normals;
+	uint32_t dataBuffer{};
+	std::vector<float> data;
 	uint32_t indexBuffer{};
 	std::vector<uint16_t> indices;
 	std::string name;
@@ -68,27 +64,22 @@ public:
 
 	static std::shared_ptr<IModel3DObject> create();
 
-	void setupRender() override;
+protected:
+	utils::ReportMessagePtr onInitialize() override;
 
+	void onUninitialize() override;
+
+public:
 	void render() override;
 
-	void destroyRender() override;
 
 	void addRenderInstance(IRenderInstance* pNewInstance) override;
 
 	void removeRenderInstance(IRenderInstance* pOldInstance) override;
 
-	[[nodiscard]] const std::vector<glm::vec3> &getVertices() const override { return vertices; }
+	[[nodiscard]] const std::vector<float> &getData() const override { return data; }
 
-	void setVertices(const std::vector<glm::vec3> &pVertices) override { vertices = pVertices; }
-
-	[[nodiscard]] const std::vector<glm::vec2> &getUvs() const override { return uvs; }
-
-	void setUvs(const std::vector<glm::vec2> &pUvs) override { uvs = pUvs; }
-
-	[[nodiscard]] const std::vector<glm::vec3> &getNormals() const override { return normals; }
-
-	void setNormals(const std::vector<glm::vec3> &pNormals) override { normals = pNormals; }
+	void setData(const std::vector<float> &pData) override { data = pData; }
 
 	[[nodiscard]] const std::vector<uint16_t> &getIndices() const override { return indices; }
 

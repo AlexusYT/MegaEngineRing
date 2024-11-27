@@ -26,11 +26,10 @@
 namespace mer::sdk::main {
 class ShaderProgramLoader : public ResourceLoader {
 public:
-	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
-								 std::shared_ptr<IResource> &pResourceOut) override;
+	std::shared_ptr<IResource> createResource() override;
 
-	utils::ReportMessagePtr init(IResourceLoadExecutor* pLoadExecutor,
-								 const std::shared_ptr<IResource> &pLoadedResource) override;
+	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
+								 const std::shared_ptr<IResource> &pResource) override;
 
 private:
 	std::string getFileExtension() override { return "enshader"; }

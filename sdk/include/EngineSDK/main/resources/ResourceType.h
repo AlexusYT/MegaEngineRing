@@ -24,7 +24,7 @@
 
 namespace mer::sdk::main {
 
-enum class ResourceType { NONE = 0, MODEL, TEXTURE, MATERIAL };
+enum class ResourceType { NONE = 0, MODEL, TEXTURE, MATERIAL, SHADER };
 
 } // namespace mer::sdk::main
 

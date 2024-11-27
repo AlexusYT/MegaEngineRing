@@ -28,14 +28,32 @@
 #include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
+std::shared_ptr<IResource> Model3DLoader::createResource() { return Model3DResource::create(); }
+
+utils::ReportMessagePtr Model3DLoader::preload(IResourceLoadExecutor* pResourcesContext,
+											   const std::shared_ptr<std::istream> &pStream,
+											   const std::shared_ptr<IResource> &pResource) {
+	if (auto msg = ResourceLoader::preload(pResourcesContext, pStream, pResource)) { return msg; }
+	auto resource = std::dynamic_pointer_cast<Model3DResource>(pResource);
+
+
+	uint16_t objectCount;
+	readNumber(pStream, objectCount);
+	for (uint16_t i = 0; i < objectCount; ++i) {
+
+		auto object = Model3DObject::create();
+		object->setName(readString(pStream));
+		resource->addModelObject(object);
+	}
+	return nullptr;
+}
 
 utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor,
 											std::shared_ptr<std::istream> &pStream,
-											std::shared_ptr<IResource> &pResourceOut) {
+											const std::shared_ptr<IResource> &pResource) {
 
 
-	auto resource = Model3DResource::create();
-	resource->setResourceUri(readString(pStream));
+	auto resource = std::dynamic_pointer_cast<Model3DResource>(pResource);
 	while (!pStream->eof()) {
 
 		try {
@@ -45,8 +63,15 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 			}
 			pStream->unget();
 		} catch (...) { break; }
-		auto object = Model3DObject::create();
-		object->setName(readString(pStream));
+		auto objectName = readString(pStream);
+
+		auto object = resource->getModelObject(objectName);
+		if (!object) {
+			object = Model3DObject::create();
+			object->setName(objectName);
+			resource->addModelObject(object);
+		}
+
 		std::string shaderUri = readString(pStream);
 		pLoadExecutor->loadResourceAsync(shaderUri, [object](const std::shared_ptr<ResourceLoadResult> &pResult) {
 			if (pResult->isErrored()) {
@@ -59,39 +84,15 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 			}
 		});
 
-		std::vector<glm::vec3> vertices;
-		readArray(pStream, vertices);
-		object->setVertices(vertices);
-
-		std::vector<glm::vec2> uvs;
-		readArray(pStream, uvs);
-		object->setUvs(uvs);
-
-		std::vector<glm::vec3> normals;
-		readArray(pStream, normals);
-		object->setNormals(normals);
+		std::vector<float> data;
+		readArray(pStream, data);
+		object->setData(data);
 
 		std::vector<uint16_t> indices;
 		readArray(pStream, indices);
 		object->setIndices(indices);
-		resource->addModelObject(object);
 	}
-	pResourceOut = resource;
 
-	return nullptr;
-}
-
-utils::ReportMessagePtr Model3DLoader::init(IResourceLoadExecutor* /*pLoadExecutor*/,
-											const std::shared_ptr<IResource> & /*pLoadedResource*/) {
-	/*auto model = std::dynamic_pointer_cast<Model3DResource>(pLoadedResource);
-	if (!model) {
-		auto msg = utils::ReportMessage::create();
-		msg->setTitle("Failed to init model resource");
-		msg->setMessage("Resource is not a model resource");
-		msg->addInfoLine("Actual resource type: {}", Utils::getTypeName(pLoadedResource.get()));
-		return msg;
-	}
-	model->setupRender();*/
 	return nullptr;
 }
 

@@ -31,45 +31,39 @@
 namespace mer::sdk::main {
 
 
-Model3DObject::~Model3DObject() { Model3DObject::destroyRender(); }
+Model3DObject::~Model3DObject() { Model3DObject::onUninitialize(); }
 
 std::shared_ptr<IModel3DObject> Model3DObject::create() { return std::shared_ptr<Model3DObject>(new Model3DObject()); }
 
-void Model3DObject::setupRender() {
+utils::ReportMessagePtr Model3DObject::onInitialize() {
 
 	instancesSsbo = std::make_shared<renderer::SSBO>();
 	instancesSsbo->setUsage(renderer::DYNAMIC_DRAW);
 	materialsSsbo = std::make_shared<renderer::SSBO>();
 	materialsSsbo->setUsage(renderer::DYNAMIC_DRAW);
 	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vertexBuffer);
-	glGenBuffers(1, &uvBuffer);
-	glGenBuffers(1, &normalsBuffer);
+	glGenBuffers(1, &dataBuffer);
 	glGenBuffers(1, &indexBuffer);
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<int32_t>(indices.size() * sizeof(uint16_t)), indices.data(),
 				 GL_STATIC_DRAW);
-	//Vertex buffer
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(vertices.size() * sizeof(glm::vec3)), vertices.data(),
-				 GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+	int stride = (3 + 3 + 2) * sizeof(float);
+	glBindBuffer(GL_ARRAY_BUFFER, dataBuffer);
+	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(data.size() * sizeof(float)), data.data(), GL_STATIC_DRAW);
+	//Vertex
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, nullptr);
 	glEnableVertexAttribArray(0);
 
-	//UV buffer
-	glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(uvs.size() * sizeof(glm::vec2)), uvs.data(), GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+	//UV
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	//Normal buffer
-	glBindBuffer(GL_ARRAY_BUFFER, normalsBuffer);
-	glBufferData(GL_ARRAY_BUFFER, static_cast<int32_t>(normals.size() * sizeof(glm::vec3)), normals.data(),
-				 GL_STATIC_DRAW);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+	//Normal
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(5 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);
+	return nullptr;
 }
 
 void Model3DObject::render() {
@@ -79,36 +73,35 @@ void Model3DObject::render() {
 	instancesSsbo->bindBufferBase(1);
 	materialsSsbo->bindBufferBase(2);
 	glBindVertexArray(vao);
-	for (auto [instShader, data]: instancesData) {
-		if (data.first.empty()) continue;
-		if (data.second.empty()) continue;
+	for (auto [instShader, instData]: instancesData) {
+		if (instData.first.empty()) continue;
+		if (instData.second.empty()) continue;
 		if (!instShader) shader->use();
 		else
 			instShader->use();
-		if (const int64_t bufSize = static_cast<int64_t>(data.first.size() * sizeof(RenderInstanceData));
+		if (const int64_t bufSize = static_cast<int64_t>(instData.first.size() * sizeof(RenderInstanceData));
 			instancesSsbo->getSize() < bufSize) {
-			instancesSsbo->reallocate(bufSize, data.first.data());
+			instancesSsbo->reallocate(bufSize, instData.first.data());
 		} else
-			instancesSsbo->bufferSubData(0, bufSize, data.first.data());
-		if (const int64_t bufSize = static_cast<int64_t>(data.second.size() * sizeof(MaterialData));
+			instancesSsbo->bufferSubData(0, bufSize, instData.first.data());
+		if (const int64_t bufSize = static_cast<int64_t>(instData.second.size() * sizeof(MaterialData));
 			materialsSsbo->getSize() < bufSize) {
-			materialsSsbo->reallocate(bufSize, data.second.data());
+			materialsSsbo->reallocate(bufSize, instData.second.data());
 		} else
-			materialsSsbo->bufferSubData(0, bufSize, data.second.data());
+			materialsSsbo->bufferSubData(0, bufSize, instData.second.data());
 		glDrawElementsInstanced(GL_TRIANGLES, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr,
-								static_cast<int>(data.first.size()));
+								static_cast<int>(instData.first.size()));
 	}
 	glBindVertexArray(0);
 	instancesSsbo->unbindBufferBase(1);
 	instancesSsbo->unbindBufferBase(2);
 }
 
-void Model3DObject::destroyRender() {
+void Model3DObject::onUninitialize() {
 	if (instancesSsbo) instancesSsbo.reset();
 	//TODO Use unique_ptr with custom deleter or wrap Buffer and VertexArray into the classes
-	if (vertexBuffer) { glDeleteBuffers(1, &vertexBuffer); }
-	if (uvBuffer) { glDeleteBuffers(1, &uvBuffer); }
-	if (normalsBuffer) { glDeleteBuffers(1, &normalsBuffer); }
+	if (dataBuffer) { glDeleteBuffers(1, &dataBuffer); }
+	if (indexBuffer) { glDeleteBuffers(1, &indexBuffer); }
 	if (vao) { glDeleteVertexArrays(1, &vao); }
 }
 
@@ -160,12 +153,9 @@ void Model3DObject::onInstanceDataChanged(IRenderInstance* /*pInstance*/) {
 void Model3DObject::onMaterialDataChanged(RenderInstance* pInstance) { onInstanceDataChanged(pInstance); }
 
 bool Model3DObject::operator<(const IModel3DObject &pRhs) const {
-	if (this->vertices < pRhs.getVertices()) return true;
-	if (pRhs.getVertices() < this->vertices) return false;
-	if (this->uvs < pRhs.getUvs()) return true;
-	if (pRhs.getUvs() < this->uvs) return false;
-	if (this->normals < pRhs.getNormals()) return true;
-	if (pRhs.getNormals() < this->normals) return false;
+	if (this->data < pRhs.getData()) return true;
+	if (pRhs.getData() < this->data) return false;
+
 	return this->indices < pRhs.getIndices();
 }
 } // namespace mer::sdk::main

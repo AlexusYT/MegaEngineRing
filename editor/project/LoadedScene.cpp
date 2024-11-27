@@ -24,8 +24,8 @@
 #include <SQLiteCpp/Database.h>
 #include <nlohmann/json.hpp>
 
+#include "EditorFileSystemResourceBundle.h"
 #include "EngineSDK/main/Application.h"
-#include "EngineSDK/main/resources/FileSystemResourceBundle.h"
 #include "EngineSDK/main/resources/LoadedResources.h"
 #include "EngineSDK/main/scene/IScene.h"
 #include "EngineSDK/main/scene/Scene.h"
@@ -55,7 +55,7 @@ LoadedScene::LoadedScene() : mainObject(mvp::RootExplorerObject::create()) {
 
 void LoadedScene::setRunDirectory(const std::filesystem::path &pPath) const {
 	app->getApplicationSettings()->setRunDirectory(pPath);
-	app->setResourceBundle(sdk::main::FileSystemResourceBundle::create(pPath / "data"));
+	app->setResourceBundle(EditorFileSystemResourceBundle::create(pPath / "data"));
 }
 
 bool LoadedScene::hasScene() const { return scene != nullptr; }
@@ -69,6 +69,7 @@ void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesCont
 	const auto resources = sdk::main::LoadedResources::create();
 	pResourcesContext->setResources(resources);
 	pResourcesContext->setApplication(app.get());
+	pResourcesContext->preloadResources();
 }
 
 void LoadedScene::initScene() const { scene->initScene(); }

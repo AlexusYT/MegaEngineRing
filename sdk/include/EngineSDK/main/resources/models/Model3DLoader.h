@@ -27,8 +27,14 @@
 namespace mer::sdk::main {
 class Model3DLoader : public ResourceLoader {
 public:
+	std::shared_ptr<IResource> createResource() override;
+
+	utils::ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
+									const std::shared_ptr<std::istream> &pStream,
+									const std::shared_ptr<IResource> &pResource) override;
+
 	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
-								 std::shared_ptr<IResource> &pResourceOut) override;
+								 const std::shared_ptr<IResource> &pResource) override;
 
 	template<typename T>
 	static void readArray(const std::shared_ptr<std::istream> &pStream, std::vector<T> &pArray) {
@@ -38,9 +44,6 @@ public:
 		pStream->read(reinterpret_cast<std::istream::char_type*>(pArray.data()),
 					  static_cast<long int>(size * sizeof(T)));
 	}
-
-	utils::ReportMessagePtr init(IResourceLoadExecutor* pLoadExecutor,
-								 const std::shared_ptr<IResource> &pLoadedResource) override;
 
 private:
 	std::string getFileExtension() override { return "enmodel"; }

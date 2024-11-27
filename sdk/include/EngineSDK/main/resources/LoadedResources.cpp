@@ -22,6 +22,8 @@
 #include "LoadedResources.h"
 
 #include "EngineSDK/main/render/IRenderable.h"
+#include "EngineSDK/main/render/Initializable.h"
+#include "EngineUtils/utils/Logger.h"
 #include "IResource.h"
 
 namespace mer::sdk::main {
@@ -31,27 +33,61 @@ std::shared_ptr<ILoadedResources> LoadedResources::create() {
 	return std::shared_ptr<ILoadedResources>(new LoadedResources());
 }
 
+void LoadedResources::markResourceComplete(const std::string &pResourceUri) {
+	std::lock_guard lock(mutex);
+	auto iter = incompleteResources.find(pResourceUri);
+	if (iter == incompleteResources.end()) return;
+	if (!iter->second->isInited()) //
+		resourcesToInit.emplace_back(iter->second);
+	else
+		initializedResources.emplace(pResourceUri, iter->second);
+	incompleteResources.erase(iter);
+}
+
 void LoadedResources::addResource(const std::string &pResourceUri, const std::shared_ptr<IResource> &pResource) {
 	std::lock_guard lock(mutex);
 	resources.insert_or_assign(pResourceUri, pResource);
-	if (auto renderable = std::dynamic_pointer_cast<IRenderable>(pResource)) {
-		renderables.insert_or_assign(pResourceUri, std::make_pair(renderable, false));
+	if (pResource->isIncomplete()) incompleteResources.emplace(pResourceUri, pResource);
+	else if (!pResource->isInited())
+		resourcesToInit.emplace_back(pResource);
+	else {
+		initializedResources.emplace(pResourceUri, pResource);
+		if (auto renderable = std::dynamic_pointer_cast<IRenderable>(pResource)) {
+			renderables.emplace_back(renderable);
+		}
 	}
 }
 
 void LoadedResources::removeResource(const std::string &pResourceUri) {
+	std::lock_guard lock(mutex);
+	auto iter = resources.find(pResourceUri);
+	if (iter == resources.end()) return;
+	if (auto renderable = std::dynamic_pointer_cast<IRenderable>(iter->second)) erase(renderables, renderable);
+	erase(resourcesToInit, iter->second);
+	initializedResources.erase(pResourceUri);
+	incompleteResources.erase(pResourceUri);
+	resources.erase(iter);
+}
 
-	resources.erase(pResourceUri);
-	renderables.erase(pResourceUri);
+bool LoadedResources::hasResource(const std::string &pResourceUri) {
+	std::lock_guard lock(mutex);
+	return resources.contains(pResourceUri);
 }
 
 void LoadedResources::render() {
-	for (auto &[name, renderable]: renderables) {
-		if (!renderable.second) {
-			renderable.first->setupRender();
-			renderable.second = true;
+	for (auto i = 0ul, maxI = std::min(resourcesToInit.size(), 10ul); i < maxI; ++i) {
+
+		auto resource = resourcesToInit.front();
+		if (auto initializable = std::dynamic_pointer_cast<IInitializable>(resource)) {
+			if (auto msg = initializable->initialize()) { utils::Logger::error(msg); }
+			resourcesToInit.pop_front();
+			initializedResources.emplace(resource->getResourceUri(), resource);
+			if (auto renderable = std::dynamic_pointer_cast<IRenderable>(resource)) {
+				renderables.emplace_back(renderable);
+			}
 		}
-		renderable.first->render();
 	}
+
+	for (auto &renderable: renderables) { renderable->render(); }
 }
 } // namespace mer::sdk::main

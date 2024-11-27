@@ -23,7 +23,6 @@
 #define ELECTRICITY_SIMULATOR_UIUTILS_H
 
 
-#include <glm/gtx/euler_angles.hpp>
 #include <vector>
 
 class UIUtils {
@@ -46,6 +45,7 @@ public:
 		return {glm::radians(-49.5), glm::radians(207.4), glm::radians(28.5)};
 	}
 
+#if 0
 	static glm::mat4 getModelViewMatrixForSlot(const glm::vec3 &size, const glm::vec3 &pos, int slotSize) {
 
 		glm::mat4 rotationMatrix = UIUtils::eulerAngleYXZ(glm::mat4(1), getEntityRotationInGUI());
@@ -55,7 +55,6 @@ public:
 
 		return glm::translate(glm::mat4(1), pos) * rotationMatrix * glm::scale(glm::mat4(1), {scale, scale, scale});
 	}
-
 	/**
 	 * @brief Calculates ModelView matrix using only given position.
 	 * @param mat matrix to transform. Usually View-Projection matrix or identity matrix.
@@ -116,6 +115,7 @@ public:
 														  const glm::vec<3, T, glm::defaultp> &angles) {
 		return in * glm::eulerAngleYXZ(angles.x, angles.y, angles.z);
 	}
+#endif
 };
 
 

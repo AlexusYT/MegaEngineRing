@@ -29,16 +29,17 @@ std::shared_ptr<Model3DResource> Model3DResource::create() {
 	return std::shared_ptr<Model3DResource>(new Model3DResource());
 }
 
-void Model3DResource::setupRender() {
-	for (auto &[name, object]: modelObjects) { object->setupRender(); }
+utils::ReportMessagePtr Model3DResource::onInitialize() {
+	for (auto &[name, object]: modelObjects) { object->initialize(); }
+	return nullptr;
 }
 
 void Model3DResource::render() {
 	for (auto &[name, object]: modelObjects) { object->render(); }
 }
 
-void Model3DResource::destroyRender() {
-	for (auto &[name, object]: modelObjects) { object->destroyRender(); }
+void Model3DResource::onUninitialize() {
+	for (auto &[name, object]: modelObjects) { object->uninitialize(); }
 }
 
 void Model3DResource::addModelObject(const std::shared_ptr<IModel3DObject> &pObject) {

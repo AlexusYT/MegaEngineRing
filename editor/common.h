@@ -28,6 +28,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdouble-promotion"
 #pragma GCC diagnostic ignored "-Wextra-semi"
+#define GDKMM_DISABLE_DEPRECATED
 #include <glibmm.h>
 #define GTKMM_DISABLE_DEPRECATED
 #include <gtkmm.h>

@@ -21,6 +21,7 @@
 
 #include "MaterialLoader.h"
 
+#include "ColorComponent.h"
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
 #include "EngineSDK/main/resources/ResourceLoadResult.h"
 #include "EngineSDK/main/resources/textures/ITextureResource.h"
@@ -28,63 +29,48 @@
 #include "MaterialResource.h"
 
 namespace mer::sdk::main {
-utils::ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
-											 std::shared_ptr<std::istream> &pStream,
-											 std::shared_ptr<IResource> &pResourceOut) {
-	auto resource = MaterialResource::create();
-	resource->setResourceUri(readString(pStream));
-	/*pLoadExecutor->loadResourceAsync("baseColor.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
-		if (pResult->isErrored()) {
-			utils::Logger::error(pResult->getError());
-		} else if (pResult->isReady()) {
-			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
-				if (auto msg = resource->setBaseColorMap(texture)) { utils::Logger::error(msg); }
-			}
-		}
-	});
-	pLoadExecutor->loadResourceAsync("normal.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
-		if (pResult->isErrored()) {
-			utils::Logger::error(pResult->getError());
-		} else if (pResult->isReady()) {
-			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
-				if (auto msg = resource->setNormalMap(texture)) { utils::Logger::error(msg); }
-			}
-		}
-	});
-	pLoadExecutor->loadResourceAsync("metallic.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
-		if (pResult->isErrored()) {
-			utils::Logger::error(pResult->getError());
-		} else if (pResult->isReady()) {
-			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
-				if (auto msg = resource->setMetallicMap(texture)) { utils::Logger::error(msg); }
-			}
-		}
-	});
-	pLoadExecutor->loadResourceAsync("roughness.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
-		if (pResult->isErrored()) {
-			utils::Logger::error(pResult->getError());
-		} else if (pResult->isReady()) {
-			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
-				if (auto msg = resource->setRoughnessMap(texture)) { utils::Logger::error(msg); }
-			}
-		}
-	});
-	pLoadExecutor->loadResourceAsync("ao.entex", [resource](const std::shared_ptr<ResourceLoadResult> &pResult) {
-		if (pResult->isErrored()) {
-			utils::Logger::error(pResult->getError());
-		} else if (pResult->isReady()) {
-			if (auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
-				if (auto msg = resource->setAoMap(texture)) { utils::Logger::error(msg); }
-			}
-		}
-	});*/
 
-	pResourceOut = resource;
+std::shared_ptr<IResource> MaterialLoader::createResource() { return MaterialResource::create(); }
+
+utils::ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecutor,
+											 std::shared_ptr<std::istream> &pStream,
+											 const std::shared_ptr<IResource> &pResource) {
+	auto resource = std::dynamic_pointer_cast<MaterialResource>(pResource);
+	readMaterialComponent(pStream, pLoadExecutor, sigc::mem_fun(*resource, &IMaterialResource::setAlbedo));
+	readMaterialComponent(pStream, pLoadExecutor, sigc::mem_fun(*resource, &IMaterialResource::setMetallic));
+	readMaterialComponent(pStream, pLoadExecutor, sigc::mem_fun(*resource, &IMaterialResource::setNormal));
+	readMaterialComponent(pStream, pLoadExecutor, sigc::mem_fun(*resource, &IMaterialResource::setRoughness));
+	readMaterialComponent(pStream, pLoadExecutor, sigc::mem_fun(*resource, &IMaterialResource::setAo));
+
 	return nullptr;
 }
 
-utils::ReportMessagePtr MaterialLoader::init(IResourceLoadExecutor* /*pLoadExecutor*/,
-											 const std::shared_ptr<IResource> & /*pLoadedResource*/) {
-	return nullptr;
+void MaterialLoader::readMaterialComponent(
+	const std::shared_ptr<std::istream> &pStream, IResourceLoadExecutor* pLoadExecutor,
+	const sigc::slot<void(const std::shared_ptr<IMaterialComponent> &pComponent)> &pSetter) {
+	try {
+		uint8_t type = 0;
+		readNumber(pStream, type);
+		if (type == 0) {
+			const auto uri = readString(pStream);
+
+			pLoadExecutor->loadResourceAsync(uri, [pSetter](const std::shared_ptr<ResourceLoadResult> &pResult) {
+				if (pResult->isErrored()) {
+					utils::Logger::error(pResult->getError());
+				} else if (pResult->isReady()) {
+					if (const auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
+						pSetter(texture);
+					}
+				}
+			});
+		} else if (type == 1) {
+			auto component = ColorComponent::create();
+			component->color->r = readNumber<float>(pStream);
+			component->color->g = readNumber<float>(pStream);
+			component->color->b = readNumber<float>(pStream);
+			component->color->a = readNumber<float>(pStream);
+			pSetter(component);
+		}
+	} catch (...) { pSetter(nullptr); }
 }
 } // namespace mer::sdk::main

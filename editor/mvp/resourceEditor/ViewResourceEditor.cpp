@@ -21,12 +21,16 @@
 
 #include "ViewResourceEditor.h"
 
+#include "EngineSDK/main/resources/materials/ColorComponent.h"
+#include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "EngineSDK/main/resources/textures/ITextureResource.h"
-#include "Globals.h"
 #include "IPresenterResourceEditor.h"
 #include "mvp/contexts/IWidgetContext.h"
+#include "ui/customWidgets/resourceSelector/ResourceSelectorWidget.h"
+#include "ui/customWidgets/resourceSelector/SourceSelectionColor.h"
+#include "ui/customWidgets/resourceSelector/SourceSelectionNone.h"
+#include "ui/customWidgets/resourceSelector/resources/SourceSelectionTexture.h"
 #include "ui/utils/UiUtils.h"
 
 namespace mer::editor::mvp {
@@ -51,8 +55,14 @@ public:
 };
 
 std::string OpenedResource::getType() const {
-	if (dynamic_cast<sdk::main::IModel3DResource*>(resource.get())) return "Model";
-	if (dynamic_cast<sdk::main::ITextureResource*>(resource.get())) return "Texture";
+	switch (resource->getResourceType()) {
+
+		case sdk::main::ResourceType::NONE: break;
+		case sdk::main::ResourceType::MODEL: return "Model";
+		case sdk::main::ResourceType::TEXTURE: return "Texture";
+		case sdk::main::ResourceType::MATERIAL: return "Material";
+		case sdk::main::ResourceType::SHADER: break;
+	}
 	return "Unknown";
 }
 
@@ -194,6 +204,33 @@ void ViewResourceEditor::setPresenter(IPresenterResourceEditor* pPresenter) {
 	builder->get_widget<Gtk::Entry>("modelFilePathEntry")->signal_icon_release().connect(iconReleaseSlot);
 	builder->get_widget<Gtk::Entry>("textureFilePathEntry")->signal_icon_release().connect(iconReleaseSlot);
 	//builder->get_widget<Gtk::Entry>("materialFilePathEntry")->signal_icon_release().connect(iconReleaseSlot);
+
+	matBaseColorSelector = addNewSelector("Base color (Albedo)", 1);
+	matBaseColorSelector->getSelectionChangedSignal().connect(
+		[this](const std::shared_ptr<ui::ISourceSelectionResult> &pResult) {
+			presenter->onMaterialBaseColorChanged(pResult, this);
+		});
+
+	matMetallicSelector = addNewSelector("Metallic map", 2);
+	matMetallicSelector->getSelectionChangedSignal().connect(
+		[this](const std::shared_ptr<ui::ISourceSelectionResult> &pResult) {
+			presenter->onMaterialMetallicChanged(pResult, this);
+		});
+	matNormalSelector = addNewSelector("Normal map", 3);
+	matNormalSelector->getSelectionChangedSignal().connect(
+		[this](const std::shared_ptr<ui::ISourceSelectionResult> &pResult) {
+			presenter->onMaterialNormalChanged(pResult, this);
+		});
+	matRoughnessSelector = addNewSelector("Roughness map", 4);
+	matRoughnessSelector->getSelectionChangedSignal().connect(
+		[this](const std::shared_ptr<ui::ISourceSelectionResult> &pResult) {
+			presenter->onMaterialRoughnessChanged(pResult, this);
+		});
+	matAoSelector = addNewSelector("Ambient occlusion map", 5);
+	matAoSelector->getSelectionChangedSignal().connect(
+		[this](const std::shared_ptr<ui::ISourceSelectionResult> &pResult) {
+			presenter->onMaterialAOChanged(pResult, this);
+		});
 }
 
 void ViewResourceEditor::displayError(const sdk::utils::ReportMessagePtr &pError) {
@@ -234,7 +271,6 @@ void ViewResourceEditor::displayMessage(const std::string &pMessage) {
 
 void ViewResourceEditor::displayObjects(const std::vector<std::shared_ptr<sdk::main::IModel3DObject>> &pObjects,
 										bool pFileObjects) {
-
 	executeInMainThread([this, pObjects, pFileObjects](auto &) {
 		auto objectsList = Gio::ListStore<ModelObject>::create();
 
@@ -266,8 +302,18 @@ std::vector<std::string> ViewResourceEditor::getSelectedObjects() {
 }
 
 void ViewResourceEditor::appendResource(const std::shared_ptr<sdk::main::IResource> &pNewResource) {
-
 	executeInMainThread([this, pNewResource](auto &) { openedList->append(OpenedResource::create(pNewResource)); });
+}
+
+void ViewResourceEditor::removeResource(const std::shared_ptr<sdk::main::IResource> &pResource) {
+	for (uint32_t i = 0, maxI = openedList->get_n_items(); i < maxI; i++) {
+		std::shared_ptr<OpenedResource> item = openedList->get_item(i);
+		if (!item) continue;
+		if (item->getResource() == pResource) {
+			openedList->remove(i);
+			break;
+		}
+	}
 }
 
 void ViewResourceEditor::selectResource(const std::shared_ptr<sdk::main::IResource> &pResource) {
@@ -281,6 +327,7 @@ void ViewResourceEditor::selectResource(const std::shared_ptr<sdk::main::IResour
 				break;
 			}
 		}
+
 		if (auto entry = getFilePathEntry()) entry->set_text("");
 		auto resource = presenter->getSelectedResource(this);
 
@@ -310,7 +357,6 @@ void ViewResourceEditor::updateUnsavedDialog(const std::shared_ptr<sdk::main::IR
 }
 
 void ViewResourceEditor::updateResourcePath(const std::shared_ptr<sdk::main::IResource> &pResource) const {
-
 	if (const auto uri = pResource->getResourceUri(); is_regular_file(presenter->getDataPath() / uri)) {
 		auto pathStr = uri.parent_path().string();
 		resourcePathEntry->set_text(pathStr.empty() ? "/" : pathStr);
@@ -365,9 +411,45 @@ void ViewResourceEditor::setupColumnView() {
 }
 
 Gtk::Entry* ViewResourceEditor::getFilePathEntry() const {
-	auto name = preferencesStack->get_visible_child_name();
-	auto entry = builder->get_widget<Gtk::Entry>(name + "FilePathEntry");
+	const auto name = preferencesStack->get_visible_child_name();
+	if (name == "material") return nullptr;
+	const auto entry = builder->get_widget<Gtk::Entry>(name + "FilePathEntry");
 	return entry;
+}
+
+void ViewResourceEditor::displayMaterial(const std::shared_ptr<sdk::main::IMaterialResource> &pMaterialResource) {
+
+	auto baseColorSetter = [this](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent,
+								  ui::ResourceSelectorWidget* pSelector) {
+		std::shared_ptr<ui::ISourceSelectionResult> selection;
+		if (const auto map = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pComponent))
+			selection = ui::SourceSelectionTexture::Result::create(map);
+		else if (const auto color = std::dynamic_pointer_cast<sdk::main::ColorComponent>(pComponent))
+			selection = ui::SourceSelectionColor::Result::create(color);
+
+		pSelector->setSelection(selection);
+	};
+	pMaterialResource->getAlbedo().connectEvent(bind(baseColorSetter, matBaseColorSelector));
+	pMaterialResource->getMetallic().connectEvent(bind(baseColorSetter, matMetallicSelector));
+	pMaterialResource->getNormal().connectEvent(bind(baseColorSetter, matNormalSelector));
+	pMaterialResource->getRoughness().connectEvent(bind(baseColorSetter, matRoughnessSelector));
+	pMaterialResource->getAo().connectEvent(bind(baseColorSetter, matAoSelector));
+}
+
+ui::ResourceSelectorWidget* ViewResourceEditor::addNewSelector(const std::string &pLabelText, const int pRowPos) const {
+
+	const auto grid = builder->get_widget<Gtk::Grid>("materialGrid");
+	grid->insert_row(pRowPos);
+	const auto label = Gtk::make_managed<Gtk::Label>(pLabelText);
+	label->set_ellipsize(Pango::EllipsizeMode::END);
+	label->set_xalign(0.0);
+	grid->attach(*label, 0, pRowPos, 1, 1);
+	const auto selector = Gtk::make_managed<ui::ResourceSelectorWidget>();
+	selector->addSource(std::make_shared<ui::SourceSelectionNone>());
+	selector->addSource(ui::SourceSelectionTexture::create(presenter->getResourceLoader()));
+	selector->addSource(ui::SourceSelectionColor::create());
+	grid->attach(*selector, 1, pRowPos, 1, 1);
+	return selector;
 }
 
 } // namespace mer::editor::mvp

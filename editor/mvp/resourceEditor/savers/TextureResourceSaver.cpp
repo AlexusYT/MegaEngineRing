@@ -43,21 +43,23 @@ void write_data(const uint32_t pWidth, const uint32_t pHeight, void* pData, std:
 }
 
 sdk::utils::ReportMessagePtr TextureResourceSaver::saveToFile(
-	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::ITextureResource> &pResource) {
+	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::ITextureResource> &pTexture) {
 
 	auto dir = pPath.parent_path();
 	if (!exists(dir)) { create_directories(dir); }
-	auto resourceUri = pResource->asResource()->getResourceUri();
+	auto resource = pTexture->asResource();
+	auto resourceUri = resource->getResourceUri();
 	try {
 		std::ofstream file(pPath, std::ios::out | std::ios::binary);
 		file.exceptions(std::_S_badbit | std::_S_failbit);
 
 		writeString(file, resourceUri);
+		writeUuid(file, resource->getUuid());
 
-		auto width = pResource->getWidth();
-		auto height = pResource->getHeight();
-		auto data = pResource->getData();
-		switch (pResource->getFormat()) {
+		auto width = pTexture->getWidth();
+		auto height = pTexture->getHeight();
+		auto data = pTexture->getData();
+		switch (pTexture->getFormat()) {
 
 			case sdk::main::Texture2DImageFormat::RED: write_data<png::gray_pixel>(width, height, data, file); break;
 			case sdk::main::Texture2DImageFormat::RG: write_data<png::ga_pixel>(width, height, data, file); break;
@@ -78,10 +80,4 @@ sdk::utils::ReportMessagePtr TextureResourceSaver::saveToFile(
 	return nullptr;
 }
 
-void TextureResourceSaver::writeString(std::ofstream &pStream, const std::string &pStr) {
-
-	auto nameSize = pStr.size();
-	pStream.write(reinterpret_cast<const std::ostream::char_type*>(&nameSize), sizeof(nameSize));
-	pStream.write(pStr.data(), static_cast<long int>(nameSize));
-}
 } // namespace mer::editor::mvp

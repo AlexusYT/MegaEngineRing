@@ -21,10 +21,22 @@
 
 #include "Resource.h"
 
+#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineUtils/utils/UUID.h"
+
 namespace mer::sdk::main {
+Resource::Resource() { uuid = UUID::create(); }
+
 void Resource::addProperty(utils::PropertyBase* pProperty) { properties.push_back(pProperty); }
 
 void Resource::removeProperty(utils::PropertyBase* pProperty) { erase(properties, pProperty); }
 
 void Resource::propertyChanged(utils::PropertyBase* /*pProperty*/) {}
+
+void Resource::addReportInfo(const utils::ReportMessagePtr &pMsg) {
+	pMsg->addInfoLine("Resource uri: {}", resourceUri.string());
+	pMsg->addInfoLine("Resource UUID: {}", uuid->toString());
+	pMsg->addInfoLine("Is resource inited: {}", isInited());
+	pMsg->addInfoLine("Is resource incomplete: {}", incomplete);
+}
 } // namespace mer::sdk::main

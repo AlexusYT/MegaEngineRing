@@ -23,27 +23,19 @@
 #define PRESENTERRESOURCEEDITOR_H
 #include <memory>
 
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
 #include "IPresenterResourceEditor.h"
 
 namespace mer::sdk::main {
+class IResourceLoadExecutor;
+class IMaterialComponent;
 class IModel3DObject;
-}
-
-namespace mer::sdk::main {
 class IResource;
-}
+} // namespace mer::sdk::main
 
 namespace mer::editor::mvp {
 class FileResourceReader;
 class IViewResourceEditor;
-} // namespace mer::editor::mvp
-
-namespace mer::editor::mvp {
 class IModelResourceEditor;
-}
-
-namespace mer::editor::mvp {
 
 class PresenterResourceEditor : public IPresenterResourceEditor {
 	class ViewInfo {
@@ -97,12 +89,32 @@ public:
 					  IViewResourceEditor* pView) override;
 	void addObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToAdd, IViewResourceEditor* pView) override;
 
+	sdk::main::IResourceLoadExecutor* getResourceLoader() override;
+
+
+	void onMaterialBaseColorChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+									IViewResourceEditor* pView) override;
+
+	void onMaterialMetallicChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+								   IViewResourceEditor* pView) override;
+	void onMaterialNormalChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+								 IViewResourceEditor* pView) override;
+	void onMaterialRoughnessChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+									IViewResourceEditor* pView) override;
+	void onMaterialAOChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+							 IViewResourceEditor* pView) override;
+
 private:
 	ViewInfo* getViewInfo(IViewResourceEditor* pView);
 
 	ResourceInfo* getResourceInfo(sdk::main::IResource* pResource);
 
-	sdk::utils::ReportMessagePtr saveResource(const std::shared_ptr<sdk::main::IResource> &pResource);
+	sdk::utils::ReportMessagePtr saveResource(const std::shared_ptr<sdk::main::IResource> &pResource,
+											  bool pIsComplete = true);
+
+	void getComponentFromResult(
+		const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
+		const sigc::slot<void(const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent)> &pSlot) const;
 };
 
 } // namespace mer::editor::mvp

@@ -40,7 +40,20 @@ enum class ShaderTypeEnum {
 
 	MAX_SHADER_TYPE
 };
+
+inline const char* to_string(ShaderTypeEnum pE) {
+	switch (pE) {
+		case ShaderTypeEnum::COMPUTE_SHADER: return "COMPUTE_SHADER";
+		case ShaderTypeEnum::VERTEX_SHADER: return "VERTEX_SHADER";
+		case ShaderTypeEnum::TESS_CONTROL_SHADER: return "TESS_CONTROL_SHADER";
+		case ShaderTypeEnum::TESS_EVALUATION_SHADER: return "TESS_EVALUATION_SHADER";
+		case ShaderTypeEnum::GEOMETRY_SHADER: return "GEOMETRY_SHADER";
+		case ShaderTypeEnum::FRAGMENT_SHADER: return "FRAGMENT_SHADER";
+		case ShaderTypeEnum::MAX_SHADER_TYPE: return "MAX_SHADER_TYPE";
+		default: return "unknown";
+	}
 }
+} // namespace mer::sdk::renderer
 
 
 #endif //SHADERTYPEENUM_H

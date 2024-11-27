@@ -28,11 +28,7 @@ class IRenderable {
 public:
 	virtual ~IRenderable() = default;
 
-	virtual void setupRender() {}
-
 	virtual void render() = 0;
-
-	virtual void destroyRender() {}
 };
 
 } // namespace mer::sdk::main

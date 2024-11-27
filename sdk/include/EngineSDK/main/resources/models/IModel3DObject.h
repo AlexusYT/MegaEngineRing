@@ -21,12 +21,10 @@
 
 #ifndef IMODEL3DOBJECT_H
 #define IMODEL3DOBJECT_H
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <memory>
 #include <string>
 #include <vector>
 
+#include "EngineSDK/main/render/IInitializable.h"
 #include "EngineSDK/main/render/IRenderable.h"
 #include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
@@ -34,7 +32,7 @@ namespace mer::sdk::main {
 class IModel3DResource;
 class IRenderInstance;
 
-class IModel3DObject : public IRenderable {
+class IModel3DObject : public virtual IInitializable, public IRenderable {
 public:
 	~IModel3DObject() override = default;
 
@@ -42,17 +40,9 @@ public:
 
 	virtual void removeRenderInstance(IRenderInstance* pOldInstance) = 0;
 
-	[[nodiscard]] virtual const std::vector<glm::vec3> &getVertices() const = 0;
+	[[nodiscard]] virtual const std::vector<float> &getData() const = 0;
 
-	virtual void setVertices(const std::vector<glm::vec3> &pVertices) = 0;
-
-	[[nodiscard]] virtual const std::vector<glm::vec2> &getUvs() const = 0;
-
-	virtual void setUvs(const std::vector<glm::vec2> &pUvs) = 0;
-
-	[[nodiscard]] virtual const std::vector<glm::vec3> &getNormals() const = 0;
-
-	virtual void setNormals(const std::vector<glm::vec3> &pNormals) = 0;
+	virtual void setData(const std::vector<float> &pData) = 0;
 
 	[[nodiscard]] virtual const std::vector<uint16_t> &getIndices() const = 0;
 

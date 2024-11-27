@@ -20,13 +20,32 @@
 //
 
 #include "ResourceLoader.h"
+
+#include "EngineUtils/utils/UUID.h"
+#include "IResource.h"
+
 namespace mer::sdk::main {
+utils::ReportMessagePtr ResourceLoader::preload(IResourceLoadExecutor* /*pResourcesContext*/,
+												const std::shared_ptr<std::istream> &pStream,
+												const std::shared_ptr<IResource> &pResource) {
+
+	pResource->setResourceUri(readString(pStream));
+	pResource->setUuid(readUuid(pStream));
+	return nullptr;
+}
+
 std::string ResourceLoader::readString(const std::shared_ptr<std::istream> &pStream) {
-	size_t size = 0;
-	pStream->read(reinterpret_cast<std::istream::char_type*>(&size), sizeof(size));
+	uint16_t size = 0;
+	readNumber(pStream, size);
 	std::string name(size, 0);
 	pStream->read(name.data(), static_cast<long int>(size));
 	return name;
 }
 
+std::shared_ptr<UUID> ResourceLoader::readUuid(const std::shared_ptr<std::istream> &pStream) {
+	auto uuid = UUID::create();
+	pStream->read(reinterpret_cast<std::istream::char_type*>(&*uuid), sizeof(*uuid));
+	return uuid;
 }
+
+} // namespace mer::sdk::main
