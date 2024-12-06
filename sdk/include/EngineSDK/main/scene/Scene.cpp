@@ -156,6 +156,7 @@ sdk::utils::ReportMessagePtr Scene::initScene() {
 
 void Scene::deinitScene() {
 	for (const auto &object: objects) { object->deinit(); }
+	resourceExecutor->getResources()->uninit();
 }
 
 void Scene::addObject(const std::shared_ptr<ISceneObject> &pObject) {

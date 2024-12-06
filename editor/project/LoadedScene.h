@@ -88,6 +88,8 @@ public:
 
 	void initScene() const;
 
+	void uninitScene() const;
+
 	void render() const;
 
 	sdk::utils::ReportMessagePtr load(const std::filesystem::path &pPath);

@@ -53,6 +53,8 @@ public:
 
 	void initScene() override;
 
+	void uninitScene() override;
+
 	void render() override;
 
 	void setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext) const override;

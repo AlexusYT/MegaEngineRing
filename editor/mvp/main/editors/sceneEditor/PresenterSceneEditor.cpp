@@ -68,6 +68,7 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 			modelSceneEditor->initScene();
 		}
 	});
+	view->connectUnrealize([this] { modelSceneEditor->uninitScene(); });
 	view->connectResize([this](const int pWidth, const int pHeight) {
 		if (const auto scene = modelSceneEditor->getScene()) scene->resize(pWidth, pHeight);
 	});
