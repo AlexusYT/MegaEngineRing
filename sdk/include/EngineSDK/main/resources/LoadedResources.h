@@ -44,6 +44,8 @@ public:
 	[[nodiscard]] virtual const std::unordered_map<std::string, std::shared_ptr<IResource>> &getResources() const = 0;
 
 	virtual void render() = 0;
+
+	virtual void uninit() = 0;
 };
 
 class LoadedResources : public ILoadedResources {
@@ -83,6 +85,8 @@ public:
 	}
 
 	void render() override;
+
+	void uninit() override;
 
 private:
 };
