@@ -88,6 +88,13 @@ void LoadedResources::render() {
 		}
 	}
 
-	for (auto &renderable: renderables) { renderable->render(); }
+	for (const auto &renderable: renderables) { renderable->render(); }
+}
+
+void LoadedResources::uninit() {
+	for (const auto &[name, resource]: resources) {
+
+		if (auto initializable = std::dynamic_pointer_cast<IInitializable>(resource)) { initializable->uninitialize(); }
+	}
 }
 } // namespace mer::sdk::main
