@@ -29,10 +29,14 @@ namespace mer::sdk::main {
 
 class ColorComponent : public IMaterialComponent {
 
-	ColorComponent();
+	ColorComponent(const glm::vec4 &pColor);
 
 public:
 	static std::shared_ptr<ColorComponent> create();
+
+	static std::shared_ptr<ColorComponent> create(const glm::vec4 &pColor);
+
+	static std::shared_ptr<ColorComponent> create(float pRed, float pGreen, float pBlue, float pAlpha = 1.0f);
 
 	utils::Property<glm::vec4> color;
 

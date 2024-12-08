@@ -22,9 +22,17 @@
 #include "ColorComponent.h"
 
 namespace mer::sdk::main {
-ColorComponent::ColorComponent() : color(nullptr, "ColorComponent") {}
+ColorComponent::ColorComponent(const glm::vec4 &pColor) : color(nullptr, "ColorComponent") { color = pColor; }
 
-std::shared_ptr<ColorComponent> ColorComponent::create() {
-	return std::shared_ptr<ColorComponent>(new ColorComponent());
+std::shared_ptr<ColorComponent> ColorComponent::create() { return create({0.0f, 0.0f, 0.0f, 1.0f}); }
+
+std::shared_ptr<ColorComponent> ColorComponent::create(const glm::vec4 &pColor) {
+	return std::shared_ptr<ColorComponent>(new ColorComponent(pColor));
 }
+
+std::shared_ptr<ColorComponent> ColorComponent::create(const float pRed, const float pGreen, const float pBlue,
+													   const float pAlpha) {
+	return create(glm::vec4(pRed, pGreen, pBlue, pAlpha));
+}
+
 } // namespace mer::sdk::main
