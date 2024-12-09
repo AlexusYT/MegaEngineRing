@@ -13,7 +13,10 @@ include(GoogleTest)
 # ---- Tests ----
 
 add_executable(MegaEngineSDK_test source/main/scene/objects/extensions/CameraExtensionTests.cpp
-        source/main/resources/models/ObjModelLoaderTests.cpp)
+        source/main/resources/models/ObjModelLoaderTests.cpp
+        source/main/prefabs/PrefabTests.cpp
+        source/utils/TransformationTests.cpp
+)
 target_link_libraries(MegaEngineSDK_test PRIVATE MegaEngineSDK_shared MegaEngineUtils)
 target_include_directories(MegaEngineSDK_shared PRIVATE ${PNGPP_INCLUDE_DIRS})
 find_package(PNG REQUIRED)
@@ -24,6 +27,8 @@ target_link_libraries(
 )
 pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 target_link_libraries(MegaEngineSDK_test PRIVATE PkgConfig::epoxy)
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(MegaEngineSDK_test INTERFACE glfw)
 
 gtest_discover_tests(MegaEngineSDK_test)
 add_custom_command(

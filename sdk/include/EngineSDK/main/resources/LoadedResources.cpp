@@ -25,9 +25,14 @@
 #include "EngineSDK/main/render/Initializable.h"
 #include "EngineUtils/utils/Logger.h"
 #include "IResource.h"
+#include "shaders/builtin/PrefabProgram.h"
 
 namespace mer::sdk::main {
-LoadedResources::LoadedResources() = default;
+LoadedResources::LoadedResources() {
+	auto prefabProgram = PrefabProgram::getInstance();
+	LoadedResources::addResource(prefabProgram->getResourceUri(), prefabProgram);
+	LoadedResources::markResourceComplete(prefabProgram->getResourceUri());
+}
 
 std::shared_ptr<ILoadedResources> LoadedResources::create() {
 	return std::shared_ptr<ILoadedResources>(new LoadedResources());
@@ -37,6 +42,7 @@ void LoadedResources::markResourceComplete(const std::string &pResourceUri) {
 	std::lock_guard lock(mutex);
 	auto iter = incompleteResources.find(pResourceUri);
 	if (iter == incompleteResources.end()) return;
+	iter->second->setIncomplete(false);
 	if (!iter->second->isInited()) //
 		resourcesToInit.emplace_back(iter->second);
 	else
@@ -88,6 +94,13 @@ void LoadedResources::render() {
 		}
 	}
 
-	for (auto &renderable: renderables) { renderable->render(); }
+	for (const auto &renderable: renderables) { renderable->render(); }
+}
+
+void LoadedResources::uninit() {
+	for (const auto &[name, resource]: resources) {
+
+		if (auto initializable = std::dynamic_pointer_cast<IInitializable>(resource)) { initializable->uninitialize(); }
+	}
 }
 } // namespace mer::sdk::main

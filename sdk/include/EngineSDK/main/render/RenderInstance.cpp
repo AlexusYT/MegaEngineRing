@@ -27,8 +27,4 @@ namespace mer::sdk::main {
 void RenderInstance::notifyDataChanged() {
 	if (instancedRender) instancedRender->onInstanceDataChanged(this);
 }
-
-void RenderInstance::notifyMaterialChanged() {
-	if (instancedRender) instancedRender->onMaterialDataChanged(this);
-}
 } // namespace mer::sdk::main

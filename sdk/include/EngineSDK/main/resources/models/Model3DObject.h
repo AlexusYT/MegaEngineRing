@@ -50,12 +50,9 @@ class Model3DObject : public IModel3DObject, public IInstancedRender, public vir
 	uint32_t vao{};
 
 	std::vector<IRenderInstance*> instances;
-	std::unordered_map<std::shared_ptr<renderer::ShaderProgram>,
-					   std::pair<std::vector<RenderInstanceData>, std::vector<MaterialData>>>
-		instancesData;
+	std::unordered_map<std::shared_ptr<renderer::ShaderProgram>, std::vector<RenderInstanceData>> instancesData;
 	std::shared_ptr<renderer::ShaderProgram> shader;
 	std::shared_ptr<renderer::ISSBO> instancesSsbo;
-	std::shared_ptr<renderer::ISSBO> materialsSsbo;
 
 	Model3DObject() = default;
 

@@ -74,6 +74,8 @@ void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesCont
 
 void LoadedScene::initScene() const { scene->initScene(); }
 
+void LoadedScene::uninitScene() const { scene->deinitScene(); }
+
 void LoadedScene::render() const { scene->render(); }
 
 sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {

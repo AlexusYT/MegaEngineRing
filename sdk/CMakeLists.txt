@@ -48,6 +48,16 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         include/EngineSDK/main/resources/materials/MaterialLoader.cpp
         include/EngineSDK/main/resources/ResourceLoadResult.cpp
         include/EngineSDK/main/resources/materials/ColorComponent.cpp
+        sources/main/prefabs/Prefab.cpp
+        sources/main/prefabs/PrefabInstance.cpp
+        sources/main/prefabs/elements/PrefabElementInstance.cpp
+        sources/main/prefabs/elements/PrefabElementsSsbo.cpp
+        sources/main/prefabs/elements/PrefabElement.cpp
+        sources/main/prefabs/elements/MeshPrefabElement.cpp
+        sources/main/resources/shaders/builtin/PrefabProgram.cpp
+        sources/utils/Transformation.cpp
+        sources/utils/Transformable.cpp
+        sources/main/prefabs/PrefabSsbo.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/context/IContext.h
@@ -139,6 +149,19 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/render/Initializable.h
         include/EngineSDK/main/resources/materials/IMaterialComponent.h
         include/EngineSDK/main/resources/materials/ColorComponent.h
+        include/EngineSDK/main/prefabs/Prefab.h
+        include/EngineSDK/main/prefabs/PrefabInstance.h
+        include/EngineSDK/main/prefabs/elements/PrefabElementInstance.h
+        include/EngineSDK/main/prefabs/elements/PrefabElementsSsbo.h
+        include/EngineSDK/main/prefabs/elements/PrefabElement.h
+        include/EngineSDK/main/prefabs/elements/MeshPrefabElement.h
+        include/EngineSDK/main/prefabs/IPrefabElementInstance.h
+        include/EngineSDK/main/prefabs/IPrefabInstance.h
+        include/EngineSDK/main/resources/shaders/builtin/PrefabProgram.h
+        include/EngineSDK/utils/Transformation.h
+        include/EngineSDK/utils/Transformable.h
+        include/EngineSDK/renderer/shaders/GeometryShader.h
+        include/EngineSDK/main/prefabs/PrefabSsbo.h
 )
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
@@ -146,8 +169,8 @@ add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
 target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
-#[[find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(MegaEngineSDK_static INTERFACE glfw)]]
+find_package(glfw3 CONFIG REQUIRED)
+target_link_libraries(MegaEngineSDK_shared INTERFACE glfw)
 
 find_package(sigc++-3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)

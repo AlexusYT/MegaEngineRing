@@ -46,8 +46,6 @@ public:
 
 	const RenderInstanceData &getRenderInstanceData() override { return data; }
 
-	std::optional<MaterialData> getMaterialData() override;
-
 	std::shared_ptr<renderer::ShaderProgram> getShader() override { return nullptr; }
 
 protected:

@@ -214,7 +214,9 @@ void PresenterMain::run() {
 void PresenterMain::stop() {
 
 	for (auto presenter: presenters) getAppController()->stop(presenter.get());
+	presenters.clear();
 	viewMain->closeView();
+	loadedScene.reset();
 }
 
 std::shared_ptr<IView> PresenterMain::createView(const IPresenter* pPresenter,

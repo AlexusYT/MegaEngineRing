@@ -65,6 +65,8 @@ public:
 
 	virtual void initScene() = 0;
 
+	virtual void uninitScene() = 0;
+
 	virtual void render() = 0;
 
 	virtual void setName(const std::string &pName) = 0;

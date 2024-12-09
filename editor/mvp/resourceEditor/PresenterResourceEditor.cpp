@@ -358,7 +358,6 @@ sdk::utils::ReportMessagePtr PresenterResourceEditor::saveResource(
 	if (pIsComplete && pResource->isIncomplete()) {
 
 		auto res = model->getEditingResources()->getContext()->getResources();
-		pResource->setIncomplete(false);
 		res->markResourceComplete(pResource->getResourceUri());
 	}
 	return nullptr;

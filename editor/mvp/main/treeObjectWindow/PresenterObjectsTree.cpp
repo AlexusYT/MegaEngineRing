@@ -33,6 +33,7 @@ void PresenterObjectsTree::run() {
 
 void PresenterObjectsTree::stop() {
 	for (const auto &view: views) { view->closeView(); }
+	views.clear();
 }
 
 void PresenterObjectsTree::addView(const std::shared_ptr<IView> &pNewView) {

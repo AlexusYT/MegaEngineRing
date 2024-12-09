@@ -48,6 +48,7 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEdit
 				[this, view](const std::promise<void> & /*pPromise*/) { view.first->redraw(); });
 
 			view.first->queueResize();
+			view.first->makeCurrent();
 		}
 		modelSceneEditor->initScene();
 	});
@@ -64,10 +65,12 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 	view->connectRealize([this, view] {
 		if (!modelSceneEditor->hasScene()) return;
 		if (!modelSceneEditor->hasResourcesContext()) {
+			view->makeCurrent();
 			//modelSceneEditor->setupResourcesContext(view->getResourcesContext());
 			modelSceneEditor->initScene();
 		}
 	});
+	view->connectUnrealize([this] { modelSceneEditor->uninitScene(); });
 	view->connectResize([this](const int pWidth, const int pHeight) {
 		if (const auto scene = modelSceneEditor->getScene()) scene->resize(pWidth, pHeight);
 	});

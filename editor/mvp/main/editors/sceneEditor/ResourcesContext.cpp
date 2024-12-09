@@ -202,7 +202,6 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 			callSlot(result, pRequest->callbackSignal);
 			return;
 		}
-		resource->setIncomplete(false);
 		resources->markResourceComplete(pRequest->uri);
 	}
 	try {

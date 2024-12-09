@@ -32,6 +32,8 @@ void PresenterObjectProperties::run() {
 
 void PresenterObjectProperties::stop() {
 	for (const auto &view: views) { view->closeView(); }
+	views.clear();
+	model.reset();
 }
 
 void PresenterObjectProperties::addView(const std::shared_ptr<IView> &pElement) {

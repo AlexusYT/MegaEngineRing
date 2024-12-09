@@ -23,10 +23,13 @@
 #define RENDERINSTANCEDATA_H
 #include <glm/mat4x4.hpp>
 
+#include "EngineSDK/main/resources/materials/MaterialData.h"
+
 namespace mer::sdk::main {
 
 class RenderInstanceData {
 public:
+	MaterialData material;
 	glm::mat4 modelViewMatrix{1};
 	glm::mat4 normalMatrix{1};
 };

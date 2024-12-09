@@ -41,6 +41,8 @@ bool ModelSceneEditor::hasResourcesContext() const { return loadedScene->hasReso
 
 void ModelSceneEditor::initScene() { loadedScene->initScene(); }
 
+void ModelSceneEditor::uninitScene() { loadedScene->uninitScene(); }
+
 void ModelSceneEditor::render() { loadedScene->render(); }
 
 void ModelSceneEditor::setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext) const {
