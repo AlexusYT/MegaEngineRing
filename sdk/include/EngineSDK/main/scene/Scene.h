@@ -32,8 +32,10 @@
 #include "IScene.h"
 
 namespace mer::sdk::main {
+class PrefabInstance;
+class Prefab;
 class ILightSources;
-}
+} // namespace mer::sdk::main
 
 namespace mer::sdk::main {
 class ICamera;
@@ -50,6 +52,9 @@ class Scene : public IScene {
 	IApplication* application;
 	bool inited{};
 	std::shared_ptr<ILightSources> lightSources;
+	std::shared_ptr<Prefab> prefab;
+	std::shared_ptr<PrefabInstance> instance;
+	std::shared_ptr<PrefabInstance> instance2;
 
 public:
 	Scene();

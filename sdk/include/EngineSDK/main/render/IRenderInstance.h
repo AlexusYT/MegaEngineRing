@@ -42,13 +42,9 @@ public:
 
 	virtual const RenderInstanceData &getRenderInstanceData() = 0;
 
-	virtual std::optional<MaterialData> getMaterialData() = 0;
-
 	virtual std::shared_ptr<renderer::ShaderProgram> getShader() = 0;
 
 	virtual void notifyDataChanged() = 0;
-
-	virtual void notifyMaterialChanged() = 0;
 
 	[[nodiscard]] virtual IInstancedRender* getInstancedRender() const = 0;
 

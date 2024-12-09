@@ -16,24 +16,49 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 02.10.24.
+// Created by alexus on 06.12.24.
 //
 
-#ifndef RENDERINSTANCEDATA_H
-#define RENDERINSTANCEDATA_H
-#include <glm/mat4x4.hpp>
+#ifndef PREFABSSBO_H
+#define PREFABSSBO_H
+#include <memory>
+#include <unordered_map>
+#include <vector>
 
-#include "EngineSDK/main/resources/materials/MaterialData.h"
+#include "EngineSDK/main/render/IRenderable.h"
+#include "EngineSDK/renderer/buffers/SSBO.h"
+
+namespace sigc {
+struct scoped_connection;
+}
 
 namespace mer::sdk::main {
+struct PrefabInstanceData;
+class PrefabInstance;
 
-class RenderInstanceData {
+class PrefabSsbo : public renderer::SSBO, public IRenderable {
+	std::unordered_map<PrefabInstance*, sigc::scoped_connection> instances;
+	std::vector<PrefabInstanceData> instancesData;
+	void* ssboData{};
+	int64_t dataSize{};
+
+	bool dirty{true};
+
+	PrefabSsbo();
+
 public:
-	MaterialData material;
-	glm::mat4 modelViewMatrix{1};
-	glm::mat4 normalMatrix{1};
+	static std::shared_ptr<PrefabSsbo> create();
+
+	void trackInstance(PrefabInstance* pInstance);
+
+	void untrackInstance(PrefabInstance* pInstance);
+
+	void render() override;
+
+private:
+	void onDataChanged();
 };
 
 } // namespace mer::sdk::main
 
-#endif //RENDERINSTANCEDATA_H
+#endif //PREFABSSBO_H

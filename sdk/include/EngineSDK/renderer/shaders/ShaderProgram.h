@@ -61,6 +61,8 @@ public:
 
 	void setUniform(const std::string &pName, int pValue) const;
 
+	void setUniform(const std::string &pName, uint32_t pValue) const;
+
 	void setUniform(const std::string &pName, const glm::vec3 &pValue) const;
 
 	void setUniform(const std::string &pName, const glm::vec4 &pValue) const;

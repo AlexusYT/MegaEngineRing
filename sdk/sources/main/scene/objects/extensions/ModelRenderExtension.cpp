@@ -24,23 +24,18 @@
 #include <glm/ext/matrix_transform.hpp>
 
 #include "EngineSDK/main/resources/materials/IMaterialResource.h"
+#include "EngineSDK/main/resources/materials/MaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
 #include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 
-std::optional<MaterialData> ModelRenderExtension::getMaterialData() {
-	auto &mat = propertyMaterial.getValue();
-	if (!mat) return {};
-	return mat->getData();
-}
-
 utils::ReportMessagePtr ModelRenderExtension::onInit() {
-	auto pos = getObject()->getMainExtension()->propertyPosition;
+	auto &pos = getObject()->getMainExtension()->propertyPosition;
 
 	pos.connectEvent([this](const glm::vec3 &pPos) {
-		data.modelViewMatrix = glm::translate(glm::mat4(1.0f), pPos);
+		data.modelViewMatrix = glm::translate(glm::mat4(1.0f), pPos + glm::vec3(0.0f, 1, 0));
 		data.normalMatrix = glm::transpose(glm::inverse(glm::mat3(data.modelViewMatrix)));
 		notifyDataChanged();
 	});
@@ -58,9 +53,12 @@ utils::ReportMessagePtr ModelRenderExtension::onInit() {
 	});
 	propertyMaterial.connectEvent([this](const std::shared_ptr<IMaterialResource> &pMaterial) {
 		if (pMaterial) {
-			pMaterial->connectOnDataChangedSignal([this] { notifyMaterialChanged(); });
+			pMaterial->connectOnDataChangedSignal([this](const MaterialData &pData) {
+				data.material = pData;
+				notifyDataChanged();
+			});
 		}
-		notifyMaterialChanged();
+		notifyDataChanged();
 	});
 	return nullptr;
 }

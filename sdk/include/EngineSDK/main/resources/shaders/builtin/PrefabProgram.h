@@ -16,24 +16,23 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 02.10.24.
+// Created by alexus on 03.12.24.
 //
 
-#ifndef RENDERINSTANCEDATA_H
-#define RENDERINSTANCEDATA_H
-#include <glm/mat4x4.hpp>
-
-#include "EngineSDK/main/resources/materials/MaterialData.h"
+#ifndef PREFABPROGRAM_H
+#define PREFABPROGRAM_H
+#include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
 namespace mer::sdk::main {
 
-class RenderInstanceData {
+class PrefabProgram : public renderer::ShaderProgram {
+	static std::shared_ptr<PrefabProgram> instance;
+	PrefabProgram();
+
 public:
-	MaterialData material;
-	glm::mat4 modelViewMatrix{1};
-	glm::mat4 normalMatrix{1};
+	static std::shared_ptr<PrefabProgram> getInstance();
 };
 
 } // namespace mer::sdk::main
 
-#endif //RENDERINSTANCEDATA_H
+#endif //PREFABPROGRAM_H

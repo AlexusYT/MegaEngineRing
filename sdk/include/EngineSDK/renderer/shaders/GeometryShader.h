@@ -16,24 +16,20 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 02.10.24.
+// Created by alexus on 05.12.24.
 //
 
-#ifndef RENDERINSTANCEDATA_H
-#define RENDERINSTANCEDATA_H
-#include <glm/mat4x4.hpp>
+#ifndef GEOMETRYSHADER_H
+#define GEOMETRYSHADER_H
+#include "Shader.h"
 
-#include "EngineSDK/main/resources/materials/MaterialData.h"
+namespace mer::sdk::renderer {
 
-namespace mer::sdk::main {
-
-class RenderInstanceData {
+class GeometryShader : public Shader {
 public:
-	MaterialData material;
-	glm::mat4 modelViewMatrix{1};
-	glm::mat4 normalMatrix{1};
+	explicit GeometryShader() : Shader(ShaderTypeEnum::GEOMETRY_SHADER) {}
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk::renderer
 
-#endif //RENDERINSTANCEDATA_H
+#endif //GEOMETRYSHADER_H

@@ -16,24 +16,23 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 02.10.24.
+// Created by alexus on 27.11.24.
 //
 
-#ifndef RENDERINSTANCEDATA_H
-#define RENDERINSTANCEDATA_H
-#include <glm/mat4x4.hpp>
+#include "EngineSDK/main/prefabs/elements/MeshPrefabElement.h"
 
-#include "EngineSDK/main/resources/materials/MaterialData.h"
+#include "EngineSDK/main/resources/models/Model3DObject.h"
 
 namespace mer::sdk::main {
+MeshPrefabElement::MeshPrefabElement(const std::shared_ptr<IModel3DObject> &pMesh, const std::string &pName)
+	: PrefabElement(pName.empty() ? pMesh->getName() : pName), mesh(pMesh) {}
 
-class RenderInstanceData {
-public:
-	MaterialData material;
-	glm::mat4 modelViewMatrix{1};
-	glm::mat4 normalMatrix{1};
-};
+std::shared_ptr<MeshPrefabElement> MeshPrefabElement::create(const std::shared_ptr<IModel3DObject> &pMesh,
+															 const std::string &pName) {
+	return std::shared_ptr<MeshPrefabElement>(new MeshPrefabElement(pMesh, pName));
+}
 
+const std::vector<float> &MeshPrefabElement::getData() const { return mesh->getData(); }
+
+const std::vector<uint16_t> &MeshPrefabElement::getIndices() const { return mesh->getIndices(); }
 } // namespace mer::sdk::main
-
-#endif //RENDERINSTANCEDATA_H

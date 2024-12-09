@@ -21,10 +21,9 @@
 
 #ifndef WINDOW_H
 #define WINDOW_H
-#ifndef EDITOR_SDK
-	#include <EngineUtils/utils/ReportMessageFwd.h>
+#include <EngineUtils/utils/ReportMessageFwd.h>
 
-	#include "IContext.h"
+#include "IContext.h"
 
 typedef struct GLFWwindow GLFWwindow;
 
@@ -38,7 +37,7 @@ class Window : IContext {
 	std::string title = "Untitled121";
 
 protected:
-	Window() = default;
+	Window();
 
 public:
 	~Window() override;
@@ -85,5 +84,3 @@ private:
 
 } // namespace mer::sdk::main
 #endif //WINDOW_H
-
-#endif

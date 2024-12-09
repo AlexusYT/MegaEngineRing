@@ -59,6 +59,23 @@ public:
 		return uuid;
 	}
 
+	static UUID newInstance() {
+		static std::mt19937 gen(rd());
+		static std::uniform_int_distribution<uint32_t> dis(0, 0xFFFFFFFF);
+		static std::uniform_int_distribution<uint16_t> dis2(0, 0xFFFF);
+		const auto time = static_cast<uint64_t>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+
+		using namespace std::chrono_literals;
+		UUID uuid;
+		uuid.timeLow = time & 0xFFFFFFFF;
+		uuid.timeMid = (time >> 32) & 0xFFFF;
+		uuid.timeHiVersion = static_cast<uint16_t>(time >> 48);
+		uuid.varClockSeq = dis2(gen);
+		uuid.node1 = dis(gen);
+		uuid.node2 = dis2(gen);
+		return uuid;
+	}
+
 	static UUID getNull() {
 		static UUID uuid;
 		return uuid;

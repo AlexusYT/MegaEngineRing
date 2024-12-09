@@ -63,7 +63,7 @@ public:
 
 	virtual IResource* asResource() = 0;
 
-	virtual sigc::connection connectOnDataChangedSignal(const sigc::slot<void()> &pSlot) = 0;
+	virtual sigc::connection connectOnDataChangedSignal(const sigc::slot<void(const MaterialData &pData)> &pSlot) = 0;
 };
 
 } // namespace mer::sdk::main

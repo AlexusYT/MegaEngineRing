@@ -25,7 +25,6 @@
 
 #include "EngineSDK/main/render/IRenderInstance.h"
 #include "EngineSDK/main/render/RenderInstanceData.h"
-#include "EngineSDK/main/resources/materials/MaterialData.h"
 #include "EngineSDK/renderer/buffers/SSBO.h"
 
 namespace mer::sdk::main {
@@ -39,8 +38,6 @@ utils::ReportMessagePtr Model3DObject::onInitialize() {
 
 	instancesSsbo = std::make_shared<renderer::SSBO>();
 	instancesSsbo->setUsage(renderer::DYNAMIC_DRAW);
-	materialsSsbo = std::make_shared<renderer::SSBO>();
-	materialsSsbo->setUsage(renderer::DYNAMIC_DRAW);
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &dataBuffer);
 	glGenBuffers(1, &indexBuffer);
@@ -71,30 +68,22 @@ void Model3DObject::render() {
 	if (!shader) return;
 	glBindTexture(GL_TEXTURE_2D, 0);
 	instancesSsbo->bindBufferBase(1);
-	materialsSsbo->bindBufferBase(2);
 	glBindVertexArray(vao);
 	for (auto [instShader, instData]: instancesData) {
-		if (instData.first.empty()) continue;
-		if (instData.second.empty()) continue;
+		if (instData.empty()) continue;
 		if (!instShader) shader->use();
 		else
 			instShader->use();
-		if (const int64_t bufSize = static_cast<int64_t>(instData.first.size() * sizeof(RenderInstanceData));
+		if (const int64_t bufSize = static_cast<int64_t>(instData.size() * sizeof(RenderInstanceData));
 			instancesSsbo->getSize() < bufSize) {
-			instancesSsbo->reallocate(bufSize, instData.first.data());
+			instancesSsbo->reallocate(bufSize, instData.data());
 		} else
-			instancesSsbo->bufferSubData(0, bufSize, instData.first.data());
-		if (const int64_t bufSize = static_cast<int64_t>(instData.second.size() * sizeof(MaterialData));
-			materialsSsbo->getSize() < bufSize) {
-			materialsSsbo->reallocate(bufSize, instData.second.data());
-		} else
-			materialsSsbo->bufferSubData(0, bufSize, instData.second.data());
+			instancesSsbo->bufferSubData(0, bufSize, instData.data());
 		glDrawElementsInstanced(GL_TRIANGLES, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr,
-								static_cast<int>(instData.first.size()));
+								static_cast<int>(instData.size()));
 	}
 	glBindVertexArray(0);
 	instancesSsbo->unbindBufferBase(1);
-	instancesSsbo->unbindBufferBase(2);
 }
 
 void Model3DObject::onUninitialize() {
@@ -128,25 +117,12 @@ void Model3DObject::onInstanceDataChanged(IRenderInstance* /*pInstance*/) {
 			instanceShader = shader;
 		}
 		auto instanceData = instance->getRenderInstanceData();
-		auto materialDataOpt = instance->getMaterialData();
-		MaterialData materialData;
-		if (materialDataOpt.has_value()) {
-			materialData = materialDataOpt.value();
-		} else {
-			materialData.aoMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-			materialData.metallicMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-			materialData.roughnessMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-			materialData.normalMap = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-			materialData.baseColorMap = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
-		}
+
 		auto iter = instancesData.find(instanceShader);
 		if (iter == instancesData.end()) {
-			iter = instancesData
-					   .emplace(instanceShader, std::pair<std::vector<RenderInstanceData>, std::vector<MaterialData>>())
-					   .first;
+			iter = instancesData.emplace(instanceShader, std::vector<RenderInstanceData>()).first;
 		}
-		iter->second.first.emplace_back(instanceData);
-		iter->second.second.emplace_back(materialData);
+		iter->second.emplace_back(instanceData);
 	}
 }
 

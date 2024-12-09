@@ -16,24 +16,34 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 02.10.24.
+// Created by alexus on 27.11.24.
 //
 
-#ifndef RENDERINSTANCEDATA_H
-#define RENDERINSTANCEDATA_H
-#include <glm/mat4x4.hpp>
+#ifndef MESHPREFABELEMENT_H
+#define MESHPREFABELEMENT_H
+#include <memory>
 
-#include "EngineSDK/main/resources/materials/MaterialData.h"
+#include "EngineSDK/main/resources/models/IModel3DObject.h"
+#include "PrefabElement.h"
 
 namespace mer::sdk::main {
+class IModel3DObject;
 
-class RenderInstanceData {
+class MeshPrefabElement : public PrefabElement {
+	std::shared_ptr<IModel3DObject> mesh;
+
+protected:
+	explicit MeshPrefabElement(const std::shared_ptr<IModel3DObject> &pMesh, const std::string &pName = "");
+
 public:
-	MaterialData material;
-	glm::mat4 modelViewMatrix{1};
-	glm::mat4 normalMatrix{1};
+	static std::shared_ptr<MeshPrefabElement> create(const std::shared_ptr<IModel3DObject> &pMesh,
+													 const std::string &pName = "");
+
+	const std::vector<float> &getData() const override;
+
+	const std::vector<uint16_t> &getIndices() const override;
 };
 
 } // namespace mer::sdk::main
 
-#endif //RENDERINSTANCEDATA_H
+#endif //MESHPREFABELEMENT_H

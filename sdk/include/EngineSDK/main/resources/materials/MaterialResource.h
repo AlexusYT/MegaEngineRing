@@ -51,11 +51,13 @@ class MaterialResource : public IMaterialResource, public Resource {
 	MaterialData data;
 	std::atomic<bool> dirty{false};
 
-	sigc::signal<void()> onDataChangedSignal;
+	sigc::signal<void(const MaterialData &pData)> onDataChangedSignal;
 
 	MaterialResource();
 
 public:
+	static std::shared_ptr<MaterialResource> defaultMaterial;
+
 	~MaterialResource() override = default;
 
 	static std::shared_ptr<MaterialResource> create();
@@ -98,8 +100,8 @@ public:
 
 	IResource* asResource() override { return this; }
 
-	sigc::connection connectOnDataChangedSignal(const sigc::slot<void()> &pSlot) override {
-		pSlot();
+	sigc::connection connectOnDataChangedSignal(const sigc::slot<void(const MaterialData &pData)> &pSlot) override {
+		pSlot(data);
 		return onDataChangedSignal.connect(pSlot);
 	}
 

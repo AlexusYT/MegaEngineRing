@@ -93,6 +93,26 @@ class Property : public PropertyBase {
 public:
 	using PropertyT = T;
 
+	Property(const Property &pOther) = delete;
+
+	Property(Property &&pOther) noexcept
+		: PropertyBase(std::move(pOther)), value(std::move(pOther.value)), valueChanged(std::move(pOther.valueChanged)),
+		  valueChanging(std::move(pOther.valueChanging)), getter(std::move(pOther.getter)),
+		  setter(std::move(pOther.setter)) {}
+
+	Property &operator=(const Property &pOther) = delete;
+
+	Property &operator=(Property &&pOther) noexcept {
+		if (this == &pOther) return *this;
+		PropertyBase::operator=(std::move(pOther));
+		value = std::move(pOther.value);
+		valueChanged = std::move(pOther.valueChanged);
+		valueChanging = std::move(pOther.valueChanging);
+		getter = std::move(pOther.getter);
+		setter = std::move(pOther.setter);
+		return *this;
+	}
+
 	Property() = delete;
 
 	Property(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription = {})

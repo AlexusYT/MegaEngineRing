@@ -25,6 +25,8 @@
 #include "IMaterialComponent.h"
 
 namespace mer::sdk::main {
+std::shared_ptr<MaterialResource> MaterialResource::defaultMaterial = create();
+
 MaterialResource::MaterialResource()
 	: baseColorMap(this, "Albedo map (base color)"), normalMap(this, "Normal map"), metallicMap(this, "Metallic map"),
 	  roughnessMap(this, "Roughness Map"), aoMap(this, "Ambient occlusion map") {
@@ -43,7 +45,7 @@ ResourceType MaterialResource::getResourceType() { return ResourceType::MATERIAL
 
 void MaterialResource::render() {
 	if (dirty) {
-		onDataChangedSignal();
+		onDataChangedSignal(data);
 		dirty.store(false);
 	}
 }

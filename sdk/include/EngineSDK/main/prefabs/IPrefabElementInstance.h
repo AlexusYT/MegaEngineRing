@@ -16,24 +16,27 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 02.10.24.
+// Created by alexus on 29.11.24.
 //
 
-#ifndef RENDERINSTANCEDATA_H
-#define RENDERINSTANCEDATA_H
-#include <glm/mat4x4.hpp>
-
-#include "EngineSDK/main/resources/materials/MaterialData.h"
+#ifndef IPREFABELEMENTINSTANCE_H
+#define IPREFABELEMENTINSTANCE_H
 
 namespace mer::sdk::main {
+class PrefabElement;
+class PrefabInstance;
 
-class RenderInstanceData {
+class IPrefabElementInstance {
 public:
-	MaterialData material;
-	glm::mat4 modelViewMatrix{1};
-	glm::mat4 normalMatrix{1};
+	virtual ~IPrefabElementInstance() = default;
+
+	virtual void setElement(PrefabElement* pElement) = 0;
+
+	virtual void setPrefabInstanceId(uint64_t pPrefabInstanceId) = 0;
+
+	virtual void setPrefabInstance(PrefabInstance* pPrefabInstance) = 0;
 };
 
 } // namespace mer::sdk::main
 
-#endif //RENDERINSTANCEDATA_H
+#endif //IPREFABELEMENTINSTANCE_H

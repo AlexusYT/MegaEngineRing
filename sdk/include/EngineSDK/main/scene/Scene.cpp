@@ -25,7 +25,16 @@
 
 #include "EngineSDK/main/light/ILightInstance.h"
 #include "EngineSDK/main/light/LightSources.h"
+#include "EngineSDK/main/prefabs/Prefab.h"
+#include "EngineSDK/main/prefabs/PrefabInstance.h"
+#include "EngineSDK/main/prefabs/elements/MeshPrefabElement.h"
+#include "EngineSDK/main/prefabs/elements/PrefabElementInstance.h"
 #include "EngineSDK/main/resources/LoadedResources.h"
+#include "EngineSDK/main/resources/materials/ColorComponent.h"
+#include "EngineSDK/main/resources/materials/IMaterialResource.h"
+#include "EngineSDK/main/resources/materials/MaterialResource.h"
+#include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/main/resources/shaders/builtin/PrefabProgram.h"
 #include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
 #include "EngineSDK/renderer/GL.h"
 #include "EngineUtils/utils/Logger.h"
@@ -35,7 +44,10 @@
 #include "objects/extensions/cameras/ICamera.h"
 
 namespace mer::sdk::main {
-Scene::Scene() : programBuffer(std::make_shared<ProgramWideShaderBuffer>()), lightSources(LightSources::create()) {}
+Scene::Scene() : programBuffer(std::make_shared<ProgramWideShaderBuffer>()), lightSources(LightSources::create()) {
+
+	prefab = Prefab::create();
+}
 
 Scene::~Scene() {
 	Scene::deinitScene();
@@ -73,6 +85,51 @@ sdk::utils::ReportMessagePtr Scene::initScene() {
 	for (const auto &object: objects) {
 		if (auto msg = object->init()) return msg;
 	}
+	resourceExecutor->loadResourceAsync("Test.enmodel", [this](const std::shared_ptr<ResourceLoadResult> &pResult) {
+		if (!pResult->isReady()) return;
+		auto model = std::dynamic_pointer_cast<Model3DResource>(pResult->getResource());
+		if (!model) return;
+		for (const auto &modelObject: model->getModelObjects()) {
+			auto element = MeshPrefabElement::create(modelObject.second);
+			prefab->addElement(element);
+		}
+
+		instance2->visible = false;
+		auto element = prefab->getElement("CustomPistol9mm");
+		auto &transform = instance->getElement(element->getUuid())->getLocalTransform();
+		transform->translate(0.0f, 0.1f, 0);
+		auto element1 = prefab->getElement("CustomPistol9mm.007");
+		element1->visible = false;
+
+		auto elementInst1 = instance2->getElement(element->getUuid());
+		elementInst1->visible = false;
+		auto elementInst = instance2->getElement(element1->getUuid());
+		auto transform1 = elementInst->getLocalTransform();
+		transform1->translate(0.0f, 0.1f, 0);
+		auto element2 = prefab->getElement("CustomPistol9mm.008");
+		auto mat = MaterialResource::create();
+		mat->setAlbedo(ColorComponent::create(1, 0, 0));
+		element2->material = mat;
+		/*auto &material = elementInst->material;
+		MaterialResource::create();
+		material->setAlbedo(ColorComponent::create(1, 0, 1));
+		material.notifyChanged();*/
+	});
+	resourceExecutor->loadResourceAsync("test.enmat", [this](const std::shared_ptr<ResourceLoadResult> &pResult) {
+		if (!pResult->isReady()) return;
+		prefab->material = std::dynamic_pointer_cast<IMaterialResource>(pResult->getResource());
+	});
+
+	prefab->setShaderProgram(PrefabProgram::getInstance());
+	instance = PrefabInstance::create();
+	prefab->addInstance(instance);
+	instance->getLocalTransform()->translate(glm::vec3(0.1f, 0.0f, 0.0f));
+	instance2 = PrefabInstance::create();
+	prefab->addInstance(instance2);
+
+	prefab->initialize();
+
+
 	inited = true;
 	glEnable(GL_DEBUG_OUTPUT);
 	//glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, false);
@@ -196,6 +253,7 @@ void Scene::render() {
 	lightSources->updateSsbo();
 	lightSources->getLightSsbo()->bindBufferBase(3);
 	resourceExecutor->getResources()->render();
+	std::dynamic_pointer_cast<IRenderable>(prefab)->render();
 	for (const auto &object: objects) { object->render(); }
 	afterRender();
 }

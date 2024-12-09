@@ -19,16 +19,18 @@
 // Created by alexus on 31.01.24.
 //
 
-#ifndef EDITOR_SDK
-	#include "Window.h"
+#include "Window.h"
 
-	#include "EngineUtils/utils/Logger.h"
+#include <EngineUtils/utils/ReportMessage.h>
+#include <epoxy/gl.h>
+// Must be included after epoxy
+#include <GLFW/glfw3.h>
 
-	#include <EngineUtils/utils/ReportMessage.h>
-	#include <epoxy/gl.h>
-	#include <GLFW/glfw3.h>
+#include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
+Window::Window() {}
+
 Window::~Window() {
 	if (native) glfwDestroyWindow(native);
 }
@@ -211,4 +213,3 @@ void Window::swapBuffers() const {
 	glfwPollEvents();
 }
 } // namespace mer::sdk::main
-#endif

@@ -55,7 +55,7 @@ Gtk::Widget* SourceSelectionColor::getWidget() {
 
 void SourceSelectionColor::onResultSet(const std::shared_ptr<ISourceSelectionResult> &pResult) {
 	if (auto result = std::dynamic_pointer_cast<Result>(pResult)) {
-		auto color = result->getSelectionResult()->color;
+		auto &color = result->getSelectionResult()->color;
 		picker->set_rgba(Gdk::RGBA(color->r, color->g, color->b, color->a));
 	}
 }
