@@ -77,26 +77,22 @@ void Application::sigHandler(int pSig) {
 	msg->addInfoLine("Code: {}", pSig);
 	Logger::error(msg);
 	exit(1);
-
 }
 
-
 void Application::initSigHandlers() {
-	#if __MINGW32__
+#if defined __MINGW32__
 	signal(SIGILL, &sigHandler);
 	signal(SIGSEGV, &sigHandler);
 
-	#else
+#else
 
 	struct sigaction sig;
 	sig.sa_flags = SA_SIGINFO;
-	sig.sa_sigaction = [](int pSig, siginfo_t* pInfo, void*) {
-		sigHandler(pSig);
-	};
+	sig.sa_sigaction = [](int pSig, siginfo_t* /*pInfo*/, void*) { sigHandler(pSig); };
 	sigaction(SIGILL, &sig, nullptr);
 	sigaction(SIGSEGV, &sig, nullptr);
 
-	#endif
+#endif
 }
 
 void Application::loadSettings() {

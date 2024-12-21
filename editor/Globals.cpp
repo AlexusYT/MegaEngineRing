@@ -22,7 +22,7 @@
 #include "Globals.h"
 
 void Globals::init() {
-	#if __MINGW32__
+	#if defined __MINGW32__
 
 	const auto local = getenv("LOCALAPPDATA");
 	if (!local) throw std::runtime_error("Error while getting LOCALAPPDATA");

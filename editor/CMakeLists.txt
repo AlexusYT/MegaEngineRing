@@ -3,9 +3,9 @@ list(JOIN CMAKE_PROGRAM_PATH ":" PROGRAM_PATH)
 
 
 set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/data")
-if(MINGW)
+if (MINGW)
     set(EXPORT_COMMAND "")
-else()
+else ()
     set(EXPORT_COMMAND export PATH="${PROGRAM_PATH};$ENV{PATH}")
 endif ()
 add_custom_command(
@@ -315,7 +315,6 @@ target_include_directories(
 target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineSDK_shared)
 
 target_compile_features(MegaEngineEditor_lib PRIVATE cxx_std_23)
-
 
 
 pkg_check_modules(GTKMM gtkmm-4.0)
