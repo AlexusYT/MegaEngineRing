@@ -474,7 +474,7 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 
 void PresenterMain::showInFiles(const std::filesystem::path &pPathToShow) {
 	sdk::utils::Logger::info("Showing the file {}", pPathToShow.string());
-	auto launcher = Gtk::FileLauncher::create(Gio::File::create_for_path(pPathToShow));
+	auto launcher = Gtk::FileLauncher::create(Gio::File::create_for_path(pPathToShow.string()));
 	launcher->open_containing_folder([launcher, pPathToShow, this](const std::shared_ptr<Gio::AsyncResult> &pResult) {
 		try {
 			if (launcher->open_containing_folder_finish(pResult)) {

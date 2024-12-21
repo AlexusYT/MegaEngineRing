@@ -139,9 +139,9 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 	//LOAD incomplete = resource loading required
 	//LOAD complete = READY
 	std::shared_ptr<sdk::main::IResource> resource;
-	if (std::shared_ptr<sdk::main::IResource> foundResource = resources->getResource(pRequest->uri)) {
+	if (std::shared_ptr<sdk::main::IResource> foundResource = resources->getResource(pRequest->uri.string())) {
 		result->setResource(foundResource);
-		result->setRequestedUri(pRequest->uri);
+		result->setRequestedUri(pRequest->uri.string());
 
 		if (pRequest->type == RequestType::PRELOAD) {
 			result->setState(sdk::main::ResourceLoadResult::State::PRELOADED);
@@ -163,7 +163,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 		msg->setMessage("No resource extension in uri");
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
 		result->setError(msg);
-		result->setRequestedUri(pRequest->uri);
+		result->setRequestedUri(pRequest->uri.string());
 		callSlot(result, pRequest->callbackSignal);
 		return;
 	}
@@ -180,7 +180,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 		if (auto msg = loader->preload(this, stream, resource)) {
 			msg->setTitle("Unable to preload resource");
 			result->setError(msg);
-			result->setRequestedUri(pRequest->uri);
+			result->setRequestedUri(pRequest->uri.string());
 			callSlot(result, pRequest->callbackSignal);
 			return;
 		}
@@ -188,7 +188,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 			std::lock_guard lock(headersLengthMutex);
 			headersLength.emplace(resource, stream->tellg());
 		}
-		resources->addResource(pRequest->uri, resource);
+		resources->addResource(pRequest->uri.string(), resource);
 	} else {
 		{
 			std::lock_guard lock(headersLengthMutex);
@@ -198,11 +198,11 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 		if (auto msg = loader->load(this, stream, resource)) {
 			msg->setTitle("Unable to load resource");
 			result->setError(msg);
-			result->setRequestedUri(pRequest->uri);
+			result->setRequestedUri(pRequest->uri.string());
 			callSlot(result, pRequest->callbackSignal);
 			return;
 		}
-		resources->markResourceComplete(pRequest->uri);
+		resources->markResourceComplete(pRequest->uri.string());
 	}
 	try {
 		auto endTime = std::chrono::steady_clock::now();
@@ -216,7 +216,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 			sdk::utils::Logger::warn(msg->getReport(false));
 		}
 		result->setResource(resource);
-		result->setRequestedUri(pRequest->uri);
+		result->setRequestedUri(pRequest->uri.string());
 
 		result->setState(sdk::main::ResourceLoadResult::State::READY);
 		callSlot(result, pRequest->callbackSignal);
@@ -226,7 +226,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 		msg->setMessage("Exception thrown while executing request");
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
 		result->setError(msg);
-		result->setRequestedUri(pRequest->uri);
+		result->setRequestedUri(pRequest->uri.string());
 		callSlot(result, pRequest->callbackSignal);
 	}
 }
@@ -260,7 +260,7 @@ std::shared_ptr<sdk::main::IResourceLoader> ResourcesContext::getLoader(const st
 			msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
 			auto result = sdk::main::ResourceLoadResult::create();
 			result->setError(msg);
-			result->setRequestedUri(pRequest->uri);
+			result->setRequestedUri(pRequest->uri.string());
 			callSlot(result, pRequest->callbackSignal);
 			return nullptr;
 		}
@@ -272,7 +272,7 @@ std::shared_ptr<sdk::main::IResourceLoader> ResourcesContext::getLoader(const st
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
 		auto result = sdk::main::ResourceLoadResult::create();
 		result->setError(msg);
-		result->setRequestedUri(pRequest->uri);
+		result->setRequestedUri(pRequest->uri.string());
 		callSlot(result, pRequest->callbackSignal);
 		return nullptr;
 	}
@@ -281,11 +281,11 @@ std::shared_ptr<sdk::main::IResourceLoader> ResourcesContext::getLoader(const st
 std::shared_ptr<std::istream> ResourcesContext::getResourceStream(const std::shared_ptr<Request> &pRequest) const {
 	try {
 		std::shared_ptr<std::istream> stream;
-		if (auto msg = application->getResourceBundle()->getResourceStream(pRequest->uri, stream)) {
+		if (auto msg = application->getResourceBundle()->getResourceStream(pRequest->uri.string(), stream)) {
 			msg->setTitle("Unable to load resource");
 			auto result = sdk::main::ResourceLoadResult::create();
 			result->setError(msg);
-			result->setRequestedUri(pRequest->uri);
+			result->setRequestedUri(pRequest->uri.string());
 			callSlot(result, pRequest->callbackSignal);
 			return nullptr;
 		}
@@ -296,7 +296,7 @@ std::shared_ptr<std::istream> ResourcesContext::getResourceStream(const std::sha
 		msg->setMessage("Exception occurred while getting the resource stream");
 		auto result = sdk::main::ResourceLoadResult::create();
 		result->setError(msg);
-		result->setRequestedUri(pRequest->uri);
+		result->setRequestedUri(pRequest->uri.string());
 		callSlot(result, pRequest->callbackSignal);
 		return nullptr;
 	}

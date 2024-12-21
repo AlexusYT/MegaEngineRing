@@ -157,7 +157,7 @@ void PresenterResourceEditor::savePathClicked(IViewResourceEditor* pView, const 
 	res->removeResource(oldUri);
 	resource->setResourceUri(newPath / (pNewName + extension));
 	saveResource(resource, false);
-	res->addResource(resource->getResourceUri(), resource);
+	res->addResource(resource->getResourceUri().string(), resource);
 	auto oldPath = dataPath / (oldUri.starts_with("/") ? oldUri.substr(1) : oldUri);
 	if (is_regular_file(oldPath) && exists(oldPath)) remove(oldPath);
 }
@@ -358,7 +358,7 @@ sdk::utils::ReportMessagePtr PresenterResourceEditor::saveResource(
 	if (pIsComplete && pResource->isIncomplete()) {
 
 		auto res = model->getEditingResources()->getContext()->getResources();
-		res->markResourceComplete(pResource->getResourceUri());
+		res->markResourceComplete(pResource->getResourceUri().string());
 	}
 	return nullptr;
 }
@@ -370,7 +370,7 @@ void PresenterResourceEditor::getComponentFromResult(
 		auto texture = result->getSelectionResult();
 		auto context = model->getEditingResources()->getContext();
 		context->loadResourceAsync(
-			texture->asResource()->getResourceUri(),
+			texture->asResource()->getResourceUri().string(),
 			[pSlot, this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pLoadResult) {
 				if (!pLoadResult->isReady()) return;
 				pSlot(std::dynamic_pointer_cast<sdk::main::IMaterialComponent>(pLoadResult->getResource()));

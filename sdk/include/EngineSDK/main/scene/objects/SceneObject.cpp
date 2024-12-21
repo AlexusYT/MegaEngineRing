@@ -21,7 +21,6 @@
 
 #include "SceneObject.h"
 
-#include <dlfcn.h>
 
 #include "EngineSDK/main/scripting/IScript.h"
 #include "EngineUtils/utils/ReportMessage.h"

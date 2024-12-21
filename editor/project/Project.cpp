@@ -125,35 +125,41 @@ Glib::RefPtr<Gio::SimpleActionGroup> Project::getActionGroups() const {
 	return refActionGroup;
 }
 
-int Project::reloadCMake(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
-	create_directories(projectPath);
+int Project::reloadCMake(const CallbackSlot &/*pCoutCallback*/, const CallbackSlot &/*pCerrCallback*/) const {
+	/*create_directories(projectPath);
 
 	const std::string command = std::format("-DCMAKE_BUILD_TYPE=Debug --preset dev -S {} -B {}", projectPath.string(),
 											projectBuildPath.string());
 	return ToolchainUtils::executeSync(projectPath, ToolchainSettings::getCMakePath(), command, pCoutCallback,
-									   pCerrCallback);
+									   pCerrCallback);*/
+	return 0;
 }
 
-int Project::build(const std::string &pTarget, const std::string &pPreset, const CallbackSlot &pCoutCallback,
-				   const CallbackSlot &pCerrCallback) const {
-	std::string args = std::format("--build --target {} --preset {}", pTarget, pPreset);
+int Project::build(const std::string &/*pTarget*/, const std::string &/*pPreset*/, const CallbackSlot &/*pCoutCallback*/,
+				   const CallbackSlot &/*pCerrCallback*/) const {
+	/*std::string args = std::format("--build --target {} --preset {}", pTarget, pPreset);
 	return ToolchainUtils::executeSync(projectPath, ToolchainSettings::getCMakePath(), args, pCoutCallback,
-									   pCerrCallback);
+									   pCerrCallback);*/
+	return 0;
 }
 
-int Project::run(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
+int Project::run(const CallbackSlot &/*pCoutCallback*/, const CallbackSlot &/*pCerrCallback*/) const {
 
+	/*
 	const std::string command = "";
 
 	return ToolchainUtils::executeSync(projectPath, projectPath / "build/dev/GameEngine", command, pCoutCallback,
-									   pCerrCallback);
+									   pCerrCallback);*/
+	return 0;
 }
 
-int Project::runDebug(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
+int Project::runDebug(const CallbackSlot &/*pCoutCallback*/, const CallbackSlot &/*pCerrCallback*/) const {
 
+	/*
 	const std::string command = projectPath / "build/dev/GameEngine";
 
-	return ToolchainUtils::executeSync(projectPath, "gdb", command, pCoutCallback, pCerrCallback);
+	return ToolchainUtils::executeSync(projectPath, "gdb", command, pCoutCallback, pCerrCallback);*/
+	return 0;
 }
 
 } // namespace mer::editor::project

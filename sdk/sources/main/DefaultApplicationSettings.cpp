@@ -32,7 +32,7 @@ sdk::utils::ReportMessagePtr DefaultApplicationSettings::init() {
 	/*if (logsDirectory->empty())
 		setLogsDirectory(std::filesystem::path(getenv("HOME")) / getApplicationName().getValue() / "Logs");*/
 	//setLogsDirectory("{HOME}/{APPLICATION_NAME}/Logs");
-	runDirectory = std::filesystem::current_path();
+	runDirectory = std::filesystem::current_path().string();
 	return nullptr;
 }
 } // namespace mer::sdk::main

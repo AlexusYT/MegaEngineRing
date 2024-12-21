@@ -87,7 +87,7 @@ void PresenterResourceSelection::onElementSelectionChanged(ProjectExplorerElemen
 		auto executor = loadedScene->getResourceLoadExecutor();
 		if (!executor) return;
 		executor->loadResourceAsync(
-			pElement->getRelativePath(), [this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+			pElement->getRelativePath().string(), [this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
 				//TODO Display error
 				if (pResult->isErrored()) {
 					sdk::utils::Logger::error(pResult->getError());

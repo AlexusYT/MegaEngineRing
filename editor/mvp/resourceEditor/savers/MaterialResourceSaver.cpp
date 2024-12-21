@@ -38,7 +38,7 @@ sdk::utils::ReportMessagePtr MaterialResourceSaver::saveToFile(
 		std::ofstream file(pPath, std::ios::out | std::ios::binary);
 		file.exceptions(std::_S_badbit | std::_S_failbit);
 
-		writeString(file, resourceUri);
+		writeString(file, resourceUri.string());
 		writeUuid(file, resource->getUuid());
 		writeComponent(file, *pMaterial->getAlbedo());
 		writeComponent(file, *pMaterial->getMetallic());
@@ -63,7 +63,7 @@ void MaterialResourceSaver::writeComponent(std::ofstream &pStream,
 
 	if (auto texture = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pComponent)) {
 		writeNumber<uint8_t>(pStream, 0);
-		writeString(pStream, texture->asResource()->getResourceUri());
+		writeString(pStream, texture->asResource()->getResourceUri().string());
 	} else if (auto color = std::dynamic_pointer_cast<sdk::main::ColorComponent>(pComponent)) {
 		writeNumber<uint8_t>(pStream, 1);
 		writeNumber<float>(pStream, color->color->r);

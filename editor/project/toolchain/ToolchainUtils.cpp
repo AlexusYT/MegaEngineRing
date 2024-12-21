@@ -22,11 +22,12 @@
 #include "ToolchainUtils.h"
 
 #include <ranges>
-#include <sys/wait.h>
+//#include <sys/wait.h>
 #include <thread>
 
 #include "Globals.h"
 
+#if 0
 #define NUM_PIPES 2
 
 #define PARENT_WRITE_PIPE 0
@@ -44,8 +45,9 @@ int pipes[NUM_PIPES][2];
 
 #define CHILD_READ_FD (pipes[PARENT_WRITE_PIPE][READ_FD])
 #define CHILD_WRITE_FD (pipes[PARENT_READ_PIPE][WRITE_FD])
-
+#endif
 namespace mer::editor::project {
+#if 0
 void ToolchainUtils::execute(const std::filesystem::path &pRootPath, const std::filesystem::path &pPath,
 							 const std::string &pArgs, const sigc::slot<void(const std::string &pLog)> &pCoutCallback,
 							 const sigc::slot<void(const std::string &pLog)> &pCerrCallback,
@@ -206,6 +208,7 @@ int ToolchainUtils::executeSync(const std::filesystem::path &pRootPath, const st
 	}
 	return 1;
 }
+#endif
 
 sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeListsFile(const std::filesystem::path &pPath) {
 	//language=cmake

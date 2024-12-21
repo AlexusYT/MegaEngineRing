@@ -129,14 +129,14 @@ sdk::utils::ReportMessagePtr PresenterCreatingProject::installLibraries(
 		logMessage("<span foreground='red'>" + Glib::Markup::escape_text(pLine) + "</span>");
 	};
 
-	if (auto exitCode = ToolchainUtils::executeSync(pProjectPath, vcpkgPath, command, coutCallback, cerrCallback);
+	/*if (auto exitCode = ToolchainUtils::executeSync(pProjectPath, vcpkgPath, command, coutCallback, cerrCallback);
 		exitCode != 0) {
 		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to install libraries");
 		msg->setMessage("Vcpkg finished with error");
 		msg->addInfoLine("Exit code: {}", exitCode);
 		return msg;
-	}
+	}*/
 
 	logMessage("Получение скриптов для подключения библиотек...");
 	std::unordered_map<std::string, Library> libraries;

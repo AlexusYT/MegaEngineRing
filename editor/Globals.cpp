@@ -22,6 +22,25 @@
 #include "Globals.h"
 
 void Globals::init() {
+	#if __MINGW32__
+
+	const auto local = getenv("LOCALAPPDATA");
+	if (!local) throw std::runtime_error("Error while getting LOCALAPPDATA");
+	logPath = std::filesystem::path(local) / "MegaEngineRing/logs";
+	create_directories(logPath);
+
+	const auto home = getenv("USERPROFILE");
+	if (!home) throw std::runtime_error("Error while getting USERPROFILE");
+	projectsPath = std::filesystem::path(home) / "MegaEngineProjects";
+	create_directories(projectsPath);
+
+	const auto config = getenv("APPDATA");
+	if (!config) throw std::runtime_error("Error while getting APPDATA");
+	configPath = std::filesystem::path(config) / "MegaEngineRing";
+	create_directories(configPath);
+
+	#else
+
 	const std::filesystem::path home = getenv("HOME");
 	logPath = home / ".cache/MegaEngineRing/logs";
 	create_directories(logPath);
@@ -29,4 +48,5 @@ void Globals::init() {
 	create_directories(projectsPath);
 	configPath = home / ".config/MegaEngineRing";
 	create_directories(configPath);
+	#endif
 }
