@@ -21,6 +21,11 @@
 
 #include "ViewResourceEditor.h"
 
+#include <graphic/UIUtils.h>
+
+#include "CMakeFiles/MegaEngineEditor_lib.dir/cmake_pch.hxx"
+#include "EngineSDK/main/prefabs/Prefab.h"
+#include "EngineSDK/main/prefabs/elements/PrefabElement.h"
 #include "EngineSDK/main/resources/materials/ColorComponent.h"
 #include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
@@ -54,6 +59,21 @@ public:
 	void setImportBtn(bool pImportBtn) { importBtn = pImportBtn; }
 };
 
+class PrefabElementObject : public Glib::Object {
+	std::shared_ptr<sdk::main::PrefabElement> element;
+
+	PrefabElementObject(const std::shared_ptr<sdk::main::PrefabElement> &pElement) { element = pElement; }
+
+public:
+	static std::shared_ptr<PrefabElementObject> create(const std::shared_ptr<sdk::main::PrefabElement> &pElement) {
+		return Glib::make_refptr_for_instance(new PrefabElementObject(pElement));
+	}
+
+	[[nodiscard]] const std::shared_ptr<sdk::main::PrefabElement> &getElement() const { return element; }
+
+	void setElement(const std::shared_ptr<sdk::main::PrefabElement> &pElement) { element = pElement; }
+};
+
 std::string OpenedResource::getType() const {
 	switch (resource->getResourceType()) {
 
@@ -62,6 +82,7 @@ std::string OpenedResource::getType() const {
 		case sdk::main::ResourceType::TEXTURE: return "Texture";
 		case sdk::main::ResourceType::MATERIAL: return "Material";
 		case sdk::main::ResourceType::SHADER: break;
+		case sdk::main::ResourceType::PREFAB: return "Prefab";
 	}
 	return "Unknown";
 }
@@ -145,6 +166,7 @@ ViewResourceEditor::ViewResourceEditor(const std::shared_ptr<IWidgetContext> &pC
 	auto createNewMBtn = builder->get_widget<Gtk::MenuButton>("createNewMBtn");
 	auto menuCreateNew = Gio::Menu::create();
 	auto variant = Glib::Variant<Glib::ustring>::create("/");
+	menuCreateNew->append_item(ui::UiUtils::createMenuItem("Prefab", "new.resource.prefab", variant));
 	menuCreateNew->append_item(ui::UiUtils::createMenuItem("Model", "new.resource.model", variant));
 	menuCreateNew->append_item(ui::UiUtils::createMenuItem("Material", "new.resource.material", variant));
 	menuCreateNew->append_item(ui::UiUtils::createMenuItem("Texture", "new.resource.texture", variant));
@@ -169,12 +191,54 @@ ViewResourceEditor::ViewResourceEditor(const std::shared_ptr<IWidgetContext> &pC
 		if (presenter) presenter->onResourceNameChanged(nameEntry->get_text());
 	});
 
+	prefabVisSwitch = builder->get_widget<Gtk::Switch>("prefabVisSwitch");
+	prefabElementsList = builder->get_widget<Gtk::ListView>("prefabElementsList");
+	auto elementFactory = Gtk::SignalListItemFactory::create();
+	elementFactory->signal_setup().connect([](const Glib::RefPtr<Gtk::ListItem> &pItem) {
+		auto label = Gtk::make_managed<Gtk::Label>();
+		label->set_xalign(0.0f);
+		pItem->set_child(*label);
+	});
+	elementFactory->signal_bind().connect([](const Glib::RefPtr<Gtk::ListItem> &pItem) {
+		auto label = dynamic_cast<Gtk::Label*>(pItem->get_child());
+		if (!label) return;
+		auto data = std::dynamic_pointer_cast<PrefabElementObject>(pItem->get_item());
+		label->set_label(data->getElement()->getName());
+	});
+	prefabElementsList->set_factory(elementFactory);
+	prefabRemoveElemBtn = builder->get_widget<Gtk::Button>("prefabRemoveElemBtn");
+	prefabRemoveElemBtn->signal_clicked().connect([this] {
+		auto selection = std::dynamic_pointer_cast<Gtk::SingleSelection>(prefabElementsList->get_model());
+		if (!selection) return;
+		auto objects = std::dynamic_pointer_cast<Gio::ListStore<PrefabElementObject>>(selection->get_model());
+		if (!objects) return;
+		objects->remove(selection->get_selected());
+	});
+	prefabAddElemBtn = builder->get_widget<Gtk::MenuButton>("prefabAddElemBtn");
+	auto prefabElemMenu = Gio::Menu::create();
+	prefabElemMenu->append_item(Gio::MenuItem::create("Mesh element", "resource.prefab.new.element"));
+	prefabAddElemBtn->set_menu_model(prefabElemMenu);
+	prefabElementProperties = builder->get_widget<Gtk::ListView>("prefabElementProperties");
+	auto elemPropertyFactory = Gtk::SignalListItemFactory::create();
+	elemPropertyFactory->signal_setup().connect([](const Glib::RefPtr<Gtk::ListItem> &pItem) {
+		auto label = Gtk::make_managed<Gtk::Label>();
+		label->set_xalign(0.0f);
+		pItem->set_child(*label);
+	});
+	elemPropertyFactory->signal_bind().connect([](const Glib::RefPtr<Gtk::ListItem> &pItem) {
+		auto label = dynamic_cast<Gtk::Label*>(pItem->get_child());
+		if (!label) return;
+		auto data = std::dynamic_pointer_cast<PrefabElementObject>(pItem->get_item());
+		label->set_label(data->getElement()->getName());
+	});
+	prefabElementProperties->set_factory(elemPropertyFactory);
 
 	widget = builder->get_widget<Gtk::Widget>("root");
 	preferencesStack = builder->get_widget<Gtk::Stack>("preferencesStack");
 	preferencesStack->add(*builder->get_widget<Gtk::Box>("modelEditor"), "model");
 	preferencesStack->add(*builder->get_widget<Gtk::Box>("textureEditor"), "texture");
 	preferencesStack->add(*builder->get_widget<Gtk::Box>("materialEditor"), "material");
+	preferencesStack->add(*builder->get_widget<Gtk::Box>("prefabEditor"), "prefab");
 }
 
 std::shared_ptr<ViewResourceEditor> ViewResourceEditor::create(const std::shared_ptr<IWidgetContext> &pContext) {
@@ -182,7 +246,7 @@ std::shared_ptr<ViewResourceEditor> ViewResourceEditor::create(const std::shared
 	try {
 		builder = Gtk::Builder::create_from_resource(
 			"/ui/ResourceEditorWindow.ui",
-			std::vector<Glib::ustring>{"root", "modelEditor", "textureEditor", "materialEditor"});
+			std::vector<Glib::ustring>{"root", "modelEditor", "textureEditor", "materialEditor", "prefabEditor"});
 	} catch (...) {
 		auto msg = sdk::utils::ReportMessage::create();
 		msg->setTitle("Failed to load ui file");
@@ -434,6 +498,41 @@ void ViewResourceEditor::displayMaterial(const std::shared_ptr<sdk::main::IMater
 	pMaterialResource->getNormal().connectEvent(bind(baseColorSetter, matNormalSelector));
 	pMaterialResource->getRoughness().connectEvent(bind(baseColorSetter, matRoughnessSelector));
 	pMaterialResource->getAo().connectEvent(bind(baseColorSetter, matAoSelector));
+}
+
+void ViewResourceEditor::displayPrefab(const std::shared_ptr<sdk::main::Prefab> &pPrefab) {
+	auto prop = prefabVisSwitch->property_active();
+	prop.signal_changed().connect([pPrefab, prop, this] {
+		pPrefab->visible = prop.get_value();
+		if (presenter) presenter->onPrefabChanged();
+	});
+
+	const auto objectsList = Gio::ListStore<PrefabElementObject>::create();
+
+
+	for (auto object: pPrefab->getElements()) {
+		auto modelObject = PrefabElementObject::create(object.second);
+		objectsList->append(modelObject);
+	}
+	objectsList->sort([](const Glib::RefPtr<const PrefabElementObject> &pFirst,
+						 const Glib::RefPtr<const PrefabElementObject> &pSecond) {
+		return pFirst->getElement()->getName().compare(pSecond->getElement()->getName());
+	});
+	auto selection = Gtk::SingleSelection::create(objectsList);
+	prefabElementsList->set_model(selection);
+
+	selection->signal_selection_changed().connect([selection, this] {
+
+	});
+	selection->signal_items_changed().connect([this](guint pPosition, guint pRemoved, guint pAdded) {
+		sdk::utils::Logger::out("{}, {}, {}", pPosition, pRemoved, pAdded);
+		prefabRemoveElemBtn->set_sensitive(pAdded > 0);
+	});
+	/*auto selectedItem = selection->property_selected_item();
+	selectedItem.signal_changed().connect([this, selectedItem] {
+		auto object = std::dynamic_pointer_cast<PrefabElementObject>(selectedItem.get_value());
+		object->getElement().
+	});*/
 }
 
 ui::ResourceSelectorWidget* ViewResourceEditor::addNewSelector(const std::string &pLabelText, const int pRowPos) const {

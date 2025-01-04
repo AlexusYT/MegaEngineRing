@@ -74,6 +74,11 @@ class ViewResourceEditor : public IViewResourceEditor, ThreadDispatcher {
 	ui::ResourceSelectorWidget* matNormalSelector;
 	ui::ResourceSelectorWidget* matRoughnessSelector;
 	ui::ResourceSelectorWidget* matAoSelector;
+	Gtk::Switch* prefabVisSwitch{};
+	Gtk::ListView* prefabElementsList{};
+	Gtk::Button* prefabRemoveElemBtn{};
+	Gtk::MenuButton* prefabAddElemBtn{};
+	Gtk::ListView* prefabElementProperties{};
 
 	explicit ViewResourceEditor(const std::shared_ptr<IWidgetContext> &pContext,
 								const std::shared_ptr<Gtk::Builder> &pBuilder);
@@ -136,6 +141,8 @@ private:
 	Gtk::Entry* getFilePathEntry() const;
 
 	void displayMaterial(const std::shared_ptr<sdk::main::IMaterialResource> &pMaterialResource) override;
+
+	void displayPrefab(const std::shared_ptr<sdk::main::Prefab> &pPrefab) override;
 
 	ui::ResourceSelectorWidget* addNewSelector(const std::string &pLabelText, int pRowPos) const;
 };

@@ -98,9 +98,9 @@ void Prefab::removeElement(const std::shared_ptr<PrefabElement> &pPrefabElement)
 		id++;
 	}
 	for (auto instance: instances) {
-		auto uuid = pPrefabElement->getUuid();
-		auto elementInstance = instance->getElement(uuid);
-		instance->removeElement(uuid);
+		auto elementUuid = pPrefabElement->getUuid();
+		auto elementInstance = instance->getElement(elementUuid);
+		instance->removeElement(elementUuid);
 		prefabElementsSsbo->untrackInstance(elementInstance.get());
 	}
 	prefabElementsSsbo->setElementsPerInstance(static_cast<uint32_t>(elementsList.size()));

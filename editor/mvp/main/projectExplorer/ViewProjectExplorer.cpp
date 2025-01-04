@@ -132,6 +132,7 @@ void ViewProjectExplorer::onPathChanged(const std::filesystem::path &pPath) cons
 	auto menu = Gio::Menu::create();
 	const auto variant = Glib::Variant<Glib::ustring>::create(pPath.string());
 	const auto menuNewResource = Gio::Menu::create();
+	menuNewResource->append_item(ui::UiUtils::createMenuItem("Prefab", "new.resource.prefab", variant));
 	menuNewResource->append_item(ui::UiUtils::createMenuItem("Model", "new.resource.model", variant));
 	menuNewResource->append_item(ui::UiUtils::createMenuItem("Material", "new.resource.material", variant));
 	menuNewResource->append_item(ui::UiUtils::createMenuItem("Texture", "new.resource.texture", variant));

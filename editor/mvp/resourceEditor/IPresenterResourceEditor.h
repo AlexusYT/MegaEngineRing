@@ -76,6 +76,7 @@ public:
 											IViewResourceEditor* pView) = 0;
 	virtual void onMaterialAOChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 									 IViewResourceEditor* pView) = 0;
+	virtual void onPrefabChanged() = 0;
 };
 
 } // namespace mer::editor::mvp

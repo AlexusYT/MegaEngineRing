@@ -20,6 +20,8 @@ set(UTILS_HEADERS
         include/EngineUtils/utils/Property.h
         include/EngineUtils/utils/PropertyReadOnly.h
         include/EngineUtils/utils/IReportable.h
+        sources/utils/PropertyProvider.cpp
+        include/EngineUtils/utils/PropertyProvider.h
 )
 
 add_library(MegaEngineUtils STATIC ${UTILS_SOURCES} ${UTILS_HEADERS})

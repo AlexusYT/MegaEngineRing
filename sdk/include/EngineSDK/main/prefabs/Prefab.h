@@ -28,7 +28,8 @@
 #include <vector>
 
 #include "EngineSDK/main/render/IRenderable.h"
-#include "EngineSDK/main/render/Initializable.h"
+#include "EngineSDK/main/resources/Resource.h"
+#include "EngineSDK/main/resources/ResourceType.h"
 #include "PrefabInstance.h"
 
 namespace mer::sdk::renderer {
@@ -43,7 +44,7 @@ class PrefabElementsSsbo;
 class PrefabElement;
 class PrefabInstance;
 
-class Prefab : public Initializable, public IRenderable {
+class Prefab : public Resource, public IRenderable {
 	std::unordered_map<std::string, std::shared_ptr<PrefabElement>> elements;
 	std::list<PrefabElement*> elementsList;
 	uint32_t dataBuffer{};
@@ -99,6 +100,8 @@ protected:
 	void render() override;
 
 	void onUninitialize() override;
+
+	ResourceType getResourceType() override { return ResourceType::PREFAB; }
 
 private:
 };

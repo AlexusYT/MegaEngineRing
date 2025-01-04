@@ -24,6 +24,7 @@
 #include <string>
 
 #include "EngineUtils/utils/Property.h"
+#include "EngineUtils/utils/PropertyProvider.h"
 #include "EngineUtils/utils/UUID.h"
 
 namespace mer::sdk::main {
@@ -31,7 +32,7 @@ class IMaterialResource;
 class Prefab;
 class PrefabElementInstance;
 
-class PrefabElement {
+class PrefabElement : public utils::PropertyProvider {
 	UUID uuid;
 	Prefab* prefab{};
 	std::string name;
@@ -46,7 +47,7 @@ protected:
 	explicit PrefabElement(const std::string &pName);
 
 public:
-	virtual ~PrefabElement() = default;
+	~PrefabElement() override = default;
 
 	utils::Property<bool> visible;
 

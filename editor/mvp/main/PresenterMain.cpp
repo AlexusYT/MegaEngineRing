@@ -27,6 +27,7 @@
 #include <nlohmann/json.hpp>
 #include <project/Project.h>
 
+#include "EngineSDK/main/prefabs/Prefab.h"
 #include "EngineSDK/main/resources/ResourceType.h"
 #include "EngineSDK/main/resources/materials/MaterialResource.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
@@ -343,7 +344,7 @@ void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 	auto ext = pPathToFile.extension().string();
 	if (ext == ".enscene")
 		if (const auto msg = loadedScene->load(pPathToFile)) { displayError(msg); }
-	if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") {
+	if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat" || ext == "enpref") {
 		auto dataPath = modelMain->getProject()->getProjectDataPath();
 		auto resourceUri = relative(pPathToFile, dataPath);
 		editingResources->loadResource(resourceUri);
@@ -365,6 +366,9 @@ void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, c
 			break;
 		case sdk::main::ResourceType::MATERIAL:
 			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::MaterialResource::create());
+			break;
+		case sdk::main::ResourceType::PREFAB:
+			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::Prefab::create());
 			break;
 	}
 	std::filesystem::path uri = "/";
@@ -466,7 +470,9 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 			if (pPathToDelete != "/" && pPathToDelete != root) { uri = relative(pPathToDelete, root); }
 			auto ext = pPathToDelete.extension().string();
 			if (ext == ".enscene") { loadedScene->unload(); }
-			if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") { editingResources->deleteResource(uri); }
+			if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat" || ext == ".enpref") {
+				editingResources->deleteResource(uri);
+			}
 		}
 	};
 	dialog->choose(*viewMain->getWindow(), lambda);

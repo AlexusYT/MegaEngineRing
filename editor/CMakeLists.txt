@@ -289,6 +289,9 @@ add_library(
         ui/customWidgets/resourceSelector/SourceSelectionColor.h
         mvp/resourceEditor/savers/ResourceSaverBase.cpp
         mvp/resourceEditor/savers/ResourceSaverBase.h
+        mvp/resourceEditor/prefab/IViewPrefabEditor.h
+        mvp/resourceEditor/prefab/IModelPrefabEditor.h
+        mvp/resourceEditor/prefab/IPresenterPrefabEditor.h
 
 )
 

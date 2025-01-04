@@ -25,6 +25,7 @@
 #include "mvp/IView.h"
 
 namespace mer::sdk::main {
+class Prefab;
 class IModel3DObject;
 class IMaterialResource;
 } // namespace mer::sdk::main
@@ -71,6 +72,8 @@ public:
 	virtual void selectResource(const std::shared_ptr<sdk::main::IResource> &pResource) = 0;
 
 	virtual void displayMaterial(const std::shared_ptr<sdk::main::IMaterialResource> &pMaterialResource) = 0;
+
+	virtual void displayPrefab(const std::shared_ptr<sdk::main::Prefab> &pPrefab) = 0;
 };
 
 } // namespace mer::editor::mvp

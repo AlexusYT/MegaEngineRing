@@ -19,9 +19,8 @@
 // Created by alexus on 28.06.24.
 //
 
-#ifndef PROPERTIESFOREXTENSION_H
-#define PROPERTIESFOREXTENSION_H
-
+#ifndef IPROPERTIESFOREXTENSION_H
+#define IPROPERTIESFOREXTENSION_H
 
 namespace mer::sdk::utils {
 
@@ -60,6 +59,6 @@ public:
 
 	virtual void propertyChanged(PropertyBase* pProperty) = 0;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk::utils
 
-#endif //PROPERTIESFOREXTENSION_H
+#endif //IPROPERTIESFOREXTENSION_H

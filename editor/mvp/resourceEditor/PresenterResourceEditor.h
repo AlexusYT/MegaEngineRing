@@ -26,6 +26,7 @@
 #include "IPresenterResourceEditor.h"
 
 namespace mer::sdk::main {
+class PrefabInstance;
 class IResourceLoadExecutor;
 class IMaterialComponent;
 class IModel3DObject;
@@ -55,6 +56,8 @@ class PresenterResourceEditor : public IPresenterResourceEditor {
 	std::vector<std::shared_ptr<IViewResourceEditor>> views;
 	std::map<IViewResourceEditor*, ViewInfo> viewsInfo;
 	std::map<sdk::main::IResource*, ResourceInfo> resourcesInfo;
+	std::shared_ptr<sdk::main::PrefabInstance> instance;
+	std::shared_ptr<sdk::main::PrefabInstance> instance2;
 
 public:
 	PresenterResourceEditor(const std::shared_ptr<IModelResourceEditor> &pModel);
@@ -103,6 +106,8 @@ public:
 									IViewResourceEditor* pView) override;
 	void onMaterialAOChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 							 IViewResourceEditor* pView) override;
+
+	void onPrefabChanged() override;
 
 private:
 	ViewInfo* getViewInfo(IViewResourceEditor* pView);

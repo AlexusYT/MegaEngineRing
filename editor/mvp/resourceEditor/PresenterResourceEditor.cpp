@@ -22,13 +22,19 @@
 #include "PresenterResourceEditor.h"
 
 #include "EditingResourceList.h"
+#include "EngineSDK/main/prefabs/Prefab.h"
+#include "EngineSDK/main/prefabs/elements/MeshPrefabElement.h"
+#include "EngineSDK/main/prefabs/elements/PrefabElementInstance.h"
 #include "EngineSDK/main/resources/IResource.h"
 #include "EngineSDK/main/resources/LoadedResources.h"
 #include "EngineSDK/main/resources/ResourceLoadResult.h"
 #include "EngineSDK/main/resources/materials/ColorComponent.h"
 #include "EngineSDK/main/resources/materials/IMaterialResource.h"
+#include "EngineSDK/main/resources/materials/MaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/main/resources/shaders/builtin/PrefabProgram.h"
 #include "EngineSDK/main/resources/textures/ITextureResource.h"
 #include "IModelResourceEditor.h"
 #include "IViewResourceEditor.h"
@@ -148,6 +154,7 @@ void PresenterResourceEditor::savePathClicked(IViewResourceEditor* pView, const 
 		case sdk::main::ResourceType::MATERIAL: extension = ".enmat"; break;
 		case sdk::main::ResourceType::SHADER:
 		case sdk::main::ResourceType::NONE: return;
+		case sdk::main::ResourceType::PREFAB: extension = ".enpref"; break;
 	}
 
 	auto res = model->getEditingResources()->getContext()->getResources();
@@ -220,15 +227,61 @@ void PresenterResourceEditor::onSelectionChanged(const std::shared_ptr<sdk::main
 		std::ranges::sort(resInfo->resourceObjects, [](auto pA, auto pB) { return *pA < *pB; });
 		pView->displayObjects(resInfo->resourceObjects, false);
 		pView->displayObjects(resInfo->fileObjects, true);
-		pView->displayChosenPath(resInfo->srcFilePath.string());
 	} else if (auto textureResource = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
 		pView->switchTo("texture");
-		pView->displayChosenPath(resInfo->srcFilePath.string());
 	} else if (auto materialResource = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResource)) {
 		pView->switchTo("material");
-		pView->displayChosenPath(resInfo->srcFilePath.string());
 		pView->displayMaterial(materialResource);
+	} else if (auto prefab = std::dynamic_pointer_cast<sdk::main::Prefab>(pResource)) {
+		pView->switchTo("prefab");
+		model->getEditingResources()->getContext()->loadResourceAsync(
+			"Test.enmodel", [this, prefab, pView](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+				if (!pResult->isReady()) return;
+				auto model1 = std::dynamic_pointer_cast<sdk::main::Model3DResource>(pResult->getResource());
+				if (!model1) return;
+				for (const auto &modelObject: model1->getModelObjects()) {
+					auto element = sdk::main::MeshPrefabElement::create(modelObject.second);
+					prefab->addElement(element);
+				}
+
+				instance2->visible = false;
+				auto element = prefab->getElement("CustomPistol9mm");
+				auto &transform = instance->getElement(element->getUuid())->getLocalTransform();
+				transform->translate(0.0f, 0.1f, 0);
+				auto element1 = prefab->getElement("CustomPistol9mm.007");
+				element1->visible = false;
+
+				auto elementInst1 = instance2->getElement(element->getUuid());
+				elementInst1->visible = false;
+				auto elementInst = instance2->getElement(element1->getUuid());
+				auto transform1 = elementInst->getLocalTransform();
+				transform1->translate(0.0f, 0.1f, 0);
+				auto element2 = prefab->getElement("CustomPistol9mm.008");
+				auto mat = sdk::main::MaterialResource::create();
+				mat->setAlbedo(sdk::main::ColorComponent::create(1, 0, 0));
+				element2->material = mat;
+				pView->displayPrefab(prefab);
+				/*auto &material = elementInst->material;
+		MaterialResource::create();
+		material->setAlbedo(ColorComponent::create(1, 0, 1));
+		material.notifyChanged();*/
+			});
+		model->getEditingResources()->getContext()->loadResourceAsync(
+			"test.enmat", [this, prefab](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+				if (!pResult->isReady()) return;
+				prefab->material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResult->getResource());
+			});
+
+		prefab->setShaderProgram(sdk::main::PrefabProgram::getInstance());
+		instance = sdk::main::PrefabInstance::create();
+		prefab->addInstance(instance);
+		instance->getLocalTransform()->translate(glm::vec3(0.1f, 0.0f, 0.0f));
+		instance2 = sdk::main::PrefabInstance::create();
+		prefab->addInstance(instance2);
+
+		prefab->initialize();
 	}
+	pView->displayChosenPath(resInfo->srcFilePath.string());
 }
 
 void PresenterResourceEditor::removeObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToRemove,
@@ -325,6 +378,8 @@ void PresenterResourceEditor::onMaterialAOChanged(const std::shared_ptr<ui::ISou
 		saveResource(resource);
 	});
 }
+
+void PresenterResourceEditor::onPrefabChanged() { /*TODO_IMPLEMENT_ME();*/ }
 
 PresenterResourceEditor::ViewInfo* PresenterResourceEditor::getViewInfo(IViewResourceEditor* pView) {
 

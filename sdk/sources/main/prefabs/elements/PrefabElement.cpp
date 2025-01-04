@@ -26,7 +26,7 @@
 
 namespace mer::sdk::main {
 PrefabElement::PrefabElement(const std::string &pName)
-	: uuid(UUID::newInstance()), name(pName), visible(nullptr, ""), material(nullptr, "") {
+	: uuid(UUID::newInstance()), name(pName), visible(this, ""), material(this, "") {
 	visible = true;
 	material.connectEvent([this](const std::shared_ptr<IMaterialResource> &pMaterial) {
 		for (auto instance: instances) { instance->onParentMaterialChanged(pMaterial); }

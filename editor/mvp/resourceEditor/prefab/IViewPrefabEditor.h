@@ -16,16 +16,19 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 19.10.24.
+// Created by alexus on 23.12.24.
 //
 
-#ifndef RESOURCETYPE_H
-#define RESOURCETYPE_H
+#ifndef IVIEWPREFABEDITOR_H
+#define IVIEWPREFABEDITOR_H
+#include "mvp/IView.h"
 
-namespace mer::sdk::main {
+namespace mer::editor::mvp {
 
-enum class ResourceType { NONE = 0, MODEL, TEXTURE, MATERIAL, SHADER, PREFAB };
+class IViewPrefabEditor : public IView {
+public:
+};
 
-} // namespace mer::sdk::main
+} // namespace mer::editor::mvp
 
-#endif //RESOURCETYPE_H
+#endif //IVIEWPREFABEDITOR_H
