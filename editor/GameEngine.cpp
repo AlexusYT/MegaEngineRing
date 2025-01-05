@@ -42,6 +42,7 @@ class GameEngineImpl {
 
 public:
 	static int run(int pArgc, char* pArgv[]) {
+		setenv("GDK_DEBUG", "gl-prefer-gl", false);
 		Globals::init();
 		signal(SIGABRT, signals);
 		signal(SIGSEGV, signals);
