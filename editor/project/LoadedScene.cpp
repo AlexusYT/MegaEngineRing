@@ -72,9 +72,13 @@ void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesCont
 	pResourcesContext->preloadResources();
 }
 
-void LoadedScene::initScene() const { scene->initScene(); }
+void LoadedScene::initScene() const {
+	if (scene) scene->initScene();
+}
 
-void LoadedScene::uninitScene() const { scene->deinitScene(); }
+void LoadedScene::uninitScene() const {
+	if (scene) scene->deinitScene();
+}
 
 void LoadedScene::render() const { scene->render(); }
 
