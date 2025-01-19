@@ -99,9 +99,10 @@ public:
 		try {
 			cssProvider->load_from_resource("css/style.css");
 		} catch (Glib::Error &e) { Logger::error("Failed to load style {}", e.what()); }
-		Gtk::StyleProvider::add_provider_for_display(Gdk::Display::get_default(), cssProvider,
-													 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-
+		auto display = Gdk::Display::get_default();
+		Gtk::StyleProvider::add_provider_for_display(display, cssProvider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		auto theme = Gtk::IconTheme::get_for_display(display);
+		theme->add_resource_path("/icons");
 		auto window = std::make_shared<mvp::StartupWindow>(mvp::ApplicationContext::create(appController->getApp()));
 
 		auto model = std::make_shared<mvp::ModelStartup>();

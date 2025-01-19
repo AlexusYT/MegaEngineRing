@@ -33,10 +33,12 @@ class LoadedScene;
 }
 
 namespace mer::editor::mvp {
+class SceneOverlayElements;
 class ResourcesContext;
 
 class ModelSceneEditor : public IModelSceneEditor {
 	std::shared_ptr<project::LoadedScene> loadedScene;
+	std::shared_ptr<SceneOverlayElements> sceneOverlayElements;
 
 public:
 	ModelSceneEditor();
@@ -78,6 +80,8 @@ public:
 	void onCursorPosChanged(double pX, double pY) override;
 
 	void onMouseButtonStateChanged(sdk::utils::MouseButton pButton, bool pPressed, double pX, double pY) override;
+
+	void toggleGrid(bool pState) override;
 };
 } // namespace mer::editor::mvp
 #endif //MODELSCENEEDITOR_H

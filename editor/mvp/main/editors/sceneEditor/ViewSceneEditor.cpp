@@ -35,6 +35,13 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 	Gtk::Box topBox;
 	topBox.append(simulatingLabel);
 	topBox.append(modeSwitch);
+	gridToggle.set_icon_name("grid");
+	gridToggle.set_tooltip_text("Show or hide the grid in the editor");
+	gridToggle.signal_toggled().connect([this] {
+		if (presenter) presenter->onGridToggled(gridToggle.get_active());
+	});
+	gridToggle.set_active();
+	topBox.append(gridToggle);
 
 	mainWidget.append(topBox);
 	mainWidget.append(area);

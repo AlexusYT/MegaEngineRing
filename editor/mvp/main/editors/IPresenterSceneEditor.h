@@ -33,6 +33,8 @@ class IPresenterSceneEditor : public PresenterBase {
 public:
 	~IPresenterSceneEditor() override = default;
 
+	virtual void onGridToggled(bool pState) = 0;
+
 	virtual bool onMouseScroll(double pDx, double pDy) = 0;
 };
 

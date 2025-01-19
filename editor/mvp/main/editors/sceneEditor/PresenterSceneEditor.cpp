@@ -109,6 +109,8 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 	views.emplace(view, conns);
 }
 
+void PresenterSceneEditor::onGridToggled(bool pState) { modelSceneEditor->toggleGrid(pState); }
+
 sdk::utils::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::ModifierType &pState) {
 	using namespace sdk::utils;
 	uint8_t mods = 0;
