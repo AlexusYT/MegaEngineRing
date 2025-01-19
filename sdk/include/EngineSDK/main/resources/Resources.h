@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 01.02.24.
@@ -28,20 +28,7 @@
 #include "IResource.h"
 
 namespace mer::sdk::main {
-class RegularRequest;
-class LazyRequest;
-} // namespace mer::sdk::main
-
-namespace mer::sdk::main {
 class IResource;
-
-
-template<class T>
-concept RequestRegularConcept = requires(T) {
-	requires std::derived_from<T, RegularRequest>;
-	typename T::ResourceT;
-	requires std::derived_from<typename T::ResourceT, IResource>;
-};
 
 class Resources {
 	friend class LoadedResources;
@@ -78,11 +65,6 @@ public:
 	std::shared_ptr<ClassT> get(const std::string &pName) const {
 		if (const auto res = find(pName)) return std::dynamic_pointer_cast<ClassT>(res);
 		return nullptr;
-	}
-
-	template<RequestRegularConcept ClassT>
-	std::shared_ptr<typename ClassT::ResourceT> getByRequest(const std::shared_ptr<ClassT> &pRequest) const {
-		return get<typename ClassT::ResourceT>(pRequest->getName());
 	}
 
 	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<IResource>> &getResources() const {

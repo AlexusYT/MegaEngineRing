@@ -2,25 +2,20 @@
 
 set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/DefaultApplicationSettings.cpp
-        include/EngineSDK/main/context/Window.cpp
-        include/EngineSDK/main/context/Window.h
-        include/EngineSDK/main/context/MainWindow.cpp
-        include/EngineSDK/main/context/MainWindow.h
-        include/EngineSDK/main/resources/LoadedResources.cpp
-        include/EngineSDK/main/resources/LoadedResources.h
-        include/EngineSDK/renderer/shaders/Shader.cpp
-        include/EngineSDK/main/context/ResourcesWindow.cpp
-        include/EngineSDK/main/context/ResourcesWindow.h
-        include/EngineSDK/main/resources/ResourceRequest.cpp
-        include/EngineSDK/main/resources/ResourceLoader.cpp
-        include/EngineSDK/main/resources/Resources.cpp
-        include/EngineSDK/main/scene/Scene.cpp
-        include/EngineSDK/renderer/shaders/ShaderProgram.cpp
-        include/EngineSDK/main/resources/shaders/ShaderProgramLoader.cpp
-        include/EngineSDK/main/buffers/ProgramWideShaderBuffer.cpp
-        include/EngineSDK/renderer/GL.cpp
-        include/EngineSDK/renderer/buffers/SSBO.cpp
-        include/EngineSDK/main/scene/objects/SceneObject.cpp
+        sources/main/context/Window.cpp
+        sources/main/context/MainWindow.cpp
+        sources/main/resources/LoadedResources.cpp
+        sources/renderer/shaders/Shader.cpp
+        sources/main/context/ResourcesWindow.cpp
+        sources/main/resources/ResourceLoader.cpp
+        sources/main/resources/Resources.cpp
+        sources/main/scene/Scene.cpp
+        sources/renderer/shaders/ShaderProgram.cpp
+        sources/main/resources/shaders/ShaderProgramLoader.cpp
+        sources/main/buffers/ProgramWideShaderBuffer.cpp
+        sources/renderer/GL.cpp
+        sources/renderer/buffers/SSBO.cpp
+        sources/main/scene/objects/SceneObject.cpp
         sources/main/scene/objects/extensions/Extension.cpp
         sources/main/scene/objects/extensions/BasicRenderExtension.cpp
         sources/main/scene/objects/extensions/cameras/CameraExtension.cpp
@@ -33,21 +28,21 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/scripting/Script.cpp
         sources/main/scene/objects/extensions/MainObjectExtension.cpp
         sources/utils/PropertyJsonSerializers.cpp
-        include/EngineSDK/main/resources/models/Model3DResource.cpp
-        include/EngineSDK/main/resources/models/Model3DObject.cpp
-        include/EngineSDK/main/render/RenderInstance.cpp
-        include/EngineSDK/main/resources/FileSystemResourceBundle.cpp
-        include/EngineSDK/main/resources/ResourceLoaders.cpp
-        include/EngineSDK/main/resources/Resource.cpp
+        sources/main/resources/models/Model3DResource.cpp
+        sources/main/resources/models/Model3DObject.cpp
+        sources/main/render/RenderInstance.cpp
+        sources/main/resources/FileSystemResourceBundle.cpp
+        sources/main/resources/ResourceLoaders.cpp
+        sources/main/resources/Resource.cpp
         sources/main/resources/textures/TextureResource.cpp
-        include/EngineSDK/main/resources/textures/TextureLoader.cpp
-        include/EngineSDK/main/scene/objects/extensions/LightExtension.cpp
-        include/EngineSDK/main/light/LightInstance.cpp
-        include/EngineSDK/main/light/LightSources.cpp
-        include/EngineSDK/main/resources/materials/MaterialResource.cpp
-        include/EngineSDK/main/resources/materials/MaterialLoader.cpp
-        include/EngineSDK/main/resources/ResourceLoadResult.cpp
-        include/EngineSDK/main/resources/materials/ColorComponent.cpp
+        sources/main/resources/textures/TextureLoader.cpp
+        sources/main/scene/objects/extensions/LightExtension.cpp
+        sources/main/light/LightInstance.cpp
+        sources/main/light/LightSources.cpp
+        sources/main/resources/materials/MaterialResource.cpp
+        sources/main/resources/materials/MaterialLoader.cpp
+        sources/main/resources/ResourceLoadResult.cpp
+        sources/main/resources/materials/ColorComponent.cpp
         sources/main/prefabs/Prefab.cpp
         sources/main/prefabs/PrefabInstance.cpp
         sources/main/prefabs/elements/PrefabElementInstance.cpp
@@ -60,12 +55,15 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/prefabs/PrefabSsbo.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/main/Application.h
+        include/EngineSDK/main/context/Window.h
+        include/EngineSDK/main/context/MainWindow.h
+        include/EngineSDK/main/resources/LoadedResources.h
+        include/EngineSDK/main/context/ResourcesWindow.h
         include/EngineSDK/main/context/IContext.h
         include/EngineSDK/main/IWindow.h
         include/EngineSDK/main/IApplicationSettings.h
         include/EngineSDK/main/DefaultApplicationSettings.h
         include/EngineSDK/main/scene/IScene.h
-        include/EngineSDK/main/resources/ResourceRequest.h
         include/EngineSDK/renderer/shaders/ShaderTypeEnum.h
         include/EngineSDK/renderer/shaders/VertexShader.h
         include/EngineSDK/renderer/shaders/FragmentShader.h
@@ -85,7 +83,6 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/scene/objects/ISceneObject.h
         include/EngineSDK/renderer/GL.h
         include/EngineSDK/main/scene/objects/extensions/cameras/ICamera.h
-        include/EngineSDK/main/scene/actor/IActor.h
         include/EngineSDK/utils/ModifierKeys.h
         include/EngineSDK/utils/KeyboardKey.h
         include/EngineSDK/main/scene/objects/SceneObject.h
@@ -163,6 +160,36 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/renderer/shaders/GeometryShader.h
         include/EngineSDK/main/prefabs/PrefabSsbo.h
 )
+
+foreach (SOURCE IN ITEMS ${ENGINE_SOURCES})
+    if (NOT ${SOURCE} MATCHES "^sources(.*)$" AND ${SOURCE} MATCHES "^(.*)\.cpp$")
+        message(FATAL_ERROR "
+        Fatal Error when checking SDK Sources.
+        File ${SOURCE} is a source file, but not in the sources directory
+        Move the file to the sources directory")
+    endif ()
+    if (${SOURCE} MATCHES "^(.*)\.h$")
+        message(FATAL_ERROR "
+        Fatal Error when checking SDK Sources.
+        File ${SOURCE} is a header file, but not in the ENGINE_HEADERS variable
+        Move the file to the ENGINE_HEADERS variable in CMakeLists.txt")
+    endif ()
+endforeach ()
+
+foreach (HEADER IN ITEMS ${ENGINE_HEADERS})
+    if (NOT ${HEADER} MATCHES "^include(.*)$" AND ${HEADER} MATCHES "^(.*)\.h$")
+        message(FATAL_ERROR "
+        Fatal Error when checking SDK Sources.
+        File ${HEADER} is a header file, but not in the include directory
+        Move the file to the include directory")
+    endif ()
+    if (${HEADER} MATCHES "^(.*)\.cpp$")
+        message(FATAL_ERROR "
+        Fatal Error when checking SDK Sources.
+        File ${HEADER} is a source file, but not in the ENGINE_SOURCES variable
+        Move the file to the ENGINE_SOURCES variable in CMakeLists.txt")
+    endif ()
+endforeach ()
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 
