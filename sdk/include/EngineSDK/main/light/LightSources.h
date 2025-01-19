@@ -24,16 +24,13 @@
 #include "ILightSources.h"
 #include "LightInstanceData.h"
 
-namespace mer::sdk::renderer {
-class SSBO;
-}
-
 namespace mer::sdk::main {
+class SSBO;
 
 class LightSources : public ILightSources {
 	std::vector<std::shared_ptr<ILightInstance>> lights{};
 	std::vector<LightInstanceData> lightsData{};
-	std::shared_ptr<renderer::ISSBO> lightSsbo{};
+	std::shared_ptr<ISSBO> lightSsbo{};
 	bool dirty{true};
 
 	LightSources();
@@ -41,7 +38,7 @@ class LightSources : public ILightSources {
 public:
 	static std::shared_ptr<LightSources> create();
 
-	[[nodiscard]] const std::shared_ptr<renderer::ISSBO> &getLightSsbo() const override { return lightSsbo; }
+	[[nodiscard]] const std::shared_ptr<ISSBO> &getLightSsbo() const override { return lightSsbo; }
 
 	void updateSsbo() override;
 

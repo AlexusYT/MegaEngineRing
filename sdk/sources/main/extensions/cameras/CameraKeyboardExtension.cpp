@@ -20,7 +20,7 @@
 //
 
 
-#include <EngineSDK/main/scene/objects/extensions/cameras/CameraKeyboardExtension.h>
+#include <EngineSDK/main/extensions/cameras/CameraKeyboardExtension.h>
 
 #include <cmath>
 #include <glm/detail/func_geometric.inl>
@@ -28,7 +28,7 @@
 #include <glm/vec3.hpp>
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 

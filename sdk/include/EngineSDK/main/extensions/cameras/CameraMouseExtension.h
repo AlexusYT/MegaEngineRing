@@ -23,7 +23,7 @@
 #define CAMERAMOUSEEXTENSION_H
 #include <glm/vec2.hpp>
 
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "EngineSDK/main/extensions/Extension.h"
 
 namespace mer::sdk::main {
 class CameraMouseExtension : public Extension {

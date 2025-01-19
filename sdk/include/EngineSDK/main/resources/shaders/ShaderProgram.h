@@ -26,10 +26,10 @@
 
 #include "EngineSDK/main/resources/Resource.h"
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 class Shader;
 
-class ShaderProgram : public main::Resource {
+class ShaderProgram : public Resource {
 	inline static const ShaderProgram* usedProgram{};
 	uint32_t name;
 	std::vector<std::shared_ptr<Shader>> attachedShaders;
@@ -79,7 +79,7 @@ public:
 };
 
 
-} // namespace mer::sdk::renderer
+} // namespace mer::sdk::main
 
 
 #endif //SHADERPROGRAM_H

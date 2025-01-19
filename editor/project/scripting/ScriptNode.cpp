@@ -21,7 +21,7 @@
 
 #include "ScriptNode.h"
 
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "EngineSDK/main/extensions/Extension.h"
 #include "mvp/main/editors/graphicsScriptEditor/canvas/CanvasWidget.h"
 
 namespace mer::editor::project {

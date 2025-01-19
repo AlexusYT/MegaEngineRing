@@ -19,17 +19,17 @@
 // Created by alexus on 15.03.24.
 //
 
-#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
+#include "EngineSDK/main/extensions/ExtensionRegistry.h"
 
-#include "EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h"
-#include "EngineSDK/main/scene/objects/extensions/LightExtension.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
-#include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
-#include "EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h"
-#include "EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h"
-#include "EngineSDK/main/scene/objects/extensions/cameras/CameraKeyboardExtension.h"
-#include "EngineSDK/main/scene/objects/extensions/cameras/CameraMouseExtension.h"
-#include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
+#include "EngineSDK/main/extensions/BasicRenderExtension.h"
+#include "EngineSDK/main/extensions/LightExtension.h"
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
+#include "EngineSDK/main/extensions/ModelRenderExtension.h"
+#include "EngineSDK/main/extensions/MouseButtonExtension.h"
+#include "EngineSDK/main/extensions/cameras/CameraExtension.h"
+#include "EngineSDK/main/extensions/cameras/CameraKeyboardExtension.h"
+#include "EngineSDK/main/extensions/cameras/CameraMouseExtension.h"
+#include "EngineSDK/main/extensions/cameras/OrbitCameraExtension.h"
 #include "EngineUtils/utils/ReportMessage.h"
 #include "EngineUtils/utils/Utils.h"
 

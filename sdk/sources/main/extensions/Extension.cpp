@@ -20,12 +20,12 @@
 //
 
 
-#include <EngineSDK/main/scene/objects/extensions/Extension.h>
+#include <EngineSDK/main/extensions/Extension.h>
 
 #include <nlohmann/json.hpp>
 
+#include "EngineSDK/main/extensions/ExtensionRegistry.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
 #include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/PropertyBase.h"
 

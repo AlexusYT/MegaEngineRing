@@ -25,6 +25,7 @@
 
 #include "EngineSDK/main/render/IRenderInstance.h"
 #include "EngineSDK/main/render/RenderInstanceData.h"
+#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
 #include "EngineSDK/renderer/buffers/SSBO.h"
 
 namespace mer::sdk::main {
@@ -36,8 +37,8 @@ std::shared_ptr<IModel3DObject> Model3DObject::create() { return std::shared_ptr
 
 utils::ReportMessagePtr Model3DObject::onInitialize() {
 
-	instancesSsbo = std::make_shared<renderer::SSBO>();
-	instancesSsbo->setUsage(renderer::DYNAMIC_DRAW);
+	instancesSsbo = std::make_shared<SSBO>();
+	instancesSsbo->setUsage(DYNAMIC_DRAW);
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &dataBuffer);
 	glGenBuffers(1, &indexBuffer);

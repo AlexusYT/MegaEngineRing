@@ -21,11 +21,11 @@
 
 #ifndef PREFABPROGRAM_H
 #define PREFABPROGRAM_H
-#include "EngineSDK/renderer/shaders/ShaderProgram.h"
+#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
 
 namespace mer::sdk::main {
 
-class PrefabProgram : public renderer::ShaderProgram {
+class PrefabProgram : public ShaderProgram {
 	static std::shared_ptr<PrefabProgram> instance;
 	PrefabProgram();
 

@@ -23,7 +23,7 @@
 
 #include "EngineUtils/utils/ReportMessage.h"
 #include "EngineUtils/utils/UUID.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
 #include "EngineSDK/main/scripting/IScript.h"
 
 namespace mer::sdk::main {

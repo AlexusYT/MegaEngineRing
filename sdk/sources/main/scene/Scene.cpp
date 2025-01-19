@@ -37,9 +37,9 @@
 #include "EngineSDK/main/resources/models/Model3DResource.h"
 #include "EngineSDK/main/resources/shaders/builtin/PrefabProgram.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
-#include "EngineSDK/main/scene/objects/extensions/cameras/ICamera.h"
+#include "EngineSDK/main/extensions/Extension.h"
+#include "EngineSDK/main/extensions/ExtensionProperty.h"
+#include "EngineSDK/main/extensions/cameras/ICamera.h"
 #include "EngineSDK/renderer/GL.h"
 
 namespace mer::sdk::main {
@@ -75,8 +75,8 @@ void Scene::switchCamera(ICamera* pNewCamera) {
 }
 
 void Scene::beforeRender() {
-	renderer::GL::setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	renderer::GL::clear(renderer::ClearBits::COLOR_BUFFER_BIT | renderer::ClearBits::DEPTH_BUFFER_BIT);
+	GL::setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	GL::clear(ClearBits::COLOR_BUFFER_BIT | ClearBits::DEPTH_BUFFER_BIT);
 }
 
 sdk::utils::ReportMessagePtr Scene::initScene() {
@@ -258,7 +258,7 @@ void Scene::render() {
 }
 
 void Scene::resize(const int pWidth, const int pHeight) {
-	renderer::GL::viewport(0, 0, pWidth, pHeight);
+	GL::viewport(0, 0, pWidth, pHeight);
 	onWindowSizeChangedSignal(pWidth, pHeight);
 	for (const auto &object: objects) { object->onWindowSizeChanged(pWidth, pHeight); }
 }

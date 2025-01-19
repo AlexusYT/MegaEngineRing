@@ -21,7 +21,7 @@
 
 #ifndef PRESENTERMAIN_H
 #define PRESENTERMAIN_H
-#include "EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h"
+#include "EngineSDK/main/extensions/BasicRenderExtension.h"
 #include "IPresenterMain.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 

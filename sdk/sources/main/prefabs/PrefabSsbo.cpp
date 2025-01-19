@@ -30,7 +30,7 @@
 namespace mer::sdk::main {
 
 PrefabSsbo::PrefabSsbo() {
-	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), renderer::STREAM_DRAW);
+	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), STREAM_DRAW);
 }
 
 std::shared_ptr<PrefabSsbo> PrefabSsbo::create() { return std::shared_ptr<PrefabSsbo>(new PrefabSsbo()); }

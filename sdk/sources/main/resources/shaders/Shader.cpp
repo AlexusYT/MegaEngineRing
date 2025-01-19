@@ -20,13 +20,13 @@
 //
 
 
-#include "EngineSDK/renderer/shaders/Shader.h"
+#include "EngineSDK/main/resources/shaders/Shader.h"
 
 #include <epoxy/gl.h>
 
 #include "EngineUtils/utils/ReportMessage.h"
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 Shader::Shader(const ShaderTypeEnum pType) : type(pType) {}
 
 Shader::~Shader() { Shader::uninitialize(); }
@@ -136,4 +136,4 @@ void Shader::addReportInfo(const utils::ReportMessagePtr &pMsg) {
 	pMsg->addInfoLine("Shader type: {}", to_string(type));
 	pMsg->addInfoLine("Is compiled: {}", getCompileStatus());
 }
-} // namespace mer::sdk::renderer
+} // namespace mer::sdk::main

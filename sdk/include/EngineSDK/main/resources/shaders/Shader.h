@@ -22,18 +22,14 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <EngineSDK/main/resources/IResource.h>
-#include <EngineSDK/renderer/shaders/IShader.h>
 
 #include "EngineSDK/main/render/Initializable.h"
 #include "EngineUtils/utils/IReportable.h"
+#include "ShaderTypeEnum.h"
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 enum class ShaderTypeEnum;
-}
-
-namespace mer::sdk::renderer {
-class Shader : public main::Initializable, public utils::IReportable {
+class Shader : public Initializable, public utils::IReportable {
 	uint32_t name;
 	ShaderTypeEnum type;
 	std::string source;
@@ -72,5 +68,20 @@ public:
 
 	void addReportInfo(const utils::ReportMessagePtr &pMsg) override;
 };
-} // namespace mer::sdk::renderer
+
+class FragmentShader : public Shader {
+public:
+	FragmentShader() : Shader(ShaderTypeEnum::FRAGMENT_SHADER) {}
+};
+
+class GeometryShader : public Shader {
+public:
+	explicit GeometryShader() : Shader(ShaderTypeEnum::GEOMETRY_SHADER) {}
+};
+
+class VertexShader : public Shader {
+public:
+	VertexShader() : Shader(ShaderTypeEnum::VERTEX_SHADER) {}
+};
+} // namespace mer::sdk::main
 #endif //SHADER_H

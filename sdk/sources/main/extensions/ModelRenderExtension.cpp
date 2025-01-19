@@ -19,7 +19,7 @@
 // Created by alexus on 29.03.24.
 //
 
-#include "EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h"
+#include "EngineSDK/main/extensions/ModelRenderExtension.h"
 
 #include <glm/ext/matrix_transform.hpp>
 
@@ -27,7 +27,7 @@
 #include "EngineSDK/main/resources/materials/MaterialResource.h"
 #include "EngineSDK/main/resources/models/IModel3DObject.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 

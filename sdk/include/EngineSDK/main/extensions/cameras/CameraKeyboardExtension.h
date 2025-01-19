@@ -23,7 +23,7 @@
 #define CAMERAKEYBOARDEXTENSION_H
 #include <glm/vec2.hpp>
 
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "EngineSDK/main/extensions/Extension.h"
 #include "EngineSDK/utils/KeyboardKey.h"
 
 namespace mer::sdk::main {

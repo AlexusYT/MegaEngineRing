@@ -29,13 +29,7 @@
 namespace mer::sdk::main {
 class ITextureResource;
 class IMaterialResource;
-} // namespace mer::sdk::main
-
-namespace mer::sdk::renderer {
 class ShaderProgram;
-}
-
-namespace mer::sdk::main {
 class IModel3DObject;
 } // namespace mer::sdk::main
 
@@ -81,11 +75,9 @@ struct PropertyJsonSerializer<std::shared_ptr<main::IModel3DObject>> {
 };
 
 template<>
-struct PropertyJsonSerializer<std::shared_ptr<renderer::ShaderProgram>> {
-	static nlohmann::json serialize(const std::shared_ptr<renderer::ShaderProgram> &pValue,
-									main::Extension* pExtension);
-	static std::shared_ptr<renderer::ShaderProgram> deserialize(const nlohmann::json &pJson,
-																main::Extension* pExtension);
+struct PropertyJsonSerializer<std::shared_ptr<main::ShaderProgram>> {
+	static nlohmann::json serialize(const std::shared_ptr<main::ShaderProgram> &pValue, main::Extension* pExtension);
+	static std::shared_ptr<main::ShaderProgram> deserialize(const nlohmann::json &pJson, main::Extension* pExtension);
 };
 
 template<>

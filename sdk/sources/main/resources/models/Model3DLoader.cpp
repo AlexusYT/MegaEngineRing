@@ -25,6 +25,7 @@
 #include "EngineSDK/main/resources/ResourceLoadResult.h"
 #include "EngineSDK/main/resources/models/Model3DObject.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
 #include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk::main {
@@ -79,7 +80,7 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 				return;
 			}
 			if (pResult->isReady()) {
-				if (auto shader = std::dynamic_pointer_cast<renderer::ShaderProgram>(pResult->getResource()))
+				if (auto shader = std::dynamic_pointer_cast<ShaderProgram>(pResult->getResource()))
 					object->setShader(shader);
 			}
 		});

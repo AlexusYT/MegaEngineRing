@@ -5,28 +5,28 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/context/Window.cpp
         sources/main/context/MainWindow.cpp
         sources/main/resources/LoadedResources.cpp
-        sources/renderer/shaders/Shader.cpp
+        sources/main/resources/shaders/Shader.cpp
         sources/main/context/ResourcesWindow.cpp
         sources/main/resources/ResourceLoader.cpp
         sources/main/resources/Resources.cpp
         sources/main/scene/Scene.cpp
-        sources/renderer/shaders/ShaderProgram.cpp
+        sources/main/resources/shaders/ShaderProgram.cpp
         sources/main/resources/shaders/ShaderProgramLoader.cpp
         sources/main/buffers/ProgramWideShaderBuffer.cpp
         sources/renderer/GL.cpp
         sources/renderer/buffers/SSBO.cpp
         sources/main/scene/objects/SceneObject.cpp
-        sources/main/scene/objects/extensions/Extension.cpp
-        sources/main/scene/objects/extensions/BasicRenderExtension.cpp
-        sources/main/scene/objects/extensions/cameras/CameraExtension.cpp
-        sources/main/scene/objects/extensions/cameras/CameraKeyboardExtension.cpp
-        sources/main/scene/objects/extensions/ExtensionRegistry.cpp
-        sources/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.cpp
-        sources/main/scene/objects/extensions/OrbitCameraExtension.cpp
+        sources/main/extensions/Extension.cpp
+        sources/main/extensions/BasicRenderExtension.cpp
+        sources/main/extensions/cameras/CameraExtension.cpp
+        sources/main/extensions/cameras/CameraKeyboardExtension.cpp
+        sources/main/extensions/ExtensionRegistry.cpp
+        sources/main/extensions/cameras/PerspectiveProjectionCameraMod.cpp
+        sources/main/extensions/OrbitCameraExtension.cpp
         sources/main/resources/models/Model3DLoader.cpp
-        sources/main/scene/objects/extensions/ModelRenderExtension.cpp
+        sources/main/extensions/ModelRenderExtension.cpp
         sources/main/scripting/Script.cpp
-        sources/main/scene/objects/extensions/MainObjectExtension.cpp
+        sources/main/extensions/MainObjectExtension.cpp
         sources/utils/PropertyJsonSerializers.cpp
         sources/main/resources/models/Model3DResource.cpp
         sources/main/resources/models/Model3DObject.cpp
@@ -36,7 +36,7 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/resources/Resource.cpp
         sources/main/resources/textures/TextureResource.cpp
         sources/main/resources/textures/TextureLoader.cpp
-        sources/main/scene/objects/extensions/LightExtension.cpp
+        sources/main/extensions/LightExtension.cpp
         sources/main/light/LightInstance.cpp
         sources/main/light/LightSources.cpp
         sources/main/resources/materials/MaterialResource.cpp
@@ -64,47 +64,43 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/IApplicationSettings.h
         include/EngineSDK/main/DefaultApplicationSettings.h
         include/EngineSDK/main/scene/IScene.h
-        include/EngineSDK/renderer/shaders/ShaderTypeEnum.h
-        include/EngineSDK/renderer/shaders/VertexShader.h
-        include/EngineSDK/renderer/shaders/FragmentShader.h
+        include/EngineSDK/main/resources/shaders/ShaderTypeEnum.h
         include/EngineSDK/main/resources/ResourceLoader.h
         include/EngineSDK/main/resources/IResource.h
         include/EngineSDK/main/resources/Resources.h
         include/EngineSDK/main/scene/Scene.h
-        include/EngineSDK/renderer/shaders/IShaderProgram.h
-        include/EngineSDK/renderer/shaders/ShaderProgram.h
+        include/EngineSDK/main/resources/shaders/ShaderProgram.h
         include/EngineSDK/renderer/buffers/ISSBO.h
         include/EngineSDK/renderer/buffers/SSBO.h
         include/EngineSDK/renderer/buffers/BufferUsageEnum.h
         include/EngineSDK/main/resources/shaders/ShaderProgramLoader.h
         include/EngineSDK/main/buffers/ProgramWideShaderBuffer.h
-        include/EngineSDK/renderer/shaders/IShader.h
-        include/EngineSDK/renderer/shaders/Shader.h
+        include/EngineSDK/main/resources/shaders/Shader.h
         include/EngineSDK/main/scene/objects/ISceneObject.h
         include/EngineSDK/renderer/GL.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/ICamera.h
+        include/EngineSDK/main/extensions/cameras/ICamera.h
         include/EngineSDK/utils/ModifierKeys.h
         include/EngineSDK/utils/KeyboardKey.h
         include/EngineSDK/main/scene/objects/SceneObject.h
-        include/EngineSDK/main/scene/objects/extensions/Extension.h
-        include/EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h
+        include/EngineSDK/main/extensions/Extension.h
+        include/EngineSDK/main/extensions/BasicRenderExtension.h
         include/EngineSDK/main/resources/IResourceLoadExecutor.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/CameraKeyboardExtension.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/CameraMouseExtension.h
-        include/EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/IProjectionCameraMod.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h
+        include/EngineSDK/main/extensions/cameras/CameraExtension.h
+        include/EngineSDK/main/extensions/cameras/CameraKeyboardExtension.h
+        include/EngineSDK/main/extensions/cameras/CameraMouseExtension.h
+        include/EngineSDK/main/extensions/ExtensionRegistry.h
+        include/EngineSDK/main/extensions/cameras/PerspectiveProjectionCameraMod.h
+        include/EngineSDK/main/extensions/cameras/IProjectionCameraMod.h
+        include/EngineSDK/main/extensions/cameras/OrbitCameraExtension.h
         include/EngineSDK/utils/MouseButton.h
-        include/EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h
+        include/EngineSDK/main/extensions/MouseButtonExtension.h
         include/EngineSDK/main/resources/models/Model3DLoader.h
-        include/EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h
+        include/EngineSDK/main/extensions/ModelRenderExtension.h
         include/EngineSDK/main/IApplication.h
         include/EngineSDK/main/scripting/IScript.h
         include/EngineSDK/main/scripting/Script.h
-        include/EngineSDK/main/scene/objects/extensions/ExtensionProperty.h
-        include/EngineSDK/main/scene/objects/extensions/MainObjectExtension.h
+        include/EngineSDK/main/extensions/ExtensionProperty.h
+        include/EngineSDK/main/extensions/MainObjectExtension.h
         include/EngineSDK/utils/PropertyJsonSerializers.h
         include/EngineSDK/utils/PropertyJsonSerializer.h
         include/EngineSDK/main/resources/models/Model3DResource.h
@@ -130,7 +126,7 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/textures/Texture2DType.h
         include/EngineSDK/main/resources/ResourceType.h
         include/EngineSDK/main/resources/textures/TextureLoader.h
-        include/EngineSDK/main/scene/objects/extensions/LightExtension.h
+        include/EngineSDK/main/extensions/LightExtension.h
         include/EngineSDK/main/light/ILightInstance.h
         include/EngineSDK/main/light/ILightSources.h
         include/EngineSDK/main/light/LightInstance.h
@@ -157,7 +153,6 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/shaders/builtin/PrefabProgram.h
         include/EngineSDK/utils/Transformation.h
         include/EngineSDK/utils/Transformable.h
-        include/EngineSDK/renderer/shaders/GeometryShader.h
         include/EngineSDK/main/prefabs/PrefabSsbo.h
 )
 

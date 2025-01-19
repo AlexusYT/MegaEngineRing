@@ -19,7 +19,7 @@
 // Created by alexus on 24.03.24.
 //
 
-#include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
+#include "EngineSDK/main/extensions/cameras/OrbitCameraExtension.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/ext/matrix_transform.hpp>
@@ -28,7 +28,7 @@
 
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 

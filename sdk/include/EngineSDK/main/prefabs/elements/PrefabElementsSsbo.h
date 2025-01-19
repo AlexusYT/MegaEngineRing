@@ -37,7 +37,7 @@ class PrefabElementInstanceData;
 
 namespace mer::sdk::main {
 
-class PrefabElementsSsbo : public renderer::SSBO, public IRenderable {
+class PrefabElementsSsbo : public SSBO, public IRenderable {
 	std::unordered_map<PrefabElementInstance*, sigc::scoped_connection> instances;
 	std::vector<PrefabElementInstanceData> instancesData;
 	uint32_t elementsPerInstance{};

@@ -26,11 +26,11 @@
 
 #include "EngineSDK/main/render/IInitializable.h"
 #include "EngineSDK/main/render/IRenderable.h"
-#include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
 namespace mer::sdk::main {
 class IModel3DResource;
 class IRenderInstance;
+class ShaderProgram;
 
 class IModel3DObject : public virtual IInitializable, public IRenderable {
 public:
@@ -56,9 +56,9 @@ public:
 
 	virtual void setIModelResource(IModel3DResource* pResource) = 0;
 
-	virtual void setShader(const std::shared_ptr<renderer::ShaderProgram> &pShader) = 0;
+	virtual void setShader(const std::shared_ptr<ShaderProgram> &pShader) = 0;
 
-	virtual const std::shared_ptr<renderer::ShaderProgram> &getShader() const = 0;
+	virtual const std::shared_ptr<ShaderProgram> &getShader() const = 0;
 
 	virtual bool operator<(const IModel3DObject &pElement) const = 0;
 };

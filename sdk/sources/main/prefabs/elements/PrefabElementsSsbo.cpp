@@ -30,7 +30,7 @@
 
 namespace mer::sdk::main {
 PrefabElementsSsbo::PrefabElementsSsbo() {
-	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), renderer::STREAM_DRAW);
+	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), STREAM_DRAW);
 }
 
 PrefabElementsSsbo::~PrefabElementsSsbo() {

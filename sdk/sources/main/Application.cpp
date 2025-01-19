@@ -32,7 +32,7 @@
 	#include "EngineSDK/main/context/MainWindow.h"
 #endif
 #include "EngineSDK/main/resources/ResourceLoaders.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
+#include "EngineSDK/main/extensions/ExtensionRegistry.h"
 
 #ifndef EDITOR_SDK
 extern std::shared_ptr<mer::sdk::main::IScene> getPrimaryScene();

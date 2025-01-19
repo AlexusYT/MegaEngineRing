@@ -24,7 +24,7 @@
 
 #include "ISSBO.h"
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 
 class SSBO : public ISSBO {
 	uint32_t name{};
@@ -64,6 +64,6 @@ public:
 	[[nodiscard]] const BufferUsageEnum &getUsage() const override { return usage; }
 };
 
-} // namespace mer::sdk::renderer
+} // namespace mer::sdk::main
 
 #endif //SSBO_H

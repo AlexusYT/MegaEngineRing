@@ -24,7 +24,7 @@
 
 #include <epoxy/gl.h>
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 SSBO::SSBO() { glGenBuffers(1, &name); }
 
 SSBO::~SSBO() { glDeleteBuffers(1, &name); }
@@ -70,4 +70,4 @@ void SSBO::reallocate(int64_t pNewSize, const void* pNewData) {
 	setData(pNewData, pNewSize, usage);
 	bindBufferBase(baseIndex);
 }
-} // namespace mer::sdk::renderer
+} // namespace mer::sdk::main

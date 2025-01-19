@@ -30,11 +30,8 @@
 #include "EngineSDK/main/render/Initializable.h"
 #include "IModel3DObject.h"
 
-namespace mer::sdk::renderer {
-class ISSBO;
-}
-
 namespace mer::sdk::main {
+class ISSBO;
 class Model3DResource;
 class RenderInstanceData;
 class IRenderInstance;
@@ -50,9 +47,9 @@ class Model3DObject : public IModel3DObject, public IInstancedRender, public vir
 	uint32_t vao{};
 
 	std::vector<IRenderInstance*> instances;
-	std::unordered_map<std::shared_ptr<renderer::ShaderProgram>, std::vector<RenderInstanceData>> instancesData;
-	std::shared_ptr<renderer::ShaderProgram> shader;
-	std::shared_ptr<renderer::ISSBO> instancesSsbo;
+	std::unordered_map<std::shared_ptr<ShaderProgram>, std::vector<RenderInstanceData>> instancesData;
+	std::shared_ptr<ShaderProgram> shader;
+	std::shared_ptr<ISSBO> instancesSsbo;
 
 	Model3DObject() = default;
 
@@ -90,9 +87,9 @@ public:
 
 	void setIModelResource(IModel3DResource* pResource) override { resource = pResource; }
 
-	void setShader(const std::shared_ptr<renderer::ShaderProgram> &pShader) override { shader = pShader; }
+	void setShader(const std::shared_ptr<ShaderProgram> &pShader) override { shader = pShader; }
 
-	const std::shared_ptr<renderer::ShaderProgram> &getShader() const override { return shader; }
+	const std::shared_ptr<ShaderProgram> &getShader() const override { return shader; }
 
 	bool operator<(const IModel3DObject &pRhs) const override;
 

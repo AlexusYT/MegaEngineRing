@@ -21,29 +21,28 @@
 
 #include "EngineSDK/main/resources/shaders/ShaderProgramLoader.h"
 
-#include "EngineSDK/renderer/shaders/FragmentShader.h"
-#include "EngineSDK/renderer/shaders/ShaderProgram.h"
-#include "EngineSDK/renderer/shaders/VertexShader.h"
+#include "EngineSDK/main/resources/shaders/Shader.h"
+#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
 #include "EngineUtils/utils/ReportMessage.h"
 
 namespace mer::sdk::main {
 
-std::shared_ptr<IResource> ShaderProgramLoader::createResource() { return std::make_shared<renderer::ShaderProgram>(); }
+std::shared_ptr<IResource> ShaderProgramLoader::createResource() { return std::make_shared<ShaderProgram>(); }
 
 utils::ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
 												  std::shared_ptr<std::istream> &pStream,
 												  const std::shared_ptr<IResource> &pResource) {
-	auto program = std::dynamic_pointer_cast<renderer::ShaderProgram>(pResource);
+	auto program = std::dynamic_pointer_cast<ShaderProgram>(pResource);
 	uint8_t shadersCount;
 	pStream->read(reinterpret_cast<char*>(&shadersCount), sizeof(uint8_t));
 	for (uint8_t i = 0; i < shadersCount; i++) {
-		std::shared_ptr<renderer::Shader> shader;
+		std::shared_ptr<Shader> shader;
 		uint8_t shaderType;
 		pStream->read(reinterpret_cast<char*>(&shaderType), sizeof(uint8_t));
 		if (shaderType == 0) { //vertex shader
-			shader = std::make_shared<renderer::VertexShader>();
+			shader = std::make_shared<VertexShader>();
 		} else if (shaderType == 1) { //fragment shader
-			shader = std::make_shared<renderer::FragmentShader>();
+			shader = std::make_shared<FragmentShader>();
 		} else
 			continue;
 		shader->setSource(readString(pStream));

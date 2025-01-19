@@ -24,8 +24,8 @@
 #include <glm/mat4x4.hpp>
 #include <sigc++/signal.h>
 
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
+#include "EngineSDK/main/extensions/Extension.h"
+#include "EngineSDK/main/extensions/ExtensionProperty.h"
 #include "IProjectionCameraMod.h"
 
 namespace mer::sdk::main {

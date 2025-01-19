@@ -23,7 +23,7 @@
 
 #include <epoxy/gl.h>
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 
 void GL::viewport(const int pX, const int pY, const int pWidth, const int pHeight) {
 	glViewport(pX, pY, pWidth, pHeight);
@@ -41,4 +41,4 @@ void GL::clear(const ClearBits pMask) {
 	glClear(mask);
 }
 
-} // namespace mer::sdk::renderer
+} // namespace mer::sdk::main

@@ -19,12 +19,12 @@
 // Created by alexus on 23.10.24.
 //
 
-#include "EngineSDK/main/scene/objects/extensions/LightExtension.h"
+#include "EngineSDK/main/extensions/LightExtension.h"
 
 #include <glm/vec4.hpp>
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
 LightExtension::LightExtension() : propertyPower(this, "Power"), propertyColor(this, "Light color") {

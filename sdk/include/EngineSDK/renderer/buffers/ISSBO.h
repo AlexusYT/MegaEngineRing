@@ -26,7 +26,7 @@
 
 #include "BufferUsageEnum.h"
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 
 
 class ISSBO {
@@ -57,7 +57,7 @@ public:
 
 	[[nodiscard]] virtual const BufferUsageEnum &getUsage() const = 0;
 };
-} // namespace mer::sdk::renderer
+} // namespace mer::sdk::main
 
 
 #endif //ISSBO_H

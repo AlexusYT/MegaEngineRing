@@ -22,7 +22,7 @@
 #include "EditorCameraScript.h"
 
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h"
+#include "EngineSDK/main/extensions/cameras/OrbitCameraExtension.h"
 
 namespace mer::editor::mvp {
 sdk::utils::ReportMessagePtr EditorCameraScript::setup() {

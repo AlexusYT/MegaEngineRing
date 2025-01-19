@@ -20,16 +20,16 @@
 //
 
 
-#include "EngineSDK/renderer/shaders/ShaderProgram.h"
+#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
 
 #include <epoxy/gl.h>
 #include <glm/mat4x4.hpp>
 
-#include "EngineSDK/main/resources/ResourceType.h"
-#include "EngineSDK/renderer/shaders/Shader.h"
 #include "EngineUtils/utils/ReportMessage.h"
+#include "EngineSDK/main/resources/ResourceType.h"
+#include "EngineSDK/main/resources/shaders/Shader.h"
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 
 ShaderProgram::ShaderProgram() : name(0) {}
 
@@ -138,4 +138,4 @@ void ShaderProgram::addReportInfo(const utils::ReportMessagePtr &pMsg) {
 	for (auto shader: attachedShaders) { shader->addReportInfo(pMsg); }
 }
 
-} // namespace mer::sdk::renderer
+} // namespace mer::sdk::main

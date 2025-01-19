@@ -21,9 +21,7 @@
 
 #include "EngineSDK/main/resources/shaders/builtin/PrefabProgram.h"
 
-#include "EngineSDK/renderer/shaders/FragmentShader.h"
-#include "EngineSDK/renderer/shaders/GeometryShader.h"
-#include "EngineSDK/renderer/shaders/VertexShader.h"
+#include "EngineSDK/main/resources/shaders/Shader.h"
 
 namespace mer::sdk::main {
 std::shared_ptr<PrefabProgram> PrefabProgram::instance = std::shared_ptr<PrefabProgram>(new PrefabProgram);
@@ -31,7 +29,7 @@ std::shared_ptr<PrefabProgram> PrefabProgram::instance = std::shared_ptr<PrefabP
 PrefabProgram::PrefabProgram() {
 	Resource::setResourceUri("_builtin_/shaders/PrefabProgram.enshader");
 
-	std::shared_ptr<renderer::Shader> vertexShader = std::make_shared<renderer::VertexShader>();
+	std::shared_ptr<Shader> vertexShader = std::make_shared<VertexShader>();
 	//language=glsl
 	vertexShader->setSource(R"(
 #version 460 core
@@ -116,7 +114,7 @@ void main(){
 })");
 	attachShader(vertexShader);
 
-	std::shared_ptr<renderer::Shader> geometryShader = std::make_shared<renderer::GeometryShader>();
+	std::shared_ptr<Shader> geometryShader = std::make_shared<GeometryShader>();
 	//language=glsl
 	geometryShader->setSource(R"(
 #version 460 core
@@ -204,7 +202,7 @@ void main() {
 }
 )");
 	attachShader(geometryShader);
-	std::shared_ptr<renderer::Shader> fragmentShader = std::make_shared<renderer::FragmentShader>();
+	std::shared_ptr<Shader> fragmentShader = std::make_shared<FragmentShader>();
 	//language=glsl
 	fragmentShader->setSource(R"(
 #version 460 core

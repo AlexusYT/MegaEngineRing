@@ -21,9 +21,7 @@
 
 #include "SimpleShader.h"
 
-#include "EngineSDK/renderer/shaders/FragmentShader.h"
-#include "EngineSDK/renderer/shaders/GeometryShader.h"
-#include "EngineSDK/renderer/shaders/VertexShader.h"
+#include "EngineSDK/main/resources/shaders/Shader.h"
 
 namespace mer::editor::graphics {
 std::shared_ptr<SimpleShader> SimpleShader::instance = std::shared_ptr<SimpleShader>(new SimpleShader);
@@ -31,7 +29,7 @@ std::shared_ptr<SimpleShader> SimpleShader::instance = std::shared_ptr<SimpleSha
 SimpleShader::SimpleShader() {
 	Resource::setResourceUri("_builtin_/shaders/SimpleShader.enshader");
 
-	std::shared_ptr<sdk::renderer::Shader> vertexShader = std::make_shared<sdk::renderer::VertexShader>();
+	std::shared_ptr<sdk::main::Shader> vertexShader = std::make_shared<sdk::main::VertexShader>();
 	//language=glsl
 	vertexShader->setSource(R"(
 #version 460 core
@@ -51,7 +49,7 @@ void main(){
 })");
 	attachShader(vertexShader);
 
-	std::shared_ptr<sdk::renderer::Shader> geometryShader = std::make_shared<sdk::renderer::GeometryShader>();
+	std::shared_ptr<sdk::main::Shader> geometryShader = std::make_shared<sdk::main::GeometryShader>();
 	//language=glsl
 	geometryShader->setSource(R"(
 #version 460 core
@@ -86,7 +84,7 @@ void main() {
 }
 )");
 	attachShader(geometryShader);
-	std::shared_ptr<sdk::renderer::Shader> fragmentShader = std::make_shared<sdk::renderer::FragmentShader>();
+	std::shared_ptr<sdk::main::Shader> fragmentShader = std::make_shared<sdk::main::FragmentShader>();
 	//language=glsl
 	fragmentShader->setSource(R"(
 #version 460 core

@@ -22,8 +22,8 @@
 #include "SceneExplorerObject.h"
 
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/main/extensions/Extension.h"
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
 #include "mvp/main/objectProperties/ObjectPropertyEntry.h"
 
 namespace mer::editor::mvp {

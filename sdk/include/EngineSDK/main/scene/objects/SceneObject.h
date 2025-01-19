@@ -27,7 +27,6 @@
 
 #include "EngineUtils/utils/ReportMessageFwd.h"
 #include "ISceneObject.h"
-#include "extensions/Extension.h"
 
 namespace mer::sdk::main {
 class IScript;

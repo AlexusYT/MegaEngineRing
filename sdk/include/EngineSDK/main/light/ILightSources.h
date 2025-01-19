@@ -22,18 +22,15 @@
 #ifndef ILIGHTSOURCES_H
 #define ILIGHTSOURCES_H
 
-namespace mer::sdk::renderer {
-class ISSBO;
-}
-
 namespace mer::sdk::main {
+class ISSBO;
 class ILightInstance;
 
 class ILightSources {
 public:
 	virtual ~ILightSources() = default;
 
-	[[nodiscard]] virtual const std::shared_ptr<renderer::ISSBO> &getLightSsbo() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ISSBO> &getLightSsbo() const = 0;
 
 	virtual void updateSsbo() = 0;
 

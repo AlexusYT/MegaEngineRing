@@ -31,7 +31,7 @@
 #include "EngineSDK/main/resources/materials/MaterialResource.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
 #include "EngineSDK/main/resources/textures/TextureResource.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
+#include "EngineSDK/main/extensions/ExtensionRegistry.h"
 #include "Globals.h"
 #include "PanedLayoutTab.h"
 #include "centerWindow/PresenterCenterWindow.h"

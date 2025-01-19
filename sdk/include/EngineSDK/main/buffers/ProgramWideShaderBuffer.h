@@ -26,7 +26,7 @@
 #include <glm/mat4x4.hpp>
 
 namespace mer::sdk::main {
-class ProgramWideShaderBuffer : public renderer::SSBO {
+class ProgramWideShaderBuffer : public SSBO {
 	struct Data {
 		glm::mat4 viewProjMatrix{1};
 		glm::mat4 projectionMatrix{1};
@@ -40,7 +40,7 @@ class ProgramWideShaderBuffer : public renderer::SSBO {
 public:
 	ProgramWideShaderBuffer() {
 		SSBO::bind();
-		SSBO::setData(&data, sizeof(data), renderer::BufferUsageEnum::DYNAMIC_DRAW);
+		SSBO::setData(&data, sizeof(data), DYNAMIC_DRAW);
 	}
 
 	void update() {

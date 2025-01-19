@@ -19,14 +19,14 @@
 // Created by alexus on 27.02.24.
 //
 
-#include <EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h>
+#include <EngineSDK/main/extensions/BasicRenderExtension.h>
 
 #include <EngineUtils/utils/Logger.h>
 #include <epoxy/gl.h>
 
+#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
 #include "EngineSDK/main/scene/Scene.h"
 #include "EngineSDK/main/scene/objects/SceneObject.h"
-#include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
 namespace mer::sdk::main {
 utils::ReportMessagePtr BasicRenderExtension::onInit() {

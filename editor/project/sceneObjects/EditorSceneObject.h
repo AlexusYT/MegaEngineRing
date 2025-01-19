@@ -21,10 +21,12 @@
 
 #ifndef ENGINESCENEOBJECT_H
 #define ENGINESCENEOBJECT_H
+
+//TODO delete file
 #include <EngineUtils/utils/UUID.h>
 
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
 #include "EngineSDK/main/scene/objects/ISceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
 #include "project/generatedFiles/GeneratedFiles.h"
 
 namespace mer::editor::mvp {

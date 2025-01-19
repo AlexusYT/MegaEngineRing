@@ -24,7 +24,7 @@
 #include "EngineSDK/main/render/IRenderable.h"
 #include "EngineSDK/main/render/Initializable.h"
 
-namespace mer::sdk::renderer {
+namespace mer::sdk::main {
 class ShaderProgram;
 }
 
@@ -34,7 +34,7 @@ class SceneOverlayElements : public sdk::main::Initializable, public sdk::main::
 	uint32_t dataBuffer{};
 	uint32_t indexBuffer{};
 	uint32_t vao{};
-	std::shared_ptr<sdk::renderer::ShaderProgram> shader;
+	std::shared_ptr<sdk::main::ShaderProgram> shader;
 	std::vector<uint16_t> indices;
 	bool gridVisible{true};
 

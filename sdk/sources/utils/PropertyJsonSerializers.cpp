@@ -26,12 +26,12 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
+#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
+#include "EngineSDK/main/extensions/Extension.h"
 #include "EngineSDK/main/resources/materials/IMaterialResource.h"
 #include "EngineSDK/main/resources/models/Model3DObject.h"
 #include "EngineSDK/main/resources/models/Model3DResource.h"
 #include "EngineSDK/main/resources/textures/ITextureResource.h"
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
-#include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
 namespace mer::sdk::utils {
 nlohmann::json PropertyJsonSerializer<glm::vec<4, float>>::serialize(const glm::vec4 &pValue,
@@ -113,12 +113,12 @@ std::shared_ptr<main::IModel3DObject> PropertyJsonSerializer<std::shared_ptr<mai
 	return nullptr;
 }
 
-nlohmann::json PropertyJsonSerializer<std::shared_ptr<renderer::ShaderProgram>>::serialize(
-	const std::shared_ptr<renderer::ShaderProgram> &, main::Extension* /*pExtension*/) {
+nlohmann::json PropertyJsonSerializer<std::shared_ptr<main::ShaderProgram>>::serialize(
+	const std::shared_ptr<main::ShaderProgram> &, main::Extension* /*pExtension*/) {
 	return "Shader";
 }
 
-std::shared_ptr<renderer::ShaderProgram> PropertyJsonSerializer<std::shared_ptr<renderer::ShaderProgram>>::deserialize(
+std::shared_ptr<main::ShaderProgram> PropertyJsonSerializer<std::shared_ptr<main::ShaderProgram>>::deserialize(
 	const nlohmann::json & /*pJson*/, main::Extension* /*pExtension*/) {
 	return nullptr;
 }

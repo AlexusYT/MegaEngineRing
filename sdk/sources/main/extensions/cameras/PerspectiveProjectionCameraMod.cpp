@@ -19,12 +19,12 @@
 // Created by alexus on 22.03.24.
 //
 
-#include "EngineSDK/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.h"
+#include "EngineSDK/main/extensions/cameras/PerspectiveProjectionCameraMod.h"
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <sigc++/adaptors/hide.h>
 
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "EngineSDK/main/extensions/Extension.h"
 
 namespace mer::sdk::main {
 PerspectiveProjectionCameraMod::PerspectiveProjectionCameraMod()

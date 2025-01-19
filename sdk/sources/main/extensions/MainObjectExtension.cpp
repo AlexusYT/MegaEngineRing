@@ -16,38 +16,11 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 27.02.24.
+// Created by alexus on 28.09.24.
 //
 
-#ifndef BASICRENDEREXTENSION_H
-#define BASICRENDEREXTENSION_H
-#include "Extension.h"
-
-namespace mer::sdk::renderer {
-class ShaderProgram;
-}
+#include "EngineSDK/main/extensions/MainObjectExtension.h"
 
 namespace mer::sdk::main {
-class BasicRenderExtension : public Extension {
-	std::shared_ptr<renderer::ShaderProgram> shader;
-
-	uint32_t vao{};
-	uint32_t vbo{};
-
-protected:
-	BasicRenderExtension() = default;
-
-public:
-	METHOD_CREATE(BasicRenderExtension)
-
-	EXT_TYPE_NAME("BasicRenderExtension")
-
-protected:
-	utils::ReportMessagePtr onInit() override;
-	utils::ReportMessagePtr onDeinit() override;
-	void onRender() override;
-};
+MainObjectExtension::MainObjectExtension() : propertyName(this, "Name"), propertyPosition(this, "Position") {}
 } // namespace mer::sdk::main
-
-
-#endif //BASICRENDEREXTENSION_H

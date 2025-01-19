@@ -36,7 +36,7 @@ namespace mer::sdk::main {
 struct PrefabInstanceData;
 class PrefabInstance;
 
-class PrefabSsbo : public renderer::SSBO, public IRenderable {
+class PrefabSsbo : public SSBO, public IRenderable {
 	std::unordered_map<PrefabInstance*, sigc::scoped_connection> instances;
 	std::vector<PrefabInstanceData> instancesData;
 	void* ssboData{};

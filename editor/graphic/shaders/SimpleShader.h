@@ -21,11 +21,11 @@
 
 #ifndef SIMPLESHADER_H
 #define SIMPLESHADER_H
-#include "EngineSDK/renderer/shaders/ShaderProgram.h"
+#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
 
 namespace mer::editor::graphics {
 
-class SimpleShader : public sdk::renderer::ShaderProgram {
+class SimpleShader : public sdk::main::ShaderProgram {
 	static std::shared_ptr<SimpleShader> instance;
 
 	SimpleShader();

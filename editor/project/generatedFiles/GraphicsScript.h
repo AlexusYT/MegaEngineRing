@@ -21,7 +21,7 @@
 
 #ifndef GRAPHICSSCRIPT_H
 #define GRAPHICSSCRIPT_H
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "EngineSDK/main/extensions/Extension.h"
 #include "GeneratedFileEntry.h"
 #include "project/Project.h"
 #include "project/sceneObjects/EditorSceneObject.h"

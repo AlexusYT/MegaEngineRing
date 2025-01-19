@@ -25,12 +25,12 @@
 #include <algorithm>
 #include <epoxy/gl.h>
 
+#include "include/EngineSDK/main/resources/shaders/ShaderProgram.h"
 #include "EngineSDK/main/prefabs/IPrefabElementInstance.h"
 #include "EngineSDK/main/prefabs/PrefabSsbo.h"
 #include "EngineSDK/main/prefabs/elements/PrefabElement.h"
 #include "EngineSDK/main/prefabs/elements/PrefabElementInstance.h"
 #include "EngineSDK/main/prefabs/elements/PrefabElementsSsbo.h"
-#include "EngineSDK/renderer/shaders/ShaderProgram.h"
 
 namespace mer::sdk::main {
 Prefab::Prefab()

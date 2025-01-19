@@ -23,7 +23,7 @@
 
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
 
-#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
+#include "EngineSDK/main/extensions/ExtensionRegistry.h"
 #include "generatedFiles/ApplicationInfo.h"
 #include "generators/cpp/CppCustomStatement.h"
 #include "generators/cpp/CppHeaderFile.h"

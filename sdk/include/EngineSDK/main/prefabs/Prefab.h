@@ -31,11 +31,8 @@
 #include "EngineSDK/main/render/Initializable.h"
 #include "PrefabInstance.h"
 
-namespace mer::sdk::renderer {
-class ShaderProgram;
-}
-
 namespace mer::sdk::main {
+class ShaderProgram;
 class PrefabSsbo;
 class IMaterialResource;
 class PrefabElementInstance;
@@ -56,7 +53,7 @@ class Prefab : public Initializable, public IRenderable {
 	std::vector<std::shared_ptr<PrefabInstance>> instances;
 	std::shared_ptr<PrefabElementsSsbo> prefabElementsSsbo;
 	std::shared_ptr<PrefabSsbo> prefabSsbo;
-	std::shared_ptr<renderer::ShaderProgram> shaderProgram;
+	std::shared_ptr<ShaderProgram> shaderProgram;
 
 protected:
 	Prefab();
@@ -87,9 +84,9 @@ public:
 
 	void addInstance(const std::shared_ptr<PrefabInstance> &pInstance);
 
-	[[nodiscard]] const std::shared_ptr<renderer::ShaderProgram> &getShaderProgram() const { return shaderProgram; }
+	[[nodiscard]] const std::shared_ptr<ShaderProgram> &getShaderProgram() const { return shaderProgram; }
 
-	void setShaderProgram(const std::shared_ptr<renderer::ShaderProgram> &pShaderProgram) {
+	void setShaderProgram(const std::shared_ptr<ShaderProgram> &pShaderProgram) {
 		shaderProgram = pShaderProgram;
 	}
 

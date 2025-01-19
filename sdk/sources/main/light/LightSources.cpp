@@ -25,9 +25,9 @@
 #include "EngineSDK/renderer/buffers/SSBO.h"
 
 namespace mer::sdk::main {
-LightSources::LightSources() : lightSsbo(std::make_shared<renderer::SSBO>()) {
+LightSources::LightSources() : lightSsbo(std::make_shared<SSBO>()) {
 
-	lightSsbo->setUsage(renderer::DYNAMIC_DRAW);
+	lightSsbo->setUsage(DYNAMIC_DRAW);
 }
 
 std::shared_ptr<LightSources> LightSources::create() { return std::shared_ptr<LightSources>(new LightSources()); }

@@ -21,17 +21,13 @@
 
 #ifndef IRENDERINSTANCE_H
 #define IRENDERINSTANCE_H
-#include <sigc++/functors/slot.h>
-
-namespace mer::sdk::renderer {
-class ShaderProgram;
-}
 
 namespace sigc {
 struct connection;
 }
 
 namespace mer::sdk::main {
+class ShaderProgram;
 struct MaterialData;
 class RenderInstanceData;
 class IInstancedRender;
@@ -42,7 +38,7 @@ public:
 
 	virtual const RenderInstanceData &getRenderInstanceData() = 0;
 
-	virtual std::shared_ptr<renderer::ShaderProgram> getShader() = 0;
+	virtual std::shared_ptr<ShaderProgram> getShader() = 0;
 
 	virtual void notifyDataChanged() = 0;
 
