@@ -37,9 +37,7 @@ public:
 private:
 	template<typename T>
 	static void writeArray(std::ofstream &pStream, const std::vector<T> &pArray) {
-		//Object indices cannot be grater than 65535, we're using uint16_t instead of uint32_t or uint64_t to decrease
-		//the file size.
-		uint16_t size = static_cast<uint16_t>(pArray.size());
+		uint64_t size = static_cast<uint64_t>(pArray.size());
 		pStream.write(reinterpret_cast<const std::ostream::char_type*>(&size), sizeof(size));
 		pStream.write(reinterpret_cast<const std::ostream::char_type*>(pArray.data()),
 					  static_cast<long int>(size * sizeof(T)));

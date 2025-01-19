@@ -38,7 +38,7 @@ public:
 
 	template<typename T>
 	static void readArray(const std::shared_ptr<std::istream> &pStream, std::vector<T> &pArray) {
-		uint16_t size = 0;
+		uint64_t size = 0;
 		pStream->read(reinterpret_cast<std::istream::char_type*>(&size), sizeof(size));
 		pArray.resize(size);
 		pStream->read(reinterpret_cast<std::istream::char_type*>(pArray.data()),
