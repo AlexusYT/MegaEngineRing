@@ -25,15 +25,12 @@
 #include "EngineSDK/utils/ModifierKeys.h"
 #include "mvp/main/editors/IPresenterSceneEditor.h"
 
-namespace mer::editor::mvp {
-class ExplorerObject;
-}
-
 namespace mer::sdk::main {
 class IApplication;
 }
 
 namespace mer::editor::mvp {
+class ExplorerObject;
 class IViewSceneEditor;
 class IModelSceneEditor;
 
@@ -49,6 +46,8 @@ public:
 
 private:
 	void addView(const std::shared_ptr<IView> &) override;
+
+	void onGridToggled(bool pState) override;
 
 	static sdk::utils::ModifierKeys convertToModifierKeys(const Gdk::ModifierType &pState);
 

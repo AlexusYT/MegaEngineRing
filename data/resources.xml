@@ -36,4 +36,7 @@
 	<gresource prefix="/_builtin_/shaders">
 		<file compressed="true">DefaultInstancedProgram.enshader</file>
 	</gresource>
+	<gresource prefix="/icons/32x32/actions">
+		<file compressed="true">grid.png</file>
+	</gresource>
 </gresources>

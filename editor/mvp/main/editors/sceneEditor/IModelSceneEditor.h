@@ -88,6 +88,8 @@ public:
 	virtual void onCursorPosChanged(double pX, double pY) = 0;
 
 	virtual void onMouseButtonStateChanged(sdk::utils::MouseButton pButton, bool pPressed, double pX, double pY) = 0;
+
+	virtual void toggleGrid(bool pState) = 0;
 };
 } // namespace mer::editor::mvp
 

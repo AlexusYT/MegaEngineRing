@@ -6,8 +6,14 @@ set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/data")
 add_custom_command(
         OUTPUT resources.cpp
         COMMAND export PATH="${PROGRAM_PATH};$ENV{PATH}"
-        COMMAND glib-compile-resources --target=resources.cpp --generate-source --internal --sourcedir="${RESOURCE_PATH}/css" --sourcedir="${RESOURCE_PATH}/ui" --sourcedir="${RESOURCE_PATH}/paned-layouts" --sourcedir="${RESOURCE_PATH}/_builtin_/shaders" "${RESOURCE_PATH}/resources.xml"
-        DEPENDS "${RESOURCE_PATH}/resources.xml" "${RESOURCE_PATH}/ui"
+        COMMAND glib-compile-resources --target=resources.cpp --generate-source --internal
+        --sourcedir="${RESOURCE_PATH}/css"
+        --sourcedir="${RESOURCE_PATH}/icons/32x32/actions"
+        --sourcedir="${RESOURCE_PATH}/ui"
+        --sourcedir="${RESOURCE_PATH}/paned-layouts"
+        --sourcedir="${RESOURCE_PATH}/_builtin_/shaders"
+        "${RESOURCE_PATH}/resources.xml"
+        DEPENDS "${RESOURCE_PATH}/resources.xml" "${RESOURCE_PATH}"
 )
 
 add_library(
@@ -289,6 +295,10 @@ add_library(
         ui/customWidgets/resourceSelector/SourceSelectionColor.h
         mvp/resourceEditor/savers/ResourceSaverBase.cpp
         mvp/resourceEditor/savers/ResourceSaverBase.h
+        mvp/main/editors/sceneEditor/SceneOverlayElements.cpp
+        mvp/main/editors/sceneEditor/SceneOverlayElements.h
+        graphic/shaders/SimpleShader.cpp
+        graphic/shaders/SimpleShader.h
 
 )
 

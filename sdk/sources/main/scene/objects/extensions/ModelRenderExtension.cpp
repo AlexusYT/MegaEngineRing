@@ -57,6 +57,8 @@ utils::ReportMessagePtr ModelRenderExtension::onInit() {
 				data.material = pData;
 				notifyDataChanged();
 			});
+		} else {
+			data.material = MaterialResource::defaultMaterial->getData();
 		}
 		notifyDataChanged();
 	});

@@ -37,6 +37,7 @@ class ViewSceneEditor : public IViewSceneEditor {
 
 	Gtk::GLArea area;
 	Gtk::Switch modeSwitch;
+	Gtk::ToggleButton gridToggle;
 	std::shared_ptr<Gtk::EventControllerMotion> motionController;
 	std::shared_ptr<Gtk::GestureClick> gestureClick;
 	std::shared_ptr<Gtk::EventControllerKey> keyController;

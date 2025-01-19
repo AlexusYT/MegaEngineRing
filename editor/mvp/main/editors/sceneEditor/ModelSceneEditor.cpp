@@ -21,11 +21,12 @@
 
 #include "ModelSceneEditor.h"
 
+#include "SceneOverlayElements.h"
 #include "project/LoadedScene.h"
 
 namespace mer::editor::mvp {
 
-ModelSceneEditor::ModelSceneEditor() {}
+ModelSceneEditor::ModelSceneEditor() : sceneOverlayElements(SceneOverlayElements::create()) {}
 
 sigc::connection ModelSceneEditor::connectOnLoadingSignal(const sigc::slot<void()> &pSlot) const {
 	return loadedScene->connectOnLoadingSignal(pSlot);
@@ -39,11 +40,20 @@ bool ModelSceneEditor::hasScene() const { return loadedScene->hasScene(); }
 
 bool ModelSceneEditor::hasResourcesContext() const { return loadedScene->hasResourcesContext(); }
 
-void ModelSceneEditor::initScene() { loadedScene->initScene(); }
+void ModelSceneEditor::initScene() {
+	loadedScene->initScene();
+	if (auto msg = sceneOverlayElements->initialize()) { sdk::utils::Logger::error(msg); }
+}
 
-void ModelSceneEditor::uninitScene() { loadedScene->uninitScene(); }
+void ModelSceneEditor::uninitScene() {
+	loadedScene->uninitScene();
+	sceneOverlayElements->uninitialize();
+}
 
-void ModelSceneEditor::render() { loadedScene->render(); }
+void ModelSceneEditor::render() {
+	loadedScene->render();
+	sceneOverlayElements->render();
+}
 
 void ModelSceneEditor::setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext) const {
 	loadedScene->setupResourcesContext(pResourcesContext);
@@ -77,6 +87,8 @@ void ModelSceneEditor::onMouseButtonStateChanged(const sdk::utils::MouseButton p
 												 const double pX, const double pY) {
 	loadedScene->onMouseButtonStateChanged(pButton, pPressed, pX, pY);
 }
+
+void ModelSceneEditor::toggleGrid(bool pState) { sceneOverlayElements->setGridVisible(pState); }
 
 
 } // namespace mer::editor::mvp
