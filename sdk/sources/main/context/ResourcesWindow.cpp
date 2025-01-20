@@ -22,7 +22,7 @@
 #include <condition_variable>
 #include <future>
 
-#include "EngineSDK/main/IApplication.h"
+#include "EngineSDK/main/context/IApplication.h"
 #include "EngineSDK/main/resources/IResourceBundle.h"
 #include "EngineSDK/main/resources/ResourceLoadResult.h"
 #include "EngineSDK/main/resources/ResourceLoader.h"

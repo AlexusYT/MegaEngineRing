@@ -25,9 +25,8 @@
 
 #include <EngineUtils/utils/ReportMessage.h>
 
-#include "IApplication.h"
 #include "IApplicationSettings.h"
-
+#include "IApplication.h"
 
 namespace mer::sdk::main {
 

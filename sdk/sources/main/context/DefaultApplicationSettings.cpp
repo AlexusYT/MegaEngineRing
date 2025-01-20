@@ -19,7 +19,7 @@
 // Created by alexus on 19.01.24.
 //
 
-#include <EngineSDK/main/DefaultApplicationSettings.h>
+#include <EngineSDK/main/context/DefaultApplicationSettings.h>
 
 namespace mer::sdk::main {
 DefaultApplicationSettings::DefaultApplicationSettings()

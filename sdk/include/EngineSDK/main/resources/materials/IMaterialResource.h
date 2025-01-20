@@ -21,7 +21,6 @@
 
 #ifndef IMATERIALRESOURCE_H
 #define IMATERIALRESOURCE_H
-#include "EngineSDK/main/Application.h"
 #include "EngineSDK/main/render/IRenderable.h"
 #include "MaterialData.h"
 

@@ -19,7 +19,7 @@
 // Created by alexus on 06.01.24.
 //
 
-#include "EngineSDK/main/Application.h"
+#include "EngineSDK/main/context/Application.h"
 
 #include <EngineUtils/utils/Logger.h>
 #ifndef EDITOR_SDK
@@ -27,12 +27,12 @@
 #endif
 #include <signal.h>
 
-#include "EngineSDK/main/DefaultApplicationSettings.h"
+#include "../../../include/EngineSDK/main/context/DefaultApplicationSettings.h"
 #ifndef EDITOR_SDK
 	#include "EngineSDK/main/context/MainWindow.h"
 #endif
-#include "EngineSDK/main/resources/ResourceLoaders.h"
-#include "EngineSDK/main/extensions/ExtensionRegistry.h"
+#include "../../../include/EngineSDK/main/extensions/ExtensionRegistry.h"
+#include "../../../include/EngineSDK/main/resources/ResourceLoaders.h"
 
 #ifndef EDITOR_SDK
 extern std::shared_ptr<mer::sdk::main::IScene> getPrimaryScene();

@@ -1,7 +1,7 @@
 
 
-set(ENGINE_SOURCES sources/main/Application.cpp
-        sources/main/DefaultApplicationSettings.cpp
+set(ENGINE_SOURCES sources/main/context/Application.cpp
+        sources/main/context/DefaultApplicationSettings.cpp
         sources/main/context/Window.cpp
         sources/main/context/MainWindow.cpp
         sources/main/resources/LoadedResources.cpp
@@ -53,15 +53,15 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/utils/Transformable.cpp
         sources/main/prefabs/PrefabSsbo.cpp
 )
-set(ENGINE_HEADERS include/EngineSDK/main/Application.h
+set(ENGINE_HEADERS include/EngineSDK/main/context/Application.h
         include/EngineSDK/main/context/Window.h
         include/EngineSDK/main/context/MainWindow.h
         include/EngineSDK/main/resources/LoadedResources.h
         include/EngineSDK/main/context/ResourcesWindow.h
         include/EngineSDK/main/context/IContext.h
-        include/EngineSDK/main/IWindow.h
-        include/EngineSDK/main/IApplicationSettings.h
-        include/EngineSDK/main/DefaultApplicationSettings.h
+        include/EngineSDK/main/context/IWindow.h
+        include/EngineSDK/main/context/IApplicationSettings.h
+        include/EngineSDK/main/context/DefaultApplicationSettings.h
         include/EngineSDK/main/scene/IScene.h
         include/EngineSDK/main/resources/shaders/ShaderTypeEnum.h
         include/EngineSDK/main/resources/ResourceLoader.h
@@ -93,7 +93,7 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/extensions/MouseButtonExtension.h
         include/EngineSDK/main/resources/models/Model3DLoader.h
         include/EngineSDK/main/extensions/ModelRenderExtension.h
-        include/EngineSDK/main/IApplication.h
+        include/EngineSDK/main/context/IApplication.h
         include/EngineSDK/main/scripting/IScript.h
         include/EngineSDK/main/scripting/Script.h
         include/EngineSDK/main/extensions/ExtensionProperty.h

@@ -27,6 +27,7 @@
 #include <sigc++/signal.h>
 
 #include "EngineSDK/main/resources/Resource.h"
+#include "EngineUtils/utils/Property.h"
 #include "IMaterialResource.h"
 
 namespace mer::sdk::main {

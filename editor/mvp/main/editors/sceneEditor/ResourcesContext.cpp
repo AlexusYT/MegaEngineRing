@@ -23,7 +23,7 @@
 
 #include <future>
 
-#include "EngineSDK/main/IApplication.h"
+#include "EngineSDK/main/context/IApplication.h"
 #include "EngineSDK/main/resources/IResource.h"
 #include "EngineSDK/main/resources/IResourceBundle.h"
 #include "EngineSDK/main/resources/LoadedResources.h"

@@ -24,7 +24,7 @@
 #include <condition_variable>
 #include <thread>
 
-#include "EngineSDK/main/Application.h"
+#include "EngineSDK/main/context/Application.h"
 #include "EngineSDK/main/resources/IResourceLoadExecutor.h"
 
 namespace mer::sdk::main {
