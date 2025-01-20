@@ -47,5 +47,5 @@ inline bool operator<(glm::vec2 pLhs, glm::vec2 pRhs) {
 #include <vector>
 
 
-#define MAIN_SDK SDK_NAMESPACE::main
+#define MAIN_SDK SDK_NAMESPACE
 #endif //COMMON_H

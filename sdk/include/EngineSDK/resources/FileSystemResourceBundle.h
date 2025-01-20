@@ -26,7 +26,7 @@
 
 #include "IResourceBundle.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class FileSystemResourceBundle : public IResourceBundle {
 	std::filesystem::path searchPath{};
@@ -37,12 +37,12 @@ protected:
 public:
 	static std::shared_ptr<IResourceBundle> create(const std::filesystem::path &pSearchPath);
 
-	utils::ReportMessagePtr getResourceStream(const std::string &pResourceUri,
+	ReportMessagePtr getResourceStream(const std::string &pResourceUri,
 											  std::shared_ptr<std::istream> &pStream) override;
 
 	void listResources(std::vector<std::string> &pUris) const override;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //FSRESOURCEBUNDLE_H

@@ -24,7 +24,7 @@
 
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResourceBundle;
 class IApplicationSettings;
 
@@ -33,7 +33,7 @@ class IApplication {
 public:
 	virtual ~IApplication() = default;
 
-	virtual utils::ReportMessagePtr initEngine() = 0;
+	virtual ReportMessagePtr initEngine() = 0;
 
 	virtual void deinitEngine() = 0;
 
@@ -48,7 +48,7 @@ public:
 
 	virtual void setResourceBundle(const std::shared_ptr<IResourceBundle> &pResourceBundle) = 0;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //IAPPLICATION_H

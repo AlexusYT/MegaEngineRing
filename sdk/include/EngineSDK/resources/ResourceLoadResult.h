@@ -25,18 +25,18 @@
 
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResource;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class ResourceLoadResult {
 public:
 	enum class State { NONE = 0, ERRORED, PRELOADED, READY };
 
 private:
-	utils::ReportMessagePtr error{};
+	ReportMessagePtr error{};
 	std::shared_ptr<IResource> resource{};
 	State state{State::NONE};
 	std::string requestedUri{};
@@ -46,9 +46,9 @@ private:
 public:
 	static std::shared_ptr<ResourceLoadResult> create();
 
-	[[nodiscard]] const utils::ReportMessagePtr &getError() const { return error; }
+	[[nodiscard]] const ReportMessagePtr &getError() const { return error; }
 
-	void setError(const utils::ReportMessagePtr &pError) {
+	void setError(const ReportMessagePtr &pError) {
 		error = pError;
 		state = State::ERRORED;
 	}
@@ -81,6 +81,6 @@ public:
 	bool isReady() const { return state == State::READY; }
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //RESOURCELOADCALLBACKS_H

@@ -29,7 +29,7 @@
 #include "EngineUtils/utils/Property.h"
 #include "ITextureResource.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class TextureResource : public ITextureResource, public Resource {
 	uint32_t id{};
@@ -42,8 +42,8 @@ class TextureResource : public ITextureResource, public Resource {
 	Texture2DImageFormat format{};
 	Texture2DType type{};
 	uint32_t textureBlock{};
-	utils::Property<uint64_t> textureHandle;
-	utils::Property<glm::vec4> materialComponentVal;
+	Property<uint64_t> textureHandle;
+	Property<glm::vec4> materialComponentVal;
 
 	TextureResource();
 
@@ -53,7 +53,7 @@ public:
 	~TextureResource() override;
 
 protected:
-	utils::ReportMessagePtr onInitialize() override;
+	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 
@@ -93,9 +93,9 @@ public:
 
 	ResourceType getResourceType() override { return ResourceType::TEXTURE; }
 
-	[[nodiscard]] utils::PropertyReadOnly<uint64_t> getTextureHandle() override { return textureHandle.getReadOnly(); }
+	[[nodiscard]] PropertyReadOnly<uint64_t> getTextureHandle() override { return textureHandle.getReadOnly(); }
 
-	utils::PropertyReadOnly<glm::vec4> getComponentValueProperty() override {
+	PropertyReadOnly<glm::vec4> getComponentValueProperty() override {
 		return materialComponentVal.getReadOnly();
 	}
 
@@ -103,6 +103,6 @@ private:
 	static glm::vec4 handleToVec(uint64_t pHandle);
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //TEXTURERESOURCE_H

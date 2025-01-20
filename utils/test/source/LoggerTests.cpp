@@ -22,7 +22,7 @@
 #include <regex>
 
 #include "EngineUtils/utils/Logger.h"
-using namespace mer::sdk::utils;
+using namespace mer::sdk;
 
 class LoggerTestsFixture : public testing::Test {
 	bool useColors = true;

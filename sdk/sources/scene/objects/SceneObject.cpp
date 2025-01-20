@@ -26,7 +26,7 @@
 #include "EngineSDK/extensions/MainObjectExtension.h"
 #include "EngineSDK/scripting/IScript.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 SceneObject::SceneObject() {
 	auto mainExt = MainObjectExtension::create();
@@ -43,10 +43,10 @@ SceneObject::~SceneObject() = default;
 
 std::shared_ptr<ISceneObject> SceneObject::create() { return std::shared_ptr<ISceneObject>(new SceneObject()); }
 
-utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
+ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 												  const std::shared_ptr<Extension> &pExtension) {
 	if (!pExtension) {
-		auto msg = utils::ReportMessage::create();
+		auto msg = ReportMessage::create();
 		msg->setTitle("Unable to add an extension");
 		msg->setMessage("Extension cannot be nullptr");
 		msg->addInfoLine("Extension name: {}", pName);
@@ -54,7 +54,7 @@ utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 		return msg;
 	}
 	if (const auto iter = extensions.find(pName); iter != extensions.end()) {
-		auto msg = utils::ReportMessage::create();
+		auto msg = ReportMessage::create();
 		msg->setTitle("Unable to add an extension");
 		msg->setMessage("Extension with that name already added");
 		msg->addInfoLine("Extension name: {}", pName);
@@ -73,7 +73,7 @@ utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 				}
 			} catch (...) {
 				pExtension->setObject(nullptr);
-				auto msg = utils::ReportMessage::create();
+				auto msg = ReportMessage::create();
 				msg->setTitle("Unable to add an extension");
 				msg->setMessage("Exception occurred in onInit()");
 				msg->addInfoLine("Extension name: {}", pName);
@@ -88,9 +88,9 @@ utils::ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 	return nullptr;
 }
 
-utils::ReportMessagePtr SceneObject::removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension) {
+ReportMessagePtr SceneObject::removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension) {
 	if (const auto iter = extensions.find(pName); iter == extensions.end()) {
-		auto msg = utils::ReportMessage::create();
+		auto msg = ReportMessage::create();
 		msg->setTitle("Unable to remove an extension");
 		msg->setMessage("Extension with that name doesn't exists");
 		msg->addInfoLine("Extension name: {}", pName);
@@ -108,7 +108,7 @@ utils::ReportMessagePtr SceneObject::removeExtension(const std::string &pName, s
 			}
 		} catch (...) {
 			ext->setObject(nullptr);
-			auto msg = utils::ReportMessage::create();
+			auto msg = ReportMessage::create();
 			msg->setTitle("Unable to remove an extension. It will be destroyed");
 			msg->setMessage("Exception occurred in onDeinit()");
 			msg->addInfoLine("Extension name: {}", pName);
@@ -121,7 +121,7 @@ utils::ReportMessagePtr SceneObject::removeExtension(const std::string &pName, s
 	return nullptr;
 }
 
-utils::ReportMessagePtr SceneObject::transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) {
+ReportMessagePtr SceneObject::transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) {
 	std::shared_ptr<Extension> tmp;
 	if (auto msg = this->removeExtension(pName, tmp)) { return msg; }
 	if (auto msg = pTransferTo->addExtension(pName, tmp)) { return msg; }
@@ -141,7 +141,7 @@ void SceneObject::setScript(const std::shared_ptr<IScript> &pScript) {
 	}
 }
 
-utils::ReportMessagePtr SceneObject::init() {
+ReportMessagePtr SceneObject::init() {
 	if (inited) return nullptr;
 
 	for (const auto &extension: extensions) {
@@ -157,7 +157,7 @@ utils::ReportMessagePtr SceneObject::init() {
 		if (createFunc) {
 			script = createFunc();
 		} else {
-			utils::Logger::error("Unable to load script: {}", scriptName);
+			Logger::error("Unable to load script: {}", scriptName);
 		}
 	}*/
 	if (script) { script->setup(); }
@@ -187,15 +187,15 @@ void SceneObject::onCursorPosChanged(const double pX, const double pY) const {
 	}
 }
 
-void SceneObject::onKeyStateChanged(const utils::KeyboardKey pKey, const bool pPressed,
-									const utils::ModifierKeys &pMods) const {
+void SceneObject::onKeyStateChanged(const KeyboardKey pKey, const bool pPressed,
+									const ModifierKeys &pMods) const {
 	for (const auto &extension: extensions) {
 		if (!extension.second->isEnabled()) continue;
 		extension.second->onKeyStateChanged(pKey, pPressed, pMods);
 	}
 }
 
-void SceneObject::onMouseButtonStateChanged(const utils::MouseButton pButton, const bool pPressed, const double pX,
+void SceneObject::onMouseButtonStateChanged(const MouseButton pButton, const bool pPressed, const double pX,
 											const double pY) const {
 	for (const auto &extension: extensions) {
 		if (!extension.second->isEnabled()) continue;
@@ -209,4 +209,4 @@ bool SceneObject::notifyOnMouseScroll(double pDx, double pDy) {
 	if (script) handled = script->notifyOnMouseScroll(pDx, pDy) || handled;
 	return handled;
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

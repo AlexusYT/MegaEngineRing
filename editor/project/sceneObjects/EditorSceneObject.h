@@ -38,7 +38,7 @@ class Project;
 class GraphicsScript;
 } // namespace mer::editor::project
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ISceneObject;
 }
 
@@ -48,12 +48,12 @@ class EditorSceneObject : public project::GeneratedFiles {
 	std::shared_ptr<Gio::ListStore<mvp::ObjectPropertyEntry>> propertyEntries;
 
 	std::shared_ptr<project::GraphicsScript> graphicsScript;
-	sdk::main::ISceneObject* nativeObject{};
+	sdk::ISceneObject* nativeObject{};
 
-	EditorSceneObject(sdk::main::ISceneObject* pNativeObject, std::shared_ptr<project::Project> pProject);
+	EditorSceneObject(sdk::ISceneObject* pNativeObject, std::shared_ptr<project::Project> pProject);
 
 public:
-	static std::shared_ptr<EditorSceneObject> create(sdk::main::ISceneObject* const pNativeObject,
+	static std::shared_ptr<EditorSceneObject> create(sdk::ISceneObject* const pNativeObject,
 													 const std::shared_ptr<project::Project> &pProject) {
 		return Glib::make_refptr_for_instance(new EditorSceneObject(pNativeObject, pProject));
 	}
@@ -79,9 +79,9 @@ public:
 
 	void setObjectName(const std::string &pName) { nativeObject->getMainExtension()->propertyName = pName; }
 
-	void setNativeObject(sdk::main::ISceneObject* pNativeObject) { nativeObject = pNativeObject; }
+	void setNativeObject(sdk::ISceneObject* pNativeObject) { nativeObject = pNativeObject; }
 
-	[[nodiscard]] sdk::main::ISceneObject* getNativeObject() const { return nativeObject; }
+	[[nodiscard]] sdk::ISceneObject* getNativeObject() const { return nativeObject; }
 
 	[[nodiscard]] const std::shared_ptr<Gio::ListStore<mvp::ObjectPropertyEntry>> &getPropertyEntries() const {
 		return propertyEntries;
@@ -90,7 +90,7 @@ public:
 	[[nodiscard]] const std::shared_ptr<project::GraphicsScript> &getGraphicsScript() const { return graphicsScript; }
 
 private:
-	sdk::utils::ReportMessagePtr onSaveDatabase() const override;
+	sdk::ReportMessagePtr onSaveDatabase() const override;
 };
 } // namespace mer::editor::ui
 

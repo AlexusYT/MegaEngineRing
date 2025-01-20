@@ -44,13 +44,13 @@
 #include "mvp/main/editors/sceneEditor/explorerObjects/RootExplorerObject.h"
 #include "mvp/main/editors/sceneEditor/explorerObjects/SceneExplorerObject.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class PropertyBase;
 }
 
 namespace mer::editor::project {
 LoadedScene::LoadedScene() : mainObject(mvp::RootExplorerObject::create()) {
-	app = sdk::main::Application::create();
+	app = sdk::Application::create();
 	app->initEngine();
 }
 
@@ -63,11 +63,11 @@ bool LoadedScene::hasScene() const { return scene != nullptr; }
 
 bool LoadedScene::hasResourcesContext() const { return getResourceLoadExecutor() != nullptr; }
 
-sdk::main::IResourceLoadExecutor* LoadedScene::getResourceLoadExecutor() const { return scene->getResourceExecutor(); }
+sdk::IResourceLoadExecutor* LoadedScene::getResourceLoadExecutor() const { return scene->getResourceExecutor(); }
 
 void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) {
 	context = pResourcesContext;
-	const auto resources = sdk::main::LoadedResources::create();
+	const auto resources = sdk::LoadedResources::create();
 	pResourcesContext->setResources(resources);
 	pResourcesContext->setApplication(app.get());
 	pResourcesContext->preloadResources();
@@ -83,10 +83,10 @@ void LoadedScene::uninitScene() const {
 
 void LoadedScene::render() const { scene->render(); }
 
-sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
+sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 
 	unload();
-	scene = sdk::main::Scene::create();
+	scene = sdk::Scene::create();
 	scene->setResourceExecutor(context.get());
 	onLoadingSignal();
 	setName("Untitled Scene");
@@ -95,7 +95,7 @@ sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPat
 	try {
 		database = std::make_shared<SQLite::Database>(pPath, SQLite::OPEN_CREATE | SQLite::OPEN_READWRITE);
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to open scene file");
 		msg->setMessage("Database connection failed");
 		msg->addInfoLine("File path: {}", pPath.string());
@@ -106,7 +106,7 @@ sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPat
 		databaseLocked = false;
 		return msg;
 	}
-	connections.push_back(scene->getOnObjectAddedSignal().connect([this](sdk::main::ISceneObject* pObject) {
+	connections.push_back(scene->getOnObjectAddedSignal().connect([this](sdk::ISceneObject* pObject) {
 		if (pObject == cameraObject.get()) return;
 		auto explorerObject = mvp::SceneExplorerObject::create(pObject);
 
@@ -116,7 +116,7 @@ sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPat
 		//std::thread([this, explorerObject] { addObjectToDatabase(explorerObject); }).detach();
 	}));
 
-	connections.push_back(scene->getOnObjectRemovedSignal().connect([this](sdk::main::ISceneObject* pObject) {
+	connections.push_back(scene->getOnObjectRemovedSignal().connect([this](sdk::ISceneObject* pObject) {
 		auto iter = explorerBySceneObj.find(pObject);
 		if (iter == explorerBySceneObj.end()) return;
 		auto sceneObj = iter->second;
@@ -132,17 +132,17 @@ sdk::utils::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPat
 	}
 	onLoadedSignal();
 
-	std::shared_ptr<sdk::main::ICamera> editorCamera;
-	auto camera = sdk::main::OrbitCameraExtension::create();
-	auto cameraMouse = sdk::main::CameraMouseExtension::create();
+	std::shared_ptr<sdk::ICamera> editorCamera;
+	auto camera = sdk::OrbitCameraExtension::create();
+	auto cameraMouse = sdk::CameraMouseExtension::create();
 	cameraMouse->setEnabled(false);
-	auto mouseButton = sdk::main::MouseButtonExtension::create();
-	mouseButton->connectButtonSignal(sdk::utils::MouseButton::BUTTON_MIDDLE,
-									 [cameraMouse](sdk::utils::MouseButton /*pButton*/, bool pPressed, double /*pX*/,
+	auto mouseButton = sdk::MouseButtonExtension::create();
+	mouseButton->connectButtonSignal(sdk::MouseButton::BUTTON_MIDDLE,
+									 [cameraMouse](sdk::MouseButton /*pButton*/, bool pPressed, double /*pX*/,
 												   double /*pY*/) { cameraMouse->setEnabled(pPressed); });
 
 	cameraMouse->propertyAngle.getEvent().connect(camera->propertyAngle.getSetter());
-	cameraObject = sdk::main::SceneObject::create();
+	cameraObject = sdk::SceneObject::create();
 	cameraObject->addExtension("cameraMouse", cameraMouse);
 	cameraObject->addExtension("mouseButton", mouseButton);
 	cameraObject->addExtension("camera", camera);
@@ -173,7 +173,7 @@ void LoadedScene::unload() {
 	name.clear();
 }
 
-sdk::utils::ReportMessagePtr LoadedScene::readSceneSettings() {
+sdk::ReportMessagePtr LoadedScene::readSceneSettings() {
 	if (!database->tableExists("Settings")) return nullptr;
 
 	try {
@@ -185,7 +185,7 @@ sdk::utils::ReportMessagePtr LoadedScene::readSceneSettings() {
 			if (propertyName == "Name") { setName(column.getString()); }
 		}
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to parse scene settings");
 		msg->setMessage("Exception occurred while querying the data");
 		return msg;
@@ -194,23 +194,23 @@ sdk::utils::ReportMessagePtr LoadedScene::readSceneSettings() {
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr LoadedScene::readObjects() {
+sdk::ReportMessagePtr LoadedScene::readObjects() {
 	if (!database->tableExists("Objects")) return nullptr;
 
 	try {
 		//language=sql
 		SQLite::Statement statement(*database, "SELECT * FROM Objects");
 		while (statement.executeStep()) {
-			auto object = sdk::main::SceneObject::create();
+			auto object = sdk::SceneObject::create();
 			object->setUuid(UUID::parse(statement.getColumn(1)));
 			scene->addObject(object);
 			nlohmann::json json = nlohmann::json::parse(statement.getColumn(2).getString());
 			if (json.is_array()) {
 				for (const auto &ext: json) {
 					if (ext.is_object()) {
-						sdk::main::Extension* extension;
+						sdk::Extension* extension;
 						auto extType = ext.at("ExtensionType").get<std::string>();
-						if (extType == sdk::main::MainObjectExtension::typeName()) {
+						if (extType == sdk::MainObjectExtension::typeName()) {
 							extension = object->getMainExtension();
 						} else {
 							auto extName = ext.at("ExtensionName").get<std::string>();
@@ -221,12 +221,12 @@ sdk::utils::ReportMessagePtr LoadedScene::readObjects() {
 				}
 			}
 			object->connectOnExtensionPropertyChanged(
-				[this, object](sdk::main::Extension* /*pExtension*/, sdk::utils::PropertyBase* /*pProperty*/) {
+				[this, object](sdk::Extension* /*pExtension*/, sdk::PropertyBase* /*pProperty*/) {
 					std::thread([this, object] { saveObject(object.get()); }).detach();
 				});
 		}
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to parse scene objects");
 		msg->setMessage("Exception occurred while querying the data");
 		return msg;
@@ -240,7 +240,7 @@ void LoadedScene::addObject() {
 	addObjectToDatabase(obj);
 }
 
-void LoadedScene::removeObject(sdk::main::ISceneObject* pObjectToRemove) {
+void LoadedScene::removeObject(sdk::ISceneObject* pObjectToRemove) {
 
 	std::thread([this, pObjectToRemove] {
 		removeObjectFromDatabase(pObjectToRemove);
@@ -248,24 +248,24 @@ void LoadedScene::removeObject(sdk::main::ISceneObject* pObjectToRemove) {
 	}).detach();
 }
 
-void LoadedScene::removeExtension(const sdk::main::Extension* pExtensionToRemove) const {
+void LoadedScene::removeExtension(const sdk::Extension* pExtensionToRemove) const {
 	auto obj = pExtensionToRemove->getObject();
 	if (!obj) return;
 
-	std::shared_ptr<sdk::main::Extension> removedExtension;
+	std::shared_ptr<sdk::Extension> removedExtension;
 	obj->removeExtension(pExtensionToRemove->getName(), removedExtension);
 
 	std::thread([this, obj] { saveObject(obj); }).detach();
 }
 
-void LoadedScene::renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const {
+void LoadedScene::renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const {
 	pObject->getMainExtension()->propertyName = pNewName;
 	std::thread([this, pObject] { saveObject(pObject); }).detach();
 }
 
-std::shared_ptr<sdk::main::Extension> LoadedScene::addExtension(
-	sdk::main::ISceneObject* pObject, const std::string &pType, const std::string &pName) const {
-	const auto ext = sdk::main::ExtensionRegistry::newInstance(pType);
+std::shared_ptr<sdk::Extension> LoadedScene::addExtension(
+	sdk::ISceneObject* pObject, const std::string &pType, const std::string &pName) const {
+	const auto ext = sdk::ExtensionRegistry::newInstance(pType);
 	pObject->addExtension(pName, ext);
 	//if (hasResourcesContext()) ext->onInit();
 	onExtensionAdded(ext.get());
@@ -273,7 +273,7 @@ std::shared_ptr<sdk::main::Extension> LoadedScene::addExtension(
 	return ext;
 }
 
-void LoadedScene::saveObject(sdk::main::ISceneObject* pObject) const {
+void LoadedScene::saveObject(sdk::ISceneObject* pObject) const {
 	if (databaseLocked) return;
 	if (!database->tableExists("Objects")) return;
 	nlohmann::json json;
@@ -295,14 +295,14 @@ UPDATE Objects SET Extensions = ? WHERE UUID = ?
 		statement.clearBindings();
 		statement.reset();
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save the object to the table");
 		msg->setMessage("Exception occurred while executing query");
 		onErrorOccurred(msg);
 	}
 }
 
-void LoadedScene::addObjectToDatabase(const std::shared_ptr<sdk::main::ISceneObject> &pObject) const {
+void LoadedScene::addObjectToDatabase(const std::shared_ptr<sdk::ISceneObject> &pObject) const {
 	if (databaseLocked) return;
 
 	if (!database->tableExists("Objects")) {
@@ -331,14 +331,14 @@ INSERT INTO Objects (UUID, Extensions) VALUES (?, ?)
 		statement.clearBindings();
 		statement.reset();
 	} catch (...) {
-		const auto msg = sdk::utils::ReportMessage::create();
+		const auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to insert the new object to the table");
 		msg->setMessage("Exception occurred while executing query");
 		onErrorOccurred(msg);
 	}
 }
 
-void LoadedScene::removeObjectFromDatabase(sdk::main::ISceneObject* pObject) const {
+void LoadedScene::removeObjectFromDatabase(sdk::ISceneObject* pObject) const {
 	if (!database->tableExists("Objects")) return;
 
 	try {
@@ -349,14 +349,14 @@ void LoadedScene::removeObjectFromDatabase(sdk::main::ISceneObject* pObject) con
 		statement.clearBindings();
 		statement.reset();
 	} catch (...) {
-		const auto msg = sdk::utils::ReportMessage::create();
+		const auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to delete the object from the table");
 		msg->setMessage("Exception occurred while executing query");
 		onErrorOccurred(msg);
 	}
 }
 
-sdk::utils::ReportMessagePtr LoadedScene::createObjectsTable() const {
+sdk::ReportMessagePtr LoadedScene::createObjectsTable() const {
 	try {
 		//language=sql
 		database->exec(R"(CREATE TABLE Objects
@@ -369,7 +369,7 @@ sdk::utils::ReportMessagePtr LoadedScene::createObjectsTable() const {
 );
 )");
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to create the objects table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -381,7 +381,7 @@ void LoadedScene::onCursorPosChanged(const double pX, const double pY) const {
 	if (cameraObject) cameraObject->onCursorPosChanged(pX, pY);
 }
 
-void LoadedScene::onMouseButtonStateChanged(const sdk::utils::MouseButton pButton, const bool pPressed, const double pX,
+void LoadedScene::onMouseButtonStateChanged(const sdk::MouseButton pButton, const bool pPressed, const double pX,
 											const double pY) const {
 	if (cameraObject) cameraObject->onMouseButtonStateChanged(pButton, pPressed, pX, pY);
 }
@@ -392,10 +392,10 @@ void LoadedScene::selectObject(mvp::ExplorerObject* pObjectToSelect) {
 	onSelectionChanged(selectedObject);
 }
 
-std::shared_ptr<sdk::main::ISceneObject> LoadedScene::createObject() const {
-	auto object = sdk::main::SceneObject::create();
+std::shared_ptr<sdk::ISceneObject> LoadedScene::createObject() const {
+	auto object = sdk::SceneObject::create();
 	object->connectOnExtensionPropertyChanged(
-		[this, object](sdk::main::Extension* /*pExtension*/, sdk::utils::PropertyBase* /*pProperty*/) {
+		[this, object](sdk::Extension* /*pExtension*/, sdk::PropertyBase* /*pProperty*/) {
 			std::thread([this, object] { saveObject(object.get()); }).detach();
 		});
 	scene->addObject(object);

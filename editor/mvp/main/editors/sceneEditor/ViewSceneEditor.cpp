@@ -60,7 +60,7 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 				glContext->realize();
 				return glContext;
 			} catch (Gdk::GLError &e) {
-				sdk::utils::Logger::out("{}", static_cast<int>(e.code()));
+				sdk::Logger::out("{}", static_cast<int>(e.code()));
 				throw;
 			}
 		},

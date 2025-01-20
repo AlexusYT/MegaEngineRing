@@ -23,5 +23,5 @@
 #define PROPERTYREADONLY_H
 #include "Property.h"
 
-namespace mer::sdk::utils {} // namespace mer::sdk::utils
+namespace mer::sdk {} // namespace mer::sdk
 #endif						 //PROPERTYREADONLY_H

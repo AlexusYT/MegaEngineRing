@@ -31,7 +31,7 @@
 #include "EngineSDK/render/Initializable.h"
 #include "PrefabInstance.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ShaderProgram;
 class PrefabSsbo;
 class IMaterialResource;
@@ -61,8 +61,8 @@ protected:
 public:
 	static std::shared_ptr<Prefab> create();
 
-	utils::Property<bool> visible;
-	utils::Property<std::shared_ptr<IMaterialResource>> material;
+	Property<bool> visible;
+	Property<std::shared_ptr<IMaterialResource>> material;
 
 	~Prefab() override;
 
@@ -91,7 +91,7 @@ public:
 	}
 
 protected:
-	utils::ReportMessagePtr onInitialize() override;
+	ReportMessagePtr onInitialize() override;
 
 	void render() override;
 
@@ -101,6 +101,6 @@ private:
 };
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //PREFAB_H

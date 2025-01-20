@@ -23,7 +23,7 @@
 #define IINSTANCEDRENDER_H
 #include "RenderInstance.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IRenderInstance;
 
 class IInstancedRender {
@@ -36,6 +36,6 @@ public:
 	virtual void onMaterialDataChanged(RenderInstance* pRenderInstance) = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IINSTANCEDRENDER_H

@@ -26,7 +26,7 @@
 
 class UUID;
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IApplication;
 class IResource;
 class IResourceLoadExecutor;
@@ -37,11 +37,11 @@ public:
 
 	virtual std::shared_ptr<IResource> createResource() = 0;
 
-	virtual utils::ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
+	virtual ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
 											const std::shared_ptr<std::istream> &pShared,
 											const std::shared_ptr<IResource> &pResource) = 0;
 
-	virtual utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
+	virtual ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 										 const std::shared_ptr<IResource> &pResource) = 0;
 
 
@@ -56,7 +56,7 @@ class ResourceLoader : public IResourceLoader {
 	IApplication* application{};
 
 public:
-	utils::ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
+	ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
 									const std::shared_ptr<std::istream> &pStream,
 									const std::shared_ptr<IResource> &pResource) override;
 
@@ -91,7 +91,7 @@ template<typename T>
 void ResourceLoader::readNumber(const std::shared_ptr<std::istream> &pStream, T &pNumOut) {
 	pStream->read(reinterpret_cast<std::istream::char_type*>(&pNumOut), sizeof(pNumOut));
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //RESOURCELOADER_H

@@ -27,7 +27,7 @@
 #include "EngineSDK/render/IInitializable.h"
 #include "EngineSDK/render/IRenderable.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IModel3DResource;
 class IRenderInstance;
 class ShaderProgram;
@@ -63,6 +63,6 @@ public:
 	virtual bool operator<(const IModel3DObject &pElement) const = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IMODEL3DOBJECT_H

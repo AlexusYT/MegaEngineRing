@@ -31,7 +31,7 @@
 #include "EngineSDK/resources/textures/TextureMinFilter.h"
 #include "EngineUtils/utils/Logger.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 TextureResource::TextureResource()
 	: minFilter(TextureMinFilter::LINEAR), magFilter(TextureMagFilter::LINEAR), textureHandle(nullptr, "TextureHandle"),
 	  materialComponentVal(nullptr, "TextureComponent") {}
@@ -45,7 +45,7 @@ TextureResource::~TextureResource() {
 	if (data) free(data);
 }
 
-utils::ReportMessagePtr TextureResource::onInitialize() {
+ReportMessagePtr TextureResource::onInitialize() {
 	/*glCreateTextures(GL_TEXTURE_2D, 1, &id);
 	glTextureStorage2D(id, 1, GL_RGBA8, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 	glTextureSubImage2D(id,
@@ -119,4 +119,4 @@ glm::vec4 TextureResource::handleToVec(const uint64_t pHandle) {
 	convertedHandle.y = static_cast<unsigned>(pHandle >> 32) & 0xFFFFFFFF;
 	return glm::vec4(glm::uintBitsToFloat(convertedHandle), 0.0f, 2.0f);
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

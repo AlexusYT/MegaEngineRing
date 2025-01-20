@@ -23,7 +23,7 @@
 #define MODIFIERKEYS_H
 #include <cstdint>
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class ModifierKeys {
 	uint8_t mods;
 
@@ -78,7 +78,7 @@ public:
 	 */
 	[[nodiscard]] bool check(const uint8_t modsToCheck) const { return mods & modsToCheck; }
 };
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 
 #endif //MODIFIERKEYS_H

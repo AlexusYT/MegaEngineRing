@@ -82,11 +82,11 @@ public:
 	}
 
 	static std::shared_ptr<UUID> parse(const std::string &pString) {
-		mer::sdk::utils::ReportMessagePtr error;
+		mer::sdk::ReportMessagePtr error;
 		return parse(pString, error);
 	}
 
-	static std::shared_ptr<UUID> parse(const std::string &pString, mer::sdk::utils::ReportMessagePtr &pError);
+	static std::shared_ptr<UUID> parse(const std::string &pString, mer::sdk::ReportMessagePtr &pError);
 
 	constexpr std::string toString(const bool pUpperCase = false) const {
 		if (pUpperCase) {

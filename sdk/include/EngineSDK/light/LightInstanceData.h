@@ -23,7 +23,7 @@
 #define LIGHTINSTANCEDATA_H
 #include <glm/vec4.hpp>
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class LightInstanceData {
 public:
@@ -35,6 +35,6 @@ public:
 	uint32_t padding3{};
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //LIGHTINSTANCEDATA_H

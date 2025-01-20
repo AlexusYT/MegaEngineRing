@@ -23,13 +23,13 @@
 
 #include "EngineSDK/resources/models/IModel3DObject.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 std::shared_ptr<Model3DResource> Model3DResource::create() {
 	return std::shared_ptr<Model3DResource>(new Model3DResource());
 }
 
-utils::ReportMessagePtr Model3DResource::onInitialize() {
+ReportMessagePtr Model3DResource::onInitialize() {
 	for (auto &[name, object]: modelObjects) { object->initialize(); }
 	return nullptr;
 }
@@ -59,4 +59,4 @@ std::shared_ptr<IModel3DObject> Model3DResource::getModelObject(const std::strin
 	if (iter == modelObjects.end()) return nullptr;
 	return iter->second;
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

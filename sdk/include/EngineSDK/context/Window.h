@@ -27,7 +27,7 @@
 
 typedef struct GLFWwindow GLFWwindow;
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class Window : IContext {
 	GLFWwindow* native{};
@@ -50,7 +50,7 @@ public:
 
 	void setCloseRequest(bool pState) const;
 
-	sdk::utils::ReportMessagePtr setContextVersion(int pMajor, int pMinor) const;
+	sdk::ReportMessagePtr setContextVersion(int pMajor, int pMinor) const;
 
 	bool isCloseRequest() const;
 
@@ -75,12 +75,12 @@ private:
 
 	virtual void onKeyChanged(int pKey, int pScancode, int pAction, int pMods);
 
-	sdk::utils::ReportMessagePtr init() override;
+	sdk::ReportMessagePtr init() override;
 
 	void makeCurrent() override;
 
 	void swapBuffers() const override;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 #endif //WINDOW_H

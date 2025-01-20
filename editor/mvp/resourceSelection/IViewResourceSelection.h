@@ -42,7 +42,7 @@ public:
 	virtual void showFileDialog(const std::shared_ptr<Gtk::FileDialog> &pDialog,
 								const sigc::slot<void(std::shared_ptr<Gio::AsyncResult> &pResult)> &pSlot) = 0;
 
-	virtual void displayError(const sdk::utils::ReportMessagePtr &pError) = 0;
+	virtual void displayError(const sdk::ReportMessagePtr &pError) = 0;
 
 	virtual void displayMessage(const std::string &pMessage) = 0;
 

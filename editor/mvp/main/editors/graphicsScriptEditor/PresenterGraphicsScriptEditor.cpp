@@ -64,7 +64,7 @@ PresenterGraphicsScriptEditor::PresenterGraphicsScriptEditor(
 					extNode->removeAllConnections();
 					viewGraphicsScriptEditor->redrawCanvas();
 				} else if (const auto node = dynamic_cast<project::ScriptNode*>(element)) {
-					if (const auto msg = scriptSelf->removeNode(node)) { sdk::utils::Logger::error(msg); }
+					if (const auto msg = scriptSelf->removeNode(node)) { sdk::Logger::error(msg); }
 				}
 			}
 			if (pKeyVal == GDK_KEY_Escape) {
@@ -106,11 +106,11 @@ PresenterGraphicsScriptEditor::PresenterGraphicsScriptEditor(
 			if (connection) element = connection;
 			modelGraphicsScriptEditor->setHoveredElement(element);
 			/*if (auto node = dynamic_cast<project::ScriptNode*>(element)) {
-				sdk::utils::Logger::out(node->getName() + " hovered");
+				sdk::Logger::out(node->getName() + " hovered");
 			} else if (auto nodeSlot = dynamic_cast<project::ScriptNodeSlot*>(element)) {
-				sdk::utils::Logger::out("{}->{} hovered", nodeSlot->getParent()->getName(), nodeSlot->getName());
+				sdk::Logger::out("{}->{} hovered", nodeSlot->getParent()->getName(), nodeSlot->getName());
 			} else if (auto nodeSlotConnection = dynamic_cast<project::ScriptNodeSlotConnection*>(element)) {
-				sdk::utils::Logger::out(
+				sdk::Logger::out(
 					"Connection between {}->{} and {}->{} hovered",
 					nodeSlotConnection->getSelf()->getParent()->getName(), nodeSlotConnection->getSelf()->getName(),
 					nodeSlotConnection->getOther()->getParent()->getName(), nodeSlotConnection->getOther()->getName());

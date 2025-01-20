@@ -25,7 +25,7 @@
 #include "CppDefinition.h"
 
 namespace mer::editor::project {
-mer::sdk::utils::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath) {
+mer::sdk::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath) {
 	std::filesystem::path path = pPath;
 	path.replace_extension(getExtension());
 	create_directories(pPath.parent_path());
@@ -49,7 +49,7 @@ mer::sdk::utils::ReportMessagePtr CppFile::writeFile(const std::filesystem::path
 
 	} catch (...) {
 
-		auto msg = mer::sdk::utils::ReportMessage::create();
+		auto msg = mer::sdk::ReportMessage::create();
 		msg->setTitle("Failed to save the file.");
 		msg->setMessage("Exception thrown");
 		msg->addInfoLine("Trying to save the file at {}", pPath.string());

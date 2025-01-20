@@ -22,7 +22,7 @@
 #ifndef TEXTUREMINFILTER_H
 #define TEXTUREMINFILTER_H
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 enum class TextureMinFilter {
 	/**
@@ -65,6 +65,6 @@ enum class TextureMinFilter {
 
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //TEXTUREMINFILTER_H

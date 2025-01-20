@@ -30,11 +30,11 @@
 	#include "EngineSDK/scene/IScene.h"
 	#include "Window.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ILoadedResources;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ResourcesWindow : public Window, public IResourceLoadExecutor {
 	std::list<std::pair<std::string, LoadingFinishedSlot>> queue;
 	std::mutex queueMutex;
@@ -63,13 +63,13 @@ public:
 
 	const std::shared_ptr<ILoadedResources> &getResources() override { return resources; }
 
-	static void callSlot(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult,
-						 const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot);
+	static void callSlot(const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
+						 const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot);
 
 private:
 	void resourceLoop(const std::stop_token &pToken);
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif

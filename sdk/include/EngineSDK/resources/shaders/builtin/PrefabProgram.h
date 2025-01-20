@@ -23,7 +23,7 @@
 #define PREFABPROGRAM_H
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class PrefabProgram : public ShaderProgram {
 	static std::shared_ptr<PrefabProgram> instance;
@@ -33,6 +33,6 @@ public:
 	static std::shared_ptr<PrefabProgram> getInstance();
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //PREFABPROGRAM_H

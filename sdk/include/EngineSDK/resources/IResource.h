@@ -28,10 +28,10 @@
 
 class UUID;
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 enum class ResourceType;
 
-class IResource : public utils::IReportable {
+class IResource : public IReportable {
 protected:
 	~IResource() override = default;
 
@@ -55,6 +55,6 @@ public:
 	virtual void setIncomplete(bool pIncomplete) = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IRESOURCE_H

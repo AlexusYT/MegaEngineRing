@@ -25,12 +25,12 @@
 
 #include "EngineUtils/utils/ReportMessage.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 std::shared_ptr<IResourceBundle> FileSystemResourceBundle::create(const std::filesystem::path &pSearchPath) {
 	return std::shared_ptr<FileSystemResourceBundle>(new FileSystemResourceBundle(pSearchPath));
 }
 
-utils::ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::string &pResourceUri,
+ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::string &pResourceUri,
 																	std::shared_ptr<std::istream> &pStream) {
 	auto uri = std::filesystem::path(pResourceUri);
 	std::filesystem::path resourcePath = !uri.has_root_directory() ? searchPath / pResourceUri : uri;
@@ -42,7 +42,7 @@ utils::ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::s
 		if (path.filename() == resourceName) { candidates.push_back(path); }
 	}
 	if (candidates.empty()) {
-		auto msg = utils::ReportMessage::create();
+		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to get resource stream");
 		msg->setMessage("Resource not found");
 		msg->addInfoLine("Search path: {}", searchPath.string());
@@ -50,7 +50,7 @@ utils::ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::s
 		return msg;
 	}
 	if (candidates.size() > 1) {
-		auto msg = utils::ReportMessage::create();
+		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to get resource stream");
 		msg->setMessage("Found more than one candidate to load");
 		msg->addInfoLine("Search path: {}", searchPath.string());
@@ -66,7 +66,7 @@ utils::ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::s
 		stream->exceptions(std::_S_badbit | std::_S_failbit);
 		pStream = stream;
 	} catch (...) {
-		auto msg = utils::ReportMessage::create();
+		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to get resource stream");
 		msg->setMessage("Exception occurred");
 		msg->addInfoLine("Search path: {}", searchPath.string());
@@ -87,4 +87,4 @@ void FileSystemResourceBundle::listResources(std::vector<std::string> &pUris) co
 		}
 	}
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

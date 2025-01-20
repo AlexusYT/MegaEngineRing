@@ -21,9 +21,9 @@
 
 #include "Option.h"
 
-namespace mer::editor::utils {
+namespace mer::editor {
 bool Option::onOptionParsed(const Glib::ustring & /*pOptionName*/, const Glib::ustring & /*pValue*/,
 							bool /*pHasValue*/) {
 	return true;
 }
-} // namespace mer::editor::utils
+} // namespace mer::editor

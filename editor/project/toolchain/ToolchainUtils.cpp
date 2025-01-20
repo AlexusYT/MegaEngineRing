@@ -52,7 +52,7 @@ void ToolchainUtils::execute(const std::filesystem::path &pRootPath, const std::
 							 const sigc::slot<void(int pReturnValue)> &pOnFinish) {
 
 	std::jthread thrd([pArgs, pPath, pCoutCallback, pCerrCallback, pRootPath, pOnFinish] {
-		sdk::utils::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
+		sdk::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
 		pCoutCallback(pPath.string() + " " + pArgs + "\n");
 // pipes for parent to write and read
 #pragma GCC diagnostic push
@@ -132,7 +132,7 @@ int ToolchainUtils::executeSync(const std::filesystem::path &pRootPath, const st
 								const sigc::slot<void(const std::string &pLog)> &pCoutCallback,
 								const sigc::slot<void(const std::string &pLog)> &pCerrCallback) {
 
-	sdk::utils::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
+	sdk::Logger::info("Command invoked: {} {} at {}", pPath.string(), pArgs, pRootPath.string());
 	pCoutCallback(pPath.string() + " " + pArgs + "\n");
 	// pipes for parent to write and read
 
@@ -201,13 +201,13 @@ int ToolchainUtils::executeSync(const std::filesystem::path &pRootPath, const st
 	if (pid > 0) {
 		int wstatus;
 		waitpid(pid, &wstatus, 0); // Store proc info into wstatus
-		sdk::utils::Logger::info("Command {} finished with {}", pPath.string(), wstatus);
+		sdk::Logger::info("Command {} finished with {}", pPath.string(), wstatus);
 		return WEXITSTATUS(wstatus);
 	}
 	return 1;
 }
 
-sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeListsFile(const std::filesystem::path &pPath) {
+sdk::ReportMessagePtr ToolchainUtils::generateCMakeListsFile(const std::filesystem::path &pPath) {
 	//language=cmake
 	return writeFile(pPath, R"(
 
@@ -281,7 +281,7 @@ include(cmake/internal/dev-mode.cmake)
 )");
 }
 
-sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakePresetsFile(const std::filesystem::path &pPath) {
+sdk::ReportMessagePtr ToolchainUtils::generateCMakePresetsFile(const std::filesystem::path &pPath) {
 	return writeFile(pPath, R"({
 	"version": 2,
 	"cmakeMinimumRequired": {
@@ -474,7 +474,7 @@ sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakePresetsFile(const std:
 })");
 }
 
-sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(const std::filesystem::path &pPath) {
+sdk::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(const std::filesystem::path &pPath) {
 	//TODO MER-11
 	std::stringstream content;
 	content << R"({
@@ -579,7 +579,7 @@ sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeUserPresetsFile(const 
 	return writeFile(pPath, content.str());
 }
 
-sdk::utils::ReportMessagePtr ToolchainUtils::generateVcpkgManifestFile(const std::filesystem::path &pPath) {
+sdk::ReportMessagePtr ToolchainUtils::generateVcpkgManifestFile(const std::filesystem::path &pPath) {
 	//language=json
 	return writeFile(pPath, R"(
 {
@@ -625,7 +625,7 @@ sdk::utils::ReportMessagePtr ToolchainUtils::generateVcpkgManifestFile(const std
 )");
 }
 
-sdk::utils::ReportMessagePtr ToolchainUtils::generateCMakeDirectory(const std::filesystem::path &pPath) {
+sdk::ReportMessagePtr ToolchainUtils::generateCMakeDirectory(const std::filesystem::path &pPath) {
 	const auto internalPath = pPath / "internal";
 	create_directory(internalPath);
 	if (auto msg = writeFile(internalPath / "general.cmake", R"(if( NOT ENGINE_SDK_PATH)
@@ -786,11 +786,11 @@ endif ()
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr ToolchainUtils::writeFile(const std::filesystem::path &pPath,
+sdk::ReportMessagePtr ToolchainUtils::writeFile(const std::filesystem::path &pPath,
 													   const std::string &pContents) {
 	create_directories(pPath.parent_path());
 	if (!exists(pPath.parent_path())) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to write file");
 		msg->setMessage("Parent directory doesn't exists");
 		msg->addInfoLine("File path: {}", pPath.string());

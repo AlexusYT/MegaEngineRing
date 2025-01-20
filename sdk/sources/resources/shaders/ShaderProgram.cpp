@@ -29,7 +29,7 @@
 #include "EngineSDK/resources/shaders/Shader.h"
 #include "EngineUtils/utils/ReportMessage.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 ShaderProgram::ShaderProgram() : name(0) {}
 
@@ -102,9 +102,9 @@ void ShaderProgram::setUniform(const std::string &pName, const glm::mat4 &pValue
 	glUniformMatrix4fv(glGetUniformLocation(name, pName.c_str()), 1, GL_FALSE, &pValue[0][0]);
 }
 
-main::ResourceType ShaderProgram::getResourceType() { return main::ResourceType::SHADER; }
+ResourceType ShaderProgram::getResourceType() { return ResourceType::SHADER; }
 
-utils::ReportMessagePtr ShaderProgram::onInitialize() {
+ReportMessagePtr ShaderProgram::onInitialize() {
 	name = glCreateProgram();
 	for (auto shader: attachedShaders) {
 		if (auto msg = shader->initialize()) { return msg; }
@@ -114,7 +114,7 @@ utils::ReportMessagePtr ShaderProgram::onInitialize() {
 	link();
 	if (!getLinkStatus()) {
 
-		auto msg = utils::ReportMessage::create();
+		auto msg = ReportMessage::create();
 		msg->setStacktrace();
 		msg->setTitle("Failed to link the shader program");
 		msg->setMessage("Error in shader code detected");
@@ -132,10 +132,10 @@ void ShaderProgram::onUninitialize() {
 	if (name != 0) glDeleteProgram(name);
 }
 
-void ShaderProgram::addReportInfo(const utils::ReportMessagePtr &pMsg) {
+void ShaderProgram::addReportInfo(const ReportMessagePtr &pMsg) {
 	Resource::addReportInfo(pMsg);
 	pMsg->addInfoLine("Attached shaders:");
 	for (auto shader: attachedShaders) { shader->addReportInfo(pMsg); }
 }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

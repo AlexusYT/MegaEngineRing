@@ -23,7 +23,7 @@
 #define TEXTURERESOURCESAVER_H
 #include "ResourceSaverBase.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ITextureResource;
 }
 
@@ -32,8 +32,8 @@ namespace mer::editor::mvp {
 class TextureResourceSaver : public ResourceSaverBase {
 
 public:
-	static sdk::utils::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
-												   const std::shared_ptr<sdk::main::ITextureResource> &pTexture);
+	static sdk::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
+												   const std::shared_ptr<sdk::ITextureResource> &pTexture);
 
 private:
 	template<typename T>

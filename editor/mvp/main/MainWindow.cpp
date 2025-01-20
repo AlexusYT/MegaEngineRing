@@ -30,12 +30,12 @@
 
 namespace mer::editor::mvp {
 std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<IWidgetContext> &pContext,
-											   sdk::utils::ReportMessagePtr &pReportMessage) {
+											   sdk::ReportMessagePtr &pReportMessage) {
 	const auto builder = Gtk::Builder::create();
 	try {
 		builder->add_from_resource("/ui/base.ui");
 	} catch (...) {
-		pReportMessage = sdk::utils::ReportMessage::create();
+		pReportMessage = sdk::ReportMessage::create();
 		pReportMessage->setTitle("Failed to init main window");
 		pReportMessage->setMessage("Error while loading UI from file");
 
@@ -44,7 +44,7 @@ std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<IWidgetCont
 
 	auto viewMain = std::make_shared<MainWindow>(builder, pContext);
 	if (!viewMain) {
-		pReportMessage = sdk::utils::ReportMessage::create();
+		pReportMessage = sdk::ReportMessage::create();
 		pReportMessage->setTitle("Failed to init main window");
 		pReportMessage->setMessage("Could not get the dialog");
 		return nullptr;
@@ -93,7 +93,7 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 		} else {
 			overlayBox->set_visible(true);
 			if (presenter)
-				presenter->readJsonForTab(pIndex, [this, pIndex](const sdk::utils::ReportMessagePtr &pError) {
+				presenter->readJsonForTab(pIndex, [this, pIndex](const sdk::ReportMessagePtr &pError) {
 					const auto pageOverlay = dynamic_cast<Gtk::Overlay*>(panedTabs.get_nth_page(pIndex));
 					if (!pageOverlay) return;
 					const auto pageOverlayBox = dynamic_cast<Gtk::Box*>(pageOverlay->get_last_child());
@@ -126,7 +126,7 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 	actionGroupResource->add_action_with_parameter(
 		"select-for-property", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<uintptr_t>>(pBase);
-			auto ext = reinterpret_cast<sdk::utils::PropertyBase*>(var.get());
+			auto ext = reinterpret_cast<sdk::PropertyBase*>(var.get());
 			if (presenter) presenter->selectResourceForProperty(ext);
 		});
 
@@ -135,7 +135,7 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 	actionGroupObject->add_action_with_parameter(
 		"extension.remove", Glib::VARIANT_TYPE_UINT64, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<uintptr_t>>(pBase);
-			auto ext = reinterpret_cast<sdk::main::Extension*>(var.get());
+			auto ext = reinterpret_cast<sdk::Extension*>(var.get());
 			if (presenter) presenter->removeExtension(ext);
 		});
 	actionGroupObject->add_action_with_parameter(
@@ -166,17 +166,17 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 	actionGroupNew->add_action_with_parameter(
 		"resource.model", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createResource(var.get().raw(), sdk::main::ResourceType::MODEL);
+			if (presenter) presenter->createResource(var.get().raw(), sdk::ResourceType::MODEL);
 		});
 	actionGroupNew->add_action_with_parameter(
 		"resource.texture", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createResource(var.get().raw(), sdk::main::ResourceType::TEXTURE);
+			if (presenter) presenter->createResource(var.get().raw(), sdk::ResourceType::TEXTURE);
 		});
 	actionGroupNew->add_action_with_parameter(
 		"resource.material", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {
 			const auto var = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(pBase);
-			if (presenter) presenter->createResource(var.get().raw(), sdk::main::ResourceType::MATERIAL);
+			if (presenter) presenter->createResource(var.get().raw(), sdk::ResourceType::MATERIAL);
 		});
 	actionGroupNew->add_action_with_parameter(
 		"scene", Glib::VARIANT_TYPE_STRING, [this](const Glib::VariantBase &pBase) {

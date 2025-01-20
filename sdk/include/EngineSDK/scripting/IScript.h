@@ -23,14 +23,14 @@
 #define ISCRIPT_H
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class SceneObject;
 
 class IScript {
 public:
 	virtual ~IScript() = default;
 
-	virtual utils::ReportMessagePtr setup() { return nullptr; }
+	virtual ReportMessagePtr setup() { return nullptr; }
 
 	virtual void tick(double /*pDeltaTime*/) {}
 
@@ -45,7 +45,7 @@ protected:
 };
 
 inline bool IScript::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //ISCRIPT_H

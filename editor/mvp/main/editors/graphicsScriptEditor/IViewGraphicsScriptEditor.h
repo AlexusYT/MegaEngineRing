@@ -43,7 +43,7 @@ public:
 
 	virtual CanvasElement* getSelectedElement() = 0;
 
-	virtual sdk::utils::ReportMessagePtr removeElement(CanvasElement* pElement) = 0;
+	virtual sdk::ReportMessagePtr removeElement(CanvasElement* pElement) = 0;
 
 	virtual sigc::connection connectKeyPressedEvent(
 		const sigc::slot<bool(uint32_t pKeyVal, uint32_t pKeyCode, Gdk::ModifierType pState)> &pSlot, bool pAfter) = 0;

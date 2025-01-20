@@ -28,10 +28,10 @@
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 #include "EngineUtils/utils/Logger.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 std::shared_ptr<IResource> Model3DLoader::createResource() { return Model3DResource::create(); }
 
-utils::ReportMessagePtr Model3DLoader::preload(IResourceLoadExecutor* pResourcesContext,
+ReportMessagePtr Model3DLoader::preload(IResourceLoadExecutor* pResourcesContext,
 											   const std::shared_ptr<std::istream> &pStream,
 											   const std::shared_ptr<IResource> &pResource) {
 	if (auto msg = ResourceLoader::preload(pResourcesContext, pStream, pResource)) { return msg; }
@@ -49,7 +49,7 @@ utils::ReportMessagePtr Model3DLoader::preload(IResourceLoadExecutor* pResources
 	return nullptr;
 }
 
-utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor,
+ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor,
 											std::shared_ptr<std::istream> &pStream,
 											const std::shared_ptr<IResource> &pResource) {
 
@@ -76,7 +76,7 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 		std::string shaderUri = readString(pStream);
 		pLoadExecutor->loadResourceAsync(shaderUri, [object](const std::shared_ptr<ResourceLoadResult> &pResult) {
 			if (pResult->isErrored()) {
-				utils::Logger::error(pResult->getError());
+				Logger::error(pResult->getError());
 				return;
 			}
 			if (pResult->isReady()) {
@@ -98,4 +98,4 @@ utils::ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor
 }
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

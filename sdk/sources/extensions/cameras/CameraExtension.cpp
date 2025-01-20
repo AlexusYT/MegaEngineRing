@@ -32,7 +32,7 @@
 #include "EngineSDK/scene/objects/SceneObject.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 CameraExtension::CameraExtension()
 	: propertyMatrix(this, "Matrix"), propertyDirection(this, "Direction"), propertyAngle(this, "Angle") {
@@ -57,7 +57,7 @@ ExtensionProperty<glm::vec3> &CameraExtension::getPosition() {
 	return objectSelf->getMainExtension()->propertyPosition;
 }
 
-utils::ReportMessagePtr CameraExtension::onInit() {
+ReportMessagePtr CameraExtension::onInit() {
 
 	putConnectionToStorage(
 		getPosition().getEvent().connect(hide(sigc::mem_fun(*this, &CameraExtension::updateMatrix))));
@@ -78,4 +78,4 @@ void CameraExtension::updateMatrix() {
 	propertyMatrix = getProjMatrix() * lookAt(position, position + propertyDirection.getValue(), {0, 1, 0});
 }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

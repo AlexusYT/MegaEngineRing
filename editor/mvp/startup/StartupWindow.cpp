@@ -31,19 +31,19 @@ StartupWindow::StartupWindow(const std::shared_ptr<IWidgetContext> &pContext) : 
 	try {
 		builder = Gtk::Builder::create_from_resource("/ui/CreateOpenProject.ui");
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to init window");
 		msg->setMessage("Error while loading UI from file");
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 		return;
 	}
 	window = builder->get_widget<Gtk::ApplicationWindow>("window_createOpenProj");
 	if (!window) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to init window");
 		msg->setMessage("Window not found");
 		msg->addInfoLine("Window name: window_createOpenProj");
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 		return;
 	}
 	window->set_visible();

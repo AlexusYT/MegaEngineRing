@@ -25,7 +25,7 @@
 #include <EngineSDK/context/IContext.h>
 
 namespace mer::editor::graphics {
-class EngineContext : public sdk::main::IContext {
+class EngineContext : public sdk::IContext {
 
 	Gtk::GLArea* area;
 
@@ -34,7 +34,7 @@ public:
 
 	void makeCurrent() override {
 		area->make_current();
-		sdk::utils::Logger::out("Test");
+		sdk::Logger::out("Test");
 	}
 
 	[[nodiscard]] Gtk::GLArea* getArea() const { return area; }

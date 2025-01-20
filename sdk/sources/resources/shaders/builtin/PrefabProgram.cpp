@@ -23,7 +23,7 @@
 
 #include "EngineSDK/resources/shaders/Shader.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 std::shared_ptr<PrefabProgram> PrefabProgram::instance = std::shared_ptr<PrefabProgram>(new PrefabProgram);
 
 PrefabProgram::PrefabProgram() {
@@ -423,4 +423,4 @@ void main()
 }
 
 std::shared_ptr<PrefabProgram> PrefabProgram::getInstance() { return instance; }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

@@ -57,7 +57,7 @@ public:
 
 	virtual bool isHeader() = 0;
 
-	mer::sdk::utils::ReportMessagePtr writeFile(const std::filesystem::path &pPath);
+	mer::sdk::ReportMessagePtr writeFile(const std::filesystem::path &pPath);
 };
 
 } // namespace mer::editor::project

@@ -26,17 +26,17 @@
 
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 enum class MouseButton;
 class ModifierKeys;
 enum class KeyboardKey;
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class PresenterSceneEditor;
 } // namespace mer::editor::mvp
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ResourceLoadResult;
 class IApplication;
 class ICamera;
@@ -53,7 +53,7 @@ public:
 
 	virtual void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const = 0;
 
-	virtual sdk::utils::ReportMessagePtr initScene() = 0;
+	virtual sdk::ReportMessagePtr initScene() = 0;
 
 	virtual void deinitScene() = 0;
 
@@ -67,7 +67,7 @@ public:
 		const std::string &pResourceUri,
 		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const = 0;
 
-	virtual void onResourceLoadingError(const std::string &pResourceUri, const utils::ReportMessagePtr &pError) = 0;
+	virtual void onResourceLoadingError(const std::string &pResourceUri, const ReportMessagePtr &pError) = 0;
 
 	virtual void addObject(const std::shared_ptr<ISceneObject> &pObject) = 0;
 
@@ -95,9 +95,9 @@ public:
 
 	virtual void onCursorPosChanged(double pX, double pY) = 0;
 
-	virtual void onKeyChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) = 0;
+	virtual void onKeyChanged(KeyboardKey pKey, bool pPressed, const ModifierKeys &pMods) = 0;
 
-	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) = 0;
+	virtual void onMouseButtonStateChanged(MouseButton pButton, bool pPressed, double pX, double pY) = 0;
 
 	virtual bool notifyOnMouseScroll(double pDx, double pDy) = 0;
 
@@ -106,7 +106,7 @@ protected:
 };
 
 inline bool IScene::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //ISCENE_H

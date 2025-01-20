@@ -24,32 +24,32 @@
 
 #include <EngineUtils/utils/Property.h>
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class IApplicationSettings {
 public:
 	IApplicationSettings() = default;
 	virtual ~IApplicationSettings() = default;
 
-	virtual sdk::utils::ReportMessagePtr init() = 0;
+	virtual sdk::ReportMessagePtr init() = 0;
 
-	[[nodiscard]] virtual const utils::Property<std::string> &getLogsDirectory() const = 0;
+	[[nodiscard]] virtual const Property<std::string> &getLogsDirectory() const = 0;
 
 	virtual void setLogsDirectory(const std::string &pLogsDirectory) = 0;
 
-	[[nodiscard]] virtual utils::Property<std::string> &getApplicationName() = 0;
+	[[nodiscard]] virtual Property<std::string> &getApplicationName() = 0;
 
 	virtual void setApplicationName(const std::string &pApplicationName) = 0;
 
-	[[nodiscard]] virtual const utils::Property<std::string> &getApplicationDisplayName() const = 0;
+	[[nodiscard]] virtual const Property<std::string> &getApplicationDisplayName() const = 0;
 
 	virtual void setApplicationDisplayName(const std::string &pApplicationDisplayName) = 0;
 
-	[[nodiscard]] virtual const utils::Property<std::string> &getRunDirectory() const = 0;
+	[[nodiscard]] virtual const Property<std::string> &getRunDirectory() const = 0;
 
 	virtual void setRunDirectory(const std::string &pRunDirectory) = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IAPPLICATIONSETTINGS_H

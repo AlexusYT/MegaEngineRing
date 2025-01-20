@@ -22,7 +22,7 @@
 #ifndef TEXTUREMAGFILTER_H
 #define TEXTUREMAGFILTER_H
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 enum class TextureMagFilter {
 	/**
@@ -39,6 +39,6 @@ enum class TextureMagFilter {
 	LINEAR = 0x2601
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //TEXTUREMAGFILTER_H

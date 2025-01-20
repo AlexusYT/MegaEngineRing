@@ -44,7 +44,7 @@ public:
 private:
 	void addMessageToLog(const std::string &pMessage) override;
 
-	void reportError(sdk::utils::ReportMessagePtr pMessage) override;
+	void reportError(sdk::ReportMessagePtr pMessage) override;
 
 	void closeView() override;
 

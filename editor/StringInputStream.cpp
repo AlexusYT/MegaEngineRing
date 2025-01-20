@@ -21,7 +21,7 @@
 
 #include "StringInputStream.h"
 
-namespace mer::editor::utils {
+namespace mer::editor {
 void StringInputStream::readAllAsync(
 	const sigc::slot<void(const std::string &pResult, const std::exception_ptr &pException)> &pSlot) noexcept {
 	//Prevent class instance from destroying from std::shared_ptr destructor while reading
@@ -69,4 +69,4 @@ void StringInputStream::readFromStream(
 		}
 	}
 }
-} // namespace mer::editor::utils
+} // namespace mer::editor

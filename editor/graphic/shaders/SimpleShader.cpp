@@ -29,7 +29,7 @@ std::shared_ptr<SimpleShader> SimpleShader::instance = std::shared_ptr<SimpleSha
 SimpleShader::SimpleShader() {
 	Resource::setResourceUri("_builtin_/shaders/SimpleShader.enshader");
 
-	std::shared_ptr<sdk::main::Shader> vertexShader = std::make_shared<sdk::main::VertexShader>();
+	std::shared_ptr<sdk::Shader> vertexShader = std::make_shared<sdk::VertexShader>();
 	//language=glsl
 	vertexShader->setSource(R"(
 #version 460 core
@@ -49,7 +49,7 @@ void main(){
 })");
 	attachShader(vertexShader);
 
-	std::shared_ptr<sdk::main::Shader> geometryShader = std::make_shared<sdk::main::GeometryShader>();
+	std::shared_ptr<sdk::Shader> geometryShader = std::make_shared<sdk::GeometryShader>();
 	//language=glsl
 	geometryShader->setSource(R"(
 #version 460 core
@@ -84,7 +84,7 @@ void main() {
 }
 )");
 	attachShader(geometryShader);
-	std::shared_ptr<sdk::main::Shader> fragmentShader = std::make_shared<sdk::main::FragmentShader>();
+	std::shared_ptr<sdk::Shader> fragmentShader = std::make_shared<sdk::FragmentShader>();
 	//language=glsl
 	fragmentShader->setSource(R"(
 #version 460 core

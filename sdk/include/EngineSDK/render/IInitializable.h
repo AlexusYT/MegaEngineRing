@@ -23,13 +23,13 @@
 #define IINITIALIZABLE_H
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class IInitializable {
 public:
 	virtual ~IInitializable() = default;
 
-	virtual utils::ReportMessagePtr initialize() = 0;
+	virtual ReportMessagePtr initialize() = 0;
 
 	virtual void uninitialize() = 0;
 
@@ -38,6 +38,6 @@ public:
 	virtual void setInited(bool pInited) = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IINITIALIZABLE_H

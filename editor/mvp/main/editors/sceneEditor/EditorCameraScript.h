@@ -23,17 +23,17 @@
 #define EDITORCAMERASCRIPT_H
 #include "EngineSDK/scripting/Script.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class OrbitCameraExtension;
 }
 
 namespace mer::editor::mvp {
 
-class EditorCameraScript : public sdk::main::Script {
-	std::shared_ptr<sdk::main::OrbitCameraExtension> camera;
+class EditorCameraScript : public sdk::Script {
+	std::shared_ptr<sdk::OrbitCameraExtension> camera;
 
 public:
-	sdk::utils::ReportMessagePtr setup() override;
+	sdk::ReportMessagePtr setup() override;
 
 protected:
 	inline bool onMouseScroll(double pDx, double pDy) override;

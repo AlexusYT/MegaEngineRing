@@ -25,7 +25,7 @@
 
 #include "EngineSDK/resources/materials/MaterialData.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class RenderInstanceData {
 public:
@@ -34,6 +34,6 @@ public:
 	glm::mat4 normalMatrix{1};
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //RENDERINSTANCEDATA_H

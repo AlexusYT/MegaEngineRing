@@ -41,7 +41,7 @@
 #include "EngineSDK/scene/objects/ISceneObject.h"
 #include "EngineUtils/utils/Logger.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 Scene::Scene() : programBuffer(std::make_shared<ProgramWideShaderBuffer>()), lightSources(LightSources::create()) {
 
 	prefab = Prefab::create();
@@ -58,9 +58,9 @@ void Scene::setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const {
 	programBuffer->setViewProjMatrix(pViewProjMatrix);
 }
 
-void Scene::onResourceLoadingError(const std::string & /*pRequest*/, const sdk::utils::ReportMessagePtr &pError) {
+void Scene::onResourceLoadingError(const std::string & /*pRequest*/, const sdk::ReportMessagePtr &pError) {
 
-	sdk::utils::Logger::error(pError);
+	sdk::Logger::error(pError);
 }
 
 void Scene::switchCamera(ICamera* pNewCamera) {
@@ -78,7 +78,7 @@ void Scene::beforeRender() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-sdk::utils::ReportMessagePtr Scene::initScene() {
+sdk::ReportMessagePtr Scene::initScene() {
 	if (inited) return nullptr;
 	for (const auto &object: objects) {
 		if (auto msg = object->init()) return msg;
@@ -137,7 +137,7 @@ sdk::utils::ReportMessagePtr Scene::initScene() {
 			//if (pId == 131076) return;
 			if (pId == 131185) return;
 			//if (pSeverity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
-			auto msg = utils::ReportMessage::create();
+			auto msg = ReportMessage::create();
 			msg->setTitle("OpenGL error");
 			msg->setMessage(std::string(pMessage, static_cast<std::string::size_type>(pLength)));
 			std::string sourceStr;
@@ -203,7 +203,7 @@ sdk::utils::ReportMessagePtr Scene::initScene() {
 				default: severityStr = "Unknown";
 			}
 			msg->addInfoLine("Error severity: {}: {}", severityStr, pSeverity);
-			utils::Logger::error(msg);
+			Logger::error(msg);
 		},
 		nullptr);
 	return nullptr;
@@ -219,8 +219,8 @@ void Scene::addObject(const std::shared_ptr<ISceneObject> &pObject) {
 
 	if (inited) {
 		if (auto msg = pObject->init()) {
-			utils::Logger::warn("Object shouldn't report about errors. Ignoring");
-			utils::Logger::error(msg);
+			Logger::warn("Object shouldn't report about errors. Ignoring");
+			Logger::error(msg);
 		}
 	}
 	pObject->connectOnExtensionAdded([this](const std::shared_ptr<Extension> &pExtension) {
@@ -266,11 +266,11 @@ void Scene::onCursorPosChanged(const double pX, const double pY) {
 	for (const auto &object: objects) { object->onCursorPosChanged(pX, pY); }
 }
 
-void Scene::onKeyChanged(const utils::KeyboardKey pKey, const bool pPressed, const utils::ModifierKeys &pMods) {
+void Scene::onKeyChanged(const KeyboardKey pKey, const bool pPressed, const ModifierKeys &pMods) {
 	for (const auto &object: objects) { object->onKeyStateChanged(pKey, pPressed, pMods); }
 }
 
-void Scene::onMouseButtonStateChanged(const utils::MouseButton pButton, const bool pPressed, const double pX,
+void Scene::onMouseButtonStateChanged(const MouseButton pButton, const bool pPressed, const double pX,
 									  const double pY) {
 	for (const auto &object: objects) { object->onMouseButtonStateChanged(pButton, pPressed, pX, pY); }
 }
@@ -280,4 +280,4 @@ bool Scene::notifyOnMouseScroll(double pDx, double pDy) {
 	for (const auto &object: objects) handled = object->notifyOnMouseScroll(pDx, pDy) || handled;
 	return handled;
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

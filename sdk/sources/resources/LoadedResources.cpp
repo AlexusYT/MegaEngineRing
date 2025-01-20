@@ -27,7 +27,7 @@
 #include "EngineSDK/resources/IResource.h"
 #include "EngineSDK/resources/shaders/builtin/PrefabProgram.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 LoadedResources::LoadedResources() {
 	auto prefabProgram = PrefabProgram::getInstance();
 	LoadedResources::addResource(prefabProgram->getResourceUri(), prefabProgram);
@@ -85,7 +85,7 @@ void LoadedResources::render() {
 
 		auto resource = resourcesToInit.front();
 		if (auto initializable = std::dynamic_pointer_cast<IInitializable>(resource)) {
-			if (auto msg = initializable->initialize()) { utils::Logger::error(msg); }
+			if (auto msg = initializable->initialize()) { Logger::error(msg); }
 			resourcesToInit.pop_front();
 			initializedResources.emplace(resource->getResourceUri(), resource);
 			if (auto renderable = std::dynamic_pointer_cast<IRenderable>(resource)) {
@@ -103,4 +103,4 @@ void LoadedResources::uninit() {
 		if (auto initializable = std::dynamic_pointer_cast<IInitializable>(resource)) { initializable->uninitialize(); }
 	}
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

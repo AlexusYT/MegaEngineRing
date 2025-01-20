@@ -25,7 +25,7 @@
 
 #include "Extension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class MainObjectExtension final : public Extension {
 	MainObjectExtension();
@@ -39,6 +39,6 @@ public:
 	ExtensionProperty<glm::vec3> propertyPosition;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //BASICOBJECTEXTENSION_H

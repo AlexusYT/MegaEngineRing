@@ -23,7 +23,7 @@
 #define IREPORTABLE_H
 #include "ReportMessageFwd.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 
 class IReportable {
 public:
@@ -32,6 +32,6 @@ public:
 	virtual void addReportInfo(const ReportMessagePtr &pMsg) = 0;
 };
 
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 #endif //IREPORTABLE_H

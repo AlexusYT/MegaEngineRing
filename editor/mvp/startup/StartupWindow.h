@@ -107,10 +107,10 @@ public:
 	/*void openMainWindow(project::ProjectUPtr pProject) {
 
 		//pProject->init();
-		mainWindow = std::make_unique<ui::MainWindow>(std::move(pProject));
+		mainWindow = std::make_unique<uiWindow>(std::move(pProject));
 		if (auto msg = mainWindow->init()) {
-			engine::utils::Logger::error("Failed to open main window");
-			engine::utils::Logger::error(msg);
+			engine::Logger::error("Failed to open main window");
+			engine::Logger::error(msg);
 		}
 		this->get_application()->add_window(*mainWindow->mainWindow);
 		this->close();

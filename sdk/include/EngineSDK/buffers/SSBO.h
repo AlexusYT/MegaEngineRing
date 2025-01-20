@@ -23,7 +23,7 @@
 #define SSBO_H
 #include "BufferUsageEnum.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class SSBO {
 	uint32_t name{};
@@ -63,6 +63,6 @@ public:
 	[[nodiscard]] const BufferUsageEnum &getUsage() const { return usage; }
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //SSBO_H

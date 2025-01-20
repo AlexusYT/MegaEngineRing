@@ -25,14 +25,14 @@
 #include <algorithm>
 #include <epoxy/gl.h>
 
-#include "include/EngineSDK/resources/shaders/ShaderProgram.h"
+#include "EngineSDK/resources/shaders/ShaderProgram.h"
 #include "EngineSDK/prefabs/IPrefabElementInstance.h"
 #include "EngineSDK/prefabs/PrefabSsbo.h"
 #include "EngineSDK/prefabs/elements/PrefabElement.h"
 #include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
 #include "EngineSDK/prefabs/elements/PrefabElementsSsbo.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 Prefab::Prefab()
 	: prefabElementsSsbo(PrefabElementsSsbo::create()), prefabSsbo(PrefabSsbo::create()), visible(nullptr, ""),
 	  material(nullptr, "") {
@@ -135,7 +135,7 @@ void Prefab::addInstance(const std::shared_ptr<PrefabInstance> &pInstance) {
 	prefabSsbo->trackInstance(pInstance.get());
 }
 
-utils::ReportMessagePtr Prefab::onInitialize() {
+ReportMessagePtr Prefab::onInitialize() {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &dataBuffer);
 	glGenBuffers(1, &indexBuffer);
@@ -199,4 +199,4 @@ void Prefab::onUninitialize() {
 	if (dataBuffer) glGenBuffers(1, &dataBuffer);
 	if (indexBuffer) glGenBuffers(1, &indexBuffer);
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

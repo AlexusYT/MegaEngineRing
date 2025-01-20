@@ -31,7 +31,7 @@ public:
 
 	virtual void addMessageToLog(const std::string &pMessage) = 0;
 
-	virtual void reportError(sdk::utils::ReportMessagePtr pMessage) = 0;
+	virtual void reportError(sdk::ReportMessagePtr pMessage) = 0;
 };
 } // namespace mer::editor::mvp
 #endif //IVIEWCREATINGPROJECT_H

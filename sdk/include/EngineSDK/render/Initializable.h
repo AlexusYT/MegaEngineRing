@@ -23,13 +23,13 @@
 #define INITIALIZABLE_H
 #include "IInitializable.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class Initializable : public virtual IInitializable {
 	bool inited{false};
 
 public:
-	utils::ReportMessagePtr initialize() final {
+	ReportMessagePtr initialize() final {
 		if (inited) return nullptr;
 		if (auto msg = onInitialize()) return msg;
 		inited = true;
@@ -47,11 +47,11 @@ public:
 	void setInited(bool pInited) override { inited = pInited; }
 
 protected:
-	virtual utils::ReportMessagePtr onInitialize() { return nullptr; }
+	virtual ReportMessagePtr onInitialize() { return nullptr; }
 
 	virtual void onUninitialize() {}
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //INITIALIZABLE_H

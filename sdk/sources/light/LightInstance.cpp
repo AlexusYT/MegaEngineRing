@@ -23,8 +23,8 @@
 
 #include "EngineSDK/light/ILightSources.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 void LightInstance::notifyDataChanged() {
 	if (lightSources) lightSources->onInstanceDataChanged(this);
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

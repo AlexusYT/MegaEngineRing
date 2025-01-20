@@ -25,7 +25,7 @@
 
 #include "IMaterialComponent.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class ColorComponent : public IMaterialComponent {
 
@@ -38,12 +38,12 @@ public:
 
 	static std::shared_ptr<ColorComponent> create(float pRed, float pGreen, float pBlue, float pAlpha = 1.0f);
 
-	utils::Property<glm::vec4> color;
+	Property<glm::vec4> color;
 
 private:
-	utils::PropertyReadOnly<glm::vec4> getComponentValueProperty() override { return color.getReadOnly(); }
+	PropertyReadOnly<glm::vec4> getComponentValueProperty() override { return color.getReadOnly(); }
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //COLORCOMPONENT_H

@@ -23,7 +23,7 @@
 
 #include "EngineSDK/resources/models/Model3DObject.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 MeshPrefabElement::MeshPrefabElement(const std::shared_ptr<IModel3DObject> &pMesh, const std::string &pName)
 	: PrefabElement(pName.empty() ? pMesh->getName() : pName), mesh(pMesh) {}
 
@@ -35,4 +35,4 @@ std::shared_ptr<MeshPrefabElement> MeshPrefabElement::create(const std::shared_p
 const std::vector<float> &MeshPrefabElement::getData() const { return mesh->getData(); }
 
 const std::vector<uint16_t> &MeshPrefabElement::getIndices() const { return mesh->getIndices(); }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

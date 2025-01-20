@@ -24,17 +24,17 @@
 #include "EngineSDK/render/IRenderable.h"
 #include "EngineSDK/render/Initializable.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ShaderProgram;
 }
 
 namespace mer::editor::mvp {
 
-class SceneOverlayElements : public sdk::main::Initializable, public sdk::main::IRenderable {
+class SceneOverlayElements : public sdk::Initializable, public sdk::IRenderable {
 	uint32_t dataBuffer{};
 	uint32_t indexBuffer{};
 	uint32_t vao{};
-	std::shared_ptr<sdk::main::ShaderProgram> shader;
+	std::shared_ptr<sdk::ShaderProgram> shader;
 	std::vector<uint16_t> indices;
 	bool gridVisible{true};
 
@@ -53,7 +53,7 @@ public:
 protected:
 	void renderGrid() const;
 
-	sdk::utils::ReportMessagePtr onInitialize() override;
+	sdk::ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 };

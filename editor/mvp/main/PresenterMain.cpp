@@ -85,7 +85,7 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 
 				return true;
 			}
-			sdk::utils::Logger::out("{}", pKeyCode);
+			sdk::Logger::out("{}", pKeyCode);
 			return false;
 		});
 
@@ -148,7 +148,7 @@ void PresenterMain::logError(int /*pId*/, const std::string & /*pMessage*/) cons
 	// });
 }
 
-void PresenterMain::displayError(const sdk::utils::ReportMessagePtr &pMsg) { sdk::utils::Logger::error(pMsg); }
+void PresenterMain::displayError(const sdk::ReportMessagePtr &pMsg) { sdk::Logger::error(pMsg); }
 
 void PresenterMain::onLayoutLoadFatal() { /*TODO_IMPLEMENT_ME();*/ }
 
@@ -233,13 +233,13 @@ std::shared_ptr<IView> PresenterMain::createView(const IPresenter* pPresenter,
 }
 
 void PresenterMain::readJsonForTab(int32_t pIndex,
-								   const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pCallback) {
+								   const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pCallback) {
 	std::thread([this, pIndex, pCallback]() {
 		auto tabs = modelMain->getPanedLayoutTabs();
 		if (tabs.size() <= static_cast<uint64_t>(pIndex)) {
 			//Here we can offer the user to select the file themselves or reload Layouts.json file instead of displaying
 			//an error
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Unable to read layout from JSON");
 			msg->setMessage("No layout info for specified tab in the Layout.json file");
 			msg->addInfoLine("Specified tab index: {}", pIndex);
@@ -252,7 +252,7 @@ void PresenterMain::readJsonForTab(int32_t pIndex,
 		if (path.string().starts_with("_builtin_")) {
 			auto resourcePath = "/paned-layouts/" + path.filename().string();
 			if (!Gio::Resource::get_file_exists_global_nothrow(resourcePath)) {
-				auto msg = sdk::utils::ReportMessage::create();
+				auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Unable to read layout from JSON");
 				msg->setMessage("Specified builtin layout does not exist");
 				msg->addInfoLine("Looking for layout at {}", resourcePath);
@@ -264,7 +264,7 @@ void PresenterMain::readJsonForTab(int32_t pIndex,
 				auto data = static_cast<const char*>(resourceStream->get_data(size));
 				*json = nlohmann::json::parse(std::string(data, size));
 			} catch (...) {
-				auto msg = sdk::utils::ReportMessage::create();
+				auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Unable to read layout from JSON");
 				msg->setMessage("Exception occurred while reading layout file for tab");
 				msg->addInfoLine("Looking for layout at {}", resourcePath);
@@ -280,7 +280,7 @@ void PresenterMain::readJsonForTab(int32_t pIndex,
 				stream.exceptions(std::_S_badbit | std::_S_failbit);
 				stream >> *json;
 			} catch (...) {
-				auto msg = sdk::utils::ReportMessage::create();
+				auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Unable to read layout from JSON");
 				msg->setMessage("Exception occurred while reading layout file for tab");
 				msg->addInfoLine("Specified tab index: {}", pIndex);
@@ -298,12 +298,12 @@ void PresenterMain::readJsonForTab(int32_t pIndex,
 	}).detach();
 }
 
-void PresenterMain::selectResourceForProperty(sdk::utils::PropertyBase* pProperty) {
+void PresenterMain::selectResourceForProperty(sdk::PropertyBase* pProperty) {
 
 	auto model = std::make_shared<ModelResourceSelection>();
 	model->setPropertyBase(pProperty);
 	model->setLoadedScene(loadedScene);
-	sdk::utils::ReportMessagePtr msg;
+	sdk::ReportMessagePtr msg;
 	auto view = ViewResourceSelection::create(ApplicationContext::create(getAppController()->getApp()), msg);
 	if (!view) {
 		displayError(msg);
@@ -334,7 +334,7 @@ void PresenterMain::removeObject(ExplorerObject* pObjectToRemove) {
 	}
 }
 
-void PresenterMain::removeExtension(sdk::main::Extension* pExtensionToRemove) {
+void PresenterMain::removeExtension(sdk::Extension* pExtensionToRemove) {
 	loadedScene->removeExtension(pExtensionToRemove);
 }
 
@@ -350,21 +350,21 @@ void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 	}
 }
 
-void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, const sdk::main::ResourceType pType) {
+void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, const sdk::ResourceType pType) {
 	auto pathToCreate = is_directory(pPathToCreate) ? pPathToCreate : pPathToCreate.parent_path();
-	std::shared_ptr<sdk::main::IResource> resource{};
+	std::shared_ptr<sdk::IResource> resource{};
 	switch (pType) {
 
-		case sdk::main::ResourceType::SHADER:
-		case sdk::main::ResourceType::NONE: return;
-		case sdk::main::ResourceType::MODEL:
-			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::Model3DResource::create());
+		case sdk::ResourceType::SHADER:
+		case sdk::ResourceType::NONE: return;
+		case sdk::ResourceType::MODEL:
+			resource = std::dynamic_pointer_cast<sdk::IResource>(sdk::Model3DResource::create());
 			break;
-		case sdk::main::ResourceType::TEXTURE:
-			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::TextureResource::create());
+		case sdk::ResourceType::TEXTURE:
+			resource = std::dynamic_pointer_cast<sdk::IResource>(sdk::TextureResource::create());
 			break;
-		case sdk::main::ResourceType::MATERIAL:
-			resource = std::dynamic_pointer_cast<sdk::main::IResource>(sdk::main::MaterialResource::create());
+		case sdk::ResourceType::MATERIAL:
+			resource = std::dynamic_pointer_cast<sdk::IResource>(sdk::MaterialResource::create());
 			break;
 	}
 	std::filesystem::path uri = "/";
@@ -386,7 +386,7 @@ void PresenterMain::createScene(const std::filesystem::path &pPathToCreate) {
 }
 
 void PresenterMain::createScript(const std::filesystem::path &pPathToCreate) {
-	const auto msg = sdk::utils::ReportMessage::create();
+	const auto msg = sdk::ReportMessage::create();
 	msg->setTitle("Failed to create script");
 	msg->setMessage("Not implemented yet");
 	msg->addInfoLine("Path: {}", pPathToCreate.string());
@@ -394,7 +394,7 @@ void PresenterMain::createScript(const std::filesystem::path &pPathToCreate) {
 }
 
 void PresenterMain::createDirectory(const std::filesystem::path &pPathToCreate) {
-	const auto msg = sdk::utils::ReportMessage::create();
+	const auto msg = sdk::ReportMessage::create();
 	msg->setTitle("Failed to create directory");
 	msg->setMessage("Not implemented yet");
 	msg->addInfoLine("Path: {}", pPathToCreate.string());
@@ -403,7 +403,7 @@ void PresenterMain::createDirectory(const std::filesystem::path &pPathToCreate) 
 
 void PresenterMain::renameFile(const std::filesystem::path &pPathToRemove) {
 
-	const auto msg = sdk::utils::ReportMessage::create();
+	const auto msg = sdk::ReportMessage::create();
 	msg->setTitle("Failed to rename file");
 	msg->setMessage("Not implemented yet");
 	msg->addInfoLine("File path: {}", pPathToRemove.string());
@@ -418,7 +418,7 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 	auto type = status(pPathToDelete, error).type();
 	if (error) {
 
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to delete file");
 		msg->setMessage(error.message());
 		msg->addInfoLine("File path: {}", pPathToDelete.string());
@@ -434,7 +434,7 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 	} else if (type == file_type::symlink) {
 		name = "symlink";
 	} else {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to delete the file");
 		msg->setMessage("Trying to delete the file with the unknown type");
 		msg->addInfoLine("Type must be directory or file");
@@ -453,7 +453,7 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 	auto lambda = [dialog, pPathToDelete, this](const std::shared_ptr<Gio::AsyncResult> &pResult) {
 		if (const int btn = dialog->choose_finish(pResult); btn == 0) {
 			if (std::error_code removeError; !remove_all(pPathToDelete, removeError)) {
-				const auto msg = sdk::utils::ReportMessage::create();
+				const auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Failed to delete file");
 				msg->setMessage(removeError.message());
 				msg->addInfoLine("File path: {}", pPathToDelete.string());
@@ -473,23 +473,23 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 }
 
 void PresenterMain::showInFiles(const std::filesystem::path &pPathToShow) {
-	sdk::utils::Logger::info("Showing the file {}", pPathToShow.string());
+	sdk::Logger::info("Showing the file {}", pPathToShow.string());
 	auto launcher = Gtk::FileLauncher::create(Gio::File::create_for_path(pPathToShow));
 	launcher->open_containing_folder([launcher, pPathToShow, this](const std::shared_ptr<Gio::AsyncResult> &pResult) {
 		try {
 			if (launcher->open_containing_folder_finish(pResult)) {
-				sdk::utils::Logger::out("File showed");
+				sdk::Logger::out("File showed");
 
 			} else {
 
-				auto msg = sdk::utils::ReportMessage::create();
+				auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Failed to show file in system file manager");
 				msg->setMessage("Unknown error");
 				msg->addInfoLine("File path: {}", pPathToShow.string());
 				displayError(msg);
 			}
 		} catch (...) {
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to show file in system file manager");
 			msg->setMessage("Exception occurred");
 			msg->addInfoLine("File path: {}", pPathToShow.string());

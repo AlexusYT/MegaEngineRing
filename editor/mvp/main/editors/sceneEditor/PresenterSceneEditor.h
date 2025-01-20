@@ -25,7 +25,7 @@
 #include "EngineSDK/utils/ModifierKeys.h"
 #include "mvp/main/editors/IPresenterSceneEditor.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IApplication;
 }
 
@@ -49,7 +49,7 @@ private:
 
 	void onGridToggled(bool pState) override;
 
-	static sdk::utils::ModifierKeys convertToModifierKeys(const Gdk::ModifierType &pState);
+	static sdk::ModifierKeys convertToModifierKeys(const Gdk::ModifierType &pState);
 
 	bool onMouseScroll(double pDx, double pDy) override;
 

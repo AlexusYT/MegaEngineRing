@@ -29,7 +29,7 @@
 #include "generatedFiles/GeneratedFiles.h"
 #include "sceneObjects/EditorSceneObject.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Application;
 }
 
@@ -53,11 +53,11 @@ class Project : public std::enable_shared_from_this<Project> {
 	std::shared_ptr<ApplicationInfo> applicationInfo;
 	std::shared_ptr<ScriptParser> scriptParser;
 
-	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onErrorSignal;
+	sigc::signal<void(const sdk::ReportMessagePtr &pError)> onErrorSignal;
 	std::atomic<bool> editorLibLoading{};
-	std::atomic<sdk::utils::ReportMessagePtr> editorLibError{nullptr};
+	std::atomic<sdk::ReportMessagePtr> editorLibError{nullptr};
 
-	std::shared_ptr<sdk::main::Application> application;
+	std::shared_ptr<sdk::Application> application;
 	Project();
 
 public:
@@ -65,17 +65,17 @@ public:
 
 	static std::shared_ptr<Project> create() { return std::shared_ptr<Project>(new (std::nothrow) Project()); }
 
-	sdk::utils::ReportMessagePtr openDatabase();
+	sdk::ReportMessagePtr openDatabase();
 
 	void initProject();
 
-	sdk::utils::ReportMessagePtr loadProject();
+	sdk::ReportMessagePtr loadProject();
 
-	sdk::utils::ReportMessagePtr saveProject();
+	sdk::ReportMessagePtr saveProject();
 
-	sdk::utils::ReportMessagePtr saveFiles() const;
+	sdk::ReportMessagePtr saveFiles() const;
 
-	sdk::utils::ReportMessagePtr generateMainFile() const;
+	sdk::ReportMessagePtr generateMainFile() const;
 
 	Glib::RefPtr<Gio::SimpleActionGroup> getActionGroups() const;
 
@@ -127,15 +127,15 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<SQLite::Database> &getDatabase() const { return database; }
 
-	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
+	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pSlot) {
 		return onErrorSignal.connect(pSlot);
 	}
 
 	[[nodiscard]] const std::atomic<bool> &getEditorLibLoading() const { return editorLibLoading; }
 
-	[[nodiscard]] const std::atomic<sdk::utils::ReportMessagePtr> &getEditorLibError() const { return editorLibError; }
+	[[nodiscard]] const std::atomic<sdk::ReportMessagePtr> &getEditorLibError() const { return editorLibError; }
 
-	void errorOccurred(const sdk::utils::ReportMessagePtr &pError) const { onErrorSignal(pError); }
+	void errorOccurred(const sdk::ReportMessagePtr &pError) const { onErrorSignal(pError); }
 
 	[[nodiscard]] const std::shared_ptr<ScriptParser> &getScriptParser() const { return scriptParser; }
 

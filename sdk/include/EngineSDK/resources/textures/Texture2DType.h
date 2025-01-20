@@ -22,7 +22,7 @@
 #ifndef TEXTURE2DTYPE_H
 #define TEXTURE2DTYPE_H
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 enum class Texture2DType {
 

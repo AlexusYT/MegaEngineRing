@@ -31,17 +31,17 @@
 #include "ui/customWidgets/resourceSelector/resources/SourceSelectionModel3D.h"
 
 namespace mer::editor::mvp {
-PropertyRenderer::PropertyRenderer(sdk::utils::PropertyBase* pProperty, sdk::main::IResourceLoadExecutor* pLoader,
+PropertyRenderer::PropertyRenderer(sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader,
 								   const PropertyRendererType pType)
 	: property(pProperty), type(pType), loader(pLoader) {}
 
-std::shared_ptr<PropertyRenderer> PropertyRenderer::create(sdk::utils::PropertyBase* pProperty,
-														   sdk::main::IResourceLoadExecutor* pLoader) {
+std::shared_ptr<PropertyRenderer> PropertyRenderer::create(sdk::PropertyBase* pProperty,
+														   sdk::IResourceLoadExecutor* pLoader) {
 	return create(pProperty, pLoader, PropertyRendererType::DEFAULT);
 }
 
 std::shared_ptr<PropertyRenderer> PropertyRenderer::create(
-	sdk::utils::PropertyBase* pProperty, sdk::main::IResourceLoadExecutor* pLoader, const PropertyRendererType pType) {
+	sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader, const PropertyRendererType pType) {
 	return std::shared_ptr<PropertyRenderer>(new PropertyRenderer(pProperty, pLoader, pType));
 }
 
@@ -59,7 +59,7 @@ Gtk::SpinButton* create_spin_button(const double pValue, const double pMinValue 
 }
 
 template<int L, typename T, glm::qualifier Q = glm::defaultp>
-Gtk::Widget* create_widget_for_vec(sdk::utils::Property<glm::vec<L, T, Q>>* pProperty) {
+Gtk::Widget* create_widget_for_vec(sdk::Property<glm::vec<L, T, Q>>* pProperty) {
 	auto box = Gtk::make_managed<Gtk::Box>();
 	auto vec = pProperty->getValue();
 	if constexpr (L > 0) {
@@ -101,7 +101,7 @@ Gtk::Widget* create_widget_for_vec(sdk::utils::Property<glm::vec<L, T, Q>>* pPro
 	return box;
 }
 
-Gtk::Widget* get_widget_missing(sdk::utils::PropertyBase* pProperty) {
+Gtk::Widget* get_widget_missing(sdk::PropertyBase* pProperty) {
 
 	auto* widget = Gtk::make_managed<Gtk::Label>();
 	widget->set_label("Missing widgets for " + Utils::getTypeName(pProperty));
@@ -113,7 +113,7 @@ Gtk::Widget* get_widget_missing(sdk::utils::PropertyBase* pProperty) {
 
 Gtk::Widget* PropertyRenderer::getWidget() const {
 
-	if (auto prop = dynamic_cast<sdk::utils::Property<std::string>*>(property)) {
+	if (auto prop = dynamic_cast<sdk::Property<std::string>*>(property)) {
 
 		auto* entry = Gtk::make_managed<Gtk::Entry>();
 		entry->set_size_request();
@@ -121,22 +121,22 @@ Gtk::Widget* PropertyRenderer::getWidget() const {
 		entry->signal_changed().connect([entry, prop] { prop->setValue(entry->get_text()); });
 		return entry;
 	}
-	if (auto prop = dynamic_cast<sdk::utils::Property<float>*>(property)) {
+	if (auto prop = dynamic_cast<sdk::Property<float>*>(property)) {
 
 		auto* spin = create_spin_button(static_cast<double>(prop->getValue()));
 		spin->signal_value_changed().connect([spin, prop] { prop->setValue(static_cast<float>(spin->get_value())); });
 		return spin;
 	}
 
-	if (auto prop = dynamic_cast<sdk::utils::Property<glm::vec3>*>(property)) {
+	if (auto prop = dynamic_cast<sdk::Property<glm::vec3>*>(property)) {
 		using VecT = glm::vec3;
 		return create_widget_for_vec<VecT::length(), VecT::value_type>(prop);
 	}
-	if (auto prop = dynamic_cast<sdk::utils::Property<glm::vec2>*>(property)) {
+	if (auto prop = dynamic_cast<sdk::Property<glm::vec2>*>(property)) {
 		using VecT = glm::vec2;
 		return create_widget_for_vec<VecT::length(), VecT::value_type>(prop);
 	}
-	if (auto prop = dynamic_cast<sdk::utils::Property<std::shared_ptr<sdk::main::IModel3DObject>>*>(property)) {
+	if (auto prop = dynamic_cast<sdk::Property<std::shared_ptr<sdk::IModel3DObject>>*>(property)) {
 		auto box = Gtk::make_managed<Gtk::Box>();
 
 		auto* selector = Gtk::make_managed<ui::ResourceSelectorWidget>();
@@ -158,7 +158,7 @@ Gtk::Widget* PropertyRenderer::getWidget() const {
 		box->append(*selector);
 		return box;
 	}
-	if (auto prop = dynamic_cast<sdk::utils::Property<std::shared_ptr<sdk::main::IMaterialResource>>*>(property)) {
+	if (auto prop = dynamic_cast<sdk::Property<std::shared_ptr<sdk::IMaterialResource>>*>(property)) {
 		auto box = Gtk::make_managed<Gtk::Box>();
 
 		auto* selector = Gtk::make_managed<ui::ResourceSelectorWidget>();

@@ -25,7 +25,7 @@
 #include "EngineSDK/resources/ResourceLoadResult.h"
 
 namespace mer::editor::mvp {
-void EditingResourceList::addResource(const std::shared_ptr<sdk::main::IResource> &pResource) {
+void EditingResourceList::addResource(const std::shared_ptr<sdk::IResource> &pResource) {
 	auto uuid = pResource->getUuid();
 	auto iter = resources.find(uuid);
 	if (iter != resources.end()) return;
@@ -34,9 +34,9 @@ void EditingResourceList::addResource(const std::shared_ptr<sdk::main::IResource
 }
 
 void EditingResourceList::loadResource(const std::filesystem::path &pUri) {
-	context->loadResourceAsync(pUri, [this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+	context->loadResourceAsync(pUri, [this](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
 		if (pResult->isErrored()) {
-			sdk::utils::Logger::error(pResult->getError());
+			sdk::Logger::error(pResult->getError());
 			return;
 		}
 		if (pResult->isReady()) addResource(pResult->getResource());

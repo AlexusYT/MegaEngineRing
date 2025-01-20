@@ -33,12 +33,12 @@
 #include "EngineUtils/utils/UUID.h"
 
 namespace mer::editor::mvp {
-std::shared_ptr<sdk::main::ResourceLoadResult> ResourcesContext::loadResourceSync(const std::string &pResourceUri) {
+std::shared_ptr<sdk::ResourceLoadResult> ResourcesContext::loadResourceSync(const std::string &pResourceUri) {
 
 
-	std::promise<const std::shared_ptr<sdk::main::ResourceLoadResult>> promise;
+	std::promise<const std::shared_ptr<sdk::ResourceLoadResult>> promise;
 
-	loadResourceAsync(pResourceUri, [&promise](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+	loadResourceAsync(pResourceUri, [&promise](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
 		if (!pResult->isPreLoaded()) promise.set_value(pResult);
 	});
 	auto future = promise.get_future();
@@ -57,12 +57,12 @@ void ResourcesContext::preloadResources() {
 		auto &request = iter->second;
 		request->uri = uri;
 		request->type = RequestType::PRELOAD;
-		request->callbackSignal.connect([](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+		request->callbackSignal.connect([](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
 			if (pResult->isErrored()) {
-				sdk::utils::Logger::error(pResult->getError());
+				sdk::Logger::error(pResult->getError());
 				return;
 			}
-			/*sdk::utils::Logger::out("Resource {} ({}) preloaded", pResult->getRequestedUri(),
+			/*sdk::Logger::out("Resource {} ({}) preloaded", pResult->getRequestedUri(),
 									pResult->getResource()->getUuid());*/
 		});
 	}
@@ -71,15 +71,15 @@ void ResourcesContext::preloadResources() {
 
 void ResourcesContext::loadResourceAsync(
 	const std::string &pResourceUri,
-	const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot) {
+	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) {
 
-	if (std::shared_ptr<sdk::main::IResource> foundResource = resources->getResource(pResourceUri)) {
-		auto result = sdk::main::ResourceLoadResult::create();
+	if (std::shared_ptr<sdk::IResource> foundResource = resources->getResource(pResourceUri)) {
+		auto result = sdk::ResourceLoadResult::create();
 		result->setResource(foundResource);
 		result->setRequestedUri(pResourceUri);
 
 		if (!foundResource->isIncomplete()) {
-			result->setState(sdk::main::ResourceLoadResult::State::READY);
+			result->setState(sdk::ResourceLoadResult::State::READY);
 			callSlot(result, pSlot);
 			return;
 		}
@@ -108,9 +108,9 @@ void ResourcesContext::loop(const std::stop_token &pToken) {
 	while (!pToken.stop_requested()) {
 		{
 			std::unique_lock lck(waitMutex);
-			//sdk::utils::Logger::out("Thread {} waiting", std::this_thread::get_id());
+			//sdk::Logger::out("Thread {} waiting", std::this_thread::get_id());
 			cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
-			//sdk::utils::Logger::out("Thread {} notified", std::this_thread::get_id());
+			//sdk::Logger::out("Thread {} notified", std::this_thread::get_id());
 		}
 
 		std::shared_ptr<Request> request;
@@ -123,7 +123,7 @@ void ResourcesContext::loop(const std::stop_token &pToken) {
 			queue.erase(iter);
 			processingQueue.emplace(request->uri, request);
 		}
-		//sdk::utils::Logger::out("Thread {} grabbed request {}", std::this_thread::get_id(), request->uri.string());
+		//sdk::Logger::out("Thread {} grabbed request {}", std::this_thread::get_id(), request->uri.string());
 		processRequest(request);
 		{
 			std::lock_guard lock(processingQueueMutex);
@@ -133,23 +133,23 @@ void ResourcesContext::loop(const std::stop_token &pToken) {
 }
 
 void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) {
-	auto result = sdk::main::ResourceLoadResult::create();
+	auto result = sdk::ResourceLoadResult::create();
 	//PRELOAD incomplete = PRELOADED
 	//PRELOAD complete = PRELOADED
 	//LOAD incomplete = resource loading required
 	//LOAD complete = READY
-	std::shared_ptr<sdk::main::IResource> resource;
-	if (std::shared_ptr<sdk::main::IResource> foundResource = resources->getResource(pRequest->uri)) {
+	std::shared_ptr<sdk::IResource> resource;
+	if (std::shared_ptr<sdk::IResource> foundResource = resources->getResource(pRequest->uri)) {
 		result->setResource(foundResource);
 		result->setRequestedUri(pRequest->uri);
 
 		if (pRequest->type == RequestType::PRELOAD) {
-			result->setState(sdk::main::ResourceLoadResult::State::PRELOADED);
+			result->setState(sdk::ResourceLoadResult::State::PRELOADED);
 			callSlot(result, pRequest->callbackSignal);
 			return;
 		}
 		if (!foundResource->isIncomplete()) {
-			result->setState(sdk::main::ResourceLoadResult::State::READY);
+			result->setState(sdk::ResourceLoadResult::State::READY);
 			callSlot(result, pRequest->callbackSignal);
 			return;
 		}
@@ -158,7 +158,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 
 
 	if (!pRequest->uri.has_extension()) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("No resource extension in uri");
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
@@ -168,7 +168,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 		return;
 	}
 
-	std::shared_ptr<sdk::main::IResourceLoader> loader = getLoader(pRequest);
+	std::shared_ptr<sdk::IResourceLoader> loader = getLoader(pRequest);
 	if (!loader) return;
 	std::shared_ptr<std::istream> stream = getResourceStream(pRequest);
 	if (!stream) return;
@@ -208,20 +208,20 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 		auto endTime = std::chrono::steady_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 		if (duration.count() > 500) {
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Too long duration");
 			msg->setMessage("Resource loading took to long");
 			msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
 			msg->addInfoLine("Duration: {}ms", duration.count());
-			sdk::utils::Logger::warn(msg->getReport(false));
+			sdk::Logger::warn(msg->getReport(false));
 		}
 		result->setResource(resource);
 		result->setRequestedUri(pRequest->uri);
 
-		result->setState(sdk::main::ResourceLoadResult::State::READY);
+		result->setState(sdk::ResourceLoadResult::State::READY);
 		callSlot(result, pRequest->callbackSignal);
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception thrown while executing request");
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
@@ -232,33 +232,33 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 }
 
 void ResourcesContext::callSlot(
-	const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult,
-	const sigc::slot<void(const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult)> &pSlot) {
+	const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
+	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) {
 	try {
 		pSlot(pResult);
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to send loading result to the callback");
 		msg->setMessage("Exception thrown in callback");
 		msg->addInfoLine("Result state: {}", pResult->getStateStr());
 		msg->addInfoLine("Requested resource URI: {}", pResult->getRequestedUri());
 		if (pResult->isErrored()) {
 			msg->addInfoLine("Result error reported earlier");
-			sdk::utils::Logger::error(pResult->getError());
+			sdk::Logger::error(pResult->getError());
 		}
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 	}
 }
 
-std::shared_ptr<sdk::main::IResourceLoader> ResourcesContext::getLoader(const std::shared_ptr<Request> &pRequest) {
+std::shared_ptr<sdk::IResourceLoader> ResourcesContext::getLoader(const std::shared_ptr<Request> &pRequest) {
 	try {
-		auto loader = sdk::main::ResourceLoaders::getInstance()->getLoader(pRequest->uri.extension());
+		auto loader = sdk::ResourceLoaders::getInstance()->getLoader(pRequest->uri.extension());
 		if (!loader) {
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Unable to load resource");
 			msg->setMessage("No loader registered that can load such resource");
 			msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
-			auto result = sdk::main::ResourceLoadResult::create();
+			auto result = sdk::ResourceLoadResult::create();
 			result->setError(msg);
 			result->setRequestedUri(pRequest->uri);
 			callSlot(result, pRequest->callbackSignal);
@@ -266,11 +266,11 @@ std::shared_ptr<sdk::main::IResourceLoader> ResourcesContext::getLoader(const st
 		}
 		return loader;
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception occurred while getting the resource loader");
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
-		auto result = sdk::main::ResourceLoadResult::create();
+		auto result = sdk::ResourceLoadResult::create();
 		result->setError(msg);
 		result->setRequestedUri(pRequest->uri);
 		callSlot(result, pRequest->callbackSignal);
@@ -283,7 +283,7 @@ std::shared_ptr<std::istream> ResourcesContext::getResourceStream(const std::sha
 		std::shared_ptr<std::istream> stream;
 		if (auto msg = application->getResourceBundle()->getResourceStream(pRequest->uri, stream)) {
 			msg->setTitle("Unable to load resource");
-			auto result = sdk::main::ResourceLoadResult::create();
+			auto result = sdk::ResourceLoadResult::create();
 			result->setError(msg);
 			result->setRequestedUri(pRequest->uri);
 			callSlot(result, pRequest->callbackSignal);
@@ -291,10 +291,10 @@ std::shared_ptr<std::istream> ResourcesContext::getResourceStream(const std::sha
 		}
 		return stream;
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception occurred while getting the resource stream");
-		auto result = sdk::main::ResourceLoadResult::create();
+		auto result = sdk::ResourceLoadResult::create();
 		result->setError(msg);
 		result->setRequestedUri(pRequest->uri);
 		callSlot(result, pRequest->callbackSignal);

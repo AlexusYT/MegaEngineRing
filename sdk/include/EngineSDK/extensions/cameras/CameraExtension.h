@@ -26,7 +26,7 @@
 #include "ICamera.h"
 #include "PerspectiveProjectionCameraMod.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class CameraExtension : public PerspectiveProjectionCameraMod, public ICamera {
 
 protected:
@@ -53,7 +53,7 @@ public:
 
 
 protected:
-	utils::ReportMessagePtr onInit() override;
+	ReportMessagePtr onInit() override;
 
 
 	void onWindowSizeChanged(int pWidth, int pHeight) override;
@@ -63,7 +63,7 @@ private:
 
 	void updateMatrix() override;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //CAMERAEXTENSION_H

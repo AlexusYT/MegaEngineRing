@@ -28,7 +28,7 @@
 
 #include "EngineUtils/utils/Logger.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 Window::Window() {}
 
 Window::~Window() {
@@ -62,7 +62,7 @@ void Window::show() {
 		glDebugMessageCallback(
 			[](GLenum pSource, GLenum pType, GLuint pId, GLenum pSeverity, GLsizei pLength, const GLchar* pMessage,
 			   const void* /*userParam*/) {
-				auto msg = utils::ReportMessage::create();
+				auto msg = ReportMessage::create();
 				msg->setTitle("OpenGL error");
 				msg->setMessage("OpenGL error");
 				std::string sourceStr;
@@ -133,7 +133,7 @@ void Window::show() {
 				msg->addInfoLine("Error severity: {}: {}", severityStr, pSeverity);
 				msg->addInfoLine("Error message: {}",
 								 std::string(pMessage, static_cast<std::string::size_type>(pLength)));
-				utils::Logger::error(msg);
+				Logger::error(msg);
 			},
 			nullptr);
 	}
@@ -153,12 +153,12 @@ void Window::setCloseRequest(const bool pState) const {
 	if (native) glfwSetWindowShouldClose(native, pState);
 }
 
-sdk::utils::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor) const {
+sdk::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor) const {
 	if (native) return nullptr;
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, pMajor);
 	const char* errorMsg;
 	if (auto errorId = glfwGetError(&errorMsg); errorId != GLFW_NO_ERROR) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to set context version");
 		msg->setMessage("Function returns an error when setting major version");
 		msg->addInfoLine("Error num: {}", errorId);
@@ -169,7 +169,7 @@ sdk::utils::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor) c
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, pMajor);
 
 	if (auto errorId = glfwGetError(&errorMsg); errorId != GLFW_NO_ERROR) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to set context version");
 		msg->setMessage("Function returns an error when setting minor version");
 		msg->addInfoLine("Error num: {}", errorId);
@@ -192,11 +192,11 @@ void Window::onCursorPosChanged(double /*pX*/, double /*pY*/) {}
 
 void Window::onKeyChanged(int /*pKey*/, int /*pScancode*/, int /*pAction*/, int /*pMods*/) {}
 
-sdk::utils::ReportMessagePtr Window::init() {
+sdk::ReportMessagePtr Window::init() {
 	makeCurrent();
 	/*glewExperimental = true;
 	if (auto error = glewInit(); error != GLEW_OK) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to init glew");
 		msg->setMessage("Error occurred");
 		msg->addInfoLine("Error num: {}", error);
@@ -212,4 +212,4 @@ void Window::swapBuffers() const {
 	glfwSwapBuffers(native);
 	glfwPollEvents();
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

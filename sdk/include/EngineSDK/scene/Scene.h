@@ -30,13 +30,13 @@
 #include "EngineSDK/utils/MouseButton.h"
 #include "IScene.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class PrefabInstance;
 class Prefab;
 class ILightSources;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ICamera;
 class ISceneObject;
 
@@ -82,7 +82,7 @@ public:
 		resourceExecutor->loadResourceAsync(pResourceUri, pSlot);
 	}
 
-	void onResourceLoadingError(const std::string &pResourceUri, const utils::ReportMessagePtr &pError) override;
+	void onResourceLoadingError(const std::string &pResourceUri, const ReportMessagePtr &pError) override;
 
 
 	void switchCamera(ICamera* pNewCamera) override;
@@ -115,7 +115,7 @@ protected:
 
 	virtual void afterRender() {}
 
-	sdk::utils::ReportMessagePtr initScene() override;
+	sdk::ReportMessagePtr initScene() override;
 
 	void deinitScene() override;
 
@@ -130,13 +130,13 @@ private:
 
 	void onCursorPosChanged(double pX, double pY) override;
 
-	void onKeyChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) override;
+	void onKeyChanged(KeyboardKey pKey, bool pPressed, const ModifierKeys &pMods) override;
 
-	void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) override;
+	void onMouseButtonStateChanged(MouseButton pButton, bool pPressed, double pX, double pY) override;
 
 	bool notifyOnMouseScroll(double pDx, double pDy) final;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //SCENE_H

@@ -29,7 +29,7 @@
 namespace mer::editor::ui {
 const std::string &ResourceElement::getName() const { return resource->getResourceName(); }
 
-SourceSelectionResource::SourceSelectionResource(sdk::main::IResourceLoadExecutor* pLoader) : loader(pLoader) {}
+SourceSelectionResource::SourceSelectionResource(sdk::IResourceLoadExecutor* pLoader) : loader(pLoader) {}
 
 Gtk::Widget* SourceSelectionResource::getWidget() {
 	scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
@@ -108,7 +108,7 @@ void SourceSelectionResource::onShow() {
 		});
 }
 
-std::shared_ptr<Gtk::TreeListRow> SourceSelectionResource::findRow(const sdk::main::IResource* pResource) const {
+std::shared_ptr<Gtk::TreeListRow> SourceSelectionResource::findRow(const sdk::IResource* pResource) const {
 	auto selection = std::dynamic_pointer_cast<Gtk::SingleSelection>(listView->get_model());
 
 	for (auto i = 0u, maxI = selection->get_n_items(); i < maxI; ++i) {

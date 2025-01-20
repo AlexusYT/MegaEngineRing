@@ -33,7 +33,7 @@
 	#include "EngineSDK/resources/LoadedResources.h"
 	#include "ResourcesWindow.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 std::condition_variable cv;
 
 ResourcesWindow::ResourcesWindow()
@@ -83,7 +83,7 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 			try {
 
 				if (!uri.has_extension()) {
-					auto msg = sdk::utils::ReportMessage::create();
+					auto msg = sdk::ReportMessage::create();
 					msg->setTitle("Unable to load resource");
 					msg->setMessage("No resource extension in uri");
 					msg->addInfoLine("Resource URI: {}", uri.string());
@@ -96,7 +96,7 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 
 				auto loader = ResourceLoaders::getInstance()->getLoader(uri.extension());
 				if (!loader) {
-					auto msg = sdk::utils::ReportMessage::create();
+					auto msg = sdk::ReportMessage::create();
 					msg->setTitle("Unable to load resource");
 					msg->setMessage("No loader registered that can load such resource");
 					msg->addInfoLine("Resource URI: {}", uri.string());
@@ -138,7 +138,7 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 				result->setState(ResourceLoadResult::State::READY);
 				callSlot(result, slot);
 			} catch (...) {
-				auto msg = sdk::utils::ReportMessage::create();
+				auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Unable to load resource");
 				msg->setMessage("Exception thrown while executing request");
 				msg->addInfoLine("Resource URI: {}", uri.string());
@@ -157,18 +157,18 @@ void ResourcesWindow::callSlot(const std::shared_ptr<ResourceLoadResult> &pResul
 	try {
 		pSlot(pResult);
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to send loading result to the callback");
 		msg->setMessage("Exception thrown in callback");
 		msg->addInfoLine("Result state: {}", pResult->getStateStr());
 		msg->addInfoLine("Requested resource URI: {}", pResult->getRequestedUri());
 		if (pResult->isErrored()) {
 			msg->addInfoLine("Result error reported earlier");
-			utils::Logger::error(pResult->getError());
+			Logger::error(pResult->getError());
 		}
-		utils::Logger::error(msg);
+		Logger::error(msg);
 	}
 }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 #endif

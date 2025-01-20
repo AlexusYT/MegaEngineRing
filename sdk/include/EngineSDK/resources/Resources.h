@@ -27,7 +27,7 @@
 
 #include "IResource.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResource;
 
 class Resources {
@@ -74,7 +74,7 @@ public:
 	void clear() {resources.clear();}
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //RESOURCES_H

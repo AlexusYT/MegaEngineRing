@@ -27,7 +27,7 @@
 #include "EngineSDK/resources/materials/MaterialResource.h"
 #include "EngineSDK/utils/Transformation.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 PrefabElementInstance::PrefabElementInstance() : data(nullptr, ""), visible(nullptr, ""), material(nullptr, "") {
 
 	visible = true;
@@ -59,7 +59,7 @@ void PrefabElementInstance::onParentMaterialChanged(const std::shared_ptr<IMater
 	}
 }
 
-void PrefabElementInstance::onGlobalTransformChanged(const std::shared_ptr<utils::Transformation> &pTransformation) {
+void PrefabElementInstance::onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) {
 	data->modelMat = pTransformation->getModelMatrix();
 	data->normalMat = glm::transpose(glm::inverse(glm::mat3(data->modelMat)));
 	data.notifyChanged();
@@ -70,4 +70,4 @@ void PrefabElementInstance::onMaterialChanged(const MaterialData &pData) {
 	data.notifyChanged();
 }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

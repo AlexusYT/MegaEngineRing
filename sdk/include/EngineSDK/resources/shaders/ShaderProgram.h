@@ -26,7 +26,7 @@
 
 #include "EngineSDK/resources/Resource.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Shader;
 
 class ShaderProgram : public Resource {
@@ -69,17 +69,17 @@ public:
 
 	void setUniform(const std::string &pName, const glm::mat4 &pValue) const;
 
-	main::ResourceType getResourceType() override;
+	ResourceType getResourceType() override;
 
-	utils::ReportMessagePtr onInitialize() override;
+	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 
-	void addReportInfo(const utils::ReportMessagePtr &pMsg) override;
+	void addReportInfo(const ReportMessagePtr &pMsg) override;
 };
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //SHADERPROGRAM_H

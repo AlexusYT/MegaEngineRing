@@ -52,7 +52,7 @@ public:
 	}
 
 private:
-	static sdk::utils::ReportMessagePtr initProject(const std::shared_ptr<project::Project> &pProject);
+	static sdk::ReportMessagePtr initProject(const std::shared_ptr<project::Project> &pProject);
 
 	void openProjectCreatingWindow(const std::shared_ptr<project::Project> &pProject);
 

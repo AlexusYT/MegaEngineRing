@@ -21,4 +21,4 @@
 
 #include "EngineSDK/resources/Resources.h"
 
-namespace mer::sdk::main {} // namespace mer::sdk::main
+namespace mer::sdk {} // namespace mer::sdk

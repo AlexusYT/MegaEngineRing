@@ -23,9 +23,9 @@
 
 #include "EngineSDK/utils/Transformation.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 Transformable::Transformable()
-	: globalTransform(utils::Transformation::create()), localTransform(utils::Transformation::create()) {
+	: globalTransform(Transformation::create()), localTransform(Transformation::create()) {
 	localTransform->connectOnChanged([this](const glm::mat4 & /*pNewMatrix*/) {
 		onLocalTransformChanged(localTransform);
 		updateTransform();
@@ -36,15 +36,15 @@ Transformable::Transformable()
 
 void Transformable::updateTransform() {
 
-	std::shared_ptr<utils::Transformation> transform;
+	std::shared_ptr<Transformation> transform;
 	if (parent) transform = parent->globalTransform->clone();
 	else
-		transform = utils::Transformation::create();
+		transform = Transformation::create();
 	transform->applyTransformation(localTransform);
 	globalTransform->swapTransformation(transform);
 }
 
-void Transformable::onLocalTransformChanged(const std::shared_ptr<utils::Transformation> & /*pTransformation*/) {}
+void Transformable::onLocalTransformChanged(const std::shared_ptr<Transformation> & /*pTransformation*/) {}
 
-void Transformable::onGlobalTransformChanged(const std::shared_ptr<utils::Transformation> & /*pTransformation*/) {}
-} // namespace mer::sdk::main
+void Transformable::onGlobalTransformChanged(const std::shared_ptr<Transformation> & /*pTransformation*/) {}
+} // namespace mer::sdk

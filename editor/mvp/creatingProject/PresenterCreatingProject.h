@@ -57,27 +57,27 @@ public:
 private:
 	void runTasksImpl();
 
-	sdk::utils::ReportMessagePtr generateFiles(const std::filesystem::path &pPath) const;
+	sdk::ReportMessagePtr generateFiles(const std::filesystem::path &pPath) const;
 
-	sdk::utils::ReportMessagePtr installLibraries(const std::filesystem::path &pProjectPath) const;
+	sdk::ReportMessagePtr installLibraries(const std::filesystem::path &pProjectPath) const;
 
 	static std::string editTargetLinkLibraries(const std::string &pStr, const std::string &pFunc);
 
-	sdk::utils::ReportMessagePtr reloadCmake() const;
+	sdk::ReportMessagePtr reloadCmake() const;
 
 	struct Library {
 		std::string name;
 		std::string script;
 	};
 
-	static sdk::utils::ReportMessagePtr parseLibrariesScript(std::stringstream &pLog,
+	static sdk::ReportMessagePtr parseLibrariesScript(std::stringstream &pLog,
 	std::unordered_map<std::string, Library> &pLibraries);
 
 	static std::string getLine(std::stringstream &pLog);
 
 	void logMessage(const std::string &pMessage) const;
 
-	void logError(sdk::utils::ReportMessagePtr pError) const;
+	void logError(sdk::ReportMessagePtr pError) const;
 
 	std::string getTypeName() override {
 		return "PresenterCreatingProject";

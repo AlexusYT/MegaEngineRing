@@ -27,9 +27,9 @@
 #include "EngineUtils/utils/IReportable.h"
 #include "ShaderTypeEnum.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 enum class ShaderTypeEnum;
-class Shader : public Initializable, public utils::IReportable {
+class Shader : public Initializable, public IReportable {
 	uint32_t name;
 	ShaderTypeEnum type;
 	std::string source;
@@ -62,11 +62,11 @@ public:
 
 	uint32_t native() const { return name; }
 
-	utils::ReportMessagePtr onInitialize() override;
+	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 
-	void addReportInfo(const utils::ReportMessagePtr &pMsg) override;
+	void addReportInfo(const ReportMessagePtr &pMsg) override;
 };
 
 class FragmentShader : public Shader {
@@ -83,5 +83,5 @@ class VertexShader : public Shader {
 public:
 	VertexShader() : Shader(ShaderTypeEnum::VERTEX_SHADER) {}
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 #endif //SHADER_H

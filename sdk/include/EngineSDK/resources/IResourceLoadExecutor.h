@@ -25,7 +25,7 @@
 
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ResourceLoadResult;
 class ILoadedResources;
 class IApplication;
@@ -51,7 +51,7 @@ public:
 
 	virtual const std::shared_ptr<ILoadedResources> &getResources() = 0;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //IRESOURCES_H

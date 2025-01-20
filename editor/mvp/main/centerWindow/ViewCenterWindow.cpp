@@ -67,7 +67,7 @@ ViewCenterWindow::ViewCenterWindow(const std::shared_ptr<IWidgetContext> &pConte
 						if (pNotebook->get_n_pages() == 0) pWindow->destroy();
 					},
 					notebook.get(), &window));
-				sdk::utils::Logger::out("Create window");
+				sdk::Logger::out("Create window");
 
 				return notebook;
 			},

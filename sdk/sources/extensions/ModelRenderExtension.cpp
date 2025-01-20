@@ -29,9 +29,9 @@
 #include "EngineSDK/scene/objects/SceneObject.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
-utils::ReportMessagePtr ModelRenderExtension::onInit() {
+ReportMessagePtr ModelRenderExtension::onInit() {
 	auto &pos = getObject()->getMainExtension()->propertyPosition;
 
 	pos.connectEvent([this](const glm::vec3 &pPos) {
@@ -65,9 +65,9 @@ utils::ReportMessagePtr ModelRenderExtension::onInit() {
 	return nullptr;
 }
 
-utils::ReportMessagePtr ModelRenderExtension::onDeinit() { return nullptr; }
+ReportMessagePtr ModelRenderExtension::onDeinit() { return nullptr; }
 
 void ModelRenderExtension::onRender() {}
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

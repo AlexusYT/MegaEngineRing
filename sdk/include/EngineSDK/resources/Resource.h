@@ -29,10 +29,10 @@
 
 class UUID;
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
-class Resource : public IResource, public Initializable, public utils::IPropertyProvider {
-	std::vector<utils::PropertyBase*> properties;
+class Resource : public IResource, public Initializable, public IPropertyProvider {
+	std::vector<PropertyBase*> properties;
 	std::filesystem::path resourceUri;
 	std::string resourceName;
 	bool incomplete{true};
@@ -42,11 +42,11 @@ protected:
 	Resource();
 
 public:
-	void addProperty(utils::PropertyBase* pProperty) override;
+	void addProperty(PropertyBase* pProperty) override;
 
-	void removeProperty(utils::PropertyBase* pProperty) override;
+	void removeProperty(PropertyBase* pProperty) override;
 
-	void propertyChanged(utils::PropertyBase* pProperty) override;
+	void propertyChanged(PropertyBase* pProperty) override;
 
 	const std::filesystem::path &getResourceUri() override { return resourceUri; }
 
@@ -65,12 +65,12 @@ public:
 
 	[[nodiscard]] bool isIncomplete() const final { return incomplete; }
 
-	void addReportInfo(const utils::ReportMessagePtr &pMsg) override;
+	void addReportInfo(const ReportMessagePtr &pMsg) override;
 
 private:
 	void setIncomplete(const bool pIncomplete) final { incomplete = pIncomplete; }
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //RESOURCE_H

@@ -23,13 +23,13 @@
 #define OBJECTPROPERTYENTRY_H
 #include "ui/customWidgets/TreeElementBase.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class PropertyBase;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class PropertyRenderer;
@@ -42,38 +42,38 @@ public:
 };
 
 class ObjectPropertyEntry : public ObjectPropertyEntryBase {
-	sdk::main::Extension* extension;
-	sdk::utils::PropertyBase* nativeProperty;
+	sdk::Extension* extension;
+	sdk::PropertyBase* nativeProperty;
 
 protected:
-	explicit ObjectPropertyEntry(sdk::utils::PropertyBase* pNativeProperty, sdk::main::Extension* pExtension)
+	explicit ObjectPropertyEntry(sdk::PropertyBase* pNativeProperty, sdk::Extension* pExtension)
 		: ObjectPropertyEntryBase(nullptr), extension(pExtension), nativeProperty(pNativeProperty) {}
 
 public:
-	static std::shared_ptr<ObjectPropertyEntry> create(sdk::utils::PropertyBase* pProp,
-													   sdk::main::Extension* pExtension) {
+	static std::shared_ptr<ObjectPropertyEntry> create(sdk::PropertyBase* pProp,
+													   sdk::Extension* pExtension) {
 		return make_refptr_for_instance(new ObjectPropertyEntry(pProp, pExtension));
 	}
 
 	std::shared_ptr<Gio::MenuModel> getMenu() override { return nullptr; }
 
-	[[nodiscard]] sdk::utils::PropertyBase* getNativeProperty() const { return nativeProperty; }
+	[[nodiscard]] sdk::PropertyBase* getNativeProperty() const { return nativeProperty; }
 
 	const std::string &getName() override;
 
 	std::shared_ptr<PropertyRenderer> getRenderer() const;
 
-	[[nodiscard]] sdk::main::Extension* getExtension() const { return extension; }
+	[[nodiscard]] sdk::Extension* getExtension() const { return extension; }
 };
 
 class ObjectExtensionEntry : public ObjectPropertyEntryBase {
-	sdk::main::Extension* nativeExtension{};
+	sdk::Extension* nativeExtension{};
 
 protected:
-	explicit ObjectExtensionEntry(sdk::main::Extension* pNativeExtension);
+	explicit ObjectExtensionEntry(sdk::Extension* pNativeExtension);
 
 public:
-	static std::shared_ptr<ObjectExtensionEntry> create(sdk::main::Extension* pNativeExtension) {
+	static std::shared_ptr<ObjectExtensionEntry> create(sdk::Extension* pNativeExtension) {
 		return make_refptr_for_instance(new ObjectExtensionEntry(pNativeExtension));
 	}
 
@@ -81,7 +81,7 @@ public:
 
 	const std::string &getName() override;
 
-	[[nodiscard]] sdk::main::Extension* getNativeExtension() const { return nativeExtension; }
+	[[nodiscard]] sdk::Extension* getNativeExtension() const { return nativeExtension; }
 };
 
 } // namespace mer::editor::mvp

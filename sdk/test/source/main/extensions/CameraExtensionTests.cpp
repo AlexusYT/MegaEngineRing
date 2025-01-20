@@ -25,7 +25,7 @@
 #include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "EngineSDK/extensions/cameras/CameraExtension.h"
 
-using namespace mer::sdk::main;
+using namespace mer::sdk;
 
 //TODO Tests
 class CameraExtensionTestsFixture : public testing::Test {

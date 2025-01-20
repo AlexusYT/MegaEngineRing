@@ -23,7 +23,7 @@
 #define SCRIPTNODE_H
 #include "mvp/main/editors/graphicsScriptEditor/canvas/CanvasElement.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
 }
 
@@ -41,13 +41,13 @@ class ScriptNode : public mvp::CanvasElement {
 	int64_t nodeId{};
 
 public:
-	sdk::utils::ReportMessagePtr connectToSlot(const std::string &pSelfSlotName, ScriptNodeSlot* pOtherSlot);
+	sdk::ReportMessagePtr connectToSlot(const std::string &pSelfSlotName, ScriptNodeSlot* pOtherSlot);
 
 	void removeAllConnections() const;
 
 	ScriptNodeSlot* getSlotByName(const std::string &pSelfSlotName);
 
-	sdk::utils::ReportMessagePtr addNewSlot(const std::string &pSlotName, const std::string &pMethodName,
+	sdk::ReportMessagePtr addNewSlot(const std::string &pSlotName, const std::string &pMethodName,
 											SlotConnectionType pType);
 
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<ScriptNodeSlot>> &getSlots() const { return slots; }
@@ -85,11 +85,11 @@ class ScriptNodeSlot : public mvp::CanvasElement {
 	double connectionRadius = 8;
 
 public:
-	sdk::utils::ReportMessagePtr connect(ScriptNodeSlot* pOtherSlot);
+	sdk::ReportMessagePtr connect(ScriptNodeSlot* pOtherSlot);
 
-	sdk::utils::ReportMessagePtr exchange(ScriptNodeSlot* pNewOtherSlot);
+	sdk::ReportMessagePtr exchange(ScriptNodeSlot* pNewOtherSlot);
 
-	sdk::utils::ReportMessagePtr checkConnectable(ScriptNodeSlot* pOtherSlot);
+	sdk::ReportMessagePtr checkConnectable(ScriptNodeSlot* pOtherSlot);
 
 	void disconnect();
 

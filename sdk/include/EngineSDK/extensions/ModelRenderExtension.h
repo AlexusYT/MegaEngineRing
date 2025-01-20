@@ -25,7 +25,7 @@
 #include "EngineSDK/render/RenderInstanceData.h"
 #include "Extension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IMaterialResource;
 class IModel3DObject;
 
@@ -49,13 +49,13 @@ public:
 	std::shared_ptr<ShaderProgram> getShader() override { return nullptr; }
 
 protected:
-	utils::ReportMessagePtr onInit() override;
+	ReportMessagePtr onInit() override;
 
-	utils::ReportMessagePtr onDeinit() override;
+	ReportMessagePtr onDeinit() override;
 
 	void onRender() override;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //MODELRENDEREXTENSION_H

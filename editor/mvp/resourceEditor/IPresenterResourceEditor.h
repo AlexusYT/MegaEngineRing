@@ -30,10 +30,10 @@ namespace mer::editor::ui {
 class ISourceSelectionResult;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResourceLoadExecutor;
 class IResource;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class IViewResourceEditor;
@@ -51,20 +51,20 @@ public:
 
 	virtual void onCancelClicked() = 0;
 
-	virtual std::shared_ptr<sdk::main::IResource> getSelectedResource(IViewResourceEditor* pView) = 0;
+	virtual std::shared_ptr<sdk::IResource> getSelectedResource(IViewResourceEditor* pView) = 0;
 
 	virtual std::filesystem::path getDataPath() = 0;
 
-	virtual void onSelectionChanged(const std::shared_ptr<sdk::main::IResource> &pResource,
+	virtual void onSelectionChanged(const std::shared_ptr<sdk::IResource> &pResource,
 									IViewResourceEditor* pView) = 0;
 
-	virtual void removeObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToRemove,
+	virtual void removeObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToRemove,
 							  IViewResourceEditor* pView) = 0;
 
-	virtual void addObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToRemove,
+	virtual void addObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToRemove,
 						   IViewResourceEditor* pView) = 0;
 
-	virtual sdk::main::IResourceLoadExecutor* getResourceLoader() = 0;
+	virtual sdk::IResourceLoadExecutor* getResourceLoader() = 0;
 
 	virtual void onMaterialBaseColorChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 											IViewResourceEditor* pView) = 0;

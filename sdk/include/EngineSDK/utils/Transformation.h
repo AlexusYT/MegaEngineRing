@@ -25,7 +25,7 @@
 
 #include "EngineUtils/utils/Property.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class Transformation {
 
 	glm::mat4 modelMatrix{1};
@@ -81,6 +81,6 @@ public:
 	void swapTransformation(const std::shared_ptr<Transformation> &pTransformation);
 };
 
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 #endif //TRANSFORMATION_H

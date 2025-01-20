@@ -48,7 +48,7 @@ void ProjectCreatingWindow::addMessageToLog(const std::string &pMessage) {
 	logView.scrollToEnd();
 }
 
-void ProjectCreatingWindow::reportError(sdk::utils::ReportMessagePtr pMessage) { sdk::utils::Logger::error(pMessage); }
+void ProjectCreatingWindow::reportError(sdk::ReportMessagePtr pMessage) { sdk::Logger::error(pMessage); }
 
 void ProjectCreatingWindow::closeView() { context->removeWidget(); }
 

@@ -25,7 +25,7 @@
 #include <project/toolchain/ToolchainUtils.h>
 
 namespace mer::editor::project {
-mer::sdk::utils::ReportMessagePtr GeneratedFiles::saveToCmake() const {
+mer::sdk::ReportMessagePtr GeneratedFiles::saveToCmake() const {
 	std::vector<std::string> files;
 	getFilesToSave(this, files);
 	if (!isSaveRequired(files)) return nullptr;

@@ -23,7 +23,7 @@
 #define EXTENSIONPROPERTYBASE_H
 #include <string>
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class IPropertyProvider;
 
 class PropertyBase {
@@ -49,7 +49,7 @@ protected:
 	void notifyPropertyChanged();
 };
 
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 
 #endif //EXTENSIONPROPERTYBASE_H

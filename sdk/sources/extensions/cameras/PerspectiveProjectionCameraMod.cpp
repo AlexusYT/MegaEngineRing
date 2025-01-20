@@ -26,7 +26,7 @@
 
 #include "EngineSDK/extensions/Extension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 PerspectiveProjectionCameraMod::PerspectiveProjectionCameraMod()
 	: propertyAspect(this, "Aspect"), propertyFov(this, "Fov"), propertyZNear(this, "ZNear"),
 	  propertyZFar(this, "ZFar"), propertyProjMatrix(this, "ProjMatrix") {
@@ -49,4 +49,4 @@ void PerspectiveProjectionCameraMod::updateProjMatrix() {
 	propertyProjMatrix = glm::perspective(propertyFov.getValue(), propertyAspect.getValue(), propertyZNear.getValue(),
 										  propertyZFar.getValue());
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

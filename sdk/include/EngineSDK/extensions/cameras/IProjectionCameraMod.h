@@ -24,7 +24,7 @@
 
 #include <glm/fwd.hpp>
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ExtensionProperties;
 
 class IProjectionCameraMod {
@@ -36,7 +36,7 @@ protected:
 
 	[[nodiscard]] virtual const glm::mat4 &getProjMatrix() const = 0;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //IPROJECTIONCAMERAMOD_H

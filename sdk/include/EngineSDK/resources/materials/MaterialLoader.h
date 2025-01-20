@@ -25,18 +25,18 @@
 
 #include "EngineSDK/resources/ResourceLoader.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IMaterialComponent;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class MaterialLoader : public ResourceLoader {
 
 public:
 	std::shared_ptr<IResource> createResource() override;
 
-	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
+	ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 								 const std::shared_ptr<IResource> &pResource) override;
 
 	std::string getFileExtension() override { return "enmat"; }
@@ -47,6 +47,6 @@ private:
 		const sigc::slot<void(const std::shared_ptr<IMaterialComponent> &pComponent)> &pSetter);
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //MATERIALLOADER_H

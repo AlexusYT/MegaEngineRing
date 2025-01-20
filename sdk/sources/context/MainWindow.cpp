@@ -27,8 +27,8 @@
 	#include "EngineSDK/utils/ModifierKeys.h"
 	#include "ResourcesWindow.h"
 
-namespace mer::sdk::main {
-MainWindow::MainWindow() {
+namespace mer::sdk {
+MainWindowWindow() {
 
 	resourcesWindow = ResourcesWindow::create();
 	resourcesWindow->setVisible(false);
@@ -36,7 +36,7 @@ MainWindow::MainWindow() {
 	setSharedWindow(resourcesWindow);
 }
 
-utils::ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene> &pNewScene) {
+ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene> &pNewScene) {
 
 	if (currentScene) {
 		auto oldScene = currentScene;
@@ -72,8 +72,8 @@ void MainWindow::onCursorPosChanged(double pX, double pY) {
 
 void MainWindow::onKeyChanged(int /*pKey*/, int pScancode, const int pAction, const int pMods) {
 	if (currentScene)
-		currentScene->onKeyChanged(static_cast<utils::KeyboardKey>(pScancode), pAction != GLFW_RELEASE,
-								   utils::ModifierKeys(static_cast<uint8_t>(pMods)));
+		currentScene->onKeyChanged(static_cast<KeyboardKey>(pScancode), pAction != GLFW_RELEASE,
+								   ModifierKeys(static_cast<uint8_t>(pMods)));
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 #endif

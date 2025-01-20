@@ -27,7 +27,7 @@
 
 #include "IApplicationSettings.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class DefaultApplicationSettings : public IApplicationSettings {
 
@@ -35,41 +35,41 @@ class DefaultApplicationSettings : public IApplicationSettings {
 	/**
 	 * @brief The application name. Used in paths.
 	 */
-	utils::Property<std::string> applicationName;
+	Property<std::string> applicationName;
 
 	/**
 	 * @brief The application display name. Used to display the application name to user.
 	 */
-	utils::Property<std::string> applicationDisplayName;
+	Property<std::string> applicationDisplayName;
 
 	/**
 	 * @brief The directory where the logs will be stored.
 	 */
-	utils::Property<std::string> logsDirectory;
+	Property<std::string> logsDirectory;
 
 	/**
 	 * @brief The directory where the app running.
 	 */
-	utils::Property<std::string> runDirectory;
+	Property<std::string> runDirectory;
 
 public:
 	DefaultApplicationSettings();
 
 	//TODO make replacing of the environment variables
-	sdk::utils::ReportMessagePtr init() override;
+	sdk::ReportMessagePtr init() override;
 
-	[[nodiscard]] const utils::Property<std::string> &getLogsDirectory() const override { return logsDirectory; }
+	[[nodiscard]] const Property<std::string> &getLogsDirectory() const override { return logsDirectory; }
 
 	void setLogsDirectory(const std::string &pLogsDirectory) override {
 		logsDirectory = pLogsDirectory;
-		sdk::utils::Logger::info(pLogsDirectory);
+		sdk::Logger::info(pLogsDirectory);
 	}
 
-	[[nodiscard]] utils::Property<std::string> &getApplicationName() override { return applicationName; }
+	[[nodiscard]] Property<std::string> &getApplicationName() override { return applicationName; }
 
 	void setApplicationName(const std::string &pApplicationName) override { applicationName = pApplicationName; }
 
-	[[nodiscard]] const utils::Property<std::string> &getApplicationDisplayName() const override {
+	[[nodiscard]] const Property<std::string> &getApplicationDisplayName() const override {
 		return applicationDisplayName;
 	}
 
@@ -77,7 +77,7 @@ public:
 		applicationDisplayName = pApplicationDisplayName;
 	}
 
-	[[nodiscard]] const utils::Property<std::string> &getRunDirectory() const override { return runDirectory; }
+	[[nodiscard]] const Property<std::string> &getRunDirectory() const override { return runDirectory; }
 
 	void setRunDirectory(const std::string &pRunDirectory) override { runDirectory.setValue(pRunDirectory); }
 
@@ -88,6 +88,6 @@ private:
 	}*/
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //DEFAULTAPPLICATIONSETTINGS_H

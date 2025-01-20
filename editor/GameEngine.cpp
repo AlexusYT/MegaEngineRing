@@ -52,7 +52,7 @@ public:
 		std::shared_ptr<Gtk::Application> application = Gtk::Application::create("org.gtkmm.example");
 
 		appController->setApp(application);
-		utils::EngineOptionGroup group;
+		EngineOptionGroup group;
 		application->add_option_group(group);
 
 		application->signal_activate().connect(&GameEngineImpl::startup);
@@ -64,16 +64,16 @@ public:
 	}
 
 	static void signals(int pSig) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Signal handled");
 		msg->setMessage("Aborting...");
 		msg->addInfoLine("Signal: {}", pSig);
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 		std::exit(-1);
 	}
 
 	static void startup() {
-		using namespace mer::sdk::utils;
+		using namespace mer::sdk;
 		const std::filesystem::path logPath = Globals::getLogPath() / "latest.log";
 		if (auto message = Logger::openLog(logPath)) {
 			Logger::error("Log file cannot be open, so logging to file feature won't be available");

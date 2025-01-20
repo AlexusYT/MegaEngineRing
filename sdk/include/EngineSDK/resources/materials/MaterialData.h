@@ -23,7 +23,7 @@
 #define MATERIALDATA_H
 #include <glm/vec4.hpp>
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 struct MaterialData {
 	glm::vec4 baseColorMap{};
@@ -33,6 +33,6 @@ struct MaterialData {
 	glm::vec4 aoMap{};
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //MATERIALDATA_H

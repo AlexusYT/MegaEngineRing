@@ -30,7 +30,7 @@
 #include "EngineSDK/render/Initializable.h"
 #include "IModel3DObject.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class SSBO;
 class Model3DResource;
 class RenderInstanceData;
@@ -59,7 +59,7 @@ public:
 	static std::shared_ptr<IModel3DObject> create();
 
 protected:
-	utils::ReportMessagePtr onInitialize() override;
+	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 
@@ -101,6 +101,6 @@ private:
 };
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //MODEL3DOBJECT_H

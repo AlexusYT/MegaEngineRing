@@ -41,7 +41,7 @@ public:
 		return Glib::make_refptr_for_instance(new GeneratedFiles(pProject));
 	}
 
-	sdk::utils::ReportMessagePtr saveToCmake() const;
+	sdk::ReportMessagePtr saveToCmake() const;
 
 	static void getFilesToSave(const ProjectExplorerEntry* pEntry, std::vector<std::string> &pFiles);
 

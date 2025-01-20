@@ -22,17 +22,17 @@
 #include "EditorFileSystemResourceBundle.h"
 
 namespace mer::editor::project {
-std::shared_ptr<sdk::main::IResourceBundle> EditorFileSystemResourceBundle::create(
+std::shared_ptr<sdk::IResourceBundle> EditorFileSystemResourceBundle::create(
 	const std::filesystem::path &pSearchPath) {
 	return std::shared_ptr<EditorFileSystemResourceBundle>(new EditorFileSystemResourceBundle(pSearchPath));
 }
 
-sdk::utils::ReportMessagePtr EditorFileSystemResourceBundle::getResourceStream(const std::string &pResourceUri,
+sdk::ReportMessagePtr EditorFileSystemResourceBundle::getResourceStream(const std::string &pResourceUri,
 																			   std::shared_ptr<std::istream> &pStream) {
 
 	if (pResourceUri.starts_with("_builtin_")) {
 		if (!Gio::Resource::get_file_exists_global_nothrow("/" + pResourceUri)) {
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to get resource stream");
 			msg->setMessage("Builtin resource not found");
 			msg->addInfoLine("Resource URI to search: {}", pResourceUri);
@@ -54,9 +54,9 @@ void EditorFileSystemResourceBundle::listResources(std::vector<std::string> &pUr
 	try {
 		listBuiltinResources("/_builtin_/", pUris);
 	} catch (Gio::ResourceError &e) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to list resource uris");
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 	}
 }
 

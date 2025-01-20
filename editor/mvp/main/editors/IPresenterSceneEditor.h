@@ -23,7 +23,7 @@
 #define IEDITOR_H
 #include "mvp/PresenterBase.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ISceneObject;
 }
 

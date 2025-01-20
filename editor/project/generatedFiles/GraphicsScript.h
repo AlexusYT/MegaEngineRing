@@ -105,7 +105,7 @@ public:
 
 	void addNode(std::shared_ptr<ScriptNode> pNode);
 
-	sdk::utils::ReportMessagePtr removeNode(ScriptNode* pNodeToRemove);
+	sdk::ReportMessagePtr removeNode(ScriptNode* pNodeToRemove);
 
 	void getHoveredElements(const glm::dvec2 &pPos, std::list<mvp::CanvasElement*> &pElementsOut) const;
 
@@ -118,9 +118,9 @@ public:
 		return connectionRemovingSignal.connect(pSlot);
 	}
 
-	sdk::utils::ReportMessagePtr removeConnection(ScriptNodeSlotConnection* pConnectionToRemove);
+	sdk::ReportMessagePtr removeConnection(ScriptNodeSlotConnection* pConnectionToRemove);
 
-	sdk::utils::ReportMessagePtr removeAllConnections(const ScriptNode* pNode);
+	sdk::ReportMessagePtr removeAllConnections(const ScriptNode* pNode);
 
 	std::shared_ptr<mvp::IPresenter> createEditorPresenter(
 		const std::shared_ptr<mvp::TabPlaceholder> &pPlaceholder) override;
@@ -137,11 +137,11 @@ public:
 
 	void setScriptId(int64_t pScriptId) { scriptId = pScriptId; }
 
-	static sdk::utils::ReportMessagePtr createTable(const std::shared_ptr<SQLite::Database> &);
+	static sdk::ReportMessagePtr createTable(const std::shared_ptr<SQLite::Database> &);
 
 private:
-	sdk::utils::ReportMessagePtr onSaveDatabase() const override;
-	sdk::utils::ReportMessagePtr onSaveFile() const override;
+	sdk::ReportMessagePtr onSaveDatabase() const override;
+	sdk::ReportMessagePtr onSaveFile() const override;
 };
 } // namespace mer::editor::project
 

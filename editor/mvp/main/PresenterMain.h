@@ -66,7 +66,7 @@ private:
 
 	void logError(int pId, const std::string &pMessage) const;
 
-	void displayError(const sdk::utils::ReportMessagePtr &pMsg) override;
+	void displayError(const sdk::ReportMessagePtr &pMsg) override;
 
 	void onLayoutLoadFatal() override;
 
@@ -85,9 +85,9 @@ public:
 	std::shared_ptr<IView> createView(const IPresenter* pPresenter,
 									  const std::shared_ptr<MultiPanedContext> &pContext) override;
 	void readJsonForTab(int32_t pIndex,
-						const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pCallback) override;
+						const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pCallback) override;
 
-	void selectResourceForProperty(sdk::utils::PropertyBase* pProperty) override;
+	void selectResourceForProperty(sdk::PropertyBase* pProperty) override;
 
 	void addExtension(const std::string &pExtensionName) override;
 
@@ -97,11 +97,11 @@ public:
 
 	void removeObject(ExplorerObject* pObjectToRemove) override;
 
-	void removeExtension(sdk::main::Extension* pExtensionToRemove) override;
+	void removeExtension(sdk::Extension* pExtensionToRemove) override;
 
 	void openFile(const std::filesystem::path &pPathToFile) override;
 
-	void createResource(const std::filesystem::path &pPathToCreate, sdk::main::ResourceType pType) override;
+	void createResource(const std::filesystem::path &pPathToCreate, sdk::ResourceType pType) override;
 
 	void createScene(const std::filesystem::path &pPathToCreate) override;
 

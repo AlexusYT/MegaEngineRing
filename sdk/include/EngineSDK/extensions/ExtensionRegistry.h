@@ -26,7 +26,7 @@
 
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
 
 struct ExtensionClassInfo {
@@ -72,9 +72,9 @@ public:
 		return nullptr;
 	}
 
-	static utils::ReportMessagePtr getTypeNameFor(Extension* pExt, std::string &pNameOut);
+	static ReportMessagePtr getTypeNameFor(Extension* pExt, std::string &pNameOut);
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //EXTENSIONREGISTRY_H

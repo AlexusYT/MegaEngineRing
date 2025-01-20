@@ -28,11 +28,11 @@
 #include "EngineSDK/resources/textures/ITextureResource.h"
 #include "EngineUtils/utils/Logger.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 std::shared_ptr<IResource> MaterialLoader::createResource() { return MaterialResource::create(); }
 
-utils::ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecutor,
+ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecutor,
 											 std::shared_ptr<std::istream> &pStream,
 											 const std::shared_ptr<IResource> &pResource) {
 	auto resource = std::dynamic_pointer_cast<MaterialResource>(pResource);
@@ -56,7 +56,7 @@ void MaterialLoader::readMaterialComponent(
 
 			pLoadExecutor->loadResourceAsync(uri, [pSetter](const std::shared_ptr<ResourceLoadResult> &pResult) {
 				if (pResult->isErrored()) {
-					utils::Logger::error(pResult->getError());
+					Logger::error(pResult->getError());
 				} else if (pResult->isReady()) {
 					if (const auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
 						pSetter(texture);
@@ -73,4 +73,4 @@ void MaterialLoader::readMaterialComponent(
 		}
 	} catch (...) { pSetter(nullptr); }
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

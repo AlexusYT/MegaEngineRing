@@ -24,8 +24,8 @@
 #include "EngineUtils/utils/UUID.h"
 #include "EngineSDK/resources/IResource.h"
 
-namespace mer::sdk::main {
-utils::ReportMessagePtr ResourceLoader::preload(IResourceLoadExecutor* /*pResourcesContext*/,
+namespace mer::sdk {
+ReportMessagePtr ResourceLoader::preload(IResourceLoadExecutor* /*pResourcesContext*/,
 												const std::shared_ptr<std::istream> &pStream,
 												const std::shared_ptr<IResource> &pResource) {
 
@@ -48,4 +48,4 @@ std::shared_ptr<UUID> ResourceLoader::readUuid(const std::shared_ptr<std::istrea
 	return uuid;
 }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

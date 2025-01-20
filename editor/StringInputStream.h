@@ -22,7 +22,7 @@
 #ifndef STRINGINPUTSTREAM_H
 #define STRINGINPUTSTREAM_H
 
-namespace mer::editor::utils {
+namespace mer::editor {
 
 class StringInputStream : public std::enable_shared_from_this<StringInputStream> {
 	std::shared_ptr<Gio::InputStream> inputStream{};
@@ -51,6 +51,6 @@ private:
 						const std::shared_ptr<std::string> &pData) noexcept;
 };
 
-} // namespace mer::editor::utils
+} // namespace mer::editor
 
 #endif //STRINGINPUTSTREAM_H

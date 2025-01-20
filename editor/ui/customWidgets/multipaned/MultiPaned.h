@@ -67,7 +67,7 @@ public:
 		return createWidgetSignal.connect(pSlot);
 	}
 
-	sdk::utils::ReportMessagePtr importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
+	sdk::ReportMessagePtr importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
 												mvp::ApplicationController* pAppController);
 
 	std::shared_ptr<nlohmann::json> exportToJson() const;

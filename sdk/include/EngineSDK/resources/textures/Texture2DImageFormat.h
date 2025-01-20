@@ -22,7 +22,7 @@
 #ifndef TEXTURE2DIMAGEFORMAT_H
 #define TEXTURE2DIMAGEFORMAT_H
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 enum class Texture2DImageFormat {
 

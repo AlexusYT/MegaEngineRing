@@ -30,12 +30,12 @@ namespace sigc {
 struct scoped_connection;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class PrefabElementInstance;
 class PrefabElementInstanceData;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class PrefabElementsSsbo : public SSBO, public IRenderable {
 	std::unordered_map<PrefabElementInstance*, sigc::scoped_connection> instances;
@@ -74,6 +74,6 @@ private:
 };
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //PREFABELEMENTSSSBO_H

@@ -23,34 +23,34 @@
 #define MOUSEBUTTONEXTENSION_H
 #include "Extension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class MouseButtonExtension : public Extension {
 public:
-	using ButtonSignal = sigc::signal<void(utils::MouseButton pButton, bool pPressed, double pX, double pY)>;
+	using ButtonSignal = sigc::signal<void(MouseButton pButton, bool pPressed, double pX, double pY)>;
 
 private:
-	std::unordered_map<utils::MouseButton, ButtonSignal> buttonHandlers;
+	std::unordered_map<MouseButton, ButtonSignal> buttonHandlers;
 
 public:
 	METHOD_CREATE(MouseButtonExtension)
 
 	EXT_TYPE_NAME("MouseButtonExtension")
 
-	sigc::connection connectButtonSignal(utils::MouseButton pButton, const ButtonSignal::slot_type &pSlot) {
+	sigc::connection connectButtonSignal(MouseButton pButton, const ButtonSignal::slot_type &pSlot) {
 		auto iter = buttonHandlers.find(pButton);
 		if (iter == buttonHandlers.end()) iter = buttonHandlers.emplace_hint(iter, pButton, ButtonSignal());
 		return iter->second.connect(pSlot);
 	}
 
 protected:
-	void onMouseButtonStateChanged(const utils::MouseButton pButton, const bool pPressed, const double pX,
+	void onMouseButtonStateChanged(const MouseButton pButton, const bool pPressed, const double pX,
 								   const double pY) const override {
 		if (const auto iter = buttonHandlers.find(pButton); iter != buttonHandlers.end()) {
 			iter->second(pButton, pPressed, pX, pY);
 		}
 	}
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //MOUSEBUTTONEXTENSION_H

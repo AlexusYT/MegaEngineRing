@@ -48,7 +48,7 @@ public:
 
 	CanvasElement* getSelectedElement() override;
 
-	sdk::utils::ReportMessagePtr removeElement(CanvasElement* pElement) override;
+	sdk::ReportMessagePtr removeElement(CanvasElement* pElement) override;
 
 	sigc::connection connectKeyPressedEvent(
 		const sigc::slot<bool(uint32_t pKeyVal, uint32_t pKeyCode, Gdk::ModifierType pState)> &pSlot,

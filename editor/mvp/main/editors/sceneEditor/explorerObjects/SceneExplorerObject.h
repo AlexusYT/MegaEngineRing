@@ -23,22 +23,22 @@
 #define SCENEEXPLOREROBJECT_H
 #include "ExplorerObject.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
 class ISceneObject;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class SceneExplorerObject : public ExplorerObject {
-	sdk::main::ISceneObject* object;
+	sdk::ISceneObject* object;
 	std::vector<sigc::connection> connections;
 	std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> propertyEntries;
 
 
-	explicit SceneExplorerObject(sdk::main::ISceneObject* pObject);
+	explicit SceneExplorerObject(sdk::ISceneObject* pObject);
 
 public:
-	static std::shared_ptr<SceneExplorerObject> create(sdk::main::ISceneObject* pObject);
+	static std::shared_ptr<SceneExplorerObject> create(sdk::ISceneObject* pObject);
 
 	[[nodiscard]] const std::string &getName() const override;
 
@@ -46,14 +46,14 @@ public:
 
 	std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> getPropertyEntries() const override;
 
-	[[nodiscard]] sdk::main::ISceneObject* getObject() const { return object; }
+	[[nodiscard]] sdk::ISceneObject* getObject() const { return object; }
 
-	void setObject(sdk::main::ISceneObject* pObject);
+	void setObject(sdk::ISceneObject* pObject);
 
 	Glib::RefPtr<Gio::MenuModel> getMenu() override;
 
 private:
-	void addExtension(const std::shared_ptr<sdk::main::Extension> &pExtension) const;
+	void addExtension(const std::shared_ptr<sdk::Extension> &pExtension) const;
 
 	static std::shared_ptr<Gio::MenuItem> createItem(const std::string &pName, const std::string &pAction,
 													 const Glib::VariantBase &pVariant);

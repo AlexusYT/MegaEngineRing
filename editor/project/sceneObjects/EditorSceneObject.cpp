@@ -28,7 +28,7 @@
 #include "project/generatedFiles/GraphicsScript.h"
 
 namespace mer::editor::ui {
-EditorSceneObject::EditorSceneObject(sdk::main::ISceneObject* const pNativeObject,
+EditorSceneObject::EditorSceneObject(sdk::ISceneObject* const pNativeObject,
 									 std::shared_ptr<project::Project> pProject)
 	: GeneratedFiles(pProject), childrenUi(Gio::ListStore<EditorSceneObject>::create()),
 	  propertyEntries(Gio::ListStore<mvp::ObjectPropertyEntry>::create()), nativeObject(pNativeObject) {
@@ -40,25 +40,25 @@ EditorSceneObject::EditorSceneObject(sdk::main::ISceneObject* const pNativeObjec
 	setContextMenu(menuOpenScript);
 
 	/*
-	auto basicGroup = std::make_shared<sdk::main::ExtensionPropertyGroup>();
+	auto basicGroup = std::make_shared<sdk::ExtensionPropertyGroup>();
 	basicGroup->setName("Basic properties");
-	auto nameProp = std::make_shared<sdk::main::ExtensionProperty<std::string>>();
+	auto nameProp = std::make_shared<sdk::ExtensionProperty<std::string>>();
 	nameProp->setName("Object name");
 	nameProp->setGetterFunc(sigc::mem_fun(*this, &EditorSceneObject::getObjectName));
 	nameProp->setSetterFunc(sigc::mem_fun(*this, &EditorSceneObject::setObjectName));
 	basicGroup->addChild(nameProp);
-	auto positionProp = std::make_shared<sdk::main::ExtensionProperty<glm::vec3>>();
+	auto positionProp = std::make_shared<sdk::ExtensionProperty<glm::vec3>>();
 	positionProp->setName("Position");
-	positionProp->setGetterFunc(sigc::mem_fun(*pNativeObject, &sdk::main::ISceneObject::getPosition));
-	positionProp->setSetterFunc(sigc::mem_fun(*pNativeObject, &sdk::main::ISceneObject::setPosition));
+	positionProp->setGetterFunc(sigc::mem_fun(*pNativeObject, &sdk::ISceneObject::getPosition));
+	positionProp->setSetterFunc(sigc::mem_fun(*pNativeObject, &sdk::ISceneObject::setPosition));
 	basicGroup->addChild(positionProp);
 
 	propertyEntries->append(mvp::ObjectPropertyEntry::create(basicGroup));
 
 	for (const auto &extension: pNativeObject->getExtensions()) {
-		auto group = std::make_shared<sdk::main::ExtensionPropertyGroup>();
+		auto group = std::make_shared<sdk::ExtensionPropertyGroup>();
 		group->setName(extension.second->getTypeName());
-		sdk::main::ExtensionProperties properties = extension.second->getProperties();
+		sdk::ExtensionProperties properties = extension.second->getProperties();
 		for (const auto &extensionPropertyBase: properties) { group->addChild(extensionPropertyBase); }
 		propertyEntries->append(mvp::ObjectPropertyEntry::create(group));
 	}*/
@@ -69,5 +69,5 @@ void EditorSceneObject::onGetActionGroup(const Glib::RefPtr<Gio::SimpleActionGro
 							 [this] { getCenterWindow()->openEntry(graphicsScript.get()); });
 }
 
-sdk::utils::ReportMessagePtr EditorSceneObject::onSaveDatabase() const { return graphicsScript->saveDatabase(); }
+sdk::ReportMessagePtr EditorSceneObject::onSaveDatabase() const { return graphicsScript->saveDatabase(); }
 } // namespace mer::editor::ui

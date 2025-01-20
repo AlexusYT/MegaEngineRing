@@ -25,7 +25,7 @@
 namespace mer::editor::mvp {
 struct ProjectCreatingTask {
 	using MessageCallback = std::function<void(const std::string &pMessage)>;
-	using TaskFunc = std::function<sdk::utils::ReportMessagePtr(const MessageCallback &pCallback)>;
+	using TaskFunc = std::function<sdk::ReportMessagePtr(const MessageCallback &pCallback)>;
 
 	TaskFunc function;
 	std::string tabName;

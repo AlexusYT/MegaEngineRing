@@ -28,13 +28,13 @@
 #include "EngineSDK/scene/Scene.h"
 #include "EngineSDK/scene/objects/SceneObject.h"
 
-namespace mer::sdk::main {
-utils::ReportMessagePtr BasicRenderExtension::onInit() {
+namespace mer::sdk {
+ReportMessagePtr BasicRenderExtension::onInit() {
 	/*enqueueResourceLoading(
 		BuiltInProgramRequest::getDefaultProgram(),
-		[this](const std::shared_ptr<renderer::ShaderProgram> &pProgram, const utils::ReportMessagePtr &pError) {
+		[this](const std::shared_ptr<renderer::ShaderProgram> &pProgram, const ReportMessagePtr &pError) {
 			if (pError) {
-				utils::Logger::error(pError);
+				Logger::error(pError);
 				return;
 			}
 			shader = pProgram;
@@ -55,7 +55,7 @@ utils::ReportMessagePtr BasicRenderExtension::onInit() {
 	return nullptr;
 }
 
-utils::ReportMessagePtr BasicRenderExtension::onDeinit() {
+ReportMessagePtr BasicRenderExtension::onDeinit() {
 	shader.reset();
 	glDeleteBuffers(1, &vbo);
 	glDeleteVertexArrays(1, &vao);
@@ -74,4 +74,4 @@ void BasicRenderExtension::onRender() {
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glBindVertexArray(0);
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

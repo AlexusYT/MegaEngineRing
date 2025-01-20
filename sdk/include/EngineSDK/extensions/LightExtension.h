@@ -25,7 +25,7 @@
 #include "EngineSDK/light/LightInstanceData.h"
 #include "Extension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class LightExtension : public Extension, public LightInstance {
 	LightInstanceData data;
@@ -43,9 +43,9 @@ public:
 private:
 	[[nodiscard]] const LightInstanceData &getLightInstanceData() const override { return data; }
 
-	utils::ReportMessagePtr onInit() override;
+	ReportMessagePtr onInit() override;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //LIGHTEXTENSION_H

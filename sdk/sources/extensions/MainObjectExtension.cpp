@@ -21,6 +21,6 @@
 
 #include "EngineSDK/extensions/MainObjectExtension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 MainObjectExtension::MainObjectExtension() : propertyName(this, "Name"), propertyPosition(this, "Position") {}
-} // namespace mer::sdk::main
+} // namespace mer::sdk

@@ -25,7 +25,7 @@
 #include "EngineSDK/resources/materials/IMaterialResource.h"
 
 namespace mer::editor::ui {
-std::shared_ptr<SourceSelectionMaterial> SourceSelectionMaterial::create(sdk::main::IResourceLoadExecutor* pLoader) {
+std::shared_ptr<SourceSelectionMaterial> SourceSelectionMaterial::create(sdk::IResourceLoadExecutor* pLoader) {
 	return std::shared_ptr<SourceSelectionMaterial>(new SourceSelectionMaterial(pLoader));
 }
 
@@ -54,13 +54,13 @@ std::string SourceSelectionMaterial::getLabelFromResult(const std::shared_ptr<IS
 
 void SourceSelectionMaterial::onElementSelected(const std::shared_ptr<SelectionElement> &pElement) {
 	if (const auto objectElement = std::dynamic_pointer_cast<ResourceElement>(pElement)) {
-		if (const auto material = objectElement->getTypedResource<sdk::main::IMaterialResource>())
+		if (const auto material = objectElement->getTypedResource<sdk::IMaterialResource>())
 			resultCallback(Result::create(material));
 	}
 }
 
 std::shared_ptr<SelectionElement> SourceSelectionMaterial::createElementFromResource(
-	const std::shared_ptr<sdk::main::IResource> &pResource) {
+	const std::shared_ptr<sdk::IResource> &pResource) {
 	return ResourceElement::create(pResource);
 }
 } // namespace mer::editor::ui

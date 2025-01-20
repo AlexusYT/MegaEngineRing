@@ -46,7 +46,7 @@ Gtk::Widget* SourceSelectionColor::getWidget() {
 	auto rgbaProp = picker->property_rgba();
 	rgbaProp.signal_changed().connect([rgbaProp, this] {
 		auto rgba = rgbaProp.get_value();
-		auto component = sdk::main::ColorComponent::create();
+		auto component = sdk::ColorComponent::create();
 		component->color = glm::vec4(rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 		resultCallback(Result::create(component));
 	});

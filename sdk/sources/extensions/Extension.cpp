@@ -29,7 +29,7 @@
 #include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/PropertyBase.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 Extension::Extension() {}
 
@@ -53,10 +53,10 @@ void Extension::onWindowSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
 
 void Extension::onCursorPosChanged(const double /*pX*/, const double /*pY*/) {}
 
-void Extension::onKeyStateChanged(const utils::KeyboardKey /*pKey*/, const bool /*pPressed*/,
-								  const utils::ModifierKeys & /*pMods*/) {}
+void Extension::onKeyStateChanged(const KeyboardKey /*pKey*/, const bool /*pPressed*/,
+								  const ModifierKeys & /*pMods*/) {}
 
-void Extension::onMouseButtonStateChanged(utils::MouseButton /*pButton*/, bool /*pPressed*/, double /*pX*/,
+void Extension::onMouseButtonStateChanged(MouseButton /*pButton*/, bool /*pPressed*/, double /*pX*/,
 										  double /*pY*/) const {}
 
 void Extension::onEnabledChanged() {}
@@ -64,15 +64,15 @@ void Extension::onEnabledChanged() {}
 bool Extension::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
 
 void Extension::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
-	if (auto msg = ExtensionRegistry::getTypeNameFor(pExt, pNameOut)) { utils::Logger::error(msg); }
+	if (auto msg = ExtensionRegistry::getTypeNameFor(pExt, pNameOut)) { Logger::error(msg); }
 }
 
-void Extension::addProperty(utils::PropertyBase* pProperty) { properties.push_back(pProperty); }
+void Extension::addProperty(PropertyBase* pProperty) { properties.push_back(pProperty); }
 
-void Extension::removeProperty(utils::PropertyBase* pProperty) { erase(properties, pProperty); }
+void Extension::removeProperty(PropertyBase* pProperty) { erase(properties, pProperty); }
 
-void Extension::propertyChanged(utils::PropertyBase* pProperty) {
+void Extension::propertyChanged(PropertyBase* pProperty) {
 	if (object) object->notifyExtensionPropertyChanged(this, pProperty);
 }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

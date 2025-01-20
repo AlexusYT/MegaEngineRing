@@ -56,7 +56,7 @@ public:
 	 */
 	size_t addElement(CanvasElement* pElement);
 
-	sdk::utils::ReportMessagePtr removeElement(CanvasElement* pElement);
+	sdk::ReportMessagePtr removeElement(CanvasElement* pElement);
 
 	void setSelectedElement(CanvasElement* pSelectedElement) {
 		if (selectedElement == pSelectedElement) return;

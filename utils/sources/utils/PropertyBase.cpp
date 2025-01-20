@@ -23,7 +23,7 @@
 
 #include "EngineUtils/utils/IPropertyProvider.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 PropertyBase::PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription)
 	: name(pName), description(pDescription), provider(pProvider) {
 	if (provider) provider->addProperty(this);
@@ -36,4 +36,4 @@ PropertyBase::~PropertyBase() {
 void PropertyBase::notifyPropertyChanged() {
 	if (provider) provider->propertyChanged(this);
 }
-} // namespace mer::sdk::utils
+} // namespace mer::sdk

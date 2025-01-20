@@ -28,7 +28,7 @@
 #include "EngineSDK/prefabs/elements/PrefabElement.h"
 #include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 PrefabElementsSsbo::PrefabElementsSsbo() {
 	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), STREAM_DRAW);
 }
@@ -94,4 +94,4 @@ void PrefabElementsSsbo::onDataChanged() {
 
 	dirty = true;
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

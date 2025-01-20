@@ -25,7 +25,7 @@
 
 namespace mer::editor::graphics {
 
-class SimpleShader : public sdk::main::ShaderProgram {
+class SimpleShader : public sdk::ShaderProgram {
 	static std::shared_ptr<SimpleShader> instance;
 
 	SimpleShader();

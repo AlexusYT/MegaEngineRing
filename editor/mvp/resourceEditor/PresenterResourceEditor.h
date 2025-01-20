@@ -25,12 +25,12 @@
 
 #include "IPresenterResourceEditor.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResourceLoadExecutor;
 class IMaterialComponent;
 class IModel3DObject;
 class IResource;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class FileResourceReader;
@@ -40,21 +40,21 @@ class IModelResourceEditor;
 class PresenterResourceEditor : public IPresenterResourceEditor {
 	class ViewInfo {
 	public:
-		std::shared_ptr<sdk::main::IResource> selectedResource;
+		std::shared_ptr<sdk::IResource> selectedResource;
 	};
 
 	class ResourceInfo {
 	public:
 		std::shared_ptr<FileResourceReader> resourceReader;
-		std::vector<std::shared_ptr<sdk::main::IModel3DObject>> resourceObjects;
-		std::vector<std::shared_ptr<sdk::main::IModel3DObject>> fileObjects;
+		std::vector<std::shared_ptr<sdk::IModel3DObject>> resourceObjects;
+		std::vector<std::shared_ptr<sdk::IModel3DObject>> fileObjects;
 		std::filesystem::path srcFilePath;
 	};
 
 	std::shared_ptr<IModelResourceEditor> model;
 	std::vector<std::shared_ptr<IViewResourceEditor>> views;
 	std::map<IViewResourceEditor*, ViewInfo> viewsInfo;
-	std::map<sdk::main::IResource*, ResourceInfo> resourcesInfo;
+	std::map<sdk::IResource*, ResourceInfo> resourcesInfo;
 
 public:
 	PresenterResourceEditor(const std::shared_ptr<IModelResourceEditor> &pModel);
@@ -77,19 +77,19 @@ public:
 
 	inline void removeView(const std::shared_ptr<IView> &pOldView) override;
 
-	std::shared_ptr<sdk::main::IResource> getSelectedResource(IViewResourceEditor* pView) override;
+	std::shared_ptr<sdk::IResource> getSelectedResource(IViewResourceEditor* pView) override;
 
 	std::string getTypeName() override { return "PresenterResourceEditor"; }
 
 	std::filesystem::path getDataPath() override;
 
-	void onSelectionChanged(const std::shared_ptr<sdk::main::IResource> &pResource,
+	void onSelectionChanged(const std::shared_ptr<sdk::IResource> &pResource,
 							IViewResourceEditor* pView) override;
-	void removeObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToRemove,
+	void removeObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToRemove,
 					  IViewResourceEditor* pView) override;
-	void addObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToAdd, IViewResourceEditor* pView) override;
+	void addObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToAdd, IViewResourceEditor* pView) override;
 
-	sdk::main::IResourceLoadExecutor* getResourceLoader() override;
+	sdk::IResourceLoadExecutor* getResourceLoader() override;
 
 
 	void onMaterialBaseColorChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
@@ -107,14 +107,14 @@ public:
 private:
 	ViewInfo* getViewInfo(IViewResourceEditor* pView);
 
-	ResourceInfo* getResourceInfo(sdk::main::IResource* pResource);
+	ResourceInfo* getResourceInfo(sdk::IResource* pResource);
 
-	sdk::utils::ReportMessagePtr saveResource(const std::shared_ptr<sdk::main::IResource> &pResource,
+	sdk::ReportMessagePtr saveResource(const std::shared_ptr<sdk::IResource> &pResource,
 											  bool pIsComplete = true);
 
 	void getComponentFromResult(
 		const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
-		const sigc::slot<void(const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent)> &pSlot) const;
+		const sigc::slot<void(const std::shared_ptr<sdk::IMaterialComponent> &pComponent)> &pSlot) const;
 };
 
 } // namespace mer::editor::mvp

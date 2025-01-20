@@ -25,7 +25,7 @@
 #include "EngineSDK/resources/textures/ITextureResource.h"
 
 namespace mer::editor::ui {
-std::shared_ptr<SourceSelectionTexture> SourceSelectionTexture::create(sdk::main::IResourceLoadExecutor* pLoader) {
+std::shared_ptr<SourceSelectionTexture> SourceSelectionTexture::create(sdk::IResourceLoadExecutor* pLoader) {
 	return std::shared_ptr<SourceSelectionTexture>(new SourceSelectionTexture(pLoader));
 }
 
@@ -54,13 +54,13 @@ std::string SourceSelectionTexture::getLabelFromResult(const std::shared_ptr<ISo
 
 void SourceSelectionTexture::onElementSelected(const std::shared_ptr<SelectionElement> &pElement) {
 	if (const auto objectElement = std::dynamic_pointer_cast<ResourceElement>(pElement)) {
-		if (const auto material = objectElement->getTypedResource<sdk::main::ITextureResource>())
+		if (const auto material = objectElement->getTypedResource<sdk::ITextureResource>())
 			resultCallback(Result::create(material));
 	}
 }
 
 std::shared_ptr<SelectionElement> SourceSelectionTexture::createElementFromResource(
-	const std::shared_ptr<sdk::main::IResource> &pResource) {
+	const std::shared_ptr<sdk::IResource> &pResource) {
 	return ResourceElement::create(pResource);
 }
 } // namespace mer::editor::ui

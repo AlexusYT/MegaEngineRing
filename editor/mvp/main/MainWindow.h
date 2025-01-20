@@ -41,7 +41,7 @@ class MainWindow : public IViewMain, public Gtk::Window, ThreadDispatcher {
 
 public:
 	static std::shared_ptr<MainWindow> create(const std::shared_ptr<IWidgetContext> &pContext,
-											  sdk::utils::ReportMessagePtr &pReportMessage);
+											  sdk::ReportMessagePtr &pReportMessage);
 
 	bool reloadUi = false;
 
@@ -69,8 +69,8 @@ public:
 		insert_action_group(pName, pActionGroup);
 	}
 
-	void reportError(const sdk::utils::ReportMessagePtr &pError) override {
-		if (pError) sdk::utils::Logger::error(pError);
+	void reportError(const sdk::ReportMessagePtr &pError) override {
+		if (pError) sdk::Logger::error(pError);
 	}
 
 	void openView() override;

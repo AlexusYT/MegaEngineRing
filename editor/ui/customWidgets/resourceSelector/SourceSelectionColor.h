@@ -24,7 +24,7 @@
 #include "SourceSelection.h"
 #include "resources/TypedSourceSelectionResult.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ColorComponent;
 }
 
@@ -36,13 +36,13 @@ class SourceSelectionColor : public SourceSelection {
 	SourceSelectionColor() = default;
 
 public:
-	class Result : public TypedSourceSelectionResult<sdk::main::ColorComponent> {
+	class Result : public TypedSourceSelectionResult<sdk::ColorComponent> {
 
-		explicit Result(const std::shared_ptr<sdk::main::ColorComponent> &pResultObject)
+		explicit Result(const std::shared_ptr<sdk::ColorComponent> &pResultObject)
 			: TypedSourceSelectionResult(pResultObject) {}
 
 	public:
-		static std::shared_ptr<Result> create(const std::shared_ptr<sdk::main::ColorComponent> &pObject) {
+		static std::shared_ptr<Result> create(const std::shared_ptr<sdk::ColorComponent> &pObject) {
 			return std::shared_ptr<Result>(new Result(pObject));
 		}
 

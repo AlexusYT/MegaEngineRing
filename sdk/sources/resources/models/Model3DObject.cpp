@@ -28,14 +28,14 @@
 #include "EngineSDK/render/RenderInstanceData.h"
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 
 Model3DObject::~Model3DObject() { Model3DObject::onUninitialize(); }
 
 std::shared_ptr<IModel3DObject> Model3DObject::create() { return std::shared_ptr<Model3DObject>(new Model3DObject()); }
 
-utils::ReportMessagePtr Model3DObject::onInitialize() {
+ReportMessagePtr Model3DObject::onInitialize() {
 
 	instancesSsbo = std::make_shared<SSBO>();
 	instancesSsbo->setUsage(DYNAMIC_DRAW);
@@ -135,4 +135,4 @@ bool Model3DObject::operator<(const IModel3DObject &pRhs) const {
 
 	return this->indices < pRhs.getIndices();
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

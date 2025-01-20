@@ -25,7 +25,7 @@
 
 #include "PropertyBase.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 template<typename T>
 concept IsSharedPtr = requires { std::is_pointer_v<typename T::element_type>; };
 
@@ -200,6 +200,6 @@ public:
 	PropertyReadOnly<T> getReadOnly() { return PropertyReadOnly<T>(value, valueChanged, getter); }
 };
 
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 #endif //PROPERTY_H

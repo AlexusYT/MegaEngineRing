@@ -30,7 +30,7 @@
 #include "EngineSDK/scene/objects/SceneObject.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 
 OrbitCameraExtension::OrbitCameraExtension()
@@ -49,7 +49,7 @@ ExtensionProperty<glm::vec3> &OrbitCameraExtension::getPosition() {
 	return objectSelf->getMainExtension()->propertyPosition;
 }
 
-utils::ReportMessagePtr OrbitCameraExtension::onInit() { return nullptr; }
+ReportMessagePtr OrbitCameraExtension::onInit() { return nullptr; }
 
 void OrbitCameraExtension::onWindowSizeChanged(const int pWidth, const int pHeight) {
 	if (pHeight <= 0) return;
@@ -74,4 +74,4 @@ void OrbitCameraExtension::updateMatrix() {
 	propertyMatrix = getProjMatrix() * lookAt(position, propertyTargetPosition.getValue(), up);
 }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

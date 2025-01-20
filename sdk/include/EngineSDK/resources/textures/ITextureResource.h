@@ -24,12 +24,12 @@
 #include "EngineSDK/render/IRenderable.h"
 #include "EngineSDK/resources/materials/IMaterialComponent.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 template<typename T>
 class PropertyReadOnly;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 enum class Texture2DType;
 enum class Texture2DImageFormat;
@@ -71,9 +71,9 @@ public:
 
 	virtual IResource* asResource() = 0;
 
-	[[nodiscard]] virtual utils::PropertyReadOnly<uint64_t> getTextureHandle() = 0;
+	[[nodiscard]] virtual PropertyReadOnly<uint64_t> getTextureHandle() = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //ITEXTURERESOURCE_H

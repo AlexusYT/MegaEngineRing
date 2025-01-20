@@ -23,18 +23,18 @@
 #define IRESOURCEBUNDLE_H
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class IResourceBundle {
 public:
 	virtual ~IResourceBundle() = default;
 
-	virtual utils::ReportMessagePtr getResourceStream(const std::string &pResourceUri,
+	virtual ReportMessagePtr getResourceStream(const std::string &pResourceUri,
 													  std::shared_ptr<std::istream> &pStream) = 0;
 
 	virtual void listResources(std::vector<std::string> &pUris) const = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IRESOURCEBUNDLE_H

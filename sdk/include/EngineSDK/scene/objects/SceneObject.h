@@ -28,11 +28,11 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 #include "ISceneObject.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IScript;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
 class IScene;
 
@@ -43,7 +43,7 @@ class SceneObject : public ISceneObject {
 	std::map<std::string, std::shared_ptr<Extension>> extensions;
 	sigc::signal<void(const std::shared_ptr<Extension> &pNewExt)> onExtensionAddedSignal;
 	sigc::signal<void(const std::shared_ptr<Extension> &pExtToRemove)> onExtensionRemovedSignal;
-	sigc::signal<void(Extension* pExtension, utils::PropertyBase* pProperty)> onExtensionPropertyChangedSignal;
+	sigc::signal<void(Extension* pExtension, PropertyBase* pProperty)> onExtensionPropertyChangedSignal;
 	bool inited{};
 	std::shared_ptr<IScript> script;
 	std::string scriptName;
@@ -62,12 +62,12 @@ public:
 	 * \param[in] pExtension
 	 * \return 
 	 */
-	utils::ReportMessagePtr addExtension(const std::string &pName,
+	ReportMessagePtr addExtension(const std::string &pName,
 										 const std::shared_ptr<Extension> &pExtension) override;
 
-	utils::ReportMessagePtr removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension) override;
+	ReportMessagePtr removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension) override;
 
-	utils::ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) override;
+	ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) override;
 
 	sigc::connection connectOnExtensionAdded(
 		const sigc::slot<void(const std::shared_ptr<Extension> &pNewExt)> &pSlot) override {
@@ -80,11 +80,11 @@ public:
 	}
 
 	sigc::connection connectOnExtensionPropertyChanged(
-		const sigc::slot<void(Extension* pExtension, utils::PropertyBase* pProperty)> &pSlot) final {
+		const sigc::slot<void(Extension* pExtension, PropertyBase* pProperty)> &pSlot) final {
 		return onExtensionPropertyChangedSignal.connect(pSlot);
 	}
 
-	void notifyExtensionPropertyChanged(Extension* pExtension, utils::PropertyBase* pProperty) final {
+	void notifyExtensionPropertyChanged(Extension* pExtension, PropertyBase* pProperty) final {
 		onExtensionPropertyChangedSignal(pExtension, pProperty);
 	}
 
@@ -107,7 +107,7 @@ public:
 	static void resetCounter() { counter = 0; }
 
 private:
-	utils::ReportMessagePtr init() override;
+	ReportMessagePtr init() override;
 
 	void deinit() override;
 
@@ -117,9 +117,9 @@ private:
 
 	void onCursorPosChanged(double pX, double pY) const override;
 
-	void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) const override;
+	void onKeyStateChanged(KeyboardKey pKey, bool pPressed, const ModifierKeys &pMods) const override;
 
-	void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const override;
+	void onMouseButtonStateChanged(MouseButton pButton, bool pPressed, double pX, double pY) const override;
 
 	void setScene(IScene* const pScene) override { scene = pScene; }
 
@@ -129,7 +129,7 @@ private:
 
 	bool notifyOnMouseScroll(double pDx, double pDy) final;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //SCENEOBJECT_H

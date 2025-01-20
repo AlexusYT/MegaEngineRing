@@ -29,7 +29,7 @@
 #include "EngineSDK/resources/ResourceType.h"
 #include "IModel3DResource.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IModel3DObject;
 class IRenderInstance;
 
@@ -43,7 +43,7 @@ public:
 
 
 protected:
-	utils::ReportMessagePtr onInitialize() override;
+	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 
@@ -69,6 +69,6 @@ public:
 	ResourceType getResourceType() override { return ResourceType::MODEL; }
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //MODEL3DRESOURCE_H

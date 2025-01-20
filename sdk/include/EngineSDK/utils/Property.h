@@ -23,7 +23,7 @@
 #define PROPERTY_H
 #include <sigc++/signal.h>
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 
 /*
 template<typename T>
@@ -91,6 +91,6 @@ public:
 };
 */
 
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 #endif //PROPERTY_H

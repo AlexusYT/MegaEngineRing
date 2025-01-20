@@ -25,7 +25,7 @@
 
 #include "IResourceLoaders.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResourceLoader;
 
 class ResourceLoaders : public IResourceLoaders {
@@ -54,6 +54,6 @@ public:
 };
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //RESOURCELOADERS_H

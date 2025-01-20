@@ -30,12 +30,12 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 #include "ExtensionProperty.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class ModifierKeys;
 enum class KeyboardKey;
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class SceneObject;
 
 
@@ -45,8 +45,8 @@ class SceneObject;
 #define EXT_TYPE_NAME(__TYPE_NAME)                                                                                     \
 	static const char* typeName() { return __TYPE_NAME; }
 
-class Extension : public virtual utils::IPropertyProvider {
-	std::vector<utils::PropertyBase*> properties;
+class Extension : public virtual IPropertyProvider {
+	std::vector<PropertyBase*> properties;
 	friend SceneObject;
 	SceneObject* object{};
 	std::vector<sigc::connection> connectionStorage;
@@ -79,7 +79,7 @@ public:
 
 	~Extension() override = default;
 
-	[[nodiscard]] const std::vector<utils::PropertyBase*> &getProperties() const { return properties; }
+	[[nodiscard]] const std::vector<PropertyBase*> &getProperties() const { return properties; }
 
 	[[nodiscard]] SceneObject* getObject() const { return object; }
 
@@ -109,9 +109,9 @@ public:
 
 	void deserialize(const nlohmann::json &pJson);
 
-	virtual utils::ReportMessagePtr onInit() { return nullptr; }
+	virtual ReportMessagePtr onInit() { return nullptr; }
 
-	virtual utils::ReportMessagePtr onDeinit() {
+	virtual ReportMessagePtr onDeinit() {
 		freeConnectionStorage();
 		return nullptr;
 	}
@@ -154,9 +154,9 @@ protected:
 
 	virtual void onCursorPosChanged(double pX, double pY);
 
-	virtual void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods);
+	virtual void onKeyStateChanged(KeyboardKey pKey, bool pPressed, const ModifierKeys &pMods);
 
-	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const;
+	virtual void onMouseButtonStateChanged(MouseButton pButton, bool pPressed, double pX, double pY) const;
 
 	virtual void onEnabledChanged();
 
@@ -167,13 +167,13 @@ private:
 
 	static void getTypeNameFor(Extension* pExt, std::string &pNameOut);
 
-	void addProperty(utils::PropertyBase* pProperty) override;
+	void addProperty(PropertyBase* pProperty) override;
 
-	void removeProperty(utils::PropertyBase* pProperty) override;
+	void removeProperty(PropertyBase* pProperty) override;
 
-	void propertyChanged(utils::PropertyBase* pProperty) override;
+	void propertyChanged(PropertyBase* pProperty) override;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //EXTENSION_H

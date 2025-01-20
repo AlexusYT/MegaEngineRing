@@ -34,7 +34,7 @@
 #include "EngineSDK/resources/models/Model3DLoader.h"
 #include "EngineSDK/resources/models/Model3DResource.h"
 
-using namespace mer::sdk::main;
+using namespace mer::sdk;
 using ::testing::_;
 
 class LoadExecutorStub : public IResourceLoadExecutor {
@@ -67,7 +67,7 @@ public:
 	const std::shared_ptr<ILoadedResources> &getResources() override { return resources; }
 };
 
-class HiddenWindow : public mer::sdk::main::Window {
+class HiddenWindow : public mer::sdk::Window {
 
 public:
 	HiddenWindow() = default;

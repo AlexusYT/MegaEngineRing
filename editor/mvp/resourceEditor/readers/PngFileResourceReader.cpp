@@ -28,7 +28,7 @@
 #include "png++/png.hpp"
 
 namespace mer::editor::mvp {
-sdk::utils::ReportMessagePtr PngFileResourceReader::checkType() {
+sdk::ReportMessagePtr PngFileResourceReader::checkType() {
 
 	if (auto msg = open()) {
 		msg->setTitle("Unable to prove that the file is the PNG File");
@@ -57,9 +57,9 @@ std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, s
 	return pixelsOut;
 }
 
-void PngFileResourceReader::generateResourceData(const std::shared_ptr<sdk::main::ITextureResource> &pResource) const {
+void PngFileResourceReader::generateResourceData(const std::shared_ptr<sdk::ITextureResource> &pResource) const {
 
-	using namespace sdk::main;
+	using namespace sdk;
 	auto &streamSelf = *getStream();
 	switch (colorType) {
 

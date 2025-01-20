@@ -23,7 +23,7 @@
 #define KEYBOARDKEY_H
 #include "PropertyJsonSerializer.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 enum class KeyboardKey {
 	KEY_UNKNOWN = -1,
 	KEY_ESCAPE = 9,
@@ -97,14 +97,14 @@ enum class KeyboardKey {
 
 template<>
 struct PropertyJsonSerializer<KeyboardKey> {
-	static nlohmann::json serialize(const KeyboardKey &pValue, main::Extension* /*pExtension*/) {
+	static nlohmann::json serialize(const KeyboardKey &pValue, Extension* /*pExtension*/) {
 		return static_cast<int>(pValue);
 	}
 
-	static KeyboardKey deserialize(const nlohmann::json &pValue, main::Extension* /*pExtension*/) {
+	static KeyboardKey deserialize(const nlohmann::json &pValue, Extension* /*pExtension*/) {
 		return static_cast<KeyboardKey>(pValue.get<int>());
 	}
 };
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 #endif //KEYBOARDKEY_H

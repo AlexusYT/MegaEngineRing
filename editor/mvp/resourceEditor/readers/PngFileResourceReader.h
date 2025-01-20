@@ -26,7 +26,7 @@
 
 #include "FileResourceReader.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ITextureResource;
 }
 
@@ -40,9 +40,9 @@ class PngFileResourceReader : public FileResourceReader {
 public:
 	explicit PngFileResourceReader(const std::filesystem::path &pPath) : FileResourceReader(pPath) {}
 
-	sdk::utils::ReportMessagePtr checkType() override;
+	sdk::ReportMessagePtr checkType() override;
 
-	void generateResourceData(const std::shared_ptr<sdk::main::ITextureResource> &pResource) const;
+	void generateResourceData(const std::shared_ptr<sdk::ITextureResource> &pResource) const;
 };
 
 } // namespace mer::editor::mvp

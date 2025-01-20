@@ -22,7 +22,7 @@
 #ifndef IWINDOW_H
 #define IWINDOW_H
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IWindow {
 
 public:
@@ -31,6 +31,6 @@ public:
 
 	virtual glm::ivec2 getWindowSize() = 0;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IWINDOW_H

@@ -25,7 +25,7 @@
 
 #include "EngineSDK/extensions/Extension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class CameraMouseExtension : public Extension {
 	std::optional<glm::dvec2> lastCursorPos{};
 
@@ -55,6 +55,6 @@ protected:
 
 	void onEnabledChanged() override { lastCursorPos.reset(); }
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //CAMERAMOUSEEXTENSION_H

@@ -22,7 +22,7 @@
 #ifndef IRENDERABLE_H
 #define IRENDERABLE_H
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class IRenderable {
 public:
@@ -31,6 +31,6 @@ public:
 	virtual void render() = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IRENDERABLE_H

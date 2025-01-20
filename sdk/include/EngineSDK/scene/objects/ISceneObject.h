@@ -29,13 +29,13 @@
 
 class UUID;
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 enum class MouseButton;
 class ModifierKeys;
 enum class KeyboardKey;
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IScript;
 class MainObjectExtension;
 class Extension;
@@ -45,13 +45,13 @@ class ISceneObject {
 public:
 	virtual ~ISceneObject() = default;
 
-	virtual utils::ReportMessagePtr addExtension(const std::string &pName,
+	virtual ReportMessagePtr addExtension(const std::string &pName,
 												 const std::shared_ptr<Extension> &pExtension) = 0;
 
-	virtual utils::ReportMessagePtr removeExtension(const std::string &pName,
+	virtual ReportMessagePtr removeExtension(const std::string &pName,
 													std::shared_ptr<Extension> &pExtension) = 0;
 
-	virtual utils::ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) = 0;
+	virtual ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) = 0;
 
 	virtual sigc::connection connectOnExtensionAdded(
 		const sigc::slot<void(const std::shared_ptr<Extension> &pNewExt)> &pSlot) = 0;
@@ -61,11 +61,11 @@ public:
 
 
 	virtual sigc::connection connectOnExtensionPropertyChanged(
-		const sigc::slot<void(Extension* pExtension, utils::PropertyBase* pProperty)> &pSlot) = 0;
+		const sigc::slot<void(Extension* pExtension, PropertyBase* pProperty)> &pSlot) = 0;
 
-	virtual void notifyExtensionPropertyChanged(Extension* pExtension, utils::PropertyBase* pProperty) = 0;
+	virtual void notifyExtensionPropertyChanged(Extension* pExtension, PropertyBase* pProperty) = 0;
 
-	virtual utils::ReportMessagePtr init() = 0;
+	virtual ReportMessagePtr init() = 0;
 
 	virtual void deinit() = 0;
 
@@ -75,9 +75,9 @@ public:
 
 	virtual void onCursorPosChanged(double pX, double pY) const = 0;
 
-	virtual void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) const = 0;
+	virtual void onKeyStateChanged(KeyboardKey pKey, bool pPressed, const ModifierKeys &pMods) const = 0;
 
-	virtual void onMouseButtonStateChanged(utils::MouseButton pButton, bool pPressed, double pX, double pY) const = 0;
+	virtual void onMouseButtonStateChanged(MouseButton pButton, bool pPressed, double pX, double pY) const = 0;
 
 	virtual void setScene(IScene* pScene) = 0;
 
@@ -105,6 +105,6 @@ protected:
 
 inline bool ISceneObject::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //ISCENEOBJECT_H

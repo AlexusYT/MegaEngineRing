@@ -33,17 +33,17 @@ public:
 						   const std::string &pArgs, const sigc::slot<void(const std::string &pLog)> &pCoutCallback,
 						   const sigc::slot<void(const std::string &pLog)> &pCerrCallback);
 
-	static sdk::utils::ReportMessagePtr generateCMakeListsFile(const std::filesystem::path &pPath);
+	static sdk::ReportMessagePtr generateCMakeListsFile(const std::filesystem::path &pPath);
 
-	static sdk::utils::ReportMessagePtr generateCMakePresetsFile(const std::filesystem::path &pPath);
+	static sdk::ReportMessagePtr generateCMakePresetsFile(const std::filesystem::path &pPath);
 
-	static sdk::utils::ReportMessagePtr generateCMakeUserPresetsFile(const std::filesystem::path &pPath);
+	static sdk::ReportMessagePtr generateCMakeUserPresetsFile(const std::filesystem::path &pPath);
 
-	static sdk::utils::ReportMessagePtr generateVcpkgManifestFile(const std::filesystem::path &pPath);
+	static sdk::ReportMessagePtr generateVcpkgManifestFile(const std::filesystem::path &pPath);
 
-	static sdk::utils::ReportMessagePtr generateCMakeDirectory(const std::filesystem::path &pPath);
+	static sdk::ReportMessagePtr generateCMakeDirectory(const std::filesystem::path &pPath);
 
-	static sdk::utils::ReportMessagePtr writeFile(const std::filesystem::path &pPath, const std::string &pContents);
+	static sdk::ReportMessagePtr writeFile(const std::filesystem::path &pPath, const std::string &pContents);
 };
 } // namespace mer::editor::project
 

@@ -41,7 +41,7 @@ public:
 
 	void addElement(GeneratorElement* pElement) { elements.emplace_back(pElement); }
 
-	mer::sdk::utils::ReportMessagePtr saveHeader(const std::filesystem::path &pPath) const {
+	mer::sdk::ReportMessagePtr saveHeader(const std::filesystem::path &pPath) const {
 		create_directories(pPath.parent_path());
 		std::ofstream stream;
 		try {
@@ -49,7 +49,7 @@ public:
 			stream.open(pPath);
 		} catch (...) {
 
-			auto msg = mer::sdk::utils::ReportMessage::create();
+			auto msg = mer::sdk::ReportMessage::create();
 			msg->setTitle("Failed to save header file.");
 			msg->setMessage("Exception thrown");
 			msg->addInfoLine("Trying to save file at {}", pPath.string());
@@ -66,7 +66,7 @@ public:
 		return nullptr;
 	}
 
-	mer::sdk::utils::ReportMessagePtr saveSource(const std::filesystem::path &pPath) const {
+	mer::sdk::ReportMessagePtr saveSource(const std::filesystem::path &pPath) const {
 		create_directories(pPath.parent_path());
 		std::ofstream stream;
 		try {
@@ -74,7 +74,7 @@ public:
 			stream.open(pPath);
 		} catch (...) {
 
-			auto msg = mer::sdk::utils::ReportMessage::create();
+			auto msg = mer::sdk::ReportMessage::create();
 			msg->setTitle("Failed to save source file.");
 			msg->setMessage("Exception thrown");
 			msg->addInfoLine("Trying to save file at {}", pPath.string());

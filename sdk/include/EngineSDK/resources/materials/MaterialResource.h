@@ -30,24 +30,24 @@
 #include "EngineUtils/utils/Property.h"
 #include "IMaterialResource.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IMaterialComponent;
 class ITextureResource;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class MaterialResource : public IMaterialResource, public Resource {
 
-	utils::Property<std::shared_ptr<IMaterialComponent>> baseColorMap;
+	Property<std::shared_ptr<IMaterialComponent>> baseColorMap;
 	sigc::scoped_connection baseColorMapConnection;
-	utils::Property<std::shared_ptr<IMaterialComponent>> normalMap;
+	Property<std::shared_ptr<IMaterialComponent>> normalMap;
 	sigc::scoped_connection normalMapConnection;
-	utils::Property<std::shared_ptr<IMaterialComponent>> metallicMap;
+	Property<std::shared_ptr<IMaterialComponent>> metallicMap;
 	sigc::scoped_connection metallicMapConnection;
-	utils::Property<std::shared_ptr<IMaterialComponent>> roughnessMap;
+	Property<std::shared_ptr<IMaterialComponent>> roughnessMap;
 	sigc::scoped_connection roughnessMapConnection;
-	utils::Property<std::shared_ptr<IMaterialComponent>> aoMap;
+	Property<std::shared_ptr<IMaterialComponent>> aoMap;
 	sigc::scoped_connection aoMapConnection;
 	MaterialData data;
 	std::atomic<bool> dirty{false};
@@ -69,33 +69,31 @@ public:
 
 	const MaterialData &getData() override { return data; }
 
-	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAlbedo() override {
+	[[nodiscard]] PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAlbedo() override {
 		return baseColorMap.getReadOnly();
 	}
 
 	void setAlbedo(const std::shared_ptr<IMaterialComponent> &pBaseColorMap) override;
 
-	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getNormal() override {
+	[[nodiscard]] PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getNormal() override {
 		return normalMap.getReadOnly();
 	}
 
 	void setNormal(const std::shared_ptr<IMaterialComponent> &pNormalMap) override;
 
-	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getMetallic() override {
+	[[nodiscard]] PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getMetallic() override {
 		return metallicMap.getReadOnly();
 	}
 
 	void setMetallic(const std::shared_ptr<IMaterialComponent> &pMetallicMap) override;
 
-	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getRoughness() override {
+	[[nodiscard]] PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getRoughness() override {
 		return roughnessMap.getReadOnly();
 	}
 
 	void setRoughness(const std::shared_ptr<IMaterialComponent> &pRoughnessMap) override;
 
-	[[nodiscard]] utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAo() override {
-		return aoMap.getReadOnly();
-	}
+	[[nodiscard]] PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAo() override { return aoMap.getReadOnly(); }
 
 	void setAo(const std::shared_ptr<IMaterialComponent> &pAoMap) override;
 
@@ -112,6 +110,6 @@ private:
 };
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //MATERIALRESOURCE_H

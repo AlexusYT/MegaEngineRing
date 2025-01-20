@@ -26,7 +26,7 @@
 	#include "EngineSDK/scene/IScene.h"
 	#include "Window.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IApplication;
 class ResourcesWindow;
 class LoadedResources;
@@ -44,7 +44,7 @@ protected:
 public:
 	static auto create() { return std::shared_ptr<MainWindow>(new (std::nothrow) MainWindow()); }
 
-	sdk::utils::ReportMessagePtr openScene(const std::shared_ptr<IScene> &pNewScene);
+	sdk::ReportMessagePtr openScene(const std::shared_ptr<IScene> &pNewScene);
 
 	void runMainLoop();
 
@@ -59,7 +59,7 @@ private:
 
 	void onKeyChanged(int pKey, int pScancode, int pAction, int pMods) override;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif
 

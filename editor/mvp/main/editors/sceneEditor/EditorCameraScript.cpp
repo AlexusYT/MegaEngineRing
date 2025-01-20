@@ -25,10 +25,10 @@
 #include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
 
 namespace mer::editor::mvp {
-sdk::utils::ReportMessagePtr EditorCameraScript::setup() {
+sdk::ReportMessagePtr EditorCameraScript::setup() {
 
 	auto extensions = getObject()->getExtensions();
-	camera = std::dynamic_pointer_cast<sdk::main::OrbitCameraExtension>(extensions.at("camera"));
+	camera = std::dynamic_pointer_cast<sdk::OrbitCameraExtension>(extensions.at("camera"));
 	return Script::setup();
 }
 

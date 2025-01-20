@@ -28,7 +28,7 @@
 #include "EngineSDK/extensions/ExtensionProperty.h"
 #include "IProjectionCameraMod.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class PerspectiveProjectionCameraMod : public Extension, public IProjectionCameraMod {
 protected:
@@ -57,6 +57,6 @@ private:
 };
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //PROJECTIONCAMERAMOD_H

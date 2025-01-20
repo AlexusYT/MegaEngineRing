@@ -23,7 +23,7 @@
 #define MODEL3DRESOURCESAVER_H
 #include "ResourceSaverBase.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IModel3DResource;
 }
 
@@ -31,8 +31,8 @@ namespace mer::editor::mvp {
 
 class Model3DResourceSaver : public ResourceSaverBase {
 public:
-	static sdk::utils::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
-												   const std::shared_ptr<sdk::main::IModel3DResource> &pModel);
+	static sdk::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
+												   const std::shared_ptr<sdk::IModel3DResource> &pModel);
 
 private:
 	template<typename T>

@@ -24,12 +24,12 @@
 #include "EngineSDK/render/IRenderable.h"
 #include "MaterialData.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 template<typename T>
 class PropertyReadOnly;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IMaterialComponent;
 class ITextureResource;
 class IResource;
@@ -40,23 +40,23 @@ public:
 
 	virtual const MaterialData &getData() = 0;
 
-	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAlbedo() = 0;
+	[[nodiscard]] virtual PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAlbedo() = 0;
 
 	void virtual setAlbedo(const std::shared_ptr<IMaterialComponent> &pBaseColorMap) = 0;
 
-	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getNormal() = 0;
+	[[nodiscard]] virtual PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getNormal() = 0;
 
 	virtual void setNormal(const std::shared_ptr<IMaterialComponent> &pNormalMap) = 0;
 
-	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getMetallic() = 0;
+	[[nodiscard]] virtual PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getMetallic() = 0;
 
 	virtual void setMetallic(const std::shared_ptr<IMaterialComponent> &pMetallicMap) = 0;
 
-	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getRoughness() = 0;
+	[[nodiscard]] virtual PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getRoughness() = 0;
 
 	virtual void setRoughness(const std::shared_ptr<IMaterialComponent> &pRoughnessMap) = 0;
 
-	[[nodiscard]] virtual utils::PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAo() = 0;
+	[[nodiscard]] virtual PropertyReadOnly<std::shared_ptr<IMaterialComponent>> getAo() = 0;
 
 	virtual void setAo(const std::shared_ptr<IMaterialComponent> &pAoMap) = 0;
 
@@ -65,6 +65,6 @@ public:
 	virtual sigc::connection connectOnDataChangedSignal(const sigc::slot<void(const MaterialData &pData)> &pSlot) = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IMATERIALRESOURCE_H

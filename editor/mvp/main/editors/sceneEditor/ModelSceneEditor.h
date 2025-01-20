@@ -24,7 +24,7 @@
 
 #include "IModelSceneEditor.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 enum class MouseButton;
 }
 
@@ -69,17 +69,17 @@ public:
 
 	void createObject() override;
 
-	void removeObject(sdk::main::ISceneObject* pObjectToRemove) override;
+	void removeObject(sdk::ISceneObject* pObjectToRemove) override;
 
-	void renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const override;
+	void renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const override;
 
-	void saveObject(sdk::main::ISceneObject* pObject) override;
+	void saveObject(sdk::ISceneObject* pObject) override;
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::IScene> &getScene() const override;
+	[[nodiscard]] const std::shared_ptr<sdk::IScene> &getScene() const override;
 
 	void onCursorPosChanged(double pX, double pY) override;
 
-	void onMouseButtonStateChanged(sdk::utils::MouseButton pButton, bool pPressed, double pX, double pY) override;
+	void onMouseButtonStateChanged(sdk::MouseButton pButton, bool pPressed, double pX, double pY) override;
 
 	void toggleGrid(bool pState) override;
 };

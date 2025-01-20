@@ -31,11 +31,11 @@
 #include "EngineUtils/utils/UUID.h"
 #include "IPrefabInstance.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class Transformation;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IMaterialResource;
 class PrefabElementInstance;
 
@@ -47,7 +47,7 @@ struct PrefabInstanceData {
 class PrefabInstance : public IPrefabInstance, public Transformable {
 	std::unordered_map<UUID, std::shared_ptr<PrefabElementInstance>> elements;
 	uint32_t instanceId{};
-	utils::Property<PrefabInstanceData> data;
+	Property<PrefabInstanceData> data;
 
 protected:
 	PrefabInstance();
@@ -55,9 +55,9 @@ protected:
 public:
 	static std::shared_ptr<PrefabInstance> create();
 
-	utils::Property<bool> visible;
+	Property<bool> visible;
 
-	utils::Property<std::shared_ptr<IMaterialResource>> material;
+	Property<std::shared_ptr<IMaterialResource>> material;
 
 	std::shared_ptr<PrefabElementInstance> getElement(const UUID &pUuid) const override;
 
@@ -65,16 +65,16 @@ public:
 
 	void removeElement(const UUID &pUuid) override;
 
-	[[nodiscard]] utils::PropertyReadOnly<PrefabInstanceData> getData() { return data.getReadOnly(); }
+	[[nodiscard]] PropertyReadOnly<PrefabInstanceData> getData() { return data.getReadOnly(); }
 
 	[[nodiscard]] uint32_t getInstanceId() const { return instanceId; }
 
 protected:
-	void onGlobalTransformChanged(const std::shared_ptr<utils::Transformation> &pTransformation) override;
+	void onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) override;
 
 	void setInstanceId(uint32_t pInstanceId) override { instanceId = pInstanceId; }
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //PREFABINSTANCE_H

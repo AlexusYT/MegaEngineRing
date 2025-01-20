@@ -26,7 +26,7 @@
 #include "EngineSDK/resources/models/IModel3DObject.h"
 #include "PrefabElement.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IModel3DObject;
 
 class MeshPrefabElement : public PrefabElement {
@@ -44,6 +44,6 @@ public:
 	const std::vector<uint16_t> &getIndices() const override;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //MESHPREFABELEMENT_H

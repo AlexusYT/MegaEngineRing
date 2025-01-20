@@ -21,12 +21,12 @@
 
 #include <EngineSDK/context/DefaultApplicationSettings.h>
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 DefaultApplicationSettings::DefaultApplicationSettings()
 	: applicationName(nullptr, "ApplicationName"), applicationDisplayName(nullptr, "AppDisplayName"),
 	  logsDirectory(nullptr, "LogsDir"), runDirectory(nullptr, "RunDir") {}
 
-sdk::utils::ReportMessagePtr DefaultApplicationSettings::init() {
+sdk::ReportMessagePtr DefaultApplicationSettings::init() {
 	if (applicationName->empty()) setApplicationName("DefaultApplication");
 	if (applicationDisplayName->empty()) setApplicationDisplayName("Default Application");
 	/*if (logsDirectory->empty())
@@ -35,4 +35,4 @@ sdk::utils::ReportMessagePtr DefaultApplicationSettings::init() {
 	runDirectory = std::filesystem::current_path();
 	return nullptr;
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

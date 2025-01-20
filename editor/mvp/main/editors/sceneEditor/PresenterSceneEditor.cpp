@@ -31,10 +31,10 @@
 #include "IViewSceneEditor.h"
 #include "project/Project.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class CameraMouseExtension;
 class OrbitCameraExtension;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 
@@ -84,24 +84,24 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 	view->connectCursorMovedSignal(
 		[this](const double pX, const double pY) { modelSceneEditor->onCursorPosChanged(pX, pY); });
 	view->connectMouseButtonPressedSignal([this](unsigned int pButton, double pX, double pY) {
-		const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
+		const auto btn = static_cast<sdk::MouseButton>(pButton);
 		modelSceneEditor->onMouseButtonStateChanged(btn, true, pX, pY);
 	});
 	view->connectMouseButtonReleasedSignal([this](unsigned int pButton, const double pX, const double pY) {
-		const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
+		const auto btn = static_cast<sdk::MouseButton>(pButton);
 		modelSceneEditor->onMouseButtonStateChanged(btn, false, pX, pY);
 	});
 
 	view->connectKeyPressedSignal([this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
-		const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
-		const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
+		const auto key = static_cast<sdk::KeyboardKey>(pKeyCode);
+		const sdk::ModifierKeys mods = convertToModifierKeys(pState);
 		if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, true, mods);
 		return true;
 	});
 
 	view->connectKeyReleasedSignal([this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
-		const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
-		const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
+		const auto key = static_cast<sdk::KeyboardKey>(pKeyCode);
+		const sdk::ModifierKeys mods = convertToModifierKeys(pState);
 		if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, false, mods);
 	});
 
@@ -111,8 +111,8 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 
 void PresenterSceneEditor::onGridToggled(bool pState) { modelSceneEditor->toggleGrid(pState); }
 
-sdk::utils::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::ModifierType &pState) {
-	using namespace sdk::utils;
+sdk::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::ModifierType &pState) {
+	using namespace sdk;
 	uint8_t mods = 0;
 	if ((pState & Gdk::ModifierType::SHIFT_MASK) == Gdk::ModifierType::SHIFT_MASK) { mods |= ModifierKeys::MOD_SHIFT; }
 	if ((pState & Gdk::ModifierType::CONTROL_MASK) == Gdk::ModifierType::CONTROL_MASK) {

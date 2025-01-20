@@ -23,8 +23,8 @@
 
 #include "EngineSDK/render/IInstancedRender.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 void RenderInstance::notifyDataChanged() {
 	if (instancedRender) instancedRender->onInstanceDataChanged(this);
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

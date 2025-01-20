@@ -39,13 +39,13 @@ Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEn
 
 Project::~Project() {}
 
-sdk::utils::ReportMessagePtr Project::openDatabase() {
+sdk::ReportMessagePtr Project::openDatabase() {
 
 	try {
 		database = std::make_shared<SQLite::Database>(projectPath / (projectName + ".enproj"),
 													  SQLite::OPEN_CREATE | SQLite::OPEN_READWRITE);
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to connect to database");
 		return msg;
 	}
@@ -62,36 +62,36 @@ void Project::initProject() {
 	projectExplorerEntries->append(engineFileEntries);
 }
 
-sdk::utils::ReportMessagePtr Project::loadProject() {
+sdk::ReportMessagePtr Project::loadProject() {
 
 	if (auto msg = engineFileEntries->loadDatabase()) return msg;
 	if (auto msg = saveFiles()) return msg;
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr Project::saveProject() {
-	sdk::utils::Logger::info("Saving project...");
+sdk::ReportMessagePtr Project::saveProject() {
+	sdk::Logger::info("Saving project...");
 	try {
 		database->backup((database->getFilename() + ".bak").c_str(), SQLite::Database::Save);
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save project");
 		msg->setMessage("Exception occurred while backup");
 		return msg;
 	}
 	if (auto msg = engineFileEntries->saveDatabase()) return msg;
-	sdk::utils::Logger::info("Project saved");
+	sdk::Logger::info("Project saved");
 
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr Project::saveFiles() const {
+sdk::ReportMessagePtr Project::saveFiles() const {
 	if (auto msg = engineFileEntries->saveToCmake()) return msg;
 	if (auto msg = engineFileEntries->saveFile()) return msg;
 	return nullptr;
 }
 
-mer::sdk::utils::ReportMessagePtr Project::generateMainFile() const {
+mer::sdk::ReportMessagePtr Project::generateMainFile() const {
 
 	const auto sourcesPath = projectPath / "source/main";
 	CppSourceFile sourceFile;
@@ -101,8 +101,8 @@ mer::sdk::utils::ReportMessagePtr Project::generateMainFile() const {
 	main->setReturnType("int");
 	main->setName("main");
 	main->setParamsList({"int argc", "char* argv[]"});
-	main->addStatement(CppCustomStatement::create("using namespace mer::sdk::main"));
-	main->addStatement(CppCustomStatement::create("using namespace mer::sdk::utils"));
+	main->addStatement(CppCustomStatement::create("using namespace mer::sdk"));
+	main->addStatement(CppCustomStatement::create("using namespace mer::sdk"));
 	main->addStatement(CppCustomStatement::create("auto app = Application::create()"));
 	main->addStatement(
 		CppMethodCall::create("app->setApplicationSettings", {"std::make_shared<ApplicationSettings>()"}));

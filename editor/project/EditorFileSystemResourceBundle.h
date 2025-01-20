@@ -25,7 +25,7 @@
 
 namespace mer::editor::project {
 
-class EditorFileSystemResourceBundle : public sdk::main::FileSystemResourceBundle {
+class EditorFileSystemResourceBundle : public sdk::FileSystemResourceBundle {
 
 	explicit EditorFileSystemResourceBundle(const std::filesystem::path &pSearchPath)
 		: FileSystemResourceBundle(pSearchPath) {}
@@ -33,7 +33,7 @@ class EditorFileSystemResourceBundle : public sdk::main::FileSystemResourceBundl
 public:
 	static std::shared_ptr<IResourceBundle> create(const std::filesystem::path &pSearchPath);
 
-	sdk::utils::ReportMessagePtr getResourceStream(const std::string &pResourceUri,
+	sdk::ReportMessagePtr getResourceStream(const std::string &pResourceUri,
 												   std::shared_ptr<std::istream> &pStream) override;
 
 	void listResources(std::vector<std::string> &pUris) const override;

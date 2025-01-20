@@ -33,7 +33,7 @@
 #include "EngineUtils/utils/ReportMessage.h"
 #include "EngineUtils/utils/Utils.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 void ExtensionRegistry::init() {
 	registerClass<MainObjectExtension>();
@@ -58,7 +58,7 @@ std::shared_ptr<Extension> ExtensionRegistry::newInstance(const std::string &pTy
 	return nullptr;
 }
 
-utils::ReportMessagePtr ExtensionRegistry::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
+ReportMessagePtr ExtensionRegistry::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
 
 	auto &type = typeid(*pExt);
 	if (const auto iter = extensionByType.find(std::type_index(type)); iter != extensionByType.end()) {
@@ -66,10 +66,10 @@ utils::ReportMessagePtr ExtensionRegistry::getTypeNameFor(Extension* pExt, std::
 		return nullptr;
 	}
 	pNameOut = Utils::demangle(type.name());
-	auto msg = utils::ReportMessage::create();
+	auto msg = ReportMessage::create();
 	msg->setTitle("Failed to get name for type");
 	msg->setMessage("No extension registered with such type");
 	msg->addInfoLine("Extension type: {}", pNameOut);
 	return msg;
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

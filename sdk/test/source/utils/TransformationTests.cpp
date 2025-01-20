@@ -22,7 +22,7 @@
 #include <gtest/gtest.h>
 
 #include "EngineSDK/utils/Transformation.h"
-using namespace mer::sdk::utils;
+using namespace mer::sdk;
 
 TEST(TransformationTests, getPosition) {
 	{

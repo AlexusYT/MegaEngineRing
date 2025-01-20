@@ -22,7 +22,7 @@
 #ifndef OPTION_H
 #define OPTION_H
 
-namespace mer::editor::utils {
+namespace mer::editor {
 
 class Option : public Glib::OptionEntry {
 public:
@@ -38,6 +38,6 @@ public:
 	virtual bool onOptionParsed(const Glib::ustring &pOptionName, const Glib::ustring &pValue, bool pHasValue);
 };
 
-} // namespace mer::editor::utils
+} // namespace mer::editor
 
 #endif //OPTION_H

@@ -23,7 +23,7 @@
 #define BASICRENDEREXTENSION_H
 #include "Extension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ShaderProgram;
 class BasicRenderExtension : public Extension {
 	std::shared_ptr<ShaderProgram> shader;
@@ -40,11 +40,11 @@ public:
 	EXT_TYPE_NAME("BasicRenderExtension")
 
 protected:
-	utils::ReportMessagePtr onInit() override;
-	utils::ReportMessagePtr onDeinit() override;
+	ReportMessagePtr onInit() override;
+	ReportMessagePtr onDeinit() override;
 	void onRender() override;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //BASICRENDEREXTENSION_H

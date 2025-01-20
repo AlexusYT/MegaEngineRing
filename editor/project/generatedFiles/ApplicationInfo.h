@@ -90,15 +90,15 @@ public:
 		return Glib::make_refptr_for_instance(new ApplicationInfo(pProject));
 	}
 
-	sdk::utils::ReportMessagePtr onLoadDatabase() override;
+	sdk::ReportMessagePtr onLoadDatabase() override;
 
-	sdk::utils::ReportMessagePtr onSaveDatabase() const override;
+	sdk::ReportMessagePtr onSaveDatabase() const override;
 
-	sdk::utils::ReportMessagePtr onSaveFile() const override;
+	sdk::ReportMessagePtr onSaveFile() const override;
 
-	static sdk::utils::ReportMessagePtr createTable(SQLite::Database* pDatabase);
+	static sdk::ReportMessagePtr createTable(SQLite::Database* pDatabase);
 
-	sdk::utils::ReportMessagePtr writeFile() const;
+	sdk::ReportMessagePtr writeFile() const;
 
 	std::shared_ptr<mvp::IPresenter> createEditorPresenter(
 		const std::shared_ptr<mvp::TabPlaceholder> &pPlaceholder) override;

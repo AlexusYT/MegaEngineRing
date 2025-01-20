@@ -25,7 +25,7 @@
 #include "EngineSDK/resources/ResourceType.h"
 #include "EngineSDK/resources/materials/IMaterialComponent.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 std::shared_ptr<MaterialResource> MaterialResource::defaultMaterial = create();
 
 MaterialResource::MaterialResource()
@@ -119,4 +119,4 @@ sigc::scoped_connection MaterialResource::connectComponentValChanged(
 			dirty.store(true);
 		}));
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

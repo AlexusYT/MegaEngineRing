@@ -44,7 +44,7 @@ ApplicationInfo::ApplicationInfo(const std::shared_ptr<Project> &pProject) : Gen
 	setDatabaseSaveRequired();
 }
 
-sdk::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
+sdk::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
 	const auto database = getProject()->getDatabase();
 
 	if (!database->tableExists("ApplicationInfo")) return nullptr;
@@ -63,7 +63,7 @@ sdk::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
 			}
 		}
 	} catch (...) {
-		auto msg = mer::sdk::utils::ReportMessage::create();
+		auto msg = mer::sdk::ReportMessage::create();
 		msg->setTitle("Failed to parse application info");
 		msg->setMessage("Exception occurred while querying the application info");
 		return msg;
@@ -72,7 +72,7 @@ sdk::utils::ReportMessagePtr ApplicationInfo::onLoadDatabase() {
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr ApplicationInfo::onSaveDatabase() const {
+sdk::ReportMessagePtr ApplicationInfo::onSaveDatabase() const {
 	const auto database = getProject()->getDatabase();
 	if (auto msg = createTable(database.get())) return msg;
 
@@ -80,7 +80,7 @@ sdk::utils::ReportMessagePtr ApplicationInfo::onSaveDatabase() const {
 	try {
 		transaction = std::make_unique<SQLite::Transaction>(*database);
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save application info into database");
 		msg->setMessage("Exception occurred while starting transaction");
 		return msg;
@@ -100,7 +100,7 @@ INSERT INTO ApplicationInfo (PropertyName, PropertyValue) VALUES
 		}
 	} catch (...) {
 		transaction->rollback();
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to create application info table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -111,12 +111,12 @@ INSERT INTO ApplicationInfo (PropertyName, PropertyValue) VALUES
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr ApplicationInfo::onSaveFile() const {
+sdk::ReportMessagePtr ApplicationInfo::onSaveFile() const {
 	if (auto msg = writeFile()) { return msg; }
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr ApplicationInfo::createTable(SQLite::Database* pDatabase) {
+sdk::ReportMessagePtr ApplicationInfo::createTable(SQLite::Database* pDatabase) {
 	try {
 		//language=sql
 		pDatabase->exec(R"(DROP TABLE IF EXISTS ApplicationInfo;
@@ -130,7 +130,7 @@ CREATE TABLE ApplicationInfo
 );
 )");
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to create application info table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -139,12 +139,12 @@ CREATE TABLE ApplicationInfo
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
+sdk::ReportMessagePtr ApplicationInfo::writeFile() const {
 	using namespace std::string_literals;
 
 	auto method = CppMethod::create();
 	method->setName("init");
-	method->setReturnType("mer::sdk::utils::ReportMessagePtr");
+	method->setReturnType("mer::sdk::ReportMessagePtr");
 	method->setIsOverride(true);
 	for (const auto &[optName, value]: properties) {
 		if (optName.empty() || value->getValue().empty()) continue;
@@ -155,7 +155,7 @@ sdk::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
 	const auto class_ = CppClass::create();
 	method->setKlass(class_.get());
 	class_->setName("ApplicationSettings");
-	class_->addImplement("public mer::sdk::main::DefaultApplicationSettings");
+	class_->addImplement("public mer::sdk::DefaultApplicationSettings");
 	class_->addDeclaration(method->getDeclaration(), AccessModifier::PRIVATE);
 	CppHeaderFile headerFile;
 	headerFile.addInclude("EngineSDK/DefaultApplicationSettings.h");

@@ -24,7 +24,7 @@
 
 #include "EngineSDK/render/IRenderable.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IModel3DObject;
 class IResource;
 
@@ -46,6 +46,6 @@ public:
 	virtual IResource* asResource() = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IMODEL3DRESOURCE_H

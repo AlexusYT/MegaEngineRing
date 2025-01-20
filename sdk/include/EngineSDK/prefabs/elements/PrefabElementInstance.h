@@ -30,7 +30,7 @@
 #include "EngineSDK/utils/Transformable.h"
 #include "EngineUtils/utils/Property.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class PrefabInstance;
 class PrefabElement;
 class IMaterialResource;
@@ -57,7 +57,7 @@ struct PrefabElementInstanceData {
 class PrefabElementInstance : public IPrefabElementInstance, public Transformable {
 	PrefabElement* element{};
 	PrefabInstance* prefabInstance{};
-	utils::Property<PrefabElementInstanceData> data;
+	Property<PrefabElementInstanceData> data;
 	uint64_t prefabInstanceId{};
 	sigc::scoped_connection materialConnection;
 
@@ -67,10 +67,10 @@ protected:
 public:
 	static std::shared_ptr<PrefabElementInstance> create();
 
-	utils::Property<bool> visible;
-	utils::Property<std::shared_ptr<IMaterialResource>> material;
+	Property<bool> visible;
+	Property<std::shared_ptr<IMaterialResource>> material;
 
-	[[nodiscard]] utils::PropertyReadOnly<PrefabElementInstanceData> getData() { return data.getReadOnly(); }
+	[[nodiscard]] PropertyReadOnly<PrefabElementInstanceData> getData() { return data.getReadOnly(); }
 
 	[[nodiscard]] PrefabElement* getElement() const { return element; }
 
@@ -81,7 +81,7 @@ public:
 	void onParentMaterialChanged(const std::shared_ptr<IMaterialResource> &pMaterial);
 
 protected:
-	void onGlobalTransformChanged(const std::shared_ptr<utils::Transformation> &pTransformation) override;
+	void onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) override;
 
 private:
 	void setElement(PrefabElement* pElement) final { element = pElement; }
@@ -93,6 +93,6 @@ private:
 	void onMaterialChanged(const MaterialData &pData);
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //PREFABPARTINSTANCE_H

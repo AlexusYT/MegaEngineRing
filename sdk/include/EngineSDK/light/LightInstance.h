@@ -23,11 +23,11 @@
 #define LIGHTINSTANCE_H
 #include "ILightInstance.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ILightSources;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class LightInstance : public ILightInstance {
 	ILightSources* lightSources{};
@@ -40,6 +40,6 @@ public:
 	void setLightSources(ILightSources* pLightSources) override { lightSources = pLightSources; }
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //LIGHTINSTANCE_H

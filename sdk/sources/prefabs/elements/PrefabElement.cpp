@@ -24,7 +24,7 @@
 #include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
 #include "EngineUtils/utils/UUID.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 PrefabElement::PrefabElement(const std::string &pName)
 	: uuid(UUID::newInstance()), name(pName), visible(nullptr, ""), material(nullptr, "") {
 	visible = true;
@@ -57,4 +57,4 @@ void PrefabElement::onParentMaterialChanged(const std::shared_ptr<IMaterialResou
 	if (*material) return;
 	for (auto instance: instances) { instance->onParentMaterialChanged(pMaterial); }
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

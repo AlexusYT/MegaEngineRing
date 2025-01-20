@@ -27,7 +27,7 @@
 #include "mvp/main/projectExplorer/entries/ProjectExplorerElement.h"
 #include "project/LoadedScene.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class PropertyBase;
 }
 namespace mer::editor::mvp {
@@ -39,17 +39,17 @@ namespace mer::editor::mvp {
 
 class ModelResourceSelection : public IModelResourceSelection {
 	IPresenterResourceSelection* presenter{};
-	sdk::utils::PropertyBase* propertyBase{};
+	sdk::PropertyBase* propertyBase{};
 	std::shared_ptr<project::LoadedScene> loadedScene;
-	std::shared_ptr<sdk::main::IResource> selectedResource;
+	std::shared_ptr<sdk::IResource> selectedResource;
 	ExplorerElementType elementType{ExplorerElementType::NONE};
 
 public:
 	void setPresenter(IPresenterResourceSelection* pPresenter) override { presenter = pPresenter; }
 
-	[[nodiscard]] sdk::utils::PropertyBase* getPropertyBase() const override { return propertyBase; }
+	[[nodiscard]] sdk::PropertyBase* getPropertyBase() const override { return propertyBase; }
 
-	void setPropertyBase(sdk::utils::PropertyBase* pPropertyBase) override { propertyBase = pPropertyBase; }
+	void setPropertyBase(sdk::PropertyBase* pPropertyBase) override { propertyBase = pPropertyBase; }
 
 	void setLoadedScene(const std::shared_ptr<project::LoadedScene> &pLoadedScene) override {
 		loadedScene = pLoadedScene;
@@ -57,11 +57,11 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<project::LoadedScene> &getLoadedScene() const override { return loadedScene; }
 
-	void setSelectedResource(const std::shared_ptr<sdk::main::IResource> &pSelectedResource) override {
+	void setSelectedResource(const std::shared_ptr<sdk::IResource> &pSelectedResource) override {
 		selectedResource = pSelectedResource;
 	}
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::IResource> &getSelectedResource() const override {
+	[[nodiscard]] const std::shared_ptr<sdk::IResource> &getSelectedResource() const override {
 		return selectedResource;
 	}
 

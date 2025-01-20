@@ -21,4 +21,4 @@
 
 #include "LogPathOption.h"
 
-namespace mer::editor::utils {} // namespace mer::editor::utils
+namespace mer::editor {} // namespace mer::editor

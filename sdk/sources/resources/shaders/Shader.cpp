@@ -26,7 +26,7 @@
 
 #include "EngineUtils/utils/ReportMessage.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 Shader::Shader(const ShaderTypeEnum pType) : type(pType) {}
 
 Shader::~Shader() { Shader::uninitialize(); }
@@ -93,7 +93,7 @@ int Shader::getSourceLength() const {
 	return out;
 }
 
-utils::ReportMessagePtr Shader::onInitialize() {
+ReportMessagePtr Shader::onInitialize() {
 
 	uint32_t glType;
 	switch (type) {
@@ -113,7 +113,7 @@ utils::ReportMessagePtr Shader::onInitialize() {
 	//source.clear();
 	compile();
 	if (!getCompileStatus()) {
-		auto msg = utils::ReportMessage::create();
+		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to compile the shader");
 		msg->setMessage("Error in shader code detected");
 		addReportInfo(msg);
@@ -132,8 +132,8 @@ void Shader::onUninitialize() {
 	}
 }
 
-void Shader::addReportInfo(const utils::ReportMessagePtr &pMsg) {
+void Shader::addReportInfo(const ReportMessagePtr &pMsg) {
 	pMsg->addInfoLine("Shader type: {}", to_string(type));
 	pMsg->addInfoLine("Is compiled: {}", getCompileStatus());
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

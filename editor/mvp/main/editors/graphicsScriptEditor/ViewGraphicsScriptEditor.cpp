@@ -42,7 +42,7 @@ std::optional<size_t> ViewGraphicsScriptEditor::getSelectedElementIndex() { retu
 
 CanvasElement* ViewGraphicsScriptEditor::getSelectedElement() { return canvas.getSelectedElement(); }
 
-sdk::utils::ReportMessagePtr ViewGraphicsScriptEditor::removeElement(CanvasElement* pElement) {
+sdk::ReportMessagePtr ViewGraphicsScriptEditor::removeElement(CanvasElement* pElement) {
 	return canvas.removeElement(pElement);
 }
 

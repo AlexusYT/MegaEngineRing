@@ -90,7 +90,7 @@ public:
 		auto* widget = popoverMenu.get_parent();
 		auto* data = widget->get_data("contextSelectedObject");
 		if (!data) {
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to get context selected object");
 			msg->setMessage("Widget has no data named contextSelectedObject");
 			msg->addInfoLine("This is an error in the TreeWidget logic");

@@ -25,12 +25,12 @@
 
 namespace mer::editor::project {
 class ExtensionScriptNode : public ScriptNode {
-	sdk::main::Extension* extension{};
+	sdk::Extension* extension{};
 
 public:
-	[[nodiscard]] sdk::main::Extension* getExtension() const { return extension; }
+	[[nodiscard]] sdk::Extension* getExtension() const { return extension; }
 
-	void setExtension(sdk::main::Extension* pExtension) { extension = pExtension; }
+	void setExtension(sdk::Extension* pExtension) { extension = pExtension; }
 };
 } // namespace mer::editor::project
 

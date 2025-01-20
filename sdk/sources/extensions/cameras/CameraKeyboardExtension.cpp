@@ -30,10 +30,10 @@
 #include "EngineSDK/scene/objects/SceneObject.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
-void CameraKeyboardExtension::onKeyStateChanged(const utils::KeyboardKey pKey, const bool pPressed,
-												const utils::ModifierKeys & /*pMods*/) {
+void CameraKeyboardExtension::onKeyStateChanged(const KeyboardKey pKey, const bool pPressed,
+												const ModifierKeys & /*pMods*/) {
 	if (pKey == propertyForwardKey) fwdPressed = pPressed;
 	if (pKey == propertyBackwardKey) bwdPressed = pPressed;
 	if (pKey == propertyStrafeLeftKey) strafeLeftPressed = pPressed;
@@ -60,4 +60,4 @@ void CameraKeyboardExtension::onRender() {
 		propertyPosition = position;
 	}
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

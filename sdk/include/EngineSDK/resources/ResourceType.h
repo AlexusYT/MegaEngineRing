@@ -22,10 +22,10 @@
 #ifndef RESOURCETYPE_H
 #define RESOURCETYPE_H
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 enum class ResourceType { NONE = 0, MODEL, TEXTURE, MATERIAL, SHADER };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //RESOURCETYPE_H

@@ -21,8 +21,8 @@
 
 #include "EngineSDK/resources/ResourceLoadResult.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 std::shared_ptr<ResourceLoadResult> ResourceLoadResult::create() {
 	return std::shared_ptr<ResourceLoadResult>(new ResourceLoadResult());
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

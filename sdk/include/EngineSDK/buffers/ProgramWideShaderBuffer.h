@@ -26,7 +26,7 @@
 
 #include "SSBO.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ProgramWideShaderBuffer : public SSBO {
 	struct Data {
 		glm::mat4 viewProjMatrix{1};
@@ -64,7 +64,7 @@ public:
 		dirty = true;
 	}
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //PROGRAMWIDESHADERBUFFER_H

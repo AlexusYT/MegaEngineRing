@@ -24,7 +24,7 @@
 #include "EngineSDK/resources/IResource.h"
 #include "mvp/main/editors/sceneEditor/ResourcesContext.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResource;
 }
 
@@ -32,24 +32,24 @@ namespace mer::editor::mvp {
 
 class EditingResourceList {
 	std::shared_ptr<ResourcesContext> context;
-	std::map<std::shared_ptr<UUID>, std::shared_ptr<sdk::main::IResource>> resources;
-	sigc::signal<void(const std::shared_ptr<sdk::main::IResource> &pResource)> onResourceRemovedSignal;
-	sigc::signal<void(const std::shared_ptr<sdk::main::IResource> &pResource)> onResourceAddedSignal;
+	std::map<std::shared_ptr<UUID>, std::shared_ptr<sdk::IResource>> resources;
+	sigc::signal<void(const std::shared_ptr<sdk::IResource> &pResource)> onResourceRemovedSignal;
+	sigc::signal<void(const std::shared_ptr<sdk::IResource> &pResource)> onResourceAddedSignal;
 
 public:
-	void addResource(const std::shared_ptr<sdk::main::IResource> &pResource);
+	void addResource(const std::shared_ptr<sdk::IResource> &pResource);
 
 	sigc::connection connectOnResourceAddedSignal(
-		const sigc::slot<void(const std::shared_ptr<sdk::main::IResource> &pResource)> &pSlot) {
+		const sigc::slot<void(const std::shared_ptr<sdk::IResource> &pResource)> &pSlot) {
 		return onResourceAddedSignal.connect(pSlot);
 	}
 
 	sigc::connection connectOnResourceRemovedSignal(
-		const sigc::slot<void(const std::shared_ptr<sdk::main::IResource> &pResource)> &pSlot) {
+		const sigc::slot<void(const std::shared_ptr<sdk::IResource> &pResource)> &pSlot) {
 		return onResourceRemovedSignal.connect(pSlot);
 	}
 
-	[[nodiscard]] const std::map<std::shared_ptr<UUID>, std::shared_ptr<sdk::main::IResource>> &getResources() const {
+	[[nodiscard]] const std::map<std::shared_ptr<UUID>, std::shared_ptr<sdk::IResource>> &getResources() const {
 		return resources;
 	}
 

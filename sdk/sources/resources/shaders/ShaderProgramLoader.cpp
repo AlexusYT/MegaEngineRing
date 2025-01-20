@@ -25,11 +25,11 @@
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 #include "EngineUtils/utils/ReportMessage.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 std::shared_ptr<IResource> ShaderProgramLoader::createResource() { return std::make_shared<ShaderProgram>(); }
 
-utils::ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
+ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
 												  std::shared_ptr<std::istream> &pStream,
 												  const std::shared_ptr<IResource> &pResource) {
 	auto program = std::dynamic_pointer_cast<ShaderProgram>(pResource);
@@ -51,4 +51,4 @@ utils::ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoad
 
 	return nullptr;
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

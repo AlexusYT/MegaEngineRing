@@ -25,7 +25,7 @@
 
 class UUID;
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class PrefabElementInstance;
 
 class IPrefabInstance {
@@ -41,6 +41,6 @@ public:
 	virtual void setInstanceId(uint32_t pInstanceId) = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //IPREFABINSTANCE_H

@@ -27,8 +27,8 @@
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 
 namespace mer::editor::mvp {
-sdk::utils::ReportMessagePtr Model3DResourceSaver::saveToFile(
-	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::IModel3DResource> &pModel) {
+sdk::ReportMessagePtr Model3DResourceSaver::saveToFile(const std::filesystem::path &pPath,
+													   const std::shared_ptr<sdk::IModel3DResource> &pModel) {
 
 	auto dir = pPath.parent_path();
 	if (!exists(dir)) { create_directories(dir); }
@@ -61,7 +61,7 @@ sdk::utils::ReportMessagePtr Model3DResourceSaver::saveToFile(
 			writeArray(file, object->getIndices());
 		}
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save model resource to file");
 		msg->setMessage("Exception occurred");
 		msg->addInfoLine("Path: {}", pPath.string());

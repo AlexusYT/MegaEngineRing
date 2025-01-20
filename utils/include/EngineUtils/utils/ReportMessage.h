@@ -27,7 +27,7 @@
 #include "ReportMessageFwd.h"
 #include "Utils.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class ReportMessage {
 
 	std::string title;
@@ -84,7 +84,7 @@ public:
 		return ss.str();
 	}
 };
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 
 #endif //REPORTMESSAGE_H

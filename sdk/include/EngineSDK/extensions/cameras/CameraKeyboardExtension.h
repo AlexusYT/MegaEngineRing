@@ -26,7 +26,7 @@
 #include "EngineSDK/extensions/Extension.h"
 #include "EngineSDK/utils/KeyboardKey.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class CameraKeyboardExtension : public Extension {
 
 	bool fwdPressed{}, bwdPressed{}, strafeLeftPressed{}, strafeRightPressed{};
@@ -38,18 +38,18 @@ protected:
 		  propertyStrafeLeftKey(this, "StrafeLeftKey"), propertyBackwardKey(this, "BackwardKey"),
 		  propertyStrafeRightKey(this, "StrafeLeftKey"), propertyAngle(this, "Angle") {
 		propertySpeed = 1.4f;
-		propertyForwardKey = utils::KeyboardKey::KEY_W;
-		propertyStrafeLeftKey = utils::KeyboardKey::KEY_A;
-		propertyBackwardKey = utils::KeyboardKey::KEY_S;
-		propertyStrafeRightKey = utils::KeyboardKey::KEY_D;
+		propertyForwardKey = KeyboardKey::KEY_W;
+		propertyStrafeLeftKey = KeyboardKey::KEY_A;
+		propertyBackwardKey = KeyboardKey::KEY_S;
+		propertyStrafeRightKey = KeyboardKey::KEY_D;
 	}
 
 public:
 	ExtensionProperty<float> propertySpeed;
-	ExtensionProperty<utils::KeyboardKey> propertyForwardKey;
-	ExtensionProperty<utils::KeyboardKey> propertyStrafeLeftKey;
-	ExtensionProperty<utils::KeyboardKey> propertyBackwardKey;
-	ExtensionProperty<utils::KeyboardKey> propertyStrafeRightKey;
+	ExtensionProperty<KeyboardKey> propertyForwardKey;
+	ExtensionProperty<KeyboardKey> propertyStrafeLeftKey;
+	ExtensionProperty<KeyboardKey> propertyBackwardKey;
+	ExtensionProperty<KeyboardKey> propertyStrafeRightKey;
 
 	ExtensionProperty<glm::vec2> propertyAngle;
 
@@ -58,11 +58,11 @@ public:
 	EXT_TYPE_NAME("CameraKeyboardExtension")
 
 protected:
-	void onKeyStateChanged(utils::KeyboardKey pKey, bool pPressed, const utils::ModifierKeys &pMods) override;
+	void onKeyStateChanged(KeyboardKey pKey, bool pPressed, const ModifierKeys &pMods) override;
 
 	void onRender() override;
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //CAMERAKEYBOARDEXTENSION_H

@@ -42,7 +42,7 @@ bool ModelSceneEditor::hasResourcesContext() const { return loadedScene->hasReso
 
 void ModelSceneEditor::initScene() {
 	loadedScene->initScene();
-	if (auto msg = sceneOverlayElements->initialize()) { sdk::utils::Logger::error(msg); }
+	if (auto msg = sceneOverlayElements->initialize()) { sdk::Logger::error(msg); }
 }
 
 void ModelSceneEditor::uninitScene() {
@@ -69,21 +69,21 @@ sigc::connection ModelSceneEditor::connectNameChanged(const sigc::slot<void(cons
 
 void ModelSceneEditor::createObject() { return loadedScene->addObject(); }
 
-void ModelSceneEditor::removeObject(sdk::main::ISceneObject* pObjectToRemove) {
+void ModelSceneEditor::removeObject(sdk::ISceneObject* pObjectToRemove) {
 	loadedScene->removeObject(pObjectToRemove);
 }
 
-void ModelSceneEditor::renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const {
+void ModelSceneEditor::renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const {
 	loadedScene->renameObject(pObject, pNewName);
 }
 
-void ModelSceneEditor::saveObject(sdk::main::ISceneObject* pObject) { loadedScene->saveObject(pObject); }
+void ModelSceneEditor::saveObject(sdk::ISceneObject* pObject) { loadedScene->saveObject(pObject); }
 
-const std::shared_ptr<sdk::main::IScene> &ModelSceneEditor::getScene() const { return loadedScene->getScene(); }
+const std::shared_ptr<sdk::IScene> &ModelSceneEditor::getScene() const { return loadedScene->getScene(); }
 
 void ModelSceneEditor::onCursorPosChanged(const double pX, const double pY) { loadedScene->onCursorPosChanged(pX, pY); }
 
-void ModelSceneEditor::onMouseButtonStateChanged(const sdk::utils::MouseButton pButton, const bool pPressed,
+void ModelSceneEditor::onMouseButtonStateChanged(const sdk::MouseButton pButton, const bool pPressed,
 												 const double pX, const double pY) {
 	loadedScene->onMouseButtonStateChanged(pButton, pPressed, pX, pY);
 }

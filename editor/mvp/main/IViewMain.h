@@ -46,7 +46,7 @@ public:
 
 	virtual void addActionGroup(const std::string &pName, const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) = 0;
 
-	virtual void reportError(const sdk::utils::ReportMessagePtr &pError) = 0;
+	virtual void reportError(const sdk::ReportMessagePtr &pError) = 0;
 
 	virtual void setPresenter(IPresenterMain* pPresenter) = 0;
 

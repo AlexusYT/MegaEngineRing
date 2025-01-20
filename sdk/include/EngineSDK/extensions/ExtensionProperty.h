@@ -26,42 +26,42 @@
 #include "EngineSDK/utils/PropertyJsonSerializers.h"
 #include "EngineUtils/utils/Property.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 template<typename T>
-class ExtensionProperty : public utils::Property<T>, public ISerializable {
+class ExtensionProperty : public Property<T>, public ISerializable {
 
 
 public:
-	ExtensionProperty(utils::IPropertyProvider* pProvider, const std::string &pName,
+	ExtensionProperty(IPropertyProvider* pProvider, const std::string &pName,
 					  const std::string &pDescription = {})
-		: utils::Property<T>(pProvider, pName, pDescription) {}
+		: Property<T>(pProvider, pName, pDescription) {}
 
 	ExtensionProperty &operator=(const T &pOther) {
-		utils::Property<T>::setValue(pOther);
+		Property<T>::setValue(pOther);
 		return *this;
 	}
 
 	ExtensionProperty &operator=(T &&pOther) {
-		utils::Property<T>::setValue(pOther);
+		Property<T>::setValue(pOther);
 		return *this;
 	}
 
 	void serialize(nlohmann::json &pJson, Extension* pExtension) override {
-		pJson[this->utils::Property<T>::PropertyBase::getPropertyName()] =
-			utils::PropertyJsonSerializer<T>::serialize(utils::Property<T>::getValue(), pExtension);
+		pJson[this->Property<T>::PropertyBase::getPropertyName()] =
+			PropertyJsonSerializer<T>::serialize(Property<T>::getValue(), pExtension);
 	}
 
 	void deserialize(const nlohmann::json &pJson, Extension* pExtension) override {
-		if (pJson.contains(this->utils::Property<T>::getPropertyName()))
-			utils::Property<T>::setValue(utils::PropertyJsonSerializer<T>::deserialize(
-				pJson.at(this->utils::Property<T>::getPropertyName()), pExtension));
+		if (pJson.contains(this->Property<T>::getPropertyName()))
+			Property<T>::setValue(PropertyJsonSerializer<T>::deserialize(
+				pJson.at(this->Property<T>::getPropertyName()), pExtension));
 		else
-			utils::Property<T>::setValue({});
+			Property<T>::setValue({});
 	}
 };
 
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //EXTENSIONPROPERTY_H

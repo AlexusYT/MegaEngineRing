@@ -23,7 +23,7 @@
 #define ENGINEOPTIONGROUP_H
 #include "options/Option.h"
 
-namespace mer::editor::utils {
+namespace mer::editor {
 
 
 class EngineOptionGroup final : public Glib::OptionGroup {

@@ -25,23 +25,23 @@
 #include "TypedSourceSelectionResult.h"
 #include "ui/customWidgets/resourceSelector/ISourceSelectionResult.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IModel3DObject;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResourceLoadExecutor;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::ui {
 
 class SourceSelectionModel3D : public SourceSelectionResource {
-	explicit SourceSelectionModel3D(sdk::main::IResourceLoadExecutor* pLoader);
+	explicit SourceSelectionModel3D(sdk::IResourceLoadExecutor* pLoader);
 
 public:
-	using Result = TypedSourceSelectionResult<sdk::main::IModel3DObject>;
+	using Result = TypedSourceSelectionResult<sdk::IModel3DObject>;
 
-	static std::shared_ptr<SourceSelectionModel3D> create(sdk::main::IResourceLoadExecutor* pLoader);
+	static std::shared_ptr<SourceSelectionModel3D> create(sdk::IResourceLoadExecutor* pLoader);
 
 	void onResultSet(const std::shared_ptr<ISourceSelectionResult> &pResult) override;
 
@@ -55,10 +55,10 @@ public:
 
 	void onElementSelected(const std::shared_ptr<SelectionElement> &pElement) override;
 
-	sdk::main::ResourceType getResourceType() override { return sdk::main::ResourceType::MODEL; }
+	sdk::ResourceType getResourceType() override { return sdk::ResourceType::MODEL; }
 
 	std::shared_ptr<SelectionElement> createElementFromResource(
-		const std::shared_ptr<sdk::main::IResource> &pResource) override;
+		const std::shared_ptr<sdk::IResource> &pResource) override;
 };
 
 

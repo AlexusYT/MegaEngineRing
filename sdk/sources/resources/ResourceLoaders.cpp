@@ -26,7 +26,7 @@
 #include "EngineSDK/resources/shaders/ShaderProgramLoader.h"
 #include "EngineSDK/resources/textures/TextureLoader.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 void ResourceLoaders::addLoader(const std::shared_ptr<IResourceLoader> &pLoader) {
 	loaders.emplace(pLoader->getFileExtension(), pLoader);
@@ -45,4 +45,4 @@ std::shared_ptr<IResourceLoader> ResourceLoaders::getLoader(const std::filesyste
 	return iter->second;
 }
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk

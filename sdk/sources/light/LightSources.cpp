@@ -24,7 +24,7 @@
 #include "EngineSDK/buffers/SSBO.h"
 #include "EngineSDK/light/ILightInstance.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 LightSources::LightSources() : lightSsbo(std::make_shared<SSBO>()) {
 
 	lightSsbo->setUsage(DYNAMIC_DRAW);
@@ -59,4 +59,4 @@ void LightSources::removeLightInstance(const std::shared_ptr<ILightInstance> &pL
 	erase(lights, pLightInstance);
 	onInstanceDataChanged(pLightInstance.get());
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk

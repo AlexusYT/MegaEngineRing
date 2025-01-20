@@ -25,10 +25,10 @@
 
 #include <EngineUtils/utils/ReportMessage.h>
 
-#include "IApplicationSettings.h"
 #include "IApplication.h"
+#include "IApplicationSettings.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class Application : public IApplication {
 	std::shared_ptr<IApplicationSettings> applicationSettings;
@@ -39,7 +39,7 @@ class Application : public IApplication {
 public:
 	static std::shared_ptr<Application> create();
 
-	utils::ReportMessagePtr initEngine() override;
+	ReportMessagePtr initEngine() override;
 
 	void deinitEngine() override;
 
@@ -67,10 +67,10 @@ private:
 	void createLog() const;
 
 #ifndef EDITOR_SDK
-	utils::ReportMessagePtr setupGlfw();
+	ReportMessagePtr setupGlfw();
 #endif
 };
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //APPLICATION_H

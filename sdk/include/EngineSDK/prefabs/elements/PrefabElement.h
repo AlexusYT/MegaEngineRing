@@ -26,7 +26,7 @@
 #include "EngineUtils/utils/Property.h"
 #include "EngineUtils/utils/UUID.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IMaterialResource;
 class Prefab;
 class PrefabElementInstance;
@@ -48,9 +48,9 @@ protected:
 public:
 	virtual ~PrefabElement() = default;
 
-	utils::Property<bool> visible;
+	Property<bool> visible;
 
-	utils::Property<std::shared_ptr<IMaterialResource>> material;
+	Property<std::shared_ptr<IMaterialResource>> material;
 
 
 	std::shared_ptr<PrefabElementInstance> createInstance();
@@ -92,6 +92,6 @@ public:
 	void onParentMaterialChanged(const std::shared_ptr<IMaterialResource> &pMaterial);
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //PREFABELEMENT_H

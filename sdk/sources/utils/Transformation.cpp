@@ -28,7 +28,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/polar_coordinates.hpp>
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 Transformation::Transformation() {}
 
 std::shared_ptr<Transformation> Transformation::create() {
@@ -80,4 +80,4 @@ void Transformation::swapTransformation(const std::shared_ptr<Transformation> &p
 	pTransformation->onChanged(pTransformation->modelMatrix);
 }
 
-} // namespace mer::sdk::utils
+} // namespace mer::sdk

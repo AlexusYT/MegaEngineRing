@@ -24,7 +24,7 @@
 #include "EngineSDK/resources/IResourceLoadExecutor.h"
 #include "EngineSDK/scene/IScene.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class PropertyBase;
 }
 
@@ -32,19 +32,19 @@ namespace mer::editor::mvp {
 enum class PropertyRendererType;
 
 class PropertyRenderer {
-	sdk::utils::PropertyBase* property;
+	sdk::PropertyBase* property;
 	PropertyRendererType type;
-	sdk::main::IResourceLoadExecutor* loader;
+	sdk::IResourceLoadExecutor* loader;
 
-	PropertyRenderer(sdk::utils::PropertyBase* pProperty, sdk::main::IResourceLoadExecutor* pLoader,
+	PropertyRenderer(sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader,
 					 PropertyRendererType pType);
 
 public:
-	static std::shared_ptr<PropertyRenderer> create(sdk::utils::PropertyBase* pProperty,
-													sdk::main::IResourceLoadExecutor* pLoader);
+	static std::shared_ptr<PropertyRenderer> create(sdk::PropertyBase* pProperty,
+													sdk::IResourceLoadExecutor* pLoader);
 
 	static std::shared_ptr<PropertyRenderer> create(
-		sdk::utils::PropertyBase* pProperty, sdk::main::IResourceLoadExecutor* pLoader, PropertyRendererType pType);
+		sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader, PropertyRendererType pType);
 
 	Gtk::Widget* getWidget() const;
 

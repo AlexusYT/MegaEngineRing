@@ -26,7 +26,7 @@
 #include "Globals.h"
 #include "Option.h"
 
-namespace mer::editor::utils {
+namespace mer::editor {
 
 class LogPathOption final : public Option {
 
@@ -39,7 +39,7 @@ public:
 
 	bool onOptionParsed(const Glib::ustring & /*pOptionName*/, const Glib::ustring &pValue,
 						bool /*pHasValue*/) override {
-		using namespace sdk::utils;
+		using namespace sdk;
 		std::filesystem::path logPath = std::filesystem::absolute(pValue.data());
 		if (std::error_code err; !exists(logPath, err)) {
 			const auto message = ReportMessage::create();
@@ -60,6 +60,6 @@ public:
 	}
 };
 
-} // namespace mer::editor::utils
+} // namespace mer::editor
 
 #endif //LOGPATHOPTION_H

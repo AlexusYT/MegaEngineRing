@@ -24,16 +24,16 @@
 
 #include "EngineSDK/resources/ResourceLoader.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Model3DLoader : public ResourceLoader {
 public:
 	std::shared_ptr<IResource> createResource() override;
 
-	utils::ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
+	ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
 									const std::shared_ptr<std::istream> &pStream,
 									const std::shared_ptr<IResource> &pResource) override;
 
-	utils::ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
+	ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 								 const std::shared_ptr<IResource> &pResource) override;
 
 	template<typename T>
@@ -49,7 +49,7 @@ private:
 	std::string getFileExtension() override { return "enmodel"; }
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 #endif //MODEL3DLOADER_H

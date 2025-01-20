@@ -35,14 +35,14 @@ public:
 	virtual ~FileResourceReader() = default;
 
 
-	virtual sdk::utils::ReportMessagePtr checkType() = 0;
+	virtual sdk::ReportMessagePtr checkType() = 0;
 
 	[[nodiscard]] const std::filesystem::path &getPath() const { return path; }
 
 	[[nodiscard]] const std::shared_ptr<std::ifstream> &getStream() const { return stream; }
 
 protected:
-	sdk::utils::ReportMessagePtr open() {
+	sdk::ReportMessagePtr open() {
 		if (stream) return nullptr;
 
 		std::shared_ptr<std::ifstream> file = std::make_shared<std::ifstream>();
@@ -50,7 +50,7 @@ protected:
 			file->exceptions(std::_S_badbit | std::_S_failbit);
 			file->open(path);
 		} catch (...) {
-			sdk::utils::ReportMessagePtr msg = sdk::utils::ReportMessage::create();
+			sdk::ReportMessagePtr msg = sdk::ReportMessage::create();
 			msg->setStacktrace();
 			msg->setTitle("Failed to open file");
 			msg->setMessage("Exception thrown");

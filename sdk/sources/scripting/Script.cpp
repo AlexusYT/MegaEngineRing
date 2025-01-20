@@ -21,4 +21,4 @@
 
 #include "EngineSDK/scripting/Script.h"
 
-namespace mer::sdk::main {} // namespace mer::sdk::main
+namespace mer::sdk {} // namespace mer::sdk

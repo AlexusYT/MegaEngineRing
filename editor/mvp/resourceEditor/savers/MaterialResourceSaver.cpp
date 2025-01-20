@@ -28,8 +28,8 @@
 #include "EngineUtils/utils/UUID.h"
 
 namespace mer::editor::mvp {
-sdk::utils::ReportMessagePtr MaterialResourceSaver::saveToFile(
-	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::IMaterialResource> &pMaterial) {
+sdk::ReportMessagePtr MaterialResourceSaver::saveToFile(
+	const std::filesystem::path &pPath, const std::shared_ptr<sdk::IMaterialResource> &pMaterial) {
 	auto dir = pPath.parent_path();
 	if (!exists(dir)) { create_directories(dir); }
 	auto resource = pMaterial->asResource();
@@ -47,7 +47,7 @@ sdk::utils::ReportMessagePtr MaterialResourceSaver::saveToFile(
 		writeComponent(file, *pMaterial->getAo());
 
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save material resource to file");
 		msg->setMessage("Exception occurred");
 		msg->addInfoLine("Path: {}", pPath.string());
@@ -59,12 +59,12 @@ sdk::utils::ReportMessagePtr MaterialResourceSaver::saveToFile(
 }
 
 void MaterialResourceSaver::writeComponent(std::ofstream &pStream,
-										   const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+										   const std::shared_ptr<sdk::IMaterialComponent> &pComponent) {
 
-	if (auto texture = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pComponent)) {
+	if (auto texture = std::dynamic_pointer_cast<sdk::ITextureResource>(pComponent)) {
 		writeNumber<uint8_t>(pStream, 0);
 		writeString(pStream, texture->asResource()->getResourceUri());
-	} else if (auto color = std::dynamic_pointer_cast<sdk::main::ColorComponent>(pComponent)) {
+	} else if (auto color = std::dynamic_pointer_cast<sdk::ColorComponent>(pComponent)) {
 		writeNumber<uint8_t>(pStream, 1);
 		writeNumber<float>(pStream, color->color->r);
 		writeNumber<float>(pStream, color->color->g);

@@ -35,13 +35,13 @@
 #include "EngineSDK/resources/ResourceLoaders.h"
 
 #ifndef EDITOR_SDK
-extern std::shared_ptr<mer::sdk::main::IScene> getPrimaryScene();
+extern std::shared_ptr<mer::sdk::IScene> getPrimaryScene();
 #endif
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 std::shared_ptr<Application> Application::create() { return std::shared_ptr<Application>(new Application()); }
 
-utils::ReportMessagePtr Application::initEngine() {
+ReportMessagePtr Application::initEngine() {
 
 #ifndef EDITOR_SDK
 	initSigHandlers();
@@ -66,7 +66,7 @@ void Application::initSigHandlers() {
 	struct sigaction sig;
 	sig.sa_flags = SA_SIGINFO;
 	sig.sa_sigaction = [](int pSig, siginfo_t* pInfo, void*) {
-		using namespace sdk::utils;
+		using namespace sdk;
 		const auto msg = ReportMessage::create();
 		msg->setTitle("Signal recieved");
 		msg->setMessage("Aborting...");
@@ -86,7 +86,7 @@ void Application::initSigHandlers() {
 }
 
 void Application::loadSettings() {
-	using namespace sdk::utils;
+	using namespace sdk;
 	bool userSettingsLoaded = false;
 	if (applicationSettings) {
 		if (ReportMessagePtr msg = applicationSettings->init()) {
@@ -105,7 +105,7 @@ void Application::loadSettings() {
 }
 
 void Application::createLog() const {
-	using namespace sdk::utils;
+	using namespace sdk;
 	if (const auto logsDir = applicationSettings->getLogsDirectory().getValue(); !logsDir.empty()) {
 		const auto logPath = std::filesystem::path(logsDir) / "latest.log";
 		if (const auto msg = Logger::openLog(logPath)) {
@@ -119,8 +119,8 @@ void Application::createLog() const {
 	}
 }
 #ifndef EDITOR_SDK
-utils::ReportMessagePtr Application::setupGlfw() {
-	using namespace sdk::utils;
+ReportMessagePtr Application::setupGlfw() {
+	using namespace sdk;
 	if (!glfwInit()) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to init engine");
@@ -142,7 +142,7 @@ utils::ReportMessagePtr Application::setupGlfw() {
 #endif
 int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 #ifndef EDITOR_SDK
-	using namespace sdk::utils;
+	using namespace sdk;
 
 	std::shared_ptr<MainWindow> window = MainWindow::create();
 	if (auto msg = window->setContextVersion(4, 0)) {
@@ -176,4 +176,4 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 #endif
 	return 0;
 }
-} // namespace mer::sdk::main
+} // namespace mer::sdk
