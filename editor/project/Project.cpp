@@ -25,12 +25,7 @@
 
 #include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "generatedFiles/ApplicationInfo.h"
-#include "generators/cpp/CppCustomStatement.h"
-#include "generators/cpp/CppHeaderFile.h"
-#include "generators/cpp/CppMethod.h"
 #include "scripting/ScriptParser.h"
-#include "toolchain/ToolchainSettings.h"
-#include "toolchain/ToolchainUtils.h"
 
 namespace mer::editor::project {
 Project::Project() : projectExplorerEntries(Gio::ListStore<ui::ProjectExplorerEntry>::create()) {
@@ -91,69 +86,9 @@ sdk::ReportMessagePtr Project::saveFiles() const {
 	return nullptr;
 }
 
-mer::sdk::ReportMessagePtr Project::generateMainFile() const {
-
-	const auto sourcesPath = projectPath / "source/main";
-	CppSourceFile sourceFile;
-	sourceFile.addInclude("EngineSDK/Application.h");
-	sourceFile.addInclude("ApplicationSettings.h");
-	auto main = CppMethod::create();
-	main->setReturnType("int");
-	main->setName("main");
-	main->setParamsList({"int argc", "char* argv[]"});
-	main->addStatement(CppCustomStatement::create("using namespace mer::sdk"));
-	main->addStatement(CppCustomStatement::create("using namespace mer::sdk"));
-	main->addStatement(CppCustomStatement::create("auto app = Application::create()"));
-	main->addStatement(
-		CppMethodCall::create("app->setApplicationSettings", {"std::make_shared<ApplicationSettings>()"}));
-	//language=c++
-	main->addStatement(CppCustomStatement::create(R"(
-	if(auto msg = app->initEngine()) {
-		Logger::error(msg);
-		return -1;
-	}
-	int ret = app->runMainLoop(argc, argv);
-	app->deinitEngine();
-	return ret;
-)"));
-	sourceFile.addDefinition(main->getDefinition());
-	return sourceFile.writeFile(sourcesPath);
-}
-
 Glib::RefPtr<Gio::SimpleActionGroup> Project::getActionGroups() const {
 	const Glib::RefPtr<Gio::SimpleActionGroup> refActionGroup = Gio::SimpleActionGroup::create();
 	return refActionGroup;
-}
-
-int Project::reloadCMake(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
-	create_directories(projectPath);
-
-	const std::string command = std::format("-DCMAKE_BUILD_TYPE=Debug --preset dev -S {} -B {}", projectPath.string(),
-											projectBuildPath.string());
-	return ToolchainUtils::executeSync(projectPath, ToolchainSettings::getCMakePath(), command, pCoutCallback,
-									   pCerrCallback);
-}
-
-int Project::build(const std::string &pTarget, const std::string &pPreset, const CallbackSlot &pCoutCallback,
-				   const CallbackSlot &pCerrCallback) const {
-	std::string args = std::format("--build --target {} --preset {}", pTarget, pPreset);
-	return ToolchainUtils::executeSync(projectPath, ToolchainSettings::getCMakePath(), args, pCoutCallback,
-									   pCerrCallback);
-}
-
-int Project::run(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
-
-	const std::string command = "";
-
-	return ToolchainUtils::executeSync(projectPath, projectPath / "build/dev/GameEngine", command, pCoutCallback,
-									   pCerrCallback);
-}
-
-int Project::runDebug(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
-
-	const std::string command = projectPath / "build/dev/GameEngine";
-
-	return ToolchainUtils::executeSync(projectPath, "gdb", command, pCoutCallback, pCerrCallback);
 }
 
 } // namespace mer::editor::project

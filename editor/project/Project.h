@@ -75,28 +75,7 @@ public:
 
 	sdk::ReportMessagePtr saveFiles() const;
 
-	sdk::ReportMessagePtr generateMainFile() const;
-
 	Glib::RefPtr<Gio::SimpleActionGroup> getActionGroups() const;
-
-	using CallbackSlot = sigc::slot<void(const std::string &pLogLine)>;
-
-	int reloadCMake(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const;
-
-	int build(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
-		return build("GameEngine_exe", pCoutCallback, pCerrCallback);
-	}
-
-	int build(const std::string &pTarget, const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
-		return build(pTarget, "dev", pCoutCallback, pCerrCallback);
-	}
-
-	int build(const std::string &pTarget, const std::string &pPreset, const CallbackSlot &pCoutCallback,
-			  const CallbackSlot &pCerrCallback) const;
-
-	int run(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const;
-
-	int runDebug(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const;
 
 	[[nodiscard]] const std::filesystem::path &getProjectPath() { return projectPath; }
 

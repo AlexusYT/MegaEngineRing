@@ -56,12 +56,6 @@ public:
 	~PresenterMain() override;
 
 private:
-	void generateCmakeFiles(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
-
-	void build(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
-
-	void runProject(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
-
 	void logMessage(int pId, const std::string &pMessage) const;
 
 	void logError(int pId, const std::string &pMessage) const;

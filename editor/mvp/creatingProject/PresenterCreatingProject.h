@@ -57,13 +57,7 @@ public:
 private:
 	void runTasksImpl();
 
-	sdk::ReportMessagePtr generateFiles(const std::filesystem::path &pPath) const;
-
-	sdk::ReportMessagePtr installLibraries(const std::filesystem::path &pProjectPath) const;
-
 	static std::string editTargetLinkLibraries(const std::string &pStr, const std::string &pFunc);
-
-	sdk::ReportMessagePtr reloadCmake() const;
 
 	struct Library {
 		std::string name;
@@ -71,7 +65,7 @@ private:
 	};
 
 	static sdk::ReportMessagePtr parseLibrariesScript(std::stringstream &pLog,
-	std::unordered_map<std::string, Library> &pLibraries);
+													  std::unordered_map<std::string, Library> &pLibraries);
 
 	static std::string getLine(std::stringstream &pLog);
 
@@ -79,9 +73,7 @@ private:
 
 	void logError(sdk::ReportMessagePtr pError) const;
 
-	std::string getTypeName() override {
-		return "PresenterCreatingProject";
-	}
+	std::string getTypeName() override { return "PresenterCreatingProject"; }
 
 public:
 	void run() override;

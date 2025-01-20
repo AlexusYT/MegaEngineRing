@@ -22,7 +22,6 @@
 #include "GeneratedFiles.h"
 
 #include <project/Project.h>
-#include <project/toolchain/ToolchainUtils.h>
 
 namespace mer::editor::project {
 mer::sdk::ReportMessagePtr GeneratedFiles::saveToCmake() const {
@@ -38,7 +37,8 @@ mer::sdk::ReportMessagePtr GeneratedFiles::saveToCmake() const {
 	ss << "\tsource/scripts/SceneObject1Script.cpp\n";
 	ss << ")";
 
-	return ToolchainUtils::writeFile(getProject()->getProjectPath() / "cmake/generated-sources.cmake", ss.str());
+	//return ToolchainUtils::writeFile(getProject()->getProjectPath() / "cmake/generated-sources.cmake", ss.str());
+	return nullptr;
 }
 
 void GeneratedFiles::getFilesToSave(const ProjectExplorerEntry* pEntry, std::vector<std::string> &pFiles) {

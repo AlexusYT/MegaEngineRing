@@ -27,11 +27,11 @@
 #include <nlohmann/json.hpp>
 #include <project/Project.h>
 
+#include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "EngineSDK/resources/ResourceType.h"
 #include "EngineSDK/resources/materials/MaterialResource.h"
 #include "EngineSDK/resources/models/Model3DResource.h"
 #include "EngineSDK/resources/textures/TextureResource.h"
-#include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "Globals.h"
 #include "PanedLayoutTab.h"
 #include "centerWindow/PresenterCenterWindow.h"
@@ -94,47 +94,6 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 }
 
 PresenterMain::~PresenterMain() {}
-
-void PresenterMain::generateCmakeFiles(const sigc::slot<void(int pExitCode)> &pOnFinish) const {
-
-	std::thread([this, pOnFinish] {
-		// TODO viewMain
-		// 	->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
-		// 		viewMain->switchLogPage(0);
-		// 		viewMain->clearLogMessage(0);
-		// 	})
-		// 	.wait();
-		pOnFinish(modelMain->getProject()->reloadCMake([this](const std::string &pLogLine) { logMessage(0, pLogLine); },
-													   [this](const std::string &pLogLine) { logError(0, pLogLine); }));
-	}).detach();
-}
-
-void PresenterMain::build(const sigc::slot<void(int pExitCode)> &pOnFinish) const {
-
-	std::thread([this, pOnFinish] {
-		// TODO viewMain
-		// 	->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
-		// 		viewMain->switchLogPage(1);
-		// 		viewMain->clearLogMessage(1);
-		// 	})
-		// 	.wait();
-		pOnFinish(modelMain->getProject()->build([this](const std::string &pLogLine) { logMessage(1, pLogLine); },
-												 [this](const std::string &pLogLine) { logError(1, pLogLine); }));
-	}).detach();
-}
-
-void PresenterMain::runProject(const sigc::slot<void(int pExitCode)> &pOnFinish) const {
-	std::thread([this, pOnFinish] {
-		// TODO viewMain
-		// ->executeInMainThread([this](const std::promise<void> & /*pPromise*/) {
-		// 	viewMain->switchLogPage(2);
-		// 	viewMain->clearLogMessage(2);
-		// })
-		// .wait();
-		pOnFinish(modelMain->getProject()->run([this](const std::string &pLogLine) { logMessage(2, pLogLine); },
-											   [this](const std::string &pLogLine) { logError(2, pLogLine); }));
-	}).detach();
-}
 
 void PresenterMain::logMessage(int /*pId*/, const std::string & /*pMessage*/) const {
 	// TODO viewMain->executeInMainThread([pMessage, this, pId](const std::promise<void> & /*pPromise*/) {
