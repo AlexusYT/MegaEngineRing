@@ -31,7 +31,7 @@
 #include "IModel3DObject.h"
 
 namespace mer::sdk::main {
-class ISSBO;
+class SSBO;
 class Model3DResource;
 class RenderInstanceData;
 class IRenderInstance;
@@ -49,7 +49,7 @@ class Model3DObject : public IModel3DObject, public IInstancedRender, public vir
 	std::vector<IRenderInstance*> instances;
 	std::unordered_map<std::shared_ptr<ShaderProgram>, std::vector<RenderInstanceData>> instancesData;
 	std::shared_ptr<ShaderProgram> shader;
-	std::shared_ptr<ISSBO> instancesSsbo;
+	std::shared_ptr<SSBO> instancesSsbo;
 
 	Model3DObject() = default;
 

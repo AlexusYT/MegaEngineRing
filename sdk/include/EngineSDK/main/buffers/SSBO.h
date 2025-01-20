@@ -19,45 +19,50 @@
 // Created by alexus on 04.02.24.
 //
 
-#ifndef ISSBO_H
-#define ISSBO_H
-
-#include <cstdint>
-
+#ifndef SSBO_H
+#define SSBO_H
 #include "BufferUsageEnum.h"
 
 namespace mer::sdk::main {
 
+class SSBO {
+	uint32_t name{};
+	int64_t size{};
+	const void* data{};
+	BufferUsageEnum usage;
+	uint32_t baseIndex{};
 
-class ISSBO {
+
 public:
-	virtual ~ISSBO() = default;
+	SSBO();
 
-	virtual void setData(const void* pData, int64_t pSize, BufferUsageEnum pUsage) = 0;
+	~SSBO();
 
-	virtual void bind() const = 0;
+	void setData(const void* pData, int64_t pSize, BufferUsageEnum pUsage);
 
-	virtual void unbind() const = 0;
+	void bind() const;
 
-	virtual uint32_t native() const = 0;
+	void unbind() const;
 
-	virtual void bindBufferBase(uint32_t pBinding) = 0;
+	uint32_t native() const;
 
-	virtual void unbindBufferBase(uint32_t pBinding) = 0;
+	void bindBufferBase(uint32_t pBinding);
 
-	virtual void bufferSubData(int32_t pOffset, int64_t pSize, const void* pData) = 0;
+	void unbindBufferBase(uint32_t pBinding);
 
-	virtual void reallocate(int64_t pNewSize, const void* pNewData) = 0;
+	void bufferSubData(int32_t pOffset, int64_t pSize, const void* pData);
 
-	[[nodiscard]] virtual int64_t getSize() const = 0;
+	void reallocate(int64_t pNewSize, const void* pNewData);
 
-	[[nodiscard]] virtual const void* getData() const = 0;
+	[[nodiscard]] int64_t getSize() const { return size; }
 
-	virtual void setUsage(BufferUsageEnum pUsage) = 0;
+	[[nodiscard]] const void* getData() const { return data; }
 
-	[[nodiscard]] virtual const BufferUsageEnum &getUsage() const = 0;
+	void setUsage(const BufferUsageEnum pUsage) { usage = pUsage; }
+
+	[[nodiscard]] const BufferUsageEnum &getUsage() const { return usage; }
 };
+
 } // namespace mer::sdk::main
 
-
-#endif //ISSBO_H
+#endif //SSBO_H

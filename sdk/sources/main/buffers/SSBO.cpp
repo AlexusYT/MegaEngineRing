@@ -20,7 +20,7 @@
 //
 
 
-#include "EngineSDK/renderer/buffers/SSBO.h"
+#include "EngineSDK/main/buffers/SSBO.h"
 
 #include <epoxy/gl.h>
 

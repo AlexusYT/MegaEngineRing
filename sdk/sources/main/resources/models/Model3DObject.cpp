@@ -23,10 +23,10 @@
 
 #include <epoxy/gl.h>
 
+#include "EngineSDK/main/buffers/SSBO.h"
 #include "EngineSDK/main/render/IRenderInstance.h"
 #include "EngineSDK/main/render/RenderInstanceData.h"
 #include "EngineSDK/main/resources/shaders/ShaderProgram.h"
-#include "EngineSDK/renderer/buffers/SSBO.h"
 
 namespace mer::sdk::main {
 

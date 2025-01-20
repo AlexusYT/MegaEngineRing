@@ -21,8 +21,8 @@
 
 #include "EngineSDK/main/light/LightSources.h"
 
+#include "EngineSDK/main/buffers/SSBO.h"
 #include "EngineSDK/main/light/ILightInstance.h"
-#include "EngineSDK/renderer/buffers/SSBO.h"
 
 namespace mer::sdk::main {
 LightSources::LightSources() : lightSsbo(std::make_shared<SSBO>()) {

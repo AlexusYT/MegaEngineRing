@@ -13,8 +13,7 @@ set(ENGINE_SOURCES sources/main/Application.cpp
         sources/main/resources/shaders/ShaderProgram.cpp
         sources/main/resources/shaders/ShaderProgramLoader.cpp
         sources/main/buffers/ProgramWideShaderBuffer.cpp
-        sources/renderer/GL.cpp
-        sources/renderer/buffers/SSBO.cpp
+        sources/main/buffers/SSBO.cpp
         sources/main/scene/objects/SceneObject.cpp
         sources/main/extensions/Extension.cpp
         sources/main/extensions/BasicRenderExtension.cpp
@@ -70,14 +69,12 @@ set(ENGINE_HEADERS include/EngineSDK/main/Application.h
         include/EngineSDK/main/resources/Resources.h
         include/EngineSDK/main/scene/Scene.h
         include/EngineSDK/main/resources/shaders/ShaderProgram.h
-        include/EngineSDK/renderer/buffers/ISSBO.h
-        include/EngineSDK/renderer/buffers/SSBO.h
-        include/EngineSDK/renderer/buffers/BufferUsageEnum.h
+        include/EngineSDK/main/buffers/SSBO.h
+        include/EngineSDK/main/buffers/BufferUsageEnum.h
         include/EngineSDK/main/resources/shaders/ShaderProgramLoader.h
         include/EngineSDK/main/buffers/ProgramWideShaderBuffer.h
         include/EngineSDK/main/resources/shaders/Shader.h
         include/EngineSDK/main/scene/objects/ISceneObject.h
-        include/EngineSDK/renderer/GL.h
         include/EngineSDK/main/extensions/cameras/ICamera.h
         include/EngineSDK/utils/ModifierKeys.h
         include/EngineSDK/utils/KeyboardKey.h

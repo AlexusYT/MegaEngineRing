@@ -21,9 +21,10 @@
 
 #ifndef PROGRAMWIDESHADERBUFFER_H
 #define PROGRAMWIDESHADERBUFFER_H
-#include <EngineSDK/renderer/buffers/SSBO.h>
 
 #include <glm/mat4x4.hpp>
+
+#include "SSBO.h"
 
 namespace mer::sdk::main {
 class ProgramWideShaderBuffer : public SSBO {
@@ -39,8 +40,8 @@ class ProgramWideShaderBuffer : public SSBO {
 
 public:
 	ProgramWideShaderBuffer() {
-		SSBO::bind();
-		SSBO::setData(&data, sizeof(data), DYNAMIC_DRAW);
+		bind();
+		setData(&data, sizeof(data), DYNAMIC_DRAW);
 	}
 
 	void update() {
