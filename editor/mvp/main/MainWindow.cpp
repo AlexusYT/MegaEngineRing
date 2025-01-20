@@ -20,7 +20,7 @@
 //
 #include "MainWindow.h"
 
-#include "EngineSDK/main/resources/ResourceType.h"
+#include "EngineSDK/resources/ResourceType.h"
 #include "Globals.h"
 #include "IPresenterMain.h"
 #include "PanedLayoutTab.h"

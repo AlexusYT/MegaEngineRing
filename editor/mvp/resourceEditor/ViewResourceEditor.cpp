@@ -21,10 +21,10 @@
 
 #include "ViewResourceEditor.h"
 
-#include "EngineSDK/main/resources/materials/ColorComponent.h"
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/materials/ColorComponent.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
 #include "IPresenterResourceEditor.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "ui/customWidgets/resourceSelector/ResourceSelectorWidget.h"

@@ -158,7 +158,7 @@ sdk::utils::ReportMessagePtr ApplicationInfo::writeFile() const {
 	class_->addImplement("public mer::sdk::main::DefaultApplicationSettings");
 	class_->addDeclaration(method->getDeclaration(), AccessModifier::PRIVATE);
 	CppHeaderFile headerFile;
-	headerFile.addInclude("EngineSDK/main/DefaultApplicationSettings.h");
+	headerFile.addInclude("EngineSDK/DefaultApplicationSettings.h");
 	headerFile.addDefinition(class_->getDefinition());
 	if (auto msg = headerFile.writeFile(getProject()->getProjectPath() / getHeaderPath())) return msg;
 	CppSourceFile sourceFile;

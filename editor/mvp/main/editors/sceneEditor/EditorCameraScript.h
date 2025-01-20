@@ -21,7 +21,7 @@
 
 #ifndef EDITORCAMERASCRIPT_H
 #define EDITORCAMERASCRIPT_H
-#include "EngineSDK/main/scripting/Script.h"
+#include "EngineSDK/scripting/Script.h"
 
 namespace mer::sdk::main {
 class OrbitCameraExtension;

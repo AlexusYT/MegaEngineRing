@@ -25,8 +25,8 @@
 //TODO delete file
 #include <EngineUtils/utils/UUID.h>
 
-#include "EngineSDK/main/extensions/MainObjectExtension.h"
-#include "EngineSDK/main/scene/objects/ISceneObject.h"
+#include "EngineSDK/extensions/MainObjectExtension.h"
+#include "EngineSDK/scene/objects/ISceneObject.h"
 #include "project/generatedFiles/GeneratedFiles.h"
 
 namespace mer::editor::mvp {

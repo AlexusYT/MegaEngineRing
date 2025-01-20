@@ -21,7 +21,7 @@
 
 #ifndef IVIEWRESOURCEEDITOR_H
 #define IVIEWRESOURCEEDITOR_H
-#include "EngineSDK/main/resources/IResource.h"
+#include "EngineSDK/resources/IResource.h"
 #include "mvp/IView.h"
 
 namespace mer::sdk::main {

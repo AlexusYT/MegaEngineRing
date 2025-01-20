@@ -21,8 +21,8 @@
 
 #include "SourceSelectionModel3D.h"
 
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/models/Model3DResource.h"
 #include "ui/customWidgets/resourceSelector/ISourceSelectionResult.h"
 
 namespace mer::editor::ui {

@@ -23,10 +23,10 @@
 
 #include <regex>
 
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
-#include "EngineSDK/main/resources/models/Model3DObject.h"
-#include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/models/IModel3DResource.h"
+#include "EngineSDK/resources/models/Model3DObject.h"
+#include "EngineSDK/resources/models/Model3DResource.h"
 
 namespace mer::editor::mvp {
 

@@ -23,9 +23,9 @@
 
 #include <png++/image.hpp>
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
-#include "EngineSDK/main/resources/textures/Texture2DImageFormat.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/textures/Texture2DImageFormat.h"
 
 namespace mer::editor::mvp {
 

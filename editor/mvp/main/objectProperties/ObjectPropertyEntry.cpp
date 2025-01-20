@@ -21,7 +21,7 @@
 
 #include "ObjectPropertyEntry.h"
 
-#include "EngineSDK/main/extensions/Extension.h"
+#include "EngineSDK/extensions/Extension.h"
 #include "PropertyRenderer.h"
 
 namespace mer::editor::mvp {

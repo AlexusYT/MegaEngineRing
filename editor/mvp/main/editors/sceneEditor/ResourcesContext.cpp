@@ -23,13 +23,13 @@
 
 #include <future>
 
-#include "EngineSDK/main/context/IApplication.h"
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/IResourceBundle.h"
-#include "EngineSDK/main/resources/LoadedResources.h"
-#include "EngineSDK/main/resources/ResourceLoadResult.h"
-#include "EngineSDK/main/resources/ResourceLoader.h"
-#include "EngineSDK/main/resources/ResourceLoaders.h"
+#include "EngineSDK/context/IApplication.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/IResourceBundle.h"
+#include "EngineSDK/resources/LoadedResources.h"
+#include "EngineSDK/resources/ResourceLoadResult.h"
+#include "EngineSDK/resources/ResourceLoader.h"
+#include "EngineSDK/resources/ResourceLoaders.h"
 #include "EngineUtils/utils/UUID.h"
 
 namespace mer::editor::mvp {

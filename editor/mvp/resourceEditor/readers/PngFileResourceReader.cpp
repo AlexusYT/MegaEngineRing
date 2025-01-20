@@ -21,10 +21,10 @@
 
 #include "PngFileResourceReader.h"
 
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
-#include "EngineSDK/main/resources/textures/Texture2DImageFormat.h"
-#include "EngineSDK/main/resources/textures/Texture2DType.h"
-#include "EngineSDK/main/resources/textures/TextureBaseInternalFormat.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/textures/Texture2DImageFormat.h"
+#include "EngineSDK/resources/textures/Texture2DType.h"
+#include "EngineSDK/resources/textures/TextureBaseInternalFormat.h"
 #include "png++/png.hpp"
 
 namespace mer::editor::mvp {

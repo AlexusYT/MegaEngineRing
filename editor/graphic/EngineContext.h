@@ -22,7 +22,7 @@
 #ifndef ENGINECONTEXT_H
 #define ENGINECONTEXT_H
 
-#include <EngineSDK/main/context/IContext.h>
+#include <EngineSDK/context/IContext.h>
 
 namespace mer::editor::graphics {
 class EngineContext : public sdk::main::IContext {

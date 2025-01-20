@@ -21,11 +21,11 @@
 
 #include "PresenterSceneEditor.h"
 
-#include <EngineSDK/main/resources/LoadedResources.h>
-#include <EngineSDK/main/scene/IScene.h>
+#include <EngineSDK/resources/LoadedResources.h>
+#include <EngineSDK/scene/IScene.h>
 
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/scene/objects/ISceneObject.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/scene/objects/ISceneObject.h"
 #include "EngineSDK/utils/MouseButton.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"

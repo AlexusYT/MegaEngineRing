@@ -24,8 +24,8 @@
 #include <condition_variable>
 #include <thread>
 
-#include "EngineSDK/main/context/Application.h"
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/context/Application.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
 
 namespace mer::sdk::main {
 class IResourceLoader;

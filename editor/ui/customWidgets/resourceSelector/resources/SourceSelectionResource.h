@@ -21,7 +21,7 @@
 
 #ifndef SOURCESELECTIONRESOURCE_H
 #define SOURCESELECTIONRESOURCE_H
-#include "EngineSDK/main/resources/ResourceType.h"
+#include "EngineSDK/resources/ResourceType.h"
 #include "ui/customWidgets/resourceSelector/SourceSelection.h"
 
 namespace mer::sdk::main {

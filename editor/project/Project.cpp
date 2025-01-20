@@ -23,7 +23,7 @@
 
 #include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
 
-#include "EngineSDK/main/extensions/ExtensionRegistry.h"
+#include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "generatedFiles/ApplicationInfo.h"
 #include "generators/cpp/CppCustomStatement.h"
 #include "generators/cpp/CppHeaderFile.h"
@@ -95,7 +95,7 @@ mer::sdk::utils::ReportMessagePtr Project::generateMainFile() const {
 
 	const auto sourcesPath = projectPath / "source/main";
 	CppSourceFile sourceFile;
-	sourceFile.addInclude("EngineSDK/main/Application.h");
+	sourceFile.addInclude("EngineSDK/Application.h");
 	sourceFile.addInclude("ApplicationSettings.h");
 	auto main = CppMethod::create();
 	main->setReturnType("int");

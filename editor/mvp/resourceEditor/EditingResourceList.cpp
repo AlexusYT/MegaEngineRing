@@ -21,8 +21,8 @@
 
 #include "EditingResourceList.h"
 
-#include "EngineSDK/main/resources/LoadedResources.h"
-#include "EngineSDK/main/resources/ResourceLoadResult.h"
+#include "EngineSDK/resources/LoadedResources.h"
+#include "EngineSDK/resources/ResourceLoadResult.h"
 
 namespace mer::editor::mvp {
 void EditingResourceList::addResource(const std::shared_ptr<sdk::main::IResource> &pResource) {

@@ -21,8 +21,8 @@
 
 #include "PropertyRenderer.h"
 
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
 #include "EngineUtils/utils/Property.h"
 #include "PropertyRendererType.h"
 #include "ui/customWidgets/resourceSelector/ResourceSelectorWidget.h"

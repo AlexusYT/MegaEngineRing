@@ -21,12 +21,12 @@
 
 #include "PresenterResourceSelection.h"
 
-#include "EngineSDK/main/extensions/ExtensionProperty.h"
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/resources/ResourceLoadResult.h"
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "EngineSDK/extensions/ExtensionProperty.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/resources/ResourceLoadResult.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/models/IModel3DResource.h"
 #include "IModelResourceSelection.h"
 #include "IViewResourceSelection.h"
 #include "mvp/ApplicationController.h"

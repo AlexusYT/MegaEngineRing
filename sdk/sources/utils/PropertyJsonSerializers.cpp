@@ -26,12 +26,12 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
-#include "EngineSDK/main/extensions/Extension.h"
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
-#include "EngineSDK/main/resources/models/Model3DObject.h"
-#include "EngineSDK/main/resources/models/Model3DResource.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/shaders/ShaderProgram.h"
+#include "EngineSDK/extensions/Extension.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/models/Model3DObject.h"
+#include "EngineSDK/resources/models/Model3DResource.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
 
 namespace mer::sdk::utils {
 nlohmann::json PropertyJsonSerializer<glm::vec<4, float>>::serialize(const glm::vec4 &pValue,

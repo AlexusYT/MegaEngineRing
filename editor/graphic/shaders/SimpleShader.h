@@ -21,7 +21,7 @@
 
 #ifndef SIMPLESHADER_H
 #define SIMPLESHADER_H
-#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
+#include "EngineSDK/resources/shaders/ShaderProgram.h"
 
 namespace mer::editor::graphics {
 

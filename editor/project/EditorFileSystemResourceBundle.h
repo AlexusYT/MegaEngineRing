@@ -21,7 +21,7 @@
 
 #ifndef EDITORFILESYSTEMRESOURCEBUNDLE_H
 #define EDITORFILESYSTEMRESOURCEBUNDLE_H
-#include "EngineSDK/main/resources/FileSystemResourceBundle.h"
+#include "EngineSDK/resources/FileSystemResourceBundle.h"
 
 namespace mer::editor::project {
 

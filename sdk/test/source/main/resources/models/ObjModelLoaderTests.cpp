@@ -21,7 +21,7 @@
 
 #include <gtest/gtest.h>
 
-#include "EngineSDK/main/resources/models/Model3DLoader.h"
+#include "EngineSDK/resources/models/Model3DLoader.h"
 #include "EngineUtils/utils/ReportMessage.h"
 
 TEST(ObjModelLoaderTests, ModelLoading) {

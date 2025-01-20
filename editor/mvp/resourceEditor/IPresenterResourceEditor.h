@@ -23,7 +23,7 @@
 #define IPRESENTERRESOURCEEDITOR_H
 #include <memory>
 
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "EngineSDK/resources/models/IModel3DResource.h"
 #include "mvp/PresenterBase.h"
 
 namespace mer::editor::ui {

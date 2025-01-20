@@ -21,7 +21,7 @@
 
 #include "ScriptParser.h"
 
-#include "EngineSDK/main/scripting/Script.h"
+#include "EngineSDK/scripting/Script.h"
 #include "project/Project.h"
 #include "project/generatedFiles/GraphicsScript.h"
 #include "project/generators/cpp/CppClass.h"
@@ -36,7 +36,7 @@ void ScriptParser::generateSource(const GraphicsScript* pScript, CppSourceFile &
 
 	std::string scriptName = pScript->getName();
 
-	pSourceFile.addInclude("EngineSDK/main/scripting/Script.h");
+	pSourceFile.addInclude("EngineSDK/scripting/Script.h");
 	pSourceFile.addInclude("EngineUtils/utils/ReportMessage.h");
 	pSourceFile.addInclude("memory");
 	pSourceFile.addInclude("iostream");

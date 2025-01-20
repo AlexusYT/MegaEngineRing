@@ -21,10 +21,10 @@
 
 #include "Model3DResourceSaver.h"
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
-#include "EngineSDK/main/resources/shaders/ShaderProgram.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/models/IModel3DResource.h"
+#include "EngineSDK/resources/shaders/ShaderProgram.h"
 
 namespace mer::editor::mvp {
 sdk::utils::ReportMessagePtr Model3DResourceSaver::saveToFile(

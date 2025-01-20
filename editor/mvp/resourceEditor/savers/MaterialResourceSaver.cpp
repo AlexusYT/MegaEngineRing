@@ -21,10 +21,10 @@
 
 #include "MaterialResourceSaver.h"
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/materials/ColorComponent.h"
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/materials/ColorComponent.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
 #include "EngineUtils/utils/UUID.h"
 
 namespace mer::editor::mvp {

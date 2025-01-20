@@ -21,8 +21,8 @@
 
 #include "SourceSelectionTexture.h"
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
 
 namespace mer::editor::ui {
 std::shared_ptr<SourceSelectionTexture> SourceSelectionTexture::create(sdk::main::IResourceLoadExecutor* pLoader) {

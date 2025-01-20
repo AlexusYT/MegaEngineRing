@@ -21,7 +21,7 @@
 
 #include "SourceSelectionColor.h"
 
-#include "EngineSDK/main/resources/materials/ColorComponent.h"
+#include "EngineSDK/resources/materials/ColorComponent.h"
 
 namespace mer::editor::ui {
 bool SourceSelectionColor::Result::isSame(const std::shared_ptr<ISourceSelectionResult> &pOther) {

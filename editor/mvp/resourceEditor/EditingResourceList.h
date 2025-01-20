@@ -21,7 +21,7 @@
 
 #ifndef EDITINGRESOURCELIST_H
 #define EDITINGRESOURCELIST_H
-#include "EngineSDK/main/resources/IResource.h"
+#include "EngineSDK/resources/IResource.h"
 #include "mvp/main/editors/sceneEditor/ResourcesContext.h"
 
 namespace mer::sdk::main {

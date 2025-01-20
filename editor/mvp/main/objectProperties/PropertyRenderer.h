@@ -21,8 +21,8 @@
 
 #ifndef PROPERTYRENDERER_H
 #define PROPERTYRENDERER_H
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/scene/IScene.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/scene/IScene.h"
 
 namespace mer::sdk::utils {
 class PropertyBase;

@@ -27,11 +27,11 @@
 #include <nlohmann/json.hpp>
 #include <project/Project.h>
 
-#include "EngineSDK/main/resources/ResourceType.h"
-#include "EngineSDK/main/resources/materials/MaterialResource.h"
-#include "EngineSDK/main/resources/models/Model3DResource.h"
-#include "EngineSDK/main/resources/textures/TextureResource.h"
-#include "EngineSDK/main/extensions/ExtensionRegistry.h"
+#include "EngineSDK/resources/ResourceType.h"
+#include "EngineSDK/resources/materials/MaterialResource.h"
+#include "EngineSDK/resources/models/Model3DResource.h"
+#include "EngineSDK/resources/textures/TextureResource.h"
+#include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "Globals.h"
 #include "PanedLayoutTab.h"
 #include "centerWindow/PresenterCenterWindow.h"

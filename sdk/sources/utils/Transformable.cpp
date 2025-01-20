@@ -19,9 +19,9 @@
 // Created by alexus on 05.12.24.
 //
 
-#include "../../include/EngineSDK/utils/Transformable.h"
+#include "EngineSDK/utils/Transformable.h"
 
-#include "../../include/EngineSDK/utils/Transformation.h"
+#include "EngineSDK/utils/Transformation.h"
 
 namespace mer::sdk::main {
 Transformable::Transformable()

@@ -21,9 +21,9 @@
 
 #include "ViewObjectProperties.h"
 
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/extensions/ExtensionRegistry.h"
-#include "EngineSDK/main/extensions/MainObjectExtension.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/extensions/ExtensionRegistry.h"
+#include "EngineSDK/extensions/MainObjectExtension.h"
 #include "ObjectPropertyEntry.h"
 #include "PropertyRenderer.h"
 #include "mvp/contexts/IWidgetContext.h"

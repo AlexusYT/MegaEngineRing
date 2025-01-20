@@ -22,7 +22,7 @@
 #ifndef IPRESENTERMAIN_H
 #define IPRESENTERMAIN_H
 
-#include "EngineSDK/main/extensions/BasicRenderExtension.h"
+#include "EngineSDK/extensions/BasicRenderExtension.h"
 #include "mvp/PresenterBase.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 

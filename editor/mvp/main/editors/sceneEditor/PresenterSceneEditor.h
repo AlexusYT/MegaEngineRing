@@ -21,7 +21,7 @@
 
 #ifndef PRESENTERSCENEEDITOR_H
 #define PRESENTERSCENEEDITOR_H
-#include "EngineSDK/main/scene/objects/ISceneObject.h"
+#include "EngineSDK/scene/objects/ISceneObject.h"
 #include "EngineSDK/utils/ModifierKeys.h"
 #include "mvp/main/editors/IPresenterSceneEditor.h"
 

@@ -21,9 +21,9 @@
 
 #include "SourceSelectionResource.h"
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/resources/LoadedResources.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/resources/LoadedResources.h"
 #include "ui/customWidgets/resourceSelector/ResourceSelectorWidget.h"
 
 namespace mer::editor::ui {

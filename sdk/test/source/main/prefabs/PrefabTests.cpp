@@ -24,15 +24,15 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "EngineSDK/main/context/Window.h"
-#include "EngineSDK/main/prefabs/IPrefabInstance.h"
-#include "EngineSDK/main/prefabs/Prefab.h"
-#include "EngineSDK/main/prefabs/PrefabInstance.h"
-#include "EngineSDK/main/prefabs/elements/MeshPrefabElement.h"
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/resources/ResourceLoadResult.h"
-#include "EngineSDK/main/resources/models/Model3DLoader.h"
-#include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/context/Window.h"
+#include "EngineSDK/prefabs/IPrefabInstance.h"
+#include "EngineSDK/prefabs/Prefab.h"
+#include "EngineSDK/prefabs/PrefabInstance.h"
+#include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/resources/ResourceLoadResult.h"
+#include "EngineSDK/resources/models/Model3DLoader.h"
+#include "EngineSDK/resources/models/Model3DResource.h"
 
 using namespace mer::sdk::main;
 using ::testing::_;

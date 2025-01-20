@@ -23,7 +23,7 @@
 #include "EditorSceneObject.h"
 
 #include "mvp/main/objectProperties/ObjectPropertyEntry.h"
-#include "EngineSDK/main/extensions/Extension.h"
+#include "EngineSDK/extensions/Extension.h"
 #include "mvp/main/centerWindow/ViewCenterWindow.h"
 #include "project/generatedFiles/GraphicsScript.h"
 

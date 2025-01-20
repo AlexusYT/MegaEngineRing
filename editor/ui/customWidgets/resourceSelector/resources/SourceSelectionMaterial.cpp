@@ -21,8 +21,8 @@
 
 #include "SourceSelectionMaterial.h"
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
 
 namespace mer::editor::ui {
 std::shared_ptr<SourceSelectionMaterial> SourceSelectionMaterial::create(sdk::main::IResourceLoadExecutor* pLoader) {
