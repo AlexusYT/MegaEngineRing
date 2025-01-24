@@ -1,168 +1,187 @@
 
 
-set(ENGINE_SOURCES sources/main/Application.cpp
-        sources/main/DefaultApplicationSettings.cpp
-        include/EngineSDK/main/context/Window.cpp
-        include/EngineSDK/main/context/Window.h
-        include/EngineSDK/main/context/MainWindow.cpp
-        include/EngineSDK/main/context/MainWindow.h
-        include/EngineSDK/main/resources/LoadedResources.cpp
-        include/EngineSDK/main/resources/LoadedResources.h
-        include/EngineSDK/renderer/shaders/Shader.cpp
-        include/EngineSDK/main/context/ResourcesWindow.cpp
-        include/EngineSDK/main/context/ResourcesWindow.h
-        include/EngineSDK/main/resources/ResourceRequest.cpp
-        include/EngineSDK/main/resources/ResourceLoader.cpp
-        include/EngineSDK/main/resources/Resources.cpp
-        include/EngineSDK/main/scene/Scene.cpp
-        include/EngineSDK/renderer/shaders/ShaderProgram.cpp
-        include/EngineSDK/main/resources/shaders/ShaderProgramLoader.cpp
-        include/EngineSDK/main/buffers/ProgramWideShaderBuffer.cpp
-        include/EngineSDK/renderer/GL.cpp
-        include/EngineSDK/renderer/buffers/SSBO.cpp
-        include/EngineSDK/main/scene/objects/SceneObject.cpp
-        sources/main/scene/objects/extensions/Extension.cpp
-        sources/main/scene/objects/extensions/BasicRenderExtension.cpp
-        sources/main/scene/objects/extensions/cameras/CameraExtension.cpp
-        sources/main/scene/objects/extensions/cameras/CameraKeyboardExtension.cpp
-        sources/main/scene/objects/extensions/ExtensionRegistry.cpp
-        sources/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.cpp
-        sources/main/scene/objects/extensions/OrbitCameraExtension.cpp
-        sources/main/resources/models/Model3DLoader.cpp
-        sources/main/scene/objects/extensions/ModelRenderExtension.cpp
-        sources/main/scripting/Script.cpp
-        sources/main/scene/objects/extensions/MainObjectExtension.cpp
+set(ENGINE_SOURCES sources/context/Application.cpp
+        sources/context/DefaultApplicationSettings.cpp
+        sources/context/Window.cpp
+        sources/context/MainWindow.cpp
+        sources/resources/LoadedResources.cpp
+        sources/resources/shaders/Shader.cpp
+        sources/context/ResourcesWindow.cpp
+        sources/resources/ResourceLoader.cpp
+        sources/resources/Resources.cpp
+        sources/scene/Scene.cpp
+        sources/resources/shaders/ShaderProgram.cpp
+        sources/resources/shaders/ShaderProgramLoader.cpp
+        sources/buffers/ProgramWideShaderBuffer.cpp
+        sources/buffers/SSBO.cpp
+        sources/scene/objects/SceneObject.cpp
+        sources/extensions/Extension.cpp
+        sources/extensions/BasicRenderExtension.cpp
+        sources/extensions/cameras/CameraExtension.cpp
+        sources/extensions/cameras/CameraKeyboardExtension.cpp
+        sources/extensions/ExtensionRegistry.cpp
+        sources/extensions/cameras/PerspectiveProjectionCameraMod.cpp
+        sources/extensions/OrbitCameraExtension.cpp
+        sources/resources/models/Model3DLoader.cpp
+        sources/extensions/ModelRenderExtension.cpp
+        sources/scripting/Script.cpp
+        sources/extensions/MainObjectExtension.cpp
         sources/utils/PropertyJsonSerializers.cpp
-        include/EngineSDK/main/resources/models/Model3DResource.cpp
-        include/EngineSDK/main/resources/models/Model3DObject.cpp
-        include/EngineSDK/main/render/RenderInstance.cpp
-        include/EngineSDK/main/resources/FileSystemResourceBundle.cpp
-        include/EngineSDK/main/resources/ResourceLoaders.cpp
-        include/EngineSDK/main/resources/Resource.cpp
-        sources/main/resources/textures/TextureResource.cpp
-        include/EngineSDK/main/resources/textures/TextureLoader.cpp
-        include/EngineSDK/main/scene/objects/extensions/LightExtension.cpp
-        include/EngineSDK/main/light/LightInstance.cpp
-        include/EngineSDK/main/light/LightSources.cpp
-        include/EngineSDK/main/resources/materials/MaterialResource.cpp
-        include/EngineSDK/main/resources/materials/MaterialLoader.cpp
-        include/EngineSDK/main/resources/ResourceLoadResult.cpp
-        include/EngineSDK/main/resources/materials/ColorComponent.cpp
-        sources/main/prefabs/Prefab.cpp
-        sources/main/prefabs/PrefabInstance.cpp
-        sources/main/prefabs/elements/PrefabElementInstance.cpp
-        sources/main/prefabs/elements/PrefabElementsSsbo.cpp
-        sources/main/prefabs/elements/PrefabElement.cpp
-        sources/main/prefabs/elements/MeshPrefabElement.cpp
-        sources/main/resources/shaders/builtin/PrefabProgram.cpp
+        sources/resources/models/Model3DResource.cpp
+        sources/resources/models/Model3DObject.cpp
+        sources/render/RenderInstance.cpp
+        sources/resources/FileSystemResourceBundle.cpp
+        sources/resources/ResourceLoaders.cpp
+        sources/resources/Resource.cpp
+        sources/resources/textures/TextureResource.cpp
+        sources/resources/textures/TextureLoader.cpp
+        sources/extensions/LightExtension.cpp
+        sources/light/LightInstance.cpp
+        sources/light/LightSources.cpp
+        sources/resources/materials/MaterialResource.cpp
+        sources/resources/materials/MaterialLoader.cpp
+        sources/resources/ResourceLoadResult.cpp
+        sources/resources/materials/ColorComponent.cpp
+        sources/prefabs/Prefab.cpp
+        sources/prefabs/PrefabInstance.cpp
+        sources/prefabs/elements/PrefabElementInstance.cpp
+        sources/prefabs/elements/PrefabElementsSsbo.cpp
+        sources/prefabs/elements/PrefabElement.cpp
+        sources/prefabs/elements/MeshPrefabElement.cpp
+        sources/resources/shaders/builtin/PrefabProgram.cpp
         sources/utils/Transformation.cpp
         sources/utils/Transformable.cpp
-        sources/main/prefabs/PrefabSsbo.cpp
+        sources/prefabs/PrefabSsbo.cpp
 )
-set(ENGINE_HEADERS include/EngineSDK/main/Application.h
-        include/EngineSDK/main/context/IContext.h
-        include/EngineSDK/main/IWindow.h
-        include/EngineSDK/main/IApplicationSettings.h
-        include/EngineSDK/main/DefaultApplicationSettings.h
-        include/EngineSDK/main/scene/IScene.h
-        include/EngineSDK/main/resources/ResourceRequest.h
-        include/EngineSDK/renderer/shaders/ShaderTypeEnum.h
-        include/EngineSDK/renderer/shaders/VertexShader.h
-        include/EngineSDK/renderer/shaders/FragmentShader.h
-        include/EngineSDK/main/resources/ResourceLoader.h
-        include/EngineSDK/main/resources/IResource.h
-        include/EngineSDK/main/resources/Resources.h
-        include/EngineSDK/main/scene/Scene.h
-        include/EngineSDK/renderer/shaders/IShaderProgram.h
-        include/EngineSDK/renderer/shaders/ShaderProgram.h
-        include/EngineSDK/renderer/buffers/ISSBO.h
-        include/EngineSDK/renderer/buffers/SSBO.h
-        include/EngineSDK/renderer/buffers/BufferUsageEnum.h
-        include/EngineSDK/main/resources/shaders/ShaderProgramLoader.h
-        include/EngineSDK/main/buffers/ProgramWideShaderBuffer.h
-        include/EngineSDK/renderer/shaders/IShader.h
-        include/EngineSDK/renderer/shaders/Shader.h
-        include/EngineSDK/main/scene/objects/ISceneObject.h
-        include/EngineSDK/renderer/GL.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/ICamera.h
-        include/EngineSDK/main/scene/actor/IActor.h
+set(ENGINE_HEADERS include/EngineSDK/context/Application.h
+        include/EngineSDK/context/Window.h
+        include/EngineSDK/context/MainWindow.h
+        include/EngineSDK/resources/LoadedResources.h
+        include/EngineSDK/context/ResourcesWindow.h
+        include/EngineSDK/context/IContext.h
+        include/EngineSDK/context/IWindow.h
+        include/EngineSDK/context/IApplicationSettings.h
+        include/EngineSDK/context/DefaultApplicationSettings.h
+        include/EngineSDK/scene/IScene.h
+        include/EngineSDK/resources/shaders/ShaderTypeEnum.h
+        include/EngineSDK/resources/ResourceLoader.h
+        include/EngineSDK/resources/IResource.h
+        include/EngineSDK/resources/Resources.h
+        include/EngineSDK/scene/Scene.h
+        include/EngineSDK/resources/shaders/ShaderProgram.h
+        include/EngineSDK/buffers/SSBO.h
+        include/EngineSDK/buffers/BufferUsageEnum.h
+        include/EngineSDK/resources/shaders/ShaderProgramLoader.h
+        include/EngineSDK/buffers/ProgramWideShaderBuffer.h
+        include/EngineSDK/resources/shaders/Shader.h
+        include/EngineSDK/scene/objects/ISceneObject.h
+        include/EngineSDK/extensions/cameras/ICamera.h
         include/EngineSDK/utils/ModifierKeys.h
         include/EngineSDK/utils/KeyboardKey.h
-        include/EngineSDK/main/scene/objects/SceneObject.h
-        include/EngineSDK/main/scene/objects/extensions/Extension.h
-        include/EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h
-        include/EngineSDK/main/resources/IResourceLoadExecutor.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/CameraExtension.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/CameraKeyboardExtension.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/CameraMouseExtension.h
-        include/EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/PerspectiveProjectionCameraMod.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/IProjectionCameraMod.h
-        include/EngineSDK/main/scene/objects/extensions/cameras/OrbitCameraExtension.h
+        include/EngineSDK/scene/objects/SceneObject.h
+        include/EngineSDK/extensions/Extension.h
+        include/EngineSDK/extensions/BasicRenderExtension.h
+        include/EngineSDK/resources/IResourceLoadExecutor.h
+        include/EngineSDK/extensions/cameras/CameraExtension.h
+        include/EngineSDK/extensions/cameras/CameraKeyboardExtension.h
+        include/EngineSDK/extensions/cameras/CameraMouseExtension.h
+        include/EngineSDK/extensions/ExtensionRegistry.h
+        include/EngineSDK/extensions/cameras/PerspectiveProjectionCameraMod.h
+        include/EngineSDK/extensions/cameras/IProjectionCameraMod.h
+        include/EngineSDK/extensions/cameras/OrbitCameraExtension.h
         include/EngineSDK/utils/MouseButton.h
-        include/EngineSDK/main/scene/objects/extensions/MouseButtonExtension.h
-        include/EngineSDK/main/resources/models/Model3DLoader.h
-        include/EngineSDK/main/scene/objects/extensions/ModelRenderExtension.h
-        include/EngineSDK/main/IApplication.h
-        include/EngineSDK/main/scripting/IScript.h
-        include/EngineSDK/main/scripting/Script.h
-        include/EngineSDK/main/scene/objects/extensions/ExtensionProperty.h
-        include/EngineSDK/main/scene/objects/extensions/MainObjectExtension.h
+        include/EngineSDK/extensions/MouseButtonExtension.h
+        include/EngineSDK/resources/models/Model3DLoader.h
+        include/EngineSDK/extensions/ModelRenderExtension.h
+        include/EngineSDK/context/IApplication.h
+        include/EngineSDK/scripting/IScript.h
+        include/EngineSDK/scripting/Script.h
+        include/EngineSDK/extensions/ExtensionProperty.h
+        include/EngineSDK/extensions/MainObjectExtension.h
         include/EngineSDK/utils/PropertyJsonSerializers.h
         include/EngineSDK/utils/PropertyJsonSerializer.h
-        include/EngineSDK/main/resources/models/Model3DResource.h
-        include/EngineSDK/main/render/IRenderInstance.h
-        include/EngineSDK/main/render/RenderInstanceData.h
-        include/EngineSDK/main/resources/models/Model3DObject.h
-        include/EngineSDK/main/resources/models/IModel3DObject.h
-        include/EngineSDK/main/resources/models/IModel3DResource.h
-        include/EngineSDK/main/render/RenderInstance.h
-        include/EngineSDK/main/render/IInstancedRender.h
-        include/EngineSDK/main/resources/IResourceBundle.h
-        include/EngineSDK/main/resources/FileSystemResourceBundle.h
-        include/EngineSDK/main/resources/ResourceLoaders.h
-        include/EngineSDK/main/resources/IResourceLoaders.h
-        include/EngineSDK/main/render/IRenderable.h
-        include/EngineSDK/main/resources/Resource.h
-        include/EngineSDK/main/resources/textures/ITextureResource.h
-        include/EngineSDK/main/resources/textures/TextureResource.h
-        include/EngineSDK/main/resources/textures/TextureMinFilter.h
-        include/EngineSDK/main/resources/textures/TextureMagFilter.h
-        include/EngineSDK/main/resources/textures/TextureBaseInternalFormat.h
-        include/EngineSDK/main/resources/textures/Texture2DImageFormat.h
-        include/EngineSDK/main/resources/textures/Texture2DType.h
-        include/EngineSDK/main/resources/ResourceType.h
-        include/EngineSDK/main/resources/textures/TextureLoader.h
-        include/EngineSDK/main/scene/objects/extensions/LightExtension.h
-        include/EngineSDK/main/light/ILightInstance.h
-        include/EngineSDK/main/light/ILightSources.h
-        include/EngineSDK/main/light/LightInstance.h
-        include/EngineSDK/main/light/LightInstanceData.h
-        include/EngineSDK/main/light/LightSources.h
-        include/EngineSDK/main/resources/materials/IMaterialResource.h
-        include/EngineSDK/main/resources/materials/MaterialResource.h
-        include/EngineSDK/main/resources/materials/MaterialData.h
-        include/EngineSDK/main/resources/materials/MaterialLoader.h
-        include/EngineSDK/main/resources/ResourceLoadResult.h
+        include/EngineSDK/resources/models/Model3DResource.h
+        include/EngineSDK/render/IRenderInstance.h
+        include/EngineSDK/render/RenderInstanceData.h
+        include/EngineSDK/resources/models/Model3DObject.h
+        include/EngineSDK/resources/models/IModel3DObject.h
+        include/EngineSDK/resources/models/IModel3DResource.h
+        include/EngineSDK/render/RenderInstance.h
+        include/EngineSDK/render/IInstancedRender.h
+        include/EngineSDK/resources/IResourceBundle.h
+        include/EngineSDK/resources/FileSystemResourceBundle.h
+        include/EngineSDK/resources/ResourceLoaders.h
+        include/EngineSDK/resources/IResourceLoaders.h
+        include/EngineSDK/render/IRenderable.h
+        include/EngineSDK/resources/Resource.h
+        include/EngineSDK/resources/textures/ITextureResource.h
+        include/EngineSDK/resources/textures/TextureResource.h
+        include/EngineSDK/resources/textures/TextureMinFilter.h
+        include/EngineSDK/resources/textures/TextureMagFilter.h
+        include/EngineSDK/resources/textures/TextureBaseInternalFormat.h
+        include/EngineSDK/resources/textures/Texture2DImageFormat.h
+        include/EngineSDK/resources/textures/Texture2DType.h
+        include/EngineSDK/resources/ResourceType.h
+        include/EngineSDK/resources/textures/TextureLoader.h
+        include/EngineSDK/extensions/LightExtension.h
+        include/EngineSDK/light/ILightInstance.h
+        include/EngineSDK/light/ILightSources.h
+        include/EngineSDK/light/LightInstance.h
+        include/EngineSDK/light/LightInstanceData.h
+        include/EngineSDK/light/LightSources.h
+        include/EngineSDK/resources/materials/IMaterialResource.h
+        include/EngineSDK/resources/materials/MaterialResource.h
+        include/EngineSDK/resources/materials/MaterialData.h
+        include/EngineSDK/resources/materials/MaterialLoader.h
+        include/EngineSDK/resources/ResourceLoadResult.h
         include/EngineSDK/utils/ISerializable.h
-        include/EngineSDK/main/render/IInitializable.h
-        include/EngineSDK/main/render/Initializable.h
-        include/EngineSDK/main/resources/materials/IMaterialComponent.h
-        include/EngineSDK/main/resources/materials/ColorComponent.h
-        include/EngineSDK/main/prefabs/Prefab.h
-        include/EngineSDK/main/prefabs/PrefabInstance.h
-        include/EngineSDK/main/prefabs/elements/PrefabElementInstance.h
-        include/EngineSDK/main/prefabs/elements/PrefabElementsSsbo.h
-        include/EngineSDK/main/prefabs/elements/PrefabElement.h
-        include/EngineSDK/main/prefabs/elements/MeshPrefabElement.h
-        include/EngineSDK/main/prefabs/IPrefabElementInstance.h
-        include/EngineSDK/main/prefabs/IPrefabInstance.h
-        include/EngineSDK/main/resources/shaders/builtin/PrefabProgram.h
+        include/EngineSDK/render/IInitializable.h
+        include/EngineSDK/render/Initializable.h
+        include/EngineSDK/resources/materials/IMaterialComponent.h
+        include/EngineSDK/resources/materials/ColorComponent.h
+        include/EngineSDK/prefabs/Prefab.h
+        include/EngineSDK/prefabs/PrefabInstance.h
+        include/EngineSDK/prefabs/elements/PrefabElementInstance.h
+        include/EngineSDK/prefabs/elements/PrefabElementsSsbo.h
+        include/EngineSDK/prefabs/elements/PrefabElement.h
+        include/EngineSDK/prefabs/elements/MeshPrefabElement.h
+        include/EngineSDK/prefabs/IPrefabElementInstance.h
+        include/EngineSDK/prefabs/IPrefabInstance.h
+        include/EngineSDK/resources/shaders/builtin/PrefabProgram.h
         include/EngineSDK/utils/Transformation.h
         include/EngineSDK/utils/Transformable.h
-        include/EngineSDK/renderer/shaders/GeometryShader.h
-        include/EngineSDK/main/prefabs/PrefabSsbo.h
+        include/EngineSDK/prefabs/PrefabSsbo.h
 )
+
+foreach (SOURCE IN ITEMS ${ENGINE_SOURCES})
+    if (NOT ${SOURCE} MATCHES "^sources(.*)$" AND ${SOURCE} MATCHES "^(.*)\.cpp$")
+        message(FATAL_ERROR "
+        Fatal Error when checking SDK Sources.
+        File ${SOURCE} is a source file, but not in the sources directory
+        Move the file to the sources directory")
+    endif ()
+    if (${SOURCE} MATCHES "^(.*)\.h$")
+        message(FATAL_ERROR "
+        Fatal Error when checking SDK Sources.
+        File ${SOURCE} is a header file, but not in the ENGINE_HEADERS variable
+        Move the file to the ENGINE_HEADERS variable in CMakeLists.txt")
+    endif ()
+endforeach ()
+
+foreach (HEADER IN ITEMS ${ENGINE_HEADERS})
+    if (NOT ${HEADER} MATCHES "^include(.*)$" AND ${HEADER} MATCHES "^(.*)\.h$")
+        message(FATAL_ERROR "
+        Fatal Error when checking SDK Sources.
+        File ${HEADER} is a header file, but not in the include directory
+        Move the file to the include directory")
+    endif ()
+    if (${HEADER} MATCHES "^(.*)\.cpp$")
+        message(FATAL_ERROR "
+        Fatal Error when checking SDK Sources.
+        File ${HEADER} is a source file, but not in the ENGINE_SOURCES variable
+        Move the file to the ENGINE_SOURCES variable in CMakeLists.txt")
+    endif ()
+endforeach ()
 
 add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 

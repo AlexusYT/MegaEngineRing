@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 #include "ScriptParser.h"
 
-#include "EngineSDK/main/scripting/Script.h"
+#include "EngineSDK/scripting/Script.h"
 #include "project/Project.h"
 #include "project/generatedFiles/GraphicsScript.h"
 #include "project/generators/cpp/CppClass.h"
@@ -36,7 +36,7 @@ void ScriptParser::generateSource(const GraphicsScript* pScript, CppSourceFile &
 
 	std::string scriptName = pScript->getName();
 
-	pSourceFile.addInclude("EngineSDK/main/scripting/Script.h");
+	pSourceFile.addInclude("EngineSDK/scripting/Script.h");
 	pSourceFile.addInclude("EngineUtils/utils/ReportMessage.h");
 	pSourceFile.addInclude("memory");
 	pSourceFile.addInclude("iostream");
@@ -45,12 +45,12 @@ void ScriptParser::generateSource(const GraphicsScript* pScript, CppSourceFile &
 	auto setupMethod = CppMethod::create();
 	setupMethod->setName("setup");
 	setupMethod->setIsOverride(true);
-	setupMethod->setReturnType<sdk::utils::ReportMessagePtr>();
+	setupMethod->setReturnType<sdk::ReportMessagePtr>();
 
 	std::unordered_map<ScriptNodeSlot*, bool> connected;
 	auto nodes = pScript->getScriptNodes();
 
-	setupMethod->addStatement(CppCustomStatement::create(R"(using namespace mer::sdk::main)"));
+	setupMethod->addStatement(CppCustomStatement::create(R"(using namespace mer::sdk)"));
 	setupMethod->addStatement(CppCustomStatement::create(R"(auto extensions = getObject()->getExtensions())"));
 	for (auto [nodeName, node]: nodes) {
 		if (auto extNode = std::dynamic_pointer_cast<ExtensionScriptNode>(node)) {
@@ -89,8 +89,8 @@ void ScriptParser::generateSource(const GraphicsScript* pScript, CppSourceFile &
 		}
 		auto eventNode = eventSlot->getParent();
 		auto setterNode = setterSlot->getParent();
-		sdk::main::Extension* eventExtension;
-		sdk::main::Extension* setterExtension;
+		sdk::Extension* eventExtension;
+		sdk::Extension* setterExtension;
 		if (auto extEventNode = dynamic_cast<ExtensionScriptNode*>(eventNode)) {
 			eventExtension = extEventNode->getExtension();
 		} else {
@@ -115,7 +115,7 @@ void ScriptParser::generateSource(const GraphicsScript* pScript, CppSourceFile &
 
 	auto clazz = CppClass::create(scriptName);
 
-	clazz->setImplementsList({"public mer::sdk::main::Script"});
+	clazz->setImplementsList({"public mer::sdk::Script"});
 	clazz->addDefinition(setupMethod->getDefinition(), AccessModifier::PUBLIC);
 
 	pSourceFile.addDefinition(clazz->getDefinition());
@@ -123,7 +123,7 @@ void ScriptParser::generateSource(const GraphicsScript* pScript, CppSourceFile &
 
 	auto createMethod = CppMethod::create();
 	createMethod->setName("create" + scriptName);
-	createMethod->setReturnType<std::shared_ptr<sdk::main::Script>>();
+	createMethod->setReturnType<std::shared_ptr<sdk::Script>>();
 	createMethod->addStatement(CppCustomStatement::create("return std::make_shared<" + scriptName + ">();"));
 
 	auto externC = CppExternC::create();

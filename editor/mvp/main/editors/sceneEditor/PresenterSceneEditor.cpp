@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 06.02.24.
@@ -21,20 +21,20 @@
 
 #include "PresenterSceneEditor.h"
 
-#include <EngineSDK/main/resources/LoadedResources.h>
-#include <EngineSDK/main/scene/IScene.h>
+#include <EngineSDK/resources/LoadedResources.h>
+#include <EngineSDK/scene/IScene.h>
 
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/scene/objects/ISceneObject.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/scene/objects/ISceneObject.h"
 #include "EngineSDK/utils/MouseButton.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
 #include "project/Project.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class CameraMouseExtension;
 class OrbitCameraExtension;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 
@@ -84,24 +84,24 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 	view->connectCursorMovedSignal(
 		[this](const double pX, const double pY) { modelSceneEditor->onCursorPosChanged(pX, pY); });
 	view->connectMouseButtonPressedSignal([this](unsigned int pButton, double pX, double pY) {
-		const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
+		const auto btn = static_cast<sdk::MouseButton>(pButton);
 		modelSceneEditor->onMouseButtonStateChanged(btn, true, pX, pY);
 	});
 	view->connectMouseButtonReleasedSignal([this](unsigned int pButton, const double pX, const double pY) {
-		const auto btn = static_cast<sdk::utils::MouseButton>(pButton);
+		const auto btn = static_cast<sdk::MouseButton>(pButton);
 		modelSceneEditor->onMouseButtonStateChanged(btn, false, pX, pY);
 	});
 
 	view->connectKeyPressedSignal([this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
-		const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
-		const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
+		const auto key = static_cast<sdk::KeyboardKey>(pKeyCode);
+		const sdk::ModifierKeys mods = convertToModifierKeys(pState);
 		if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, true, mods);
 		return true;
 	});
 
 	view->connectKeyReleasedSignal([this](guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
-		const auto key = static_cast<sdk::utils::KeyboardKey>(pKeyCode);
-		const sdk::utils::ModifierKeys mods = convertToModifierKeys(pState);
+		const auto key = static_cast<sdk::KeyboardKey>(pKeyCode);
+		const sdk::ModifierKeys mods = convertToModifierKeys(pState);
 		if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, false, mods);
 	});
 
@@ -111,8 +111,8 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 
 void PresenterSceneEditor::onGridToggled(bool pState) { modelSceneEditor->toggleGrid(pState); }
 
-sdk::utils::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::ModifierType &pState) {
-	using namespace sdk::utils;
+sdk::ModifierKeys PresenterSceneEditor::convertToModifierKeys(const Gdk::ModifierType &pState) {
+	using namespace sdk;
 	uint8_t mods = 0;
 	if ((pState & Gdk::ModifierType::SHIFT_MASK) == Gdk::ModifierType::SHIFT_MASK) { mods |= ModifierKeys::MOD_SHIFT; }
 	if ((pState & Gdk::ModifierType::CONTROL_MASK) == Gdk::ModifierType::CONTROL_MASK) {

@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@
 
 #include "EditingResourceList.h"
 
-#include "EngineSDK/main/resources/LoadedResources.h"
-#include "EngineSDK/main/resources/ResourceLoadResult.h"
+#include "EngineSDK/resources/LoadedResources.h"
+#include "EngineSDK/resources/ResourceLoadResult.h"
 
 namespace mer::editor::mvp {
-void EditingResourceList::addResource(const std::shared_ptr<sdk::main::IResource> &pResource) {
+void EditingResourceList::addResource(const std::shared_ptr<sdk::IResource> &pResource) {
 	auto uuid = pResource->getUuid();
 	auto iter = resources.find(uuid);
 	if (iter != resources.end()) return;
@@ -34,9 +34,9 @@ void EditingResourceList::addResource(const std::shared_ptr<sdk::main::IResource
 }
 
 void EditingResourceList::loadResource(const std::filesystem::path &pUri) {
-	context->loadResourceAsync(pUri, [this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+	context->loadResourceAsync(pUri, [this](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
 		if (pResult->isErrored()) {
-			sdk::utils::Logger::error(pResult->getError());
+			sdk::Logger::error(pResult->getError());
 			return;
 		}
 		if (pResult->isReady()) addResource(pResult->getResource());

@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
 // Created by alexus on 28.10.24.
 //
 
-#include "../../include/EngineUtils/utils/PropertyBase.h"
+#include "EngineUtils/utils/PropertyBase.h"
 
-#include "../../include/EngineUtils/utils/IPropertyProvider.h"
+#include "EngineUtils/utils/IPropertyProvider.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 PropertyBase::PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription)
 	: name(pName), description(pDescription), provider(pProvider) {
 	if (provider) provider->addProperty(this);
@@ -36,4 +36,4 @@ PropertyBase::~PropertyBase() {
 void PropertyBase::notifyPropertyChanged() {
 	if (provider) provider->propertyChanged(this);
 }
-} // namespace mer::sdk::utils
+} // namespace mer::sdk

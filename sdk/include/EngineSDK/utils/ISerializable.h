@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #define ISERIALIZABLE_H
 #include <nlohmann/json_fwd.hpp>
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
 
 class ISerializable {
@@ -35,6 +35,6 @@ public:
 	virtual void deserialize(const nlohmann::json &pJson, Extension* pExtension) = 0;
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //ISERIALIZABLE_H

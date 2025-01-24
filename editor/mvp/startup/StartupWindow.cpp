@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 28.12.23.
@@ -31,19 +31,19 @@ StartupWindow::StartupWindow(const std::shared_ptr<IWidgetContext> &pContext) : 
 	try {
 		builder = Gtk::Builder::create_from_resource("/ui/CreateOpenProject.ui");
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to init window");
 		msg->setMessage("Error while loading UI from file");
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 		return;
 	}
 	window = builder->get_widget<Gtk::ApplicationWindow>("window_createOpenProj");
 	if (!window) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to init window");
 		msg->setMessage("Window not found");
 		msg->addInfoLine("Window name: window_createOpenProj");
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 		return;
 	}
 	window->set_visible();

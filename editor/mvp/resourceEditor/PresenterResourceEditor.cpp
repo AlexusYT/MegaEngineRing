@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,14 +22,14 @@
 #include "PresenterResourceEditor.h"
 
 #include "EditingResourceList.h"
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/LoadedResources.h"
-#include "EngineSDK/main/resources/ResourceLoadResult.h"
-#include "EngineSDK/main/resources/materials/ColorComponent.h"
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/LoadedResources.h"
+#include "EngineSDK/resources/ResourceLoadResult.h"
+#include "EngineSDK/resources/materials/ColorComponent.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/models/IModel3DResource.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
 #include "IModelResourceEditor.h"
 #include "IViewResourceEditor.h"
 #include "mvp/ApplicationController.h"
@@ -46,7 +46,7 @@ PresenterResourceEditor::PresenterResourceEditor(const std::shared_ptr<IModelRes
 
 	model->setPresenter(this);
 	model->getEditingResources()->connectOnResourceAddedSignal(
-		[this](const std::shared_ptr<sdk::main::IResource> &pResource) {
+		[this](const std::shared_ptr<sdk::IResource> &pResource) {
 			resourcesInfo.emplace(pResource.get(), ResourceInfo());
 			for (auto &[view, info]: viewsInfo) {
 
@@ -55,7 +55,7 @@ PresenterResourceEditor::PresenterResourceEditor(const std::shared_ptr<IModelRes
 			}
 		});
 	model->getEditingResources()->connectOnResourceRemovedSignal(
-		[this](const std::shared_ptr<sdk::main::IResource> &pResource) {
+		[this](const std::shared_ptr<sdk::IResource> &pResource) {
 			resourcesInfo.erase(pResource.get());
 			for (auto &[view, info]: viewsInfo) { view->removeResource(pResource); }
 		});
@@ -72,13 +72,13 @@ void PresenterResourceEditor::chooseFileClicked(IViewResourceEditor* pView) {
 			onPathToFileChanged(pView, path);
 		} catch (const Gtk::DialogError &err) {
 			if (err.code() == Gtk::DialogError::FAILED) {
-				const auto msg = sdk::utils::ReportMessage::create();
+				const auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Failed to show file dialog");
 				msg->setMessage(err.what());
 				pView->displayError(msg);
 			}
 		} catch (const Glib::Error &err) {
-			const auto msg = sdk::utils::ReportMessage::create();
+			const auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to show file dialog");
 			msg->setMessage(err.what());
 			pView->displayError(msg);
@@ -105,33 +105,33 @@ void PresenterResourceEditor::onPathToFileChanged(IViewResourceEditor* pView, co
 	ResourceInfo* info = getResourceInfo(resource.get());
 	if (!info) return;
 	auto resourceType = resource->getResourceType();
-	if (resourceType == sdk::main::ResourceType::MODEL) {
+	if (resourceType == sdk::ResourceType::MODEL) {
 
 		auto objReader = std::make_shared<ObjFileResourceReader>(pPath);
 		if (auto msg = objReader->checkType(); msg) {
-			sdk::utils::Logger::error(msg);
+			sdk::Logger::error(msg);
 			return;
 		}
 		info->resourceReader = objReader;
 		auto objects = objReader->getObjectsName();
-		std::vector<std::shared_ptr<sdk::main::IModel3DObject>> objectsList;
+		std::vector<std::shared_ptr<sdk::IModel3DObject>> objectsList;
 		for (auto objectName: objects) { objectsList.emplace_back(objReader->generateObject(objectName)); }
 
 		auto comp = [](auto pA, auto pB) { return *pA < *pB; };
 		std::ranges::sort(objectsList, comp);
-		std::vector<std::shared_ptr<sdk::main::IModel3DObject>> tmpList;
+		std::vector<std::shared_ptr<sdk::IModel3DObject>> tmpList;
 		std::ranges::set_difference(objectsList, info->resourceObjects, std::back_inserter(tmpList), comp);
 		std::ranges::set_difference(tmpList, info->fileObjects, std::back_inserter(info->fileObjects), comp);
 		info->srcFilePath = pPath;
 		pView->displayObjects(info->fileObjects, true);
-	} else if (resourceType == sdk::main::ResourceType::TEXTURE) {
+	} else if (resourceType == sdk::ResourceType::TEXTURE) {
 
 		auto reader = std::make_shared<PngFileResourceReader>(pPath);
 		if (auto msg = reader->checkType(); msg) {
-			sdk::utils::Logger::error(msg);
+			sdk::Logger::error(msg);
 			return;
 		}
-		reader->generateResourceData(std::dynamic_pointer_cast<sdk::main::ITextureResource>(resource));
+		reader->generateResourceData(std::dynamic_pointer_cast<sdk::ITextureResource>(resource));
 		saveResource(resource);
 	}
 	pView->displayChosenPath(pPath.string());
@@ -143,11 +143,11 @@ void PresenterResourceEditor::savePathClicked(IViewResourceEditor* pView, const 
 	std::string extension;
 	switch (resource->getResourceType()) {
 
-		case sdk::main::ResourceType::MODEL: extension = ".enmodel"; break;
-		case sdk::main::ResourceType::TEXTURE: extension = ".entex"; break;
-		case sdk::main::ResourceType::MATERIAL: extension = ".enmat"; break;
-		case sdk::main::ResourceType::SHADER:
-		case sdk::main::ResourceType::NONE: return;
+		case sdk::ResourceType::MODEL: extension = ".enmodel"; break;
+		case sdk::ResourceType::TEXTURE: extension = ".entex"; break;
+		case sdk::ResourceType::MATERIAL: extension = ".enmat"; break;
+		case sdk::ResourceType::SHADER:
+		case sdk::ResourceType::NONE: return;
 	}
 
 	auto res = model->getEditingResources()->getContext()->getResources();
@@ -176,7 +176,7 @@ void PresenterResourceEditor::addView(const std::shared_ptr<IView> &pNewView) {
 	ViewInfo info;
 	viewsInfo.emplace(view.get(), info);
 	if (!res.empty()) {
-		std::shared_ptr<sdk::main::IResource> lastResource;
+		std::shared_ptr<sdk::IResource> lastResource;
 		for (const auto &resource: res | std::views::values) {
 			view->appendResource(resource);
 			lastResource = resource;
@@ -196,7 +196,7 @@ void PresenterResourceEditor::removeView(const std::shared_ptr<IView> &pOldView)
 	view->closeView();
 }
 
-std::shared_ptr<sdk::main::IResource> PresenterResourceEditor::getSelectedResource(IViewResourceEditor* pView) {
+std::shared_ptr<sdk::IResource> PresenterResourceEditor::getSelectedResource(IViewResourceEditor* pView) {
 	const auto iter = viewsInfo.find(pView);
 	if (iter == viewsInfo.end()) { return nullptr; }
 	return iter->second.selectedResource;
@@ -204,14 +204,14 @@ std::shared_ptr<sdk::main::IResource> PresenterResourceEditor::getSelectedResour
 
 std::filesystem::path PresenterResourceEditor::getDataPath() { return model->getPathToDataDir(); }
 
-void PresenterResourceEditor::onSelectionChanged(const std::shared_ptr<sdk::main::IResource> &pResource,
+void PresenterResourceEditor::onSelectionChanged(const std::shared_ptr<sdk::IResource> &pResource,
 												 IViewResourceEditor* pView) {
 	auto info = getViewInfo(pView);
 	if (!info) return;
 	info->selectedResource = pResource;
 	auto resInfo = getResourceInfo(pResource.get());
 	if (!resInfo) return;
-	if (auto modelResource = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
+	if (auto modelResource = std::dynamic_pointer_cast<sdk::IModel3DResource>(pResource)) {
 		pView->switchTo("model");
 		auto modelObj = modelResource->getModelObjects() | std::views::values;
 		resInfo->resourceObjects = std::vector(modelObj.begin(), modelObj.end());
@@ -221,21 +221,21 @@ void PresenterResourceEditor::onSelectionChanged(const std::shared_ptr<sdk::main
 		pView->displayObjects(resInfo->resourceObjects, false);
 		pView->displayObjects(resInfo->fileObjects, true);
 		pView->displayChosenPath(resInfo->srcFilePath.string());
-	} else if (auto textureResource = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
+	} else if (auto textureResource = std::dynamic_pointer_cast<sdk::ITextureResource>(pResource)) {
 		pView->switchTo("texture");
 		pView->displayChosenPath(resInfo->srcFilePath.string());
-	} else if (auto materialResource = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResource)) {
+	} else if (auto materialResource = std::dynamic_pointer_cast<sdk::IMaterialResource>(pResource)) {
 		pView->switchTo("material");
 		pView->displayChosenPath(resInfo->srcFilePath.string());
 		pView->displayMaterial(materialResource);
 	}
 }
 
-void PresenterResourceEditor::removeObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToRemove,
+void PresenterResourceEditor::removeObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToRemove,
 										   IViewResourceEditor* pView) {
 	auto resource = getSelectedResource(pView);
 	if (!resource) return;
-	auto modelResource = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(resource);
+	auto modelResource = std::dynamic_pointer_cast<sdk::IModel3DResource>(resource);
 	if (!modelResource) return;
 	auto info = getResourceInfo(resource.get());
 	if (!info) return;
@@ -248,12 +248,12 @@ void PresenterResourceEditor::removeObject(const std::shared_ptr<sdk::main::IMod
 	saveResource(resource);
 }
 
-void PresenterResourceEditor::addObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToAdd,
+void PresenterResourceEditor::addObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToAdd,
 										IViewResourceEditor* pView) {
 
 	auto resource = getSelectedResource(pView);
 	if (!resource) return;
-	auto modelResource = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(resource);
+	auto modelResource = std::dynamic_pointer_cast<sdk::IModel3DResource>(resource);
 	if (!modelResource) return;
 	auto info = getResourceInfo(resource.get());
 	if (!info) return;
@@ -266,16 +266,16 @@ void PresenterResourceEditor::addObject(const std::shared_ptr<sdk::main::IModel3
 	saveResource(resource);
 }
 
-sdk::main::IResourceLoadExecutor* PresenterResourceEditor::getResourceLoader() {
+sdk::IResourceLoadExecutor* PresenterResourceEditor::getResourceLoader() {
 
 	return model->getEditingResources()->getContext().get();
 }
 
 void PresenterResourceEditor::onMaterialBaseColorChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 														 IViewResourceEditor* pView) {
-	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::IMaterialComponent> &pComponent) {
 		const auto resource = getSelectedResource(pView);
-		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		const auto material = std::dynamic_pointer_cast<sdk::IMaterialResource>(resource);
 		if (!material) return;
 		material->setAlbedo(pComponent);
 		saveResource(resource);
@@ -284,9 +284,9 @@ void PresenterResourceEditor::onMaterialBaseColorChanged(const std::shared_ptr<u
 
 void PresenterResourceEditor::onMaterialMetallicChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 														IViewResourceEditor* pView) {
-	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::IMaterialComponent> &pComponent) {
 		const auto resource = getSelectedResource(pView);
-		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		const auto material = std::dynamic_pointer_cast<sdk::IMaterialResource>(resource);
 		if (!material) return;
 		material->setMetallic(pComponent);
 		saveResource(resource);
@@ -295,9 +295,9 @@ void PresenterResourceEditor::onMaterialMetallicChanged(const std::shared_ptr<ui
 
 void PresenterResourceEditor::onMaterialNormalChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 													  IViewResourceEditor* pView) {
-	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::IMaterialComponent> &pComponent) {
 		const auto resource = getSelectedResource(pView);
-		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		const auto material = std::dynamic_pointer_cast<sdk::IMaterialResource>(resource);
 		if (!material) return;
 		material->setNormal(pComponent);
 		saveResource(resource);
@@ -306,9 +306,9 @@ void PresenterResourceEditor::onMaterialNormalChanged(const std::shared_ptr<ui::
 
 void PresenterResourceEditor::onMaterialRoughnessChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 														 IViewResourceEditor* pView) {
-	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::IMaterialComponent> &pComponent) {
 		const auto resource = getSelectedResource(pView);
-		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		const auto material = std::dynamic_pointer_cast<sdk::IMaterialResource>(resource);
 		if (!material) return;
 		material->setRoughness(pComponent);
 		saveResource(resource);
@@ -317,9 +317,9 @@ void PresenterResourceEditor::onMaterialRoughnessChanged(const std::shared_ptr<u
 
 void PresenterResourceEditor::onMaterialAOChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 												  IViewResourceEditor* pView) {
-	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+	getComponentFromResult(pResult, [this, pView](const std::shared_ptr<sdk::IMaterialComponent> &pComponent) {
 		const auto resource = getSelectedResource(pView);
-		const auto material = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(resource);
+		const auto material = std::dynamic_pointer_cast<sdk::IMaterialResource>(resource);
 		if (!material) return;
 		material->setAo(pComponent);
 		saveResource(resource);
@@ -333,24 +333,24 @@ PresenterResourceEditor::ViewInfo* PresenterResourceEditor::getViewInfo(IViewRes
 	return &iter->second;
 }
 
-PresenterResourceEditor::ResourceInfo* PresenterResourceEditor::getResourceInfo(sdk::main::IResource* pResource) {
+PresenterResourceEditor::ResourceInfo* PresenterResourceEditor::getResourceInfo(sdk::IResource* pResource) {
 	const auto iter = resourcesInfo.find(pResource);
 	if (iter == resourcesInfo.end()) { return nullptr; }
 	return &iter->second;
 }
 
-sdk::utils::ReportMessagePtr PresenterResourceEditor::saveResource(
-	const std::shared_ptr<sdk::main::IResource> &pResource, bool pIsComplete) {
+sdk::ReportMessagePtr PresenterResourceEditor::saveResource(
+	const std::shared_ptr<sdk::IResource> &pResource, bool pIsComplete) {
 	auto uri = pResource->getResourceUri();
 	auto savePath = getDataPath() / uri;
-	sdk::utils::ReportMessagePtr error{};
-	if (auto res = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(pResource)) {
+	sdk::ReportMessagePtr error{};
+	if (auto res = std::dynamic_pointer_cast<sdk::IModel3DResource>(pResource)) {
 		error = Model3DResourceSaver::saveToFile(savePath, res);
 	}
-	if (auto res = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pResource)) {
+	if (auto res = std::dynamic_pointer_cast<sdk::ITextureResource>(pResource)) {
 		error = TextureResourceSaver::saveToFile(savePath, res);
 	}
-	if (auto res = std::dynamic_pointer_cast<sdk::main::IMaterialResource>(pResource)) {
+	if (auto res = std::dynamic_pointer_cast<sdk::IMaterialResource>(pResource)) {
 		error = MaterialResourceSaver::saveToFile(savePath, res);
 	}
 	if (error) return error;
@@ -365,15 +365,15 @@ sdk::utils::ReportMessagePtr PresenterResourceEditor::saveResource(
 
 void PresenterResourceEditor::getComponentFromResult(
 	const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
-	const sigc::slot<void(const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent)> &pSlot) const {
+	const sigc::slot<void(const std::shared_ptr<sdk::IMaterialComponent> &pComponent)> &pSlot) const {
 	if (const auto result = std::dynamic_pointer_cast<ui::SourceSelectionTexture::Result>(pResult)) {
 		auto texture = result->getSelectionResult();
 		auto context = model->getEditingResources()->getContext();
 		context->loadResourceAsync(
 			texture->asResource()->getResourceUri(),
-			[pSlot, this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pLoadResult) {
+			[pSlot, this](const std::shared_ptr<sdk::ResourceLoadResult> &pLoadResult) {
 				if (!pLoadResult->isReady()) return;
-				pSlot(std::dynamic_pointer_cast<sdk::main::IMaterialComponent>(pLoadResult->getResource()));
+				pSlot(std::dynamic_pointer_cast<sdk::IMaterialComponent>(pLoadResult->getResource()));
 			});
 		return;
 	}

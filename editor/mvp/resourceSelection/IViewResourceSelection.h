@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ public:
 	virtual void showFileDialog(const std::shared_ptr<Gtk::FileDialog> &pDialog,
 								const sigc::slot<void(std::shared_ptr<Gio::AsyncResult> &pResult)> &pSlot) = 0;
 
-	virtual void displayError(const sdk::utils::ReportMessagePtr &pError) = 0;
+	virtual void displayError(const sdk::ReportMessagePtr &pError) = 0;
 
 	virtual void displayMessage(const std::string &pMessage) = 0;
 

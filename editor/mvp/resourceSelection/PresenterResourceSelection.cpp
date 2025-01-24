@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,11 +21,12 @@
 
 #include "PresenterResourceSelection.h"
 
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/resources/ResourceLoadResult.h"
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionProperty.h"
+#include "EngineSDK/extensions/ExtensionProperty.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/resources/ResourceLoadResult.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/models/IModel3DResource.h"
 #include "IModelResourceSelection.h"
 #include "IViewResourceSelection.h"
 #include "mvp/ApplicationController.h"
@@ -38,7 +39,7 @@ PresenterResourceSelection::PresenterResourceSelection(const std::shared_ptr<IMo
 
 	model->setPresenter(this);
 	view->setPresenter(this);
-	if (auto property = dynamic_cast<sdk::main::ExtensionProperty<std::shared_ptr<sdk::main::IModel3DObject>>*>(
+	if (auto property = dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(
 			model->getPropertyBase())) {
 		auto type = model->getElementType();
 		if (type == ExplorerElementType::NONE) model->setElementType(ExplorerElementType::RESOURCE_MODEL_OBJECT);
@@ -50,14 +51,14 @@ PresenterResourceSelection::PresenterResourceSelection(const std::shared_ptr<IMo
 void PresenterResourceSelection::selectClicked() {
 
 	if (model->getElementType() == ExplorerElementType::RESOURCE_MODEL_OBJECT) {
-		std::shared_ptr<sdk::main::IModel3DObject> object;
-		if (auto modelResource = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(model->getSelectedResource())) {
+		std::shared_ptr<sdk::IModel3DObject> object;
+		if (auto modelResource = std::dynamic_pointer_cast<sdk::IModel3DResource>(model->getSelectedResource())) {
 			auto objectName = view->getSelectedObject();
 			if (objectName.empty()) return;
 			object = modelResource->getModelObject(objectName);
 		}
 		if (!object) return;
-		if (auto property = dynamic_cast<sdk::main::ExtensionProperty<std::shared_ptr<sdk::main::IModel3DObject>>*>(
+		if (auto property = dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(
 				model->getPropertyBase())) {
 			property->setValue(object);
 			getAppController()->stop(this);
@@ -70,7 +71,7 @@ void PresenterResourceSelection::onCancelClicked() { getAppController()->stop(th
 void PresenterResourceSelection::unsetClicked() {
 	auto propertyBase = model->getPropertyBase();
 	if (auto property =
-			dynamic_cast<sdk::main::ExtensionProperty<std::shared_ptr<sdk::main::IModel3DObject>>*>(propertyBase)) {
+			dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(propertyBase)) {
 		property->setValue(nullptr);
 		getAppController()->stop(this);
 	}
@@ -87,22 +88,22 @@ void PresenterResourceSelection::onElementSelectionChanged(ProjectExplorerElemen
 		auto executor = loadedScene->getResourceLoadExecutor();
 		if (!executor) return;
 		executor->loadResourceAsync(
-			pElement->getRelativePath(), [this](const std::shared_ptr<sdk::main::ResourceLoadResult> &pResult) {
+			pElement->getRelativePath(), [this](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
 				//TODO Display error
 				if (pResult->isErrored()) {
-					sdk::utils::Logger::error(pResult->getError());
+					sdk::Logger::error(pResult->getError());
 					return;
 				}
 				if (!pResult->isReady()) return;
 				auto resourceResult = pResult->getResource();
 				model->setSelectedResource(resourceResult);
 
-				auto property = dynamic_cast<sdk::main::ExtensionProperty<std::shared_ptr<sdk::main::IModel3DObject>>*>(
+				auto property = dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(
 					model->getPropertyBase());
 				auto &currentObject = property->getValue();
 
 				bool hasCurrentObject{};
-				if (auto modelResource = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(resourceResult)) {
+				if (auto modelResource = std::dynamic_pointer_cast<sdk::IModel3DResource>(resourceResult)) {
 					std::vector<std::string> objects;
 					for (auto [name, object]: modelResource->getModelObjects()) {
 						if (currentObject && object == currentObject)

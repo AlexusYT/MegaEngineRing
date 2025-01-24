@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 26.01.24.
@@ -21,7 +21,7 @@
 
 #ifndef PRESENTERMAIN_H
 #define PRESENTERMAIN_H
-#include "EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h"
+#include "EngineSDK/extensions/BasicRenderExtension.h"
 #include "IPresenterMain.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 
@@ -56,17 +56,11 @@ public:
 	~PresenterMain() override;
 
 private:
-	void generateCmakeFiles(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
-
-	void build(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
-
-	void runProject(const sigc::slot<void(int pExitCode)> &pOnFinish = {}) const;
-
 	void logMessage(int pId, const std::string &pMessage) const;
 
 	void logError(int pId, const std::string &pMessage) const;
 
-	void displayError(const sdk::utils::ReportMessagePtr &pMsg) override;
+	void displayError(const sdk::ReportMessagePtr &pMsg) override;
 
 	void onLayoutLoadFatal() override;
 
@@ -85,9 +79,9 @@ public:
 	std::shared_ptr<IView> createView(const IPresenter* pPresenter,
 									  const std::shared_ptr<MultiPanedContext> &pContext) override;
 	void readJsonForTab(int32_t pIndex,
-						const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pCallback) override;
+						const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pCallback) override;
 
-	void selectResourceForProperty(sdk::utils::PropertyBase* pProperty) override;
+	void selectResourceForProperty(sdk::PropertyBase* pProperty) override;
 
 	void addExtension(const std::string &pExtensionName) override;
 
@@ -97,11 +91,11 @@ public:
 
 	void removeObject(ExplorerObject* pObjectToRemove) override;
 
-	void removeExtension(sdk::main::Extension* pExtensionToRemove) override;
+	void removeExtension(sdk::Extension* pExtensionToRemove) override;
 
 	void openFile(const std::filesystem::path &pPathToFile) override;
 
-	void createResource(const std::filesystem::path &pPathToCreate, sdk::main::ResourceType pType) override;
+	void createResource(const std::filesystem::path &pPathToCreate, sdk::ResourceType pType) override;
 
 	void createScene(const std::filesystem::path &pPathToCreate) override;
 

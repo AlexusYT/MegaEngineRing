@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,10 +23,10 @@
 #define OBJFILERESOURCEREADER_H
 #include "FileResourceReader.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IModel3DObject;
 class IModel3DResource;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 
 namespace mer::editor::mvp {
@@ -53,7 +53,7 @@ class ObjFileResourceReader : public FileResourceReader {
 public:
 	explicit ObjFileResourceReader(const std::filesystem::path &pPath) : FileResourceReader(pPath) {}
 
-	sdk::utils::ReportMessagePtr checkType() override;
+	sdk::ReportMessagePtr checkType() override;
 
 	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<Obj>> &getObjects() const { return objects; }
 
@@ -65,9 +65,9 @@ public:
 		return vec;
 	}
 
-	std::shared_ptr<sdk::main::IModel3DResource> generateResource(const std::vector<std::string> &pObjectsToSave) const;
+	std::shared_ptr<sdk::IModel3DResource> generateResource(const std::vector<std::string> &pObjectsToSave) const;
 
-	std::shared_ptr<sdk::main::IModel3DObject> generateObject(const std::string &pObjectToSave) const;
+	std::shared_ptr<sdk::IModel3DObject> generateObject(const std::string &pObjectToSave) const;
 
 
 private:

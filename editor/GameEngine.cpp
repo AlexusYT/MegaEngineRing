@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 05.12.23.
@@ -52,7 +52,7 @@ public:
 		std::shared_ptr<Gtk::Application> application = Gtk::Application::create("org.gtkmm.example");
 
 		appController->setApp(application);
-		utils::EngineOptionGroup group;
+		EngineOptionGroup group;
 		application->add_option_group(group);
 
 		application->signal_activate().connect(&GameEngineImpl::startup);
@@ -64,16 +64,16 @@ public:
 	}
 
 	static void signals(int pSig) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Signal handled");
 		msg->setMessage("Aborting...");
 		msg->addInfoLine("Signal: {}", pSig);
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 		std::exit(-1);
 	}
 
 	static void startup() {
-		using namespace mer::sdk::utils;
+		using namespace mer::sdk;
 		const std::filesystem::path logPath = Globals::getLogPath() / "latest.log";
 		if (auto message = Logger::openLog(logPath)) {
 			Logger::error("Log file cannot be open, so logging to file feature won't be available");

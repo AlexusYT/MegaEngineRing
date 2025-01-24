@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -28,24 +28,24 @@ namespace mer::editor::ui {
 class ResourceSelectorWidget;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IMaterialResource;
 class IModel3DObject;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 
 class OpenedResource : public Glib::Object {
-	std::shared_ptr<sdk::main::IResource> resource{};
+	std::shared_ptr<sdk::IResource> resource{};
 
-	explicit OpenedResource(const std::shared_ptr<sdk::main::IResource> &pResource) : resource(pResource) {}
+	explicit OpenedResource(const std::shared_ptr<sdk::IResource> &pResource) : resource(pResource) {}
 
 public:
-	static std::shared_ptr<OpenedResource> create(const std::shared_ptr<sdk::main::IResource> &pResource) {
+	static std::shared_ptr<OpenedResource> create(const std::shared_ptr<sdk::IResource> &pResource) {
 		return Glib::make_refptr_for_instance(new OpenedResource(pResource));
 	}
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::IResource> &getResource() const { return resource; }
+	[[nodiscard]] const std::shared_ptr<sdk::IResource> &getResource() const { return resource; }
 
 	std::string getName() const { return resource->getResourceUri().string(); }
 
@@ -97,7 +97,7 @@ public:
 		pDialog->open(*dynamic_cast<Gtk::Window*>(widget->get_root()), pSlot);
 	}
 
-	void displayError(const sdk::utils::ReportMessagePtr &pError) override;
+	void displayError(const sdk::ReportMessagePtr &pError) override;
 
 	void displayChosenPath(const std::string &pPath) override;
 
@@ -107,7 +107,7 @@ public:
 
 	void displayMessage(const std::string &pMessage) override;
 
-	void displayObjects(const std::vector<std::shared_ptr<sdk::main::IModel3DObject>> &pObjects,
+	void displayObjects(const std::vector<std::shared_ptr<sdk::IModel3DObject>> &pObjects,
 						bool pFileObjects) override;
 
 	void setStackVisibility(bool pState) override;
@@ -116,26 +116,26 @@ public:
 
 	std::vector<std::string> getSelectedObjects() override;
 
-	void appendResource(const std::shared_ptr<sdk::main::IResource> &pNewResource) override;
+	void appendResource(const std::shared_ptr<sdk::IResource> &pNewResource) override;
 
-	void removeResource(const std::shared_ptr<sdk::main::IResource> &pResource) override;
+	void removeResource(const std::shared_ptr<sdk::IResource> &pResource) override;
 
-	void selectResource(const std::shared_ptr<sdk::main::IResource> &pResource) override;
+	void selectResource(const std::shared_ptr<sdk::IResource> &pResource) override;
 
 private:
 	static void markErrored(Gtk::Widget* pWidget);
 
 	static void unmarkErrored(Gtk::Widget* pWidget);
 
-	void updateUnsavedDialog(const std::shared_ptr<sdk::main::IResource> &pResource) const;
+	void updateUnsavedDialog(const std::shared_ptr<sdk::IResource> &pResource) const;
 
-	void updateResourcePath(const std::shared_ptr<sdk::main::IResource> &pResource) const;
+	void updateResourcePath(const std::shared_ptr<sdk::IResource> &pResource) const;
 
 	void setupColumnView();
 
 	Gtk::Entry* getFilePathEntry() const;
 
-	void displayMaterial(const std::shared_ptr<sdk::main::IMaterialResource> &pMaterialResource) override;
+	void displayMaterial(const std::shared_ptr<sdk::IMaterialResource> &pMaterialResource) override;
 
 	ui::ResourceSelectorWidget* addNewSelector(const std::string &pLabelText, int pRowPos) const;
 };

@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -61,10 +61,10 @@ size_t CanvasWidget::addElement(CanvasElement* pElement) {
 	return elements.size() - 1;
 }
 
-sdk::utils::ReportMessagePtr CanvasWidget::removeElement(CanvasElement* pElement) {
+sdk::ReportMessagePtr CanvasWidget::removeElement(CanvasElement* pElement) {
 	auto iter = elements.find(pElement);
 	if (iter == elements.end()) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to remove element");
 		msg->setMessage("Element not found");
 		msg->addInfoLine("Element typename: " + Utils::getTypeName(pElement));

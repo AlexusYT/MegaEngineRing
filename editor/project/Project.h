@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 12.12.23.
@@ -29,7 +29,7 @@
 #include "generatedFiles/GeneratedFiles.h"
 #include "sceneObjects/EditorSceneObject.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Application;
 }
 
@@ -53,11 +53,11 @@ class Project : public std::enable_shared_from_this<Project> {
 	std::shared_ptr<ApplicationInfo> applicationInfo;
 	std::shared_ptr<ScriptParser> scriptParser;
 
-	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onErrorSignal;
+	sigc::signal<void(const sdk::ReportMessagePtr &pError)> onErrorSignal;
 	std::atomic<bool> editorLibLoading{};
-	std::atomic<sdk::utils::ReportMessagePtr> editorLibError{nullptr};
+	std::atomic<sdk::ReportMessagePtr> editorLibError{nullptr};
 
-	std::shared_ptr<sdk::main::Application> application;
+	std::shared_ptr<sdk::Application> application;
 	Project();
 
 public:
@@ -65,38 +65,17 @@ public:
 
 	static std::shared_ptr<Project> create() { return std::shared_ptr<Project>(new (std::nothrow) Project()); }
 
-	sdk::utils::ReportMessagePtr openDatabase();
+	sdk::ReportMessagePtr openDatabase();
 
 	void initProject();
 
-	sdk::utils::ReportMessagePtr loadProject();
+	sdk::ReportMessagePtr loadProject();
 
-	sdk::utils::ReportMessagePtr saveProject();
+	sdk::ReportMessagePtr saveProject();
 
-	sdk::utils::ReportMessagePtr saveFiles() const;
-
-	sdk::utils::ReportMessagePtr generateMainFile() const;
+	sdk::ReportMessagePtr saveFiles() const;
 
 	Glib::RefPtr<Gio::SimpleActionGroup> getActionGroups() const;
-
-	using CallbackSlot = sigc::slot<void(const std::string &pLogLine)>;
-
-	int reloadCMake(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const;
-
-	int build(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
-		return build("GameEngine_exe", pCoutCallback, pCerrCallback);
-	}
-
-	int build(const std::string &pTarget, const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const {
-		return build(pTarget, "dev", pCoutCallback, pCerrCallback);
-	}
-
-	int build(const std::string &pTarget, const std::string &pPreset, const CallbackSlot &pCoutCallback,
-			  const CallbackSlot &pCerrCallback) const;
-
-	int run(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const;
-
-	int runDebug(const CallbackSlot &pCoutCallback, const CallbackSlot &pCerrCallback) const;
 
 	[[nodiscard]] const std::filesystem::path &getProjectPath() { return projectPath; }
 
@@ -127,15 +106,15 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<SQLite::Database> &getDatabase() const { return database; }
 
-	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
+	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pSlot) {
 		return onErrorSignal.connect(pSlot);
 	}
 
 	[[nodiscard]] const std::atomic<bool> &getEditorLibLoading() const { return editorLibLoading; }
 
-	[[nodiscard]] const std::atomic<sdk::utils::ReportMessagePtr> &getEditorLibError() const { return editorLibError; }
+	[[nodiscard]] const std::atomic<sdk::ReportMessagePtr> &getEditorLibError() const { return editorLibError; }
 
-	void errorOccurred(const sdk::utils::ReportMessagePtr &pError) const { onErrorSignal(pError); }
+	void errorOccurred(const sdk::ReportMessagePtr &pError) const { onErrorSignal(pError); }
 
 	[[nodiscard]] const std::shared_ptr<ScriptParser> &getScriptParser() const { return scriptParser; }
 

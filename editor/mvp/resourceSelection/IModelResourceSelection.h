@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,13 +22,13 @@
 #ifndef IMODELRESOURCESELECTION_H
 #define IMODELRESOURCESELECTION_H
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class PropertyBase;
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResource;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::project {
 class LoadedScene;
@@ -45,17 +45,17 @@ public:
 
 	virtual void setPresenter(IPresenterResourceSelection* pPresenter) = 0;
 
-	[[nodiscard]] virtual sdk::utils::PropertyBase* getPropertyBase() const = 0;
+	[[nodiscard]] virtual sdk::PropertyBase* getPropertyBase() const = 0;
 
-	virtual void setPropertyBase(sdk::utils::PropertyBase* pPropertyBase) = 0;
+	virtual void setPropertyBase(sdk::PropertyBase* pPropertyBase) = 0;
 
 	virtual void setLoadedScene(const std::shared_ptr<project::LoadedScene> &pLoadedScene) = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<project::LoadedScene> &getLoadedScene() const = 0;
 
-	virtual void setSelectedResource(const std::shared_ptr<sdk::main::IResource> &pSelectedResource) = 0;
+	virtual void setSelectedResource(const std::shared_ptr<sdk::IResource> &pSelectedResource) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::main::IResource> &getSelectedResource() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<sdk::IResource> &getSelectedResource() const = 0;
 
 	[[nodiscard]] virtual ExplorerElementType getElementType() const = 0;
 

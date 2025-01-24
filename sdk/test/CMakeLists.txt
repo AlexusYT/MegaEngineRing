@@ -12,7 +12,7 @@ include(GoogleTest)
 
 # ---- Tests ----
 
-add_executable(MegaEngineSDK_test source/main/scene/objects/extensions/CameraExtensionTests.cpp
+add_executable(MegaEngineSDK_test source/main/extensions/CameraExtensionTests.cpp
         source/main/resources/models/ObjModelLoaderTests.cpp
         source/main/prefabs/PrefabTests.cpp
         source/utils/TransformationTests.cpp

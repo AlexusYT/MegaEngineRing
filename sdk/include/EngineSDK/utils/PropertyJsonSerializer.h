@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -24,25 +24,25 @@
 
 #include <nlohmann/json.hpp>
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
 }
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 template<class T>
 struct PropertyJsonSerializer {
 
 	template<std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
-	static nlohmann::json serialize(const T &pValue, main::Extension* /*pExtension*/) {
+	static nlohmann::json serialize(const T &pValue, Extension* /*pExtension*/) {
 		return pValue;
 	}
 
 	template<std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
-	static T deserialize(const nlohmann::json &pJson, main::Extension* /*pExtension*/) {
+	static T deserialize(const nlohmann::json &pJson, Extension* /*pExtension*/) {
 		return pJson.get<T>();
 	}
 };
-} // namespace mer::sdk::utils
+} // namespace mer::sdk
 
 
 #endif //PROPERTYJSONSERIALIZER_H

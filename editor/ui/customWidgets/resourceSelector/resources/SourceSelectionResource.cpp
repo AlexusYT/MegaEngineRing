@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 
 #include "SourceSelectionResource.h"
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/resources/LoadedResources.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/resources/LoadedResources.h"
 #include "ui/customWidgets/resourceSelector/ResourceSelectorWidget.h"
 
 namespace mer::editor::ui {
 const std::string &ResourceElement::getName() const { return resource->getResourceName(); }
 
-SourceSelectionResource::SourceSelectionResource(sdk::main::IResourceLoadExecutor* pLoader) : loader(pLoader) {}
+SourceSelectionResource::SourceSelectionResource(sdk::IResourceLoadExecutor* pLoader) : loader(pLoader) {}
 
 Gtk::Widget* SourceSelectionResource::getWidget() {
 	scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
@@ -108,7 +108,7 @@ void SourceSelectionResource::onShow() {
 		});
 }
 
-std::shared_ptr<Gtk::TreeListRow> SourceSelectionResource::findRow(const sdk::main::IResource* pResource) const {
+std::shared_ptr<Gtk::TreeListRow> SourceSelectionResource::findRow(const sdk::IResource* pResource) const {
 	auto selection = std::dynamic_pointer_cast<Gtk::SingleSelection>(listView->get_model());
 
 	for (auto i = 0u, maxI = selection->get_n_items(); i < maxI; ++i) {

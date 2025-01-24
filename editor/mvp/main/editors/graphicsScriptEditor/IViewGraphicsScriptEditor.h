@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ public:
 
 	virtual CanvasElement* getSelectedElement() = 0;
 
-	virtual sdk::utils::ReportMessagePtr removeElement(CanvasElement* pElement) = 0;
+	virtual sdk::ReportMessagePtr removeElement(CanvasElement* pElement) = 0;
 
 	virtual sigc::connection connectKeyPressedEvent(
 		const sigc::slot<bool(uint32_t pKeyVal, uint32_t pKeyCode, Gdk::ModifierType pState)> &pSlot, bool pAfter) = 0;

@@ -21,26 +21,8 @@ add_library(
         resources.cpp
         GameEngine.cpp
         mvp/main/MainWindow.cpp
-        graphic/shaders/ShadersList.cpp
-        graphic/shaders/ShadersList.h
-        graphic/ProgramWideSettings.cpp
-        graphic/objects/Door.h
-        graphic/renderers/instanced/InstancedSceneMesh.cpp
-        graphic/renderers/renderBuffers/RenderColorBuffer.h
-        graphic/renderers/renderBuffers/RenderIndicesBuffer.h
-        graphic/renderers/SceneMeshBase.cpp
-        graphic/renderers/instanced/MeshInstance.cpp
-        graphic/renderers/SceneMesh.cpp
-        graphic/renderers/SceneMesh.h
-        graphic/renderers/SceneMeshFwd.h
-        graphic/UIUtils.cpp
-        project/toolchain/ToolchainUtils.cpp
-        project/toolchain/ToolchainUtils.h
-        project/toolchain/ToolchainSettings.cpp
-        project/toolchain/ToolchainSettings.h
         project/Project.cpp
         project/Project.h
-        project/ProjectFwd.h
         mvp/startup/StartupWindow.cpp
         mvp/startup/StartupWindow.h
         cmdOptions/EngineOptionGroup.cpp
@@ -51,8 +33,6 @@ add_library(
         cmdOptions/options/Option.h
         Globals.cpp
         Globals.h
-        graphic/EngineContext.h
-        graphic/EngineContext.cpp
         project/sceneObjects/EditorSceneObject.cpp
         project/sceneObjects/EditorSceneObject.h
         ui/customWidgets/TreeWidget.cpp
@@ -101,7 +81,6 @@ add_library(
         mvp/startup/ModelStartup.h
         mvp/startup/PresenterStartup.cpp
         mvp/startup/PresenterStartup.h
-        mvp/creatingProject/ProjectCreatingTask.h
         project/generatedFiles/GeneratedFiles.cpp
         project/generatedFiles/GeneratedFiles.h
         mvp/main/IViewMain.h
@@ -114,8 +93,6 @@ add_library(
         mvp/ThreadDispatcher.h
         project/generatedFiles/GeneratedFileEntry.cpp
         project/generatedFiles/GeneratedFileEntry.h
-        project/SceneTypeRegister.cpp
-        project/SceneTypeRegister.h
         mvp/main/editors/appInfo/AppInfoEditor.cpp
         mvp/main/editors/appInfo/AppInfoEditor.h
         mvp/main/editors/appInfo/IViewAppInfo.h

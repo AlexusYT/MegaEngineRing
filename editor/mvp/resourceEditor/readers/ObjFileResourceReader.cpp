@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,10 +23,10 @@
 
 #include <regex>
 
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
-#include "EngineSDK/main/resources/models/Model3DObject.h"
-#include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/models/IModel3DResource.h"
+#include "EngineSDK/resources/models/Model3DObject.h"
+#include "EngineSDK/resources/models/Model3DResource.h"
 
 namespace mer::editor::mvp {
 
@@ -38,7 +38,7 @@ struct Model {
 	std::vector<glm::vec2> tCoords;
 };
 
-sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
+sdk::ReportMessagePtr ObjFileResourceReader::checkType() {
 
 	if (auto msg = open()) {
 		msg->setTitle("Unable to prove that the file is Wavefront OBJ File");
@@ -95,7 +95,7 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 			object->faces.emplace_back(face);
 
 		} else {
-			//utils::Logger::out(line);
+			//Logger::out(line);
 		}
 	}
 	model.vertices.shrink_to_fit();
@@ -103,7 +103,7 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 	model.normals.shrink_to_fit();
 
 	if (!hasObject || !hasVertex || !hasFace) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to prove that the file is Wavefront OBJ File");
 		msg->setMessage("File doesn't contains objects, vertices or faces");
 		msg->addInfoLine("Has objects {}", hasObject);
@@ -115,14 +115,14 @@ sdk::utils::ReportMessagePtr ObjFileResourceReader::checkType() {
 	return nullptr;
 }
 
-std::shared_ptr<sdk::main::IModel3DResource> ObjFileResourceReader::generateResource(
+std::shared_ptr<sdk::IModel3DResource> ObjFileResourceReader::generateResource(
 	const std::vector<std::string> &pObjectsToSave) const {
-	auto resource = sdk::main::Model3DResource::create();
+	auto resource = sdk::Model3DResource::create();
 	for (auto objectName: pObjectsToSave) { resource->addModelObject(generateObject(objectName)); }
 	return resource;
 }
 
-std::shared_ptr<sdk::main::IModel3DObject> ObjFileResourceReader::generateObject(
+std::shared_ptr<sdk::IModel3DObject> ObjFileResourceReader::generateObject(
 	const std::string &pObjectToSave) const {
 	const auto obj = objects.at(pObjectToSave);
 	std::map<VertexInfo, uint16_t> vertexToOutIndex;
@@ -146,7 +146,7 @@ std::shared_ptr<sdk::main::IModel3DObject> ObjFileResourceReader::generateObject
 		}
 	}
 
-	auto o = sdk::main::Model3DObject::create();
+	auto o = sdk::Model3DObject::create();
 	std::vector<float> data;
 	data.reserve(vertices.size() * 3 + uvs.size() * 2 + normals.size() * 3);
 	for (auto i = 0ul, maxI = vertices.size(); i < maxI; ++i) {

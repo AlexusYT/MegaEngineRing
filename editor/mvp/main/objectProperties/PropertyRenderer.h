@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@
 
 #ifndef PROPERTYRENDERER_H
 #define PROPERTYRENDERER_H
-#include "EngineSDK/main/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/main/scene/IScene.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/scene/IScene.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class PropertyBase;
 }
 
@@ -32,19 +32,19 @@ namespace mer::editor::mvp {
 enum class PropertyRendererType;
 
 class PropertyRenderer {
-	sdk::utils::PropertyBase* property;
+	sdk::PropertyBase* property;
 	PropertyRendererType type;
-	sdk::main::IResourceLoadExecutor* loader;
+	sdk::IResourceLoadExecutor* loader;
 
-	PropertyRenderer(sdk::utils::PropertyBase* pProperty, sdk::main::IResourceLoadExecutor* pLoader,
+	PropertyRenderer(sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader,
 					 PropertyRendererType pType);
 
 public:
-	static std::shared_ptr<PropertyRenderer> create(sdk::utils::PropertyBase* pProperty,
-													sdk::main::IResourceLoadExecutor* pLoader);
+	static std::shared_ptr<PropertyRenderer> create(sdk::PropertyBase* pProperty,
+													sdk::IResourceLoadExecutor* pLoader);
 
 	static std::shared_ptr<PropertyRenderer> create(
-		sdk::utils::PropertyBase* pProperty, sdk::main::IResourceLoadExecutor* pLoader, PropertyRendererType pType);
+		sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader, PropertyRendererType pType);
 
 	Gtk::Widget* getWidget() const;
 

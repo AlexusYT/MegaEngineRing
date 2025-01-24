@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 20.01.24.
@@ -90,15 +90,15 @@ public:
 		return Glib::make_refptr_for_instance(new ApplicationInfo(pProject));
 	}
 
-	sdk::utils::ReportMessagePtr onLoadDatabase() override;
+	sdk::ReportMessagePtr onLoadDatabase() override;
 
-	sdk::utils::ReportMessagePtr onSaveDatabase() const override;
+	sdk::ReportMessagePtr onSaveDatabase() const override;
 
-	sdk::utils::ReportMessagePtr onSaveFile() const override;
+	sdk::ReportMessagePtr onSaveFile() const override;
 
-	static sdk::utils::ReportMessagePtr createTable(SQLite::Database* pDatabase);
+	static sdk::ReportMessagePtr createTable(SQLite::Database* pDatabase);
 
-	sdk::utils::ReportMessagePtr writeFile() const;
+	sdk::ReportMessagePtr writeFile() const;
 
 	std::shared_ptr<mvp::IPresenter> createEditorPresenter(
 		const std::shared_ptr<mvp::TabPlaceholder> &pPlaceholder) override;

@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,13 +21,13 @@
 
 #ifndef IVIEWRESOURCEEDITOR_H
 #define IVIEWRESOURCEEDITOR_H
-#include "EngineSDK/main/resources/IResource.h"
+#include "EngineSDK/resources/IResource.h"
 #include "mvp/IView.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IModel3DObject;
 class IMaterialResource;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class IPresenterResourceEditor;
@@ -45,7 +45,7 @@ public:
 	virtual void showFileDialog(const std::shared_ptr<Gtk::FileDialog> &pDialog,
 								const sigc::slot<void(std::shared_ptr<Gio::AsyncResult> &pResult)> &pSlot) = 0;
 
-	virtual void displayError(const sdk::utils::ReportMessagePtr &pError) = 0;
+	virtual void displayError(const sdk::ReportMessagePtr &pError) = 0;
 
 	virtual void displayChosenPath(const std::string &pPath) = 0;
 
@@ -55,7 +55,7 @@ public:
 
 	virtual void displayMessage(const std::string &pMessage) = 0;
 
-	virtual void displayObjects(const std::vector<std::shared_ptr<sdk::main::IModel3DObject>> &pObjects,
+	virtual void displayObjects(const std::vector<std::shared_ptr<sdk::IModel3DObject>> &pObjects,
 								bool pFileObjects) = 0;
 
 	virtual void setStackVisibility(bool pState) = 0;
@@ -64,13 +64,13 @@ public:
 
 	virtual std::vector<std::string> getSelectedObjects() = 0;
 
-	virtual void appendResource(const std::shared_ptr<sdk::main::IResource> &pNewResource) = 0;
+	virtual void appendResource(const std::shared_ptr<sdk::IResource> &pNewResource) = 0;
 
-	virtual void removeResource(const std::shared_ptr<sdk::main::IResource> &pResource) = 0;
+	virtual void removeResource(const std::shared_ptr<sdk::IResource> &pResource) = 0;
 
-	virtual void selectResource(const std::shared_ptr<sdk::main::IResource> &pResource) = 0;
+	virtual void selectResource(const std::shared_ptr<sdk::IResource> &pResource) = 0;
 
-	virtual void displayMaterial(const std::shared_ptr<sdk::main::IMaterialResource> &pMaterialResource) = 0;
+	virtual void displayMaterial(const std::shared_ptr<sdk::IMaterialResource> &pMaterialResource) = 0;
 };
 
 } // namespace mer::editor::mvp

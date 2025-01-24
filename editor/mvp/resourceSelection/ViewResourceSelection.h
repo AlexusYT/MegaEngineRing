@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ class ViewResourceSelection : public IViewResourceSelection, Gtk::Window {
 
 public:
 	static std::shared_ptr<ViewResourceSelection> create(const std::shared_ptr<IWidgetContext> &pContext,
-														 sdk::utils::ReportMessagePtr &pMsg);
+														 sdk::ReportMessagePtr &pMsg);
 
 	void openView() override;
 
@@ -63,7 +63,7 @@ public:
 		pDialog->open(*this, pSlot);
 	}
 
-	void displayError(const sdk::utils::ReportMessagePtr &pError) override;
+	void displayError(const sdk::ReportMessagePtr &pError) override;
 
 	void displayMessage(const std::string &pMessage) override;
 

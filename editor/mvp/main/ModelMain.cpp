@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 26.01.24.
@@ -57,10 +57,10 @@ void ModelMain::tryCreateLayoutFile(const std::shared_ptr<Gio::AsyncResult> &pRe
 		readInternalLayouts(streamOut, pFile);
 	} catch (Gio::Error &error) {
 		if (error.code() == Gio::Error::Code::EXISTS) {
-			auto strStream = utils::StringInputStream::create(pFile->read());
+			auto strStream = StringInputStream::create(pFile->read());
 			strStream->readAllAsync(sigc::bind(sigc::mem_fun(*this, &ModelMain::userLayoutsReadFinished), pFile));
 		} else {
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to copy Layouts file to user config directory");
 			msg->setMessage("Exception occurred");
 			msg->addInfoLine("Path to user Layouts file: {}", pFile->get_path());
@@ -74,7 +74,7 @@ void ModelMain::tryCreateLayoutFile(const std::shared_ptr<Gio::AsyncResult> &pRe
 void ModelMain::userLayoutsReadFinished(const std::string &pStrResult, const std::exception_ptr &pException,
 										const std::shared_ptr<Gio::File> &pFile) {
 	if (pException) {
-		const auto msg = sdk::utils::ReportMessage::create();
+		const auto msg = sdk::ReportMessage::create();
 		msg->setExceptionPtr(pException);
 		msg->setTitle("Failed to read user-defined Layouts file ");
 		msg->setMessage("Exception occurred");
@@ -90,7 +90,7 @@ void ModelMain::userLayoutsReadFinished(const std::string &pStrResult, const std
 void ModelMain::readInternalLayouts(const std::shared_ptr<Gio::OutputStream> &pSaveTo,
 									const std::shared_ptr<Gio::File> &pUserFile) {
 	auto resourceStream = Gio::Resource::open_stream_global("/paned-layouts/Layouts.json");
-	auto strStream = utils::StringInputStream::create(resourceStream);
+	auto strStream = StringInputStream::create(resourceStream);
 	strStream->readAllAsync(
 		sigc::bind(sigc::mem_fun(*this, &ModelMain::internalLayoutsReadFinished), pSaveTo, pUserFile));
 }
@@ -99,7 +99,7 @@ void ModelMain::internalLayoutsReadFinished(const std::string &pStrResult, const
 											const std::shared_ptr<Gio::OutputStream> &pSaveTo,
 											const std::shared_ptr<Gio::File> &pUserFile) {
 	if (pException) {
-		const auto msg = sdk::utils::ReportMessage::create();
+		const auto msg = sdk::ReportMessage::create();
 		msg->setExceptionPtr(pException);
 		msg->setTitle("Failed to read internal Layouts file ");
 		msg->setMessage("Exception occurred");
@@ -116,7 +116,7 @@ void ModelMain::internalLayoutsReadFinished(const std::string &pStrResult, const
 								 try {
 									 pSaveTo->write_all_finish(pResult, size);
 								 } catch (...) {
-									 const auto msg = sdk::utils::ReportMessage::create();
+									 const auto msg = sdk::ReportMessage::create();
 									 msg->setTitle("Failed to save internal Layouts file to user directory");
 									 msg->setMessage("Exception occurred");
 									 msg->addInfoLine("Path to user Layouts file: {}", pUserFile->get_path());
@@ -137,7 +137,7 @@ void ModelMain::parseLayoutsContent(const std::string &pContent, const bool pUse
 		json.at("CurrentTab").get_to(curTab);
 		setCurrentTab(curTab);
 	} catch (...) {
-		const auto msg = sdk::utils::ReportMessage::create();
+		const auto msg = sdk::ReportMessage::create();
 		msg->setMessage("Exception occurred");
 		if (pUser) {
 			msg->setTitle("Failed to parse user Layouts file");

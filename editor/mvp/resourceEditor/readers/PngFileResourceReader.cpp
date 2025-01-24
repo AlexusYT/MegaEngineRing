@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,14 +21,14 @@
 
 #include "PngFileResourceReader.h"
 
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
-#include "EngineSDK/main/resources/textures/Texture2DImageFormat.h"
-#include "EngineSDK/main/resources/textures/Texture2DType.h"
-#include "EngineSDK/main/resources/textures/TextureBaseInternalFormat.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/textures/Texture2DImageFormat.h"
+#include "EngineSDK/resources/textures/Texture2DType.h"
+#include "EngineSDK/resources/textures/TextureBaseInternalFormat.h"
 #include "png++/png.hpp"
 
 namespace mer::editor::mvp {
-sdk::utils::ReportMessagePtr PngFileResourceReader::checkType() {
+sdk::ReportMessagePtr PngFileResourceReader::checkType() {
 
 	if (auto msg = open()) {
 		msg->setTitle("Unable to prove that the file is the PNG File");
@@ -57,9 +57,9 @@ std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, s
 	return pixelsOut;
 }
 
-void PngFileResourceReader::generateResourceData(const std::shared_ptr<sdk::main::ITextureResource> &pResource) const {
+void PngFileResourceReader::generateResourceData(const std::shared_ptr<sdk::ITextureResource> &pResource) const {
 
-	using namespace sdk::main;
+	using namespace sdk;
 	auto &streamSelf = *getStream();
 	switch (colorType) {
 

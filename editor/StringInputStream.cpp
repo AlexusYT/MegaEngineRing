@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 #include "StringInputStream.h"
 
-namespace mer::editor::utils {
+namespace mer::editor {
 void StringInputStream::readAllAsync(
 	const sigc::slot<void(const std::string &pResult, const std::exception_ptr &pException)> &pSlot) noexcept {
 	//Prevent class instance from destroying from std::shared_ptr destructor while reading
@@ -69,4 +69,4 @@ void StringInputStream::readFromStream(
 		}
 	}
 }
-} // namespace mer::editor::utils
+} // namespace mer::editor

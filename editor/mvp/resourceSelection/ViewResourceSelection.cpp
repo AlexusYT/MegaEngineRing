@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -99,12 +99,12 @@ ViewResourceSelection::ViewResourceSelection(const std::shared_ptr<IWidgetContex
 }
 
 std::shared_ptr<ViewResourceSelection> ViewResourceSelection::create(const std::shared_ptr<IWidgetContext> &pContext,
-																	 sdk::utils::ReportMessagePtr &pMsg) {
+																	 sdk::ReportMessagePtr &pMsg) {
 	std::shared_ptr<Gtk::Builder> builder;
 	try {
 		builder = Gtk::Builder::create_from_resource("/ui/ResourceSelectionWindow.ui", "root");
 	} catch (...) {
-		pMsg = sdk::utils::ReportMessage::create();
+		pMsg = sdk::ReportMessage::create();
 		pMsg->setTitle("Failed to load ui file");
 		pMsg->setMessage("Error while loading resource selection window");
 		return nullptr;
@@ -119,7 +119,7 @@ void ViewResourceSelection::closeView() {
 	explorer->getPresenter()->removeView(explorer);
 }
 
-void ViewResourceSelection::displayError(const sdk::utils::ReportMessagePtr &pError) {
+void ViewResourceSelection::displayError(const sdk::ReportMessagePtr &pError) {
 	ErrorDialog::showErrorDialog(this, pError);
 }
 

@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,21 +21,21 @@
 
 #include "ScriptNode.h"
 
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
+#include "EngineSDK/extensions/Extension.h"
 #include "mvp/main/editors/graphicsScriptEditor/canvas/CanvasWidget.h"
 
 namespace mer::editor::project {
-sdk::utils::ReportMessagePtr ScriptNode::connectToSlot(const std::string &pSelfSlotName, ScriptNodeSlot* pOtherSlot) {
+sdk::ReportMessagePtr ScriptNode::connectToSlot(const std::string &pSelfSlotName, ScriptNodeSlot* pOtherSlot) {
 	auto selfSlot = getSlotByName(pSelfSlotName);
 	if (!selfSlot) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Slot connection failed");
 		msg->setMessage("No slot with such name");
 		msg->addInfoLine("Slot name: {}", pSelfSlotName);
 		return msg;
 	}
 	if (!pOtherSlot) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Slot connection failed");
 		msg->setMessage("Pointer to other slot is nullptr");
 		msg->addInfoLine("Slot name: {}", pSelfSlotName);
@@ -61,11 +61,11 @@ ScriptNodeSlot* ScriptNode::getSlotByName(const std::string &pSelfSlotName) {
 	return iter->second.get();
 }
 
-sdk::utils::ReportMessagePtr ScriptNode::addNewSlot(const std::string &pSlotName, const std::string &pMethodName,
+sdk::ReportMessagePtr ScriptNode::addNewSlot(const std::string &pSlotName, const std::string &pMethodName,
 													SlotConnectionType pType) {
 	auto iter = slots.find(pSlotName);
 	if (iter != slots.end()) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to add new slot");
 		msg->setMessage("Slot with such name already added to node");
 		msg->addInfoLine("Slot name: {}", pSlotName);
@@ -186,7 +186,7 @@ void ScriptNode::onWidgetChanged(mvp::CanvasWidget* pWidget) {
 	for (auto [slotName, slot]: slots) { slot->setWidget(pWidget); }
 }
 
-sdk::utils::ReportMessagePtr ScriptNodeSlot::connect(ScriptNodeSlot* pOtherSlot) {
+sdk::ReportMessagePtr ScriptNodeSlot::connect(ScriptNodeSlot* pOtherSlot) {
 	if (auto msg = checkConnectable(pOtherSlot)) { return msg; }
 
 	connectedTo = pOtherSlot;
@@ -202,7 +202,7 @@ sdk::utils::ReportMessagePtr ScriptNodeSlot::connect(ScriptNodeSlot* pOtherSlot)
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr ScriptNodeSlot::exchange(ScriptNodeSlot* pNewOtherSlot) {
+sdk::ReportMessagePtr ScriptNodeSlot::exchange(ScriptNodeSlot* pNewOtherSlot) {
 	if (auto msg = checkConnectable(pNewOtherSlot)) { return msg; }
 	ScriptNodeSlot* prevSlot = connectedTo;
 	prevSlot->connectedTo = nullptr;
@@ -218,11 +218,11 @@ sdk::utils::ReportMessagePtr ScriptNodeSlot::exchange(ScriptNodeSlot* pNewOtherS
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr ScriptNodeSlot::checkConnectable(ScriptNodeSlot* pOtherSlot) {
+sdk::ReportMessagePtr ScriptNodeSlot::checkConnectable(ScriptNodeSlot* pOtherSlot) {
 
 	if (type == SlotConnectionType::CALLBACK) {
 		if (pOtherSlot->type == SlotConnectionType::CALLBACK) {
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Slot connection failed");
 			msg->setMessage("Connecting callback-slot to callback-slot is not permitted");
 			msg->addInfoLine("Self slot name: {}", name);
@@ -232,7 +232,7 @@ sdk::utils::ReportMessagePtr ScriptNodeSlot::checkConnectable(ScriptNodeSlot* pO
 	}
 	if (type == SlotConnectionType::SETTER) {
 		if (pOtherSlot->type == SlotConnectionType::SETTER) {
-			auto msg = sdk::utils::ReportMessage::create();
+			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Slot connection failed");
 			msg->setMessage("Connecting setter-slot to setter-slot is not permitted");
 			msg->addInfoLine("Self slot name: {}", name);

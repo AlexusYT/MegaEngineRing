@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 25.01.24.
@@ -86,18 +86,18 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 			if (!exists(path)) create_directories(path);
 
 		} catch (...) {
-			const auto msg = sdk::utils::ReportMessage::create();
+			const auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to create directory for project");
 			msg->setMessage("Exception occurred");
 			//TODO Report error to the window
-			sdk::utils::Logger::error(msg);
+			sdk::Logger::error(msg);
 			return;
 		}
 		auto project = project::Project::create();
 		project->setProjectName(model->getName());
 		project->setProjectPath(path);
 		//TODO Report error to the window
-		if (const auto msg = initProject(project)) return sdk::utils::Logger::error(msg);
+		if (const auto msg = initProject(project)) return sdk::Logger::error(msg);
 		openProjectCreatingWindow(project);
 	});
 
@@ -112,9 +112,9 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 											project->setProjectName(path.stem());
 											project->setProjectPath(path.parent_path());
 											if (const auto msg = initProject(project))
-												return sdk::utils::Logger::error(msg);
+												return sdk::Logger::error(msg);
 											if (const auto msg = project->loadProject())
-												return sdk::utils::Logger::error(msg);
+												return sdk::Logger::error(msg);
 											openMainWindow(project);
 										} catch (const Gtk::DialogError &err) {
 											if (err.code() != Gtk::DialogError::DISMISSED) {
@@ -133,7 +133,7 @@ void PresenterStartup::run() { view->openView(); }
 
 void PresenterStartup::stop() { view->closeView(); }
 
-sdk::utils::ReportMessagePtr PresenterStartup::initProject(const std::shared_ptr<project::Project> &pProject) {
+sdk::ReportMessagePtr PresenterStartup::initProject(const std::shared_ptr<project::Project> &pProject) {
 
 	if (auto msg = pProject->openDatabase()) return msg;
 
@@ -157,9 +157,9 @@ void PresenterStartup::openProjectCreatingWindow(const std::shared_ptr<project::
 void PresenterStartup::openMainWindow(const std::shared_ptr<project::Project> &pProject) {
 
 	auto appControllerSelf = getAppController();
-	sdk::utils::ReportMessagePtr msg;
+	sdk::ReportMessagePtr msg;
 	auto viewMain = MainWindow::create(ApplicationContext::create(appControllerSelf->getApp()), msg);
-	if (msg) return sdk::utils::Logger::error(msg);
+	if (msg) return sdk::Logger::error(msg);
 	auto modelMain = std::make_shared<ModelMain>();
 	modelMain->setProject(pProject);
 	const auto presenter = std::make_shared<PresenterMain>(viewMain, modelMain);

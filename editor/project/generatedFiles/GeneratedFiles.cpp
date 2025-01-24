@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 26.01.24.
@@ -22,10 +22,9 @@
 #include "GeneratedFiles.h"
 
 #include <project/Project.h>
-#include <project/toolchain/ToolchainUtils.h>
 
 namespace mer::editor::project {
-mer::sdk::utils::ReportMessagePtr GeneratedFiles::saveToCmake() const {
+mer::sdk::ReportMessagePtr GeneratedFiles::saveToCmake() const {
 	std::vector<std::string> files;
 	getFilesToSave(this, files);
 	if (!isSaveRequired(files)) return nullptr;
@@ -38,7 +37,8 @@ mer::sdk::utils::ReportMessagePtr GeneratedFiles::saveToCmake() const {
 	ss << "\tsource/scripts/SceneObject1Script.cpp\n";
 	ss << ")";
 
-	return ToolchainUtils::writeFile(getProject()->getProjectPath() / "cmake/generated-sources.cmake", ss.str());
+	//return ToolchainUtils::writeFile(getProject()->getProjectPath() / "cmake/generated-sources.cmake", ss.str());
+	return nullptr;
 }
 
 void GeneratedFiles::getFilesToSave(const ProjectExplorerEntry* pEntry, std::vector<std::string> &pFiles) {

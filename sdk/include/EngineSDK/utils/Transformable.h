@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,25 +23,25 @@
 #define TRANSFORMABLE_H
 #include <memory>
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class Transformation;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 
 class Transformable {
 	Transformable* parent{};
-	std::shared_ptr<utils::Transformation> globalTransform;
-	std::shared_ptr<utils::Transformation> localTransform;
+	std::shared_ptr<Transformation> globalTransform;
+	std::shared_ptr<Transformation> localTransform;
 
 public:
 	Transformable();
 
 	virtual ~Transformable() = default;
 
-	[[nodiscard]] const std::shared_ptr<utils::Transformation> &getGlobalTransform() const { return globalTransform; }
+	[[nodiscard]] const std::shared_ptr<Transformation> &getGlobalTransform() const { return globalTransform; }
 
-	[[nodiscard]] const std::shared_ptr<utils::Transformation> &getLocalTransform() { return localTransform; }
+	[[nodiscard]] const std::shared_ptr<Transformation> &getLocalTransform() { return localTransform; }
 
 	[[nodiscard]] Transformable* getTransformParent() const { return parent; }
 
@@ -54,11 +54,11 @@ public:
 	virtual void updateTransform();
 
 protected:
-	virtual void onLocalTransformChanged(const std::shared_ptr<utils::Transformation> &pTransformation);
+	virtual void onLocalTransformChanged(const std::shared_ptr<Transformation> &pTransformation);
 
-	virtual void onGlobalTransformChanged(const std::shared_ptr<utils::Transformation> &pTransformation);
+	virtual void onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation);
 };
 
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 #endif //TRANSFORMABLE_H

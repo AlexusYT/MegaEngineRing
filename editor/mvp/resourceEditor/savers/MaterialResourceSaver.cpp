@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 
 #include "MaterialResourceSaver.h"
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/materials/ColorComponent.h"
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/materials/ColorComponent.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
 #include "EngineUtils/utils/UUID.h"
 
 namespace mer::editor::mvp {
-sdk::utils::ReportMessagePtr MaterialResourceSaver::saveToFile(
-	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::IMaterialResource> &pMaterial) {
+sdk::ReportMessagePtr MaterialResourceSaver::saveToFile(
+	const std::filesystem::path &pPath, const std::shared_ptr<sdk::IMaterialResource> &pMaterial) {
 	auto dir = pPath.parent_path();
 	if (!exists(dir)) { create_directories(dir); }
 	auto resource = pMaterial->asResource();
@@ -47,7 +47,7 @@ sdk::utils::ReportMessagePtr MaterialResourceSaver::saveToFile(
 		writeComponent(file, *pMaterial->getAo());
 
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save material resource to file");
 		msg->setMessage("Exception occurred");
 		msg->addInfoLine("Path: {}", pPath.string());
@@ -59,12 +59,12 @@ sdk::utils::ReportMessagePtr MaterialResourceSaver::saveToFile(
 }
 
 void MaterialResourceSaver::writeComponent(std::ofstream &pStream,
-										   const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent) {
+										   const std::shared_ptr<sdk::IMaterialComponent> &pComponent) {
 
-	if (auto texture = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pComponent)) {
+	if (auto texture = std::dynamic_pointer_cast<sdk::ITextureResource>(pComponent)) {
 		writeNumber<uint8_t>(pStream, 0);
 		writeString(pStream, texture->asResource()->getResourceUri());
-	} else if (auto color = std::dynamic_pointer_cast<sdk::main::ColorComponent>(pComponent)) {
+	} else if (auto color = std::dynamic_pointer_cast<sdk::ColorComponent>(pComponent)) {
 		writeNumber<uint8_t>(pStream, 1);
 		writeNumber<float>(pStream, color->color->r);
 		writeNumber<float>(pStream, color->color->g);

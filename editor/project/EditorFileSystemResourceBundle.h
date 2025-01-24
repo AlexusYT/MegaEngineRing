@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@
 
 #ifndef EDITORFILESYSTEMRESOURCEBUNDLE_H
 #define EDITORFILESYSTEMRESOURCEBUNDLE_H
-#include "EngineSDK/main/resources/FileSystemResourceBundle.h"
+#include "EngineSDK/resources/FileSystemResourceBundle.h"
 
 namespace mer::editor::project {
 
-class EditorFileSystemResourceBundle : public sdk::main::FileSystemResourceBundle {
+class EditorFileSystemResourceBundle : public sdk::FileSystemResourceBundle {
 
 	explicit EditorFileSystemResourceBundle(const std::filesystem::path &pSearchPath)
 		: FileSystemResourceBundle(pSearchPath) {}
@@ -33,7 +33,7 @@ class EditorFileSystemResourceBundle : public sdk::main::FileSystemResourceBundl
 public:
 	static std::shared_ptr<IResourceBundle> create(const std::filesystem::path &pSearchPath);
 
-	sdk::utils::ReportMessagePtr getResourceStream(const std::string &pResourceUri,
+	sdk::ReportMessagePtr getResourceStream(const std::string &pResourceUri,
 												   std::shared_ptr<std::istream> &pStream) override;
 
 	void listResources(std::vector<std::string> &pUris) const override;

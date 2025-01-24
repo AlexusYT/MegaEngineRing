@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 17.01.24.
@@ -21,9 +21,9 @@
 
 #include "ViewObjectProperties.h"
 
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/scene/objects/extensions/ExtensionRegistry.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/extensions/ExtensionRegistry.h"
+#include "EngineSDK/extensions/MainObjectExtension.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
 #include "ObjectPropertyEntry.h"
 #include "PropertyRenderer.h"
 #include "mvp/contexts/IWidgetContext.h"
@@ -37,8 +37,8 @@ ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext>
 	Gtk::Box buttonBox;
 	addBtn.set_label("Add");
 	auto menu = Gio::Menu::create();
-	for (auto extension: sdk::main::ExtensionRegistry::getExtensions()) {
-		if (extension.first == sdk::main::MainObjectExtension::typeName()) continue;
+	for (auto extension: sdk::ExtensionRegistry::getExtensions()) {
+		if (extension.first == sdk::MainObjectExtension::typeName()) continue;
 		auto item = Gio::MenuItem::create(extension.first, "");
 
 		item->set_action_and_target("object.selected.extension.new",
@@ -54,7 +54,7 @@ ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext>
 	buttonBox.append(removeBtn);
 	removeBtn.signal_clicked().connect([this] {
 		auto selectedItem = propertiesTree->getSelectedItem();
-		sdk::main::Extension* extToRemove{};
+		sdk::Extension* extToRemove{};
 		if (const auto property = std::dynamic_pointer_cast<ObjectPropertyEntry>(selectedItem)) {
 			extToRemove = property->getExtension();
 		} else if (const auto extension = std::dynamic_pointer_cast<ObjectExtensionEntry>(selectedItem)) {
@@ -85,7 +85,7 @@ ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext>
 	propertiesTree->append_column(valueColumn);
 
 	propertiesTree->setSlotSelectionChanged([this](Glib::ObjectBase* pObjectBase) {
-		auto mainExtTypeName = sdk::main::MainObjectExtension::typeName();
+		auto mainExtTypeName = sdk::MainObjectExtension::typeName();
 		if (auto entry = dynamic_cast<ObjectPropertyEntry*>(pObjectBase)) {
 			removeBtn.set_sensitive(entry->getExtension()->getTypeName() != mainExtTypeName);
 		} else if (auto ext = dynamic_cast<ObjectExtensionEntry*>(pObjectBase)) {

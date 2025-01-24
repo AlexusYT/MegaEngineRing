@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -89,14 +89,14 @@ void MultiPaned::remove(Widget* pWidget) {
 	if (panel) panels.erase(*panel->getUuid());
 }
 
-sdk::utils::ReportMessagePtr MultiPaned::importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
+sdk::ReportMessagePtr MultiPaned::importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
 														mvp::ApplicationController* pAppController) {
 
 	try {
 		std::unordered_map<UUID, std::shared_ptr<MultiPanedPanelDivider>> newDividers;
 		for (auto jsonDivider: pJson->at("Dividers")) {
 			auto divider = std::make_shared<MultiPanedPanelDivider>();
-			sdk::utils::ReportMessagePtr uuidError;
+			sdk::ReportMessagePtr uuidError;
 			divider->uuid = UUID::parse(jsonDivider.at("Uuid").get<std::string>(), uuidError);
 			if (uuidError) {
 				uuidError->setTitle("Failed to parse UUID for divider while importing the layout");
@@ -115,33 +115,33 @@ sdk::utils::ReportMessagePtr MultiPaned::importFromJson(const std::shared_ptr<nl
 
 			//TODO Use default presenter for this case.
 			if (!presenter) {
-				auto msg = sdk::utils::ReportMessage::create();
+				auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Error while importing the layout");
 				msg->setMessage("Presenter with such name does not exist");
 				msg->addInfoLine("Missing presenter name: {}", presenterName);
-				sdk::utils::Logger::error(msg);
+				sdk::Logger::error(msg);
 				continue;
 			}
 
 			//TODO Use default presenter for this case.
 			auto panel = createPanel(presenter);
 			if (!panel) {
-				auto msg = sdk::utils::ReportMessage::create();
+				auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Error while importing the layout");
 				msg->setMessage("Presenter failed to create a widget or view");
 				msg->addInfoLine("Presenter name: {}", presenterName);
-				sdk::utils::Logger::error(msg);
+				sdk::Logger::error(msg);
 				continue;
 			}
 			panel->presenter = presenter;
 			std::string uuid = jsonPanel.at("Uuid").get<std::string>();
-			sdk::utils::ReportMessagePtr uuidError;
+			sdk::ReportMessagePtr uuidError;
 			panel->uuid = UUID::parse(uuid, uuidError);
 			//TODO Use default presenter for this case.
 			if (uuidError) {
 				uuidError->setTitle("Failed to parse the UUID for panel while importing the layout");
 				uuidError->addInfoLine("Presenter name: {}", presenterName);
-				sdk::utils::Logger::error(uuidError);
+				sdk::Logger::error(uuidError);
 				continue;
 			}
 			auto sides = {std::make_pair("Top", MultiPanedSide::TOP), std::make_pair("Bottom", MultiPanedSide::BOTTOM),
@@ -150,13 +150,13 @@ sdk::utils::ReportMessagePtr MultiPaned::importFromJson(const std::shared_ptr<nl
 			auto dividersJson = jsonPanel.at("Dividers");
 			for (auto [name, side]: sides) {
 				if (auto dividerUuid = dividersJson.at(name).get<std::string>(); dividerUuid != "null") {
-					sdk::utils::ReportMessagePtr dividerUuidError;
+					sdk::ReportMessagePtr dividerUuidError;
 					auto divUuid = UUID::parse(dividerUuid, dividerUuidError);
 					if (dividerUuidError) {
 						dividerUuidError->setTitle("Failed to parse the UUID of the divider for panel");
 						dividerUuidError->addInfoLine("Presenter name: {}", presenterName);
 						dividerUuidError->addInfoLine("Divider location: {}", name);
-						sdk::utils::Logger::error(dividerUuidError);
+						sdk::Logger::error(dividerUuidError);
 						return dividerUuidError;
 					}
 					panel->setDivider(side, newDividers.at(*divUuid).get());
@@ -173,7 +173,7 @@ sdk::utils::ReportMessagePtr MultiPaned::importFromJson(const std::shared_ptr<nl
 		for (auto panel: panels | std::views::values) { panel->set_parent(*this); }
 		for (auto divider: dividers | std::views::values) { divider->set_parent(*this); }
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to import layout");
 		msg->setMessage("Exception occurred");
 		return msg;

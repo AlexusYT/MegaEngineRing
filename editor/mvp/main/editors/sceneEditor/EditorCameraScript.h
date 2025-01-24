@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,19 +21,19 @@
 
 #ifndef EDITORCAMERASCRIPT_H
 #define EDITORCAMERASCRIPT_H
-#include "EngineSDK/main/scripting/Script.h"
+#include "EngineSDK/scripting/Script.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class OrbitCameraExtension;
 }
 
 namespace mer::editor::mvp {
 
-class EditorCameraScript : public sdk::main::Script {
-	std::shared_ptr<sdk::main::OrbitCameraExtension> camera;
+class EditorCameraScript : public sdk::Script {
+	std::shared_ptr<sdk::OrbitCameraExtension> camera;
 
 public:
-	sdk::utils::ReportMessagePtr setup() override;
+	sdk::ReportMessagePtr setup() override;
 
 protected:
 	inline bool onMouseScroll(double pDx, double pDy) override;

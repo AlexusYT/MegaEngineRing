@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #define TEXTURERESOURCESAVER_H
 #include "ResourceSaverBase.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ITextureResource;
 }
 
@@ -32,8 +32,8 @@ namespace mer::editor::mvp {
 class TextureResourceSaver : public ResourceSaverBase {
 
 public:
-	static sdk::utils::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
-												   const std::shared_ptr<sdk::main::ITextureResource> &pTexture);
+	static sdk::ReportMessagePtr saveToFile(const std::filesystem::path &pPath,
+												   const std::shared_ptr<sdk::ITextureResource> &pTexture);
 
 private:
 	template<typename T>

@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,17 +23,17 @@
 #define IPRESENTERRESOURCEEDITOR_H
 #include <memory>
 
-#include "EngineSDK/main/resources/models/IModel3DResource.h"
+#include "EngineSDK/resources/models/IModel3DResource.h"
 #include "mvp/PresenterBase.h"
 
 namespace mer::editor::ui {
 class ISourceSelectionResult;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResourceLoadExecutor;
 class IResource;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class IViewResourceEditor;
@@ -51,20 +51,20 @@ public:
 
 	virtual void onCancelClicked() = 0;
 
-	virtual std::shared_ptr<sdk::main::IResource> getSelectedResource(IViewResourceEditor* pView) = 0;
+	virtual std::shared_ptr<sdk::IResource> getSelectedResource(IViewResourceEditor* pView) = 0;
 
 	virtual std::filesystem::path getDataPath() = 0;
 
-	virtual void onSelectionChanged(const std::shared_ptr<sdk::main::IResource> &pResource,
+	virtual void onSelectionChanged(const std::shared_ptr<sdk::IResource> &pResource,
 									IViewResourceEditor* pView) = 0;
 
-	virtual void removeObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToRemove,
+	virtual void removeObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToRemove,
 							  IViewResourceEditor* pView) = 0;
 
-	virtual void addObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObjectToRemove,
+	virtual void addObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToRemove,
 						   IViewResourceEditor* pView) = 0;
 
-	virtual sdk::main::IResourceLoadExecutor* getResourceLoader() = 0;
+	virtual sdk::IResourceLoadExecutor* getResourceLoader() = 0;
 
 	virtual void onMaterialBaseColorChanged(const std::shared_ptr<ui::ISourceSelectionResult> &pResult,
 											IViewResourceEditor* pView) = 0;

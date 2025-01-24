@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 12.01.24.
@@ -23,7 +23,7 @@
 #define UIUTILS_H
 
 class ErrorDialog {
-	inline static mer::sdk::utils::ReportMessagePtr message;
+	inline static mer::sdk::ReportMessagePtr message;
 	Gtk::Window* rootWindow;
 
 	class DetailsDialog : public Gtk::Window {
@@ -31,10 +31,10 @@ class ErrorDialog {
 		Gtk::ScrolledWindow scrolledWindow;
 		Gtk::Label contentLabel;
 		Gtk::Button closeBtn, copyBtn;
-		mer::sdk::utils::ReportMessagePtr message;
+		mer::sdk::ReportMessagePtr message;
 
 	public:
-		DetailsDialog(mer::sdk::utils::ReportMessagePtr pMessage) : message(std::move(pMessage)) {
+		DetailsDialog(mer::sdk::ReportMessagePtr pMessage) : message(std::move(pMessage)) {
 			set_destroy_with_parent(true);
 			set_title("Name Dialog");
 			mainBox.append(scrolledWindow);
@@ -61,14 +61,14 @@ class ErrorDialog {
 	inline static std::unique_ptr<DetailsDialog> errorDetailsDialog;
 
 public:
-	static void showErrorDialog(Gtk::Root* pRoot, const mer::sdk::utils::ReportMessagePtr &pMessage) {
+	static void showErrorDialog(Gtk::Root* pRoot, const mer::sdk::ReportMessagePtr &pMessage) {
 		showErrorDialog(dynamic_cast<Gtk::Window*>(pRoot), pMessage);
 	}
 
-	static void showErrorDialog(Gtk::Window* pRootWindow, const mer::sdk::utils::ReportMessagePtr &pMessage) {
-		mer::sdk::utils::Logger::error(pMessage);
+	static void showErrorDialog(Gtk::Window* pRootWindow, const mer::sdk::ReportMessagePtr &pMessage) {
+		mer::sdk::Logger::error(pMessage);
 		if (!pRootWindow) {
-			mer::sdk::utils::Logger::error("Unable to show error dialog: pRootWindow is nullptr");
+			mer::sdk::Logger::error("Unable to show error dialog: pRootWindow is nullptr");
 			return;
 		}
 		message = pMessage;

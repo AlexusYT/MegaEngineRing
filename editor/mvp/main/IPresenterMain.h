@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,17 +22,17 @@
 #ifndef IPRESENTERMAIN_H
 #define IPRESENTERMAIN_H
 
-#include "EngineSDK/main/scene/objects/extensions/BasicRenderExtension.h"
+#include "EngineSDK/extensions/BasicRenderExtension.h"
 #include "mvp/PresenterBase.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 class PropertyBase;
 }
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class ExplorerObject;
@@ -42,7 +42,7 @@ public:
 	virtual std::shared_ptr<IView> createView(const IPresenter* pPresenter,
 											  const std::shared_ptr<MultiPanedContext> &pContext) = 0;
 
-	virtual void displayError(const sdk::utils::ReportMessagePtr &pMsg) = 0;
+	virtual void displayError(const sdk::ReportMessagePtr &pMsg) = 0;
 
 	virtual void onLayoutLoadFatal() = 0;
 
@@ -51,9 +51,9 @@ public:
 	virtual void onCurrentTabChanged() = 0;
 
 	virtual void readJsonForTab(int32_t pIndex,
-								const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pCallback) = 0;
+								const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pCallback) = 0;
 
-	virtual void selectResourceForProperty(sdk::utils::PropertyBase* pProperty) = 0;
+	virtual void selectResourceForProperty(sdk::PropertyBase* pProperty) = 0;
 
 	virtual void addExtension(const std::string &pExtensionName) = 0;
 
@@ -63,11 +63,11 @@ public:
 
 	virtual void removeObject(ExplorerObject* pObjectToRemove) = 0;
 
-	virtual void removeExtension(sdk::main::Extension* pExtensionToRemove) = 0;
+	virtual void removeExtension(sdk::Extension* pExtensionToRemove) = 0;
 
 	virtual void openFile(const std::filesystem::path &pPathToFile) = 0;
 
-	virtual void createResource(const std::filesystem::path &pPathToCreate, sdk::main::ResourceType pType) = 0;
+	virtual void createResource(const std::filesystem::path &pPathToCreate, sdk::ResourceType pType) = 0;
 
 	virtual void createScene(const std::filesystem::path &pPathToCreate) = 0;
 

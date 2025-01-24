@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -33,11 +33,11 @@ namespace mer::editor::project {
 
 void GraphicsScript::addNode(std::shared_ptr<ScriptNode> pNode) { scriptNodes.emplace(pNode->getName(), pNode); }
 
-sdk::utils::ReportMessagePtr GraphicsScript::removeNode(ScriptNode* pNodeToRemove) {
+sdk::ReportMessagePtr GraphicsScript::removeNode(ScriptNode* pNodeToRemove) {
 	std::string nodeName = pNodeToRemove->getName();
 	auto iter = scriptNodes.find(nodeName);
 	if (iter == scriptNodes.end()) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to remove node from script");
 		msg->setMessage("Node not found");
 		auto pos = pNodeToRemove->getPosition();
@@ -62,7 +62,7 @@ void GraphicsScript::getHoveredElements(const glm::dvec2 &pPos, std::list<mvp::C
 	}
 }
 
-sdk::utils::ReportMessagePtr GraphicsScript::removeConnection(ScriptNodeSlotConnection* pConnectionToRemove) {
+sdk::ReportMessagePtr GraphicsScript::removeConnection(ScriptNodeSlotConnection* pConnectionToRemove) {
 
 	connectionRemovingSignal(pConnectionToRemove);
 	pConnectionToRemove->onRemove();
@@ -70,7 +70,7 @@ sdk::utils::ReportMessagePtr GraphicsScript::removeConnection(ScriptNodeSlotConn
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr GraphicsScript::removeAllConnections(const ScriptNode* pNode) {
+sdk::ReportMessagePtr GraphicsScript::removeAllConnections(const ScriptNode* pNode) {
 
 	for (auto slot: pNode->getSlots()) {
 
@@ -91,7 +91,7 @@ std::shared_ptr<mvp::IPresenter> GraphicsScript::createEditorPresenter(const std
 	return std::make_shared<mvp::PresenterGraphicsScriptEditor>(view, model);
 }
 
-sdk::utils::ReportMessagePtr GraphicsScript::createTable(const std::shared_ptr<SQLite::Database> &pDatabase) {
+sdk::ReportMessagePtr GraphicsScript::createTable(const std::shared_ptr<SQLite::Database> &pDatabase) {
 	try {
 		//language=sql
 		pDatabase->exec(R"(DROP TABLE IF EXISTS ScriptNodes;
@@ -108,7 +108,7 @@ CREATE TABLE ScriptNodes
 );
 )");
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to create ScriptNodes table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -129,7 +129,7 @@ CREATE TABLE "ScriptNodeConnections" (
 );
 )");
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to create ScriptNodeConnections table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -138,14 +138,14 @@ CREATE TABLE "ScriptNodeConnections" (
 	return nullptr;
 }
 
-sdk::utils::ReportMessagePtr GraphicsScript::onSaveDatabase() const {
+sdk::ReportMessagePtr GraphicsScript::onSaveDatabase() const {
 	auto database = getProject()->getDatabase();
 
 	std::unique_ptr<SQLite::Transaction> transaction;
 	try {
 		transaction = std::make_unique<SQLite::Transaction>(*database);
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save ScriptNodes into database");
 		msg->setMessage("Exception occurred while starting transaction");
 		return msg;
@@ -189,7 +189,7 @@ INSERT INTO ScriptNodes (ScriptID, NodePosition, NodeName) VALUES (?, ?, ?)
 		}
 	} catch (...) {
 		transaction->rollback();
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to create ScriptNodes table");
 		msg->setMessage("Exception occurred while executing query");
 		return msg;
@@ -201,7 +201,7 @@ INSERT INTO ScriptNodes (ScriptID, NodePosition, NodeName) VALUES (?, ?, ?)
 	//return onSaveFile();
 }
 
-sdk::utils::ReportMessagePtr GraphicsScript::onSaveFile() const {
+sdk::ReportMessagePtr GraphicsScript::onSaveFile() const {
 
 	auto parser = getProject()->getScriptParser();
 	CppSourceFile source;

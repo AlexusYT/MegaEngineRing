@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/polar_coordinates.hpp>
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 Transformation::Transformation() {}
 
 std::shared_ptr<Transformation> Transformation::create() {
@@ -80,4 +80,4 @@ void Transformation::swapTransformation(const std::shared_ptr<Transformation> &p
 	pTransformation->onChanged(pTransformation->modelMatrix);
 }
 
-} // namespace mer::sdk::utils
+} // namespace mer::sdk

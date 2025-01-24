@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,18 +21,18 @@
 
 #include "SceneExplorerObject.h"
 
-#include "EngineSDK/main/scene/objects/ISceneObject.h"
-#include "EngineSDK/main/scene/objects/extensions/Extension.h"
-#include "EngineSDK/main/scene/objects/extensions/MainObjectExtension.h"
+#include "EngineSDK/scene/objects/ISceneObject.h"
+#include "EngineSDK/extensions/Extension.h"
+#include "EngineSDK/extensions/MainObjectExtension.h"
 #include "mvp/main/objectProperties/ObjectPropertyEntry.h"
 
 namespace mer::editor::mvp {
-SceneExplorerObject::SceneExplorerObject(sdk::main::ISceneObject* pObject)
+SceneExplorerObject::SceneExplorerObject(sdk::ISceneObject* pObject)
 	: propertyEntries(Gio::ListStore<ObjectExtensionEntry>::create()) {
 	setObject(pObject);
 }
 
-std::shared_ptr<SceneExplorerObject> SceneExplorerObject::create(sdk::main::ISceneObject* pObject) {
+std::shared_ptr<SceneExplorerObject> SceneExplorerObject::create(sdk::ISceneObject* pObject) {
 	return Glib::make_refptr_for_instance(new SceneExplorerObject(pObject));
 }
 
@@ -44,7 +44,7 @@ std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> SceneExplorerObject::getPr
 	return propertyEntries;
 }
 
-void SceneExplorerObject::setObject(sdk::main::ISceneObject* pObject) {
+void SceneExplorerObject::setObject(sdk::ISceneObject* pObject) {
 	if (object == pObject) return;
 	object = pObject;
 	propertyEntries->remove_all();
@@ -55,17 +55,17 @@ void SceneExplorerObject::setObject(sdk::main::ISceneObject* pObject) {
 			name = pNewName;
 		}));*/
 
-	/*auto basicGroup = std::make_shared<sdk::main::ExtensionPropertyGroup>();
+	/*auto basicGroup = std::make_shared<sdk::ExtensionPropertyGroup>();
 	basicGroup->setPropertyName("Basic properties");
-	auto nameProp = std::make_shared<sdk::main::ExtensionProperty<std::string>>();
+	auto nameProp = std::make_shared<sdk::ExtensionProperty<std::string>>();
 	nameProp->setName("Object name");
-	nameProp->setGetterFunc(sigc::mem_fun(*object, &sdk::main::ISceneObject::getName));
-	nameProp->setSetterFunc(sigc::mem_fun(*object, &sdk::main::ISceneObject::setName));
+	nameProp->setGetterFunc(sigc::mem_fun(*object, &sdk::ISceneObject::getName));
+	nameProp->setSetterFunc(sigc::mem_fun(*object, &sdk::ISceneObject::setName));
 	basicGroup->addChild(nameProp);
-	auto positionProp = std::make_shared<sdk::main::ExtensionProperty<glm::vec3>>();
+	auto positionProp = std::make_shared<sdk::ExtensionProperty<glm::vec3>>();
 	positionProp->setName("Position");
-	positionProp->setGetterFunc(sigc::mem_fun(*object, &sdk::main::ISceneObject::getPosition));
-	positionProp->setSetterFunc(sigc::mem_fun(*object, &sdk::main::ISceneObject::setPosition));
+	positionProp->setGetterFunc(sigc::mem_fun(*object, &sdk::ISceneObject::getPosition));
+	positionProp->setSetterFunc(sigc::mem_fun(*object, &sdk::ISceneObject::setPosition));
 	basicGroup->addChild(positionProp);
 
 	propertyEntries->append(ObjectPropertyEntry::create(basicGroup));*/
@@ -73,9 +73,9 @@ void SceneExplorerObject::setObject(sdk::main::ISceneObject* pObject) {
 	for (const auto &extension: object->getExtensions()) { addExtension(extension.second); }
 
 	connections.push_back(object->connectOnExtensionAdded(
-		[this](const std::shared_ptr<sdk::main::Extension> &pNewExt) { addExtension(pNewExt); }));
+		[this](const std::shared_ptr<sdk::Extension> &pNewExt) { addExtension(pNewExt); }));
 	connections.push_back(
-		object->connectOnExtensionRemoved([this](const std::shared_ptr<sdk::main::Extension> &pNewExt) {
+		object->connectOnExtensionRemoved([this](const std::shared_ptr<sdk::Extension> &pNewExt) {
 			for (uint32_t i = 0; i < propertyEntries->get_n_items(); i++) {
 				auto entry = propertyEntries->get_item(i);
 				if (!entry || !entry->getNativeExtension()) continue;
@@ -95,8 +95,8 @@ Glib::RefPtr<Gio::MenuModel> SceneExplorerObject::getMenu() {
 	return menu;
 }
 
-void SceneExplorerObject::addExtension(const std::shared_ptr<sdk::main::Extension> &pExtension) const {
-	/*auto group = std::make_shared<sdk::main::ExtensionPropertyGroup>();
+void SceneExplorerObject::addExtension(const std::shared_ptr<sdk::Extension> &pExtension) const {
+	/*auto group = std::make_shared<sdk::ExtensionPropertyGroup>();
 	group->setPropertyName(pExtension->getTypeName());
 	for (auto properties = pExtension->getProperties(); const auto &extensionPropertyBase: properties) {
 		group->addChild(extensionPropertyBase);

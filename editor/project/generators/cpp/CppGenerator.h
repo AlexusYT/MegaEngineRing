@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 20.01.24.
@@ -41,7 +41,7 @@ public:
 
 	void addElement(GeneratorElement* pElement) { elements.emplace_back(pElement); }
 
-	mer::sdk::utils::ReportMessagePtr saveHeader(const std::filesystem::path &pPath) const {
+	mer::sdk::ReportMessagePtr saveHeader(const std::filesystem::path &pPath) const {
 		create_directories(pPath.parent_path());
 		std::ofstream stream;
 		try {
@@ -49,7 +49,7 @@ public:
 			stream.open(pPath);
 		} catch (...) {
 
-			auto msg = mer::sdk::utils::ReportMessage::create();
+			auto msg = mer::sdk::ReportMessage::create();
 			msg->setTitle("Failed to save header file.");
 			msg->setMessage("Exception thrown");
 			msg->addInfoLine("Trying to save file at {}", pPath.string());
@@ -66,7 +66,7 @@ public:
 		return nullptr;
 	}
 
-	mer::sdk::utils::ReportMessagePtr saveSource(const std::filesystem::path &pPath) const {
+	mer::sdk::ReportMessagePtr saveSource(const std::filesystem::path &pPath) const {
 		create_directories(pPath.parent_path());
 		std::ofstream stream;
 		try {
@@ -74,7 +74,7 @@ public:
 			stream.open(pPath);
 		} catch (...) {
 
-			auto msg = mer::sdk::utils::ReportMessage::create();
+			auto msg = mer::sdk::ReportMessage::create();
 			msg->setTitle("Failed to save source file.");
 			msg->setMessage("Exception thrown");
 			msg->addInfoLine("Trying to save file at {}", pPath.string());

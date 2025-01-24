@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -24,19 +24,19 @@
 #include "SourceSelectionResource.h"
 #include "TypedSourceSelectionResult.h"
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class ITextureResource;
 }
 
 namespace mer::editor::ui {
 
 class SourceSelectionTexture : public SourceSelectionResource {
-	explicit SourceSelectionTexture(sdk::main::IResourceLoadExecutor* pLoader) : SourceSelectionResource(pLoader) {}
+	explicit SourceSelectionTexture(sdk::IResourceLoadExecutor* pLoader) : SourceSelectionResource(pLoader) {}
 
 public:
-	using Result = TypedSourceSelectionResult<sdk::main::ITextureResource>;
+	using Result = TypedSourceSelectionResult<sdk::ITextureResource>;
 
-	static std::shared_ptr<SourceSelectionTexture> create(sdk::main::IResourceLoadExecutor* pLoader);
+	static std::shared_ptr<SourceSelectionTexture> create(sdk::IResourceLoadExecutor* pLoader);
 
 	std::string getName() override { return "texture-resource"; }
 
@@ -50,10 +50,10 @@ public:
 
 	void onElementSelected(const std::shared_ptr<SelectionElement> &pElement) override;
 
-	sdk::main::ResourceType getResourceType() override { return sdk::main::ResourceType::TEXTURE; }
+	sdk::ResourceType getResourceType() override { return sdk::ResourceType::TEXTURE; }
 
 	std::shared_ptr<SelectionElement> createElementFromResource(
-		const std::shared_ptr<sdk::main::IResource> &pResource) override;
+		const std::shared_ptr<sdk::IResource> &pResource) override;
 };
 
 } // namespace mer::editor::ui

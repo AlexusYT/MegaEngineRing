@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@
 
 #include "ViewResourceEditor.h"
 
-#include "EngineSDK/main/resources/materials/ColorComponent.h"
-#include "EngineSDK/main/resources/materials/IMaterialResource.h"
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/materials/ColorComponent.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
 #include "IPresenterResourceEditor.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "ui/customWidgets/resourceSelector/ResourceSelectorWidget.h"
@@ -35,19 +35,19 @@
 
 namespace mer::editor::mvp {
 class ModelObject : public Glib::Object {
-	std::shared_ptr<sdk::main::IModel3DObject> object{};
+	std::shared_ptr<sdk::IModel3DObject> object{};
 	bool importBtn{};
 
-	ModelObject(const std::shared_ptr<sdk::main::IModel3DObject> &pObject, bool pImportBtn)
+	ModelObject(const std::shared_ptr<sdk::IModel3DObject> &pObject, bool pImportBtn)
 		: object(pObject), importBtn(pImportBtn) {}
 
 public:
-	static std::shared_ptr<ModelObject> create(const std::shared_ptr<sdk::main::IModel3DObject> &pObject,
+	static std::shared_ptr<ModelObject> create(const std::shared_ptr<sdk::IModel3DObject> &pObject,
 											   bool pImportBtn) {
 		return Glib::make_refptr_for_instance(new ModelObject(pObject, pImportBtn));
 	}
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::IModel3DObject> &getObject() const { return object; }
+	[[nodiscard]] const std::shared_ptr<sdk::IModel3DObject> &getObject() const { return object; }
 
 	[[nodiscard]] bool isImportBtn() const { return importBtn; }
 
@@ -57,11 +57,11 @@ public:
 std::string OpenedResource::getType() const {
 	switch (resource->getResourceType()) {
 
-		case sdk::main::ResourceType::NONE: break;
-		case sdk::main::ResourceType::MODEL: return "Model";
-		case sdk::main::ResourceType::TEXTURE: return "Texture";
-		case sdk::main::ResourceType::MATERIAL: return "Material";
-		case sdk::main::ResourceType::SHADER: break;
+		case sdk::ResourceType::NONE: break;
+		case sdk::ResourceType::MODEL: return "Model";
+		case sdk::ResourceType::TEXTURE: return "Texture";
+		case sdk::ResourceType::MATERIAL: return "Material";
+		case sdk::ResourceType::SHADER: break;
 	}
 	return "Unknown";
 }
@@ -184,10 +184,10 @@ std::shared_ptr<ViewResourceEditor> ViewResourceEditor::create(const std::shared
 			"/ui/ResourceEditorWindow.ui",
 			std::vector<Glib::ustring>{"root", "modelEditor", "textureEditor", "materialEditor"});
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to load ui file");
 		msg->setMessage("Error while loading resource creation window");
-		sdk::utils::Logger::error(msg);
+		sdk::Logger::error(msg);
 		return nullptr;
 	}
 	return std::shared_ptr<ViewResourceEditor>(new ViewResourceEditor(pContext, builder));
@@ -233,8 +233,8 @@ void ViewResourceEditor::setPresenter(IPresenterResourceEditor* pPresenter) {
 		});
 }
 
-void ViewResourceEditor::displayError(const sdk::utils::ReportMessagePtr &pError) {
-	mer::sdk::utils::Logger::error(pError);
+void ViewResourceEditor::displayError(const sdk::ReportMessagePtr &pError) {
+	mer::sdk::Logger::error(pError);
 	//ErrorDialog::showErrorDialog(this, pError);
 }
 
@@ -269,7 +269,7 @@ void ViewResourceEditor::displayMessage(const std::string &pMessage) {
 	label->set_text(pMessage);
 }
 
-void ViewResourceEditor::displayObjects(const std::vector<std::shared_ptr<sdk::main::IModel3DObject>> &pObjects,
+void ViewResourceEditor::displayObjects(const std::vector<std::shared_ptr<sdk::IModel3DObject>> &pObjects,
 										bool pFileObjects) {
 	executeInMainThread([this, pObjects, pFileObjects](auto &) {
 		auto objectsList = Gio::ListStore<ModelObject>::create();
@@ -301,11 +301,11 @@ std::vector<std::string> ViewResourceEditor::getSelectedObjects() {
 	return objects;
 }
 
-void ViewResourceEditor::appendResource(const std::shared_ptr<sdk::main::IResource> &pNewResource) {
+void ViewResourceEditor::appendResource(const std::shared_ptr<sdk::IResource> &pNewResource) {
 	executeInMainThread([this, pNewResource](auto &) { openedList->append(OpenedResource::create(pNewResource)); });
 }
 
-void ViewResourceEditor::removeResource(const std::shared_ptr<sdk::main::IResource> &pResource) {
+void ViewResourceEditor::removeResource(const std::shared_ptr<sdk::IResource> &pResource) {
 	for (uint32_t i = 0, maxI = openedList->get_n_items(); i < maxI; i++) {
 		std::shared_ptr<OpenedResource> item = openedList->get_item(i);
 		if (!item) continue;
@@ -316,7 +316,7 @@ void ViewResourceEditor::removeResource(const std::shared_ptr<sdk::main::IResour
 	}
 }
 
-void ViewResourceEditor::selectResource(const std::shared_ptr<sdk::main::IResource> &pResource) {
+void ViewResourceEditor::selectResource(const std::shared_ptr<sdk::IResource> &pResource) {
 	executeInMainThread([this, pResource](auto &) {
 		mainStack->set_visible_child("editorPage");
 		for (uint32_t i = 0, maxI = openedList->get_n_items(); i < maxI; i++) {
@@ -346,7 +346,7 @@ void ViewResourceEditor::unmarkErrored(Gtk::Widget* pWidget) {
 	if (pWidget->has_css_class("error")) pWidget->remove_css_class("error");
 }
 
-void ViewResourceEditor::updateUnsavedDialog(const std::shared_ptr<sdk::main::IResource> &pResource) const {
+void ViewResourceEditor::updateUnsavedDialog(const std::shared_ptr<sdk::IResource> &pResource) const {
 	const std::filesystem::path path{resourcePathEntry->get_text()};
 	const auto name = resourceNameEntry->get_text().raw();
 
@@ -356,7 +356,7 @@ void ViewResourceEditor::updateUnsavedDialog(const std::shared_ptr<sdk::main::IR
 		unsavedDialogBox->set_visible(false);
 }
 
-void ViewResourceEditor::updateResourcePath(const std::shared_ptr<sdk::main::IResource> &pResource) const {
+void ViewResourceEditor::updateResourcePath(const std::shared_ptr<sdk::IResource> &pResource) const {
 	if (const auto uri = pResource->getResourceUri(); is_regular_file(presenter->getDataPath() / uri)) {
 		auto pathStr = uri.parent_path().string();
 		resourcePathEntry->set_text(pathStr.empty() ? "/" : pathStr);
@@ -417,14 +417,14 @@ Gtk::Entry* ViewResourceEditor::getFilePathEntry() const {
 	return entry;
 }
 
-void ViewResourceEditor::displayMaterial(const std::shared_ptr<sdk::main::IMaterialResource> &pMaterialResource) {
+void ViewResourceEditor::displayMaterial(const std::shared_ptr<sdk::IMaterialResource> &pMaterialResource) {
 
-	auto baseColorSetter = [this](const std::shared_ptr<sdk::main::IMaterialComponent> &pComponent,
+	auto baseColorSetter = [this](const std::shared_ptr<sdk::IMaterialComponent> &pComponent,
 								  ui::ResourceSelectorWidget* pSelector) {
 		std::shared_ptr<ui::ISourceSelectionResult> selection;
-		if (const auto map = std::dynamic_pointer_cast<sdk::main::ITextureResource>(pComponent))
+		if (const auto map = std::dynamic_pointer_cast<sdk::ITextureResource>(pComponent))
 			selection = ui::SourceSelectionTexture::Result::create(map);
-		else if (const auto color = std::dynamic_pointer_cast<sdk::main::ColorComponent>(pComponent))
+		else if (const auto color = std::dynamic_pointer_cast<sdk::ColorComponent>(pComponent))
 			selection = ui::SourceSelectionColor::Result::create(color);
 
 		pSelector->setSelection(selection);

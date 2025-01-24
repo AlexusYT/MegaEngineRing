@@ -1,19 +1,19 @@
-// MegaEngineRing is a program that can speed up game development.
-// Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
 // Created by alexus on 06.02.24.
@@ -27,18 +27,18 @@ class EditorSceneObject;
 }
 class UUID;
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class Extension;
 class IScene;
 class ICamera;
 class ISceneObject;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace mer::editor::project {
 class Project;
 } // namespace mer::editor::project
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 enum class MouseButton;
 }
 
@@ -77,17 +77,17 @@ public:
 
 	virtual void createObject() = 0;
 
-	virtual void removeObject(sdk::main::ISceneObject* pObjectToRemove) = 0;
+	virtual void removeObject(sdk::ISceneObject* pObjectToRemove) = 0;
 
-	virtual void renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const = 0;
+	virtual void renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const = 0;
 
-	virtual void saveObject(sdk::main::ISceneObject* pObject) = 0;
+	virtual void saveObject(sdk::ISceneObject* pObject) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::main::IScene> &getScene() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<sdk::IScene> &getScene() const = 0;
 
 	virtual void onCursorPosChanged(double pX, double pY) = 0;
 
-	virtual void onMouseButtonStateChanged(sdk::utils::MouseButton pButton, bool pPressed, double pX, double pY) = 0;
+	virtual void onMouseButtonStateChanged(sdk::MouseButton pButton, bool pPressed, double pX, double pY) = 0;
 
 	virtual void toggleGrid(bool pState) = 0;
 };

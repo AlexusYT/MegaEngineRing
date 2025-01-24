@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 // Created by alexus on 28.10.24.
 //
 
-#include "../../include/EngineUtils/utils/Property.h"
+#include "EngineUtils/utils/Property.h"
 
 namespace mer {
 namespace sdk {

@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,20 +21,20 @@
 
 #include "SourceSelectionModel3D.h"
 
-#include "EngineSDK/main/resources/models/IModel3DObject.h"
-#include "EngineSDK/main/resources/models/Model3DResource.h"
+#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "EngineSDK/resources/models/Model3DResource.h"
 #include "ui/customWidgets/resourceSelector/ISourceSelectionResult.h"
 
 namespace mer::editor::ui {
 
 
 class ModelObjectElement : public SelectionElement {
-	std::shared_ptr<sdk::main::IModel3DObject> object;
+	std::shared_ptr<sdk::IModel3DObject> object;
 
-	explicit ModelObjectElement(const std::shared_ptr<sdk::main::IModel3DObject> &pObject) : object(pObject) {}
+	explicit ModelObjectElement(const std::shared_ptr<sdk::IModel3DObject> &pObject) : object(pObject) {}
 
 public:
-	static std::shared_ptr<ModelObjectElement> create(const std::shared_ptr<sdk::main::IModel3DObject> &pObject) {
+	static std::shared_ptr<ModelObjectElement> create(const std::shared_ptr<sdk::IModel3DObject> &pObject) {
 		return Glib::make_refptr_for_instance(new ModelObjectElement(pObject));
 	}
 
@@ -44,23 +44,23 @@ public:
 
 	const std::string &getName() const override { return object->getName(); }
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::IModel3DObject> &getObject() const { return object; }
+	[[nodiscard]] const std::shared_ptr<sdk::IModel3DObject> &getObject() const { return object; }
 };
 
 class ModelResourceElement : public ResourceElement {
 
-	explicit ModelResourceElement(const std::shared_ptr<sdk::main::IResource> &pResource)
+	explicit ModelResourceElement(const std::shared_ptr<sdk::IResource> &pResource)
 		: ResourceElement(pResource) {}
 
 public:
-	static std::shared_ptr<ModelResourceElement> create(const std::shared_ptr<sdk::main::IResource> &pResource) {
+	static std::shared_ptr<ModelResourceElement> create(const std::shared_ptr<sdk::IResource> &pResource) {
 		return Glib::make_refptr_for_instance(new ModelResourceElement(pResource));
 	}
 
 	bool selectable() override { return false; }
 
 	std::shared_ptr<Gio::ListStore<SelectionElement>> getChildren() override {
-		auto model = std::dynamic_pointer_cast<sdk::main::IModel3DResource>(getResource());
+		auto model = std::dynamic_pointer_cast<sdk::IModel3DResource>(getResource());
 		if (!model) return nullptr;
 		auto children = Gio::ListStore<SelectionElement>::create();
 		for (auto modelObject: model->getModelObjects()) {
@@ -74,10 +74,10 @@ public:
 	}
 };
 
-SourceSelectionModel3D::SourceSelectionModel3D(sdk::main::IResourceLoadExecutor* pLoader)
+SourceSelectionModel3D::SourceSelectionModel3D(sdk::IResourceLoadExecutor* pLoader)
 	: SourceSelectionResource(pLoader) {}
 
-std::shared_ptr<SourceSelectionModel3D> SourceSelectionModel3D::create(sdk::main::IResourceLoadExecutor* pLoader) {
+std::shared_ptr<SourceSelectionModel3D> SourceSelectionModel3D::create(sdk::IResourceLoadExecutor* pLoader) {
 	return std::shared_ptr<SourceSelectionModel3D>(new SourceSelectionModel3D(pLoader));
 }
 
@@ -131,7 +131,7 @@ void SourceSelectionModel3D::onElementSelected(const std::shared_ptr<SelectionEl
 }
 
 std::shared_ptr<SelectionElement> SourceSelectionModel3D::createElementFromResource(
-	const std::shared_ptr<sdk::main::IResource> &pResource) {
+	const std::shared_ptr<sdk::IResource> &pResource) {
 	return ModelResourceElement::create(pResource);
 }
 

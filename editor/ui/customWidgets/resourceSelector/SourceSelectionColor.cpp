@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 #include "SourceSelectionColor.h"
 
-#include "EngineSDK/main/resources/materials/ColorComponent.h"
+#include "EngineSDK/resources/materials/ColorComponent.h"
 
 namespace mer::editor::ui {
 bool SourceSelectionColor::Result::isSame(const std::shared_ptr<ISourceSelectionResult> &pOther) {
@@ -46,7 +46,7 @@ Gtk::Widget* SourceSelectionColor::getWidget() {
 	auto rgbaProp = picker->property_rgba();
 	rgbaProp.signal_changed().connect([rgbaProp, this] {
 		auto rgba = rgbaProp.get_value();
-		auto component = sdk::main::ColorComponent::create();
+		auto component = sdk::ColorComponent::create();
 		component->color = glm::vec4(rgba.get_red(), rgba.get_green(), rgba.get_blue(), rgba.get_alpha());
 		resultCallback(Result::create(component));
 	});

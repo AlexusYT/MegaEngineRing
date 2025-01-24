@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ public:
 		return createWidgetSignal.connect(pSlot);
 	}
 
-	sdk::utils::ReportMessagePtr importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
+	sdk::ReportMessagePtr importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
 												mvp::ApplicationController* pAppController);
 
 	std::shared_ptr<nlohmann::json> exportToJson() const;

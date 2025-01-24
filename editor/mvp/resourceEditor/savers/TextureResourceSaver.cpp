@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 
 #include <png++/image.hpp>
 
-#include "EngineSDK/main/resources/IResource.h"
-#include "EngineSDK/main/resources/textures/ITextureResource.h"
-#include "EngineSDK/main/resources/textures/Texture2DImageFormat.h"
+#include "EngineSDK/resources/IResource.h"
+#include "EngineSDK/resources/textures/ITextureResource.h"
+#include "EngineSDK/resources/textures/Texture2DImageFormat.h"
 
 namespace mer::editor::mvp {
 
@@ -42,8 +42,8 @@ void write_data(const uint32_t pWidth, const uint32_t pHeight, void* pData, std:
 	img.write_stream(pStream);
 }
 
-sdk::utils::ReportMessagePtr TextureResourceSaver::saveToFile(
-	const std::filesystem::path &pPath, const std::shared_ptr<sdk::main::ITextureResource> &pTexture) {
+sdk::ReportMessagePtr TextureResourceSaver::saveToFile(
+	const std::filesystem::path &pPath, const std::shared_ptr<sdk::ITextureResource> &pTexture) {
 
 	auto dir = pPath.parent_path();
 	if (!exists(dir)) { create_directories(dir); }
@@ -61,16 +61,16 @@ sdk::utils::ReportMessagePtr TextureResourceSaver::saveToFile(
 		auto data = pTexture->getData();
 		switch (pTexture->getFormat()) {
 
-			case sdk::main::Texture2DImageFormat::RED: write_data<png::gray_pixel>(width, height, data, file); break;
-			case sdk::main::Texture2DImageFormat::RG: write_data<png::ga_pixel>(width, height, data, file); break;
-			case sdk::main::Texture2DImageFormat::BGR:
-			case sdk::main::Texture2DImageFormat::RGB: write_data<png::rgb_pixel>(width, height, data, file); break;
-			case sdk::main::Texture2DImageFormat::RGBA:
-			case sdk::main::Texture2DImageFormat::BGRA: write_data<png::rgba_pixel>(width, height, data, file); break;
+			case sdk::Texture2DImageFormat::RED: write_data<png::gray_pixel>(width, height, data, file); break;
+			case sdk::Texture2DImageFormat::RG: write_data<png::ga_pixel>(width, height, data, file); break;
+			case sdk::Texture2DImageFormat::BGR:
+			case sdk::Texture2DImageFormat::RGB: write_data<png::rgb_pixel>(width, height, data, file); break;
+			case sdk::Texture2DImageFormat::RGBA:
+			case sdk::Texture2DImageFormat::BGRA: write_data<png::rgba_pixel>(width, height, data, file); break;
 			default: throw std::runtime_error("Unknown texture image format");
 		}
 	} catch (...) {
-		auto msg = sdk::utils::ReportMessage::create();
+		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save texture resource to file");
 		msg->setMessage("Exception occurred");
 		msg->addInfoLine("Path: {}", pPath.string());

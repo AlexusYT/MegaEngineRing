@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 #ifndef LOADEDSCENE_H
 #define LOADEDSCENE_H
 
-namespace mer::sdk::utils {
+namespace mer::sdk {
 enum class MouseButton;
 }
 
@@ -31,13 +31,13 @@ class ResourcesContext;
 class ExplorerObject;
 } // namespace mer::editor::mvp
 
-namespace mer::sdk::main {
+namespace mer::sdk {
 class IResourceLoadExecutor;
 class Application;
 class Extension;
 class ISceneObject;
 class IScene;
-} // namespace mer::sdk::main
+} // namespace mer::sdk
 
 namespace SQLite {
 class Database;
@@ -48,19 +48,19 @@ class LoadedScene {
 	std::string name;
 	std::shared_ptr<SQLite::Database> database;
 	sigc::signal<void(const std::string &pName)> onNameChanged;
-	std::shared_ptr<sdk::main::IScene> scene;
+	std::shared_ptr<sdk::IScene> scene;
 	std::shared_ptr<mvp::ExplorerObject> mainObject;
-	sigc::signal<void(const sdk::utils::ReportMessagePtr &pError)> onErrorOccurred;
-	std::unordered_map<mvp::ExplorerObject*, sdk::main::ISceneObject*> sceneObjByExplorer;
-	std::unordered_map<sdk::main::ISceneObject*, std::shared_ptr<mvp::ExplorerObject>> explorerBySceneObj;
+	sigc::signal<void(const sdk::ReportMessagePtr &pError)> onErrorOccurred;
+	std::unordered_map<mvp::ExplorerObject*, sdk::ISceneObject*> sceneObjByExplorer;
+	std::unordered_map<sdk::ISceneObject*, std::shared_ptr<mvp::ExplorerObject>> explorerBySceneObj;
 	/**=
 	 * @brief Locks the database from performing the insert operations. Typically, this is used to prevent duplication of
 	 * data when reading it.
 	 */
 	bool databaseLocked{};
-	sigc::signal<void(sdk::main::Extension* pObject)> onExtensionAdded;
-	std::shared_ptr<sdk::main::Application> app;
-	std::shared_ptr<sdk::main::ISceneObject> cameraObject;
+	sigc::signal<void(sdk::Extension* pObject)> onExtensionAdded;
+	std::shared_ptr<sdk::Application> app;
+	std::shared_ptr<sdk::ISceneObject> cameraObject;
 
 	sigc::signal<void()> onLoadingSignal;
 	sigc::signal<void()> onLoadedSignal;
@@ -78,11 +78,11 @@ public:
 
 	bool hasResourcesContext() const;
 
-	sdk::main::IResourceLoadExecutor* getResourceLoadExecutor() const;
+	sdk::IResourceLoadExecutor* getResourceLoadExecutor() const;
 
 	void setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext);
 
-	void connectErrorOccurred(const sigc::slot<void(const sdk::utils::ReportMessagePtr &pError)> &pSlot) {
+	void connectErrorOccurred(const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pSlot) {
 		onErrorOccurred.connect(pSlot);
 	}
 
@@ -92,7 +92,7 @@ public:
 
 	void render() const;
 
-	sdk::utils::ReportMessagePtr load(const std::filesystem::path &pPath);
+	sdk::ReportMessagePtr load(const std::filesystem::path &pPath);
 
 	sigc::connection connectOnLoadingSignal(const sigc::slot<void()> &pSlot) { return onLoadingSignal.connect(pSlot); }
 
@@ -100,9 +100,9 @@ public:
 
 	void unload();
 
-	sdk::utils::ReportMessagePtr readSceneSettings();
+	sdk::ReportMessagePtr readSceneSettings();
 
-	sdk::utils::ReportMessagePtr readObjects();
+	sdk::ReportMessagePtr readObjects();
 
 	void setName(const std::string &pName) {
 		if (name == pName) return;
@@ -121,16 +121,16 @@ public:
 
 	void addObject();
 
-	void removeObject(sdk::main::ISceneObject* pObjectToRemove);
+	void removeObject(sdk::ISceneObject* pObjectToRemove);
 
-	void removeExtension(const sdk::main::Extension* pExtensionToRemove) const;
+	void removeExtension(const sdk::Extension* pExtensionToRemove) const;
 
-	void renameObject(sdk::main::ISceneObject* pObject, const std::string &pNewName) const;
+	void renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const;
 
-	std::shared_ptr<sdk::main::Extension> addExtension(sdk::main::ISceneObject* pObject, const std::string &pType,
+	std::shared_ptr<sdk::Extension> addExtension(sdk::ISceneObject* pObject, const std::string &pType,
 													   const std::string &pName) const;
 
-	sigc::connection connectExtensionAdded(const sigc::slot<void(sdk::main::Extension* pExtension)> &pSlot) {
+	sigc::connection connectExtensionAdded(const sigc::slot<void(sdk::Extension* pExtension)> &pSlot) {
 		return onExtensionAdded.connect(pSlot);
 	}
 
@@ -139,28 +139,28 @@ public:
 		return onSelectionChanged.connect(pSlot);
 	}
 
-	void saveObject(sdk::main::ISceneObject* pObject) const;
+	void saveObject(sdk::ISceneObject* pObject) const;
 
-	void addObjectToDatabase(const std::shared_ptr<sdk::main::ISceneObject> &pObject) const;
+	void addObjectToDatabase(const std::shared_ptr<sdk::ISceneObject> &pObject) const;
 
-	void removeObjectFromDatabase(sdk::main::ISceneObject* pObject) const;
+	void removeObjectFromDatabase(sdk::ISceneObject* pObject) const;
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::IScene> &getScene() const { return scene; }
+	[[nodiscard]] const std::shared_ptr<sdk::IScene> &getScene() const { return scene; }
 
 	void onCursorPosChanged(double pX, double pY) const;
 
-	void onMouseButtonStateChanged(sdk::utils::MouseButton pButton, bool pPressed, double pX, double pY) const;
+	void onMouseButtonStateChanged(sdk::MouseButton pButton, bool pPressed, double pX, double pY) const;
 
 	void selectObject(mvp::ExplorerObject* pObjectToSelect);
 
 	[[nodiscard]] mvp::ExplorerObject* getSelectedObject() const { return selectedObject; }
 
-	[[nodiscard]] const std::shared_ptr<sdk::main::Application> &getApp() const { return app; }
+	[[nodiscard]] const std::shared_ptr<sdk::Application> &getApp() const { return app; }
 
 private:
-	std::shared_ptr<sdk::main::ISceneObject> createObject() const;
+	std::shared_ptr<sdk::ISceneObject> createObject() const;
 
-	sdk::utils::ReportMessagePtr createObjectsTable() const;
+	sdk::ReportMessagePtr createObjectsTable() const;
 };
 } // namespace mer::editor::project
 
