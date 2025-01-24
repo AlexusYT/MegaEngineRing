@@ -22,11 +22,6 @@
 #ifndef CANVASWIDGET_H
 #define CANVASWIDGET_H
 
-#include <glm/vec2.hpp>
-#include <gtkmm/border.h>
-#include <gtkmm/gesturedrag.h>
-#include <set>
-
 namespace mer::editor::mvp {
 class CanvasElement;
 }

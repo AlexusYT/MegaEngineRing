@@ -21,8 +21,6 @@
 
 #ifndef PANEDCONTEXT_H
 #define PANEDCONTEXT_H
-#include <gtkmm/viewport.h>
-
 #include "IWidgetContext.h"
 
 namespace mer::editor::mvp {

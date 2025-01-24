@@ -22,12 +22,29 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <glm/glm.hpp>
 
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdouble-promotion"
+#pragma GCC diagnostic ignored "-Wextra-semi"
 #define GDKMM_DISABLE_DEPRECATED
+#include <glibmm.h>
 #define GTKMM_DISABLE_DEPRECATED
+#include <gtkmm.h>
+#pragma GCC diagnostic pop
+
+#include <EngineUtils/utils/Logger.h>
 #include <EngineUtils/utils/ReportMessage.h>
 #include <filesystem>
+#include <fstream>
+#include <glm/ext.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <iostream>
+#include <list>
+#include <ranges>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 

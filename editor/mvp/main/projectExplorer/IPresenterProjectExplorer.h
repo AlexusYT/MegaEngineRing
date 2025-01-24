@@ -21,8 +21,6 @@
 
 #ifndef IPRESENTERPROJECTEXPLORER_H
 #define IPRESENTERPROJECTEXPLORER_H
-#include <sigc++/functors/slot.h>
-
 #include "mvp/PresenterBase.h"
 
 namespace mer::editor::ui {

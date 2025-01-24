@@ -21,8 +21,6 @@
 
 #ifndef GTKMMCONTEXT_H
 #define GTKMMCONTEXT_H
-#include <gtkmm/application.h>
-
 #include "IWidgetContext.h"
 
 namespace mer::editor::mvp {

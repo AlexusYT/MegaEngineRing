@@ -21,8 +21,6 @@
 
 #ifndef OPTION_H
 #define OPTION_H
-#include <glibmm/optionentry.h>
-#include <glibmm/optiongroup.h>
 
 namespace mer::editor {
 

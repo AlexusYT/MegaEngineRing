@@ -21,13 +21,7 @@
 
 #ifndef IVIEWRESOURCESELECTION_H
 #define IVIEWRESOURCESELECTION_H
-#include <gtkmm/entry.h>
-
 #include "mvp/IView.h"
-
-namespace Gtk {
-class FileDialog;
-}
 
 namespace mer::editor::mvp {
 class IViewProjectExplorer;

@@ -21,8 +21,6 @@
 
 #ifndef SCRIPTNODE_H
 #define SCRIPTNODE_H
-#include <map>
-
 #include "mvp/main/editors/graphicsScriptEditor/canvas/CanvasElement.h"
 
 namespace mer::sdk {
@@ -50,7 +48,7 @@ public:
 	ScriptNodeSlot* getSlotByName(const std::string &pSelfSlotName);
 
 	sdk::ReportMessagePtr addNewSlot(const std::string &pSlotName, const std::string &pMethodName,
-									 SlotConnectionType pType);
+											SlotConnectionType pType);
 
 	[[nodiscard]] const std::map<std::string, std::shared_ptr<ScriptNodeSlot>> &getSlots() const { return slots; }
 

@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "ReportMessageFwd.h"
+#include "Utils.h"
 
 namespace mer::sdk {
 class ReportMessage {
@@ -63,7 +64,25 @@ public:
 
 	void setExceptionPtr(const std::exception_ptr &pExceptionPtr) { exceptionPtr = pExceptionPtr; }
 
-	[[nodiscard]] std::string getReport(bool pShowStacktrace = true) const;
+	[[nodiscard]] std::string getReport(const bool pShowStacktrace = true) const {
+		std::stringstream ss;
+		ss << (title.empty() ? "Untitled report" : title) << "\n";
+		ss << "Message: " << message << "\n";
+
+		if (exceptionPtr) {
+			try {
+				std::rethrow_exception(exceptionPtr);
+			} catch (std::exception &e) {
+				ss << "Exception info:\n";
+				ss << "\tClass: " << Utils::getTypeName(&e) << "\n";
+				ss << "\tMessage: " << e.what() << "\n";
+			}
+		}
+		ss << "Additional info:\n";
+		for (const auto &infoLine: infoLines) { ss << "\t" << infoLine << "\n"; }
+		if (pShowStacktrace) ss << "Stacktrace: \n" << stacktrace;
+		return ss.str();
+	}
 };
 } // namespace mer::sdk
 

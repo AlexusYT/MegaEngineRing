@@ -22,7 +22,6 @@
 #ifndef THREADDISPATCHER_H
 #define THREADDISPATCHER_H
 #include <future>
-#include <glibmm/dispatcher.h>
 
 namespace mer::editor::mvp {
 class ThreadDispatcher {

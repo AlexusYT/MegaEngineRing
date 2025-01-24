@@ -22,7 +22,6 @@
 #include "SceneOverlayElements.h"
 
 #include <epoxy/gl.h>
-#include <glm/ext/matrix_transform.hpp>
 
 #include "graphic/shaders/SimpleShader.h"
 

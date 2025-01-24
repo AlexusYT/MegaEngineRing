@@ -22,12 +22,6 @@
 #ifndef CUSTOMTREEVIEW_H
 #define CUSTOMTREEVIEW_H
 
-#include <giomm/menu.h>
-#include <gtkmm/columnview.h>
-#include <gtkmm/popovermenu.h>
-#include <gtkmm/singleselection.h>
-#include <gtkmm/treelistmodel.h>
-
 namespace mer::editor::ui {
 class TreeElementBase;
 

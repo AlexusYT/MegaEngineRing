@@ -21,8 +21,6 @@
 
 #include "Model3DResourceSaver.h"
 
-#include <ranges>
-
 #include "EngineSDK/resources/IResource.h"
 #include "EngineSDK/resources/models/IModel3DObject.h"
 #include "EngineSDK/resources/models/IModel3DResource.h"

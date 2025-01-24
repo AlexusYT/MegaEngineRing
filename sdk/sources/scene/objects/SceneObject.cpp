@@ -21,11 +21,10 @@
 
 #include "EngineSDK/scene/objects/SceneObject.h"
 
-#include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/scripting/IScript.h"
 #include "EngineUtils/utils/ReportMessage.h"
 #include "EngineUtils/utils/UUID.h"
-#include "EngineUtils/utils/Utils.h"
+#include "EngineSDK/extensions/MainObjectExtension.h"
+#include "EngineSDK/scripting/IScript.h"
 
 namespace mer::sdk {
 
@@ -44,7 +43,8 @@ SceneObject::~SceneObject() = default;
 
 std::shared_ptr<ISceneObject> SceneObject::create() { return std::shared_ptr<ISceneObject>(new SceneObject()); }
 
-ReportMessagePtr SceneObject::addExtension(const std::string &pName, const std::shared_ptr<Extension> &pExtension) {
+ReportMessagePtr SceneObject::addExtension(const std::string &pName,
+												  const std::shared_ptr<Extension> &pExtension) {
 	if (!pExtension) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Unable to add an extension");
@@ -187,7 +187,8 @@ void SceneObject::onCursorPosChanged(const double pX, const double pY) const {
 	}
 }
 
-void SceneObject::onKeyStateChanged(const KeyboardKey pKey, const bool pPressed, const ModifierKeys &pMods) const {
+void SceneObject::onKeyStateChanged(const KeyboardKey pKey, const bool pPressed,
+									const ModifierKeys &pMods) const {
 	for (const auto &extension: extensions) {
 		if (!extension.second->isEnabled()) continue;
 		extension.second->onKeyStateChanged(pKey, pPressed, pMods);

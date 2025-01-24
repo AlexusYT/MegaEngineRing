@@ -21,11 +21,6 @@
 
 #ifndef OBJECTPROPERTIESWINDOW_H
 #define OBJECTPROPERTIESWINDOW_H
-#include <gtkmm/box.h>
-#include <gtkmm/button.h>
-#include <gtkmm/columnviewcolumn.h>
-#include <gtkmm/menubutton.h>
-
 #include "IViewObjectProperties.h"
 
 namespace mer::editor::ui {

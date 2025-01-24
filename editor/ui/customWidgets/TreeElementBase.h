@@ -22,9 +22,6 @@
 #ifndef TREEELEMENTBASE_H
 #define TREEELEMENTBASE_H
 
-#include <giomm/listmodel.h>
-#include <giomm/menumodel.h>
-
 namespace mer::editor::ui {
 class TreeElementBase : public Glib::Object {
 	sigc::slot<void(bool)> onShowExpanderSlot;

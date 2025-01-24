@@ -21,19 +21,13 @@
 
 #ifndef OBJFILERESOURCEREADER_H
 #define OBJFILERESOURCEREADER_H
-#include <bits/ranges_algo.h>
-#include <cstring>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <ranges>
-#include <unordered_map>
-
 #include "FileResourceReader.h"
 
 namespace mer::sdk {
 class IModel3DObject;
 class IModel3DResource;
 } // namespace mer::sdk
+
 
 namespace mer::editor::mvp {
 class ObjFileResourceReader : public FileResourceReader {

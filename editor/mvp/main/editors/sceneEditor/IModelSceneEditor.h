@@ -22,12 +22,6 @@
 #ifndef IMODELSCENEEDITOR_H
 #define IMODELSCENEEDITOR_H
 
-#include <sigc++/functors/slot.h>
-
-namespace sigc {
-struct connection;
-}
-
 namespace mer::editor::ui {
 class EditorSceneObject;
 }

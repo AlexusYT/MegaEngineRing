@@ -21,9 +21,6 @@
 
 #ifndef PRESENTERGRAPHICSSCRIPTEDITOR_H
 #define PRESENTERGRAPHICSSCRIPTEDITOR_H
-#include <glm/vec2.hpp>
-#include <sigc++/signal.h>
-
 #include "mvp/PresenterBase.h"
 
 namespace mer::editor::mvp {
@@ -45,7 +42,9 @@ public:
 
 	void stop() override;
 
-	std::string getTypeName() override { return "PresenterGraphicsScriptEditor"; }
+	std::string getTypeName() override {
+		return "PresenterGraphicsScriptEditor";
+	}
 };
 
 } // namespace mer::editor::mvp

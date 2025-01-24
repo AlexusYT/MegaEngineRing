@@ -21,10 +21,6 @@
 
 #include "StartupWindow.h"
 
-#include <giomm/liststore.h>
-#include <gtkmm/applicationwindow.h>
-
-#include "EngineUtils/utils/Logger.h"
 #include "Globals.h"
 #include "mvp/contexts/IWidgetContext.h"
 

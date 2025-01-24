@@ -21,12 +21,7 @@
 
 #include "CanvasWidget.h"
 
-#include <gdkmm/general.h>
-#include <gtkmm/eventcontrollerscroll.h>
-#include <gtkmm/snapshot.h>
-
 #include "CanvasElement.h"
-#include "EngineUtils/utils/Utils.h"
 
 namespace mer::editor::mvp {
 CanvasWidget::CanvasWidget() {

@@ -21,7 +21,6 @@
 
 #ifndef FILERESOURCEREADER_H
 #define FILERESOURCEREADER_H
-#include <fstream>
 
 namespace mer::editor::mvp {
 

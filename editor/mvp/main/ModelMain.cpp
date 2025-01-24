@@ -21,7 +21,6 @@
 
 #include "ModelMain.h"
 
-#include <giomm/resource.h>
 #include <nlohmann/json.hpp>
 
 #include "Globals.h"

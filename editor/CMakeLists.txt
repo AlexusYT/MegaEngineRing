@@ -390,7 +390,7 @@ find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(MegaEngineEditor_lib PRIVATE glfw)
 
 pkg_check_modules(GTKMM gtkmm-4.0)
-include_directories(SYSTEM ${GTKMM_INCLUDE_DIRS})
+include_directories(${GTKMM_INCLUDE_DIRS})
 target_link_libraries(MegaEngineEditor_lib PRIVATE ${GTKMM_LINK_LIBRARIES})
 
 # this is heuristically generated, and may not be correct

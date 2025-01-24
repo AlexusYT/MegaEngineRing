@@ -21,8 +21,6 @@
 
 #include "ViewProjectExplorer.h"
 
-#include <gtkmm/label.h>
-#include <gtkmm/treeexpander.h>
 #include <project/Project.h>
 
 #include "entries/ProjectExplorerElement.h"

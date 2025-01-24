@@ -22,10 +22,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <gtkmm/builder.h>
-#include <gtkmm/eventcontrollerkey.h>
-#include <gtkmm/headerbar.h>
-#include <gtkmm/window.h>
 #include <mvp/main/IViewMain.h>
 #include <mvp/main/centerWindow/ViewCenterWindow.h>
 

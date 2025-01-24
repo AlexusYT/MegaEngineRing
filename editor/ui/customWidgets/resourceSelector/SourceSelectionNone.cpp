@@ -21,10 +21,6 @@
 
 #include "SourceSelectionNone.h"
 
-#include <gtkmm/box.h>
-#include <gtkmm/button.h>
-#include <gtkmm/label.h>
-
 #include "ISourceSelectionResult.h"
 #include "ResourceSelectorWidget.h"
 

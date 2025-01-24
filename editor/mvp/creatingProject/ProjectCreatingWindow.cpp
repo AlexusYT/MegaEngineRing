@@ -21,9 +21,6 @@
 
 #include "ProjectCreatingWindow.h"
 
-#include <gtkmm/label.h>
-
-#include "EngineUtils/utils/Logger.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "ui/widgetWindows/LogView.h"
 

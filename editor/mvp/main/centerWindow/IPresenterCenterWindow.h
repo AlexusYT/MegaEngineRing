@@ -23,10 +23,6 @@
 #define IPRESENTERCENTERWINDOW_H
 #include "mvp/PresenterBase.h"
 
-namespace Gtk {
-class Widget;
-}
-
 namespace mer::editor::mvp {
 class TabPlaceholder;
 class ITab;

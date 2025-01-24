@@ -24,30 +24,8 @@
 #include <cstring>
 #include <utility>
 
-#include "EngineUtils/utils/Utils.h"
-
 mer::sdk::ReportMessage::ReportMessage(std::stacktrace pStacktrace)
 	: stacktrace(std::move(pStacktrace)), exceptionPtr(std::current_exception()) {
 
 	addInfoLine("Current errno status: {}", strerror(errno));
-}
-
-std::string mer::sdk::ReportMessage::getReport(const bool pShowStacktrace) const {
-	std::stringstream ss;
-	ss << (title.empty() ? "Untitled report" : title) << "\n";
-	ss << "Message: " << message << "\n";
-
-	if (exceptionPtr) {
-		try {
-			std::rethrow_exception(exceptionPtr);
-		} catch (std::exception &e) {
-			ss << "Exception info:\n";
-			ss << "\tClass: " << Utils::getTypeName(&e) << "\n";
-			ss << "\tMessage: " << e.what() << "\n";
-		}
-	}
-	ss << "Additional info:\n";
-	for (const auto &infoLine: infoLines) { ss << "\t" << infoLine << "\n"; }
-	if (pShowStacktrace) ss << "Stacktrace: \n" << stacktrace;
-	return ss.str();
 }

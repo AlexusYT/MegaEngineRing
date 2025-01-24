@@ -21,7 +21,6 @@
 
 #ifndef STRINGINPUTSTREAM_H
 #define STRINGINPUTSTREAM_H
-#include <giomm/inputstream.h>
 
 namespace mer::editor {
 

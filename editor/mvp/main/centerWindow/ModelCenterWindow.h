@@ -21,8 +21,6 @@
 
 #ifndef MODELCENTERWINDOW_H
 #define MODELCENTERWINDOW_H
-#include <set>
-
 #include "IModelCenterWindow.h"
 
 namespace mer::editor::mvp {

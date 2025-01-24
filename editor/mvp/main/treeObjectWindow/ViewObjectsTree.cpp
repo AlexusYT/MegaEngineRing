@@ -21,8 +21,6 @@
 
 #include "ViewObjectsTree.h"
 
-#include <gtkmm/label.h>
-#include <gtkmm/treeexpander.h>
 #include <project/Project.h>
 
 #include "mvp/contexts/IWidgetContext.h"

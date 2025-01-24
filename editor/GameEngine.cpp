@@ -21,16 +21,11 @@
 
 #include "GameEngine.h"
 
-#include <glibmm/exceptionhandler.h>
-#include <gtkmm/application.h>
-#include <gtkmm/cssprovider.h>
-#include <gtkmm/icontheme.h>
 #include <mvp/startup/ModelStartup.h>
 #include <mvp/startup/PresenterStartup.h>
 #include <unordered_set>
 #include <utility>
 
-#include "EngineUtils/utils/Logger.h"
 #include "Globals.h"
 #include "cmdOptions/EngineOptionGroup.h"
 #include "mvp/ApplicationController.h"

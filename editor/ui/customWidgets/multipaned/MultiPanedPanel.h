@@ -21,9 +21,8 @@
 
 #ifndef MULTIPANEDPANEL_H
 #define MULTIPANEDPANEL_H
-#include <gtkmm/widget.h>
-
 #include "MultiPanedSide.h"
+
 
 class UUID;
 

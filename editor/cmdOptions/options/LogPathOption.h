@@ -23,7 +23,6 @@
 #define LOGPATHOPTION_H
 
 
-#include "EngineUtils/utils/Logger.h"
 #include "Globals.h"
 #include "Option.h"
 

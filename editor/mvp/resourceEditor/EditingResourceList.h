@@ -21,8 +21,6 @@
 
 #ifndef EDITINGRESOURCELIST_H
 #define EDITINGRESOURCELIST_H
-#include <map>
-
 #include "EngineSDK/resources/IResource.h"
 #include "mvp/main/editors/sceneEditor/ResourcesContext.h"
 

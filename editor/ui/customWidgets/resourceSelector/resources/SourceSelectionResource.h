@@ -21,16 +21,8 @@
 
 #ifndef SOURCESELECTIONRESOURCE_H
 #define SOURCESELECTIONRESOURCE_H
-#include <giomm/liststore.h>
-#include <gtkmm/listview.h>
-#include <gtkmm/treelistrow.h>
-
 #include "EngineSDK/resources/ResourceType.h"
 #include "ui/customWidgets/resourceSelector/SourceSelection.h"
-
-namespace Gtk {
-class ScrolledWindow;
-}
 
 namespace mer::sdk {
 class IResource;

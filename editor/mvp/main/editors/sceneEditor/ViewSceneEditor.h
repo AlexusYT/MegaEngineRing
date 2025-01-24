@@ -22,14 +22,6 @@
 #ifndef VIEWSCENEEDITOR_H
 #define VIEWSCENEEDITOR_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/eventcontrollerkey.h>
-#include <gtkmm/eventcontrollermotion.h>
-#include <gtkmm/gestureclick.h>
-#include <gtkmm/glarea.h>
-#include <gtkmm/switch.h>
-#include <gtkmm/togglebutton.h>
-
 #include "IViewSceneEditor.h"
 
 namespace mer::editor::mvp {

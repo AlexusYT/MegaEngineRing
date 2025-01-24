@@ -22,8 +22,6 @@
 #ifndef IAPPLICATIONCONTROLLER_H
 #define IAPPLICATIONCONTROLLER_H
 
-#include <gtkmm/application.h>
-
 namespace mer::editor::mvp {
 class IWidgetContext;
 class IPresenter;

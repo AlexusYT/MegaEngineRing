@@ -21,17 +21,14 @@
 
 #include "EditorFileSystemResourceBundle.h"
 
-#include <giomm/resource.h>
-
-#include "EngineUtils/utils/Logger.h"
-
 namespace mer::editor::project {
-std::shared_ptr<sdk::IResourceBundle> EditorFileSystemResourceBundle::create(const std::filesystem::path &pSearchPath) {
+std::shared_ptr<sdk::IResourceBundle> EditorFileSystemResourceBundle::create(
+	const std::filesystem::path &pSearchPath) {
 	return std::shared_ptr<EditorFileSystemResourceBundle>(new EditorFileSystemResourceBundle(pSearchPath));
 }
 
 sdk::ReportMessagePtr EditorFileSystemResourceBundle::getResourceStream(const std::string &pResourceUri,
-																		std::shared_ptr<std::istream> &pStream) {
+																			   std::shared_ptr<std::istream> &pStream) {
 
 	if (pResourceUri.starts_with("_builtin_")) {
 		if (!Gio::Resource::get_file_exists_global_nothrow("/" + pResourceUri)) {

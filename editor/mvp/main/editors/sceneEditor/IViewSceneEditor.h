@@ -25,10 +25,6 @@
 
 #include "mvp/IView.h"
 
-namespace Gdk {
-class GLContext;
-}
-
 namespace mer::editor::mvp {
 class ExplorerObject;
 class IPresenterSceneEditor;

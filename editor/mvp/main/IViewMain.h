@@ -22,7 +22,6 @@
 #ifndef IVIEWMAIN_H
 #define IVIEWMAIN_H
 #include <future>
-#include <giomm/simpleactiongroup.h>
 #include <mvp/IView.h>
 
 namespace mer::editor::ui {

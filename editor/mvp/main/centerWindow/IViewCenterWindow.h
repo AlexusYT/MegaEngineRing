@@ -24,10 +24,6 @@
 
 #include "mvp/IView.h"
 
-namespace sigc {
-struct connection;
-}
-
 namespace mer::editor::mvp {
 class IPresenterCenterWindow;
 

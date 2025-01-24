@@ -21,8 +21,6 @@
 
 #include "ApplicationContext.h"
 
-#include <gtkmm/applicationwindow.h>
-
 namespace mer::editor::mvp {
 
 void ApplicationContext::addWidget(Gtk::Widget* pWidget) {

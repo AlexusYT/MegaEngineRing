@@ -21,8 +21,6 @@
 
 #include "CppFile.h"
 
-#include <fstream>
-
 #include "CppDeclaration.h"
 #include "CppDefinition.h"
 

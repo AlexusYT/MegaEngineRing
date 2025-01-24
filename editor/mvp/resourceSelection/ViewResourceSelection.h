@@ -21,11 +21,6 @@
 
 #ifndef VIEWRESOURCESELECTION_H
 #define VIEWRESOURCESELECTION_H
-#include <gtkmm/builder.h>
-#include <gtkmm/filedialog.h>
-#include <gtkmm/listview.h>
-#include <gtkmm/window.h>
-
 #include "IViewResourceSelection.h"
 
 namespace mer::editor::ui {

@@ -21,7 +21,6 @@
 
 #ifndef UIUTILS_H
 #define UIUTILS_H
-#include <giomm/menuitem.h>
 
 namespace mer::editor::ui {
 

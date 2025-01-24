@@ -21,11 +21,6 @@
 
 #include "ResourceSelectorWidget.h"
 
-#include <glibmm/main.h>
-#include <gtkmm/box.h>
-#include <gtkmm/label.h>
-#include <ranges>
-
 #include "ISourceSelection.h"
 #include "ISourceSelectionResult.h"
 

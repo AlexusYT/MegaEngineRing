@@ -21,8 +21,6 @@
 
 #ifndef CENTERWINDOW_H
 #define CENTERWINDOW_H
-#include <gtkmm/notebook.h>
-
 #include "IViewCenterWindow.h"
 #include "mvp/ThreadDispatcher.h"
 

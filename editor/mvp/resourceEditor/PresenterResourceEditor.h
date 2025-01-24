@@ -21,9 +21,7 @@
 
 #ifndef PRESENTERRESOURCEEDITOR_H
 #define PRESENTERRESOURCEEDITOR_H
-#include <map>
 #include <memory>
-#include <sigc++/functors/slot.h>
 
 #include "IPresenterResourceEditor.h"
 
@@ -85,8 +83,10 @@ public:
 
 	std::filesystem::path getDataPath() override;
 
-	void onSelectionChanged(const std::shared_ptr<sdk::IResource> &pResource, IViewResourceEditor* pView) override;
-	void removeObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToRemove, IViewResourceEditor* pView) override;
+	void onSelectionChanged(const std::shared_ptr<sdk::IResource> &pResource,
+							IViewResourceEditor* pView) override;
+	void removeObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToRemove,
+					  IViewResourceEditor* pView) override;
 	void addObject(const std::shared_ptr<sdk::IModel3DObject> &pObjectToAdd, IViewResourceEditor* pView) override;
 
 	sdk::IResourceLoadExecutor* getResourceLoader() override;
@@ -109,7 +109,8 @@ private:
 
 	ResourceInfo* getResourceInfo(sdk::IResource* pResource);
 
-	sdk::ReportMessagePtr saveResource(const std::shared_ptr<sdk::IResource> &pResource, bool pIsComplete = true);
+	sdk::ReportMessagePtr saveResource(const std::shared_ptr<sdk::IResource> &pResource,
+											  bool pIsComplete = true);
 
 	void getComponentFromResult(
 		const std::shared_ptr<ui::ISourceSelectionResult> &pResult,

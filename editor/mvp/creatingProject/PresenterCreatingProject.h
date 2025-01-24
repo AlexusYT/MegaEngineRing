@@ -22,8 +22,6 @@
 #ifndef PRESENTERCREATINGPROJECT_H
 #define PRESENTERCREATINGPROJECT_H
 
-#include <unordered_map>
-
 #include "mvp/PresenterBase.h"
 
 namespace mer::editor::mvp {
