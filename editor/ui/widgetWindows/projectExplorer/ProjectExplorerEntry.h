@@ -21,6 +21,9 @@
 
 #ifndef FILESYSTEMENTRY_H
 #define FILESYSTEMENTRY_H
+#include <giomm/liststore.h>
+#include <giomm/menu.h>
+#include <giomm/simpleactiongroup.h>
 
 namespace mer::editor::mvp {
 class IPresenterCenterWindow;

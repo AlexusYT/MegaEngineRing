@@ -21,6 +21,14 @@
 
 #include "SourceSelectionResource.h"
 
+#include <gtkmm/label.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/signallistitemfactory.h>
+#include <gtkmm/singleselection.h>
+#include <gtkmm/treeexpander.h>
+#include <gtkmm/treelistmodel.h>
+#include <ranges>
+
 #include "EngineSDK/resources/IResource.h"
 #include "EngineSDK/resources/IResourceLoadExecutor.h"
 #include "EngineSDK/resources/LoadedResources.h"

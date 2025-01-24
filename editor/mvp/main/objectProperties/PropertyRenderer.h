@@ -21,8 +21,9 @@
 
 #ifndef PROPERTYRENDERER_H
 #define PROPERTYRENDERER_H
+#include <gtkmm/spinbutton.h>
+
 #include "EngineSDK/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/scene/IScene.h"
 
 namespace mer::sdk {
 class PropertyBase;
@@ -36,15 +37,13 @@ class PropertyRenderer {
 	PropertyRendererType type;
 	sdk::IResourceLoadExecutor* loader;
 
-	PropertyRenderer(sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader,
-					 PropertyRendererType pType);
+	PropertyRenderer(sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader, PropertyRendererType pType);
 
 public:
-	static std::shared_ptr<PropertyRenderer> create(sdk::PropertyBase* pProperty,
-													sdk::IResourceLoadExecutor* pLoader);
+	static std::shared_ptr<PropertyRenderer> create(sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader);
 
-	static std::shared_ptr<PropertyRenderer> create(
-		sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader, PropertyRendererType pType);
+	static std::shared_ptr<PropertyRenderer> create(sdk::PropertyBase* pProperty, sdk::IResourceLoadExecutor* pLoader,
+													PropertyRendererType pType);
 
 	Gtk::Widget* getWidget() const;
 

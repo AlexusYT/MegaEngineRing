@@ -22,6 +22,10 @@
 #ifndef IWIDGETCONTEXT_H
 #define IWIDGETCONTEXT_H
 
+namespace Gtk {
+class Widget;
+}
+
 namespace mer::editor::mvp {
 
 class IWidgetContext {

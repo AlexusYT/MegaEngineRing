@@ -21,8 +21,11 @@
 
 #ifndef CPPCLASS_H
 #define CPPCLASS_H
+#include <bits/ranges_algo.h>
+#include <list>
 #include <project/generators/GeneratorElement.h>
 #include <project/generators/cpp/AccessModifier.h>
+#include <ranges>
 
 #include "CppDeclaration.h"
 #include "CppDefinition.h"

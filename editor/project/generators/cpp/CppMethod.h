@@ -27,6 +27,7 @@
 
 #include "CppClass.h"
 #include "CppClassMember.h"
+#include "EngineUtils/utils/Utils.h"
 
 namespace mer::editor::project {
 class CppClass;

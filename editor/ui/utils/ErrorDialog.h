@@ -21,6 +21,17 @@
 
 #ifndef UIUTILS_H
 #define UIUTILS_H
+#include <gtkmm/alertdialog.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/enums.h>
+#include <gtkmm/error.h>
+#include <gtkmm/label.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/window.h>
+#include <iostream>
+
+#include "EngineUtils/utils/Logger.h"
 
 class ErrorDialog {
 	inline static mer::sdk::ReportMessagePtr message;

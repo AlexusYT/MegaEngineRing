@@ -21,6 +21,7 @@
 
 #ifndef CPPGENERATOR_H
 #define CPPGENERATOR_H
+#include <fstream>
 #include <project/generators/GeneratorElement.h>
 
 namespace mer::editor::project {

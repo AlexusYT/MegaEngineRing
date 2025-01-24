@@ -22,6 +22,9 @@
 #ifndef PROJECTEXPORERWINDOW_H
 #define PROJECTEXPORERWINDOW_H
 
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treelistrow.h>
+
 #include "IViewProjectExplorer.h"
 
 namespace mer::editor::ui {

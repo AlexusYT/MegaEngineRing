@@ -21,6 +21,8 @@
 
 #include "ObjectPropertyEntry.h"
 
+#include <giomm/liststore.h>
+
 #include "EngineSDK/extensions/Extension.h"
 #include "PropertyRenderer.h"
 

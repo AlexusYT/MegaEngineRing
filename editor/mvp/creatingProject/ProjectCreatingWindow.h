@@ -22,6 +22,8 @@
 #ifndef PROJECTCREATINGWINDOW_H
 #define PROJECTCREATINGWINDOW_H
 
+#include <gtkmm/togglebutton.h>
+#include <gtkmm/window.h>
 #include <mvp/creatingProject/IViewCreatingProject.h>
 #include <ui/widgetWindows/LogView.h>
 

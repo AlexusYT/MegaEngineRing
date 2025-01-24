@@ -22,6 +22,9 @@
 #ifndef CANVASELEMENT_H
 #define CANVASELEMENT_H
 
+#include <cairomm/context.h>
+#include <glm/vec2.hpp>
+
 namespace mer::editor::mvp {
 class CanvasWidget;
 }

@@ -21,6 +21,9 @@
 
 #include "PresenterResourceEditor.h"
 
+#include <gtkmm/error.h>
+#include <gtkmm/filedialog.h>
+
 #include "EditingResourceList.h"
 #include "EngineSDK/resources/IResource.h"
 #include "EngineSDK/resources/LoadedResources.h"
@@ -339,8 +342,8 @@ PresenterResourceEditor::ResourceInfo* PresenterResourceEditor::getResourceInfo(
 	return &iter->second;
 }
 
-sdk::ReportMessagePtr PresenterResourceEditor::saveResource(
-	const std::shared_ptr<sdk::IResource> &pResource, bool pIsComplete) {
+sdk::ReportMessagePtr PresenterResourceEditor::saveResource(const std::shared_ptr<sdk::IResource> &pResource,
+															bool pIsComplete) {
 	auto uri = pResource->getResourceUri();
 	auto savePath = getDataPath() / uri;
 	sdk::ReportMessagePtr error{};

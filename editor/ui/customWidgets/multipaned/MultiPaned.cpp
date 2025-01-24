@@ -21,6 +21,7 @@
 
 #include "MultiPaned.h"
 
+#include <gtkmm/gesturedrag.h>
 #include <nlohmann/json.hpp>
 
 #include "EngineUtils/utils/UUID.h"
@@ -90,7 +91,7 @@ void MultiPaned::remove(Widget* pWidget) {
 }
 
 sdk::ReportMessagePtr MultiPaned::importFromJson(const std::shared_ptr<nlohmann::json> &pJson,
-														mvp::ApplicationController* pAppController) {
+												 mvp::ApplicationController* pAppController) {
 
 	try {
 		std::unordered_map<UUID, std::shared_ptr<MultiPanedPanelDivider>> newDividers;

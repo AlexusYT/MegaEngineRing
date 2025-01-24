@@ -22,6 +22,8 @@
 #ifndef IMODEL3DRESOURCE_H
 #define IMODEL3DRESOURCE_H
 
+#include <unordered_map>
+
 #include "EngineSDK/render/IRenderable.h"
 
 namespace mer::sdk {

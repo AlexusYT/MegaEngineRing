@@ -21,6 +21,11 @@
 
 #include "ViewObjectProperties.h"
 
+#include <gtkmm/entry.h>
+#include <gtkmm/label.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treeexpander.h>
+
 #include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
 #include "EngineSDK/resources/models/IModel3DObject.h"

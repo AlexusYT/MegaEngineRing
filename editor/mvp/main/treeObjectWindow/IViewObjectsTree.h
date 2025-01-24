@@ -21,6 +21,8 @@
 
 #ifndef IVIEWOBJECTSTREE_H
 #define IVIEWOBJECTSTREE_H
+#include <giomm/listmodel.h>
+
 #include "mvp/IView.h"
 
 namespace mer::editor::mvp {

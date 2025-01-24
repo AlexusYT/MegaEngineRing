@@ -21,6 +21,8 @@
 
 #ifndef PRESENTERAPPINFO_H
 #define PRESENTERAPPINFO_H
+#include <sigc++/signal.h>
+
 #include "mvp/PresenterBase.h"
 
 namespace mer::editor::mvp {
@@ -41,9 +43,7 @@ public:
 
 	void stop() override;
 
-	std::string getTypeName() override {
-		return "PresenterAppInfo";
-	}
+	std::string getTypeName() override { return "PresenterAppInfo"; }
 };
 
 } // namespace mer::editor::mvp

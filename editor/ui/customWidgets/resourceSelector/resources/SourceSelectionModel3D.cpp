@@ -21,6 +21,8 @@
 
 #include "SourceSelectionModel3D.h"
 
+#include <glibmm/main.h>
+
 #include "EngineSDK/resources/models/IModel3DObject.h"
 #include "EngineSDK/resources/models/Model3DResource.h"
 #include "ui/customWidgets/resourceSelector/ISourceSelectionResult.h"
@@ -49,8 +51,7 @@ public:
 
 class ModelResourceElement : public ResourceElement {
 
-	explicit ModelResourceElement(const std::shared_ptr<sdk::IResource> &pResource)
-		: ResourceElement(pResource) {}
+	explicit ModelResourceElement(const std::shared_ptr<sdk::IResource> &pResource) : ResourceElement(pResource) {}
 
 public:
 	static std::shared_ptr<ModelResourceElement> create(const std::shared_ptr<sdk::IResource> &pResource) {

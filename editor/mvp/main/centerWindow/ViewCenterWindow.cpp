@@ -21,8 +21,13 @@
 
 #include "ViewCenterWindow.h"
 
+#include <glibmm/exceptionhandler.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/window.h>
 #include <mvp/main/editors/IPresenterSceneEditor.h>
 
+#include "EngineUtils/utils/Logger.h"
 #include "IPresenterCenterWindow.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h"

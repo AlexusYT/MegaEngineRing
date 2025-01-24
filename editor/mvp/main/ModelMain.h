@@ -21,6 +21,9 @@
 
 #ifndef MODELMAIN_H
 #define MODELMAIN_H
+#include <giomm/asyncresult.h>
+#include <giomm/file.h>
+
 #include "IModelMain.h"
 #include "PanedLayoutTab.h"
 

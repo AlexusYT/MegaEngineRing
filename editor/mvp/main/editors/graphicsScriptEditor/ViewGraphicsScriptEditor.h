@@ -21,6 +21,10 @@
 
 #ifndef VIEWGRAPHICSSCRIPTEDITOR_H
 #define VIEWGRAPHICSSCRIPTEDITOR_H
+#include <gtkmm/eventcontrollerkey.h>
+#include <gtkmm/eventcontrollermotion.h>
+#include <gtkmm/gestureclick.h>
+
 #include "IViewGraphicsScriptEditor.h"
 #include "canvas/CanvasWidget.h"
 #include "mvp/ThreadDispatcher.h"

@@ -27,6 +27,10 @@
 #include "EngineSDK/context/Application.h"
 #include "EngineSDK/resources/IResourceLoadExecutor.h"
 
+namespace Gdk {
+class GLContext;
+}
+
 namespace mer::sdk {
 class IResourceLoader;
 class ILoadedResources;

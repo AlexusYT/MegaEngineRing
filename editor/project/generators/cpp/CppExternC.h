@@ -21,6 +21,8 @@
 
 #ifndef CPPEXTERNC_H
 #define CPPEXTERNC_H
+#include <list>
+
 #include "CppDefinition.h"
 
 namespace mer::editor::project {

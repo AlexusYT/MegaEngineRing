@@ -21,10 +21,18 @@
 
 #include "ViewResourceEditor.h"
 
+#include <giomm/menu.h>
+#include <gtkmm/button.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/label.h>
+#include <gtkmm/noselection.h>
+#include <gtkmm/signallistitemfactory.h>
+
 #include "EngineSDK/resources/materials/ColorComponent.h"
 #include "EngineSDK/resources/materials/IMaterialResource.h"
 #include "EngineSDK/resources/models/IModel3DObject.h"
 #include "EngineSDK/resources/textures/ITextureResource.h"
+#include "EngineUtils/utils/Logger.h"
 #include "IPresenterResourceEditor.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "ui/customWidgets/resourceSelector/ResourceSelectorWidget.h"
@@ -42,8 +50,7 @@ class ModelObject : public Glib::Object {
 		: object(pObject), importBtn(pImportBtn) {}
 
 public:
-	static std::shared_ptr<ModelObject> create(const std::shared_ptr<sdk::IModel3DObject> &pObject,
-											   bool pImportBtn) {
+	static std::shared_ptr<ModelObject> create(const std::shared_ptr<sdk::IModel3DObject> &pObject, bool pImportBtn) {
 		return Glib::make_refptr_for_instance(new ModelObject(pObject, pImportBtn));
 	}
 

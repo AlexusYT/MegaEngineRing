@@ -21,6 +21,8 @@
 
 #include "ViewResourceSelection.h"
 
+#include <giomm/liststore.h>
+#include <gtkmm/signallistitemfactory.h>
 #include <memory>
 
 #include "Globals.h"

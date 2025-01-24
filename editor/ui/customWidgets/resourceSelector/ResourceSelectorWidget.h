@@ -22,6 +22,9 @@
 #ifndef RESOURCESELECTORWIDGET_H
 #define RESOURCESELECTORWIDGET_H
 
+#include <gtkmm/menubutton.h>
+#include <gtkmm/stackswitcher.h>
+
 namespace mer::editor::ui {
 class ISourceSelectionResult;
 class ISourceSelection;

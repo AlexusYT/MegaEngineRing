@@ -22,6 +22,8 @@
 #ifndef MODELGRAPHICSSCRIPTEDITOR_H
 #define MODELGRAPHICSSCRIPTEDITOR_H
 
+#include <sigc++/signal.h>
+
 #include "IModelGraphicsScriptEditor.h"
 #include "canvas/CanvasElement.h"
 

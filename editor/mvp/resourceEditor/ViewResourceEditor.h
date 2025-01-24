@@ -21,6 +21,17 @@
 
 #ifndef VIEWRESOURCEEDITOR_H
 #define VIEWRESOURCEEDITOR_H
+#include <giomm/liststore.h>
+#include <gtkmm/box.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/columnview.h>
+#include <gtkmm/filedialog.h>
+#include <gtkmm/listview.h>
+#include <gtkmm/menubutton.h>
+#include <gtkmm/singleselection.h>
+#include <gtkmm/stack.h>
+#include <gtkmm/window.h>
+
 #include "IViewResourceEditor.h"
 #include "mvp/ThreadDispatcher.h"
 
@@ -107,8 +118,7 @@ public:
 
 	void displayMessage(const std::string &pMessage) override;
 
-	void displayObjects(const std::vector<std::shared_ptr<sdk::IModel3DObject>> &pObjects,
-						bool pFileObjects) override;
+	void displayObjects(const std::vector<std::shared_ptr<sdk::IModel3DObject>> &pObjects, bool pFileObjects) override;
 
 	void setStackVisibility(bool pState) override;
 

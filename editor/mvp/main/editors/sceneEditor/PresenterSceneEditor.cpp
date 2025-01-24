@@ -24,6 +24,8 @@
 #include <EngineSDK/resources/LoadedResources.h>
 #include <EngineSDK/scene/IScene.h>
 
+#include <gdkmm/glcontext.h>
+
 #include "EngineSDK/resources/IResourceLoadExecutor.h"
 #include "EngineSDK/scene/objects/ISceneObject.h"
 #include "EngineSDK/utils/MouseButton.h"

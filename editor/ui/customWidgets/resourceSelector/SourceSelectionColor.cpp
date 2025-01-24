@@ -21,6 +21,9 @@
 
 #include "SourceSelectionColor.h"
 
+#include <glm/gtc/round.hpp>
+#include <gtkmm/box.h>
+
 #include "EngineSDK/resources/materials/ColorComponent.h"
 
 namespace mer::editor::ui {

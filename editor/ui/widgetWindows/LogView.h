@@ -22,6 +22,11 @@
 #ifndef LOGVIEW_H
 #define LOGVIEW_H
 
+#include <glibmm/dispatcher.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/textview.h>
+
 namespace mer::editor::ui {
 class LogView {
 	Gtk::Box mainBox;

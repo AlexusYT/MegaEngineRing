@@ -21,6 +21,8 @@
 
 #include "ScriptNode.h"
 
+#include <glm/ext.hpp>
+
 #include "EngineSDK/extensions/Extension.h"
 #include "mvp/main/editors/graphicsScriptEditor/canvas/CanvasWidget.h"
 
@@ -62,7 +64,7 @@ ScriptNodeSlot* ScriptNode::getSlotByName(const std::string &pSelfSlotName) {
 }
 
 sdk::ReportMessagePtr ScriptNode::addNewSlot(const std::string &pSlotName, const std::string &pMethodName,
-													SlotConnectionType pType) {
+											 SlotConnectionType pType) {
 	auto iter = slots.find(pSlotName);
 	if (iter != slots.end()) {
 		auto msg = sdk::ReportMessage::create();

@@ -21,6 +21,8 @@
 
 #include "AppInfoEditor.h"
 
+#include <gtkmm/entry.h>
+#include <gtkmm/treeexpander.h>
 #include <project/generatedFiles/ApplicationInfo.h>
 
 #include "mvp/main/centerWindow/IPresenterCenterWindow.h"

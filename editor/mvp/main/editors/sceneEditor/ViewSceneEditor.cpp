@@ -21,6 +21,7 @@
 
 #include "ViewSceneEditor.h"
 
+#include <gtkmm/eventcontrollerscroll.h>
 #include <mvp/main/MainWindow.h>
 
 #include "mvp/main/centerWindow/TabPlaceholder.h"

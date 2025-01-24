@@ -21,6 +21,10 @@
 
 #include "ProjectExplorerElement.h"
 
+#include <giomm/file.h>
+#include <giomm/liststore.h>
+#include <giomm/menu.h>
+
 #include "ui/utils/UiUtils.h"
 
 namespace mer::editor::mvp {

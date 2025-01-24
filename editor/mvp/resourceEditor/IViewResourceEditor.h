@@ -21,8 +21,14 @@
 
 #ifndef IVIEWRESOURCEEDITOR_H
 #define IVIEWRESOURCEEDITOR_H
+#include <gtkmm/entry.h>
+
 #include "EngineSDK/resources/IResource.h"
 #include "mvp/IView.h"
+
+namespace Gtk {
+class FileDialog;
+}
 
 namespace mer::sdk {
 class IModel3DObject;

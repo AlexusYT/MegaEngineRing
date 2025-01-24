@@ -21,9 +21,16 @@
 
 #include "PropertyRenderer.h"
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <gtkmm/box.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/label.h>
+
 #include "EngineSDK/resources/materials/IMaterialResource.h"
 #include "EngineSDK/resources/models/IModel3DObject.h"
 #include "EngineUtils/utils/Property.h"
+#include "EngineUtils/utils/Utils.h"
 #include "PropertyRendererType.h"
 #include "ui/customWidgets/resourceSelector/ResourceSelectorWidget.h"
 #include "ui/customWidgets/resourceSelector/SourceSelectionNone.h"

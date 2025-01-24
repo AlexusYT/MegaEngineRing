@@ -22,6 +22,9 @@
 #include "PresenterMain.h"
 
 #include <future>
+#include <gdkmm/enums.h>
+#include <gtkmm/alertdialog.h>
+#include <gtkmm/filelauncher.h>
 #include <mvp/main/IModelMain.h>
 #include <mvp/main/IViewMain.h>
 #include <nlohmann/json.hpp>

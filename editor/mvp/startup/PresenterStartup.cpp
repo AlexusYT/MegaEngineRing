@@ -23,6 +23,7 @@
 
 #include <GameEngine.h>
 #include <Globals.h>
+#include <gtkmm/error.h>
 #include <mvp/creatingProject/ModelCreatingProject.h>
 #include <mvp/creatingProject/PresenterCreatingProject.h>
 #include <mvp/creatingProject/ProjectCreatingWindow.h>
@@ -111,10 +112,8 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 											const std::filesystem::path path = folder->get_path();
 											project->setProjectName(path.stem());
 											project->setProjectPath(path.parent_path());
-											if (const auto msg = initProject(project))
-												return sdk::Logger::error(msg);
-											if (const auto msg = project->loadProject())
-												return sdk::Logger::error(msg);
+											if (const auto msg = initProject(project)) return sdk::Logger::error(msg);
+											if (const auto msg = project->loadProject()) return sdk::Logger::error(msg);
 											openMainWindow(project);
 										} catch (const Gtk::DialogError &err) {
 											if (err.code() != Gtk::DialogError::DISMISSED) {

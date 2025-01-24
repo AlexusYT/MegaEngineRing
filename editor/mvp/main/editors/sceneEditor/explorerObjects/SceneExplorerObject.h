@@ -21,6 +21,8 @@
 
 #ifndef SCENEEXPLOREROBJECT_H
 #define SCENEEXPLOREROBJECT_H
+#include <giomm/menuitem.h>
+
 #include "ExplorerObject.h"
 
 namespace mer::sdk {

@@ -22,11 +22,15 @@
 #ifndef TREEOBJECTWINDOW_H
 #define TREEOBJECTWINDOW_H
 
+#include <giomm/menuitem.h>
+#include <gtkmm/scrolledwindow.h>
+
 #include "IViewObjectsTree.h"
 
 namespace mer::editor::ui {
 class CustomTreeView;
 }
+
 namespace mer::editor::mvp {
 class IWidgetContext;
 class ExplorerObject;

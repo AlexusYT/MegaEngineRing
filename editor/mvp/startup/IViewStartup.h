@@ -22,6 +22,9 @@
 #ifndef IVIEWSTARTUP_H
 #define IVIEWSTARTUP_H
 
+#include <gtkmm/entry.h>
+#include <gtkmm/filedialog.h>
+
 #include "mvp/IView.h"
 
 namespace mer::editor::mvp {

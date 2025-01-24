@@ -21,6 +21,7 @@
 
 #ifndef IMODELCENTERWINDOW_H
 #define IMODELCENTERWINDOW_H
+#include <sigc++/functors/slot.h>
 
 namespace mer::editor::mvp {
 class ITabPlaceholder;

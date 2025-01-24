@@ -21,6 +21,8 @@
 
 #include "CustomTreeView.h"
 
+#include <gtkmm/gestureclick.h>
+
 #include "TreeElementBase.h"
 
 namespace mer::editor::ui {

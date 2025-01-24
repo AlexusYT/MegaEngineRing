@@ -20,6 +20,12 @@
 //
 #include "MainWindow.h"
 
+#include <gdkmm/glcontext.h>
+#include <gtkmm/box.h>
+#include <gtkmm/notebook.h>
+#include <gtkmm/overlay.h>
+#include <gtkmm/spinner.h>
+
 #include "EngineSDK/resources/ResourceType.h"
 #include "Globals.h"
 #include "IPresenterMain.h"
@@ -81,7 +87,7 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 	keyController = Gtk::EventControllerKey::create();
 	add_controller(keyController);
 	set_child(panedTabs);
-	panedTabs.signal_switch_page().connect([this](Widget* /*pWidget*/, int32_t pIndex) {
+	panedTabs.signal_switch_page().connect([this](Gtk::Widget* /*pWidget*/, int32_t pIndex) {
 		const auto overlay = dynamic_cast<Gtk::Overlay*>(panedTabs.get_nth_page(pIndex));
 		if (!overlay) return;
 		const auto overlayBox = dynamic_cast<Gtk::Box*>(overlay->get_last_child());

@@ -21,6 +21,8 @@
 
 #ifndef PROJECTEXPLORERELEMENT_H
 #define PROJECTEXPLORERELEMENT_H
+#include <giomm/filemonitor.h>
+
 #include "ui/customWidgets/TreeElementBase.h"
 
 namespace mer::editor::mvp {

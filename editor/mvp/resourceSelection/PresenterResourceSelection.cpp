@@ -27,6 +27,7 @@
 #include "EngineSDK/resources/ResourceLoadResult.h"
 #include "EngineSDK/resources/models/IModel3DObject.h"
 #include "EngineSDK/resources/models/IModel3DResource.h"
+#include "EngineUtils/utils/Logger.h"
 #include "IModelResourceSelection.h"
 #include "IViewResourceSelection.h"
 #include "mvp/ApplicationController.h"
@@ -39,8 +40,8 @@ PresenterResourceSelection::PresenterResourceSelection(const std::shared_ptr<IMo
 
 	model->setPresenter(this);
 	view->setPresenter(this);
-	if (auto property = dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(
-			model->getPropertyBase())) {
+	if (auto property =
+			dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(model->getPropertyBase())) {
 		auto type = model->getElementType();
 		if (type == ExplorerElementType::NONE) model->setElementType(ExplorerElementType::RESOURCE_MODEL_OBJECT);
 		auto value = property->getValue();
@@ -58,8 +59,8 @@ void PresenterResourceSelection::selectClicked() {
 			object = modelResource->getModelObject(objectName);
 		}
 		if (!object) return;
-		if (auto property = dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(
-				model->getPropertyBase())) {
+		if (auto property =
+				dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(model->getPropertyBase())) {
 			property->setValue(object);
 			getAppController()->stop(this);
 		}
@@ -70,8 +71,7 @@ void PresenterResourceSelection::onCancelClicked() { getAppController()->stop(th
 
 void PresenterResourceSelection::unsetClicked() {
 	auto propertyBase = model->getPropertyBase();
-	if (auto property =
-			dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(propertyBase)) {
+	if (auto property = dynamic_cast<sdk::ExtensionProperty<std::shared_ptr<sdk::IModel3DObject>>*>(propertyBase)) {
 		property->setValue(nullptr);
 		getAppController()->stop(this);
 	}

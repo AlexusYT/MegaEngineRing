@@ -21,6 +21,7 @@
 
 #include "LogView.h"
 
+#include <gtkmm/scrolledwindow.h>
 #include <thread>
 
 namespace mer::editor::ui {

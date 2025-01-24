@@ -21,9 +21,11 @@
 
 #include "SceneExplorerObject.h"
 
-#include "EngineSDK/scene/objects/ISceneObject.h"
+#include <giomm/menu.h>
+
 #include "EngineSDK/extensions/Extension.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
+#include "EngineSDK/scene/objects/ISceneObject.h"
 #include "mvp/main/objectProperties/ObjectPropertyEntry.h"
 
 namespace mer::editor::mvp {
@@ -74,17 +76,16 @@ void SceneExplorerObject::setObject(sdk::ISceneObject* pObject) {
 
 	connections.push_back(object->connectOnExtensionAdded(
 		[this](const std::shared_ptr<sdk::Extension> &pNewExt) { addExtension(pNewExt); }));
-	connections.push_back(
-		object->connectOnExtensionRemoved([this](const std::shared_ptr<sdk::Extension> &pNewExt) {
-			for (uint32_t i = 0; i < propertyEntries->get_n_items(); i++) {
-				auto entry = propertyEntries->get_item(i);
-				if (!entry || !entry->getNativeExtension()) continue;
-				if (entry->getNativeExtension() == pNewExt.get()) {
-					propertyEntries->remove(i);
-					break;
-				}
+	connections.push_back(object->connectOnExtensionRemoved([this](const std::shared_ptr<sdk::Extension> &pNewExt) {
+		for (uint32_t i = 0; i < propertyEntries->get_n_items(); i++) {
+			auto entry = propertyEntries->get_item(i);
+			if (!entry || !entry->getNativeExtension()) continue;
+			if (entry->getNativeExtension() == pNewExt.get()) {
+				propertyEntries->remove(i);
+				break;
 			}
-		}));
+		}
+	}));
 }
 
 Glib::RefPtr<Gio::MenuModel> SceneExplorerObject::getMenu() {

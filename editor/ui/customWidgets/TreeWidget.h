@@ -21,6 +21,14 @@
 
 #ifndef OBJECTTREE_H
 #define OBJECTTREE_H
+#include <giomm/menu.h>
+#include <gtkmm/columnview.h>
+#include <gtkmm/gesture.h>
+#include <gtkmm/gestureclick.h>
+#include <gtkmm/popovermenu.h>
+#include <gtkmm/signallistitemfactory.h>
+#include <gtkmm/singleselection.h>
+#include <gtkmm/treelistmodel.h>
 #include <ui/utils/ErrorDialog.h>
 
 namespace mer::editor::ui {

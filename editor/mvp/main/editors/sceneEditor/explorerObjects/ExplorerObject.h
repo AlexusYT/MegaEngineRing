@@ -21,6 +21,8 @@
 
 #ifndef EXPLOREROBJECT_H
 #define EXPLOREROBJECT_H
+#include <giomm/liststore.h>
+
 #include "ui/customWidgets/TreeElementBase.h"
 
 namespace mer::editor::mvp {

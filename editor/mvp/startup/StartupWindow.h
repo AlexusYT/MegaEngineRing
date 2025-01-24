@@ -22,6 +22,9 @@
 #ifndef STARTUPWINDOW_H
 #define STARTUPWINDOW_H
 
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/notebook.h>
 #include <mvp/startup/IViewStartup.h>
 
 namespace mer::editor::mvp {

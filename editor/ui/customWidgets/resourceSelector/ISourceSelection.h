@@ -22,6 +22,12 @@
 #ifndef ISOURCESELECTION_H
 #define ISOURCESELECTION_H
 
+#include <sigc++/functors/slot.h>
+
+namespace Gtk {
+class Widget;
+}
+
 namespace mer::editor::ui {
 class ResourceSelectorWidget;
 class ISourceSelectionResult;

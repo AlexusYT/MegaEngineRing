@@ -21,6 +21,8 @@
 
 #ifndef SOURCESELECTIONCOLOR_H
 #define SOURCESELECTIONCOLOR_H
+#include <gtkmm/colordialogbutton.h>
+
 #include "SourceSelection.h"
 #include "resources/TypedSourceSelectionResult.h"
 

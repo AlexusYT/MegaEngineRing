@@ -21,8 +21,14 @@
 
 #ifndef IVIEWGRAPHICSSCRIPTEDITOR_H
 #define IVIEWGRAPHICSSCRIPTEDITOR_H
+#include <gdkmm/enums.h>
+#include <glm/vec2.hpp>
 
 #include "mvp/IView.h"
+
+namespace Gtk {
+class Widget;
+}
 
 namespace mer::editor::mvp {
 class CanvasElement;

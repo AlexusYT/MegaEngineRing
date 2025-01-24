@@ -21,6 +21,8 @@
 
 #include "MultiPanedPanel.h"
 
+#include <gtkmm/eventcontrollermotion.h>
+
 #include "EngineUtils/utils/UUID.h"
 #include "MultiPaned.h"
 #include "MultiPanedSide.h"
