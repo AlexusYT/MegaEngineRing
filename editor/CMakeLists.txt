@@ -81,7 +81,6 @@ add_library(
         mvp/startup/ModelStartup.h
         mvp/startup/PresenterStartup.cpp
         mvp/startup/PresenterStartup.h
-        mvp/creatingProject/ProjectCreatingTask.h
         project/generatedFiles/GeneratedFiles.cpp
         project/generatedFiles/GeneratedFiles.h
         mvp/main/IViewMain.h
