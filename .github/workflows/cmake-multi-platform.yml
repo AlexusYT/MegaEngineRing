@@ -56,7 +56,7 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         shell: C:\msys64\usr\bin\bash.exe {0}
         run: |
-          export "PATH=c/msys64/usr/bin/:c/msys64/bin/c/msys64/mingw64/bin/:$PATH"
+          export "PATH=/c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:$PATH"
           echo "$PATH"
           ninja --version
           cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
