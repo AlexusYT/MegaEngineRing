@@ -53,7 +53,7 @@ jobs:
         # choco install ninja
       - name: Configure CMake
         env:
-          PATH: /c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:$PATH
+          PATH: /c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:${{ env.PATH }}
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         shell: C:\msys64\usr\bin\bash.exe {0}
