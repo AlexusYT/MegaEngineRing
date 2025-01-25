@@ -131,8 +131,7 @@
 			"name": "ci-coverage",
 			"inherits": [
 				"coverage-linux",
-				"dev-mode",
-				"vcpkg"
+				"dev-mode"
 			],
 			"cacheVariables": {
 				"COVERAGE_HTML_COMMAND": ""
@@ -143,8 +142,7 @@
 			"binaryDir": "${sourceDir}/build/sanitize",
 			"inherits": [
 				"ci-linux",
-				"dev-mode",
-				"vcpkg"
+				"dev-mode"
 			],
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Sanitize",
@@ -162,8 +160,7 @@
 			"inherits": [
 				"ci-build",
 				"ci-darwin",
-				"dev-mode",
-				"vcpkg"
+				"dev-mode"
 			]
 		},
 		{
@@ -171,7 +168,6 @@
 			"inherits": [
 				"ci-build",
 				"ci-linux",
-				"vcpkg",
 				"dev-mode"
 			]
 		},
