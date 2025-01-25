@@ -43,12 +43,12 @@ jobs:
         if: matrix.os.name == 'ubuntu'
         run: |
           sudo apt-get update
-          sudo apt-get install ninja
+          sudo apt-get install ninja-build
 
       - name: Install tools
         if: matrix.os.name == 'windows'
         run: |
-          choco install ninja
+          choco install ninja-build
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
