@@ -19,11 +19,7 @@ include(cmake/variables.cmake)
 
 find_package(PkgConfig REQUIRED)
 
-if (WIN32)
-    pkg_check_modules(sigc++-3 REQUIRED IMPORTED_TARGET sigc++-3.0)
-else ()
-    find_package(sigc++-3 CONFIG REQUIRED)
-endif ()
+pkg_check_modules(sigc++-3 REQUIRED IMPORTED_TARGET sigc++-3.0)
 
 find_package(PNG REQUIRED)
 find_package(glm CONFIG REQUIRED)
