@@ -55,13 +55,13 @@ jobs:
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         shell: C:\msys64\usr\bin\bash.exe {0}
-        run: >
+        run:
           # export PATH="$PATH:c/msys64/usr/bin/"
-               echo "$PATH"
-               ninja --version
-               cmake "-B ${{ steps.strings.outputs.build-output-dir }}"
-               "--preset=ci-${{ matrix.os.name }}"
-               "-S ${{ github.workspace }}"
+          echo "$PATH"
+          ninja --version
+          cmake "-B ${{ steps.strings.outputs.build-output-dir }}"
+          "--preset=ci-${{ matrix.os.name }}"
+          "-S ${{ github.workspace }}"
 
       - name: Build
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
