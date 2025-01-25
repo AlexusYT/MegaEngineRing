@@ -56,7 +56,9 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         shell: C:\msys64\usr\bin\bash.exe {0}
         run: >
-          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          export PATH="$PATH:c/msys64/usr/bin/"
+          echo $PATH
+          cmake "-B ${{ steps.strings.outputs.build-output-dir }}"
           "--preset=ci-${{ matrix.os.name }}"
           "-S ${{ github.workspace }}"
 
