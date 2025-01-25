@@ -59,6 +59,7 @@ jobs:
         run: |
           echo "$PATH"
           ninja --version
+          cmake --version
           cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
 
       - name: Build
