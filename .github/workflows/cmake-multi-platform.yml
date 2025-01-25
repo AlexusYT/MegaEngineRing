@@ -47,7 +47,7 @@ jobs:
 
       - name: Install tools
         if: matrix.os.name == 'windows'
-        shell: C:\msys64\usr\bin\bash.exe {0}
+        shell: C:\msys64\mingw64\usr\bin\bash.exe {0}
         run: |
           choco install ninja
           /c/msys64/usr/bin/pacman --noconfirm -S mingw-w64-pkgconf mingw-w64-libsigc++-3.0 mingw-w64-libpng mingw-w64-glm mingw-w64-libepoxy mingw-w64-glfw
