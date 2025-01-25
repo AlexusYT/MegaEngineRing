@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.21)
 
 include(cmake/prelude.cmake)
 
@@ -18,6 +18,16 @@ include(cmake/variables.cmake)
 # ---- Declare library ----
 
 find_package(PkgConfig REQUIRED)
+
+if (WIN32)
+    pkg_check_modules(sigc++-3 REQUIRED IMPORTED_TARGET sigc++-3.0)
+else ()
+    find_package(sigc++-3 CONFIG REQUIRED)
+endif ()
+
+find_package(PNG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 include(GNUInstallDirs)
 
 add_subdirectory(utils)
@@ -29,16 +39,38 @@ add_subdirectory(editor)
 
 add_executable(MegaEngineEditor source/main.cpp)
 add_executable(MegaEngine::Editor ALIAS MegaEngineEditor)
-target_link_options(MegaEngineEditor PRIVATE -rdynamic)
-
+if (LINUX)
+    target_link_options(MegaEngineEditor PRIVATE -rdynamic)
+endif ()
 set_property(TARGET MegaEngineEditor PROPERTY OUTPUT_NAME MegaEngineEditor)
 
 target_link_libraries(MegaEngineEditor PRIVATE MegaEngineEditor_lib)
 
-install(
-        IMPORTED_RUNTIME_ARTIFACTS MegaEngineEditor
-        COMPONENT editor
-)
+#[[install(TARGETS MegaEngineEditor
+        RUNTIME ARCHIVE LIBRARY RUNTIME FRAMEWORK BUNDLE PUBLIC_HEADER RESOURCE)]]
+if (WIN32)
+
+    #[[add_custom_command(TARGET MegaEngineEditor POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:MegaEngineEditor> $<TARGET_FILE_DIR:MegaEngineEditor>
+            COMMAND_EXPAND_LISTS
+    )]]
+    install(
+            TARGETS MegaEngineEditor
+            COMPONENT editor
+            RUNTIME_DEPENDENCIES
+            PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
+            POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
+            DIRECTORIES $<TARGET_FILE_DIR:MegaEngineEditor>
+            $<TARGET_FILE_DIR:MegaEngineSDK_shared>
+            "C:\\msys64\\mingw64\\bin"
+    )
+else ()
+
+    install(
+            IMPORTED_RUNTIME_ARTIFACTS MegaEngineEditor
+            COMPONENT editor
+    )
+endif ()
 
 # ---- Install rules ----
 

@@ -58,10 +58,10 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 		}
 	});
 	view->setName(model->getName());
-	view->setPath(model->getPath());
+	view->setPath(model->getPath().string());
 
 	view->connectIconReleasedSignal([this](Gtk::Entry::IconPosition /*pPosition*/) {
-		view->showFolderChooserDialog(model->getPath(),
+		view->showFolderChooserDialog(model->getPath().string(),
 									  sigc::bind([this](const std::shared_ptr<Gio::AsyncResult> &pResult,
 														const std::shared_ptr<Gtk::FileDialog> &pDialog) {
 										  try {
@@ -102,14 +102,14 @@ PresenterStartup::PresenterStartup(const std::shared_ptr<IViewStartup> &pView,
 	});
 
 	view->connectOpenProjectClickSignal([this] {
-		view->showFileChooserDialog(model->getPath(),
+		view->showFileChooserDialog(model->getPath().string(),
 									sigc::bind([this](const std::shared_ptr<Gio::AsyncResult> &pResult,
 													  const std::shared_ptr<Gtk::FileDialog> &pDialog) {
 										try {
 											const auto folder = pDialog->open_finish(pResult);
 											const auto project = project::Project::create();
 											const std::filesystem::path path = folder->get_path();
-											project->setProjectName(path.stem());
+											project->setProjectName(path.stem().string());
 											project->setProjectPath(path.parent_path());
 											if (const auto msg = initProject(project))
 												return sdk::Logger::error(msg);

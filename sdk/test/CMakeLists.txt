@@ -18,19 +18,17 @@ add_executable(MegaEngineSDK_test source/main/extensions/CameraExtensionTests.cp
         source/utils/TransformationTests.cpp
 )
 target_link_libraries(MegaEngineSDK_test PRIVATE MegaEngineSDK_shared MegaEngineUtils)
-target_include_directories(MegaEngineSDK_shared PRIVATE ${PNGPP_INCLUDE_DIRS})
-find_package(PNG REQUIRED)
-target_link_libraries(MegaEngineSDK_shared PRIVATE PNG::PNG)
 target_link_libraries(
         MegaEngineSDK_test PRIVATE
         GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main
 )
-pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
-target_link_libraries(MegaEngineSDK_test PRIVATE PkgConfig::epoxy)
-find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(MegaEngineSDK_test INTERFACE glfw)
 
-gtest_discover_tests(MegaEngineSDK_test)
+#[[add_custom_command(TARGET MegaEngineSDK_test POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:MegaEngineSDK_test> $<TARGET_FILE_DIR:MegaEngineSDK_test>
+
+        COMMAND_EXPAND_LISTS
+)]]
+#gtest_discover_tests(MegaEngineSDK_test)
 add_custom_command(
         TARGET MegaEngineSDK_test POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

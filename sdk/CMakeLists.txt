@@ -188,11 +188,14 @@ add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
 target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
 target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
-find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(MegaEngineSDK_shared INTERFACE glfw)
 
-find_package(sigc++-3 CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
+pkg_check_modules(GLFW REQUIRED IMPORTED_TARGET glfw3)
+if (LINUX)
+    target_link_libraries(MegaEngineSDK_shared PUBLIC glfw)
+elseif ()
+    target_link_libraries(MegaEngineSDK_shared PUBLIC glfw3)
+endif ()
+
 find_path(PNGPP_INCLUDE_DIRS "png++/color.hpp")
 
 target_precompile_headers(MegaEngineSDK_shared
@@ -203,33 +206,62 @@ target_include_directories(
         PUBLIC
         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/include>"
 )
-target_include_directories(
-        MegaEngineSDK_shared ${warning_guard}
-        PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
-)
 
-target_link_libraries(MegaEngineSDK_shared PRIVATE glm::glm)
+target_link_libraries(MegaEngineSDK_shared PUBLIC PkgConfig::epoxy)
+target_link_libraries(MegaEngineSDK_shared PUBLIC glm::glm)
 target_link_libraries(MegaEngineSDK_shared PUBLIC stdc++exp MegaEngineUtils)
-target_link_libraries(MegaEngineSDK_shared PRIVATE sigc-3.0)
-target_include_directories(MegaEngineSDK_shared PRIVATE ${PNGPP_INCLUDE_DIRS})
+target_include_directories(MegaEngineSDK_shared SYSTEM PUBLIC ${PNGPP_INCLUDE_DIRS})
+target_link_libraries(MegaEngineSDK_shared PUBLIC PNG::PNG)
 set_property(TARGET MegaEngineSDK_shared PROPERTY OUTPUT_NAME MegaEngineSDK)
 set_property(TARGET MegaEngineSDK_shared PROPERTY PREFIX "")
 
 add_custom_target(MegaEngineSDK)
 add_dependencies(MegaEngineSDK MegaEngineSDK_shared MegaEngineUtils)
 
-install(
-        TARGETS MegaEngineSDK_shared
-        ARCHIVE
-        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
-        COMPONENT sdk
-        LIBRARY
-        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
-        COMPONENT sdk
-        FILE_SET engine_headers
-        DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/"
-        COMPONENT sdk
-)
+if (WIN32)
+    install(
+            TARGETS MegaEngineSDK_shared
+            RUNTIME_DEPENDENCIES
+            PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
+            POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
+            DIRECTORIES
+            $<TARGET_FILE_DIR:MegaEngineSDK_shared>
+            "C:\\msys64\\mingw64\\bin"
+            ARCHIVE
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
+            COMPONENT sdk
+            RUNTIME
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/"
+            COMPONENT sdk
+            LIBRARY
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
+            COMPONENT sdk
+            FILE_SET engine_headers
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/"
+            COMPONENT sdk
 
+    )
+else ()
+    install(
+            TARGETS MegaEngineSDK_shared
+            ARCHIVE
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
+            COMPONENT sdk
+            RUNTIME
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
+            COMPONENT sdk
+            LIBRARY
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
+            COMPONENT sdk
+            FILE_SET engine_headers
+            DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/"
+            COMPONENT sdk
+    )
+endif ()
 
+#[[add_custom_command(TARGET MegaEngineSDK_shared POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:MegaEngineSDK_shared> $<TARGET_FILE_DIR:MegaEngineSDK_shared>
+        # COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:MegaEngineSDK_shared> $<TARGET_FILE_DIR:MegaEngineSDK_test>
+
+        COMMAND_EXPAND_LISTS
+)]]

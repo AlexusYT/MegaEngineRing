@@ -55,7 +55,7 @@ LoadedScene::LoadedScene() : mainObject(mvp::RootExplorerObject::create()) {
 }
 
 void LoadedScene::setRunDirectory(const std::filesystem::path &pPath) const {
-	app->getApplicationSettings()->setRunDirectory(pPath);
+	app->getApplicationSettings()->setRunDirectory(pPath.string());
 	app->setResourceBundle(EditorFileSystemResourceBundle::create(pPath / "data"));
 }
 

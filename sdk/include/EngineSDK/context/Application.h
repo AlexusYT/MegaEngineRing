@@ -60,6 +60,8 @@ public:
 	}
 
 private:
+	static void sigHandler(int pSig);
+
 	static void initSigHandlers();
 
 	void loadSettings();

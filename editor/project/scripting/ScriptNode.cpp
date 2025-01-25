@@ -282,7 +282,7 @@ void ScriptNodeSlot::onDraw(const std::shared_ptr<Cairo::Context> &pContext) {
 			textPos.y = fontExtents.descent;
 			break;
 	}
-	pContext->arc(0, 0, connectionRadius, 0, 2 * M_PI);
+	pContext->arc(0, 0, connectionRadius, 0, 2 * std::numbers::pi);
 	if (getConnectedTo()) pContext->fill();
 	else
 		pContext->stroke();

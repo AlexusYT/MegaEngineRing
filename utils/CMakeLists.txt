@@ -30,11 +30,14 @@ target_include_directories(
         PUBLIC
         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/utils/include>"
 )
+#[[
 find_package(sigc++-3 CONFIG REQUIRED)
+]]
 
 target_compile_features(MegaEngineUtils PUBLIC cxx_std_23)
 target_link_libraries(MegaEngineUtils PRIVATE stdc++exp)
-target_link_libraries(MegaEngineUtils PRIVATE sigc-3.0)
+target_include_directories(MegaEngineUtils SYSTEM PUBLIC ${sigc++-3_INCLUDE_DIRS})
+target_link_libraries(MegaEngineUtils PUBLIC sigc-3.0)
 target_compile_options(MegaEngineUtils PRIVATE -fPIC)
 set_property(TARGET MegaEngineUtils PROPERTY OUTPUT_NAME MegaEngineUtils)
 set_property(TARGET MegaEngineUtils PROPERTY PREFIX "")
