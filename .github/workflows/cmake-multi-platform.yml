@@ -43,13 +43,14 @@ jobs:
         if: matrix.os.name == 'ubuntu'
         run: |
           sudo apt-get update
-          sudo apt-get install ninja-build libsigc++-3.0-dev libpng-dev
+          sudo apt-get install ninja-build libsigc++-3.0-dev libpng-dev libglm-dev
 
       - name: Install tools
         if: matrix.os.name == 'windows'
+        shell: msys2bash.cmd
         run: |
           choco install ninja
-          bash -l -c "pacman -S pkgconf mingw-w64-libsigc++-3.0 mingw-w64-libpng"
+          pacman -S pkgconf mingw-w64-libsigc++-3.0 mingw-w64-libpng mingw-w64-glm
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
