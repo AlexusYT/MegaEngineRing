@@ -51,17 +51,17 @@ jobs:
         shell: C:\msys64\usr\bin\bash.exe {0}
         run: |
           echo "/c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:" >> $GITHUB_PATH
-          export GITHUB_XDG_DATA_HOME="/c/msys64/mingw64/share:$GITHUB_XDG_DATA_HOME"
-          echo $GITHUB_XDG_DATA_HOME
+          export XDG_DATA_DIRS="/c/msys64/mingw64/share:$XDG_DATA_DIRS"
           echo $XDG_DATA_HOME
+          echo $XDG_DATA_DIRS
           /c/msys64/usr/bin/pacman --noconfirm -S mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsigc++-3.0 mingw-w64-x86_64-libpng mingw-w64-x86_64-glm mingw-w64-x86_64-libepoxy mingw-w64-x86_64-glfw mingw-w64-x86_64-nlohmann-json mingw-w64-x86_64-gtkmm-4.0
 
         # choco install ninja
       - name: Configure CMake Ubuntu
         if: matrix.os.name == 'ubuntu'
         run: |
-          gcc --version
-          whereis gcc
+          gcc-14 --version
+          whereis gcc-14
           cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
 
       - name: Configure CMake Windows
