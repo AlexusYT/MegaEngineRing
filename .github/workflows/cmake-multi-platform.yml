@@ -24,9 +24,9 @@ jobs:
       matrix:
         os:
           - name: ubuntu
-            version: ubuntu-latest
+            version: ubuntu-24.04
           - name: windows
-            version: windows-latest
+            version: windows-2025
         build_type: [ Release ]
 
     steps:
@@ -59,7 +59,10 @@ jobs:
         # choco install ninja
       - name: Configure CMake Ubuntu
         if: matrix.os.name == 'ubuntu'
-        run: cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
+        run: |
+          gcc --version
+          whereis gcc
+          cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
 
       - name: Configure CMake Windows
         if: matrix.os.name == 'windows'
