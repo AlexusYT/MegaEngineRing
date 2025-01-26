@@ -21,8 +21,7 @@ find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(sigc++-3 REQUIRED IMPORTED_TARGET sigc++-3.0)
 
-pkg_check_modules(PNG REQUIRED IMPORTED_TARGET PNG)
-find_package(PNG REQUIRED)
+pkg_check_modules(PNG REQUIRED IMPORTED_TARGET libpng)
 find_package(glm CONFIG REQUIRED)
 pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 include(GNUInstallDirs)
