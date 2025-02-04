@@ -99,7 +99,7 @@
 		},
 		{
 			"name": "gtk",
-			"version>=": "4.16.3#1",
+			"version>=": "4.16.3",
 			"platform": "linux"
 		},
 		{
@@ -144,11 +144,6 @@
 		{
 			"name": "libsass",
 			"version>=": "3.6.6",
-			"platform": "linux"
-		},
-		{
-			"name": "libsigcpp-3",
-			"version>=": "3.0.3#1",
 			"platform": "linux"
 		},
 		{

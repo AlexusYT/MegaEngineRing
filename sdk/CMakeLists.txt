@@ -192,7 +192,7 @@ target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
 pkg_check_modules(GLFW REQUIRED IMPORTED_TARGET glfw3)
 if (LINUX)
     target_link_libraries(MegaEngineSDK_shared PUBLIC glfw)
-elseif ()
+else ()
     target_link_libraries(MegaEngineSDK_shared PUBLIC glfw3)
 endif ()
 

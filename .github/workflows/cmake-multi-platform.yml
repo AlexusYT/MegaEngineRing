@@ -60,11 +60,6 @@ jobs:
       - name: Configure CMake Ubuntu
         if: matrix.os.name == 'ubuntu'
         run: |
-          cd $VCPKG_INSTALLATION_ROOT
-          git fetch --all
-          git branch backup-main
-          ./bootstrap-vcpkg.sh
-          vcpkg update
           cmake -DCMAKE_CXX_COMPILER=g++-14 "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
 
       - name: Configure CMake Windows
