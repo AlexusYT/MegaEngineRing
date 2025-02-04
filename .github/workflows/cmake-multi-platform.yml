@@ -43,7 +43,7 @@ jobs:
         if: matrix.os.name == 'ubuntu'
         run: |
           sudo apt-get update
-          sudo apt-get install ninja-build libxi-dev  libxcursor-dev libsigc++-3.0-dev libpng-dev libglm-dev libepoxy-dev libglfw3-dev libsqlitecpp-dev nlohmann-json3-dev libgtest-dev libgmock-dev libpng++-dev
+          sudo apt-get install ninja-build libxi-dev libxcursor-dev libxdamage-dev libsigc++-3.0-dev libpng-dev libglm-dev libepoxy-dev libglfw3-dev libsqlitecpp-dev nlohmann-json3-dev libgtest-dev libgmock-dev libpng++-dev
 
       - name: Install tools
 
@@ -71,7 +71,7 @@ jobs:
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
         run: |
           echo "/c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:" >> $GITHUB_PATH
-          cmake --build ${{ steps.strings.outputs.build-output-dir }} -j 5 #--config ${{ matrix.build_type }}
+          cmake --build ${{ steps.strings.outputs.build-output-dir }} -j 5 --target MegaEngineEditor #--config ${{ matrix.build_type }}
 
         #- name: Test
         #  working-directory: ${{ steps.strings.outputs.build-output-dir }}
