@@ -1,10 +1,10 @@
 
 list(JOIN CMAKE_PROGRAM_PATH ":" PROGRAM_PATH)
 
-
+message(STATUS "${PROGRAM_PATH}")
 set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/data")
 if (MINGW)
-    set(EXPORT_COMMAND "")
+    set(EXPORT_COMMAND export PATH="${PROGRAM_PATH};$ENV{PATH}")
 else ()
     set(EXPORT_COMMAND export PATH="${PROGRAM_PATH};$ENV{PATH}")
 endif ()
