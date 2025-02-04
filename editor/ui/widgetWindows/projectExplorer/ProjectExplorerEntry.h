@@ -124,6 +124,7 @@ public:
 		if (!children) return nullptr;
 		for (uint32_t i = 0; i < children->get_n_items(); i++) {
 			auto child = children->get_item(i);
+			if (!child) continue;
 			if (auto msg = child->loadDatabase()) return msg;
 		}
 		return nullptr;
