@@ -168,6 +168,7 @@
 			"inherits": [
 				"ci-build",
 				"ci-linux",
+				"vcpkg",
 				"dev-mode"
 			]
 		},
@@ -176,6 +177,7 @@
 			"inherits": [
 				"ci-build",
 				"ci-win64",
+				"vcpkg",
 				"dev-mode"
 			]
 		}

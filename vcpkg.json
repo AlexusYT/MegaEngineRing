@@ -220,7 +220,7 @@
 		},
 		{
 			"name": "vcpkg-tool-meson",
-			"version>=": "1.6.0",
+			"version>=": "1.6.1",
 			"platform": "linux"
 		},
 		{
@@ -229,18 +229,8 @@
 			"platform": "linux"
 		},
 		{
-			"name": "glfw3",
-			"version>=": "3.4#1",
-			"platform": "linux"
-		},
-		{
 			"name": "glm",
 			"version>=": "1.0.1#3",
-			"platform": "linux"
-		},
-		{
-			"name": "ms-gsl",
-			"version>=": "4.1.0",
 			"platform": "linux"
 		},
 		{
