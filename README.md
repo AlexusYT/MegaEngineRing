@@ -47,10 +47,10 @@ sudo apt install libx11-dev libxft-dev libxext-dev libxinerama-dev libxcursor-de
 
 ### 2. Configuring
 
-First of all, you need to specify the path to the vcpkg using VCPKG_ROOT env variable. For example,
+First of all, you need to specify the path to the vcpkg using VCPKG_INSTALLATION_ROOT env variable. For example,
 
 ```shell
-export VCPKG_ROOT="/home/builder/vcpkg"
+export VCPKG_INSTALLATION_ROOT="/home/builder/vcpkg"
 ```
 
 And for gcc:

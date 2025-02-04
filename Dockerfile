@@ -28,7 +28,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install pkg-config libmpc3 libc6
 #gdb
 #
 ENV PATH=$PATH:/home/builder/cmake/bin:/home/builder
-ENV VCPKG_ROOT=/home/builder/vcpkg
+ENV VCPKG_INSTALLATION_ROOT=/home/builder/vcpkg
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib64
 #USER builder
 #RUN apt-get -y clean

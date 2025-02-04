@@ -212,7 +212,7 @@ To help the project, you will probably need to set up the environment and IDE.
 				"CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
 			},
 			"environment": {
-				"VCPKG_ROOT": "<PATH-TO-VCPKG>",
+				"VCPKG_INSTALLATION_ROOT": "<PATH-TO-VCPKG>",
 				"CC": "<PATH-TO-GCC-COMPILER>",
 				"CXX": "<PATH-TO-G++-COMPILER>",
 				"LD_LIBRARY_PATH": "<PATH-TO-GCC-LIB64>"
