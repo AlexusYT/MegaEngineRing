@@ -11,6 +11,7 @@ endif ()
 add_custom_command(
         OUTPUT resources.cpp
         COMMAND ${EXPORT_COMMAND}
+        COMMAND echo $ENV{PATH}
         COMMAND glib-compile-resources --target=resources.cpp --generate-source --internal
         --sourcedir="${RESOURCE_PATH}/css"
         --sourcedir="${RESOURCE_PATH}/icons/32x32/actions"
