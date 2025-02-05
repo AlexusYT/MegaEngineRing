@@ -27,9 +27,7 @@ jobs:
             version: windows-2025
         build_type: [ Release ]
         exclude:
-          os:
-            name: windows
-            version: windows-2025
+          os.name: ubuntu
     
     steps:
       - uses: actions/checkout@v4
