@@ -17,6 +17,8 @@ add_custom_command(
         --sourcedir="${RESOURCE_PATH}/paned-layouts"
         --sourcedir="${RESOURCE_PATH}/_builtin_/shaders"
         "${RESOURCE_PATH}/resources.xml"
+        COMMAND ls
+        COMMAND pwd
         DEPENDS "${RESOURCE_PATH}/resources.xml" "${RESOURCE_PATH}"
 )
 
