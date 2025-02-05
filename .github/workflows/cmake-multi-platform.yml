@@ -26,8 +26,6 @@ jobs:
           - name: windows
             version: windows-2025
         build_type: [ Release ]
-        exclude:
-          os.name: ubuntu
     
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +38,7 @@ jobs:
           echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
       - name: Install tools
-        if: matrix.os.name == 'ubuntu'
+        if: matrix.os.name == 'ubuntu1'
         run: |
           sudo apt-get update
           sudo apt-get install ninja-build libxi-dev libx11-dev libxft-dev libxext-dev  libxinerama-dev xorg-dev libglu1-mesa-dev libxcursor-dev libxdamage-dev libsigc++-3.0-dev libpng-dev libglm-dev libepoxy-dev libglfw3-dev libsqlitecpp-dev nlohmann-json3-dev libgtest-dev libgmock-dev libpng++-dev
@@ -58,7 +56,7 @@ jobs:
 
         # choco install ninja
       - name: Configure CMake Ubuntu
-        if: matrix.os.name == 'ubuntu'
+        if: matrix.os.name == 'ubuntu1'
         run: |
           cmake -DCMAKE_CXX_COMPILER=g++-14 "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
 
