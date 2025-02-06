@@ -303,8 +303,8 @@ include_directories(${GTKMM_INCLUDE_DIRS})
 target_link_libraries(MegaEngineEditor_lib PRIVATE ${GTKMM_LINK_LIBRARIES})
 
 # this is heuristically generated, and may not be correct
-find_package(SQLiteCpp CONFIG REQUIRED)
-target_link_libraries(MegaEngineEditor_lib PUBLIC SQLiteCpp)
+find_package(SQLiteCpp REQUIRED)
+target_link_libraries(MegaEngineEditor_lib PRIVATE SQLiteCpp)
 
 #find_package(nlohmann_json CONFIG REQUIRED)
 pkg_check_modules(nlohmann_json REQUIRED IMPORTED_TARGET nlohmann_json)

@@ -230,8 +230,7 @@
 		},
 		{
 			"name": "sqlitecpp",
-			"version>=": "3.3.2",
-			"platform": "windows"
+			"version>=": "3.3.2"
 		}
 	],
 	"default-features": [],
