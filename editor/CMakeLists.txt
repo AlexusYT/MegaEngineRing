@@ -10,7 +10,7 @@ else ()
 endif ()
 add_custom_command(
         OUTPUT resources.cpp
-        COMMAND ./PROGRAM_PATH --target=resources.cpp --generate-source --internal
+        COMMAND ./${PROGRAM_PATH} --target=resources.cpp --generate-source --internal
         --sourcedir="${RESOURCE_PATH}/css"
         --sourcedir="${RESOURCE_PATH}/icons/32x32/actions"
         --sourcedir="${RESOURCE_PATH}/ui"
