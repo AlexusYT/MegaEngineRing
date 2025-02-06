@@ -3,11 +3,6 @@
 find_program(PROGRAM_PATH NAMES "glib-compile-resources" REQUIRED)
 message(STATUS "Program glib-compile-resources found at: ${PROGRAM_PATH}")
 set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/data")
-if (MINGW)
-    set(EXPORT_COMMAND set PATH="${PROGRAM_PATH};$ENV{PATH}")
-else ()
-    set(EXPORT_COMMAND export PATH="${PROGRAM_PATH};$ENV{PATH}")
-endif ()
 add_custom_command(
         OUTPUT resources.cpp
         COMMAND ${PROGRAM_PATH} --target=resources.cpp --generate-source --internal
@@ -17,7 +12,6 @@ add_custom_command(
         --sourcedir="${RESOURCE_PATH}/paned-layouts"
         --sourcedir="${RESOURCE_PATH}/_builtin_/shaders"
         "${RESOURCE_PATH}/resources.xml"
-        COMMAND dir ".."
         DEPENDS "${RESOURCE_PATH}/resources.xml" "${RESOURCE_PATH}"
 )
 
@@ -310,7 +304,7 @@ target_link_libraries(MegaEngineEditor_lib PRIVATE ${GTKMM_LINK_LIBRARIES})
 
 # this is heuristically generated, and may not be correct
 find_package(SQLiteCpp CONFIG REQUIRED)
-target_link_libraries(MegaEngineEditor_lib PRIVATE SQLiteCpp)
+target_link_libraries(MegaEngineEditor_lib PUBLIC SQLiteCpp)
 
 #find_package(nlohmann_json CONFIG REQUIRED)
 pkg_check_modules(nlohmann_json REQUIRED IMPORTED_TARGET nlohmann_json)
