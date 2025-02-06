@@ -46,7 +46,7 @@ class GameEngineImpl {
 
 public:
 	static int run(int pArgc, char* pArgv[]) {
-#if __linux
+#if defined __linux
 		setenv("GDK_DEBUG", "gl-prefer-gl", false);
 #endif
 		Globals::init();
