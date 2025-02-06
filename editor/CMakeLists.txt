@@ -1,7 +1,7 @@
 
-list(JOIN CMAKE_PROGRAM_PATH ":" PROGRAM_PATH)
-
-message(STATUS "${PROGRAM_PATH}")
+#list(JOIN CMAKE_PROGRAM_PATH ":" PROGRAM_PATH)
+find_program(PROGRAM_PATH NAMES "glib-compile-resources" REQUIRED)
+message(STATUS "Program glib-compile-resources found at: ${PROGRAM_PATH}")
 set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/data")
 if (MINGW)
     set(EXPORT_COMMAND set PATH="${PROGRAM_PATH};$ENV{PATH}")
@@ -10,7 +10,7 @@ else ()
 endif ()
 add_custom_command(
         OUTPUT resources.cpp
-        COMMAND PATH="${PROGRAM_PATH}:$ENV{PATH}" glib-compile-resources --target=resources.cpp --generate-source --internal
+        COMMAND ./PROGRAM_PATH --target=resources.cpp --generate-source --internal
         --sourcedir="${RESOURCE_PATH}/css"
         --sourcedir="${RESOURCE_PATH}/icons/32x32/actions"
         --sourcedir="${RESOURCE_PATH}/ui"
