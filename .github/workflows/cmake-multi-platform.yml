@@ -64,8 +64,8 @@ jobs:
         if: matrix.os.name == 'windows'
         shell: C:\msys64\usr\bin\bash.exe {0}
         run: |
-          ./${{ steps.strings.outputs.build-output-dir }}/vcpkg_installed/x64-linux/tools/glib-compile-resources --help
           cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
+          ./${{ steps.strings.outputs.build-output-dir }}/vcpkg_installed/x64-linux/tools/glib-compile-resources --help
 
       - name: Build
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
