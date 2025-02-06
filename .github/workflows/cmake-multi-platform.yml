@@ -65,7 +65,7 @@ jobs:
         shell: C:\msys64\usr\bin\bash.exe {0}
         run: |
           cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
-          ./"${{ steps.strings.outputs.build-output-dir }}"/vcpkg_installed/x64-windows/tools/glib-compile-resources.exe --help
+          ./"${{ steps.strings.outputs.build-output-dir }}"/vcpkg_installed/x64-windows/tools/glib/glib-compile-resources.exe --help
           dir "${{ steps.strings.outputs.build-output-dir }}"/vcpkg_installed/
 
       - name: Build
