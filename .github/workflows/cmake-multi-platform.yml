@@ -36,6 +36,7 @@ jobs:
         shell: bash
         run: |
           echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+          echo "install-output-dir=${{ github.workspace }}/install" >> "$GITHUB_OUTPUT"
 
       - name: Install tools
         if: matrix.os.name == 'ubuntu'
@@ -69,7 +70,7 @@ jobs:
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
         run: |
           echo "/c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:" >> $GITHUB_PATH
-          cmake --install ${{ steps.strings.outputs.build-output-dir }} -j 5 #--config ${{ matrix.build_type }}
+          cmake -DCMAKE_INSTALL_PREFIX= ${{ steps.strings.outputs.install-output-dir }} --install ${{ steps.strings.outputs.build-output-dir }} -j 5 #--config ${{ matrix.build_type }}
 
         #- name: Test
         #  working-directory: ${{ steps.strings.outputs.build-output-dir }}
