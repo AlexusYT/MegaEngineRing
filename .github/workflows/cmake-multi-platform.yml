@@ -59,7 +59,7 @@ jobs:
       - name: Configure CMake Ubuntu
         if: matrix.os.name == 'ubuntu'
         run: |
-          cmake -DCMAKE_CXX_COMPILER=g++-14 "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
+          cmake -DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.install-output-dir }} -DCMAKE_CXX_COMPILER=g++-14 "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
 
       - name: Configure CMake Windows
         if: matrix.os.name == 'windows'
@@ -69,7 +69,7 @@ jobs:
       - name: Build
         run: |
           echo "/c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:" >> $GITHUB_PATH
-          cmake -DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.install-output-dir }} --build ${{ steps.strings.outputs.build-output-dir }} --target install #--config ${{ matrix.build_type }}
+          cmake --build ${{ steps.strings.outputs.build-output-dir }} --target install #--config ${{ matrix.build_type }}
 
         #- name: Test
         #  working-directory: ${{ steps.strings.outputs.build-output-dir }}
