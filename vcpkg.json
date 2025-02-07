@@ -3,11 +3,6 @@
 	"version-string": "0.1.0",
 	"dependencies": [
 		{
-			"name": "atk",
-			"version>=": "2.38.0#8",
-			"platform": "linux"
-		},
-		{
 			"name": "brotli",
 			"version>=": "1.1.0#1",
 			"platform": "linux"
@@ -149,11 +144,6 @@
 		{
 			"name": "libsigcpp",
 			"version>=": "3.6.0#1",
-			"platform": "linux"
-		},
-		{
-			"name": "lzo",
-			"version>=": "2.10#9",
 			"platform": "linux"
 		},
 		{
