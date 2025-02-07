@@ -116,7 +116,7 @@ ViewResourceEditor::ViewResourceEditor(const std::shared_ptr<IWidgetContext> &pC
 	mainStack = builder->get_widget<Gtk::Stack>("mainStack");
 	resourcePathEntry = builder->get_widget<Gtk::Entry>("resourcePathEntry");
 	resourcePathEntry->signal_changed().connect([this] {
-		std::filesystem::path path{resourcePathEntry->get_text()};
+		std::filesystem::path path{resourcePathEntry->get_text().raw()};
 		if (path.empty()) {
 			markErrored(resourcePathEntry);
 			return;
@@ -347,7 +347,7 @@ void ViewResourceEditor::unmarkErrored(Gtk::Widget* pWidget) {
 }
 
 void ViewResourceEditor::updateUnsavedDialog(const std::shared_ptr<sdk::IResource> &pResource) const {
-	const std::filesystem::path path{resourcePathEntry->get_text()};
+	const std::filesystem::path path{resourcePathEntry->get_text().raw()};
 	const auto name = resourceNameEntry->get_text().raw();
 
 	if (const auto uri = "/" / pResource->getResourceUri(); uri.parent_path() != path || uri.stem().string() != name) {

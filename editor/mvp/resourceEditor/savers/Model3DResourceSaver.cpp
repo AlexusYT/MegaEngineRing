@@ -38,7 +38,7 @@ sdk::ReportMessagePtr Model3DResourceSaver::saveToFile(const std::filesystem::pa
 		std::ofstream file(pPath, std::ios::out | std::ios::binary);
 		file.exceptions(std::_S_badbit | std::_S_failbit);
 
-		writeString(file, resourceUri);
+		writeString(file, resourceUri.string());
 		writeUuid(file, resource->getUuid());
 		auto objects = pModel->getModelObjects();
 		auto objCount = static_cast<uint16_t>(objects.size());
@@ -51,7 +51,7 @@ sdk::ReportMessagePtr Model3DResourceSaver::saveToFile(const std::filesystem::pa
 			auto shader = object->getShader();
 			std::string shaderName;
 			if (shader) {
-				shaderName = shader->getResourceUri();
+				shaderName = shader->getResourceUri().string();
 			} else {
 				shaderName = "_builtin_/shaders/DefaultInstancedProgram.enshader";
 			}

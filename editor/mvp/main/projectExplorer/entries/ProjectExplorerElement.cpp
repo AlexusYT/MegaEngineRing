@@ -39,7 +39,7 @@ ProjectExplorerElement::ProjectExplorerElement(const std::filesystem::path &pPat
 		type = ExplorerElementType::RESOURCE_TEXTURE;
 	else if (ext == ".enmat")
 		type = ExplorerElementType::RESOURCE_MATERIAL;
-	fileMonitor = Gio::File::create_for_path(path)->monitor_directory();
+	fileMonitor = Gio::File::create_for_path(path.string())->monitor_directory();
 
 	fileMonitor->signal_changed().connect([this, pRootPath](const std::shared_ptr<Gio::File> &pFile,
 															const std::shared_ptr<Gio::File> & /*pOtherFile*/,

@@ -162,7 +162,7 @@ sdk::ReportMessagePtr ApplicationInfo::writeFile() const {
 	headerFile.addDefinition(class_->getDefinition());
 	if (auto msg = headerFile.writeFile(getProject()->getProjectPath() / getHeaderPath())) return msg;
 	CppSourceFile sourceFile;
-	sourceFile.addInclude(getHeaderPath().filename(), false);
+	sourceFile.addInclude(getHeaderPath().filename().string(), false);
 	sourceFile.addDefinition(method->getDefinition());
 	return sourceFile.writeFile(getProject()->getProjectPath() / getSourcePath());
 }

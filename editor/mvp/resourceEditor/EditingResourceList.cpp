@@ -34,7 +34,7 @@ void EditingResourceList::addResource(const std::shared_ptr<sdk::IResource> &pRe
 }
 
 void EditingResourceList::loadResource(const std::filesystem::path &pUri) {
-	context->loadResourceAsync(pUri, [this](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
+	context->loadResourceAsync(pUri.string(), [this](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
 		if (pResult->isErrored()) {
 			sdk::Logger::error(pResult->getError());
 			return;
@@ -44,7 +44,7 @@ void EditingResourceList::loadResource(const std::filesystem::path &pUri) {
 }
 
 void EditingResourceList::deleteResource(const std::filesystem::path &pUri) {
-	context->getResources()->removeResource(pUri);
+	context->getResources()->removeResource(pUri.string());
 	for (auto resource: resources) {
 		if (resource.second->getResourceUri() == pUri) {
 			resources.erase(resource.first);

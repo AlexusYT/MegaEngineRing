@@ -40,7 +40,7 @@ sdk::ReportMessagePtr EditorFileSystemResourceBundle::getResourceStream(const st
 		}
 		auto resourceBytes = Gio::Resource::lookup_data_global("/" + pResourceUri);
 		auto ss = std::make_shared<std::stringstream>();
-		unsigned long size = 0;
+		size_t size = 0;
 		auto buf = static_cast<const char*>(resourceBytes->get_data(size));
 		ss->write(buf, static_cast<std::streamsize>(size));
 		pStream = ss;

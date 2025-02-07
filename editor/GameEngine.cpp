@@ -26,6 +26,10 @@
 #include <unordered_set>
 #include <utility>
 
+#if defined _WIN32
+	#include <windows.h>
+#endif
+
 #include "Globals.h"
 #include "cmdOptions/EngineOptionGroup.h"
 #include "mvp/ApplicationController.h"
@@ -42,7 +46,9 @@ class GameEngineImpl {
 
 public:
 	static int run(int pArgc, char* pArgv[]) {
+#if defined __linux
 		setenv("GDK_DEBUG", "gl-prefer-gl", false);
+#endif
 		Globals::init();
 		signal(SIGABRT, signals);
 		signal(SIGSEGV, signals);

@@ -18,14 +18,15 @@
 			"name": "vcpkg",
 			"hidden": true,
 			"cacheVariables": {
-				"CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+				"CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake"
 			}
 		},
 		{
 			"name": "vcpkg-win64-static",
 			"hidden": true,
 			"cacheVariables": {
-				"VCPKG_TARGET_TRIPLET": "x64-windows-static-md"
+				"VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
+				"VCPKG_HOST_TRIPLET": "x64-mingw-dynamic"
 			}
 		},
 		{
@@ -70,12 +71,13 @@
 			}
 		},
 		{
-			"name": "flags-msvc",
+			"name": "flags-mingw",
 			"description": "Note that all the flags after /W4 are required for MSVC to conform to the language standard",
 			"hidden": true,
 			"cacheVariables": {
-				"CMAKE_CXX_FLAGS": "/sdl /guard:cf /utf-8 /diagnostics:caret /w14165 /w44242 /w44254 /w44263 /w34265 /w34287 /w44296 /w44365 /w44388 /w44464 /w14545 /w14546 /w14547 /w14549 /w14555 /w34619 /w34640 /w24826 /w14905 /w14906 /w14928 /w45038 /W4 /permissive- /volatile:iso /Zc:inline /Zc:preprocessor /Zc:enumTypes /Zc:lambda /Zc:__cplusplus /Zc:externConstexpr /Zc:throwingNew /EHsc",
-				"CMAKE_EXE_LINKER_FLAGS": "/machine:x64 /guard:cf"
+				"CMAKE_CXX_FLAGS": "-fconcepts-diagnostics-depth=4 -Werror -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS=1 -fstack-protector-strong -fcf-protection=full -fstack-clash-protection -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor",
+				"CMAKE_EXE_LINKER_FLAGS": "-Wl,--allow-shlib-undefined,--as-needed",
+				"CMAKE_SHARED_LINKER_FLAGS": "-Wl,--allow-shlib-undefined,--as-needed"
 			}
 		},
 		{
@@ -105,11 +107,10 @@
 		{
 			"name": "ci-win64",
 			"inherits": [
-				"flags-msvc",
+				"flags-mingw",
 				"ci-std"
 			],
-			"generator": "Visual Studio 17 2022",
-			"architecture": "x64",
+			"generator": "Ninja",
 			"hidden": true
 		},
 		{
@@ -130,8 +131,7 @@
 			"name": "ci-coverage",
 			"inherits": [
 				"coverage-linux",
-				"dev-mode",
-				"vcpkg"
+				"dev-mode"
 			],
 			"cacheVariables": {
 				"COVERAGE_HTML_COMMAND": ""
@@ -142,8 +142,7 @@
 			"binaryDir": "${sourceDir}/build/sanitize",
 			"inherits": [
 				"ci-linux",
-				"dev-mode",
-				"vcpkg"
+				"dev-mode"
 			],
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Sanitize",
@@ -161,8 +160,7 @@
 			"inherits": [
 				"ci-build",
 				"ci-darwin",
-				"dev-mode",
-				"vcpkg"
+				"dev-mode"
 			]
 		},
 		{
@@ -179,9 +177,8 @@
 			"inherits": [
 				"ci-build",
 				"ci-win64",
-				"dev-mode",
 				"vcpkg",
-				"vcpkg-win64-static"
+				"dev-mode"
 			]
 		}
 	]

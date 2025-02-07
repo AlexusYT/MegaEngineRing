@@ -54,7 +54,7 @@ public:
 
 	void setResourceUri(const std::filesystem::path &pResourceUri) override {
 		resourceUri = pResourceUri;
-		resourceName = resourceUri.stem();
+		resourceName = resourceUri.stem().string();
 	}
 
 	[[nodiscard]] const std::shared_ptr<UUID> &getUuid() const override { return uuid; }

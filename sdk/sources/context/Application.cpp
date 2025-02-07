@@ -61,28 +61,36 @@ void Application::deinitEngine() {
 	ExtensionRegistry::deinit();
 	ResourceLoaders::clearLoaders();
 }
-
+void Application::sigHandler(int pSig) {
+	using namespace sdk;
+	const auto msg = ReportMessage::create();
+	msg->setTitle("Signal recieved");
+	msg->setMessage("Aborting...");
+	std::string sigName;
+	switch (pSig) {
+		case SIGILL: sigName = "SIGILL"; break;
+		case SIGSEGV: sigName = "SIGSEGV"; break;
+		default: sigName = "Unknown"; break;
+	}
+	msg->addInfoLine("Signal: {}", sigName);
+	msg->addInfoLine("Code: {}", pSig);
+	Logger::error(msg);
+	exit(1);
+}
 void Application::initSigHandlers() {
+	#if defined __MINGW32__
+	signal(SIGILL, &sigHandler);
+	signal(SIGSEGV, &sigHandler);
+
+	#else
+
 	struct sigaction sig;
 	sig.sa_flags = SA_SIGINFO;
-	sig.sa_sigaction = [](int pSig, siginfo_t* pInfo, void*) {
-		using namespace sdk;
-		const auto msg = ReportMessage::create();
-		msg->setTitle("Signal recieved");
-		msg->setMessage("Aborting...");
-		std::string sigName;
-		switch (pSig) {
-			case SIGILL: sigName = "SIGILL"; break;
-			case SIGSEGV: sigName = "SIGSEGV"; break;
-			default: sigName = "Unknown"; break;
-		}
-		msg->addInfoLine("Signal: {}", sigName);
-		msg->addInfoLine("Code: {}", pInfo->si_code);
-		Logger::error(msg);
-		exit(1);
-	};
+	sig.sa_sigaction = [](int pSig, siginfo_t* /*pInfo*/, void*) { sigHandler(pSig); };
 	sigaction(SIGILL, &sig, nullptr);
 	sigaction(SIGSEGV, &sig, nullptr);
+
+	#endif
 }
 
 void Application::loadSettings() {

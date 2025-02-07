@@ -3,112 +3,134 @@
 	"version-string": "0.1.0",
 	"dependencies": [
 		{
-			"name": "atk",
-			"version>=": "2.38.0#8"
-		},
-		{
 			"name": "brotli",
-			"version>=": "1.1.0#1"
+			"version>=": "1.1.0#1",
+			"platform": "linux"
 		},
 		{
 			"name": "bzip2",
-			"version>=": "1.0.8#5"
+			"version>=": "1.0.8#5",
+			"platform": "linux"
 		},
 		{
 			"name": "cairo",
-			"version>=": "1.18.2"
+			"version>=": "1.18.2",
+			"platform": "linux"
 		},
 		{
 			"name": "cairomm",
-			"version>=": "1.18.0"
+			"version>=": "1.18.0",
+			"platform": "linux"
 		},
 		{
 			"name": "dirent",
-			"version>=": "1.24"
+			"version>=": "1.24",
+			"platform": "linux"
 		},
 		{
 			"name": "egl-registry",
-			"version>=": "2024-01-25"
+			"version>=": "2024-01-25",
+			"platform": "linux"
 		},
 		{
 			"name": "expat",
-			"version>=": "2.6.3"
+			"version>=": "2.6.3",
+			"platform": "linux"
 		},
 		{
 			"name": "fontconfig",
-			"version>=": "2.15.0#1"
+			"version>=": "2.15.0#1",
+			"platform": "linux"
 		},
 		{
 			"name": "freetype",
-			"version>=": "2.13.3"
+			"version>=": "2.13.3",
+			"platform": "linux"
 		},
 		{
 			"name": "fribidi",
-			"version>=": "1.0.16"
+			"version>=": "1.0.16",
+			"platform": "linux"
 		},
 		{
 			"name": "gdk-pixbuf",
-			"version>=": "2.42.12#1"
+			"version>=": "2.42.12#1",
+			"platform": "linux"
 		},
 		{
 			"name": "getopt",
-			"version>=": "0#3"
+			"version>=": "0#3",
+			"platform": "linux"
 		},
 		{
 			"name": "gettext-libintl",
-			"version>=": "0.22.5#2"
+			"version>=": "0.22.5#2",
+			"platform": "linux"
 		},
 		{
 			"name": "gettext",
-			"version>=": "0.22.5#1"
+			"version>=": "0.22.5#1",
+			"platform": "linux"
 		},
 		{
 			"name": "glib",
-			"version>=": "2.80.0#1"
+			"version>=": "2.80.0#1",
+			"platform": "linux"
 		},
 		{
 			"name": "glibmm",
-			"version>=": "2.78.1"
+			"version>=": "2.78.1",
+			"platform": "linux"
 		},
 		{
 			"name": "gperf",
-			"version>=": "3.1#6"
+			"version>=": "3.1#6",
+			"platform": "linux"
 		},
 		{
 			"name": "graphene",
-			"version>=": "1.10.8#2"
+			"version>=": "1.10.8#2",
+			"platform": "linux"
 		},
 		{
 			"name": "gtk",
-			"version>=": "4.16.3"
+			"version>=": "4.16.3",
+			"platform": "linux"
 		},
 		{
 			"name": "gtkmm",
-			"version>=": "4.14.0"
+			"version>=": "4.14.0",
+			"platform": "linux"
 		},
 		{
 			"name": "harfbuzz",
-			"version>=": "10.1.0"
+			"version>=": "10.1.0",
+			"platform": "linux"
 		},
 		{
 			"name": "libepoxy",
-			"version>=": "1.5.10#2"
+			"version>=": "1.5.10#2",
+			"platform": "linux"
 		},
 		{
 			"name": "libffi",
-			"version>=": "3.4.6"
+			"version>=": "3.4.6",
+			"platform": "linux"
 		},
 		{
 			"name": "libiconv",
-			"version>=": "1.17#4"
+			"version>=": "1.17#4",
+			"platform": "linux"
 		},
 		{
 			"name": "libjpeg-turbo",
-			"version>=": "3.0.4"
+			"version>=": "3.0.4",
+			"platform": "linux"
 		},
 		{
 			"name": "liblzma",
-			"version>=": "5.6.3"
+			"version>=": "5.6.3",
+			"platform": "linux"
 		},
 		{
 			"name": "libpng",
@@ -116,59 +138,58 @@
 		},
 		{
 			"name": "libsass",
-			"version>=": "3.6.6"
-		},
-		{
-			"name": "libsigcpp-3",
-			"version>=": "3.0.3#1"
+			"version>=": "3.6.6",
+			"platform": "linux"
 		},
 		{
 			"name": "libsigcpp",
-			"version>=": "3.6.0#1"
-		},
-		{
-			"name": "libuuid",
-			"version>=": "1.0.3#14"
-		},
-		{
-			"name": "lzo",
-			"version>=": "2.10#9"
+			"version>=": "3.6.0#1",
+			"platform": "linux"
 		},
 		{
 			"name": "pango",
-			"version>=": "1.54.0"
+			"version>=": "1.54.0",
+			"platform": "linux"
 		},
 		{
 			"name": "pangomm",
-			"version>=": "2.50.1#3"
+			"version>=": "2.50.1#3",
+			"platform": "linux"
 		},
 		{
 			"name": "pcre2",
-			"version>=": "10.43"
+			"version>=": "10.43",
+			"platform": "linux"
 		},
 		{
 			"name": "pcre",
-			"version>=": "8.45#6"
+			"version>=": "8.45#6",
+			"platform": "linux"
 		},
 		{
 			"name": "pixman",
-			"version>=": "0.43.4#1"
+			"version>=": "0.43.4#1",
+			"platform": "linux"
 		},
 		{
 			"name": "pthread",
-			"version>=": "3.0.0#2"
+			"version>=": "3.0.0#2",
+			"platform": "linux"
 		},
 		{
 			"name": "pthreads",
-			"version>=": "3.0.0#14"
+			"version>=": "3.0.0#14",
+			"platform": "linux"
 		},
 		{
 			"name": "sassc",
-			"version>=": "3.6.2#1"
+			"version>=": "3.6.2#1",
+			"platform": "linux"
 		},
 		{
 			"name": "tiff",
-			"version>=": "4.7.0"
+			"version>=": "4.7.0",
+			"platform": "linux"
 		},
 		{
 			"name": "vcpkg-cmake-config",
@@ -184,48 +205,24 @@
 		},
 		{
 			"name": "vcpkg-tool-meson",
-			"version>=": "1.6.0"
+			"version>=": "1.6.1",
+			"platform": "linux"
 		},
 		{
 			"name": "zlib",
-			"version>=": "1.3.1"
-		},
-		{
-			"name": "glfw3",
-			"version>=": "3.4#1"
-		},
-		{
-			"name": "glm",
-			"version>=": "1.0.1#3"
-		},
-		{
-			"name": "ms-gsl",
-			"version>=": "4.1.0"
+			"version>=": "1.3.1",
+			"platform": "linux"
 		},
 		{
 			"name": "pngpp",
-			"version>=": "0.2.10#2"
+			"version>=": "0.2.10#2",
+			"platform": "windows"
 		},
 		{
 			"name": "sqlitecpp",
 			"version>=": "3.3.2"
-		},
-		{
-			"name": "nlohmann-json",
-			"version>=": "3.11.3"
 		}
 	],
 	"default-features": [],
-	"features": {
-		"test": {
-			"description": "Dependencies for testing",
-			"dependencies": [
-				{
-					"name": "gtest",
-					"version>=": "1.15.2"
-				}
-			]
-		}
-	},
 	"builtin-baseline": "16ee2ecb31788c336ace8bb14c21801efb6836e4"
 }

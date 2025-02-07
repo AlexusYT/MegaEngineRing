@@ -30,7 +30,7 @@
 namespace mer::editor::mvp {
 void ModelMain::loadLayoutsFile() {
 	const auto layoutFile = Globals::getConfigPath() / "paned-layouts/Layouts.json";
-	const auto file = Gio::File::create_for_path(layoutFile);
+	const auto file = Gio::File::create_for_path(layoutFile.string());
 
 	//According to the documentation of the Gio::File::query_exists method, it is best to try to create the file.
 	//If it already exists, an exception will be thrown, which means we can read its contents.

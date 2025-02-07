@@ -56,7 +56,7 @@ ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::string &
 		msg->addInfoLine("Search path: {}", searchPath.string());
 		msg->addInfoLine("Resource URI to search: {}", pResourceUri);
 		msg->addInfoLine("Candidates:");
-		for (auto candidate: candidates) { msg->addInfoLine(candidate); }
+		for (auto candidate: candidates) { msg->addInfoLine(candidate.string()); }
 		return msg;
 	}
 	auto resource = candidates.at(0);
