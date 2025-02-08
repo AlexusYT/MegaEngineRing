@@ -297,6 +297,7 @@ target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineSDK_shared)
 
 target_compile_features(MegaEngineEditor_lib PRIVATE cxx_std_23)
 
+target_link_libraries(MegaEngineEditor_lib PRIVATE ImGUI)
 
 pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
 include_directories(${GTKMM_INCLUDE_DIRS})
