@@ -43,6 +43,7 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEdit
 	: modelSceneEditor(pModelSceneEditor) {
 
 	modelSceneEditor->connectOnLoadedSignal([this] {
+#ifdef USE_OLD_UI
 		for (auto view: views) {
 			view.first->executeInMainThread(
 				[this, view](const std::promise<void> & /*pPromise*/) { view.first->redraw(); });
@@ -50,9 +51,10 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEdit
 			view.first->queueResize();
 			view.first->makeCurrent();
 		}
+#endif
 		modelSceneEditor->initScene();
 	});
-}
+} // namespace mer::editor::mvp
 
 PresenterSceneEditor::~PresenterSceneEditor() {}
 
@@ -62,6 +64,8 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 	view->setPresenter(this);
 	std::vector<sigc::connection> conns;
 
+
+#ifdef USE_OLD_UI
 	view->connectRealize([this, view] {
 		if (!modelSceneEditor->hasScene()) return;
 		if (!modelSceneEditor->hasResourcesContext()) {
@@ -104,7 +108,7 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 		const sdk::ModifierKeys mods = convertToModifierKeys(pState);
 		if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, false, mods);
 	});
-
+#endif
 	view->openView();
 	views.emplace(view, conns);
 }

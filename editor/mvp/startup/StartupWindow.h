@@ -35,6 +35,8 @@ class StartupWindow final : public IViewStartup {
 public:
 	explicit StartupWindow(const std::shared_ptr<IWidgetContext> &pContext);
 
+	void updateInterface() override;
+
 	sigc::connection connectNewProjectClickSignal(const sigc::slot<void()> &pSlot) const override {
 		return builder->get_widget<Gtk::Button>("btn_newProject")->signal_clicked().connect(pSlot);
 	}

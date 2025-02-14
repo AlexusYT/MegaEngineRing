@@ -21,6 +21,7 @@
 
 #include "ApplicationController.h"
 
+#include "EngineSDK/scene/SceneUi.h"
 #include "IPresenter.h"
 
 namespace mer::editor::mvp {
@@ -41,5 +42,9 @@ void ApplicationController::stop(IPresenter* pPresenter) {
 	pPresenter->stop();
 	presenters.erase(pPresenter->getTypeName());
 }
+
+void ApplicationController::addPopup(const std::shared_ptr<sdk::UiPopup> &pPopup) const { sceneUi->addUiPopup(pPopup); }
+
+void ApplicationController::showPopup(const std::string & /*pName*/) const { /* TODO_IMPLEMENT_ME();*/ }
 
 } // namespace mer::editor::mvp

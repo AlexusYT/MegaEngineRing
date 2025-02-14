@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,36 +16,37 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 24.01.24.
+// Created by alexus on 10.02.25.
 //
 
-#ifndef IVIEW_H
-#define IVIEW_H
+#ifndef UIWINDOWCONTEXT_H
+#define UIWINDOWCONTEXT_H
+#include "IWidgetContext.h"
 
-namespace mer::editor::mvp {
-class IWidgetContext;
+namespace mer::sdk {
+class SceneUi;
 }
 
 namespace mer::editor::mvp {
-class IView {
+
+class UiWindowContext : public IWidgetContext {
+	sdk::UiWindow* uiWindow{};
+	std::shared_ptr<sdk::SceneUi> sceneUi{};
+
+	explicit UiWindowContext(const std::shared_ptr<sdk::SceneUi> &pSceneUi) : sceneUi(pSceneUi) {}
+
 public:
-	virtual ~IView() = default;
+	static std::shared_ptr<IWidgetContext> create(const std::shared_ptr<sdk::SceneUi> &pSceneUi) {
+		return std::shared_ptr<UiWindowContext>(new UiWindowContext(pSceneUi));
+	}
 
-	virtual void openView() = 0;
+	void addWidget(Gtk::Widget* /*pWidget*/) override {}
 
-	virtual void updateInterface() {}
-
-	virtual void closeView() = 0;
-
-	virtual void startConfirmation(const std::string &pTitle, const std::string &pMessage,
-								   const std::function<void(int pId)> &pResult,
-								   const std::vector<std::string> &pButtons = {"OK", "Cancel"});
+	inline void addWindow(sdk::UiWindow* pWidget) override;
+	void removeWidget() override;
+	void setTitle(const std::string &pTitle) override;
 };
 
-inline void IView::startConfirmation(const std::string & /*pTitle*/, const std::string & /*pMessage*/,
-									 const std::function<void(int pId)> & /*pResult*/,
-									 const std::vector<std::string> & /*pButtons*/) {}
 } // namespace mer::editor::mvp
 
-
-#endif //IVIEW_H
+#endif //UIWINDOWCONTEXT_H

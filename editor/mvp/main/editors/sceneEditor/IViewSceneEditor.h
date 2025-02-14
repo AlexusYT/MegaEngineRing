@@ -42,6 +42,8 @@ public:
 
 	virtual void setPresenter(IPresenterSceneEditor* pPresenter) = 0;
 
+
+#ifdef USE_OLD_UI
 	virtual sigc::connection connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) = 0;
 
 	virtual sigc::connection connectRealize(const sigc::slot<void()> &pSlot) = 0;
@@ -82,6 +84,7 @@ public:
 	virtual void toggleSimMode(bool pMode = true) = 0;
 
 	virtual bool isSimMode() const = 0;
+#endif
 };
 } // namespace mer::editor::mvp
 

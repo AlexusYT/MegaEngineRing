@@ -22,6 +22,7 @@
 #ifndef VIEWSCENEEDITOR_H
 #define VIEWSCENEEDITOR_H
 
+#include "EngineSDK/ui/UiWindow.h"
 #include "IViewSceneEditor.h"
 
 namespace mer::editor::mvp {
@@ -30,9 +31,10 @@ class IPresenterSceneEditor;
 
 namespace mer::editor::mvp {
 
-class ViewSceneEditor : public IViewSceneEditor {
+class ViewSceneEditor : public IViewSceneEditor, public sdk::UiWindow {
 	std::shared_ptr<IWidgetContext> context;
 	IPresenterSceneEditor* presenter{};
+#ifdef USE_OLD_UI
 	Gtk::Box mainWidget{Gtk::Orientation::VERTICAL};
 
 	Gtk::GLArea area;
@@ -41,12 +43,16 @@ class ViewSceneEditor : public IViewSceneEditor {
 	std::shared_ptr<Gtk::EventControllerMotion> motionController;
 	std::shared_ptr<Gtk::GestureClick> gestureClick;
 	std::shared_ptr<Gtk::EventControllerKey> keyController;
+#endif
 
 public:
 	explicit ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext);
 
+	void updateUi() override;
+
 	void setPresenter(IPresenterSceneEditor* pPresenter) override { presenter = pPresenter; }
 
+#ifdef USE_OLD_UI
 	sigc::connection connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) override;
 
 	sigc::connection connectRealize(const sigc::slot<void()> &pSlot) override;
@@ -102,7 +108,7 @@ public:
 	void toggleSimMode(const bool pMode = true) override { modeSwitch.set_active(pMode); }
 
 	bool isSimMode() const override { return modeSwitch.get_active(); }
-
+#endif
 	void openView() override;
 
 	void closeView() override;

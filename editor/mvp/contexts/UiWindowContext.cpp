@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,29 +16,22 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 12.08.24.
+// Created by alexus on 10.02.25.
 //
 
-#ifndef IPRESENTERPROJECTEXPLORER_H
-#define IPRESENTERPROJECTEXPLORER_H
-#include "mvp/PresenterBase.h"
+#include "UiWindowContext.h"
 
-namespace mer::editor::ui {
-
-class ProjectExplorerEntry;
-}
+#include "EngineSDK/scene/SceneUi.h"
+#include "EngineSDK/ui/UiWindow.h"
 
 namespace mer::editor::mvp {
-class IPresenterProjectExplorer : public PresenterBase {
-public:
-	virtual void setEntrySelectionChanged(
-		const sigc::slot<void(ui::ProjectExplorerEntry*)> &pEntrySelectionChanged) = 0;
 
-	virtual void openInFilesystem(const std::filesystem::path &pPathToFile) = 0;
+void UiWindowContext::addWindow(sdk::UiWindow* pWidget) {
+	uiWindow = pWidget;
+	sceneUi->addUiWindow(pWidget);
+}
 
-	virtual void deleteFile(const std::filesystem::path &pPathToDelete) = 0;
-};
+void UiWindowContext::removeWidget() { sceneUi->removeUiWindow(uiWindow->getName()); }
+
+void UiWindowContext::setTitle(const std::string & /*pTitle*/) {}
 } // namespace mer::editor::mvp
-
-
-#endif //IPRESENTERPROJECTEXPLORER_H

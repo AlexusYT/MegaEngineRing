@@ -25,8 +25,12 @@
 #include <epoxy/gl.h>
 // Must be included after epoxy
 #include <GLFW/glfw3.h>
+#include <thread>
 
+#include "EngineSDK/scene/SceneUi.h"
 #include "EngineUtils/utils/Logger.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 namespace mer::sdk {
 Window::Window() {}
@@ -184,6 +188,75 @@ bool Window::isCloseRequest() const {
 
 	if (native) return glfwWindowShouldClose(native);
 	return false;
+}
+
+void Window::addScene(const std::shared_ptr<SceneUi> &pScene) {
+	pScene->setWindow(this);
+	sceneUis.emplace_back(pScene);
+}
+
+void Window::removeScene(const std::shared_ptr<SceneUi> &pScene) { erase(sceneUis, pScene); }
+
+void Window::runMainLoop() {
+	setContextVersion(3, 0);
+
+
+	// Create window with graphics context
+	show();
+	glfwMaximizeWindow(native);
+	glfwSwapInterval(1); // Enable vsync
+	IMGUI_CHECKVERSION();
+	while (!glfwWindowShouldClose(native)) {
+		glfwMakeContextCurrent(native);
+		glfwPollEvents();
+		if (glfwGetWindowAttrib(native, GLFW_ICONIFIED) != 0) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			continue;
+		}
+		if (sceneUis.empty() && imGuiContext) {
+			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplGlfw_Shutdown();
+			ImGui::DestroyContext(imGuiContext);
+			imGuiContext = nullptr;
+		}
+
+		if (!sceneUis.empty() && !imGuiContext) {
+			imGuiContext = ImGui::CreateContext();
+			ImGui::SetCurrentContext(imGuiContext);
+			ImGuiIO &io = ImGui::GetIO();
+			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+			io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+			// Setup Dear ImGui style
+			ImGui::StyleColorsDark();
+			//ImGui::StyleColorsLight();
+
+			// Setup Platform/Renderer backends
+			ImGui_ImplGlfw_InitForOpenGL(native, true);
+			ImGui_ImplOpenGL3_Init("#version 130");
+		}
+
+		if (imGuiContext) {
+			ImGui::SetCurrentContext(imGuiContext);
+			// Start the Dear ImGui frame
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+			for (auto sceneUi: sceneUis) {
+				if (!sceneUi->isInited()) continue;
+				sceneUi->updateUi();
+			}
+			ImGui::Render();
+		}
+		int displayW, displayH;
+		glfwGetFramebufferSize(native, &displayW, &displayH);
+		glViewport(0, 0, displayW, displayH);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		if (imGuiContext) { ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); }
+		glfwSwapBuffers(native);
+	}
 }
 
 void Window::onSizeChanged(int /*pWidth*/, int /*pHeight*/) {}

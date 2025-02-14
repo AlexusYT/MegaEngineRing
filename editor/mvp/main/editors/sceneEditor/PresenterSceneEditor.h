@@ -44,9 +44,9 @@ public:
 	~PresenterSceneEditor() override;
 
 
-private:
 	void addView(const std::shared_ptr<IView> &) override;
 
+private:
 	void onGridToggled(bool pState) override;
 
 	static sdk::ModifierKeys convertToModifierKeys(const Gdk::ModifierType &pState);

@@ -22,15 +22,16 @@
 #include "EngineSDK/context/Application.h"
 
 #include <EngineUtils/utils/Logger.h>
-#ifndef EDITOR_SDK
-	#include <GLFW/glfw3.h>
-#endif
+#include <GLFW/glfw3.h>
 #include <signal.h>
 
 #include "EngineSDK/context/DefaultApplicationSettings.h"
 #ifndef EDITOR_SDK
 	#include "EngineSDK/context/MainWindow.h"
 #endif
+#include <thread>
+
+#include "EngineSDK/context/Window.h"
 #include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "EngineSDK/resources/ResourceLoaders.h"
 
@@ -43,17 +44,12 @@ std::shared_ptr<Application> Application::create() { return std::shared_ptr<Appl
 
 ReportMessagePtr Application::initEngine() {
 
-#ifndef EDITOR_SDK
 	initSigHandlers();
-#endif
 	loadSettings();
-#ifndef EDITOR_SDK
 	createLog();
 	if (auto msg = setupGlfw()) return msg;
-#else
 	ExtensionRegistry::init();
 	ResourceLoaders::getInstance();
-#endif
 	return nullptr;
 }
 
@@ -61,6 +57,9 @@ void Application::deinitEngine() {
 	ExtensionRegistry::deinit();
 	ResourceLoaders::clearLoaders();
 }
+
+void Application::registerWindow(const std::shared_ptr<Window> &pWindow) { window = pWindow; }
+
 void Application::sigHandler(int pSig) {
 	using namespace sdk;
 	const auto msg = ReportMessage::create();
@@ -77,12 +76,13 @@ void Application::sigHandler(int pSig) {
 	Logger::error(msg);
 	exit(1);
 }
+
 void Application::initSigHandlers() {
-	#if defined __MINGW32__
+#if defined __MINGW32__
 	signal(SIGILL, &sigHandler);
 	signal(SIGSEGV, &sigHandler);
 
-	#else
+#else
 
 	struct sigaction sig;
 	sig.sa_flags = SA_SIGINFO;
@@ -90,7 +90,7 @@ void Application::initSigHandlers() {
 	sigaction(SIGILL, &sig, nullptr);
 	sigaction(SIGSEGV, &sig, nullptr);
 
-	#endif
+#endif
 }
 
 void Application::loadSettings() {
@@ -126,7 +126,7 @@ void Application::createLog() const {
 		Logger::info("LogsDirectory property is empty. Logging to file will be disabled.");
 	}
 }
-#ifndef EDITOR_SDK
+
 ReportMessagePtr Application::setupGlfw() {
 	using namespace sdk;
 	if (!glfwInit()) {
@@ -147,8 +147,10 @@ ReportMessagePtr Application::setupGlfw() {
 	});
 	return nullptr;
 }
-#endif
+
 int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
+	window->runMainLoop();
+	return 0;
 #ifndef EDITOR_SDK
 	using namespace sdk;
 

@@ -49,6 +49,8 @@ StartupWindow::StartupWindow(const std::shared_ptr<IWidgetContext> &pContext) : 
 	window->set_visible();
 }
 
+void StartupWindow::updateInterface() {}
+
 std::shared_ptr<Gtk::FileDialog> StartupWindow::showFolderChooserDialog(
 	const std::string &pInitialFolder,
 	const sigc::slot<void(const std::shared_ptr<Gio::AsyncResult> &, const std::shared_ptr<Gtk::FileDialog> &)>

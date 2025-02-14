@@ -60,6 +60,18 @@ public:
 
 	[[nodiscard]] ExplorerElementType getType() const { return type; }
 
+	const char* getTypeStr() const {
+
+		switch (type) {
+			case ExplorerElementType::DIRECTORY: return "Folder";
+			case ExplorerElementType::SCENE: return "Scene";
+			case ExplorerElementType::RESOURCE_MODEL: return "Model";
+			case ExplorerElementType::RESOURCE_TEXTURE: return "Texture";
+			case ExplorerElementType::RESOURCE_MATERIAL: return "Material";
+			default: return "File";
+		}
+	}
+
 	[[nodiscard]] bool isDirectory() const { return directory; }
 
 	[[nodiscard]] ProjectExplorerElement* getParent() const { return parent; }

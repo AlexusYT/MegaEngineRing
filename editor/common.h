@@ -28,12 +28,12 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdouble-promotion"
 #pragma GCC diagnostic ignored "-Wextra-semi"
+//#define USE_OLD_UI
 #define GDKMM_DISABLE_DEPRECATED
 #include <glibmm.h>
 #define GTKMM_DISABLE_DEPRECATED
 #include <gtkmm.h>
 #pragma GCC diagnostic pop
-
 #include <EngineUtils/utils/Logger.h>
 #include <EngineUtils/utils/ReportMessage.h>
 #include <filesystem>

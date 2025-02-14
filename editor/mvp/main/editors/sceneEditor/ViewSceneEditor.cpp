@@ -27,7 +27,9 @@
 #include "mvp/main/editors/IPresenterSceneEditor.h"
 
 namespace mer::editor::mvp {
-ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
+ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext)
+	: UiWindow("", "Scene Editor"), context(pContext) {
+#ifdef USE_OLD_UI
 	modeSwitch.set_margin(5);
 	modeSwitch.set_sensitive(false);
 	Gtk::Label simulatingLabel("Simulation");
@@ -93,8 +95,13 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 			return true;
 		},
 		16);
+#endif
 }
 
+void ViewSceneEditor::updateUi() { ImGui::Text("Scene Editor"); }
+
+
+#ifdef USE_OLD_UI
 sigc::connection ViewSceneEditor::connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) {
 
 	return area.signal_render().connect(pSlot, false);
@@ -131,8 +138,14 @@ void ViewSceneEditor::throwIfError() { area.throw_if_error(); }
 void ViewSceneEditor::emitResize() { area.queue_resize(); }
 
 void ViewSceneEditor::setTitle(const std::string &pTitle) { context->setTitle(pTitle); }
-
-void ViewSceneEditor::openView() { context->addWidget(&mainWidget); }
+#endif
+void ViewSceneEditor::openView() {
+#ifdef USE_OLD_UI
+	context->addWidget(&mainWidget);
+#else
+	context->addWindow(this);
+#endif
+}
 
 void ViewSceneEditor::closeView() { context->removeWidget(); }
 } // namespace mer::editor::mvp

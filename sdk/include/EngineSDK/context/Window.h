@@ -25,9 +25,12 @@
 
 #include "IContext.h"
 
+
+struct ImGuiContext;
 typedef struct GLFWwindow GLFWwindow;
 
 namespace mer::sdk {
+class SceneUi;
 
 class Window : IContext {
 	GLFWwindow* native{};
@@ -35,12 +38,16 @@ class Window : IContext {
 	int width = 800;
 	int height = 600;
 	std::string title = "Untitled121";
+	std::vector<std::shared_ptr<SceneUi>> sceneUis;
+	ImGuiContext* imGuiContext{};
 
 protected:
 	Window();
 
 public:
 	~Window() override;
+
+	static auto create() { return std::shared_ptr<Window>(new (std::nothrow) Window()); }
 
 	void show();
 
@@ -53,6 +60,12 @@ public:
 	sdk::ReportMessagePtr setContextVersion(int pMajor, int pMinor) const;
 
 	bool isCloseRequest() const;
+
+	void addScene(const std::shared_ptr<SceneUi> &pScene);
+
+	void removeScene(const std::shared_ptr<SceneUi> &pScene);
+
+	void runMainLoop();
 
 	[[nodiscard]] const std::shared_ptr<Window> &getSharedWindow() const { return sharedWindow; }
 
@@ -67,6 +80,8 @@ public:
 	[[nodiscard]] int getHeight() const { return height; }
 
 	void setHeight(const int pHeight) { height = pHeight; }
+
+	[[nodiscard]] GLFWwindow* getNative() const { return native; }
 
 private:
 	virtual void onSizeChanged(int pWidth, int pHeight);

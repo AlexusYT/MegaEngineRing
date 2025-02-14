@@ -22,6 +22,11 @@
 #ifndef IWIDGETCONTEXT_H
 #define IWIDGETCONTEXT_H
 
+namespace mer::sdk {
+class UiWindow;
+class UiPopup;
+} // namespace mer::sdk
+
 namespace mer::editor::mvp {
 
 class IWidgetContext {
@@ -30,10 +35,14 @@ public:
 
 	virtual void addWidget(Gtk::Widget* pWidget) = 0;
 
+	virtual void addWindow(sdk::UiWindow* pWidget);
+
 	virtual void removeWidget() = 0;
 
 	virtual void setTitle(const std::string &pTitle) = 0;
 };
+
+inline void IWidgetContext::addWindow(sdk::UiWindow* /*pWidget*/) {}
 } // namespace mer::editor::mvp
 
 

@@ -29,10 +29,12 @@
 #include "IApplicationSettings.h"
 
 namespace mer::sdk {
+class Window;
 
 class Application : public IApplication {
 	std::shared_ptr<IApplicationSettings> applicationSettings;
 	std::shared_ptr<IResourceBundle> resourceBundle;
+	std::shared_ptr<Window> window;
 
 	Application() = default;
 
@@ -59,6 +61,8 @@ public:
 		resourceBundle = pResourceBundle;
 	}
 
+	void registerWindow(const std::shared_ptr<Window> &pWindow);
+
 private:
 	static void sigHandler(int pSig);
 
@@ -68,9 +72,7 @@ private:
 
 	void createLog() const;
 
-#ifndef EDITOR_SDK
 	ReportMessagePtr setupGlfw();
-#endif
 };
 } // namespace mer::sdk
 

@@ -30,23 +30,76 @@
 	#include <windows.h>
 #endif
 #include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
 #include <thread>
 
+#include "EngineSDK/context/Application.h"
+#include "EngineSDK/context/Window.h"
+#include "EngineSDK/scene/SceneUi.h"
+#include "EngineSDK/ui/UiWindow.h"
 #include "Globals.h"
 #include "cmdOptions/EngineOptionGroup.h"
-#include "examples/libs/glfw/include/GLFW/glfw3.h"
+#include "imgui_internal.h"
 #include "mvp/ApplicationController.h"
 #include "mvp/IApplicationController.h"
 #include "mvp/contexts/ApplicationContext.h"
+#include "mvp/contexts/UiWindowContext.h"
+#include "mvp/main/MainWindow.h"
+#include "mvp/main/ModelMain.h"
+#include "mvp/main/PresenterMain.h"
 #include "mvp/startup/StartupWindow.h"
+#include "project/Project.h"
 
 namespace mer::editor::ui {
+class MainUiWindow : public sdk::UiWindow {
+public:
+	MainUiWindow() : UiWindow("MainWindow", "Main Window") {
+		setWindowFlags(ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
+		setDockSpace();
+		setSize({SIZE_MATH_PARENT, SIZE_MATH_PARENT});
+	}
 
-static void glfw_error_callback(int error, const char* description) {
-	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
-}
+	void updateUi() override {
+		if (ImGui::BeginMenuBar()) {
+			if (ImGui::BeginMenu("File")) {
+				ImGui::SeparatorText("Project");
+				if (ImGui::MenuItem("New")) {}
+				if (ImGui::MenuItem("Open")) {}
+				if (ImGui::MenuItem("Recent")) {}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+		ImGui::Text("This is some useful text.");
+		static int counter = 0;
+		if (ImGui::Button("Button")) counter++;
+		ImGui::SameLine();
+		const auto &io = ImGui::GetIO();
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", static_cast<double>(1000.0f / io.Framerate),
+					static_cast<double>(io.Framerate));
+	}
+};
+
+class StartupUiWindow : public sdk::UiWindow {
+public:
+	StartupUiWindow() : UiWindow("StartupWindow", "Startup Window") {
+		setWindowFlags(ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove |
+					   ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoNav);
+		setPosition({POSITION_CENTERED, POSITION_CENTERED});
+	}
+
+	void updateUi() override {
+
+		ImGui::Text("This is some useful text.");
+
+		static int counter = 0;
+		if (ImGui::Button("Button")) counter++;
+		ImGui::SameLine();
+
+		const auto &io = ImGui::GetIO();
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", static_cast<double>(1000.0f / io.Framerate),
+					static_cast<double>(io.Framerate));
+	}
+};
 
 class GameEngineImpl {
 	static inline std::shared_ptr<mvp::IApplicationController> appController;
@@ -54,104 +107,7 @@ class GameEngineImpl {
 
 
 public:
-	static void runImgui() {
-		glfwSetErrorCallback(glfw_error_callback);
-		if (!glfwInit()) return;
-
-
-		// GL 3.0 + GLSL 130
-		const char* glsl_version = "#version 130";
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
-
-		// Create window with graphics context
-		GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
-		if (window == nullptr) return;
-		glfwHideWindow(window);
-		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1); // Enable vsync
-
-		// Setup Dear ImGui context
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-		ImGuiIO &io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-		// Setup Dear ImGui style
-		ImGui::StyleColorsDark();
-		//ImGui::StyleColorsLight();
-
-		// Setup Platform/Renderer backends
-		ImGui_ImplGlfw_InitForOpenGL(window, true);
-		ImGui_ImplOpenGL3_Init(glsl_version);
-
-		// Our state
-
-		// Main loop
-		while (!glfwWindowShouldClose(window)) {
-			// Poll and handle events (inputs, window resize, etc.)
-			// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-			// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-			// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-			// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-			glfwPollEvents();
-			if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0) {
-				ImGui_ImplGlfw_Sleep(10);
-				continue;
-			}
-
-			// Start the Dear ImGui frame
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
-
-			//if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
-
-			// 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
-			{
-				static int counter = 0;
-				ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
-				ImGui::Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-				ImGui::Text("This is some useful text.");
-
-
-				if (ImGui::Button("Button")) counter++;
-				ImGui::SameLine();
-				ImGui::Text("counter = %d", counter);
-
-				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", static_cast<double>(1000.0f / io.Framerate),
-							static_cast<double>(io.Framerate));
-				ImGui::End();
-			}
-
-			{
-				ImGui::Begin("Hello, world1!");			  // Create a window called "Hello, world!" and append into it.
-				ImGui::Text("This is some useful text."); // Display some text (you can use a format strings too)
-
-				ImGui::End();
-			}
-			// Rendering
-			ImGui::Render();
-			int displayW, displayH;
-			glfwGetFramebufferSize(window, &displayW, &displayH);
-			glViewport(0, 0, displayW, displayH);
-			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-			glfwSwapBuffers(window);
-		}
-		// Cleanup
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-
-		glfwDestroyWindow(window);
-		glfwTerminate();
-	}
+	static void runImgui() {}
 
 	static int run(int pArgc, char* pArgv[]) {
 #if defined __linux
@@ -233,7 +189,57 @@ public:
 	static void removeWindow(const std::shared_ptr<mvp::IPresenter> &pWindow) { windows.erase(pWindow); }
 };
 
-int GameEngine::run(const int pArgc, char* pArgv[]) { return GameEngineImpl::run(pArgc, pArgv); }
+int GameEngine::run(const int pArgc, char* pArgv[]) {
+#ifndef USE_OLD_UI
+	Gio::init();
+	Globals::init();
+	auto application = sdk::Application::create();
+
+	application->initEngine();
+	auto window = sdk::Window::create();
+	application->registerWindow(window);
+
+	std::shared_ptr<sdk::SceneUi> mainUi = std::make_shared<sdk::SceneUi>();
+	mainUi->initialize();
+	window->addScene(mainUi);
+
+	auto project = project::Project::create();
+	project->setProjectName("Untitled");
+	auto path = Globals::getProjectsPath() / "unsaved/Untitled";
+	project->setProjectPath(path);
+	create_directories(path);
+	if (auto msg = project->openDatabase()) {
+		sdk::Logger::error(msg);
+		return -1;
+	}
+	project->initProject();
+
+	if (auto msg = project->saveProject()) {
+		sdk::Logger::error(msg);
+		return -1;
+	}
+
+	std::shared_ptr<mvp::IApplicationController> appController = std::make_shared<mvp::ApplicationController>();
+	appController->setSceneUi(mainUi);
+	sdk::ReportMessagePtr msg;
+	auto viewMain = mvp::MainWindow::create(mvp::UiWindowContext::create(mainUi), msg);
+	if (msg) {
+		sdk::Logger::error(msg);
+		return -1;
+	}
+	auto modelMain = std::make_shared<mvp::ModelMain>();
+	modelMain->setProject(project);
+	appController->run(std::make_shared<mvp::PresenterMain>(viewMain, modelMain));
+
+	auto result = application->runMainLoop(pArgc, pArgv);
+	appController.reset();
+	return result;
+	;
+#else
+
+	return GameEngineImpl::run(pArgc, pArgv);
+#endif
+}
 
 void GameEngine::addWindow(std::shared_ptr<mvp::IPresenter> pWindow) { GameEngineImpl::addWindow(std::move(pWindow)); }
 

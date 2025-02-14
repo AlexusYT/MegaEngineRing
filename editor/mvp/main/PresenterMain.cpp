@@ -44,6 +44,7 @@
 #include "mvp/ApplicationController.h"
 #include "mvp/contexts/ApplicationContext.h"
 #include "mvp/contexts/MultiPanedContext.h"
+#include "mvp/contexts/UiWindowContext.h"
 #include "mvp/resourceEditor/EditingResourceList.h"
 #include "mvp/resourceEditor/ModelResourceEditor.h"
 #include "mvp/resourceEditor/PresenterResourceEditor.h"
@@ -74,7 +75,7 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 	viewMain->setWindowTitle("Game engine editor - " + project->getProjectName());
 
 	modelMain->loadLayoutsFile();
-
+#ifdef USE_OLD_UI
 	auto r = viewMain->connectKeyPressedSignal(
 		[this, project](const guint /*pKeyVal*/, guint pKeyCode, const Gdk::ModifierType pState) {
 			if (pKeyCode == 39 && (pState & (Gdk::ModifierType::SHIFT_MASK | Gdk::ModifierType::CONTROL_MASK |
@@ -88,6 +89,7 @@ PresenterMain::PresenterMain(const std::shared_ptr<IViewMain> &pViewMain, const 
 			sdk::Logger::out("{}", pKeyCode);
 			return false;
 		});
+#endif
 
 
 	viewMain->addActionGroup("win", project->getActionGroups());
@@ -116,51 +118,57 @@ void PresenterMain::onPanedLayoutTabsChanged() { viewMain->setTabs(modelMain->ge
 void PresenterMain::onCurrentTabChanged() { viewMain->openTab(modelMain->getCurrentTab()); }
 
 void PresenterMain::run() {
-	auto project = modelMain->getProject();
 	viewMain->openView();
-	{
-		auto modelProjectExplorer =
-			std::make_shared<ModelProjectExplorer>(modelMain->getProject()->getProjectPath() / "data");
-		presenterProjectExplorer = std::make_shared<PresenterProjectExplorer>(modelProjectExplorer);
-		getAppController()->run(presenterProjectExplorer);
-		presenters.push_back(presenterProjectExplorer);
+	auto project = modelMain->getProject();
 
-		loadedScene = std::make_shared<project::LoadedScene>();
-		loadedScene->connectErrorOccurred([this](auto pMsg) { displayError(pMsg); });
-		loadedScene->setRunDirectory(project->getProjectPath());
-		loadedScene->setupResourcesContext(viewMain->getResourcesContext());
-		auto modelSceneEditor = std::make_shared<ModelSceneEditor>();
-		modelSceneEditor->setLoadedScene(loadedScene);
-		auto presenterSceneEditor = std::make_shared<PresenterSceneEditor>(modelSceneEditor);
-		getAppController()->run(presenterSceneEditor);
-		presenters.push_back(presenterSceneEditor);
-
-		auto modelObjectsTree = std::make_shared<ModelObjectsTree>();
-		modelObjectsTree->setLoadedScene(loadedScene);
-		auto presenterObjectsTree = std::make_shared<PresenterObjectsTree>(modelObjectsTree);
-		getAppController()->run(presenterObjectsTree);
-		presenters.push_back(presenterObjectsTree);
-
-		auto modelObjectProperties = std::make_shared<ModelObjectProperties>();
-		modelObjectProperties->setLoadedScene(loadedScene);
-		auto presenterObjectProperties = std::make_shared<PresenterObjectProperties>(modelObjectProperties);
-		getAppController()->run(presenterObjectProperties);
-		presenters.push_back(presenterObjectProperties);
-
-		editingResources = std::make_shared<EditingResourceList>();
-		editingResources->setupResourcesContext(viewMain->getResourcesContext());
-
-		auto model = std::make_shared<ModelResourceEditor>();
-		model->setEditingResources(editingResources);
-		model->setPathToDataDir(project->getProjectDataPath());
-		auto presenter = std::make_shared<PresenterResourceEditor>(model);
-		getAppController()->run(presenter);
-		presenters.push_back(presenter);
-	}
+	auto modelProjectExplorer =
+		std::make_shared<ModelProjectExplorer>(modelMain->getProject()->getProjectPath() / "data");
+	presenterProjectExplorer = std::make_shared<PresenterProjectExplorer>(modelProjectExplorer);
+	getAppController()->run(presenterProjectExplorer);
+	auto viewProjectExplorer =
+		std::make_shared<ViewProjectExplorer>(UiWindowContext::create(getAppController()->getSceneUi()));
+	presenterProjectExplorer->addView(viewProjectExplorer);
+	presenters.push_back(presenterProjectExplorer);
 
 
-	//auto viewCenterWindow = std::make_shared<ViewCenterWindow>(getAppController()->getAppContext());
-	/*auto viewCenterWindow = std::make_shared<ViewCenterWindow>(PanedContext::create(viewMain->getTopPaned(), true));
+	loadedScene = std::make_shared<project::LoadedScene>();
+	loadedScene->connectErrorOccurred([this](auto pMsg) { displayError(pMsg); });
+	loadedScene->setRunDirectory(project->getProjectPath());
+	loadedScene->setupResourcesContext(viewMain->getResourcesContext());
+	auto modelSceneEditor = std::make_shared<ModelSceneEditor>();
+	modelSceneEditor->setLoadedScene(loadedScene);
+	auto presenterSceneEditor = std::make_shared<PresenterSceneEditor>(modelSceneEditor);
+	auto viewSceneEditor = std::make_shared<ViewSceneEditor>(UiWindowContext::create(getAppController()->getSceneUi()));
+	presenterSceneEditor->addView(viewSceneEditor);
+	getAppController()->run(presenterSceneEditor);
+	presenters.push_back(presenterSceneEditor);
+
+#ifdef USE_OLD_UI
+	auto modelObjectsTree = std::make_shared<ModelObjectsTree>();
+	modelObjectsTree->setLoadedScene(loadedScene);
+	auto presenterObjectsTree = std::make_shared<PresenterObjectsTree>(modelObjectsTree);
+	getAppController()->run(presenterObjectsTree);
+	presenters.push_back(presenterObjectsTree);
+
+	auto modelObjectProperties = std::make_shared<ModelObjectProperties>();
+	modelObjectProperties->setLoadedScene(loadedScene);
+	auto presenterObjectProperties = std::make_shared<PresenterObjectProperties>(modelObjectProperties);
+	getAppController()->run(presenterObjectProperties);
+	presenters.push_back(presenterObjectProperties);
+
+	editingResources = std::make_shared<EditingResourceList>();
+	editingResources->setupResourcesContext(viewMain->getResourcesContext());
+
+	auto model = std::make_shared<ModelResourceEditor>();
+	model->setEditingResources(editingResources);
+	model->setPathToDataDir(project->getProjectDataPath());
+	auto presenter = std::make_shared<PresenterResourceEditor>(model);
+	getAppController()->run(presenter);
+	presenters.push_back(presenter);
+
+
+//auto viewCenterWindow = std::make_shared<ViewCenterWindow>(getAppController()->getAppContext());
+/*auto viewCenterWindow = std::make_shared<ViewCenterWindow>(PanedContext::create(viewMain->getTopPaned(), true));
 	auto modelCenterWindow = std::make_shared<ModelCenterWindow>();
 	presenterCenterWindow = std::make_shared<PresenterCenterWindow>(viewCenterWindow, modelCenterWindow);
 	getAppController()->run(presenterCenterWindow);
@@ -168,6 +176,7 @@ void PresenterMain::run() {
 	presenterProjectExplorer->setEntrySelectionChanged([this](ui::ProjectExplorerEntry* pEntry) {
 		if (auto tab = dynamic_cast<ITab*>(pEntry)) presenterCenterWindow->openTab(tab);
 	});*/
+#endif
 }
 
 void PresenterMain::stop() {

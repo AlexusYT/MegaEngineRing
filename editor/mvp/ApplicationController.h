@@ -25,10 +25,16 @@
 #include "IApplicationController.h"
 #include "IPresenter.h"
 
+namespace mer::sdk {
+class UiPopup;
+class SceneUi;
+} // namespace mer::sdk
+
 namespace mer::editor::mvp {
 class ApplicationController : public IApplicationController {
 	std::unordered_map<std::string /*typeName*/, std::shared_ptr<IPresenter>> presenters;
 	std::shared_ptr<Gtk::Application> app;
+	std::shared_ptr<sdk::SceneUi> sceneUi;
 
 public:
 	explicit ApplicationController();
@@ -47,9 +53,16 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<Gtk::Application> &getApp() const final { return app; }
 
+	[[nodiscard]] const std::shared_ptr<sdk::SceneUi> &getSceneUi() const override { return sceneUi; }
+
+	void addPopup(const std::shared_ptr<sdk::UiPopup> &pPopup) const override;
+
+	void showPopup(const std::string &pName) const override;
 
 private:
 	void setApp(const std::shared_ptr<Gtk::Application> &pApp) final { app = pApp; }
+
+	void setSceneUi(const std::shared_ptr<sdk::SceneUi> &pSceneUi) override { sceneUi = pSceneUi; }
 };
 } // namespace mer::editor::mvp
 

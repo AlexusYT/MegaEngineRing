@@ -31,6 +31,7 @@
 namespace mer::editor::mvp {
 std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<IWidgetContext> &pContext,
 											   sdk::ReportMessagePtr &pReportMessage) {
+#ifdef USE_OLD_UI
 	const auto builder = Gtk::Builder::create();
 	try {
 		builder->add_from_resource("/ui/base.ui");
@@ -41,8 +42,11 @@ std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<IWidgetCont
 
 		return nullptr;
 	}
-
 	auto viewMain = std::make_shared<MainWindow>(builder, pContext);
+#else
+	auto viewMain = std::make_shared<MainWindow>(nullptr, pContext);
+#endif
+
 	if (!viewMain) {
 		pReportMessage = sdk::ReportMessage::create();
 		pReportMessage->setTitle("Failed to init main window");
@@ -53,16 +57,24 @@ std::shared_ptr<MainWindow> MainWindow::create(const std::shared_ptr<IWidgetCont
 	return viewMain;
 }
 
+#ifdef USE_OLD_UI
 MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::shared_ptr<IWidgetContext> &pContext)
-	: context(pContext) {
+#else
+MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> & /*pBuilder*/, const std::shared_ptr<IWidgetContext> &pContext)
+#endif
+	: UiWindow("MainWindow", "Main Window"), context(pContext) {
 
+	//setWindowFlags(ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_MenuBar);
+	setDockSpace();
+	//setSize({SIZE_MATH_PARENT, SIZE_MATH_PARENT});
 
+#ifdef USE_OLD_UI
 	set_size_request(800, 600);
 	maximize();
-
 	Gtk::HeaderBar* bar = pBuilder->get_widget<Gtk::HeaderBar>("header");
 	bar->unparent();
 	set_titlebar(*bar);
+
 	/*auto* popoverMenu = builder->get_widget<Gtk::PopoverMenu>("popoverMenu");
 
 	const auto menu = Gio::Menu::create();
@@ -108,12 +120,6 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 					}
 				});
 		}
-	});
-	signal_realize().connect([this] {
-		const auto surface = this->get_native()->get_surface();
-		auto sharedContext = surface->create_gl_context();
-		sharedContext->realize();
-		resourcesContext = std::make_shared<ResourcesContext>(sharedContext);
 	});
 	/*auto motionController = Gtk::EventControllerMotion::create();
 	motionController->signal_motion().connect([this](double x, double y) {
@@ -224,15 +230,45 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> &pBuilder, const std::sh
 			return false;
 		},
 		false);
+#endif
+	resourcesContext = std::make_shared<ResourcesContext>();
 }
 
 MainWindow::~MainWindow() { presenter = nullptr; }
 
-void MainWindow::openView() { context->addWidget(this); }
+void MainWindow::updateUi() {
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu("File")) {
+			ImGui::SeparatorText("Project");
+			if (ImGui::MenuItem("New")) {}
+			if (ImGui::MenuItem("Open")) {}
+			if (ImGui::MenuItem("Recent")) {}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+	ImGui::Text("This is some useful text.");
+	static int counter = 0;
+	if (ImGui::Button("Button")) counter++;
+	ImGui::SameLine();
+	const auto &io = ImGui::GetIO();
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", static_cast<double>(1000.0f / io.Framerate),
+				static_cast<double>(io.Framerate));
+}
+
+void MainWindow::openView() {
+
+#ifdef USE_OLD_UI
+	context->addWidget(this);
+#else
+	context->addWindow(this);
+#endif
+}
 
 void MainWindow::closeView() { context->removeWidget(); }
 
-void MainWindow::setTabs(const std::vector<PanedLayoutTab> &pPanedLayoutTabs) {
+void MainWindow::setTabs([[maybe_unused]] const std::vector<PanedLayoutTab> &pPanedLayoutTabs) {
+#ifdef USE_OLD_UI
 	for (int32_t i = 0, maxI = panedTabs.get_n_pages(); i < maxI; i++) { panedTabs.remove_page(i); }
 	for (auto panedLayoutTab: pPanedLayoutTabs) {
 		const auto multiPanedTab = Gtk::make_managed<ui::MultiPaned>();
@@ -251,15 +287,25 @@ void MainWindow::setTabs(const std::vector<PanedLayoutTab> &pPanedLayoutTabs) {
 		overlay.add_overlay(box);
 		panedTabs.append_page(overlay, panedLayoutTab.getName());
 	}
+#endif
 }
 
-void MainWindow::openTab(const int32_t pTabIndex) { panedTabs.set_current_page(pTabIndex); }
+void MainWindow::openTab([[maybe_unused]] const int32_t pTabIndex) {
 
-ui::MultiPaned* MainWindow::getMultiPanedByIndex(const int32_t pIndex) {
+#ifdef USE_OLD_UI
+	panedTabs.set_current_page(pTabIndex);
+#endif
+}
+
+ui::MultiPaned* MainWindow::getMultiPanedByIndex([[maybe_unused]] const int32_t pIndex) {
+#ifdef USE_OLD_UI
 	auto overlay = dynamic_cast<Gtk::Overlay*>(panedTabs.get_nth_page(pIndex));
 	if (!overlay) return nullptr;
 	auto paned = dynamic_cast<ui::MultiPaned*>(overlay->get_child());
 	return paned;
+#else
+	return nullptr;
+#endif
 }
 
-}
+} // namespace mer::editor::mvp

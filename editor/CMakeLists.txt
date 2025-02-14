@@ -275,6 +275,10 @@ add_library(
         mvp/main/editors/sceneEditor/SceneOverlayElements.h
         graphic/shaders/SimpleShader.cpp
         graphic/shaders/SimpleShader.h
+        mvp/contexts/UiWindowContext.cpp
+        mvp/contexts/UiWindowContext.h
+        mvp/dialogs/confirmationDialog/ConfirmationDialog.cpp
+        mvp/dialogs/confirmationDialog/ConfirmationDialog.h
 
 )
 
