@@ -38,14 +38,18 @@
 #include "EngineSDK/ui/UiWindow.h"
 #include "Globals.h"
 #include "cmdOptions/EngineOptionGroup.h"
+#include "examples/libs/glfw/include/GLFW/glfw3.h"
 #include "imgui_internal.h"
 #include "mvp/ApplicationController.h"
 #include "mvp/IApplicationController.h"
 #include "mvp/contexts/ApplicationContext.h"
 #include "mvp/contexts/UiWindowContext.h"
+#include "mvp/editor/EditorUi.h"
 #include "mvp/main/MainWindow.h"
 #include "mvp/main/ModelMain.h"
 #include "mvp/main/PresenterMain.h"
+#include "mvp/main/editors/sceneEditor/ViewSceneEditor.h"
+#include "mvp/onlineImport/ViewOnlineImport.h"
 #include "mvp/startup/StartupWindow.h"
 #include "project/Project.h"
 
@@ -189,52 +193,62 @@ public:
 	static void removeWindow(const std::shared_ptr<mvp::IPresenter> &pWindow) { windows.erase(pWindow); }
 };
 
+class EditorWindow : public sdk::Window {
+	std::shared_ptr<mvp::IApplicationController> appController;
+
+public:
+	explicit EditorWindow(const std::shared_ptr<mvp::IApplicationController> &pAppController)
+		: appController(pAppController) {
+		glfwWindowHint(GLFW_SAMPLES, 4);
+	}
+
+protected:
+	sdk::ReportMessagePtr init() override {
+		auto mainUi = std::make_shared<mvp::EditorUi>();
+
+		mainUi->addEditor(std::make_shared<mvp::OnlineImportWorkspace>());
+		mainUi->addEditor(std::make_shared<mvp::SceneEditor>("Scene 1"));
+		addScene(mainUi);
+
+		auto project = project::Project::create();
+		project->setProjectName("Untitled");
+		auto path = Globals::getProjectsPath() / "unsaved/Untitled";
+		project->setProjectPath(path);
+		create_directories(path);
+		if (auto msg = project->openDatabase()) { return msg; }
+		project->initProject();
+
+		if (auto msg = project->saveProject()) { return msg; }
+
+		appController->setSceneUi(mainUi);
+		Window::init();
+		/*sdk::ReportMessagePtr msg;
+		auto viewMain = mvp::MainWindow::create(mvp::UiWindowContext::create(mainUi), msg);
+		if (msg) { return msg; }
+		auto modelMain = std::make_shared<mvp::ModelMain>();
+		modelMain->setProject(project);
+		appController->run(std::make_shared<mvp::PresenterMain>(viewMain, modelMain));*/
+
+		return nullptr;
+	}
+};
+
 int GameEngine::run(const int pArgc, char* pArgv[]) {
 #ifndef USE_OLD_UI
 	Gio::init();
 	Globals::init();
+	auto appController = std::make_shared<mvp::ApplicationController>();
 	auto application = sdk::Application::create();
 
 	application->initEngine();
-	auto window = sdk::Window::create();
+	auto window = std::make_shared<EditorWindow>(appController);
 	application->registerWindow(window);
 
-	std::shared_ptr<sdk::SceneUi> mainUi = std::make_shared<sdk::SceneUi>();
-	mainUi->initialize();
-	window->addScene(mainUi);
-
-	auto project = project::Project::create();
-	project->setProjectName("Untitled");
-	auto path = Globals::getProjectsPath() / "unsaved/Untitled";
-	project->setProjectPath(path);
-	create_directories(path);
-	if (auto msg = project->openDatabase()) {
-		sdk::Logger::error(msg);
-		return -1;
-	}
-	project->initProject();
-
-	if (auto msg = project->saveProject()) {
-		sdk::Logger::error(msg);
-		return -1;
-	}
-
-	std::shared_ptr<mvp::IApplicationController> appController = std::make_shared<mvp::ApplicationController>();
-	appController->setSceneUi(mainUi);
-	sdk::ReportMessagePtr msg;
-	auto viewMain = mvp::MainWindow::create(mvp::UiWindowContext::create(mainUi), msg);
-	if (msg) {
-		sdk::Logger::error(msg);
-		return -1;
-	}
-	auto modelMain = std::make_shared<mvp::ModelMain>();
-	modelMain->setProject(project);
-	appController->run(std::make_shared<mvp::PresenterMain>(viewMain, modelMain));
 
 	auto result = application->runMainLoop(pArgc, pArgv);
 	appController.reset();
 	return result;
-	;
+
 #else
 
 	return GameEngineImpl::run(pArgc, pArgv);

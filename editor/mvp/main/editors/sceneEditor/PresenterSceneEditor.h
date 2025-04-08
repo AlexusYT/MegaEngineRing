@@ -30,21 +30,26 @@ class IApplication;
 }
 
 namespace mer::editor::mvp {
+class IModelScenePreview;
 class ExplorerObject;
 class IViewSceneEditor;
 class IModelSceneEditor;
 
 class PresenterSceneEditor : public IPresenterSceneEditor {
-	std::unordered_map<std::shared_ptr<IViewSceneEditor>, std::vector<sigc::connection>> views;
+	std::shared_ptr<IViewSceneEditor> view;
 	std::shared_ptr<IModelSceneEditor> modelSceneEditor;
+	std::shared_ptr<IModelScenePreview> modelPreview;
 
 public:
-	explicit PresenterSceneEditor(const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor);
+	explicit PresenterSceneEditor(const std::shared_ptr<IViewSceneEditor> &pView,
+								  const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor);
 
 	~PresenterSceneEditor() override;
 
 
 	void addView(const std::shared_ptr<IView> &) override;
+
+	void onRender() override;
 
 private:
 	void onGridToggled(bool pState) override;

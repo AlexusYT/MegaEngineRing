@@ -231,7 +231,6 @@ MainWindow::MainWindow(const Glib::RefPtr<Gtk::Builder> & /*pBuilder*/, const st
 		},
 		false);
 #endif
-	resourcesContext = std::make_shared<ResourcesContext>();
 }
 
 MainWindow::~MainWindow() { presenter = nullptr; }

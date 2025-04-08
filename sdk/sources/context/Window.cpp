@@ -59,8 +59,18 @@ void Window::show() {
 				const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
 				win->onKeyChanged(pKey, pScancode, pAction, pMods);
 			});
+		glfwSetScrollCallback(native, [](GLFWwindow* pWindow, double pXOffset, double pYOffset) {
+			const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
+			win->onMouseScroll(pXOffset, pYOffset);
+		});
+		glfwSetMouseButtonCallback(native,
+								   [](GLFWwindow* pWindow, const int pButton, const int pAction, const int pMods) {
+									   const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
+									   win->onMouseButton(pButton, pAction, pMods);
+								   });
 
 		makeCurrent();
+		init();
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, false);
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(
@@ -206,6 +216,7 @@ void Window::runMainLoop() {
 	glfwMaximizeWindow(native);
 	glfwSwapInterval(1); // Enable vsync
 	IMGUI_CHECKVERSION();
+	for (auto ui: sceneUis) { ui->initialize(); }
 	while (!glfwWindowShouldClose(native)) {
 		glfwMakeContextCurrent(native);
 		glfwPollEvents();
@@ -230,6 +241,10 @@ void Window::runMainLoop() {
 
 			// Setup Dear ImGui style
 			ImGui::StyleColorsDark();
+			auto &style = ImGui::GetStyle();
+			style.FrameRounding = 5.0f;
+			style.FrameBorderSize = 2.0f;
+
 			//ImGui::StyleColorsLight();
 
 			// Setup Platform/Renderer backends
@@ -243,11 +258,18 @@ void Window::runMainLoop() {
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
+
 			for (auto sceneUi: sceneUis) {
 				if (!sceneUi->isInited()) continue;
 				sceneUi->updateUi();
 			}
 			ImGui::Render();
+		}
+		for (auto sceneUi: sceneUis) {
+			if (!sceneUi->isInited()) continue;
+			glEnable(GL_MULTISAMPLE);
+			sceneUi->customRender();
+			glDisable(GL_MULTISAMPLE);
 		}
 		int displayW, displayH;
 		glfwGetFramebufferSize(native, &displayW, &displayH);
@@ -257,25 +279,32 @@ void Window::runMainLoop() {
 		if (imGuiContext) { ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); }
 		glfwSwapBuffers(native);
 	}
+	for (auto ui: sceneUis) { ui->uninitialize(); }
+	sceneUis.clear();
 }
 
-void Window::onSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
+void Window::onSizeChanged(int pWidth, int pHeight) {
+	for (auto sceneUi: sceneUis) sceneUi->onSizeChanged(pWidth, pHeight);
+}
 
-void Window::onCursorPosChanged(double /*pX*/, double /*pY*/) {}
+void Window::onCursorPosChanged(double pX, double pY) {
+	for (auto sceneUi: sceneUis) sceneUi->onCursorPosChanged(pX, pY);
+}
 
-void Window::onKeyChanged(int /*pKey*/, int /*pScancode*/, int /*pAction*/, int /*pMods*/) {}
+void Window::onKeyChanged(int pKey, int pScancode, int pAction, int pMods) {
+	for (auto sceneUi: sceneUis) sceneUi->onKeyChanged(pKey, pScancode, pAction, pMods);
+}
+
+void Window::onMouseScroll(double pXOffset, double pYOffset) {
+	for (auto sceneUi: sceneUis) sceneUi->onMouseScroll(pXOffset, pYOffset);
+}
+
+void Window::onMouseButton(int pButton, int pAction, int pMods) {
+	for (auto sceneUi: sceneUis) sceneUi->onMouseButton(pButton, pAction, pMods);
+}
 
 sdk::ReportMessagePtr Window::init() {
 	makeCurrent();
-	/*glewExperimental = true;
-	if (auto error = glewInit(); error != GLEW_OK) {
-		auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to init glew");
-		msg->setMessage("Error occurred");
-		msg->addInfoLine("Error num: {}", error);
-		msg->addInfoLine("Error msg: {}", reinterpret_cast<const char*>(glewGetErrorString(error)));
-		return msg;
-	}*/
 	return nullptr;
 }
 

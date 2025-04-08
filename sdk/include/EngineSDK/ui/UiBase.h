@@ -42,6 +42,8 @@ public:
 
 	virtual void updateUi() = 0;
 
+	virtual void customRender();
+
 	[[nodiscard]] const std::string &getName() const { return name; }
 
 	void setName(const std::string &pName) {

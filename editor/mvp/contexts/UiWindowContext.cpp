@@ -23,15 +23,33 @@
 
 #include "EngineSDK/scene/SceneUi.h"
 #include "EngineSDK/ui/UiWindow.h"
+#include "mvp/editor/Editor.h"
 
 namespace mer::editor::mvp {
 
-void UiWindowContext::addWindow(sdk::UiWindow* pWidget) {
-	uiWindow = pWidget;
-	sceneUi->addUiWindow(pWidget);
+void EditorContext::addTool(EditorTool* pWidget) {
+	tool = pWidget;
+	editor->addTool(pWidget->shared_from_this());
 }
 
-void UiWindowContext::removeWidget() { sceneUi->removeUiWindow(uiWindow->getName()); }
+void EditorContext::removeWidget() {
+	if (!tool) return;
+	editor->removeTool(tool);
+}
+
+void EditorContext::setTitle(const std::string & /*pTitle*/) {}
+
+void UiWindowContext::addWindow(sdk::UiBase* pWidget) {
+	if (auto win = dynamic_cast<sdk::UiWindow*>(pWidget)) {
+		uiWindow = win;
+		sceneUi->addUiWindow(win);
+	}
+}
+
+void UiWindowContext::removeWidget() {
+	if (!uiWindow) return;
+	sceneUi->removeUiWindow(uiWindow->getName());
+}
 
 void UiWindowContext::setTitle(const std::string & /*pTitle*/) {}
 } // namespace mer::editor::mvp

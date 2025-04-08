@@ -83,6 +83,9 @@ public:
 
 	[[nodiscard]] GLFWwindow* getNative() const { return native; }
 
+protected:
+	ReportMessagePtr init() override;
+
 private:
 	virtual void onSizeChanged(int pWidth, int pHeight);
 
@@ -90,7 +93,9 @@ private:
 
 	virtual void onKeyChanged(int pKey, int pScancode, int pAction, int pMods);
 
-	sdk::ReportMessagePtr init() override;
+	virtual void onMouseScroll(double pXOffset, double pYOffset);
+
+	virtual void onMouseButton(int pButton, int pAction, int pMods);
 
 	void makeCurrent() override;
 

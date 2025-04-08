@@ -31,7 +31,9 @@
 
 #pragma once
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <string>
 //---- Define assertion handler. Defaults to calling assert().
 // If your macro uses multiple statements, make sure is enclosed in a 'do { .. } while (0)' block so it can be used as a single statement.
 //#define IM_ASSERT(_EXPR)  MyAssert(_EXPR)
@@ -166,9 +168,22 @@
 //#define IMGUI_DEBUG_PARANOID
 
 //---- Tip: You can add extra functions within the ImGui:: namespace from anywhere (e.g. your own sources/header files)
-/*
-namespace ImGui
-{
-    void MyFunction(const char* name, MyMatrix44* mtx);
-}
-*/
+
+
+class UUID;
+
+namespace ImGui {
+bool InputText(const char* pName, std::string &pText, int pFlags = 0);
+bool InputTextWithHint(const char* pName, const char* pHint, std::string &pText, int pFlags = 0);
+
+bool UuidText(const char* pName, const UUID &pUuid, int pFlags = 0);
+bool DragFloat3(const char* pName, glm::vec3 &pVal, float pVSpeed = 1.0f, float pVMin = 0.0f, float pVMax = 0.0f,
+				const char* pFormat = "%.3f", int pFlags = 0);
+bool DragFloat4(const char* pName, glm::vec4 &pVal, float pVSpeed = 1.0f, float pVMin = 0.0f, float pVMax = 0.0f,
+				const char* pFormat = "%.3f", int pFlags = 0);
+void HelpMarker(const char* pDesc);
+
+bool InputTextErrored(const char* pName, const char* pHint, const char* pTooltipMsg, bool pErrored, std::string &pText,
+					  int pFlags = 0);
+
+} // namespace ImGui

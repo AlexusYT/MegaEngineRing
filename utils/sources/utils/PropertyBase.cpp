@@ -33,7 +33,7 @@ PropertyBase::~PropertyBase() {
 	if (provider) provider->removeProperty(this);
 }
 
-void PropertyBase::notifyPropertyChanged() {
+void PropertyBase::notifyChanged() {
 	if (provider) provider->propertyChanged(this);
 }
 } // namespace mer::sdk

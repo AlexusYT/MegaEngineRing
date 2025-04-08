@@ -35,6 +35,8 @@ inline bool operator<(glm::vec3 pLhs, glm::vec3 pRhs) {
 	return lt[2];
 }
 
+inline bool operator>(glm::vec3 pLhs, glm::vec3 pRhs) { return pRhs < pLhs; }
+
 inline bool operator<(glm::vec2 pLhs, glm::vec2 pRhs) {
 	glm::vec2 nequ = glm::notEqual(pLhs, pRhs);
 	auto lt = glm::lessThan(pLhs, pRhs);

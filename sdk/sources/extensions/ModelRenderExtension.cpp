@@ -23,13 +23,14 @@
 
 #include <glm/ext/matrix_transform.hpp>
 
-#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/extensions/MainObjectExtension.h"
 #include "EngineSDK/resources/materials/MaterialResource.h"
 #include "EngineSDK/resources/models/IModel3DObject.h"
 #include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
 
 namespace mer::sdk {
+
+ModelRenderExtension::ModelRenderExtension() : propertyModel(this, "Model"), propertyMaterial(this, "Material") {}
 
 ReportMessagePtr ModelRenderExtension::onInit() {
 	auto &pos = getObject()->getMainExtension()->propertyPosition;

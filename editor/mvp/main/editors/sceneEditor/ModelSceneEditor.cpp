@@ -41,8 +41,10 @@ bool ModelSceneEditor::hasScene() const { return loadedScene->hasScene(); }
 bool ModelSceneEditor::hasResourcesContext() const { return loadedScene->hasResourcesContext(); }
 
 void ModelSceneEditor::initScene() {
+	if (inited) return;
 	loadedScene->initScene();
 	if (auto msg = sceneOverlayElements->initialize()) { sdk::Logger::error(msg); }
+	inited = true;
 }
 
 void ModelSceneEditor::uninitScene() {
@@ -69,9 +71,7 @@ sigc::connection ModelSceneEditor::connectNameChanged(const sigc::slot<void(cons
 
 void ModelSceneEditor::createObject() { return loadedScene->addObject(); }
 
-void ModelSceneEditor::removeObject(sdk::ISceneObject* pObjectToRemove) {
-	loadedScene->removeObject(pObjectToRemove);
-}
+void ModelSceneEditor::removeObject(sdk::ISceneObject* pObjectToRemove) { loadedScene->removeObject(pObjectToRemove); }
 
 void ModelSceneEditor::renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const {
 	loadedScene->renameObject(pObject, pNewName);
@@ -83,8 +83,8 @@ const std::shared_ptr<sdk::IScene> &ModelSceneEditor::getScene() const { return 
 
 void ModelSceneEditor::onCursorPosChanged(const double pX, const double pY) { loadedScene->onCursorPosChanged(pX, pY); }
 
-void ModelSceneEditor::onMouseButtonStateChanged(const sdk::MouseButton pButton, const bool pPressed,
-												 const double pX, const double pY) {
+void ModelSceneEditor::onMouseButtonStateChanged(const sdk::MouseButton pButton, const bool pPressed, const double pX,
+												 const double pY) {
 	loadedScene->onMouseButtonStateChanged(pButton, pPressed, pX, pY);
 }
 

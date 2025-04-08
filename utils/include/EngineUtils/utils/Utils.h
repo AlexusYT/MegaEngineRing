@@ -24,6 +24,9 @@
 
 #include <string>
 #include <typeinfo>
+#include <vector>
+
+#include "ReportMessageFwd.h"
 
 class Utils {
 private:
@@ -55,6 +58,10 @@ public:
 	static std::string demangle(const std::string &pMangledName);
 
 	static std::string parseDlError(const std::string &pMsg);
+
+	static mer::sdk::ReportMessagePtr decompressJpeg(unsigned char* pDataBuffer, uint64_t pDataSize,
+													 std::vector<unsigned char> &pOutData, int* pWidthOut = nullptr,
+													 int* pHeightOut = nullptr) noexcept;
 };
 
 

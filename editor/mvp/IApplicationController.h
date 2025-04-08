@@ -49,8 +49,6 @@ public:
 
 	virtual void setSceneUi(const std::shared_ptr<sdk::SceneUi> &pSceneUi) = 0;
 
-	virtual void addPopup(const std::shared_ptr<sdk::UiPopup> &pPopup) const = 0;
-
 	virtual void showPopup(const std::string &pName) const = 0;
 };
 } // namespace mer::editor::mvp

@@ -24,14 +24,12 @@
 #include <project/Project.h>
 
 #include "mvp/contexts/IWidgetContext.h"
-#include "mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.h"
-#include "ui/customWidgets/CustomSignalListItemFactory.h"
-#include "ui/customWidgets/CustomTreeView.h"
 
 namespace mer::editor::mvp {
 
-ViewObjectsTree::ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
-	tree = Gtk::make_managed<ui::CustomTreeView>();
+ViewObjectsTree::ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext)
+	: EditorTool("TreeViewTool"), context(pContext) {
+	/*tree = Gtk::make_managed<ui::CustomTreeView>();
 	mainScrolledWindow.set_child(*tree);
 	mainScrolledWindow.set_has_frame(false);
 	const auto factory = ui::CustomSignalListItemFactory::create();
@@ -70,25 +68,27 @@ ViewObjectsTree::ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext
 
 	const auto variant = Glib::Variant<uintptr_t>::create(reinterpret_cast<uintptr_t>(nullptr));
 	mainMenu->append_item(createItem("New Object", "object.manage.new.object", variant));
-	tree->setMenu(mainMenu);
+	tree->setMenu(mainMenu);*/
 }
 
-void ViewObjectsTree::setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) {
+/*void ViewObjectsTree::setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) {
 	tree->setSlotCreateModel(
 		[this, pTopLevelObjects](const Glib::RefPtr<Glib::ObjectBase> &pItem) -> Glib::RefPtr<Gio::ListModel> {
 			if (const auto col = std::dynamic_pointer_cast<ExplorerObject>(pItem)) return col->getChildren();
 			return pTopLevelObjects;
 		});
-}
+}*/
 
-void ViewObjectsTree::openView() { context->addWidget(&mainScrolledWindow); }
+void ViewObjectsTree::openView() { context->addTool(this); }
 
 void ViewObjectsTree::closeView() { context->removeWidget(); }
 
-std::shared_ptr<Gio::MenuItem> ViewObjectsTree::createItem(const std::string &pName, const std::string &pAction,
+void ViewObjectsTree::onUpdate(bool /*pVisible*/) { ImGui::Text("Test"); }
+
+/*std::shared_ptr<Gio::MenuItem> ViewObjectsTree::createItem(const std::string &pName, const std::string &pAction,
 														   const Glib::VariantBase &pVariant) {
 	std::shared_ptr<Gio::MenuItem> item = Gio::MenuItem::create(pName, "");
 	item->set_action_and_target(pAction, pVariant);
 	return item;
-}
+}*/
 } // namespace mer::editor::mvp

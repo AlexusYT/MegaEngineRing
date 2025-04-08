@@ -55,8 +55,6 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<sdk::SceneUi> &getSceneUi() const override { return sceneUi; }
 
-	void addPopup(const std::shared_ptr<sdk::UiPopup> &pPopup) const override;
-
 	void showPopup(const std::string &pName) const override;
 
 private:

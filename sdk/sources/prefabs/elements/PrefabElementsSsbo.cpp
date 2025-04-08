@@ -29,9 +29,7 @@
 #include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
 
 namespace mer::sdk {
-PrefabElementsSsbo::PrefabElementsSsbo() {
-	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), STREAM_DRAW);
-}
+PrefabElementsSsbo::PrefabElementsSsbo() {}
 
 PrefabElementsSsbo::~PrefabElementsSsbo() {
 	if (ssboData) free(ssboData);
@@ -62,12 +60,22 @@ void PrefabElementsSsbo::untrackAll() {
 void PrefabElementsSsbo::render() {
 	if (!dirty) return;
 
-	if (getSize() < dataSize) {
-		reallocate(dataSize, ssboData);
+	if (ssbo->getSize() < dataSize) {
+		ssbo->reallocate(dataSize, ssboData);
 	} else
-		bufferSubData(0, dataSize, ssboData);
+		ssbo->bufferSubData(0, dataSize, ssboData);
 	dirty = false;
 }
+
+void PrefabElementsSsbo::bind(const uint32_t pBinding) const { ssbo->bindBufferBase(pBinding); }
+
+ReportMessagePtr PrefabElementsSsbo::onInitialize() {
+	ssbo = std::make_shared<SSBO>();
+	ssbo->setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), STREAM_DRAW);
+	return Initializable::onInitialize();
+}
+
+void PrefabElementsSsbo::onUninitialize() { ssbo.reset(); }
 
 void PrefabElementsSsbo::onDataChanged() {
 	instancesData.clear();

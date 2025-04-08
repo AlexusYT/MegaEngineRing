@@ -23,6 +23,7 @@
 #define MODELRENDEREXTENSION_H
 #include "EngineSDK/render/RenderInstance.h"
 #include "EngineSDK/render/RenderInstanceData.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
 #include "Extension.h"
 
 namespace mer::sdk {
@@ -34,7 +35,7 @@ class ModelRenderExtension : public Extension, public RenderInstance {
 	RenderInstanceData data;
 
 protected:
-	ModelRenderExtension() : propertyModel(this, "Model"), propertyMaterial(this, "Material") {}
+	ModelRenderExtension();
 
 public:
 	ExtensionProperty<std::shared_ptr<IModel3DObject>> propertyModel;

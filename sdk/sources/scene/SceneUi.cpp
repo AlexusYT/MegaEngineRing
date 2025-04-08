@@ -28,22 +28,40 @@
 namespace mer::sdk {
 
 void SceneUi::updateUi() {
-	const ImGuiViewport* viewport = ImGui::GetMainViewport();
 	ImGui::ShowDemoWindow();
-	ImGui::DockSpaceOverViewport(0, viewport);
-	for (auto [name, uiPopup]: popups) { uiPopup->render(); }
-	for (auto [name, uiWindow]: windows) { uiWindow->render(); }
+	//const ImGuiViewport* viewport = ImGui::GetMainViewport();
+	//ImGui::DockSpaceOverViewport(0, viewport);
 }
 
-void SceneUi::customRender() {}
+void SceneUi::customRender() {
+	for (auto [name, uiWindow]: windows) { uiWindow->customRender(); }
+}
 
 ImGuiIO &SceneUi::getIo() { return ImGui::GetIO(); }
 
 void SceneUi::addUiWindow(UiWindow* pWindow) { windows.emplace(pWindow->getName(), pWindow); }
 
-void SceneUi::addUiPopup(const std::shared_ptr<UiPopup> &pPopup) { popups.emplace(pPopup->getName(), pPopup); }
-
 void SceneUi::removeUiWindow(const std::string &pName) { windows.erase(pName); }
+
+void SceneUi::onSizeChanged(int pWidth, int pHeight) {
+	for (auto win: windows) win.second->onSizeChanged(pWidth, pHeight);
+}
+
+void SceneUi::onCursorPosChanged(double pX, double pY) {
+	for (auto win: windows) win.second->onCursorPosChanged(pX, pY);
+}
+
+void SceneUi::onKeyChanged(int pKey, int pScancode, int pAction, int pMods) {
+	for (auto win: windows) win.second->onKeyChanged(pKey, pScancode, pAction, pMods);
+}
+
+void SceneUi::onMouseScroll(double pXOffset, double pYOffset) {
+	for (auto win: windows) win.second->onMouseScroll(pXOffset, pYOffset);
+}
+
+void SceneUi::onMouseButton(int pButton, int pAction, int pMods) {
+	for (auto win: windows) win.second->onMouseButton(pButton, pAction, pMods);
+}
 
 ReportMessagePtr SceneUi::onInitialize() { return Initializable::onInitialize(); }
 

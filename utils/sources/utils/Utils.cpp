@@ -22,6 +22,10 @@
 #include <EngineUtils/utils/Utils.h>
 #include <cxxabi.h>
 #include <regex>
+#include <turbojpeg.h>
+
+#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineUtils/utils/ReportMessageFwd.h"
 
 void replace_name(std::string &pIn, const std::string &pWhat, const std::string &pReplaceWith) {
 	std::regex regex(pWhat);
@@ -51,4 +55,50 @@ std::string Utils::parseDlError(const std::string &pMsg) {
 		return "undefined symbol: " + demangle(pMsg.substr(iter + 18));
 	}
 	return pMsg;
+}
+
+mer::sdk::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, const uint64_t pDataSize,
+												 std::vector<unsigned char> &pOutData, int* pWidthOut,
+												 int* pHeightOut) noexcept {
+	tjhandle decompressor = tjInitDecompress();
+	if (!decompressor) {
+		auto msg = mer::sdk::ReportMessage::create();
+		msg->setTitle("Image loading failed");
+		msg->setMessage("JPEG Decompressor init failed");
+		msg->addInfoLine("Turbo-JPEG error: {} ", tjGetErrorStr());
+		msg->addInfoLine("Buffer size: {}", pDataSize);
+		return msg;
+	}
+	int width;
+	int height;
+	if (tjDecompressHeader(decompressor, pDataBuffer, pDataSize, &width, &height) == -1) {
+		pOutData.clear();
+		auto msg = mer::sdk::ReportMessage::create();
+		msg->setTitle("Image loading failed");
+		msg->setMessage("JPEG header decompressing failed");
+		msg->addInfoLine("Turbo-JPEG error: {} ", tjGetErrorStr());
+		msg->addInfoLine("Image size: {}x{}", width, height);
+		msg->addInfoLine("Buffer size: {}", pDataSize);
+		tjDestroy(decompressor);
+		return msg;
+	}
+	pOutData.resize(static_cast<uint64_t>(width * height * 3));
+
+	if (tjDecompress2(decompressor, pDataBuffer, pDataSize, pOutData.data(), width, 0, height, TJPF_RGB,
+					  TJFLAG_FASTDCT) == -1) {
+		pOutData.clear();
+		auto msg = mer::sdk::ReportMessage::create();
+		msg->setTitle("Image loading failed");
+		msg->setMessage("JPEG Decompressing failed");
+		msg->addInfoLine("Turbo-JPEG error: {} ", tjGetErrorStr());
+		msg->addInfoLine("Image size: {}x{}", width, height);
+		msg->addInfoLine("Buffer size: {}", pDataSize);
+		tjDestroy(decompressor);
+		return msg;
+	}
+	tjDestroy(decompressor);
+
+	if (pWidthOut) *pWidthOut = width;
+	if (pHeightOut) *pHeightOut = height;
+	return nullptr;
 }

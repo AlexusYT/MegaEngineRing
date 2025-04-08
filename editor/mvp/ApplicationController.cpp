@@ -33,17 +33,25 @@ ApplicationController::~ApplicationController() {
 }
 
 void ApplicationController::run(const std::shared_ptr<IPresenter> &pPresenter) {
-	pPresenter->setAppController(this);
-	pPresenter->run();
-	presenters.emplace(pPresenter->getTypeName(), pPresenter);
+	auto presenterName = pPresenter->getTypeName();
+	if (auto iter = presenters.find(presenterName); iter == presenters.end()) {
+		pPresenter->setAppController(this);
+		pPresenter->run();
+		presenters.emplace_hint(iter, pPresenter->getTypeName(), pPresenter);
+
+	} else {
+		auto msg = sdk::ReportMessage::create();
+		msg->setTitle("Programmer error");
+		msg->setMessage("Attempting to run same presenter twice!");
+		msg->addInfoLine("Presenter name: " + pPresenter->getTypeName());
+		sdk::Logger::error(msg);
+	}
 }
 
 void ApplicationController::stop(IPresenter* pPresenter) {
 	pPresenter->stop();
 	presenters.erase(pPresenter->getTypeName());
 }
-
-void ApplicationController::addPopup(const std::shared_ptr<sdk::UiPopup> &pPopup) const { sceneUi->addUiPopup(pPopup); }
 
 void ApplicationController::showPopup(const std::string & /*pName*/) const { /* TODO_IMPLEMENT_ME();*/ }
 

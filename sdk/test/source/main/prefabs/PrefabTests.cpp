@@ -103,21 +103,31 @@ public:
 
 TEST_F(PrefabsFixture, RemoveElement) {
 
-	auto elementToRemove = MeshPrefabElement::create(model->getModelObject("CustomPistol9mm.002"));
+	auto elementToRemove = MeshPrefabElement::create();
+	elementToRemove->setMesh(model->getModelObject("CustomPistol9mm.002"));
 	auto prefab1 = Prefab::create();
-	prefab1->addElement(MeshPrefabElement::create(model->getModelObject("CustomPistol9mm.001")));
+	auto element11 = MeshPrefabElement::create();
+	element11->setMesh(model->getModelObject("CustomPistol9mm.001"));
+	prefab1->addElement(element11);
 	prefab1->addElement(elementToRemove);
-	prefab1->addElement(MeshPrefabElement::create(model->getModelObject("CustomPistol9mm.003")));
+	auto element13 = MeshPrefabElement::create();
+	element13->setMesh(model->getModelObject("CustomPistol9mm.003"));
+	prefab1->addElement(element13);
+
 
 	prefab1->removeElement(elementToRemove);
 	auto prefab2 = Prefab::create();
-	prefab2->addElement(MeshPrefabElement::create(model->getModelObject("CustomPistol9mm.001")));
-	prefab2->addElement(MeshPrefabElement::create(model->getModelObject("CustomPistol9mm.003")));
+	auto element21 = MeshPrefabElement::create();
+	element21->setMesh(model->getModelObject("CustomPistol9mm.001"));
+	prefab2->addElement(element21);
+	auto element23 = MeshPrefabElement::create();
+	element23->setMesh(model->getModelObject("CustomPistol9mm.003"));
+	prefab2->addElement(element23);
 
 	auto pref1Elements = prefab1->getElements();
 	auto pref2Elements = prefab2->getElements();
-	auto element1 = pref1Elements.at("CustomPistol9mm.003");
-	auto element2 = pref2Elements.at("CustomPistol9mm.003");
+	auto element1 = pref1Elements.at(element13->getUuid());
+	auto element2 = pref2Elements.at(element23->getUuid());
 	EXPECT_EQ(pref1Elements.size(), pref2Elements.size());
 	EXPECT_EQ(element1->getDataStart(), element2->getDataStart());
 	EXPECT_EQ(element1->getIndicesStart(), element2->getIndicesStart());
@@ -139,8 +149,10 @@ public:
 TEST_F(PrefabsFixture, AddPrefabInstance) {
 	auto prefab = Prefab::create();
 
-	auto element1 = MeshPrefabElement::create(model->getModelObject("CustomPistol9mm.001"));
-	auto element2 = MeshPrefabElement::create(model->getModelObject("CustomPistol9mm.003"));
+	auto element1 = MeshPrefabElement::create();
+	element1->setMesh(model->getModelObject("CustomPistol9mm.001"));
+	auto element2 = MeshPrefabElement::create();
+	element2->setMesh(model->getModelObject("CustomPistol9mm.003"));
 	prefab->addElement(element1);
 	prefab->addElement(element2);
 	auto mockPrefabInstance = std::make_shared<PrefabInstanceMock>();

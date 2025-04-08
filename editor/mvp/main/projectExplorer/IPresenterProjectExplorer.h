@@ -34,6 +34,8 @@ public:
 	virtual void setEntrySelectionChanged(
 		const sigc::slot<void(ui::ProjectExplorerEntry*)> &pEntrySelectionChanged) = 0;
 
+	virtual void createScene(const std::filesystem::path &pPathToFile) = 0;
+
 	virtual void openInFilesystem(const std::filesystem::path &pPathToFile) = 0;
 
 	virtual void deleteFile(const std::filesystem::path &pPathToDelete) = 0;

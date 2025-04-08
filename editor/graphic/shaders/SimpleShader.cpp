@@ -39,7 +39,8 @@ layout(std430, binding = 0) buffer ProgramWideSettings {
 	mat4 viewProjectionMat;
 	mat4 projectionMat;
 	mat4 viewMat;
-	vec3 camPos;
+	vec4 camPos;
+	int mode;
 };
 
 
@@ -59,7 +60,8 @@ layout(std430, binding = 0) buffer ProgramWideSettings {
 	mat4 viewProjectionMat;
 	mat4 projectionMat;
 	mat4 viewMat;
-	vec3 camPos;
+	vec4 camPos;
+	int mode;
 };
 
 uniform mat4 modelMatrix;
@@ -95,7 +97,8 @@ layout(std430, binding = 0) buffer ProgramWideSettings {
 	mat4 viewProjectionMat;
 	mat4 projectionMat;
 	mat4 viewMat;
-	vec3 camPos;
+	vec4 camPos;
+	int mode;
 };
 
 void main()

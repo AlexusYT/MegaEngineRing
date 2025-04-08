@@ -129,8 +129,11 @@ void ViewProjectExplorer::updateUi() {
 				if (ImGui::MenuItem("Texture")) {}
 				ImGui::EndMenu();
 			}
+			if (ImGui::MenuItem("New Prefab")) {}
 			if (ImGui::MenuItem("New Folder")) {}
-			if (ImGui::MenuItem("New Scene")) {}
+			if (ImGui::MenuItem("New Scene")) {
+				if (selectedElement && presenter) presenter->createScene(selectedElement->getPath());
+			}
 			if (ImGui::MenuItem("New Script")) {}
 			ImGui::Separator();
 			ImGui::BeginDisabled();

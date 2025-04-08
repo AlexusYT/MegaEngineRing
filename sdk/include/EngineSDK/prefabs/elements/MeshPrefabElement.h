@@ -31,17 +31,22 @@ class IModel3DObject;
 
 class MeshPrefabElement : public PrefabElement {
 	std::shared_ptr<IModel3DObject> mesh;
+	std::vector<float> defaultVertices;
+	std::vector<uint16_t> defaultIndices;
 
 protected:
-	explicit MeshPrefabElement(const std::shared_ptr<IModel3DObject> &pMesh, const std::string &pName = "");
+	explicit MeshPrefabElement();
 
 public:
-	static std::shared_ptr<MeshPrefabElement> create(const std::shared_ptr<IModel3DObject> &pMesh,
-													 const std::string &pName = "");
+	static std::shared_ptr<MeshPrefabElement> create();
 
 	const std::vector<float> &getData() const override;
 
 	const std::vector<uint16_t> &getIndices() const override;
+
+	[[nodiscard]] const std::shared_ptr<IModel3DObject> &getMesh() const { return mesh; }
+
+	void setMesh(const std::shared_ptr<IModel3DObject> &pMesh) { mesh = pMesh; }
 };
 
 } // namespace mer::sdk

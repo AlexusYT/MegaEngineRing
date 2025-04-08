@@ -1,0 +1,180 @@
+//  MegaEngineRing is a program that can speed up game development.
+//  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License along
+//  with this program; if not, write to the Free Software Foundation, Inc.,
+//  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+//
+// Created by alexus on 28.02.25.
+//
+
+#include "PresenterScenePreview.h"
+
+#include <memory>
+
+#include "EngineSDK/bounding/DebugGeometry.h"
+#include "EngineSDK/bounding/VolumeAabb.h"
+#include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
+#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/render/Renderer.h"
+#include "EngineSDK/resources/shaders/builtin/BoundingVolumeProgram.h"
+#include "EngineSDK/resources/shaders/builtin/DefaultProgram.h"
+#include "EngineSDK/scene/Scene3D.h"
+#include "EngineSDK/utils/Transformation.h"
+#include "IModelScenePreview.h"
+#include "IViewScenePreview.h"
+
+namespace mer::editor::mvp {
+PresenterScenePreview::PresenterScenePreview(const std::shared_ptr<IViewScenePreview> &pView,
+											 const std::shared_ptr<IModelScenePreview> &pModel)
+	: view(pView), model(pModel) {
+	model->setPresenter(this);
+	view->setPresenter(this);
+}
+
+void PresenterScenePreview::renderScene() {
+	auto &scene = model->getScene();
+	if (!scene) return;
+	/*if (!scene->isInited()) {
+		if (auto msg = scene->initialize()) { sdk::Logger::error(msg); }
+	}
+	*/
+	scene->getRenderer()->executeMainPass();
+	//for (auto mesh: scene->getMeshes()) mesh->render();
+}
+
+void PresenterScenePreview::renderGeometryBoundingVolumes() {
+	boundingProgram->use();
+	auto &scene = model->getScene();
+	if (!scene) return;
+	auto camera = view->getCamera();
+	auto mousePos = view->getMousePos();
+	[[maybe_unused]] glm::vec3 dir =
+		camera->propertyTargetPosition.getValue() +
+		glm::vec3(glm::inverse(camera->getMatrix()) * glm::vec4(mousePos.x, -mousePos.y, 1.0f, 1.0f)) *
+			camera->propertyDistance.getValue();
+	glm::vec3 origin = camera->propertyPosition.getValue();
+	test->setBounds(dir, origin);
+	hoveredMeshNode = nullptr;
+	std::vector<std::pair<glm::vec3, sdk::Node*>> candidates;
+	//test->render();
+	for (auto node: scene->getRootNodes()) {
+		//
+		node->listGeometryIntersectsAabb(origin, dir - origin, candidates);
+	} /*
+	std::ranges::sort(candidates, [origin](const std::pair<glm::vec3, sdk::Node*> &pLhs,
+										   const std::pair<glm::vec3, sdk::Node*> &pRhs) {
+		return glm::distance(pLhs.first, origin) < glm::distance(origin, pRhs.first);
+	});*/
+	if (candidates.empty()) return;
+
+	float minDistance = std::numeric_limits<float>::max();
+	for (auto &candidate: candidates) {
+
+		if (auto meshInst = dynamic_cast<sdk::MeshInstance*>(candidate.second)) {
+			glm::vec2 coord;
+			float distance;
+			if (meshInst->isGeometryIntersects(origin, glm::normalize(dir - origin), coord, distance)) {
+				if (minDistance > distance) {
+					minDistance = distance;
+					hoveredMeshNode = meshInst;
+				}
+				//selectedByRay.emplace_back(std::make_pair(distance, meshInst));
+			}
+		}
+	}
+	//auto &[coord, meshInst] = selectedByRay.front();
+	int i = 0;
+	//for (auto &[coord, meshInst]: selectedByRay) {
+
+	//meshInst->debugGeometry->setCube(origin + glm::normalize(dir - origin) * coord);
+	/*sdk::Logger::out("{}, {}: {}, {}, {}", meshInst->getName(), glm::distance(coord, origin), coord.x, coord.y,
+						 coord.z);*/
+	if (!hoveredMeshNode) return;
+	if (!hoveredMeshNode->debugGeometry->isInited()) hoveredMeshNode->debugGeometry->initialize();
+	boundingProgram->setUniform("color", glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+	hoveredMeshNode->debugGeometry->render();
+	auto aabb = hoveredMeshNode->getGeometryAabb();
+	if (!aabb->isInited()) aabb->initialize();
+	boundingProgram->setUniform("color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	aabb->render();
+	//if (view->isRotate()) selectedMesh->getLocalTransform()->translate(0.1f, 0, 0);
+	//	break;
+	i++;
+	//}
+}
+
+void PresenterScenePreview::renderSelected(bool /*pOutline*/) {
+	auto &scene = model->getScene();
+	if (!scene) return;
+	scene->getRenderer()->executeRenderPass("__editor_outline__");
+	/*for (auto selectedMesh: model->getSelectedMeshes()) {
+		if (!selectedMesh->isInited()) selectedMesh->initialize();
+		selectedMesh->render();
+	}
+	if (view->isRotate()) {
+		for (auto selectedMeshNode: model->getSelectedMeshNodes()) {
+			selectedMeshNode->getLocalTransform()->translate(1, 0, 0);
+		}
+	}*/
+	//scene->getMeshes().at(1)->render();
+	//scene->render();
+}
+
+void PresenterScenePreview::init() {
+	boundingProgram = sdk::BoundingVolumeProgram::getInstance();
+	if (auto msg = boundingProgram->initialize()) { sdk::Logger::error(msg); }
+	auto defaultProgram = sdk::DefaultProgram::getInstance();
+	if (!defaultProgram->isInited()) {
+		if (auto msg = defaultProgram->initialize()) { sdk::Logger::error(msg); }
+	}
+	test = sdk::VolumeAabb::create();
+	test->initialize();
+}
+
+void PresenterScenePreview::onPrimaryMouseKeyPressed() {
+	model->clearSelectedMeshes();
+	if (hoveredMeshNode) model->addSelectedMeshNode(hoveredMeshNode);
+}
+
+void getAllNodes(sdk::Node* pNode, std::vector<sdk::Node*> &pNodes) {
+
+	for (const auto &child: pNode->getChildren()) { getAllNodes(child.get(), pNodes); }
+	pNodes.push_back(pNode);
+}
+
+void PresenterScenePreview::onSceneChanged() {
+
+	/*auto scene = model->getScene();
+	if (!scene) return;*/
+	/*std::vector<sdk::Node*> nodes;
+	for (auto material: scene->getMaterials()) { model->addMaterial(material.get()); }
+	for (auto rootNode: scene->getRootNodes()) { getAllNodes(rootNode.get(), nodes); }
+	for (auto node: nodes) {
+		if (auto instance = dynamic_cast<sdk::MeshInstance*>(node)) {
+			model->addMeshInstance(instance->getMesh(), instance);
+		}
+	}*/
+	/*for (auto mesh: scene->getMeshes()) {
+		//
+		mainRenderPass->addMesh(mesh.get());
+	}*/
+}
+
+void PresenterScenePreview::setFocus() { view->focusOnThis(); }
+
+void PresenterScenePreview::run() { view->openView(); }
+
+void PresenterScenePreview::stop() { view->closeView(); }
+} // namespace mer::editor::mvp

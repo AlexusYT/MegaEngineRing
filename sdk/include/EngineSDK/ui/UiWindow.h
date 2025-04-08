@@ -42,7 +42,18 @@ public:
 	static constexpr float SIZE_MATH_PARENT = -1.0f;
 
 	void render() override;
+
 	void addPopup(const std::shared_ptr<UiPopup> &pPopup);
+
+	virtual void onSizeChanged(int pWidth, int pHeight);
+
+	virtual void onCursorPosChanged(double pX, double pY);
+
+	virtual void onKeyChanged(int pKey, int pScancode, int pAction, int pMods);
+
+	virtual void onMouseScroll(double pXOffset, double pYOffset);
+
+	virtual void onMouseButton(int pButton, int pAction, int pMods);
 };
 
 } // namespace mer::sdk

@@ -24,8 +24,12 @@
 
 #include "EngineSDK/ui/UiWindow.h"
 #include "IViewSceneEditor.h"
+#include "mvp/editor/Editor.h"
 
 namespace mer::editor::mvp {
+class IPresenterObjectsTree;
+class IPresenterScenePreview;
+class SubWindows;
 class IPresenterSceneEditor;
 } // namespace mer::editor::mvp
 
@@ -112,6 +116,28 @@ public:
 	void openView() override;
 
 	void closeView() override;
+};
+
+class SceneEditor : public Editor {
+	std::shared_ptr<IPresenterScenePreview> scenePreviewPresenter;
+	std::shared_ptr<EditorTool> scenePreviewView;
+	std::shared_ptr<IPresenterObjectsTree> objTreePresenter;
+	std::shared_ptr<EditorTool> objTreeView;
+
+public:
+	explicit SceneEditor(const std::string &pName);
+
+	void updateUi() override;
+
+protected:
+	const char* getType() const override { return "SceneEditor"; }
+
+	void loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir pPanelDir) override;
+
+private:
+	void addPlane();
+
+	void addGltfModel();
 };
 } // namespace mer::editor::mvp
 

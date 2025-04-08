@@ -26,6 +26,7 @@
 #include <sigc++/scoped_connection.h>
 
 #include "EngineSDK/prefabs/IPrefabElementInstance.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
 #include "EngineSDK/resources/materials/MaterialData.h"
 #include "EngineSDK/utils/Transformable.h"
 #include "EngineUtils/utils/Property.h"

@@ -29,6 +29,10 @@
 #include "EngineSDK/utils/MouseButton.h"
 #include "IModelSceneEditor.h"
 #include "IViewSceneEditor.h"
+#include "mvp/ApplicationController.h"
+#include "mvp/scenePreview/PresenterScenePreview.h"
+#include "mvp/scenePreview/ViewScenePreview.h"
+#include "project/LoadedScene.h"
 #include "project/Project.h"
 
 namespace mer::sdk {
@@ -39,11 +43,12 @@ class OrbitCameraExtension;
 namespace mer::editor::mvp {
 
 
-PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor)
-	: modelSceneEditor(pModelSceneEditor) {
-
-	modelSceneEditor->connectOnLoadedSignal([this] {
+PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IViewSceneEditor> &pView,
+										   const std::shared_ptr<IModelSceneEditor> &pModelSceneEditor)
+	: view(pView), modelSceneEditor(pModelSceneEditor) {
+	pView->setPresenter(this);
 #ifdef USE_OLD_UI
+	modelSceneEditor->connectOnLoadedSignal([this] {
 		for (auto view: views) {
 			view.first->executeInMainThread(
 				[this, view](const std::promise<void> & /*pPromise*/) { view.first->redraw(); });
@@ -51,18 +56,18 @@ PresenterSceneEditor::PresenterSceneEditor(const std::shared_ptr<IModelSceneEdit
 			view.first->queueResize();
 			view.first->makeCurrent();
 		}
-#endif
 		modelSceneEditor->initScene();
 	});
+#endif
 } // namespace mer::editor::mvp
 
 PresenterSceneEditor::~PresenterSceneEditor() {}
 
-void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
-	const auto view = std::dynamic_pointer_cast<IViewSceneEditor>(pNewView);
+void PresenterSceneEditor::addView(const std::shared_ptr<IView> & /*pNewView*/) {
+	/*const auto view = std::dynamic_pointer_cast<IViewSceneEditor>(pNewView);
 	if (!view) return;
 	view->setPresenter(this);
-	std::vector<sigc::connection> conns;
+	std::vector<sigc::connection> conns;*/
 
 
 #ifdef USE_OLD_UI
@@ -108,9 +113,16 @@ void PresenterSceneEditor::addView(const std::shared_ptr<IView> &pNewView) {
 		const sdk::ModifierKeys mods = convertToModifierKeys(pState);
 		if (const auto scene = modelSceneEditor->getScene()) scene->onKeyChanged(key, false, mods);
 	});
+
 #endif
-	view->openView();
-	views.emplace(view, conns);
+	/*view->openView();
+	views.emplace(view, conns);*/
+}
+
+void PresenterSceneEditor::onRender() {
+	if (!modelSceneEditor->hasScene()) return;
+	modelSceneEditor->initScene();
+	modelSceneEditor->render();
 }
 
 void PresenterSceneEditor::onGridToggled(bool pState) { modelSceneEditor->toggleGrid(pState); }
@@ -135,9 +147,16 @@ bool PresenterSceneEditor::onMouseScroll(double pDx, double pDy) {
 	return false;
 }
 
-void PresenterSceneEditor::run() {}
-
-void PresenterSceneEditor::stop() {
-	for (auto view: views) view.first->closeView();
+void PresenterSceneEditor::run() {
+	view->openView();
+	/*auto scenePreview = ViewScenePreview::create("PrefabScenePreview", "Scene preview",
+												 UiWinChildContext::create(view->getSubWindows()));
+	modelPreview = std::make_shared<ModelScenePreview>();
+	modelPreview->setScene(sdk::Scene3D::create());
+	auto presenter = PresenterSceneEditorPreview::create(scenePreview, modelPreview);
+	getAppController()->run(presenter);*/
+	//modelSceneEditor->setLoadedScene(getAppController()->getLoadedScene());
 }
+
+void PresenterSceneEditor::stop() { view->closeView(); }
 } // namespace mer::editor::mvp

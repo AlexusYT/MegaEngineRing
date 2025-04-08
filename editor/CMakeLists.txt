@@ -279,8 +279,50 @@ add_library(
         mvp/contexts/UiWindowContext.h
         mvp/dialogs/confirmationDialog/ConfirmationDialog.cpp
         mvp/dialogs/confirmationDialog/ConfirmationDialog.h
+        mvp/prefabEditor/ViewPrefabEditor.cpp
+        mvp/prefabEditor/ViewPrefabEditor.h
+        mvp/prefabEditor/IModelPrefabEditor.h
+        mvp/prefabEditor/ModelPrefabEditor.cpp
+        mvp/prefabEditor/ModelPrefabEditor.h
+        mvp/prefabEditor/IPresenterPrefabEditor.h
+        mvp/prefabEditor/PresenterPrefabEditor.cpp
+        mvp/prefabEditor/PresenterPrefabEditor.h
+        mvp/onlineImport/ViewOnlineImport.cpp
+        mvp/onlineImport/ViewOnlineImport.h
+        mvp/onlineImport/ModelOnlineImport.cpp
+        mvp/onlineImport/ModelOnlineImport.h
+        mvp/onlineImport/PresenterOnlineImport.cpp
+        mvp/onlineImport/PresenterOnlineImport.h
+        mvp/onlineImport/sketchfab/SketchfabAccount.cpp
+        mvp/onlineImport/sketchfab/SketchfabAccount.h
+        mvp/onlineImport/sketchfab/SketchfabCache.cpp
+        mvp/onlineImport/sketchfab/SketchfabCache.h
+        mvp/onlineImport/sketchfab/SketchfabSearch.cpp
+        mvp/onlineImport/sketchfab/SketchfabSearch.h
+        mvp/scenePreview/IViewScenePreview.h
+        mvp/scenePreview/ViewScenePreview.cpp
+        mvp/scenePreview/ViewScenePreview.h
+        mvp/scenePreview/IPresenterScenePreview.h
+        mvp/scenePreview/IModelScenePreview.h
+        mvp/scenePreview/prefab/PresenterPrefabPreview.cpp
+        mvp/scenePreview/prefab/PresenterPrefabPreview.h
+        mvp/scenePreview/prefab/ModelPrefabPreview.cpp
+        mvp/scenePreview/prefab/ModelPrefabPreview.h
+        mvp/scenePreview/ModelScenePreview.cpp
+        mvp/scenePreview/ModelScenePreview.h
+        mvp/scenePreview/onlineImport/PresenterOnlineImportPreview.cpp
+        mvp/scenePreview/onlineImport/PresenterOnlineImportPreview.h
+        mvp/scenePreview/sceneEditor/PresenterSceneEditorPreview.cpp
+        mvp/scenePreview/sceneEditor/PresenterSceneEditorPreview.h
+        mvp/scenePreview/PresenterScenePreview.h
+        mvp/scenePreview/PresenterScenePreview.cpp
+        mvp/editor/Editor.cpp
+        mvp/editor/Editor.h
+        mvp/editor/EditorUi.cpp
+        mvp/editor/EditorUi.h
 
 )
+target_compile_options(MegaEngineEditor_lib PRIVATE -Werror)
 
 target_precompile_headers(MegaEngineEditor_lib
         PRIVATE common.h
@@ -315,3 +357,6 @@ target_link_libraries(MegaEngineEditor_lib PRIVATE SQLiteCpp)
 pkg_check_modules(nlohmann_json REQUIRED IMPORTED_TARGET nlohmann_json)
 target_link_libraries(MegaEngineEditor_lib PRIVATE ${nlohmann_json_LIBRARIES})
 set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
+
+find_package(unofficial-curlpp CONFIG REQUIRED)
+target_link_libraries(MegaEngineEditor_lib PRIVATE unofficial::curlpp::curlpp)

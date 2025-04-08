@@ -28,7 +28,7 @@ class ExplorerObject;
 
 class IViewObjectsTree : public IView {
 public:
-	virtual void setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) = 0;
+	//virtual void setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) = 0;
 };
 } // namespace mer::editor::mvp
 

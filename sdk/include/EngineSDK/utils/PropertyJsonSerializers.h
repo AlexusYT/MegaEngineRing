@@ -24,6 +24,7 @@
 
 #include <glm/fwd.hpp>
 
+#include "EngineSDK/resources/models/IModel3DObject.h"
 #include "PropertyJsonSerializer.h"
 
 namespace mer::sdk {
@@ -70,8 +71,7 @@ struct PropertyJsonSerializer<std::string> {
 template<>
 struct PropertyJsonSerializer<std::shared_ptr<IModel3DObject>> {
 	static nlohmann::json serialize(const std::shared_ptr<IModel3DObject> &pValue, Extension* pExtension);
-	static std::shared_ptr<IModel3DObject> deserialize(const nlohmann::json &pJson,
-															 const Extension* pExtension);
+	static std::shared_ptr<IModel3DObject> deserialize(const nlohmann::json &pJson, const Extension* pExtension);
 };
 
 template<>
@@ -83,16 +83,13 @@ struct PropertyJsonSerializer<std::shared_ptr<ShaderProgram>> {
 template<>
 struct PropertyJsonSerializer<std::shared_ptr<ITextureResource>> {
 	static nlohmann::json serialize(const std::shared_ptr<ITextureResource> &pValue, Extension* pExtension);
-	static std::shared_ptr<ITextureResource> deserialize(const nlohmann::json &pJson,
-															   const Extension* pExtension);
+	static std::shared_ptr<ITextureResource> deserialize(const nlohmann::json &pJson, const Extension* pExtension);
 };
 
 template<>
 struct PropertyJsonSerializer<std::shared_ptr<IMaterialResource>> {
-	static nlohmann::json serialize(const std::shared_ptr<IMaterialResource> &pValue,
-									Extension* pExtension);
-	static std::shared_ptr<IMaterialResource> deserialize(const nlohmann::json &pJson,
-																const Extension* pExtension);
+	static nlohmann::json serialize(const std::shared_ptr<IMaterialResource> &pValue, Extension* pExtension);
+	static std::shared_ptr<IMaterialResource> deserialize(const nlohmann::json &pJson, const Extension* pExtension);
 };
 } // namespace mer::sdk
 

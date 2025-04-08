@@ -41,7 +41,7 @@ class SceneUi : public Initializable {
 	Window* window{};
 	ImGuiContext* imGuiContext{};
 	std::unordered_map<std::string, UiWindow*> windows;
-	std::unordered_map<std::string, std::shared_ptr<UiPopup>> popups;
+
 
 public:
 	virtual void updateUi();
@@ -56,9 +56,17 @@ public:
 
 	void addUiWindow(UiWindow* pWindow);
 
-	void addUiPopup(const std::shared_ptr<UiPopup> &pPopup);
-
 	void removeUiWindow(const std::string &pName);
+
+	virtual void onSizeChanged(int pWidth, int pHeight);
+
+	virtual void onCursorPosChanged(double pX, double pY);
+
+	virtual void onKeyChanged(int pKey, int pScancode, int pAction, int pMods);
+
+	virtual void onMouseScroll(double pXOffset, double pYOffset);
+
+	virtual void onMouseButton(int pButton, int pAction, int pMods);
 
 protected:
 	ReportMessagePtr onInitialize() override;

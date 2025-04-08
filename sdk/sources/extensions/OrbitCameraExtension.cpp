@@ -26,16 +26,16 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/polar_coordinates.hpp>
 
+#include "EngineSDK/extensions/MainObjectExtension.h"
 #include "EngineSDK/scene/Scene.h"
 #include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
 
 namespace mer::sdk {
 
 
 OrbitCameraExtension::OrbitCameraExtension()
 	: propertyMatrix(this, "Matrix"), propertyAngle(this, "Angle"), propertyTargetPosition(this, "TargetPosition"),
-	  propertyDistance(this, "Distance") {
+	  propertyDistance(this, "Distance"), propertyPosition(this, "Test"), propertyUp(this, "Up") {
 	propertyMatrix.setValue(glm::mat4(1));
 	propertyDistance = 3.0f;
 	auto updateMatrixSlot = hide(sigc::mem_fun(*this, &OrbitCameraExtension::updateMatrix));
@@ -45,8 +45,8 @@ OrbitCameraExtension::OrbitCameraExtension()
 }
 
 ExtensionProperty<glm::vec3> &OrbitCameraExtension::getPosition() {
-	const auto &objectSelf = getObject();
-	return objectSelf->getMainExtension()->propertyPosition;
+	//const auto &objectSelf = getObject();
+	return propertyPosition;
 }
 
 ReportMessagePtr OrbitCameraExtension::onInit() { return nullptr; }
@@ -72,6 +72,7 @@ void OrbitCameraExtension::updateMatrix() {
 	/*auto right = glm::cross(look, up);
 	auto V = glm::lookAt(position, target, up);*/
 	propertyMatrix = getProjMatrix() * lookAt(position, propertyTargetPosition.getValue(), up);
+	propertyUp = up;
 }
 
 } // namespace mer::sdk

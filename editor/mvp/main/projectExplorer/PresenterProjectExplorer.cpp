@@ -26,6 +26,7 @@
 #include "entries/ProjectExplorerElement.h"
 #include "mvp/ApplicationController.h"
 #include "mvp/dialogs/confirmationDialog/ConfirmationDialog.h"
+#include "project/LoadedScene.h"
 #include "project/Project.h"
 
 namespace mer::editor::mvp {
@@ -40,6 +41,17 @@ PresenterProjectExplorer::PresenterProjectExplorer(const std::shared_ptr<IModelP
 void PresenterProjectExplorer::setEntrySelectionChanged(
 	const sigc::slot<void(ui::ProjectExplorerEntry*)> & /*pEntrySelectionChanged*/) {
 	//viewProjectExplorer->setEntrySelectionChanged(pEntrySelectionChanged);
+}
+
+void PresenterProjectExplorer::createScene(const std::filesystem::path & /*pPathToFile*/) {
+
+	/*std::filesystem::path pathToCreate = !is_directory(pPathToFile) ? pPathToFile.parent_path() : pPathToFile;
+	int id = 0;
+	std::string sceneName;
+	while (true) {
+		sceneName = std::format("Scene{}.enscene", id++);
+		if (!exists(pathToCreate / sceneName)) break;
+	}*/
 }
 
 void PresenterProjectExplorer::openInFilesystem(const std::filesystem::path &pPathToFile) {

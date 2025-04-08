@@ -24,15 +24,19 @@
 #include "EngineSDK/resources/models/Model3DObject.h"
 
 namespace mer::sdk {
-MeshPrefabElement::MeshPrefabElement(const std::shared_ptr<IModel3DObject> &pMesh, const std::string &pName)
-	: PrefabElement(pName.empty() ? pMesh->getName() : pName), mesh(pMesh) {}
+MeshPrefabElement::MeshPrefabElement() : PrefabElement("MeshElement") {}
 
-std::shared_ptr<MeshPrefabElement> MeshPrefabElement::create(const std::shared_ptr<IModel3DObject> &pMesh,
-															 const std::string &pName) {
-	return std::shared_ptr<MeshPrefabElement>(new MeshPrefabElement(pMesh, pName));
+std::shared_ptr<MeshPrefabElement> MeshPrefabElement::create() {
+	return std::shared_ptr<MeshPrefabElement>(new MeshPrefabElement());
 }
 
-const std::vector<float> &MeshPrefabElement::getData() const { return mesh->getData(); }
+const std::vector<float> &MeshPrefabElement::getData() const {
+	if (!mesh) return defaultVertices;
+	return mesh->getData();
+}
 
-const std::vector<uint16_t> &MeshPrefabElement::getIndices() const { return mesh->getIndices(); }
+const std::vector<uint16_t> &MeshPrefabElement::getIndices() const {
+	if (!mesh) return defaultIndices;
+	return mesh->getIndices();
+}
 } // namespace mer::sdk

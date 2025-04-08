@@ -23,6 +23,7 @@
 #include "EngineSDK/prefabs/PrefabInstance.h"
 
 #include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
 #include "EngineSDK/utils/Transformation.h"
 
 namespace mer::sdk {

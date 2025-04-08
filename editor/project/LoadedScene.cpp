@@ -73,7 +73,7 @@ void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesCont
 	pResourcesContext->preloadResources();
 }
 
-void LoadedScene::initScene() const {
+void LoadedScene::initScene() {
 	if (scene) scene->initScene();
 }
 
@@ -81,10 +81,15 @@ void LoadedScene::uninitScene() const {
 	if (scene) scene->deinitScene();
 }
 
-void LoadedScene::render() const { scene->render(); }
+void LoadedScene::render() const {
+	scene->resize(100, 100);
+	scene->render();
+}
 
 sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 
+	auto resourcesContext = std::make_shared<mvp::ResourcesContext>();
+	setupResourcesContext(resourcesContext);
 	unload();
 	scene = sdk::Scene::create();
 	scene->setResourceExecutor(context.get());
@@ -263,8 +268,8 @@ void LoadedScene::renameObject(sdk::ISceneObject* pObject, const std::string &pN
 	std::thread([this, pObject] { saveObject(pObject); }).detach();
 }
 
-std::shared_ptr<sdk::Extension> LoadedScene::addExtension(
-	sdk::ISceneObject* pObject, const std::string &pType, const std::string &pName) const {
+std::shared_ptr<sdk::Extension> LoadedScene::addExtension(sdk::ISceneObject* pObject, const std::string &pType,
+														  const std::string &pName) const {
 	const auto ext = sdk::ExtensionRegistry::newInstance(pType);
 	pObject->addExtension(pName, ext);
 	//if (hasResourcesContext()) ext->onInit();

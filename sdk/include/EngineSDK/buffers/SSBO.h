@@ -21,16 +21,132 @@
 
 #ifndef SSBO_H
 #define SSBO_H
-#include "BufferUsageEnum.h"
+#include "BasicBuffer.h"
 
 namespace mer::sdk {
+
+class SsboImpl : public BasicBuffer {
+protected:
+	SsboImpl() = default;
+
+public:
+	void bindBufferBase(uint32_t pBinding) const;
+
+	void unbindBufferBase(uint32_t pBinding);
+};
+
+template<typename T>
+class Ssbo : public SsboImpl {
+	T data{};
+
+
+public:
+	using ElementT = T;
+
+	void setData(const T &pData) {
+		std::lock_guard lock(mutex);
+		data = pData;
+		dirty = true;
+	}
+
+	[[nodiscard]] const T &getData() const { return data; }
+
+	size_t getElementSize() const override { return sizeof(T); }
+
+	size_t getBytesCount() const override { return getElementSize(); }
+
+	const void* getBytes() const override { return data.data(); }
+};
+
+template<typename T>
+class Ssbo<std::vector<T>> : public SsboImpl {
+	std::vector<T> data{};
+
+
+public:
+	using ElementT = T;
+	using VectorT = std::vector<T>;
+
+	void addElement(const T &pElement) {
+		std::lock_guard lock(mutex);
+		data.push_back(pElement);
+		dirty = true;
+	}
+
+	void setElement(size_t pIndex, const T &pElement) {
+		std::lock_guard lock(mutex);
+		data.at(pIndex) = pElement;
+		dirty = true;
+	}
+
+	template<typename InputIterator, typename = std::_RequireInputIter<InputIterator>>
+	typename std::vector<T>::iterator insertElements(typename std::vector<T>::const_iterator pPosition,
+													 InputIterator pFirst, InputIterator pLast) {
+		std::lock_guard lock(mutex);
+		const auto &res = data.insert(pPosition, pFirst, pLast);
+		dirty = true;
+		return res;
+	}
+
+	typename std::vector<T>::iterator insertElement(typename std::vector<T>::const_iterator pPosition, T pElement) {
+		std::lock_guard lock(mutex);
+		const auto &res = data.insert(pPosition, pElement);
+		dirty = true;
+		return res;
+	}
+
+	typename std::vector<T>::iterator insertElement(typename std::vector<T>::const_iterator pPosition,
+													const T &pElement) {
+		std::lock_guard lock(mutex);
+		const auto &res = data.insert(pPosition, pElement);
+		dirty = true;
+		return res;
+	}
+
+	typename std::vector<T>::iterator removeElement(const typename std::vector<T>::const_iterator &pBeginIter,
+													const typename std::vector<T>::const_iterator &pEndIter) {
+		std::lock_guard lock(mutex);
+		auto &res = data.erase(pBeginIter, pEndIter);
+		dirty = true;
+		return res;
+	}
+
+	typename std::vector<T>::iterator removeElement(const typename std::vector<T>::const_iterator &pPosition) {
+		std::lock_guard lock(mutex);
+		auto res = data.erase(pPosition);
+		dirty = true;
+		return res;
+	}
+
+	typename std::vector<T>::const_iterator begin() const { return data.begin(); }
+
+	typename std::vector<T>::const_iterator end() const { return data.end(); }
+
+	void clear() {
+		data.clear();
+		dirty = true;
+	}
+
+	size_t size() const { return data.size(); }
+
+	bool empty() const { return data.empty(); }
+
+	size_t getElementSize() const override { return sizeof(T); }
+
+	size_t getBytesCount() const override { return data.size() * getElementSize(); }
+
+	const void* getBytes() const override { return data.data(); }
+
+	/*typename std::vector<T>::iterator begin() { return data.begin(); }
+
+	typename std::vector<T>::iterator end() { return data.end(); }*/
+};
 
 class SSBO {
 	uint32_t name{};
 	int64_t size{};
 	const void* data{};
 	BufferUsageEnum usage;
-	uint32_t baseIndex{};
 
 
 public:

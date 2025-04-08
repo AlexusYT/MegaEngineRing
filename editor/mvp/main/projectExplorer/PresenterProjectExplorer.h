@@ -38,6 +38,8 @@ public:
 
 	void setEntrySelectionChanged(const sigc::slot<void(ui::ProjectExplorerEntry*)> &pEntrySelectionChanged) override;
 
+	void createScene(const std::filesystem::path &pPathToFile) override;
+
 	void openInFilesystem(const std::filesystem::path &pPathToFile) override;
 
 	void deleteFile(const std::filesystem::path &pPathToDelete) override;

@@ -21,9 +21,15 @@
 
 #ifndef PROPERTY_H
 #define PROPERTY_H
+#include <iostream>
 #include <sigc++/signal.h>
 
 #include "PropertyBase.h"
+#include "PropertyNotifiable.h"
+
+namespace mer::sdk {
+class IPropertyNotifiable;
+}
 
 namespace mer::sdk {
 template<typename T>
@@ -75,11 +81,19 @@ public:
 
 	[[nodiscard]] const sigc::signal<void(const T &)> &getEvent() const { return valueChanged; }
 
-	sigc::connection connectEvent(const sigc::slot<void(const T &)> &pSlot) {
+	sigc::connection connectEvent(const sigc::slot<void(const T &)> &pSlot) const {
 		pSlot(value);
 		return valueChanged.connect(pSlot);
 	}
 };
+
+template<typename T>
+concept IsConvertibleToNotify = std::convertible_to<typename T::element_type*, IPropertyNotifiable*> ||
+								std::convertible_to<T, IPropertyNotifiable*> ||
+								std::is_convertible_v<std::add_lvalue_reference_t<T>, IPropertyNotifiable &>;
+template<typename T>
+concept HasBaseClassNotify = std::is_base_of_v<IPropertyNotifiable, typename T::element_type> ||
+							 std::is_base_of_v<IPropertyNotifiable, std::remove_pointer_t<T>>;
 
 template<typename T>
 class Property : public PropertyBase {
@@ -133,10 +147,31 @@ public:
 		if (valueChanging.empty()) value = pOther;
 		else
 			value = valueChanging(pOther);
+
+		if constexpr (!IsConvertibleToNotify<T> && HasBaseClassNotify<T>) {
+			static_assert(IsConvertibleToNotify<T>,
+						  "Property value class has IPropertyNotifiable base class, but it is not accessible. "
+						  "IPropertyNotifiable must be publicly inherited");
+		}
+		if constexpr (IsConvertibleToNotify<T>) {
+
+			if constexpr (std::__is_shared_ptr<T>) {
+				auto notifiable = dynamic_cast<IPropertyNotifiable*>(value.get());
+				notifiable->setBase(this);
+			} else if constexpr (std::is_pointer_v<T>) {
+				auto notifiable = dynamic_cast<IPropertyNotifiable*>(value);
+				notifiable->setBase(this);
+			} else if constexpr (std::is_class_v<T>) {
+				auto &notifiable = dynamic_cast<IPropertyNotifiable &>(value);
+				notifiable.setBase(this);
+			}
+		}
+
 		notifyChanged();
 	}
 
 	virtual Property &operator=(const T &pOther) {
+
 		setValue(pOther);
 		return *this;
 	}
@@ -192,9 +227,9 @@ public:
 
 	[[nodiscard]] sigc::signal<T(const T &)> &getReturnOverride() { return valueChanging; }
 
-	void notifyChanged() {
-		notifyPropertyChanged();
+	void notifyChanged() override {
 		valueChanged(value);
+		PropertyBase::notifyChanged();
 	}
 
 	PropertyReadOnly<T> getReadOnly() { return PropertyReadOnly<T>(value, valueChanged, getter); }

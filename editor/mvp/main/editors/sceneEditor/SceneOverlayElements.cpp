@@ -42,12 +42,10 @@ void SceneOverlayElements::renderGrid() const {
 	glBindVertexArray(vao);
 	shader->setUniform("modelMatrix", glm::mat4(1.0f));
 	glDrawElements(GL_LINES, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr);
-	shader->setUniform("modelMatrix", glm::scale(glm::mat4(1.0f), glm::vec3(10.0f)));
 
-	//glLineWidth(1.1f);
+	shader->setUniform("modelMatrix", glm::scale(glm::mat4(1.0f), glm::vec3(10.0f)));
 	glDrawElements(GL_LINES, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr);
-	//glDrawElements(GL_POINTS, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr);
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 }
 
 sdk::ReportMessagePtr SceneOverlayElements::onInitialize() {

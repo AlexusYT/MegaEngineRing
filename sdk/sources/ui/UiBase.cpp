@@ -21,6 +21,6 @@
 
 #include "EngineSDK/ui/UiBase.h"
 
-namespace mer {
-namespace sdk {} // namespace sdk
-} // namespace mer
+namespace mer::sdk {
+void UiBase::customRender() {}
+} // namespace mer::sdk

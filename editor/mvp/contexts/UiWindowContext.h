@@ -23,11 +23,36 @@
 #define UIWINDOWCONTEXT_H
 #include "IWidgetContext.h"
 
-namespace mer::sdk {
-class SceneUi;
+namespace mer::editor::mvp {
+class Editor;
 }
 
+namespace mer::sdk {
+class UiWindow;
+class SceneUi;
+} // namespace mer::sdk
+
 namespace mer::editor::mvp {
+
+class EditorContext : public IWidgetContext {
+	EditorTool* tool{};
+	Editor* editor{};
+
+	explicit EditorContext(Editor* pEditor) : editor(pEditor) {}
+
+public:
+	static std::shared_ptr<IWidgetContext> create(Editor* pEditor) {
+		return std::shared_ptr<EditorContext>(new EditorContext(pEditor));
+	}
+
+	void addWidget(Gtk::Widget* /*pWidget*/) override {}
+
+	inline void addTool(EditorTool* pWidget) override;
+
+	void removeWidget() override;
+
+	void setTitle(const std::string &pTitle) override;
+};
 
 class UiWindowContext : public IWidgetContext {
 	sdk::UiWindow* uiWindow{};
@@ -42,8 +67,10 @@ public:
 
 	void addWidget(Gtk::Widget* /*pWidget*/) override {}
 
-	inline void addWindow(sdk::UiWindow* pWidget) override;
+	inline void addWindow(sdk::UiBase* pWidget) override;
+
 	void removeWidget() override;
+
 	void setTitle(const std::string &pTitle) override;
 };
 

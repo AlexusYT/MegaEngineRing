@@ -54,4 +54,14 @@ void UiWindow::render() {
 }
 
 void UiWindow::addPopup(const std::shared_ptr<UiPopup> &pPopup) { popups.emplace_back(pPopup); }
+
+void UiWindow::onSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
+
+void UiWindow::onCursorPosChanged(double /*pX*/, double /*pY*/) {}
+
+void UiWindow::onKeyChanged(int /*pKey*/, int /*pScancode*/, int /*pAction*/, int /*pMods*/) {}
+
+void UiWindow::onMouseScroll(double /*pXOffset*/, double /*pYOffset*/) {}
+
+void UiWindow::onMouseButton(int /*pButton*/, int /*pAction*/, int /*pMods*/) {}
 } // namespace mer::sdk

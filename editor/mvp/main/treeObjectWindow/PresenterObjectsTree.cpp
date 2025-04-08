@@ -27,21 +27,16 @@
 #include "project/LoadedScene.h"
 
 namespace mer::editor::mvp {
-void PresenterObjectsTree::run() {
-	for (const auto &view: views) { view->openView(); }
-}
+void PresenterObjectsTree::run() { view->openView(); }
 
-void PresenterObjectsTree::stop() {
-	for (const auto &view: views) { view->closeView(); }
-	views.clear();
-}
+void PresenterObjectsTree::stop() { view->closeView(); }
 
-void PresenterObjectsTree::addView(const std::shared_ptr<IView> &pNewView) {
+void PresenterObjectsTree::addView(const std::shared_ptr<IView> & /*pNewView*/) {
 
-	const auto view = std::dynamic_pointer_cast<IViewObjectsTree>(pNewView);
+	/*const auto view = std::dynamic_pointer_cast<IViewObjectsTree>(pNewView);
 	if (!view) return;
 	views.push_back(view);
 	view->setTopLevelObjects(model->getLoadedScene()->getMainObject()->getChildren());
-	view->openView();
+	view->openView();*/
 }
 } // namespace mer::editor::mvp

@@ -45,6 +45,12 @@
 #include "mvp/contexts/ApplicationContext.h"
 #include "mvp/contexts/MultiPanedContext.h"
 #include "mvp/contexts/UiWindowContext.h"
+#include "mvp/onlineImport/ModelOnlineImport.h"
+#include "mvp/onlineImport/PresenterOnlineImport.h"
+#include "mvp/onlineImport/ViewOnlineImport.h"
+#include "mvp/prefabEditor/ModelPrefabEditor.h"
+#include "mvp/prefabEditor/PresenterPrefabEditor.h"
+#include "mvp/prefabEditor/ViewPrefabEditor.h"
 #include "mvp/resourceEditor/EditingResourceList.h"
 #include "mvp/resourceEditor/ModelResourceEditor.h"
 #include "mvp/resourceEditor/PresenterResourceEditor.h"
@@ -131,18 +137,31 @@ void PresenterMain::run() {
 	presenters.push_back(presenterProjectExplorer);
 
 
+#ifdef USE_OLD_UI
 	loadedScene = std::make_shared<project::LoadedScene>();
 	loadedScene->connectErrorOccurred([this](auto pMsg) { displayError(pMsg); });
 	loadedScene->setRunDirectory(project->getProjectPath());
-	loadedScene->setupResourcesContext(viewMain->getResourcesContext());
+#endif
 	auto modelSceneEditor = std::make_shared<ModelSceneEditor>();
+#ifdef USE_OLD_UI
 	modelSceneEditor->setLoadedScene(loadedScene);
-	auto presenterSceneEditor = std::make_shared<PresenterSceneEditor>(modelSceneEditor);
+#endif
 	auto viewSceneEditor = std::make_shared<ViewSceneEditor>(UiWindowContext::create(getAppController()->getSceneUi()));
-	presenterSceneEditor->addView(viewSceneEditor);
+	auto presenterSceneEditor = std::make_shared<PresenterSceneEditor>(viewSceneEditor, modelSceneEditor);
 	getAppController()->run(presenterSceneEditor);
 	presenters.push_back(presenterSceneEditor);
 
+	auto modelTextureEditor = std::make_shared<ModelPrefabEditor>();
+	auto viewTextureEditor = ViewPrefabEditor::create(UiWindowContext::create(getAppController()->getSceneUi()));
+	auto presenterTextureEditor = PresenterPrefabEditor::create(modelTextureEditor, viewTextureEditor);
+
+	getAppController()->run(presenterTextureEditor);
+
+	/*auto modelOnlineImport = std::make_shared<ModelOnlineImport>();
+	auto viewOnlineImport = ViewOnlineImport::create(UiWindowContext::create(getAppController()->getSceneUi()));
+	auto presenterOnlineImport = PresenterOnlineImport::create(modelOnlineImport, viewOnlineImport);
+
+	getAppController()->run(presenterOnlineImport);*/
 #ifdef USE_OLD_UI
 	auto modelObjectsTree = std::make_shared<ModelObjectsTree>();
 	modelObjectsTree->setLoadedScene(loadedScene);
@@ -184,7 +203,10 @@ void PresenterMain::stop() {
 	for (auto presenter: presenters) getAppController()->stop(presenter.get());
 	presenters.clear();
 	viewMain->closeView();
+
+#ifdef USE_OLD_UI
 	loadedScene.reset();
+#endif
 }
 
 std::shared_ptr<IView> PresenterMain::createView(const IPresenter* pPresenter,
@@ -270,7 +292,9 @@ void PresenterMain::selectResourceForProperty(sdk::PropertyBase* pProperty) {
 
 	auto model = std::make_shared<ModelResourceSelection>();
 	model->setPropertyBase(pProperty);
+#ifdef USE_OLD_UI
 	model->setLoadedScene(loadedScene);
+#endif
 	sdk::ReportMessagePtr msg;
 	auto view = ViewResourceSelection::create(ApplicationContext::create(getAppController()->getApp()), msg);
 	if (!view) {
@@ -282,35 +306,51 @@ void PresenterMain::selectResourceForProperty(sdk::PropertyBase* pProperty) {
 	getAppController()->run(presenter);
 }
 
-void PresenterMain::addExtension(const std::string &pExtensionName) {
+void PresenterMain::addExtension([[maybe_unused]] const std::string &pExtensionName) {
+#ifdef USE_OLD_UI
 	auto obj = loadedScene->getSelectedObject();
 	if (auto element = dynamic_cast<SceneExplorerObject*>(obj)) {
 		loadedScene->addExtension(element->getObject(), pExtensionName, pExtensionName);
 	}
+#endif
 }
 
-void PresenterMain::selectObject(ExplorerObject* pObjectToSelect) { loadedScene->selectObject(pObjectToSelect); }
+void PresenterMain::selectObject([[maybe_unused]] ExplorerObject* pObjectToSelect) {
+
+#ifdef USE_OLD_UI
+	loadedScene->selectObject(pObjectToSelect);
+#endif
+}
 
 void PresenterMain::createObject(ExplorerObject* /*pParentObject*/) {
+
+#ifdef USE_OLD_UI
 	if (!loadedScene->hasScene()) return;
 	loadedScene->addObject();
+#endif
 }
 
-void PresenterMain::removeObject(ExplorerObject* pObjectToRemove) {
+void PresenterMain::removeObject([[maybe_unused]] ExplorerObject* pObjectToRemove) {
+#ifdef USE_OLD_UI
 	if (auto element = dynamic_cast<SceneExplorerObject*>(pObjectToRemove)) {
 		loadedScene->removeObject(element->getObject());
 	}
+#endif
 }
 
-void PresenterMain::removeExtension(sdk::Extension* pExtensionToRemove) {
+void PresenterMain::removeExtension([[maybe_unused]] sdk::Extension* pExtensionToRemove) {
+#ifdef USE_OLD_UI
 	loadedScene->removeExtension(pExtensionToRemove);
+#endif
 }
 
 void PresenterMain::openFile(const std::filesystem::path &pPathToFile) {
 	if (!pPathToFile.has_extension()) return;
 	auto ext = pPathToFile.extension().string();
+#ifdef USE_OLD_UI
 	if (ext == ".enscene")
 		if (const auto msg = loadedScene->load(pPathToFile)) { displayError(msg); }
+#endif
 	if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") {
 		auto dataPath = modelMain->getProject()->getProjectDataPath();
 		auto resourceUri = relative(pPathToFile, dataPath);
@@ -342,7 +382,8 @@ void PresenterMain::createResource(const std::filesystem::path &pPathToCreate, c
 	editingResources->addResource(resource);
 }
 
-void PresenterMain::createScene(const std::filesystem::path &pPathToCreate) {
+void PresenterMain::createScene([[maybe_unused]] const std::filesystem::path &pPathToCreate) {
+#ifdef USE_OLD_UI
 	std::filesystem::path pathToCreate = !is_directory(pPathToCreate) ? pPathToCreate.parent_path() : pPathToCreate;
 	int id = 0;
 	std::string sceneName;
@@ -351,6 +392,7 @@ void PresenterMain::createScene(const std::filesystem::path &pPathToCreate) {
 		if (!exists(pathToCreate / sceneName)) break;
 	}
 	if (const auto msg = loadedScene->load(pathToCreate / sceneName)) { displayError(msg); }
+#endif
 }
 
 void PresenterMain::createScript(const std::filesystem::path &pPathToCreate) {
@@ -433,7 +475,10 @@ void PresenterMain::deleteFile(const std::filesystem::path &pPathToDelete) {
 			auto root = modelMain->getProject()->getProjectDataPath();
 			if (pPathToDelete != "/" && pPathToDelete != root) { uri = relative(pPathToDelete, root); }
 			auto ext = pPathToDelete.extension().string();
+
+#ifdef USE_OLD_UI
 			if (ext == ".enscene") { loadedScene->unload(); }
+#endif
 			if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") { editingResources->deleteResource(uri); }
 		}
 	};

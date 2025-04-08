@@ -45,7 +45,6 @@ class MainWindow : public IViewMain,
 #ifdef USE_OLD_UI
 	Gtk::Notebook panedTabs;
 #endif
-	std::shared_ptr<ResourcesContext> resourcesContext;
 
 public:
 	static std::shared_ptr<MainWindow> create(const std::shared_ptr<IWidgetContext> &pContext,
@@ -107,10 +106,6 @@ public:
 	void openTab(int32_t pTabIndex) override;
 
 	ui::MultiPaned* getMultiPanedByIndex(int32_t pIndex) override;
-
-	[[nodiscard]] const std::shared_ptr<ResourcesContext> &getResourcesContext() const override {
-		return resourcesContext;
-	}
 
 	std::future<void> executeInMainThread(const sigc::slot<void(std::promise<void>)> &pSlot) override {
 		return ThreadDispatcher::executeInMainThread(pSlot);

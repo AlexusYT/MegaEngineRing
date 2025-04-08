@@ -150,6 +150,7 @@ ReportMessagePtr Application::setupGlfw() {
 
 int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 	window->runMainLoop();
+	window.reset();
 	return 0;
 #ifndef EDITOR_SDK
 	using namespace sdk;

@@ -24,8 +24,7 @@
 #include "EngineSDK/utils/Transformation.h"
 
 namespace mer::sdk {
-Transformable::Transformable()
-	: globalTransform(Transformation::create()), localTransform(Transformation::create()) {
+Transformable::Transformable() : globalTransform(Transformation::create()), localTransform(Transformation::create()) {
 	localTransform->connectOnChanged([this](const glm::mat4 & /*pNewMatrix*/) {
 		onLocalTransformChanged(localTransform);
 		updateTransform();

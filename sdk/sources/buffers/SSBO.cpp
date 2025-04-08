@@ -25,17 +25,23 @@
 #include <epoxy/gl.h>
 
 namespace mer::sdk {
-SSBO::SSBO() { glGenBuffers(1, &name); }
+
+void SsboImpl::bindBufferBase(const uint32_t pBinding) const {
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name);
+}
+
+void SsboImpl::unbindBufferBase(const uint32_t pBinding) { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, 0); }
+
+SSBO::SSBO() { glCreateBuffers(1, &name); }
 
 SSBO::~SSBO() { glDeleteBuffers(1, &name); }
 
 void SSBO::setData(const void* pData, const int64_t pSize, const BufferUsageEnum pUsage) {
-	bind();
 	data = pData;
 	size = pSize;
 	usage = pUsage;
 
-	glBufferData(GL_SHADER_STORAGE_BUFFER, pSize, pData, usage);
+	glNamedBufferData(name, pSize, pData, usage);
 }
 
 void SSBO::bind() const { glBindBuffer(GL_SHADER_STORAGE_BUFFER, name); }
@@ -44,30 +50,20 @@ void SSBO::unbind() const {}
 
 uint32_t SSBO::native() const { return name; }
 
-void SSBO::bindBufferBase(const uint32_t pBinding) {
-
-	baseIndex = pBinding;
-
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name);
-}
+void SSBO::bindBufferBase(const uint32_t pBinding) { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name); }
 
 void SSBO::unbindBufferBase(const uint32_t pBinding) { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, 0); }
 
 void SSBO::bufferSubData(int32_t pOffset, int64_t pSize, const void* pData) {
-	bind();
-	glBufferSubData(GL_SHADER_STORAGE_BUFFER, pOffset, pSize, pData);
+	glNamedBufferSubData(name, pOffset, pSize, pData);
 }
 
 void SSBO::reallocate(int64_t pNewSize, const void* pNewData) {
 
 	data = pNewData;
 	size = pNewSize;
-	if (name != 0) {
-		unbindBufferBase(baseIndex);
-		glDeleteBuffers(1, &name);
-	}
-	glGenBuffers(1, &name);
+	if (name != 0) { glDeleteBuffers(1, &name); }
+	glCreateBuffers(1, &name);
 	setData(pNewData, pNewSize, usage);
-	bindBufferBase(baseIndex);
 }
 } // namespace mer::sdk
