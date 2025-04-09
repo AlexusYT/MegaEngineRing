@@ -46,7 +46,9 @@ class PresenterMain : public IPresenterMain {
 	std::shared_ptr<IViewMain> viewMain;
 	std::shared_ptr<IModelMain> modelMain;
 	std::shared_ptr<PresenterProjectExplorer> presenterProjectExplorer;
+#ifdef USE_OLD_UI
 	std::shared_ptr<project::LoadedScene> loadedScene;
+#endif
 	std::shared_ptr<EditingResourceList> editingResources;
 	std::vector<std::shared_ptr<IPresenter>> presenters;
 

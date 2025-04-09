@@ -26,6 +26,7 @@
 #include "EngineUtils/utils/Property.h"
 #include "EngineUtils/utils/UUID.h"
 
+#include "EngineSDK/resources/materials/IMaterialResource.h"
 namespace mer::sdk {
 class IMaterialResource;
 class Prefab;
@@ -52,7 +53,10 @@ public:
 
 	Property<std::shared_ptr<IMaterialResource>> material;
 
+protected:
+	void update();
 
+public:
 	std::shared_ptr<PrefabElementInstance> createInstance();
 
 	void addInstance(std::shared_ptr<PrefabElementInstance> pInstance);
@@ -64,6 +68,8 @@ public:
 	[[nodiscard]] const UUID &getUuid() const { return uuid; }
 
 	[[nodiscard]] const std::string &getName() const { return name; }
+
+	void setName(const std::string &pName) { name = pName; }
 
 	virtual const std::vector<float> &getData() const = 0;
 

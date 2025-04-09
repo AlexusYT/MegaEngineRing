@@ -25,17 +25,19 @@
 #include <algorithm>
 #include <epoxy/gl.h>
 
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
 #include "EngineSDK/prefabs/IPrefabElementInstance.h"
 #include "EngineSDK/prefabs/PrefabSsbo.h"
 #include "EngineSDK/prefabs/elements/PrefabElement.h"
 #include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
 #include "EngineSDK/prefabs/elements/PrefabElementsSsbo.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
+#include "EngineSDK/resources/shaders/ShaderProgram.h"
 
 namespace mer::sdk {
 Prefab::Prefab()
-	: prefabElementsSsbo(PrefabElementsSsbo::create()), prefabSsbo(PrefabSsbo::create()), visible(nullptr, ""),
-	  material(nullptr, "") {
+	: name("UnnamedPrefab"), uuid(UUID::newInstance()), prefabElementsSsbo(PrefabElementsSsbo::create()),
+	  visible(nullptr, ""), material(nullptr, "") {
+	prefabSsbo = PrefabSsbo::create();
 	visible = true;
 	material.connectEvent([this](const std::shared_ptr<IMaterialResource> &pMaterial) {
 		for (auto element: elementsList) { element->onParentMaterialChanged(pMaterial); }
@@ -49,7 +51,8 @@ Prefab::~Prefab() {}
 void Prefab::addElement(const std::shared_ptr<PrefabElement> &pPrefabElement) {
 	pPrefabElement->setPrefab(this);
 	pPrefabElement->setIdInPrefab(static_cast<uint32_t>(elementsList.size()));
-	elements.emplace(pPrefabElement->getName(), pPrefabElement);
+	auto elementUuid = pPrefabElement->getUuid();
+	elements.emplace(elementUuid, pPrefabElement);
 	elementsList.emplace_back(pPrefabElement.get());
 	auto elementMeshData = pPrefabElement->getData();
 	pPrefabElement->setDataCount(elementMeshData.size());
@@ -65,7 +68,7 @@ void Prefab::addElement(const std::shared_ptr<PrefabElement> &pPrefabElement) {
 		if (auto interface = std::dynamic_pointer_cast<IPrefabElementInstance>(elementInstance))
 			interface->setPrefabInstance(instance.get());
 		prefabElementsSsbo->trackInstance(elementInstance.get());
-		instance->addElement(pPrefabElement->getUuid(), elementInstance);
+		instance->addElement(elementUuid, elementInstance);
 	}
 	prefabElementsSsbo->setElementsPerInstance(static_cast<uint32_t>(elementsList.size()));
 	pPrefabElement->onParentMaterialChanged(material);
@@ -90,25 +93,25 @@ void Prefab::removeElement(const std::shared_ptr<PrefabElement> &pPrefabElement)
 		element->setIndicesStart(element->getIndicesStart() - (*resultIter)->getIndicesCount());
 		element->setDataStart(element->getDataStart() - (*resultIter)->getDataCount());
 	}
+	auto elementUuid = pPrefabElement->getUuid();
 	elementsList.erase(resultIter);
-	elements.erase(pPrefabElement->getName());
+	elements.erase(elementUuid);
 	uint32_t id = 0;
 	for (auto element: elementsList) {
 		element->setIdInPrefab(id);
 		id++;
 	}
 	for (auto instance: instances) {
-		auto uuid = pPrefabElement->getUuid();
-		auto elementInstance = instance->getElement(uuid);
-		instance->removeElement(uuid);
+		auto elementInstance = instance->getElement(elementUuid);
+		instance->removeElement(elementUuid);
 		prefabElementsSsbo->untrackInstance(elementInstance.get());
 	}
 	prefabElementsSsbo->setElementsPerInstance(static_cast<uint32_t>(elementsList.size()));
 	pPrefabElement->setPrefab(nullptr);
 }
 
-std::shared_ptr<PrefabElement> Prefab::getElement(const std::string &pElementName) {
-	const auto iter = elements.find(pElementName);
+std::shared_ptr<PrefabElement> Prefab::getElement(const UUID &pElementUuid) {
+	const auto iter = elements.find(pElementUuid);
 	if (iter == elements.end()) return nullptr;
 	return iter->second;
 }
@@ -124,7 +127,7 @@ void Prefab::addInstance(const std::shared_ptr<PrefabInstance> &pInstance) {
 	if (auto interface = std::dynamic_pointer_cast<IPrefabInstance>(pInstance))
 		interface->setInstanceId(static_cast<uint32_t>(instances.size()));
 	instances.emplace_back(pInstance);
-	for (auto &[name, element]: elements) {
+	for (auto &[elementName, element]: elements) {
 		auto elementInstance = element->createInstance();
 
 		if (auto interface = std::dynamic_pointer_cast<IPrefabElementInstance>(elementInstance))
@@ -135,7 +138,15 @@ void Prefab::addInstance(const std::shared_ptr<PrefabInstance> &pInstance) {
 	prefabSsbo->trackInstance(pInstance.get());
 }
 
+void Prefab::updateElement(PrefabElement* /*pElement*/) { /*pElement*/ }
+
 ReportMessagePtr Prefab::onInitialize() {
+	prefabElementsSsbo->initialize();
+	createBuffers();
+	return nullptr;
+}
+
+void Prefab::createBuffers() {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &dataBuffer);
 	glGenBuffers(1, &indexBuffer);
@@ -158,9 +169,7 @@ ReportMessagePtr Prefab::onInitialize() {
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(5 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glBindVertexArray(0);
-
 	buffersDirty = false;
-	return nullptr;
 }
 
 void Prefab::render() {
@@ -170,11 +179,11 @@ void Prefab::render() {
 	prefabSsbo->render();
 	if (!shaderProgram) return;
 	shaderProgram->use();
-	prefabElementsSsbo->bindBufferBase(1);
+	prefabElementsSsbo->bind(1);
 	prefabSsbo->bindBufferBase(2);
 	if (buffersDirty) {
-		onUninitialize();
-		onInitialize();
+		deleteBuffers();
+		createBuffers();
 	}
 	glBindVertexArray(vao);
 
@@ -194,9 +203,14 @@ void Prefab::render() {
 	glBindVertexArray(0);
 }
 
-void Prefab::onUninitialize() {
+void Prefab::deleteBuffers() {
 	if (vao) glDeleteVertexArrays(1, &vao);
 	if (dataBuffer) glGenBuffers(1, &dataBuffer);
 	if (indexBuffer) glGenBuffers(1, &indexBuffer);
+}
+
+void Prefab::onUninitialize() {
+	prefabElementsSsbo.reset();
+	prefabSsbo.reset();
 }
 } // namespace mer::sdk

@@ -33,6 +33,8 @@ public:
 	virtual void setSlotCreateModel(
 		const sigc::slot<std::shared_ptr<Gio::ListModel>(const std::shared_ptr<Glib::ObjectBase> &)> &pSlot) = 0;
 
+	virtual void setElements(const std::shared_ptr<Gio::ListModel> &pArray) = 0;
+
 	virtual void setSelectionChangedSlot(const sigc::slot<void(ProjectExplorerElement* pElement)> &pSlot) = 0;
 
 	virtual void setSelectOnDoubleClick(bool pSelectOnDoubleClick = true) = 0;

@@ -30,6 +30,7 @@
 #include "EngineSDK/render/IRenderable.h"
 #include "EngineSDK/render/Initializable.h"
 #include "PrefabInstance.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
 
 namespace mer::sdk {
 class ShaderProgram;
@@ -41,7 +42,7 @@ class PrefabElement;
 class PrefabInstance;
 
 class Prefab : public Initializable, public IRenderable {
-	std::unordered_map<std::string, std::shared_ptr<PrefabElement>> elements;
+	std::unordered_map<UUID, std::shared_ptr<PrefabElement>> elements;
 	std::list<PrefabElement*> elementsList;
 	uint32_t dataBuffer{};
 	std::vector<float> data;
@@ -49,6 +50,8 @@ class Prefab : public Initializable, public IRenderable {
 	std::vector<uint16_t> indices;
 	bool buffersDirty{true};
 	uint32_t vao{};
+	std::string name;
+	UUID uuid{};
 
 	std::vector<std::shared_ptr<PrefabInstance>> instances;
 	std::shared_ptr<PrefabElementsSsbo> prefabElementsSsbo;
@@ -70,9 +73,9 @@ public:
 
 	void removeElement(const std::shared_ptr<PrefabElement> &pPrefabElement);
 
-	std::shared_ptr<PrefabElement> getElement(const std::string &pElementName);
+	std::shared_ptr<PrefabElement> getElement(const UUID &pElementUuid);
 
-	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<PrefabElement>> &getElements() const {
+	[[nodiscard]] const std::unordered_map<UUID, std::shared_ptr<PrefabElement>> &getElements() const {
 		return elements;
 	}
 
@@ -84,16 +87,25 @@ public:
 
 	void addInstance(const std::shared_ptr<PrefabInstance> &pInstance);
 
+	void updateElement(PrefabElement* pElement);
+
 	[[nodiscard]] const std::shared_ptr<ShaderProgram> &getShaderProgram() const { return shaderProgram; }
 
-	void setShaderProgram(const std::shared_ptr<ShaderProgram> &pShaderProgram) {
-		shaderProgram = pShaderProgram;
-	}
+	void setShaderProgram(const std::shared_ptr<ShaderProgram> &pShaderProgram) { shaderProgram = pShaderProgram; }
 
-protected:
+	[[nodiscard]] const std::string &getName() const { return name; }
+
+	void setName(const std::string &pName) { name = pName; }
+
+	[[nodiscard]] const UUID &getUuid() const { return uuid; }
+
 	ReportMessagePtr onInitialize() override;
 
+	void createBuffers();
+
 	void render() override;
+
+	void deleteBuffers();
 
 	void onUninitialize() override;
 

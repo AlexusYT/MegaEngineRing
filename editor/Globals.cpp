@@ -38,6 +38,8 @@ void Globals::init() {
 	if (!config) throw std::runtime_error("Error while getting APPDATA");
 	configPath = std::filesystem::path(config) / "MegaEngineRing";
 	create_directories(configPath);
+	cachePath = home / ".cache/MegaEngineRing/";
+	create_directories(cachePath);
 
 	#else
 
@@ -48,5 +50,7 @@ void Globals::init() {
 	create_directories(projectsPath);
 	configPath = home / ".config/MegaEngineRing";
 	create_directories(configPath);
+	cachePath = home / ".cache/MegaEngineRing/";
+	create_directories(cachePath);
 	#endif
 }

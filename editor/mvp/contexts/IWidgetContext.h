@@ -23,6 +23,14 @@
 #define IWIDGETCONTEXT_H
 
 namespace mer::editor::mvp {
+class EditorTool;
+}
+
+namespace mer::sdk {
+class UiBase;
+} // namespace mer::sdk
+
+namespace mer::editor::mvp {
 
 class IWidgetContext {
 public:
@@ -30,10 +38,18 @@ public:
 
 	virtual void addWidget(Gtk::Widget* pWidget) = 0;
 
+	virtual void addWindow(sdk::UiBase* pWidget);
+
+	virtual void addTool(EditorTool* pWidget);
+
 	virtual void removeWidget() = 0;
 
 	virtual void setTitle(const std::string &pTitle) = 0;
 };
+
+inline void IWidgetContext::addWindow(sdk::UiBase* /*pWidget*/) {}
+
+inline void IWidgetContext::addTool(EditorTool* /*pWidget*/) {}
 } // namespace mer::editor::mvp
 
 

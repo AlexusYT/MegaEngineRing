@@ -25,8 +25,12 @@
 #include <epoxy/gl.h>
 // Must be included after epoxy
 #include <GLFW/glfw3.h>
+#include <thread>
 
+#include "EngineSDK/scene/SceneUi.h"
 #include "EngineUtils/utils/Logger.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 namespace mer::sdk {
 Window::Window() {}
@@ -55,8 +59,18 @@ void Window::show() {
 				const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
 				win->onKeyChanged(pKey, pScancode, pAction, pMods);
 			});
+		glfwSetScrollCallback(native, [](GLFWwindow* pWindow, double pXOffset, double pYOffset) {
+			const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
+			win->onMouseScroll(pXOffset, pYOffset);
+		});
+		glfwSetMouseButtonCallback(native,
+								   [](GLFWwindow* pWindow, const int pButton, const int pAction, const int pMods) {
+									   const auto win = static_cast<Window*>(glfwGetWindowUserPointer(pWindow));
+									   win->onMouseButton(pButton, pAction, pMods);
+								   });
 
 		makeCurrent();
+		init();
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, false);
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(
@@ -186,23 +200,111 @@ bool Window::isCloseRequest() const {
 	return false;
 }
 
-void Window::onSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
+void Window::addScene(const std::shared_ptr<SceneUi> &pScene) {
+	pScene->setWindow(this);
+	sceneUis.emplace_back(pScene);
+}
 
-void Window::onCursorPosChanged(double /*pX*/, double /*pY*/) {}
+void Window::removeScene(const std::shared_ptr<SceneUi> &pScene) { erase(sceneUis, pScene); }
 
-void Window::onKeyChanged(int /*pKey*/, int /*pScancode*/, int /*pAction*/, int /*pMods*/) {}
+void Window::runMainLoop() {
+	setContextVersion(3, 0);
+
+
+	// Create window with graphics context
+	show();
+	glfwMaximizeWindow(native);
+	glfwSwapInterval(1); // Enable vsync
+	IMGUI_CHECKVERSION();
+	for (auto ui: sceneUis) { ui->initialize(); }
+	while (!glfwWindowShouldClose(native)) {
+		glfwMakeContextCurrent(native);
+		glfwPollEvents();
+		if (glfwGetWindowAttrib(native, GLFW_ICONIFIED) != 0) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			continue;
+		}
+		if (sceneUis.empty() && imGuiContext) {
+			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplGlfw_Shutdown();
+			ImGui::DestroyContext(imGuiContext);
+			imGuiContext = nullptr;
+		}
+
+		if (!sceneUis.empty() && !imGuiContext) {
+			imGuiContext = ImGui::CreateContext();
+			ImGui::SetCurrentContext(imGuiContext);
+			ImGuiIO &io = ImGui::GetIO();
+			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+			io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+			// Setup Dear ImGui style
+			ImGui::StyleColorsDark();
+			auto &style = ImGui::GetStyle();
+			style.FrameRounding = 5.0f;
+			style.FrameBorderSize = 2.0f;
+
+			//ImGui::StyleColorsLight();
+
+			// Setup Platform/Renderer backends
+			ImGui_ImplGlfw_InitForOpenGL(native, true);
+			ImGui_ImplOpenGL3_Init("#version 130");
+		}
+
+		if (imGuiContext) {
+			ImGui::SetCurrentContext(imGuiContext);
+			// Start the Dear ImGui frame
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+
+			for (auto sceneUi: sceneUis) {
+				if (!sceneUi->isInited()) continue;
+				sceneUi->updateUi();
+			}
+			ImGui::Render();
+		}
+		for (auto sceneUi: sceneUis) {
+			if (!sceneUi->isInited()) continue;
+			glEnable(GL_MULTISAMPLE);
+			sceneUi->customRender();
+			glDisable(GL_MULTISAMPLE);
+		}
+		int displayW, displayH;
+		glfwGetFramebufferSize(native, &displayW, &displayH);
+		glViewport(0, 0, displayW, displayH);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		if (imGuiContext) { ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); }
+		glfwSwapBuffers(native);
+	}
+	for (auto ui: sceneUis) { ui->uninitialize(); }
+	sceneUis.clear();
+}
+
+void Window::onSizeChanged(int pWidth, int pHeight) {
+	for (auto sceneUi: sceneUis) sceneUi->onSizeChanged(pWidth, pHeight);
+}
+
+void Window::onCursorPosChanged(double pX, double pY) {
+	for (auto sceneUi: sceneUis) sceneUi->onCursorPosChanged(pX, pY);
+}
+
+void Window::onKeyChanged(int pKey, int pScancode, int pAction, int pMods) {
+	for (auto sceneUi: sceneUis) sceneUi->onKeyChanged(pKey, pScancode, pAction, pMods);
+}
+
+void Window::onMouseScroll(double pXOffset, double pYOffset) {
+	for (auto sceneUi: sceneUis) sceneUi->onMouseScroll(pXOffset, pYOffset);
+}
+
+void Window::onMouseButton(int pButton, int pAction, int pMods) {
+	for (auto sceneUi: sceneUis) sceneUi->onMouseButton(pButton, pAction, pMods);
+}
 
 sdk::ReportMessagePtr Window::init() {
 	makeCurrent();
-	/*glewExperimental = true;
-	if (auto error = glewInit(); error != GLEW_OK) {
-		auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to init glew");
-		msg->setMessage("Error occurred");
-		msg->addInfoLine("Error num: {}", error);
-		msg->addInfoLine("Error msg: {}", reinterpret_cast<const char*>(glewGetErrorString(error)));
-		return msg;
-	}*/
 	return nullptr;
 }
 

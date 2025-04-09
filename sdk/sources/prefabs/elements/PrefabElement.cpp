@@ -21,7 +21,9 @@
 
 #include "EngineSDK/prefabs/elements/PrefabElement.h"
 
+#include "EngineSDK/prefabs/Prefab.h"
 #include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
+#include "EngineSDK/resources/materials/IMaterialResource.h"
 #include "EngineUtils/utils/UUID.h"
 
 namespace mer::sdk {
@@ -31,6 +33,10 @@ PrefabElement::PrefabElement(const std::string &pName)
 	material.connectEvent([this](const std::shared_ptr<IMaterialResource> &pMaterial) {
 		for (auto instance: instances) { instance->onParentMaterialChanged(pMaterial); }
 	});
+}
+
+void PrefabElement::update() {
+	if (prefab) prefab->updateElement(this);
 }
 
 std::shared_ptr<PrefabElementInstance> PrefabElement::createInstance() {

@@ -25,6 +25,7 @@
 
 #include "EngineSDK/buffers/SSBO.h"
 #include "EngineSDK/render/IRenderable.h"
+#include "EngineSDK/render/Initializable.h"
 
 namespace sigc {
 struct scoped_connection;
@@ -37,12 +38,13 @@ class PrefabElementInstanceData;
 
 namespace mer::sdk {
 
-class PrefabElementsSsbo : public SSBO, public IRenderable {
+class PrefabElementsSsbo : public IRenderable, public Initializable {
 	std::unordered_map<PrefabElementInstance*, sigc::scoped_connection> instances;
 	std::vector<PrefabElementInstanceData> instancesData;
 	uint32_t elementsPerInstance{};
 	void* ssboData{};
 	int64_t dataSize{};
+	std::shared_ptr<SSBO> ssbo;
 
 	bool dirty{true};
 
@@ -68,6 +70,12 @@ public:
 		elementsPerInstance = pElementsPerInstance;
 		onDataChanged();
 	}
+
+	void bind(uint32_t pBinding) const;
+
+protected:
+	ReportMessagePtr onInitialize() override;
+	void onUninitialize() override;
 
 private:
 	void onDataChanged();

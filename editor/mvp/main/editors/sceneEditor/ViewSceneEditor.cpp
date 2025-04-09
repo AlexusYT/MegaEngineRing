@@ -23,11 +23,27 @@
 
 #include <mvp/main/MainWindow.h>
 
+#include "EngineSDK/gltf/GltfModel.h"
+#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/meshes/BlockPlaneMesh.h"
+#include "EngineSDK/scene/Scene.h"
+#include "EngineSDK/scene/Scene3D.h"
+#include "imgui_internal.h"
+#include "mvp/contexts/UiWindowContext.h"
 #include "mvp/main/centerWindow/TabPlaceholder.h"
 #include "mvp/main/editors/IPresenterSceneEditor.h"
+#include "mvp/main/treeObjectWindow/ModelObjectsTree.h"
+#include "mvp/main/treeObjectWindow/PresenterObjectsTree.h"
+#include "mvp/main/treeObjectWindow/ViewObjectsTree.h"
+#include "mvp/scenePreview/ModelScenePreview.h"
+#include "mvp/scenePreview/ViewScenePreview.h"
+#include "mvp/scenePreview/sceneEditor/PresenterSceneEditorPreview.h"
 
 namespace mer::editor::mvp {
-ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
+ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext)
+	: UiWindow("", "Scene Editor"), context(pContext) {
+	setWindowFlags(ImGuiWindowFlags_MenuBar);
+#ifdef USE_OLD_UI
 	modeSwitch.set_margin(5);
 	modeSwitch.set_sensitive(false);
 	Gtk::Label simulatingLabel("Simulation");
@@ -93,8 +109,13 @@ ViewSceneEditor::ViewSceneEditor(const std::shared_ptr<IWidgetContext> &pContext
 			return true;
 		},
 		16);
+#endif
 }
 
+void ViewSceneEditor::updateUi() { ImGui::Text("Scene Editor"); }
+
+
+#ifdef USE_OLD_UI
 sigc::connection ViewSceneEditor::connectRender(const sigc::slot<bool(const Glib::RefPtr<Gdk::GLContext> &)> &pSlot) {
 
 	return area.signal_render().connect(pSlot, false);
@@ -131,8 +152,106 @@ void ViewSceneEditor::throwIfError() { area.throw_if_error(); }
 void ViewSceneEditor::emitResize() { area.queue_resize(); }
 
 void ViewSceneEditor::setTitle(const std::string &pTitle) { context->setTitle(pTitle); }
-
-void ViewSceneEditor::openView() { context->addWidget(&mainWidget); }
+#endif
+void ViewSceneEditor::openView() {
+#ifdef USE_OLD_UI
+	context->addWidget(&mainWidget);
+#else
+	context->addWindow(this);
+#endif
+}
 
 void ViewSceneEditor::closeView() { context->removeWidget(); }
+
+SceneEditor::SceneEditor(const std::string &pName) : Editor(pName) {
+
+	auto previewView = ViewScenePreview::create("SceneEditorPreview", EditorContext::create(this));
+	scenePreviewView = previewView;
+	auto previewModel = std::make_shared<ModelScenePreview>();
+	//previewModel->setScene(sdk::Scene3D::create());
+	scenePreviewPresenter = PresenterSceneEditorPreview::create(previewView, previewModel);
+	scenePreviewPresenter->run();
+	auto objView = std::make_shared<ViewObjectsTree>(EditorContext::create(this));
+	objTreeView = objView;
+	auto objTreeModel = std::make_shared<ModelObjectsTree>();
+	objTreePresenter = std::make_shared<PresenterObjectsTree>(objView, objTreeModel);
+	objTreePresenter->run();
+}
+
+void SceneEditor::updateUi() {
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu("Add")) {
+			if (ImGui::BeginMenu("Block")) {
+				if (ImGui::MenuItem("Plane")) { addPlane(); }
+				ImGui::MenuItem("Cube");
+				ImGui::MenuItem("Sphere");
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Model")) {
+				if (ImGui::MenuItem("GLTF...")) { addGltfModel(); }
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+}
+
+void SceneEditor::loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir /*pPanelDir*/) {
+	ImGuiID dockMainId = pDockspaceId;
+	ImGui::DockBuilderAddNode(dockMainId, ImGuiDockNodeFlags_DockSpace);
+	ImGui::DockBuilderSetNodeSize(dockMainId, pDockspaceSize);
+	ImGuiID dockIdRight = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.20f, NULL, &dockMainId);
+
+	ImGui::DockBuilderDockWindow(scenePreviewView->getWindowName(currDockspaceId).c_str(), dockMainId);
+
+	ImGui::DockBuilderDockWindow(objTreeView->getWindowName(currDockspaceId).c_str(), dockIdRight);
+	ImGui::DockBuilderFinish(pDockspaceId);
+}
+
+void SceneEditor::addPlane() {
+	auto model = scenePreviewPresenter->getModel();
+	auto mesh = std::make_shared<sdk::BlockPlaneMesh>();
+	//mesh->initialize();
+	auto scene = model->getScene();
+	if (!scene) {
+		scene = sdk::Scene3D::create();
+		model->setScene(scene);
+	}
+	//scene->addMesh(mesh);
+	auto instance = sdk::MeshInstance::create("", mesh);
+	instance->setMesh(mesh);
+	scene->addMesh(mesh);
+	scenePreviewPresenter->getModel()->addNode(nullptr, instance);
+	//if (scenePreviewPresenter) scenePreviewPresenter->addPlane();
+}
+
+void SceneEditor::addGltfModel() {
+
+	sdk::ReportMessagePtr msg;
+	auto gltf = sdk::GltfModel::createFromFile("/home/alexus/.cache/MegaEngineRing/halo.glb", msg);
+
+	//auto gltf = sdk::GltfModel::createFromFile("/home/alexus/Downloads/models/Sphere.glb", msg);
+	//auto gltf = sdk::GltfModel::createFromFile("/home/alexus/Downloads/models/OrientationTest.gltf", msg);
+	if (!gltf) {
+		sdk::Logger::error(msg);
+		return;
+	}
+	auto model = scenePreviewPresenter->getModel();
+	auto scene = model->getScene();
+	if (!scene) {
+		scene = sdk::Scene3D::create();
+		model->setScene(scene);
+	}
+	for (auto material: gltf->getMaterials()) { scene->addMaterial(material); }
+	for (auto mesh: gltf->getMeshes()) { scene->addMesh(mesh); }
+
+	scene->mergeNodes(gltf->getNodes());
+	//for (auto rootNode: gltf->getDefaultScene()->getRootNodes()) { scene->addNode(nullptr, rootNode); }
+	/*for (auto node: gltf->getNodes()) {
+		if (auto meshInstance = std::dynamic_pointer_cast<sdk::MeshInstance>(node))
+			modelPreview->addNode(meshInstance->getMesh(), meshInstance);
+	}*/
+	//modelPreview->setScene(gltf->getDefaultScene());
+}
 } // namespace mer::editor::mvp

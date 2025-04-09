@@ -33,11 +33,14 @@ class OrbitCameraExtension : public PerspectiveProjectionCameraMod, public ICame
 protected:
 	OrbitCameraExtension();
 
+
 public:
 	ExtensionProperty<glm::mat4> propertyMatrix;
 	ExtensionProperty<glm::vec2> propertyAngle;
 	ExtensionProperty<glm::vec3> propertyTargetPosition;
 	ExtensionProperty<float> propertyDistance;
+	ExtensionProperty<glm::vec3> propertyPosition;
+	ExtensionProperty<glm::vec3> propertyUp;
 
 	METHOD_CREATE(OrbitCameraExtension)
 

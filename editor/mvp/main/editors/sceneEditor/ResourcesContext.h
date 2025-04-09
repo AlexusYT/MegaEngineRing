@@ -48,7 +48,6 @@ class ResourcesContext : public sdk::IResourceLoadExecutor {
 	std::shared_ptr<sdk::ILoadedResources> resources;
 	std::condition_variable cv;
 
-	std::shared_ptr<Gdk::GLContext> sharedContext;
 	std::list<std::jthread> threads;
 	sdk::IApplication* application{};
 	std::mutex headersLengthMutex;
@@ -57,7 +56,7 @@ class ResourcesContext : public sdk::IResourceLoadExecutor {
 	std::unordered_map<std::filesystem::path, std::shared_ptr<Request>> processingQueue;
 
 public:
-	explicit ResourcesContext(const std::shared_ptr<Gdk::GLContext> &pSharedContext) : sharedContext(pSharedContext) {
+	explicit ResourcesContext() {
 		for (uint32_t i = 0, maxI = std::max(std::thread::hardware_concurrency() / 2, 1u); i < maxI; i++) {
 			threads.emplace_back([this](const std::stop_token &pToken) { this->loop(pToken); });
 		}

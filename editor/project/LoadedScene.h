@@ -86,7 +86,7 @@ public:
 		onErrorOccurred.connect(pSlot);
 	}
 
-	void initScene() const;
+	void initScene();
 
 	void uninitScene() const;
 
@@ -128,7 +128,7 @@ public:
 	void renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const;
 
 	std::shared_ptr<sdk::Extension> addExtension(sdk::ISceneObject* pObject, const std::string &pType,
-													   const std::string &pName) const;
+												 const std::string &pName) const;
 
 	sigc::connection connectExtensionAdded(const sigc::slot<void(sdk::Extension* pExtension)> &pSlot) {
 		return onExtensionAdded.connect(pSlot);

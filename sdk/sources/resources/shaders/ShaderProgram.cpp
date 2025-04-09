@@ -87,7 +87,7 @@ void ShaderProgram::setUniform(const std::string &pName, const int pValue) const
 }
 
 void ShaderProgram::setUniform(const std::string &pName, const uint32_t pValue) const {
-	glUniform1ui(glGetUniformLocation(name, pName.c_str()), pValue);
+	glProgramUniform1ui(name, glGetUniformLocation(name, pName.c_str()), pValue);
 }
 
 void ShaderProgram::setUniform(const std::string &pName, const glm::vec3 &pValue) const {

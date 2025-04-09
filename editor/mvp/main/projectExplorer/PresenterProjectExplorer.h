@@ -38,6 +38,12 @@ public:
 
 	void setEntrySelectionChanged(const sigc::slot<void(ui::ProjectExplorerEntry*)> &pEntrySelectionChanged) override;
 
+	void createScene(const std::filesystem::path &pPathToFile) override;
+
+	void openInFilesystem(const std::filesystem::path &pPathToFile) override;
+
+	void deleteFile(const std::filesystem::path &pPathToDelete) override;
+
 	void addView(const std::shared_ptr<IView> &pNewView) override;
 
 	void removeView(const std::shared_ptr<IView> &pOldView) override;
@@ -46,9 +52,7 @@ public:
 
 	void stop() override;
 
-	std::string getTypeName() override {
-		return "PresenterProjectExplorer";
-	}
+	std::string getTypeName() override { return "PresenterProjectExplorer"; }
 };
 } // namespace mer::editor::mvp
 

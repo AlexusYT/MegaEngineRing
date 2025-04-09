@@ -21,6 +21,8 @@
 
 #ifndef IMATERIALRESOURCE_H
 #define IMATERIALRESOURCE_H
+#include <sigc++/slot.h>
+
 #include "EngineSDK/render/IRenderable.h"
 #include "MaterialData.h"
 

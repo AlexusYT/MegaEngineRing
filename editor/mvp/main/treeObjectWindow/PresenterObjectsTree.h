@@ -31,10 +31,12 @@ class IModelObjectsTree;
 
 class PresenterObjectsTree : public IPresenterObjectsTree {
 	std::shared_ptr<IModelObjectsTree> model;
-	std::vector<std::shared_ptr<IViewObjectsTree>> views;
+	std::shared_ptr<IViewObjectsTree> view;
 
 public:
-	explicit PresenterObjectsTree(const std::shared_ptr<IModelObjectsTree> &pModel) : model(pModel) {}
+	explicit PresenterObjectsTree(const std::shared_ptr<IViewObjectsTree> &pView,
+								  const std::shared_ptr<IModelObjectsTree> &pModel)
+		: model(pModel), view(pView) {}
 
 	void run() override;
 
@@ -42,9 +44,7 @@ public:
 
 	void addView(const std::shared_ptr<IView> &pNewView) override;
 
-	std::string getTypeName() override {
-		return "PresenterObjectsTree";
-	}
+	std::string getTypeName() override { return "PresenterObjectsTree"; }
 };
 
 } // namespace mer::editor::mvp

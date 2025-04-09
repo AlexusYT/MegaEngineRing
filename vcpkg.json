@@ -221,6 +221,10 @@
 		{
 			"name": "sqlitecpp",
 			"version>=": "3.3.2"
+		},
+		{
+			"name": "curlpp",
+			"version>=": "2018-06-15#11"
 		}
 	],
 	"default-features": [],

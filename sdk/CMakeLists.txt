@@ -52,6 +52,30 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/utils/Transformation.cpp
         sources/utils/Transformable.cpp
         sources/prefabs/PrefabSsbo.cpp
+        sources/scene/SceneUi.cpp
+        sources/ui/UiWindow.cpp
+        sources/ui/UiPopup.cpp
+        sources/ui/UiBase.cpp
+        sources/resources/shaders/builtin/DefaultProgram.cpp
+        sources/scene/Scene3D.cpp
+        sources/gltf/Accessor.cpp
+        sources/gltf/Accessor.cpp
+        sources/gltf/Primitive.cpp
+        sources/gltf/GltfModel.cpp
+        sources/gltf/Mesh.cpp
+        sources/gltf/MeshInstance.cpp
+        sources/gltf/Sampler.cpp
+        sources/gltf/Texture.cpp
+        sources/gltf/Image.cpp
+        sources/gltf/Material.cpp
+        sources/buffers/Framebuffer.cpp
+        sources/bounding/BoundingVolume.cpp
+        sources/bounding/VolumeAabb.cpp
+        sources/resources/shaders/builtin/BoundingVolumeProgram.cpp
+        sources/meshes/BlockPlaneMesh.cpp
+        sources/render/Renderer.cpp
+        sources/buffers/VertexBufferObject.cpp
+        sources/buffers/BasicBuffer.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/context/Window.h
@@ -151,6 +175,31 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/utils/Transformation.h
         include/EngineSDK/utils/Transformable.h
         include/EngineSDK/prefabs/PrefabSsbo.h
+        include/EngineSDK/scene/SceneUi.h
+        include/EngineSDK/ui/UiWindow.h
+        include/EngineSDK/ui/UiPopup.h
+        include/EngineSDK/ui/UiBase.h
+        include/EngineSDK/resources/shaders/builtin/DefaultProgram.h
+        include/EngineSDK/scene/Scene3D.h
+        include/EngineSDK/gltf/Accessor.h
+        include/EngineSDK/gltf/Accessor.h
+        include/EngineSDK/gltf/Primitive.h
+        include/EngineSDK/gltf/GltfModel.h
+        include/EngineSDK/gltf/Mesh.h
+        include/EngineSDK/gltf/MeshInstance.h
+        include/EngineSDK/gltf/Sampler.h
+        include/EngineSDK/gltf/Texture.h
+        include/EngineSDK/gltf/Image.h
+        include/EngineSDK/gltf/Material.h
+        include/EngineSDK/buffers/Framebuffer.h
+        include/EngineSDK/bounding/BoundingVolume.h
+        include/EngineSDK/bounding/VolumeAabb.h
+        include/EngineSDK/resources/shaders/builtin/BoundingVolumeProgram.h
+        include/EngineSDK/bounding/DebugGeometry.h
+        include/EngineSDK/meshes/BlockPlaneMesh.h
+        include/EngineSDK/render/Renderer.h
+        include/EngineSDK/buffers/VertexBufferObject.h
+        include/EngineSDK/buffers/BasicBuffer.h
 )
 
 foreach (SOURCE IN ITEMS ${ENGINE_SOURCES})
@@ -183,11 +232,13 @@ foreach (HEADER IN ITEMS ${ENGINE_HEADERS})
     endif ()
 endforeach ()
 
-add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} ${ENGINE_HEADERS})
+add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} imconfig_custom.cpp ${ENGINE_HEADERS})
 
 target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
 target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
+
+target_link_libraries(MegaEngineSDK_shared PRIVATE ImGUI)
 
 pkg_check_modules(GLFW REQUIRED IMPORTED_TARGET glfw3)
 if (LINUX)
@@ -212,8 +263,11 @@ target_link_libraries(MegaEngineSDK_shared PUBLIC glm::glm)
 target_link_libraries(MegaEngineSDK_shared PUBLIC stdc++exp MegaEngineUtils)
 target_include_directories(MegaEngineSDK_shared SYSTEM PUBLIC ${PNGPP_INCLUDE_DIRS})
 target_link_libraries(MegaEngineSDK_shared PUBLIC PNG::PNG)
+target_link_libraries(MegaEngineSDK_shared PUBLIC GLTFSDK)
+
 set_property(TARGET MegaEngineSDK_shared PROPERTY OUTPUT_NAME MegaEngineSDK)
 set_property(TARGET MegaEngineSDK_shared PROPERTY PREFIX "")
+target_compile_options(MegaEngineSDK_shared PRIVATE -Werror)
 
 add_custom_target(MegaEngineSDK)
 add_dependencies(MegaEngineSDK MegaEngineSDK_shared MegaEngineUtils)

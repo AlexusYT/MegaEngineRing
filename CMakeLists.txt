@@ -9,7 +9,6 @@ project(
         HOMEPAGE_URL "https://example.com/"
         LANGUAGES CXX
 )
-
 set(SDK_VERSION "0.1.0")
 
 include(cmake/project-is-top-level.cmake)
@@ -26,34 +25,12 @@ find_package(glm CONFIG REQUIRED)
 pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 include(GNUInstallDirs)
 
-#
-# Applies CMAKE_CXX_FLAGS to all targets in the current CMake directory.
-# After this operation, CMAKE_CXX_FLAGS is cleared.
-#
-macro(apply_global_cxx_flags_to_all_targets)
-    separate_arguments(_global_cxx_flags_list UNIX_COMMAND ${CMAKE_CXX_FLAGS})
-    get_property(_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
-    foreach (_target ${_targets})
-        target_compile_options(${_target} PUBLIC ${_global_cxx_flags_list})
-    endforeach ()
-    unset(CMAKE_CXX_FLAGS)
-    set(_flag_sync_required TRUE)
-endmacro()
-
-#
-# Removes the specified compile flag from the specified target.
-#   _target     - The target to remove the compile flag from
-#   _flag       - The compile flag to remove
-#
-# Pre: apply_global_cxx_flags_to_all_targets() must be invoked.
-#
-macro(remove_flag_from_target _target _flag)
-    get_target_property(_target_cxx_flags ${_target} COMPILE_OPTIONS)
-    if (_target_cxx_flags)
-        list(REMOVE_ITEM _target_cxx_flags ${_flag})
-        set_target_properties(${_target} PROPERTIES COMPILE_OPTIONS "${_target_cxx_flags}")
-    endif ()
-endmacro()
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+set(ENABLE_UNIT_TESTS OFF)
+set(ENABLE_SAMPLES OFF)
+add_subdirectory(submodules/glTF-SDK)
+target_include_directories(GLTFSDK SYSTEM PUBLIC "submodules/glTF-SDK/GLTFSDK/Inc/")
+target_compile_options(GLTFSDK PRIVATE -fPIC)
 
 add_library(ImGUI STATIC
         submodules/imgui/imgui.cpp
@@ -65,14 +42,16 @@ add_library(ImGUI STATIC
         submodules/imgui/imgui_widgets.cpp
         submodules/imgui/backends/imgui_impl_glfw.cpp
         submodules/imgui/backends/imgui_impl_opengl3.cpp)
+target_compile_options(ImGUI PRIVATE -fPIC)
 target_compile_options(ImGUI BEFORE PRIVATE -w)
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui")
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui/backends")
 
+target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/imconfig_custom.h>\"")
+
 add_subdirectory(utils)
 add_subdirectory(sdk)
 add_subdirectory(editor)
-
 
 # ---- Declare executable ----
 
@@ -84,9 +63,8 @@ endif ()
 set_property(TARGET MegaEngineEditor PROPERTY OUTPUT_NAME MegaEngineEditor)
 
 target_link_libraries(MegaEngineEditor PRIVATE MegaEngineEditor_lib)
+target_compile_options(MegaEngineEditor PRIVATE -Werror)
 
-apply_global_cxx_flags_to_all_targets()
-remove_flag_from_target(ImGUI -Werror)
 #[[install(TARGETS MegaEngineEditor
         RUNTIME ARCHIVE LIBRARY RUNTIME FRAMEWORK BUNDLE PUBLIC_HEADER RESOURCE)]]
 if (WIN32)

@@ -23,35 +23,39 @@
 #define TREEOBJECTWINDOW_H
 
 #include "IViewObjectsTree.h"
+#include "mvp/editor/Editor.h"
 
 namespace mer::editor::ui {
 class CustomTreeView;
 }
+
 namespace mer::editor::mvp {
 class IWidgetContext;
 class ExplorerObject;
 
-class ViewObjectsTree : public IViewObjectsTree {
+class ViewObjectsTree : public IViewObjectsTree, public EditorTool {
 public:
-	using SlotEntrySelectionChanged = sigc::slot<void(mvp::ExplorerObject*)>;
+	//using SlotEntrySelectionChanged = sigc::slot<void(mvp::ExplorerObject*)>;
 
 private:
-	Gtk::ScrolledWindow mainScrolledWindow;
-	ui::CustomTreeView* tree;
+	/*Gtk::ScrolledWindow mainScrolledWindow;
+	ui::CustomTreeView* tree;*/
 	std::shared_ptr<IWidgetContext> context;
 
 public:
 	ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext);
 
-	void setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) override;
+	//void setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) override;
 
 	void openView() override;
 
 	void closeView() override;
 
+	void onUpdate(bool pVisible) override;
+
 private:
-	static std::shared_ptr<Gio::MenuItem> createItem(const std::string &pName, const std::string &pAction,
-													 const Glib::VariantBase &pVariant);
+	/*static std::shared_ptr<Gio::MenuItem> createItem(const std::string &pName, const std::string &pAction,
+													 const Glib::VariantBase &pVariant);*/
 };
 } // namespace mer::editor::mvp
 

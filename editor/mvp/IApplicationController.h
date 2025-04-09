@@ -22,6 +22,11 @@
 #ifndef IAPPLICATIONCONTROLLER_H
 #define IAPPLICATIONCONTROLLER_H
 
+namespace mer::sdk {
+class SceneUi;
+class UiPopup;
+} // namespace mer::sdk
+
 namespace mer::editor::mvp {
 class IWidgetContext;
 class IPresenter;
@@ -38,7 +43,13 @@ public:
 
 	[[nodiscard]] virtual const std::shared_ptr<Gtk::Application> &getApp() const = 0;
 
+	[[nodiscard]] virtual const std::shared_ptr<sdk::SceneUi> &getSceneUi() const = 0;
+
 	virtual void setApp(const std::shared_ptr<Gtk::Application> &pApp) = 0;
+
+	virtual void setSceneUi(const std::shared_ptr<sdk::SceneUi> &pSceneUi) = 0;
+
+	virtual void showPopup(const std::string &pName) const = 0;
 };
 } // namespace mer::editor::mvp
 

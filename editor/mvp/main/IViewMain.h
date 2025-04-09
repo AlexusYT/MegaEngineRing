@@ -58,8 +58,6 @@ public:
 
 	virtual ui::MultiPaned* getMultiPanedByIndex(int32_t pIndex) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<ResourcesContext> &getResourcesContext() const = 0;
-
 	virtual std::future<void> executeInMainThread(const sigc::slot<void(std::promise<void>)> &pSlot) = 0;
 };
 } // namespace mer::editor::mvp

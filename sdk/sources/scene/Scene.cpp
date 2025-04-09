@@ -74,8 +74,8 @@ void Scene::switchCamera(ICamera* pNewCamera) {
 }
 
 void Scene::beforeRender() {
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 sdk::ReportMessagePtr Scene::initScene() {
@@ -83,8 +83,9 @@ sdk::ReportMessagePtr Scene::initScene() {
 	for (const auto &object: objects) {
 		if (auto msg = object->init()) return msg;
 	}
-	resourceExecutor->loadResourceAsync("Test.enmodel", [this](const std::shared_ptr<ResourceLoadResult> &pResult) {
-		if (!pResult->isReady()) return;
+	resourceExecutor->loadResourceAsync("Test.enmodel",
+										[this](const std::shared_ptr<ResourceLoadResult> & /*pResult*/) {
+											/*if (!pResult->isReady()) return;
 		auto model = std::dynamic_pointer_cast<Model3DResource>(pResult->getResource());
 		if (!model) return;
 		for (const auto &modelObject: model->getModelObjects()) {
@@ -107,12 +108,12 @@ sdk::ReportMessagePtr Scene::initScene() {
 		auto element2 = prefab->getElement("CustomPistol9mm.008");
 		auto mat = MaterialResource::create();
 		mat->setAlbedo(ColorComponent::create(1, 0, 0));
-		element2->material = mat;
-		/*auto &material = elementInst->material;
+		element2->material = mat;*/
+											/*auto &material = elementInst->material;
 		MaterialResource::create();
 		material->setAlbedo(ColorComponent::create(1, 0, 1));
 		material.notifyChanged();*/
-	});
+										});
 	resourceExecutor->loadResourceAsync("test.enmat", [this](const std::shared_ptr<ResourceLoadResult> &pResult) {
 		if (!pResult->isReady()) return;
 		prefab->material = std::dynamic_pointer_cast<IMaterialResource>(pResult->getResource());

@@ -29,10 +29,10 @@
 #include <glm/gtx/polar_coordinates.hpp>
 
 namespace mer::sdk {
-Transformation::Transformation() {}
+Transformation::Transformation(const glm::mat4 &pModelMatrix) : modelMatrix(pModelMatrix) {}
 
-std::shared_ptr<Transformation> Transformation::create() {
-	return std::shared_ptr<Transformation>(new Transformation());
+std::shared_ptr<Transformation> Transformation::create(const glm::mat4 &pModelMatrix) {
+	return std::shared_ptr<Transformation>(new Transformation(pModelMatrix));
 }
 
 void Transformation::translate(const glm::vec3 &pCoords) {
@@ -47,6 +47,11 @@ void Transformation::scale(const glm::vec3 &pScale) {
 
 void Transformation::rotate(const float pRadians, const glm::vec3 &pVector) {
 	modelMatrix = glm::rotate(modelMatrix, pRadians, pVector);
+	onChanged(modelMatrix);
+}
+
+void Transformation::rotateQuaternion(const glm::quat &pQuat) {
+	modelMatrix = modelMatrix * glm::mat4_cast(pQuat);
 	onChanged(modelMatrix);
 }
 

@@ -27,12 +27,15 @@
 #include "SSBO.h"
 
 namespace mer::sdk {
+enum class RenderPassMode : int32_t { REGULAR, OUTLINE };
+
 class ProgramWideShaderBuffer : public SSBO {
 	struct Data {
 		glm::mat4 viewProjMatrix{1};
 		glm::mat4 projectionMatrix{1};
 		glm::mat4 viewMatrix{1};
-		glm::vec3 camPos{0};
+		glm::vec4 camPos{0};
+		int32_t mode{0};
 	};
 
 	Data data{};
@@ -59,8 +62,13 @@ public:
 		dirty = true;
 	}
 
+	void setMode(RenderPassMode pMode) {
+		data.mode = static_cast<int32_t>(pMode);
+		dirty = true;
+	}
+
 	void setCameraPos(const glm::vec3 &pPosition) {
-		data.camPos = pPosition;
+		data.camPos = glm::vec4(pPosition, 1.0f);
 		dirty = true;
 	}
 };

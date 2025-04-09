@@ -33,8 +33,18 @@ public:
 
 	virtual void openView() = 0;
 
+	virtual void updateInterface() {}
+
 	virtual void closeView() = 0;
+
+	virtual void startConfirmation(const std::string &pTitle, const std::string &pMessage,
+								   const std::function<void(int pId)> &pResult,
+								   const std::vector<std::string> &pButtons = {"OK", "Cancel"});
 };
+
+inline void IView::startConfirmation(const std::string & /*pTitle*/, const std::string & /*pMessage*/,
+									 const std::function<void(int pId)> & /*pResult*/,
+									 const std::vector<std::string> & /*pButtons*/) {}
 } // namespace mer::editor::mvp
 
 

@@ -39,6 +39,7 @@ class ResourcesContext;
 class ModelSceneEditor : public IModelSceneEditor {
 	std::shared_ptr<project::LoadedScene> loadedScene;
 	std::shared_ptr<SceneOverlayElements> sceneOverlayElements;
+	bool inited{};
 
 public:
 	ModelSceneEditor();

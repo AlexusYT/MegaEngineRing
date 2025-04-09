@@ -23,15 +23,24 @@
 
 #include <project/Project.h>
 
+#include "IPresenterProjectExplorer.h"
 #include "entries/ProjectExplorerElement.h"
+#include "imgui_internal.h"
 #include "mvp/contexts/IWidgetContext.h"
+#include "mvp/dialogs/confirmationDialog/ConfirmationDialog.h"
 #include "ui/customWidgets/CustomSignalListItemFactory.h"
 #include "ui/customWidgets/CustomTreeView.h"
 #include "ui/utils/UiUtils.h"
 
 namespace mer::editor::mvp {
-ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
+ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &pContext)
+	: UiWindow("ViewProjectExplorer", "View Project Explorer##ViewProjectExplorer"), context(pContext) {
 
+	dialog = ConfirmationDialog::create("ProjectExplorer-confirm", "ConfirmDeletion");
+	dialog->setWindowFlags(ImGuiWindowFlags_NoResize);
+	addPopup(dialog);
+	setWindowFlags(ImGuiWindowFlags_MenuBar);
+#ifdef USE_OLD_UI
 	treeView = Gtk::make_managed<ui::CustomTreeView>();
 	treeView->set_halign(Gtk::Align::START);
 	mainScrolledWindow.set_child(*treeView);
@@ -43,30 +52,163 @@ ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &
 		auto str = pElement->getPath().string();
 		treeView->activate_action("file.open", Glib::Variant<Glib::ustring>::create(str));
 	});
+#endif
 }
 
 void ViewProjectExplorer::setSlotCreateModel(
-	const sigc::slot<std::shared_ptr<Gio::ListModel>(const std::shared_ptr<Glib::ObjectBase> &)> &pSlot) {
+	[[maybe_unused]] const sigc::slot<std::shared_ptr<Gio::ListModel>(const std::shared_ptr<Glib::ObjectBase> &)>
+		&pSlot) {
+#ifdef USE_OLD_UI
 	treeView->setSlotCreateModel(pSlot);
+#endif
 }
 
-void ViewProjectExplorer::setSelectionChangedSlot(const sigc::slot<void(ProjectExplorerElement* pElement)> &pSlot) {
+void ViewProjectExplorer::setElements(const std::shared_ptr<Gio::ListModel> &pArray) {
+#ifdef USE_OLD_UI
+	treeView->setSlotCreateModel(
+		[this, pArray](const Glib::RefPtr<Glib::ObjectBase> &pItem) -> Glib::RefPtr<Gio::ListModel> {
+			if (const auto col = std::dynamic_pointer_cast<ProjectExplorerElement>(pItem)) {
+				return col->getChildren();
+			}
+			return pArray;
+		});
+#else
+	array = pArray;
+#endif
+}
 
+void ViewProjectExplorer::setSelectionChangedSlot(
+	[[maybe_unused]] const sigc::slot<void(ProjectExplorerElement* pElement)> &pSlot) {
+
+#ifdef USE_OLD_UI
 	treeView->setSlotSelectionChanged([this, pSlot](Glib::ObjectBase* pObjectBase) {
 		const auto element = dynamic_cast<ProjectExplorerElement*>(pObjectBase);
 		if (!element) return;
 		pSlot(element);
 	});
+#endif
 }
 
-void ViewProjectExplorer::setSelectOnDoubleClick(const bool pSelectOnDoubleClick) {
+void ViewProjectExplorer::setSelectOnDoubleClick([[maybe_unused]] const bool pSelectOnDoubleClick) {
+#ifdef USE_OLD_UI
 	treeView->setSelectOnDoubleClick(pSelectOnDoubleClick);
+#endif
 }
 
-void ViewProjectExplorer::openView() { context->addWidget(&mainScrolledWindow); }
+void ViewProjectExplorer::openView() {
+#ifdef USE_OLD_UI
+	context->addWidget(&mainScrolledWindow);
+#else
+	context->addWindow(this);
+#endif
+}
 
 void ViewProjectExplorer::closeView() { context->removeWidget(); }
 
+void ViewProjectExplorer::updateUi() {
+
+	const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
+	/*auto slot = [this](const Glib::RefPtr<Glib::ObjectBase> &pItem) -> Glib::RefPtr<Gio::ListModel> {
+		if (const auto col = std::dynamic_pointer_cast<ProjectExplorerElement>(pItem)) { return col->getChildren(); }
+		return array;
+	};*/
+	static ImGuiTableFlags table_flags =
+		ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
+	if (ImGui::BeginTable("3ways", 2, table_flags)) {
+		// The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
+		ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoHide);
+		ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
+		ImGui::TableHeadersRow();
+
+		updateTreeLevel(array);
+
+		if (ImGui::BeginPopup("Menu123")) {
+			if (ImGui::BeginMenu("New Resource")) {
+				if (ImGui::MenuItem("Model")) {}
+				if (ImGui::MenuItem("Material")) {}
+				if (ImGui::MenuItem("Texture")) {}
+				ImGui::EndMenu();
+			}
+			if (ImGui::MenuItem("New Prefab")) {}
+			if (ImGui::MenuItem("New Folder")) {}
+			if (ImGui::MenuItem("New Scene")) {
+				if (selectedElement && presenter) presenter->createScene(selectedElement->getPath());
+			}
+			if (ImGui::MenuItem("New Script")) {}
+			ImGui::Separator();
+			ImGui::BeginDisabled();
+			if (ImGui::MenuItem("Rename")) {}
+			ImGui::SetItemTooltip("Not implemented yet");
+			ImGui::EndDisabled();
+			if (ImGui::MenuItem("Delete")) {
+				ImGui::OpenPopup(dialog->getId(), 0);
+				//b = true;
+				if (selectedElement && presenter) { presenter->deleteFile(selectedElement->getPath()); }
+			}
+			ImGui::Separator();
+			ImGui::BeginDisabled();
+			if (ImGui::MenuItem("Show in Files")) {
+				//if (selectedElement && presenter) { presenter->openInFilesystem(selectedElement->getPath()); }
+			}
+			ImGui::SetItemTooltip("Not implemented yet");
+			ImGui::EndDisabled();
+			ImGui::EndPopup();
+		}
+
+		ImGui::EndTable();
+	}
+	/*if (ImGui::BeginPopupModal("Delete?11###ProjectExplorer-delete", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+		ImGui::Text("All those beautiful files will be deleted.\nThis operation cannot be undone!");
+		ImGui::Separator();
+
+		if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		ImGui::SetItemDefaultFocus();
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		ImGui::EndPopup();
+	}*/
+}
+
+void ViewProjectExplorer::startConfirmation(const std::string &pTitle, const std::string &pMessage,
+											const std::function<void(int pId)> &pResult,
+											const std::vector<std::string> &pButtons) {
+	dialog->setTitle(pTitle);
+	dialog->setMessage(pMessage);
+	dialog->setButtons(pButtons);
+	dialog->setButtonClickedCallback(pResult);
+}
+
+void ViewProjectExplorer::updateTreeLevel(const std::shared_ptr<Gio::ListModel> &pElements) {
+
+
+	for (uint32_t i = 0; i < pElements->get_n_items(); ++i) {
+
+
+		auto node = pElements->get_typed_object<ProjectExplorerElement>(i);
+		ImGui::TableNextRow();
+		ImGui::TableNextColumn();
+		bool folder = node->getChildren()->get_n_items() > 0;
+
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAllColumns;
+		if (!folder) { flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; }
+		bool open = ImGui::TreeNodeEx(node->getName().c_str(), flags);
+		if (ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonRight) &&
+			ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)) {
+			ImGui::OpenPopup("Menu123", ImGuiPopupFlags_MouseButtonRight);
+			selectedElement = node;
+		}
+		//ImGui::OpenPopupOnItemClick(id.c_str(), ImGuiPopupFlags_MouseButtonRight);
+		ImGui::TableNextColumn();
+		ImGui::TextUnformatted(node->getTypeStr());
+		if (open && folder) {
+
+			updateTreeLevel(node->getChildren());
+			ImGui::TreePop();
+		}
+	}
+}
+
+#ifdef USE_OLD_UI
 void ViewProjectExplorer::addNameColumn() const {
 
 	const auto factory = ui::CustomSignalListItemFactory::create();
@@ -98,7 +240,6 @@ void ViewProjectExplorer::addNameColumn() const {
 }
 
 void ViewProjectExplorer::addTypeColumn() const {
-
 	const auto factory = ui::CustomSignalListItemFactory::create();
 	factory->signal_setup().connect([this](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
 		auto* label = Gtk::make_managed<Gtk::Label>();
@@ -127,8 +268,10 @@ void ViewProjectExplorer::addTypeColumn() const {
 	column->set_resizable(true);
 	treeView->append_column(column);
 }
+#endif
 
-void ViewProjectExplorer::onPathChanged(const std::filesystem::path &pPath) const {
+void ViewProjectExplorer::onPathChanged([[maybe_unused]] const std::filesystem::path &pPath) const {
+#ifdef USE_OLD_UI
 	auto menu = Gio::Menu::create();
 	const auto variant = Glib::Variant<Glib::ustring>::create(pPath.string());
 	const auto menuNewResource = Gio::Menu::create();
@@ -142,9 +285,12 @@ void ViewProjectExplorer::onPathChanged(const std::filesystem::path &pPath) cons
 	menuNew->append_item(ui::UiUtils::createMenuItem("Script", "new.script", variant));
 	menu->append_submenu("New", menuNew);
 	treeView->setMenu(menu);
+#endif
 }
 
-void ViewProjectExplorer::selectByUri(const std::filesystem::path &pPath) {
+void ViewProjectExplorer::selectByUri([[maybe_unused]] const std::filesystem::path &pPath) {
+
+#ifdef USE_OLD_UI
 	auto selection = std::dynamic_pointer_cast<Gtk::SingleSelection>(treeView->get_model());
 	if (!selection) return;
 	for (uint32_t i = 0, maxI = selection->get_n_items(); i < maxI; ++i) {
@@ -155,6 +301,7 @@ void ViewProjectExplorer::selectByUri(const std::filesystem::path &pPath) {
 		if (!pos) continue;
 		selection->select_item(pos.value(), true);
 	}
+#endif
 }
 
 std::optional<uint32_t> ViewProjectExplorer::getPositionByUri(const std::filesystem::path &pPath,

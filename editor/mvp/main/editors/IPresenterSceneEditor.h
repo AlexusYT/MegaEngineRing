@@ -32,6 +32,7 @@ namespace mer::editor::mvp {
 class IPresenterSceneEditor : public PresenterBase {
 public:
 	~IPresenterSceneEditor() override = default;
+	virtual void onRender() = 0;
 
 	virtual void onGridToggled(bool pState) = 0;
 

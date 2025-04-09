@@ -27,6 +27,7 @@ namespace mer::sdk {
 class IPropertyProvider;
 
 class PropertyBase {
+	friend class PropertyNotifiable;
 	std::string name;
 	std::string description;
 	IPropertyProvider* provider;
@@ -45,8 +46,10 @@ public:
 
 	void setPropertyDescription(const std::string &pDescription) { description = pDescription; }
 
-protected:
-	void notifyPropertyChanged();
+	/**
+	 * @brief Send notification to Property::valueChanged signal and IPropertyProvider::propertyChanged method.
+	 */
+	virtual void notifyChanged();
 };
 
 } // namespace mer::sdk

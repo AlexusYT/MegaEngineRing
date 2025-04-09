@@ -26,6 +26,7 @@ class Globals {
 	inline static std::filesystem::path logPath;
 	inline static std::filesystem::path projectsPath;
 	inline static std::filesystem::path configPath;
+	inline static std::filesystem::path cachePath;
 
 public:
 	static void init();
@@ -41,6 +42,10 @@ public:
 	[[nodiscard]] static const std::filesystem::path &getConfigPath() { return configPath; }
 
 	static void setConfigPath(const std::filesystem::path &pConfigPath) { configPath = pConfigPath; }
+
+	[[nodiscard]] static const std::filesystem::path &getCachePath() { return cachePath; }
+
+	static void setCachePath(const std::filesystem::path& pCachePath) { cachePath = pCachePath; }
 };
 
 

@@ -21,6 +21,8 @@
 
 #ifndef TRANSFORMATION_H
 #define TRANSFORMATION_H
+#include <glm/detail/type_quat.hpp>
+#include <glm/fwd.hpp>
 #include <glm/mat4x4.hpp>
 
 #include "EngineUtils/utils/Property.h"
@@ -32,13 +34,18 @@ class Transformation {
 	sigc::signal<void(const glm::mat4 &pNewMatrix)> onChanged;
 
 protected:
-	Transformation();
+	Transformation(const glm::mat4 &pModelMatrix);
 
 public:
-	static std::shared_ptr<Transformation> create();
+	static std::shared_ptr<Transformation> create(const glm::mat4 &pModelMatrix = glm::mat4{1});
 
 	void reset() {
 		modelMatrix = glm::mat4(1);
+		onChanged(modelMatrix);
+	}
+
+	void setMatrix(const glm::mat4 &pNewMatrix) {
+		modelMatrix = pNewMatrix;
 		onChanged(modelMatrix);
 	}
 
@@ -55,6 +62,11 @@ public:
 	}
 
 	void rotate(float pRadians, const glm::vec3 &pVector);
+
+	void rotateQuaternion(const glm::quat &pQuat);
+
+	// ReSharper disable once CppInconsistentNaming
+	void eulerAngleXZY(const float pX, const float pY, const float pZ) { eulerAngleXZY(glm::vec3(pX, pY, pZ)); }
 
 	// ReSharper disable once CppInconsistentNaming
 	void eulerAngleXZY(const glm::vec3 &pVector);

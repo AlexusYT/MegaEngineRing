@@ -25,19 +25,26 @@
 #include <mvp/main/IViewMain.h>
 #include <mvp/main/centerWindow/ViewCenterWindow.h>
 
+#include "EngineSDK/ui/UiWindow.h"
 #include "editors/sceneEditor/ResourcesContext.h"
 #include "ui/customWidgets/multipaned/MultiPaned.h"
 
 namespace mer::editor::mvp {
 class PanedLayoutTab;
 
-class MainWindow : public IViewMain, public Gtk::Window, ThreadDispatcher {
+class MainWindow : public IViewMain,
+#ifdef USE_OLD_UI
+				   public Gtk::Window,
+#endif
+				   public sdk::UiWindow,
+				   ThreadDispatcher {
 	std::shared_ptr<IWidgetContext> context;
 
 	Glib::RefPtr<Gtk::EventControllerKey> keyController;
 	IPresenterMain* presenter{};
+#ifdef USE_OLD_UI
 	Gtk::Notebook panedTabs;
-	std::shared_ptr<ResourcesContext> resourcesContext;
+#endif
 
 public:
 	static std::shared_ptr<MainWindow> create(const std::shared_ptr<IWidgetContext> &pContext,
@@ -49,6 +56,8 @@ public:
 
 	~MainWindow() override;
 
+	void updateUi() override;
+
 	sigc::connection connectKeyPressedSignal(
 		const sigc::slot<bool(guint pKeyVal, guint pKeyCode, Gdk::ModifierType pState)> &pSlot) const override {
 		return keyController->signal_key_pressed().connect(pSlot, false);
@@ -59,14 +68,19 @@ public:
 		return keyController->signal_key_released().connect(pSlot, false);
 	}
 
-	void setWindowTitle(const std::string &pTitle) override {
+	void setWindowTitle([[maybe_unused]] const std::string &pTitle) override {
+#ifdef USE_OLD_UI
 		const auto bar = dynamic_cast<Gtk::HeaderBar*>(get_titlebar());
 		dynamic_cast<Gtk::Label*>(bar->get_title_widget())->set_label(pTitle);
 		set_title(pTitle);
+#endif
 	}
 
-	void addActionGroup(const std::string &pName, const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) override {
+	void addActionGroup([[maybe_unused]] const std::string &pName,
+						[[maybe_unused]] const Glib::RefPtr<Gio::SimpleActionGroup> &pActionGroup) override {
+#ifdef USE_OLD_UI
 		insert_action_group(pName, pActionGroup);
+#endif
 	}
 
 	void reportError(const sdk::ReportMessagePtr &pError) override {
@@ -79,17 +93,19 @@ public:
 
 	void setPresenter(IPresenterMain* pPresenter) override { presenter = pPresenter; }
 
-	Gtk::Window* getWindow() override { return this; }
+	Gtk::Window* getWindow() override {
+#ifdef USE_OLD_UI
+		return this;
+#else
+		return nullptr;
+#endif
+	}
 
 	void setTabs(const std::vector<PanedLayoutTab> &pPanedLayoutTabs) override;
 
 	void openTab(int32_t pTabIndex) override;
 
 	ui::MultiPaned* getMultiPanedByIndex(int32_t pIndex) override;
-
-	[[nodiscard]] const std::shared_ptr<ResourcesContext> &getResourcesContext() const override {
-		return resourcesContext;
-	}
 
 	std::future<void> executeInMainThread(const sigc::slot<void(std::promise<void>)> &pSlot) override {
 		return ThreadDispatcher::executeInMainThread(pSlot);
