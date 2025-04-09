@@ -156,11 +156,9 @@ public:
 		if constexpr (IsConvertibleToNotify<T>) {
 
 			if constexpr (std::__is_shared_ptr<T>) {
-				auto notifiable = dynamic_cast<IPropertyNotifiable*>(value.get());
-				notifiable->setBase(this);
+				if (const auto notifiable = dynamic_cast<IPropertyNotifiable*>(value.get())) notifiable->setBase(this);
 			} else if constexpr (std::is_pointer_v<T>) {
-				auto notifiable = dynamic_cast<IPropertyNotifiable*>(value);
-				notifiable->setBase(this);
+				if (auto notifiable = dynamic_cast<IPropertyNotifiable*>(value)) notifiable->setBase(this);
 			} else if constexpr (std::is_class_v<T>) {
 				auto &notifiable = dynamic_cast<IPropertyNotifiable &>(value);
 				notifiable.setBase(this);
