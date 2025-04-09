@@ -32,7 +32,7 @@ class Node;
 class Mesh;
 
 class Scene3D : public Initializable, public IRenderable {
-	std::shared_ptr<Renderer> renderer{};
+	std::shared_ptr<Renderer> renderer;
 	std::vector<std::shared_ptr<Node>> nodes;
 	std::vector<Node*> rootNodes;
 

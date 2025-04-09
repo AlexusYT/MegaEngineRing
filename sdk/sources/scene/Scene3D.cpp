@@ -26,7 +26,7 @@
 
 namespace mer::sdk {
 
-Scene3D::Scene3D() { renderer = std::make_shared<Renderer>(); }
+Scene3D::Scene3D() : renderer(std::make_shared<Renderer>()) {}
 
 void Scene3D::render() {}
 

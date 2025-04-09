@@ -211,6 +211,7 @@ protected:
 		addScene(mainUi);
 
 		auto project = project::Project::create();
+		if (!project) return nullptr;
 		project->setProjectName("Untitled");
 		auto path = Globals::getProjectsPath() / "unsaved/Untitled";
 		project->setProjectPath(path);

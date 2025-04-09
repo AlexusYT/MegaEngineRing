@@ -38,7 +38,7 @@ bool VolumeAabb::isIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRay
 	int i;
 	int whichPlane;
 	float maxT[NUMDIM];
-	float candidatePlane[NUMDIM];
+	float candidatePlane[NUMDIM]{};
 
 	/* Find candidate planes; this loop can be avoided if
 	   rays cast all from the eye(assume perpsective view) */

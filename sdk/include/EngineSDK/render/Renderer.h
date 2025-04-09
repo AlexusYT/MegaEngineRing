@@ -153,7 +153,7 @@ public:
 
 	void removeRenderPass(const std::string &pName) {
 		auto iter = renderPasses.find(pName);
-		if (iter != renderPasses.end()) return;
+		if (iter == renderPasses.end()) return;
 		iter->second->renderer = nullptr;
 		renderPasses.erase(iter);
 	}
