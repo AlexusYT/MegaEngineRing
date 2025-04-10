@@ -41,19 +41,17 @@ Node::Node(const Microsoft::glTF::Node &pNode) : nodeAabb(nullptr, "AABB"), geom
 	debugGeometry = std::make_shared<DebugGeometry>();
 	debugGeometry->setIndices({0, 1, 1, 2, 2, 0});
 	connection = geometryAabb.connectEvent([this](const std::shared_ptr<VolumeAabb> & /*pAabb*/) { updateNodeAabb(); });
-	auto &transform = getLocalTransform();
 	switch (pNode.GetTransformationType()) {
 
 		case Microsoft::glTF::TRANSFORMATION_IDENTITY: break;
 		case Microsoft::glTF::TRANSFORMATION_MATRIX:
-			transform->setMatrix(glm::make_mat4(pNode.matrix.values.data()));
+			getLocalTransform()->setFromMatrix(glm::make_mat4(pNode.matrix.values.data()));
 			break;
 		case Microsoft::glTF::TRANSFORMATION_TRS:
-			auto trans = Transformation::create();
-			trans->translate(pNode.translation.x, pNode.translation.y, pNode.translation.z);
-			trans->rotateQuaternion(glm::quat(pNode.rotation.w, pNode.rotation.x, pNode.rotation.y, pNode.rotation.z));
-			trans->scale(pNode.scale.x, pNode.scale.y, pNode.scale.z);
-			transform->applyTransformation(trans);
+			const auto pos = glm::vec3(pNode.translation.x, pNode.translation.y, pNode.translation.z);
+			const auto rot = glm::quat(pNode.rotation.w, pNode.rotation.x, pNode.rotation.y, pNode.rotation.z);
+			const auto scale = glm::vec3(pNode.scale.x, pNode.scale.y, pNode.scale.z);
+			getLocalTransform()->setFromArgs(pos, rot, scale);
 			break;
 	}
 }
@@ -100,7 +98,7 @@ void Node::listGeometryIntersectsAabb(const glm::vec3 &pRayOrigin, const glm::ve
 }
 
 void Node::onLocalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) {
-	for (auto child: children) { child->getLocalTransform()->applyTransformation(pTransformation); }
+	for (auto child: children) { child->getLocalTransform()->addFromMatrix(pTransformation->getModelMatrix()); }
 	Transformable::onLocalTransformChanged(pTransformation);
 }
 
