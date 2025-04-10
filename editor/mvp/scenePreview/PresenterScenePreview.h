@@ -49,6 +49,10 @@ protected:
 	sdk::MeshInstance* hoveredMeshNode{};
 	std::shared_ptr<sdk::BoundingVolumeProgram> boundingProgram{};
 
+	bool movingNode{};
+	std::unordered_map<sdk::Node*, glm::vec3> startPosForNodes{};
+	std::optional<glm::dvec2> lastCursorPosMove{};
+
 	PresenterScenePreview(const std::shared_ptr<IViewScenePreview> &pView,
 						  const std::shared_ptr<IModelScenePreview> &pModel);
 
@@ -63,11 +67,22 @@ public:
 
 	void onPrimaryMouseKeyPressed() override;
 
+	void onSecondaryMouseKeyPressed() override;
+
 	void onSceneChanged() override;
 
 	void setFocus() override;
 
 	[[nodiscard]] const std::shared_ptr<IModelScenePreview> &getModel() const override { return model; }
+
+	void startMovingGesture() override;
+
+	bool cancelCurrentAction() override;
+
+	bool applyCurrentAction() override;
+
+	bool onCursorPosChanged(double pX, double pY) override;
+
 
 protected:
 	void run() override;

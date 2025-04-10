@@ -144,15 +144,12 @@ void PresenterScenePreview::init() {
 }
 
 void PresenterScenePreview::onPrimaryMouseKeyPressed() {
+	if (applyCurrentAction()) return;
 	model->clearSelectedMeshes();
 	if (hoveredMeshNode) model->addSelectedMeshNode(hoveredMeshNode);
 }
 
-void getAllNodes(sdk::Node* pNode, std::vector<sdk::Node*> &pNodes) {
-
-	for (const auto &child: pNode->getChildren()) { getAllNodes(child.get(), pNodes); }
-	pNodes.push_back(pNode);
-}
+void PresenterScenePreview::onSecondaryMouseKeyPressed() { cancelCurrentAction(); }
 
 void PresenterScenePreview::onSceneChanged() {
 
@@ -173,6 +170,61 @@ void PresenterScenePreview::onSceneChanged() {
 }
 
 void PresenterScenePreview::setFocus() { view->focusOnThis(); }
+
+void PresenterScenePreview::startMovingGesture() {
+
+	if (movingNode) return;
+	auto &nodes = model->getSelectedMeshNodes();
+	if (nodes.empty()) return;
+	for (auto node: nodes) { startPosForNodes.emplace(node, node->getLocalTransform()->getPosition()); }
+	movingNode = true;
+}
+
+bool PresenterScenePreview::cancelCurrentAction() {
+	if (movingNode) {
+		for (auto &node: startPosForNodes) { node.first->getLocalTransform()->setPosition(node.second); }
+
+		startPosForNodes.clear();
+		movingNode = false;
+		return true;
+	}
+	return false;
+}
+
+bool PresenterScenePreview::applyCurrentAction() {
+	if (movingNode) {
+		startPosForNodes.clear();
+		movingNode = false;
+		return true;
+	}
+	return false;
+}
+
+bool PresenterScenePreview::onCursorPosChanged(double pX, double pY) {
+	const glm::dvec2 pos{pX, pY};
+	if (movingNode) {
+		auto camera = view->getCamera();
+		auto mousePos = view->getMousePos();
+		glm::vec3 cameraDirection =
+			glm::normalize(camera->propertyPosition.getValue() - camera->propertyTargetPosition.getValue());
+		[[maybe_unused]] glm::vec3 dir =
+			/*camera->propertyTargetPosition.getValue() +*/
+			(cameraDirection +
+			 glm::vec3(glm::inverse(camera->getMatrix()) * glm::vec4(mousePos.x, -mousePos.y, 1.0f, 1.0f))) *
+			camera->propertyDistance.getValue() * 0.5f;
+		if (!lastCursorPosMove) { lastCursorPosMove = pos; }
+		/*const glm::vec2 delta = glm::vec2(lastCursorPosMove.value() - pos) * 0.002f * view->getZoom();
+		glm::vec3 cameraRight = glm::normalize(glm::cross(camera->propertyUp.getValue(), cameraDirection));
+		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);*/
+		for (auto &[node, startPos]: startPosForNodes) {
+			auto &globTransform = node->getGlobalTransform();
+			node->getLocalTransform()->setPosition(startPos + dir / globTransform->getScale());
+		}
+		return true;
+	}
+	if (lastCursorPosMove) lastCursorPosMove.reset();
+	return false;
+}
 
 void PresenterScenePreview::run() { view->openView(); }
 

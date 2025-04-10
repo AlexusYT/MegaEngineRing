@@ -99,6 +99,7 @@ void ViewScenePreview::onUpdate(bool pVisible) {
 		ImGui::SetWindowFocus();
 		focusWindow = false;
 	}
+	widgetHovered = ImGui::IsWindowHovered();
 	if (!pVisible) return;
 	ImDrawList* dl = ImGui::GetWindowDrawList();
 	auto screenCursor = ImGui::GetCursorScreenPos();
@@ -106,15 +107,14 @@ void ViewScenePreview::onUpdate(bool pVisible) {
 	glm::vec2 contentAvail = ImGui::GetContentRegionAvail();
 	int width = static_cast<int>(contentAvail.x);
 	int height = static_cast<int>(contentAvail.y);
-	mousePos.x = static_cast<float>(mouse.x - screenCursor.x - contentAvail.x / 2.0f) / (contentAvail.x * 0.25f);
-	mousePos.y = static_cast<float>(mouse.y - screenCursor.y - contentAvail.y / 2.0f) / (contentAvail.y * 0.25f);
+	mousePos.x = (mouse.x - screenCursor.x - contentAvail.x / 2.0f) / (contentAvail.x * 0.25f);
+	mousePos.y = (mouse.y - screenCursor.y - contentAvail.y / 2.0f) / (contentAvail.y * 0.25f);
 	//mousePos = mousePos;
 	if (framebuffer->getWidth() != width || framebuffer->getHeight() != height) {
 		camera->propertyAspect = contentAvail.x / contentAvail.y;
 		framebuffer->setSize(width, height);
 	}
 
-	widgetHovered = ImGui::IsWindowHovered();
 	glm::vec2 imageStart = screenCursor;
 	glm::vec2 imageEnd = imageStart + contentAvail;
 	frameDisplayed = true;
@@ -145,8 +145,9 @@ void ViewScenePreview::closeView() {
 }
 
 void ViewScenePreview::onCursorPosChanged(double pX, double pY) {
+	if (!widgetHovered) return;
 	const glm::dvec2 pos{pX, pY};
-
+	if (presenter->onCursorPosChanged(pX, pY)) return;
 	if (moveKeyHeld && mouseHeld) {
 
 		if (!lastCursorPosMove) { lastCursorPosMove = pos; }
@@ -186,6 +187,7 @@ void ViewScenePreview::onCursorPosChanged(double pX, double pY) {
 }
 
 void ViewScenePreview::onKeyChanged(int pKey, int pScancode, int pAction, int pMods) {
+	if (!widgetHovered) return;
 	if (pKey == GLFW_KEY_LEFT_SHIFT || pKey == GLFW_KEY_RIGHT_SHIFT) {
 		if (!mouseHeld) {
 			if (pAction == GLFW_PRESS) {
@@ -198,7 +200,12 @@ void ViewScenePreview::onKeyChanged(int pKey, int pScancode, int pAction, int pM
 			moveKeyHeld = false;
 		}
 	}
-	if (pKey == GLFW_KEY_G) rotate = pAction != GLFW_RELEASE;
+	if (pKey == GLFW_KEY_G && pAction == GLFW_PRESS) {
+		if (presenter) presenter->startMovingGesture();
+	}
+	if (pKey == GLFW_KEY_ESCAPE && pAction == GLFW_PRESS) {
+		if (presenter) presenter->cancelCurrentAction();
+	}
 	EditorTool::onKeyChanged(pKey, pScancode, pAction, pMods);
 }
 
@@ -210,6 +217,8 @@ void ViewScenePreview::onMouseButton(int pButton, int pAction, int /*pMods*/) {
 	if (!widgetHovered) return;
 	if (pButton == GLFW_MOUSE_BUTTON_LEFT && pAction == GLFW_RELEASE)
 		if (presenter) presenter->onPrimaryMouseKeyPressed();
+	if (pButton == GLFW_MOUSE_BUTTON_RIGHT && pAction == GLFW_RELEASE)
+		if (presenter) presenter->onSecondaryMouseKeyPressed();
 }
 
 void ViewScenePreview::onMouseScroll(double /*pXOffset*/, double pYOffset) {

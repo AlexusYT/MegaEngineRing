@@ -38,11 +38,21 @@ public:
 
 	virtual void onPrimaryMouseKeyPressed() = 0;
 
+	virtual void onSecondaryMouseKeyPressed() = 0;
+
 	virtual void onSceneChanged() = 0;
 
 	virtual void setFocus() = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<IModelScenePreview> &getModel() const = 0;
+
+	virtual void startMovingGesture() = 0;
+
+	virtual bool cancelCurrentAction() = 0;
+
+	virtual bool applyCurrentAction() = 0;
+
+	virtual bool onCursorPosChanged(double pX, double pY) = 0;
 };
 
 } // namespace mer::editor::mvp
