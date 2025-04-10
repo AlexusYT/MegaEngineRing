@@ -35,12 +35,8 @@ Transformable::Transformable() : globalTransform(Transformation::create()), loca
 
 void Transformable::updateTransform() {
 
-	std::shared_ptr<Transformation> transform;
-	if (parent) transform = parent->globalTransform->clone();
-	else
-		transform = Transformation::create();
-	transform->applyTransformation(localTransform);
-	globalTransform->swapTransformation(transform);
+	glm::mat4 parentMat = parent ? parent->globalTransform->getModelMatrix() : glm::mat4(1);
+	globalTransform->setFromMatrix(parentMat * localTransform->getModelMatrix());
 }
 
 void Transformable::onLocalTransformChanged(const std::shared_ptr<Transformation> & /*pTransformation*/) {}

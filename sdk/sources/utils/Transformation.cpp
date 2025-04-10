@@ -29,60 +29,40 @@
 #include <glm/gtx/polar_coordinates.hpp>
 
 namespace mer::sdk {
-Transformation::Transformation(const glm::mat4 &pModelMatrix) : modelMatrix(pModelMatrix) {}
-
-std::shared_ptr<Transformation> Transformation::create(const glm::mat4 &pModelMatrix) {
-	return std::shared_ptr<Transformation>(new Transformation(pModelMatrix));
-}
-
-void Transformation::translate(const glm::vec3 &pCoords) {
-	modelMatrix = glm::translate(modelMatrix, pCoords);
-	onChanged(modelMatrix);
-}
-
-void Transformation::scale(const glm::vec3 &pScale) {
-	modelMatrix = glm::scale(modelMatrix, pScale);
-	onChanged(modelMatrix);
-}
-
-void Transformation::rotate(const float pRadians, const glm::vec3 &pVector) {
-	modelMatrix = glm::rotate(modelMatrix, pRadians, pVector);
-	onChanged(modelMatrix);
-}
-
-void Transformation::rotateQuaternion(const glm::quat &pQuat) {
-	modelMatrix = modelMatrix * glm::mat4_cast(pQuat);
-	onChanged(modelMatrix);
-}
-
-// ReSharper disable once CppInconsistentNaming
-void Transformation::eulerAngleXZY(const glm::vec3 &pVector) {
-	modelMatrix = modelMatrix * glm::eulerAngleXZY(pVector.x, pVector.y, pVector.z);
-	onChanged(modelMatrix);
-}
-
-void Transformation::yawPitchRoll(const glm::vec3 &pVector) {
-	modelMatrix = modelMatrix * glm::yawPitchRoll(pVector.x, pVector.y, pVector.z);
-	onChanged(modelMatrix);
-}
 
 std::shared_ptr<Transformation> Transformation::clone() const {
 	auto other = create();
 	other->modelMatrix = this->modelMatrix;
+	other->positionVal = this->positionVal;
+	other->positionValChanged = this->positionValChanged;
+	other->translationMatrix = this->translationMatrix;
+	other->rotationVal = this->rotationVal;
+	other->rotationValChanged = this->rotationValChanged;
+	other->rotationMatrix = this->rotationMatrix;
+	other->scaleVal = this->scaleVal;
+	other->scaleValChanged = this->scaleValChanged;
+	other->scaleMatrix = this->scaleMatrix;
 	return other;
 }
 
-void Transformation::applyTransformation(const std::shared_ptr<Transformation> &pTransformation) {
-	this->modelMatrix = this->modelMatrix * pTransformation->modelMatrix;
-	onChanged(this->modelMatrix);
-}
+void Transformation::calculateModelMatrix() {
 
-void Transformation::swapTransformation(const std::shared_ptr<Transformation> &pTransformation) {
-	auto tmp = pTransformation->modelMatrix;
-	pTransformation->modelMatrix = this->modelMatrix;
-	this->modelMatrix = tmp;
-	onChanged(this->modelMatrix);
-	pTransformation->onChanged(pTransformation->modelMatrix);
+	if (!positionValChanged && !rotationValChanged && !scaleValChanged) return;
+	if (positionValChanged) {
+		translationMatrix = glm::translate(glm::mat4(1.0f), positionVal);
+		positionValChanged = false;
+	}
+	if (rotationValChanged) {
+		rotationMatrix = glm::mat4_cast(rotationVal);
+		rotationValChanged = false;
+	}
+	if (scaleValChanged) {
+		scaleMatrix = glm::scale(glm::mat4(1.0f), scaleVal);
+		scaleValChanged = false;
+	}
+
+	modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+	onChanged(modelMatrix);
 }
 
 } // namespace mer::sdk
