@@ -118,11 +118,11 @@ public:
 	}
 
 	void addFromMatrix(const glm::mat4 &pNewMatrix) {
-		glm::vec3 scaleTmp;
-		glm::quat rotationTmp;
-		glm::vec3 translationTmp;
-		glm::vec3 skewTmp;
-		glm::vec4 perspectiveTmp;
+		glm::vec3 scaleTmp{};
+		glm::quat rotationTmp{};
+		glm::vec3 translationTmp{};
+		glm::vec3 skewTmp{};
+		glm::vec4 perspectiveTmp{};
 
 		glm::decompose(pNewMatrix, scaleVal, rotationVal, positionVal, skewTmp, perspectiveTmp);
 
