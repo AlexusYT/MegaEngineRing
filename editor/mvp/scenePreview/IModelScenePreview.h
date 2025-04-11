@@ -52,10 +52,6 @@ public:
 
 	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
 
-	virtual void addNode(const std::shared_ptr<sdk::Node> &pParentNode, const std::shared_ptr<sdk::Node> &pNode) = 0;
-
-	virtual void addMaterial(const std::shared_ptr<sdk::Material> &pMaterial) = 0;
-
 	[[nodiscard]] virtual const std::shared_ptr<sdk::RenderPass> &getOutlinePass() const = 0;
 
 	[[nodiscard]] virtual const std::vector<sdk::MeshInstance*> &getSelectedMeshNodes() const = 0;

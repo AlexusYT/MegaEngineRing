@@ -63,10 +63,6 @@ public:
 
 	void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) override;
 
-	void addNode(const std::shared_ptr<sdk::Node> &pParentNode, const std::shared_ptr<sdk::Node> &pNode) override;
-
-	void addMaterial(const std::shared_ptr<sdk::Material> &pMaterial) override;
-
 	[[nodiscard]] const std::shared_ptr<sdk::RenderPass> &getOutlinePass() const override { return outlinePass; }
 
 	[[nodiscard]] const std::vector<sdk::MeshInstance*> &getSelectedMeshNodes() const override {

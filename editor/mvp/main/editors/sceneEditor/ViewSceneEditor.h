@@ -26,6 +26,10 @@
 #include "IViewSceneEditor.h"
 #include "mvp/editor/Editor.h"
 
+namespace mer::sdk {
+class Scene3D;
+}
+
 namespace mer::editor::mvp {
 class IPresenterObjectsTree;
 class IPresenterScenePreview;
@@ -123,6 +127,8 @@ class SceneEditor : public Editor {
 	std::shared_ptr<EditorTool> scenePreviewView;
 	std::shared_ptr<IPresenterObjectsTree> objTreePresenter;
 	std::shared_ptr<EditorTool> objTreeView;
+
+	std::shared_ptr<sdk::Scene3D> scene3D;
 
 public:
 	explicit SceneEditor(const std::string &pName);

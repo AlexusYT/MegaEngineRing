@@ -39,13 +39,6 @@ void ModelScenePreview::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
 	if (presenter) presenter->onSceneChanged();
 }
 
-void ModelScenePreview::addNode(const std::shared_ptr<sdk::Node> &pParentNode,
-								const std::shared_ptr<sdk::Node> &pNode) {
-	scene->addNode(pParentNode, pNode);
-}
-
-void ModelScenePreview::addMaterial(const std::shared_ptr<sdk::Material> &pMaterial) { scene->addMaterial(pMaterial); }
-
 void ModelScenePreview::addSelectedMeshNode(sdk::MeshInstance* pMeshInstance) {
 	auto oldMesh = pMeshInstance->getMesh();
 	scene->getRenderer()->getMainRenderPass()->removeMeshInstance(oldMesh.get(), pMeshInstance);

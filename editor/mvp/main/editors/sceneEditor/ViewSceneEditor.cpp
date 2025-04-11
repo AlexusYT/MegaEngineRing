@@ -167,8 +167,8 @@ SceneEditor::SceneEditor(const std::string &pName) : Editor(pName) {
 
 	auto previewView = ViewScenePreview::create("SceneEditorPreview", EditorContext::create(this));
 	scenePreviewView = previewView;
-	auto previewModel = std::make_shared<ModelScenePreview>();
-	//previewModel->setScene(sdk::Scene3D::create());
+	scene3D = sdk::Scene3D::create();
+	previewModel->setScene(scene3D);
 	scenePreviewPresenter = PresenterSceneEditorPreview::create(previewView, previewModel);
 	scenePreviewPresenter->run();
 	auto objView = std::make_shared<ViewObjectsTree>(EditorContext::create(this));
@@ -222,7 +222,7 @@ void SceneEditor::addPlane() {
 	auto instance = sdk::MeshInstance::create("", mesh);
 	instance->setMesh(mesh);
 	scene->addMesh(mesh);
-	scenePreviewPresenter->getModel()->addNode(nullptr, instance);
+	scene3D->addNode(nullptr, instance);
 	//if (scenePreviewPresenter) scenePreviewPresenter->addPlane();
 }
 
