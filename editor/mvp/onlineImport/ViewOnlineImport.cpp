@@ -250,8 +250,9 @@ void ViewOnlineImport::renderImage(ImDrawList* pDl, const std::shared_ptr<ModelS
 }
 
 OnlineImportWorkspace::OnlineImportWorkspace() : Editor("OnlineImportWorkspace") {
+	selection = std::make_shared<NodeSelectionHelper>();
 	auto previewView = ViewScenePreview::create("PrefabScenePreview", EditorContext::create(this));
-	auto previewModel = std::make_shared<ModelScenePreview>();
+	auto previewModel = std::make_shared<ModelScenePreview>(selection.get());
 	scenePresenter = PresenterOnlineImportPreview::create(previewView, previewModel);
 	scenePresenter->run();
 	auto searchView = ViewOnlineImport::create(EditorContext::create(this));

@@ -66,7 +66,7 @@ Node::Node(const std::string &pName) : nodeAabb(nullptr, "AABB"), geometryAabb(n
 	connection = geometryAabb.connectEvent([this](const std::shared_ptr<VolumeAabb> & /*pAabb*/) { updateNodeAabb(); });
 }
 
-void Node::addChild(const std::shared_ptr<Node> &pChild) {
+void Node::addChild(Node* pChild) {
 	children.emplace_back(pChild);
 	pChild->parentNode = this;
 	pChild->setTransformParent(this);
@@ -76,9 +76,7 @@ void Node::addChild(const std::shared_ptr<Node> &pChild) {
 }
 
 void Node::removeChild(Node* pChild) {
-	auto iter = std::ranges::remove_if(children, [pChild](const std::shared_ptr<Node> &pNode) {
-					return pChild == pNode.get();
-				}).begin();
+	auto iter = std::ranges::remove(children, pChild).begin();
 	auto e = iter - children.begin();
 	signalConnections.erase(signalConnections.begin() + e);
 	pChild->parentNode = nullptr;

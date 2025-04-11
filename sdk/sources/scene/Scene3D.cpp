@@ -41,8 +41,9 @@ void Scene3D::addNode(const std::shared_ptr<Node> &pParentNode, const std::share
 	if (auto meshInstance = std::dynamic_pointer_cast<MeshInstance>(pNode)) { addToMainRenderPass(meshInstance); }
 	if (!pParentNode) rootNodes.emplace_back(pNode.get());
 	else
-		pParentNode->addChild(pNode);
+		pParentNode->addChild(pNode.get());
 	nodes.emplace_back(pNode);
+	onNodeCollectionChanged();
 }
 
 void Scene3D::mergeNodes(const std::vector<std::shared_ptr<Node>> &pNodes) {
@@ -51,6 +52,7 @@ void Scene3D::mergeNodes(const std::vector<std::shared_ptr<Node>> &pNodes) {
 		if (!node->getParentNode()) rootNodes.emplace_back(node.get());
 		if (auto meshInstance = std::dynamic_pointer_cast<MeshInstance>(node)) { addToMainRenderPass(meshInstance); }
 	}
+	onNodeCollectionChanged();
 }
 
 void Scene3D::addMesh(const std::shared_ptr<Mesh> &pMesh) const { renderer->addMesh(pMesh); }
@@ -65,8 +67,4 @@ void Scene3D::addToMainRenderPass(const std::shared_ptr<MeshInstance> &pMeshInst
 	renderer->getMainRenderPass()->addMeshInstance(pMeshInstance->getMesh().get(), pMeshInstance.get());
 }
 
-void Scene3D::addToMainRenderPassRecursive(const std::shared_ptr<Node> &pNode) {
-	if (auto meshInstance = std::dynamic_pointer_cast<MeshInstance>(pNode)) { addToMainRenderPass(meshInstance); }
-	for (auto child: pNode->getChildren()) { addToMainRenderPassRecursive(child); }
-}
 } // namespace mer::sdk

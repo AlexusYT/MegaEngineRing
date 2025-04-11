@@ -28,6 +28,7 @@
 #include "EngineSDK/meshes/BlockPlaneMesh.h"
 #include "EngineSDK/scene/Scene.h"
 #include "EngineSDK/scene/Scene3D.h"
+#include "NodeSelectionHelper.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/main/centerWindow/TabPlaceholder.h"
@@ -164,16 +165,18 @@ void ViewSceneEditor::openView() {
 void ViewSceneEditor::closeView() { context->removeWidget(); }
 
 SceneEditor::SceneEditor(const std::string &pName) : Editor(pName) {
-
+	selection = std::make_shared<NodeSelectionHelper>();
 	auto previewView = ViewScenePreview::create("SceneEditorPreview", EditorContext::create(this));
 	scenePreviewView = previewView;
-	auto previewModel = std::make_shared<ModelScenePreview>();
-	//previewModel->setScene(sdk::Scene3D::create());
+	auto previewModel = std::make_shared<ModelScenePreview>(selection.get());
+	scene3D = sdk::Scene3D::create();
+	previewModel->setScene(scene3D);
 	scenePreviewPresenter = PresenterSceneEditorPreview::create(previewView, previewModel);
 	scenePreviewPresenter->run();
 	auto objView = std::make_shared<ViewObjectsTree>(EditorContext::create(this));
 	objTreeView = objView;
-	auto objTreeModel = std::make_shared<ModelObjectsTree>();
+	auto objTreeModel = std::make_shared<ModelObjectsTree>(selection.get());
+	objTreeModel->setScene(scene3D);
 	objTreePresenter = std::make_shared<PresenterObjectsTree>(objView, objTreeModel);
 	objTreePresenter->run();
 }
@@ -222,7 +225,7 @@ void SceneEditor::addPlane() {
 	auto instance = sdk::MeshInstance::create("", mesh);
 	instance->setMesh(mesh);
 	scene->addMesh(mesh);
-	scenePreviewPresenter->getModel()->addNode(nullptr, instance);
+	scene3D->addNode(nullptr, instance);
 	//if (scenePreviewPresenter) scenePreviewPresenter->addPlane();
 }
 

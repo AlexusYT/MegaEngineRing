@@ -24,9 +24,27 @@
 #include "EngineSDK/gltf/MeshInstance.h"
 #include "EngineSDK/render/Renderer.h"
 #include "EngineSDK/scene/Scene3D.h"
+#include "mvp/main/editors/sceneEditor/NodeSelectionHelper.h"
 
 namespace mer::editor::mvp {
-ModelScenePreview::ModelScenePreview() { outlinePass = std::make_shared<sdk::RenderPass>(); }
+ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper) : selectionHelper(pSelectionHelper) {
+	outlinePass = std::make_shared<sdk::RenderPass>();
+	selectionHelper->getOnNodeSelectionChanged().connect([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+		for (auto node: pNodes) {
+			auto meshInst = dynamic_cast<sdk::MeshInstance*>(node);
+			if (!meshInst) continue;
+			auto oldMesh = meshInst->getMesh();
+			if (pSelected) {
+				scene->getRenderer()->getMainRenderPass()->removeMeshInstance(oldMesh.get(), meshInst);
+				outlinePass->addMeshInstance(oldMesh.get(), meshInst);
+			} else {
+
+				outlinePass->removeMeshInstance(oldMesh.get(), meshInst);
+				scene->getRenderer()->getMainRenderPass()->addMeshInstance(oldMesh.get(), meshInst);
+			}
+		}
+	});
+}
 
 void ModelScenePreview::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
 	if (pScene == scene) return;
@@ -39,32 +57,11 @@ void ModelScenePreview::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
 	if (presenter) presenter->onSceneChanged();
 }
 
-void ModelScenePreview::addNode(const std::shared_ptr<sdk::Node> &pParentNode,
-								const std::shared_ptr<sdk::Node> &pNode) {
-	scene->addNode(pParentNode, pNode);
-}
-
-void ModelScenePreview::addMaterial(const std::shared_ptr<sdk::Material> &pMaterial) { scene->addMaterial(pMaterial); }
-
 void ModelScenePreview::addSelectedMeshNode(sdk::MeshInstance* pMeshInstance) {
-	auto oldMesh = pMeshInstance->getMesh();
-	scene->getRenderer()->getMainRenderPass()->removeMeshInstance(oldMesh.get(), pMeshInstance);
-	outlinePass->addMeshInstance(oldMesh.get(), pMeshInstance);
-	selectedMeshNodes.emplace_back(pMeshInstance);
-	/*auto newMesh = sdk::Mesh::create();
-	newMesh->setPrimitives(oldMesh->getPrimitives());
-	pMeshInstance->changeMesh(newMesh);
-	oldMeshes.emplace(newMesh, oldMesh);
-	selectedMeshes.emplace_back(newMesh);*/
+	selectionHelper->addNode(pMeshInstance);
 }
 
 void ModelScenePreview::clearSelectedMeshes() {
-
-	for (auto selectedMeshNode: selectedMeshNodes) {
-		auto oldMesh = selectedMeshNode->getMesh();
-		outlinePass->removeMeshInstance(oldMesh.get(), selectedMeshNode);
-		scene->getRenderer()->getMainRenderPass()->addMeshInstance(oldMesh.get(), selectedMeshNode);
-	}
-	selectedMeshNodes.clear();
+	selectionHelper->clearSelection();
 }
 } // namespace mer::editor::mvp

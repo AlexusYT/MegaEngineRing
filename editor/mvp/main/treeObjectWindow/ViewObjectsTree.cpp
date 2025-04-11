@@ -23,72 +23,106 @@
 
 #include <project/Project.h>
 
+#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/scene/Scene3D.h"
+#include "PresenterObjectsTree.h"
 #include "mvp/contexts/IWidgetContext.h"
 
 namespace mer::editor::mvp {
 
 ViewObjectsTree::ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext)
-	: EditorTool("TreeViewTool"), context(pContext) {
-	/*tree = Gtk::make_managed<ui::CustomTreeView>();
-	mainScrolledWindow.set_child(*tree);
-	mainScrolledWindow.set_has_frame(false);
-	const auto factory = ui::CustomSignalListItemFactory::create();
-	factory->signal_setup().connect([this](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
-		auto* expander = Gtk::make_managed<Gtk::TreeExpander>();
-		auto* label = Gtk::make_managed<Gtk::Label>();
-		label->set_halign(Gtk::Align::END);
-		label->set_margin(3);
-		expander->set_child(*label);
-		pListItem->set_child(*expander);
-	});
-	factory->signal_bind().connect([](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
-		const auto row = std::dynamic_pointer_cast<Gtk::TreeListRow>(pListItem->get_item());
-		if (!row) return;
-
-		const auto col = std::dynamic_pointer_cast<ExplorerObject>(row->get_item());
-		if (!col) return;
-		auto* const expander = dynamic_cast<Gtk::TreeExpander*>(pListItem->get_child());
-		if (!expander) return;
-		expander->set_list_row(row);
-		expander->set_hide_expander(false);
-		auto* label = dynamic_cast<Gtk::Label*>(expander->get_child());
-		if (!label) return;
-		label->set_text(col->getName());
-	});
-
-	const auto column = Gtk::ColumnViewColumn::create("Name", factory);
-	column->set_resizable(true);
-	tree->append_column(column);
-	tree->setSlotSelectionChanged([this](Glib::ObjectBase* pObjectBase) {
-		auto element = dynamic_cast<ExplorerObject*>(pObjectBase);
-		const auto variant = Glib::Variant<uintptr_t>::create(reinterpret_cast<uintptr_t>(element));
-		tree->activate_action("object.open", variant);
-	});
-	auto mainMenu = Gio::Menu::create();
-
-	const auto variant = Glib::Variant<uintptr_t>::create(reinterpret_cast<uintptr_t>(nullptr));
-	mainMenu->append_item(createItem("New Object", "object.manage.new.object", variant));
-	tree->setMenu(mainMenu);*/
-}
-
-/*void ViewObjectsTree::setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) {
-	tree->setSlotCreateModel(
-		[this, pTopLevelObjects](const Glib::RefPtr<Glib::ObjectBase> &pItem) -> Glib::RefPtr<Gio::ListModel> {
-			if (const auto col = std::dynamic_pointer_cast<ExplorerObject>(pItem)) return col->getChildren();
-			return pTopLevelObjects;
-		});
-}*/
+	: EditorTool("TreeViewTool"), context(pContext) {}
 
 void ViewObjectsTree::openView() { context->addTool(this); }
 
 void ViewObjectsTree::closeView() { context->removeWidget(); }
 
-void ViewObjectsTree::onUpdate(bool /*pVisible*/) { ImGui::Text("Test"); }
+void ViewObjectsTree::onUpdate(bool pVisible) {
+	if (!pVisible) return;
+	const float textBaseWidth = ImGui::CalcTextSize("A").x;
 
-/*std::shared_ptr<Gio::MenuItem> ViewObjectsTree::createItem(const std::string &pName, const std::string &pAction,
-														   const Glib::VariantBase &pVariant) {
-	std::shared_ptr<Gio::MenuItem> item = Gio::MenuItem::create(pName, "");
-	item->set_action_and_target(pAction, pVariant);
-	return item;
-}*/
+	static ImGuiTableFlags table_flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg |
+										 ImGuiTableFlags_NoBordersInBody | ImGuiTableFlags_ScrollY |
+										 ImGuiTableFlags_ScrollX;
+	if (ImGui::BeginTable("ObjectTreeTable", 2, table_flags)) {
+		// The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
+		ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoResize);
+		ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, textBaseWidth * 6.0f);
+		ImGui::TableSetupScrollFreeze(0, 1);
+		ImGui::TableHeadersRow();
+
+		if (scene) updateTreeLevel(scene->getRootNodes());
+
+		if (ImGui::BeginPopup("ContextMenu")) {
+			ImGui::BeginDisabled();
+			if (ImGui::MenuItem("Rename")) {}
+			ImGui::SetItemTooltip("Not implemented yet");
+			if (ImGui::MenuItem("Delete")) {}
+			ImGui::SetItemTooltip("Not implemented yet");
+			ImGui::EndDisabled();
+			ImGui::EndPopup();
+		}
+
+		ImGui::EndTable();
+	}
+}
+
+void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
+	for (auto node: pNodes) {
+		ImGui::TableNextRow();
+		ImGui::TableNextColumn();
+		auto &children = node->getChildren();
+		bool folder = !children.empty();
+
+		ImGuiTreeNodeFlags flags =
+			ImGuiTreeNodeFlags_SpanAllColumns | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
+		if (!folder) { flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; }
+		auto iter = selectedMap.find(node);
+		if (iter != selectedMap.end() && iter->second) flags |= ImGuiTreeNodeFlags_Selected;
+		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+		bool nodeOpen = ImGui::TreeNodeEx(node->getName().c_str(), flags);
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)) {
+			if (ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonRight)) {
+				ImGui::OpenPopup("ContextMenu", ImGuiPopupFlags_MouseButtonRight);
+				//selectedElement = node;
+			} else if (ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonLeft)) {
+				if (presenter) {
+					presenter->clearSelection();
+					presenter->select(node);
+				}
+			}
+		}
+		//ImGui::OpenPopupOnItemClick(id.c_str(), ImGuiPopupFlags_MouseButtonRight);
+		ImGui::TableNextColumn();
+		if (/*auto mesh =*/dynamic_cast<sdk::MeshInstance*>(node)) ImGui::TextUnformatted("Mesh");
+		else
+			ImGui::TextUnformatted("Node");
+
+		if (nodeOpen && folder) {
+
+			updateTreeLevel(children);
+			ImGui::TreePop();
+		}
+	}
+}
+
+void ViewObjectsTree::setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pScene) {
+	scene = pScene;
+	if (!scene) {
+		selectedMap.clear();
+		sceneNodesChangedConnection.disconnect();
+		return;
+	}
+	sceneNodesChangedConnection = scene->connectOnNodeCollectionChanged([this]() {
+		selectedMap.clear();
+		for (auto node: scene->getNodes()) { selectedMap.emplace(node.get(), false); }
+	});
+}
+
+void ViewObjectsTree::markSelected(const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+	for (auto node: pNodes) {
+		if (auto iter = selectedMap.find(node); iter != selectedMap.end()) iter->second = pSelected;
+	}
+}
+
 } // namespace mer::editor::mvp

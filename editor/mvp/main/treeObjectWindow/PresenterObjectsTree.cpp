@@ -21,12 +21,18 @@
 
 #include "PresenterObjectsTree.h"
 
-#include "IModelObjectsTree.h"
-#include "IViewObjectsTree.h"
-#include "mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.h"
-#include "project/LoadedScene.h"
+#include "ModelObjectsTree.h"
+#include "ViewObjectsTree.h"
 
 namespace mer::editor::mvp {
+PresenterObjectsTree::PresenterObjectsTree(const std::shared_ptr<IViewObjectsTree> &pView,
+										   const std::shared_ptr<IModelObjectsTree> &pModel)
+	: model(pModel), view(pView) {
+	view->setPresenter(this);
+	model->setPresenter(this);
+	view->setSceneToRender(model->getScene());
+}
+
 void PresenterObjectsTree::run() { view->openView(); }
 
 void PresenterObjectsTree::stop() { view->closeView(); }
@@ -39,4 +45,16 @@ void PresenterObjectsTree::addView(const std::shared_ptr<IView> & /*pNewView*/) 
 	view->setTopLevelObjects(model->getLoadedScene()->getMainObject()->getChildren());
 	view->openView();*/
 }
+
+void PresenterObjectsTree::onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) {
+	view->setSceneToRender(pScene);
+}
+
+void PresenterObjectsTree::onSelectionChanged(const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+	view->markSelected(pNodes, pSelected);
+}
+
+void PresenterObjectsTree::clearSelection() { model->clearSelection(); }
+
+void PresenterObjectsTree::select(sdk::Node* pNode) { model->select(pNode); }
 } // namespace mer::editor::mvp

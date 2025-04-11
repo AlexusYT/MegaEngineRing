@@ -21,24 +21,59 @@
 
 #ifndef MODELOBJECTSTREE_H
 #define MODELOBJECTSTREE_H
-#include "IModelObjectsTree.h"
 
-namespace mer::editor::project {
-class LoadedScene;
+namespace mer::sdk {
+class Node;
 }
 
 namespace mer::editor::mvp {
+class IPresenterObjectsTree;
+class NodeSelectionHelper;
+} // namespace mer::editor::mvp
+
+namespace mer::sdk {
+class Scene3D;
+}
+
+namespace mer::editor::mvp {
+class IModelObjectsTree {
+public:
+	virtual ~IModelObjectsTree() = default;
+
+	[[nodiscard]] virtual IPresenterObjectsTree* getPresenter() const = 0;
+
+	virtual void setPresenter(IPresenterObjectsTree* pPresenter) = 0;
+
+	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<sdk::Scene3D> &getScene() const = 0;
+
+	virtual void clearSelection() = 0;
+
+	virtual void select(sdk::Node* pNode) = 0;
+};
 
 class ModelObjectsTree : public IModelObjectsTree {
-	std::shared_ptr<project::LoadedScene> loadedScene;
+	std::shared_ptr<sdk::Scene3D> scene;
+	NodeSelectionHelper* selection;
+	IPresenterObjectsTree* presenter{};
 
 public:
-	void setLoadedScene(const std::shared_ptr<project::LoadedScene> &pLoadedScene) override {
-		loadedScene = pLoadedScene;
-	}
+	explicit ModelObjectsTree(NodeSelectionHelper* pSelection);
 
-	[[nodiscard]] const std::shared_ptr<project::LoadedScene> &getLoadedScene() const override { return loadedScene; }
+	[[nodiscard]] IPresenterObjectsTree* getPresenter() const override { return presenter; }
+
+	void setPresenter(IPresenterObjectsTree* pPresenter) override { presenter = pPresenter; }
+
+	void setScene(const std::shared_ptr<sdk::Scene3D> &pNewScene3D) override;
+
+	[[nodiscard]] const std::shared_ptr<sdk::Scene3D> &getScene() const override { return scene; }
+
+	void clearSelection() override;
+
+	void select(sdk::Node* pNode) override;
 };
+
 
 } // namespace mer::editor::mvp
 

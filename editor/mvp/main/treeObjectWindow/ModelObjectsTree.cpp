@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,21 +16,28 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 25.09.24.
+// Created by alexus on 10.04.25.
 //
 
-#ifndef IVIEWOBJECTSTREE_H
-#define IVIEWOBJECTSTREE_H
-#include "mvp/IView.h"
+
+#include "ModelObjectsTree.h"
+
+#include "PresenterObjectsTree.h"
+#include "mvp/main/editors/sceneEditor/NodeSelectionHelper.h"
 
 namespace mer::editor::mvp {
-class ExplorerObject;
+ModelObjectsTree::ModelObjectsTree(NodeSelectionHelper* pSelection) : selection(pSelection) {
+	selection->getOnNodeSelectionChanged().connect([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+		if (presenter) presenter->onSelectionChanged(pNodes, pSelected);
+	});
+}
 
-class IViewObjectsTree : public IView {
-public:
-	//virtual void setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) = 0;
-};
+void ModelObjectsTree::setScene(const std::shared_ptr<sdk::Scene3D> &pNewScene3D) {
+	scene = pNewScene3D;
+	if (presenter) presenter->onSceneChanged(scene);
+}
+
+void ModelObjectsTree::clearSelection() { selection->clearSelection(); }
+
+void ModelObjectsTree::select(sdk::Node* pNode) { selection->addNode(pNode); }
 } // namespace mer::editor::mvp
-
-
-#endif //IVIEWOBJECTSTREE_H

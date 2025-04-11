@@ -23,11 +23,28 @@
 #define PRESENTEROBJECTSTREE_H
 #include <memory>
 
-#include "IPresenterObjectsTree.h"
+#include "mvp/PresenterBase.h"
+
+namespace mer::sdk {
+class Node;
+class Scene3D;
+}
 
 namespace mer::editor::mvp {
 class IViewObjectsTree;
 class IModelObjectsTree;
+
+class IPresenterObjectsTree : public PresenterBase {
+
+public:
+	virtual void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+
+	virtual void onSelectionChanged(const std::vector<sdk::Node*> &pNodes, bool pSelected) = 0;
+
+	virtual void clearSelection() = 0;
+
+	virtual void select(sdk::Node* pNode) = 0;
+};
 
 class PresenterObjectsTree : public IPresenterObjectsTree {
 	std::shared_ptr<IModelObjectsTree> model;
@@ -35,14 +52,21 @@ class PresenterObjectsTree : public IPresenterObjectsTree {
 
 public:
 	explicit PresenterObjectsTree(const std::shared_ptr<IViewObjectsTree> &pView,
-								  const std::shared_ptr<IModelObjectsTree> &pModel)
-		: model(pModel), view(pView) {}
+								  const std::shared_ptr<IModelObjectsTree> &pModel);
 
 	void run() override;
 
 	void stop() override;
 
 	void addView(const std::shared_ptr<IView> &pNewView) override;
+
+	void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) override;
+
+	void onSelectionChanged(const std::vector<sdk::Node*> &pNodes, bool pSelected) override;
+
+	void clearSelection() override;
+
+	void select(sdk::Node* pNode) override;
 
 	std::string getTypeName() override { return "PresenterObjectsTree"; }
 };

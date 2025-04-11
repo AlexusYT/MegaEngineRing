@@ -21,6 +21,8 @@
 
 #ifndef SCENE3D_H
 #define SCENE3D_H
+#include <sigc++/signal.h>
+
 #include "EngineSDK/render/IRenderable.h"
 #include "EngineSDK/render/Initializable.h"
 
@@ -35,6 +37,7 @@ class Scene3D : public Initializable, public IRenderable {
 	std::shared_ptr<Renderer> renderer;
 	std::vector<std::shared_ptr<Node>> nodes;
 	std::vector<Node*> rootNodes;
+	sigc::signal<void()> onNodeCollectionChanged;
 
 	std::vector<std::shared_ptr<Material>> materials;
 
@@ -56,10 +59,15 @@ public:
 
 	void addMaterial(const std::shared_ptr<Material> &pMaterial) const;
 
+	[[nodiscard]] const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }
+
 	[[nodiscard]] const std::vector<Node*> &getRootNodes() const { return rootNodes; }
 
 	[[nodiscard]] const std::shared_ptr<Renderer> &getRenderer() const { return renderer; }
 
+	sigc::connection connectOnNodeCollectionChanged(const sigc::slot<void()> &pSlot) {
+		return onNodeCollectionChanged.connect(pSlot);
+	}
 
 protected:
 	ReportMessagePtr onInitialize() override;
@@ -67,8 +75,6 @@ protected:
 	void onUninitialize() override;
 
 	void addToMainRenderPass(const std::shared_ptr<MeshInstance> &pMeshInstance) const;
-
-	void addToMainRenderPassRecursive(const std::shared_ptr<Node> &pNode);
 };
 
 } // namespace mer::sdk

@@ -21,8 +21,12 @@
 
 #ifndef MODELSCENEPREVIEW_H
 #define MODELSCENEPREVIEW_H
+#include <memory>
+
 #include "IModelScenePreview.h"
 #include "IPresenterScenePreview.h"
+#include "mvp/main/editors/sceneEditor/NodeSelectionHelper.h"
+#include "mvp/main/editors/sceneEditor/ViewSceneEditor.h"
 
 namespace mer::sdk {
 class Renderer;
@@ -44,13 +48,11 @@ class ModelScenePreview : public IModelScenePreview {
 
 	IPresenterScenePreview* presenter{};
 	std::shared_ptr<sdk::Scene3D> scene{};
-	std::vector<sdk::MeshInstance*> selectedMeshNodes{};
-	std::unordered_map<std::shared_ptr<sdk::Mesh> /*new*/, std::shared_ptr<sdk::Mesh> /*old*/> oldMeshes;
-	std::vector<std::shared_ptr<sdk::Mesh>> selectedMeshes{};
 	std::shared_ptr<sdk::RenderPass> outlinePass;
+	NodeSelectionHelper* selectionHelper;
 
 public:
-	ModelScenePreview();
+	explicit ModelScenePreview(NodeSelectionHelper* pSelectionHelper);
 
 	[[nodiscard]] IPresenterScenePreview* getPresenter() const override { return presenter; }
 
@@ -63,18 +65,10 @@ public:
 
 	void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) override;
 
-	void addNode(const std::shared_ptr<sdk::Node> &pParentNode, const std::shared_ptr<sdk::Node> &pNode) override;
-
-	void addMaterial(const std::shared_ptr<sdk::Material> &pMaterial) override;
-
 	[[nodiscard]] const std::shared_ptr<sdk::RenderPass> &getOutlinePass() const override { return outlinePass; }
 
-	[[nodiscard]] const std::vector<sdk::MeshInstance*> &getSelectedMeshNodes() const override {
-		return selectedMeshNodes;
-	}
-
-	[[nodiscard]] const std::vector<std::shared_ptr<sdk::Mesh>> &getSelectedMeshes() const override {
-		return selectedMeshes;
+	[[nodiscard]] const std::vector<sdk::Node*> &getSelectedMeshNodes() const override {
+		return selectionHelper->getSelectedNodes();
 	}
 
 	void addSelectedMeshNode(sdk::MeshInstance* pMeshInstance) override;
