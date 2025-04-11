@@ -25,6 +25,10 @@
 #include "mvp/editor/Editor.h"
 
 namespace mer::editor::mvp {
+class NodeSelectionHelper;
+}
+
+namespace mer::editor::mvp {
 class IPresenterScenePreview;
 class ModelSearchList;
 class IPresenterOnlineImport;
@@ -115,6 +119,7 @@ private:
 class OnlineImportWorkspace : public Editor {
 	std::shared_ptr<IPresenterOnlineImport> searchPresenter;
 	std::shared_ptr<IPresenterScenePreview> scenePresenter;
+	std::shared_ptr<NodeSelectionHelper> selection;
 
 public:
 	OnlineImportWorkspace();

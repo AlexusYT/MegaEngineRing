@@ -22,30 +22,36 @@
 #ifndef TREEOBJECTWINDOW_H
 #define TREEOBJECTWINDOW_H
 
-#include "IViewObjectsTree.h"
+#include "mvp/IView.h"
 #include "mvp/editor/Editor.h"
 
-namespace mer::editor::ui {
-class CustomTreeView;
-}
+namespace mer::sdk {
+class Scene3D;
+class Node;
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
 class IWidgetContext;
-class ExplorerObject;
+class IPresenterObjectsTree;
+
+class IViewObjectsTree : public IView {
+public:
+	virtual void setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+
+	virtual void markSelected(const std::vector<sdk::Node*> &pNodes, bool pSelected) = 0;
+
+	virtual void setPresenter(IPresenterObjectsTree* pPresenter) = 0;
+};
 
 class ViewObjectsTree : public IViewObjectsTree, public EditorTool {
-public:
-	//using SlotEntrySelectionChanged = sigc::slot<void(mvp::ExplorerObject*)>;
-
-private:
-	/*Gtk::ScrolledWindow mainScrolledWindow;
-	ui::CustomTreeView* tree;*/
 	std::shared_ptr<IWidgetContext> context;
+	std::shared_ptr<sdk::Scene3D> scene;
+	std::unordered_map<sdk::Node*, bool> selectedMap;
+	sigc::scoped_connection sceneNodesChangedConnection;
+	IPresenterObjectsTree* presenter;
 
 public:
 	ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext);
-
-	//void setTopLevelObjects(const std::shared_ptr<Gio::ListModel> &pTopLevelObjects) override;
 
 	void openView() override;
 
@@ -54,8 +60,13 @@ public:
 	void onUpdate(bool pVisible) override;
 
 private:
-	/*static std::shared_ptr<Gio::MenuItem> createItem(const std::string &pName, const std::string &pAction,
-													 const Glib::VariantBase &pVariant);*/
+	void updateTreeLevel(const std::vector<sdk::Node*> &pNodes);
+
+	void setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pScene) override;
+
+	void markSelected(const std::vector<sdk::Node*> &pNodes, bool pSelected) override;
+
+	void setPresenter(IPresenterObjectsTree* pPresenter) override { presenter = pPresenter; }
 };
 } // namespace mer::editor::mvp
 

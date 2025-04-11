@@ -194,10 +194,8 @@ add_library(
         project/LoadedScene.h
         mvp/main/editors/sceneEditor/EditorCameraScript.cpp
         mvp/main/editors/sceneEditor/EditorCameraScript.h
-        mvp/main/treeObjectWindow/IViewObjectsTree.h
-        mvp/main/treeObjectWindow/IModelObjectsTree.h
+        mvp/main/treeObjectWindow/ModelObjectsTree.cpp
         mvp/main/treeObjectWindow/ModelObjectsTree.h
-        mvp/main/treeObjectWindow/IPresenterObjectsTree.h
         mvp/main/treeObjectWindow/PresenterObjectsTree.cpp
         mvp/main/treeObjectWindow/PresenterObjectsTree.h
         mvp/main/objectProperties/IViewObjectProperties.h
@@ -320,6 +318,7 @@ add_library(
         mvp/editor/Editor.h
         mvp/editor/EditorUi.cpp
         mvp/editor/EditorUi.h
+        mvp/main/editors/sceneEditor/NodeSelectionHelper.h
 
 )
 target_compile_options(MegaEngineEditor_lib PRIVATE -Werror)
