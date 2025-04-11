@@ -43,6 +43,7 @@ void Scene3D::addNode(const std::shared_ptr<Node> &pParentNode, const std::share
 	else
 		pParentNode->addChild(pNode.get());
 	nodes.emplace_back(pNode);
+	onNodeCollectionChanged();
 }
 
 void Scene3D::mergeNodes(const std::vector<std::shared_ptr<Node>> &pNodes) {
@@ -51,6 +52,7 @@ void Scene3D::mergeNodes(const std::vector<std::shared_ptr<Node>> &pNodes) {
 		if (!node->getParentNode()) rootNodes.emplace_back(node.get());
 		if (auto meshInstance = std::dynamic_pointer_cast<MeshInstance>(node)) { addToMainRenderPass(meshInstance); }
 	}
+	onNodeCollectionChanged();
 }
 
 void Scene3D::addMesh(const std::shared_ptr<Mesh> &pMesh) const { renderer->addMesh(pMesh); }
