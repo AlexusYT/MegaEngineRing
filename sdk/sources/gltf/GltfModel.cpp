@@ -264,7 +264,7 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 		auto node = nodes.at(pDocument.nodes.GetIndex(element.id));
 		for (auto &child: element.children) {
 			auto childNode = nodes.at(pDocument.nodes.GetIndex(child));
-			node->addChild(childNode);
+			node->addChild(childNode.get());
 			//defaultScene->addNode(node, childNode);
 		}
 	}

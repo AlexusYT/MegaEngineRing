@@ -67,8 +67,6 @@ protected:
 	void onUninitialize() override;
 
 	void addToMainRenderPass(const std::shared_ptr<MeshInstance> &pMeshInstance) const;
-
-	void addToMainRenderPassRecursive(const std::shared_ptr<Node> &pNode);
 };
 
 } // namespace mer::sdk

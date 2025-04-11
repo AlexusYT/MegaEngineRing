@@ -51,7 +51,7 @@ class Mesh;
 class Node : public Transformable {
 
 	Node* parentNode{};
-	std::vector<std::shared_ptr<Node>> children;
+	std::vector<Node*> children;
 	std::vector<sigc::scoped_connection> signalConnections;
 	sigc::scoped_connection connection;
 	std::string name;
@@ -71,9 +71,7 @@ public:
 
 	static std::shared_ptr<Node> create(const std::string &pName) { return std::shared_ptr<Node>(new Node(pName)); }
 
-	void addChild(const std::shared_ptr<Node> &pChild);
-
-	void removeChild(const std::shared_ptr<Node> &pChild) { removeChild(pChild.get()); }
+	void addChild(Node* pChild);
 
 	void removeChild(Node* pChild);
 
@@ -83,7 +81,7 @@ public:
 
 	[[nodiscard]] Node* getParentNode() const { return parentNode; }
 
-	[[nodiscard]] const std::vector<std::shared_ptr<Node>> &getChildren() const { return children; }
+	[[nodiscard]] const std::vector<Node*> &getChildren() const { return children; }
 
 	[[nodiscard]] PropertyReadOnly<std::shared_ptr<VolumeAabb>> getNodeAabb() { return nodeAabb.getReadOnly(); }
 
