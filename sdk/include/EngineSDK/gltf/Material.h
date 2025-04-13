@@ -57,6 +57,7 @@ struct MaterialData {
 };
 
 class Material : public Initializable {
+	std::string name;
 	MaterialData data{};
 	int alphaMode;
 	float alphaCutoff;
@@ -77,6 +78,10 @@ public:
 	sigc::connection connectOnChanged(const sigc::slot<void(Material* pSelf)> &pSlot) {
 		return onMaterialChanged.connect(pSlot);
 	}
+
+	[[nodiscard]] const std::string &getName() const { return name; }
+
+	void setName(const std::string &pName) { name = pName; }
 
 protected:
 	ReportMessagePtr onInitialize() override;

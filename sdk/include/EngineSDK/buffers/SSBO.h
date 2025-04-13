@@ -79,6 +79,29 @@ public:
 		dirty = true;
 	}
 
+	/**
+	 * @brief Get an element at specified @a pIndex.
+	 * @warning You must call markDirty() method if you are changed the data.
+	 * @param pIndex index of an element to return. Must be less than Ssbo::size().
+	 * @return reference to an element
+	 * @throw std::out_of_range  If @a pIndex is an invalid index.
+	 */
+	typename std::vector<T>::reference getElement(size_t pIndex) {
+		std::lock_guard lock(mutex);
+		return data.at(pIndex);
+	}
+
+	/**
+	 * @brief Get an element at specified @a pIndex.
+	 * @param pIndex index of an element to return. Must be less than Ssbo::size().
+	 * @return const reference to an element
+	 * @throw std::out_of_range  If @a pIndex is an invalid index.
+	 */
+	typename std::vector<T>::reference getElement(size_t pIndex) const {
+		std::lock_guard lock(mutex);
+		return data.at(pIndex);
+	}
+
 	template<typename InputIterator, typename = std::_RequireInputIter<InputIterator>>
 	typename std::vector<T>::iterator insertElements(typename std::vector<T>::const_iterator pPosition,
 													 InputIterator pFirst, InputIterator pLast) {

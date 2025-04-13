@@ -39,7 +39,7 @@ protected:
 	glm::quat rotationVal{};
 	glm::mat4 rotationMatrix{1};
 	bool rotationValChanged{};
-	glm::vec3 scaleVal{};
+	glm::vec3 scaleVal{1};
 	glm::mat4 scaleMatrix{1};
 	bool scaleValChanged{};
 	glm::mat4 modelMatrix{1};
@@ -124,7 +124,7 @@ public:
 		glm::vec3 skewTmp{};
 		glm::vec4 perspectiveTmp{};
 
-		glm::decompose(pNewMatrix, scaleVal, rotationVal, positionVal, skewTmp, perspectiveTmp);
+		glm::decompose(pNewMatrix, scaleTmp, rotationTmp, translationTmp, skewTmp, perspectiveTmp);
 
 		addFromArgs(translationTmp, rotationTmp, scaleTmp);
 	}

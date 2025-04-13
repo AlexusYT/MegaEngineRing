@@ -32,11 +32,15 @@ namespace mer::editor::mvp {
 class NodeSelectionHelper {
 	std::vector<sdk::Node*> selectedNodes{};
 	sigc::signal<void(const std::vector<sdk::Node*> &pNodes, bool pSelected)> onNodeSelectionChanged;
+	sdk::Node* editingNode{};
+	sigc::signal<void(sdk::Node* pNode)> onEditingNodeChanged;
 
 public:
 	void addNode(sdk::Node* pNode) {
 		selectedNodes.push_back(pNode);
 		onNodeSelectionChanged(std::vector{pNode}, true);
+		editingNode = pNode;
+		onEditingNodeChanged(editingNode);
 	}
 
 	void addNodes(const std::vector<sdk::Node*> &pNodes) {
@@ -47,12 +51,22 @@ public:
 	void clearSelection() {
 		onNodeSelectionChanged(selectedNodes, false);
 		selectedNodes.clear();
+		editingNode = nullptr;
+		onEditingNodeChanged(editingNode);
 	}
 
 	[[nodiscard]] const std::vector<sdk::Node*> &getSelectedNodes() const { return selectedNodes; }
 
-	[[nodiscard]] sigc::signal<void(const std::vector<sdk::Node*> &pNodes, bool pSelected)> &getOnNodeSelectionChanged() {
-		return onNodeSelectionChanged;
+	sigc::connection connectOnNodeSelectionChanged(
+		const sigc::slot<void(const std::vector<sdk::Node*> &pNodes, bool pSelected)> &pSlot) {
+		return onNodeSelectionChanged.connect(pSlot);
+	}
+
+	[[nodiscard]] sdk::Node* getEditingNode() const { return editingNode; }
+
+	sigc::connection connectOnEditingNodeChanged(const sigc::slot<void(sdk::Node* pNode)> &pSlot) {
+		pSlot(editingNode);
+		return onEditingNodeChanged.connect(pSlot);
 	}
 };
 } // namespace mer::editor::mvp

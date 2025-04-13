@@ -94,6 +94,11 @@ public:
 
 	[[nodiscard]] bool isDirty() const { return dirty; }
 
+	void markDirty() {
+		std::lock_guard lock(mutex);
+		dirty = true;
+	}
+
 private:
 	void updateImpl() {
 

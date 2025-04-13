@@ -95,9 +95,13 @@ void Node::listGeometryIntersectsAabb(const glm::vec3 &pRayOrigin, const glm::ve
 	}
 }
 
-void Node::onLocalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) {
-	for (auto child: children) { child->getLocalTransform()->addFromMatrix(pTransformation->getModelMatrix()); }
-	Transformable::onLocalTransformChanged(pTransformation);
+void Node::onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) {
+	for (auto child: children) {
+		auto &global = child->getGlobalTransform();
+		auto &local = child->getLocalTransform();
+		global->setFromMatrix(pTransformation->getModelMatrix() * local->getModelMatrix());
+	}
+	Transformable::onGlobalTransformChanged(pTransformation);
 }
 
 void Node::updateNodeAabb() {

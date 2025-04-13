@@ -21,28 +21,37 @@
 
 #include "PresenterObjectProperties.h"
 
-#include "IModelObjectProperties.h"
-#include "IViewObjectProperties.h"
-#include "project/LoadedScene.h"
+#include "ModelObjectProperties.h"
+#include "ViewObjectProperties.h"
 
 namespace mer::editor::mvp {
-void PresenterObjectProperties::run() {
-	for (const auto &view: views) { view->openView(); };
+PresenterObjectProperties::PresenterObjectProperties(const std::shared_ptr<IViewObjectProperties> &pView,
+													 const std::shared_ptr<IModelObjectProperties> &pModel)
+	: model(pModel), view(pView) {
+	view->setPresenter(this);
+	model->setPresenter(this);
+	if (auto scene = model->getScene()) view->setScene(scene);
 }
 
+void PresenterObjectProperties::run() { view->openView(); }
+
 void PresenterObjectProperties::stop() {
-	for (const auto &view: views) { view->closeView(); }
-	views.clear();
+	view->closeView();
 	model.reset();
 }
 
-void PresenterObjectProperties::addView(const std::shared_ptr<IView> &pElement) {
+void PresenterObjectProperties::onEditingNodeChanged(sdk::Node* pNode) { view->setSelectedNode(pNode); }
 
+void PresenterObjectProperties::onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) { view->setScene(pScene); }
+
+void PresenterObjectProperties::addView(const std::shared_ptr<IView> & /*pElement*/) {
+
+	/*
 	const auto view = std::dynamic_pointer_cast<IViewObjectProperties>(pElement);
 	if (!view) return;
 	views.push_back(view);
 	auto loadedScene = model->getLoadedScene();
 	loadedScene->connectSelectionChanged([view](ExplorerObject* pSelectedObject) { view->setObject(pSelectedObject); });
-	view->openView();
+	view->openView();*/
 }
 } // namespace mer::editor::mvp

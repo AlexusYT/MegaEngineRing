@@ -59,6 +59,8 @@ void Scene3D::addMesh(const std::shared_ptr<Mesh> &pMesh) const { renderer->addM
 
 void Scene3D::addMaterial(const std::shared_ptr<Material> &pMaterial) const { renderer->addMaterial(pMaterial); }
 
+const std::vector<std::shared_ptr<Material>> &Scene3D::getMaterials() const { return renderer->getMaterials(); }
+
 ReportMessagePtr Scene3D::onInitialize() { return Initializable::onInitialize(); }
 
 void Scene3D::onUninitialize() { Initializable::onUninitialize(); }

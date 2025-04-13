@@ -48,7 +48,7 @@
 //#define IMGUI_API __attribute__((visibility("default")))  // GCC/Clang: override visibility when set is hidden
 
 //---- Don't define obsolete functions/enums/behaviors. Consider enabling from time to time after updating to clean your code of obsolete function/names.
-//#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 //---- Disable all of Dear ImGui or don't implement standard windows/tools.
 // It is very strongly recommended to NOT disable the demo windows and debug tool during development. They are extremely useful in day to day work. Please read comments in imgui_demo.cpp.
@@ -177,10 +177,11 @@ bool InputText(const char* pName, std::string &pText, int pFlags = 0);
 bool InputTextWithHint(const char* pName, const char* pHint, std::string &pText, int pFlags = 0);
 
 bool UuidText(const char* pName, const UUID &pUuid, int pFlags = 0);
-bool DragFloat3(const char* pName, glm::vec3 &pVal, float pVSpeed = 1.0f, float pVMin = 0.0f, float pVMax = 0.0f,
-				const char* pFormat = "%.3f", int pFlags = 0);
-bool DragFloat4(const char* pName, glm::vec4 &pVal, float pVSpeed = 1.0f, float pVMin = 0.0f, float pVMax = 0.0f,
-				const char* pFormat = "%.3f", int pFlags = 0);
+
+bool DragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* roundFormat,
+			   const char* displayFormat, int flags);
+bool DragScalar(const char* label, int data_type, void* p_data, float v_speed, const void* p_min, const void* p_max,
+				const char* roundFormat, const char* displayFormat, int flags);
 void HelpMarker(const char* pDesc);
 
 bool InputTextErrored(const char* pName, const char* pHint, const char* pTooltipMsg, bool pErrored, std::string &pText,

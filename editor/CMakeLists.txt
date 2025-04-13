@@ -198,10 +198,8 @@ add_library(
         mvp/main/treeObjectWindow/ModelObjectsTree.h
         mvp/main/treeObjectWindow/PresenterObjectsTree.cpp
         mvp/main/treeObjectWindow/PresenterObjectsTree.h
-        mvp/main/objectProperties/IViewObjectProperties.h
-        mvp/main/objectProperties/IModelObjectProperties.h
+        mvp/main/objectProperties/ModelObjectProperties.cpp
         mvp/main/objectProperties/ModelObjectProperties.h
-        mvp/main/objectProperties/IPresenterObjectProperties.h
         mvp/main/objectProperties/PresenterObjectProperties.cpp
         mvp/main/objectProperties/PresenterObjectProperties.h
         mvp/resourceEditor/IModelResourceEditor.h

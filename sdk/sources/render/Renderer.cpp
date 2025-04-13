@@ -23,6 +23,7 @@
 
 #include <epoxy/gl.h>
 #include <mutex>
+#include <sigc++/adaptors/bind.h>
 
 #include "EngineSDK/gltf/Accessor.h"
 #include "EngineSDK/gltf/Material.h"
@@ -35,7 +36,17 @@ class Logger;
 
 RenderPass::RenderPass() {}
 
-Renderer::Renderer() { addRenderPass(getMainPassName(), std::make_shared<RenderPass>()); }
+Renderer::Renderer() {
+	addRenderPass(getMainPassName(), std::make_shared<RenderPass>());
+	materialToIndexMap.emplace(nullptr, 0);
+	MaterialData defaultMaterial;
+	//defaultMaterial.baseColorFactor = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+	defaultMaterial.baseColorFactor = glm::vec4(1.0f);
+	defaultMaterial.metallicRoughnessInfo = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	defaultMaterial.emissiveFactor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+	materialsSsbo.addElement(defaultMaterial);
+}
 
 void Renderer::addMaterial(const std::shared_ptr<Material> &pMaterial) {
 
@@ -43,7 +54,8 @@ void Renderer::addMaterial(const std::shared_ptr<Material> &pMaterial) {
 		auto index = materialToIndexMap.at(pChangedMaterial);
 		materialsSsbo.setElement(index, pChangedMaterial->getData());
 	});
-	materials.emplace_back(std::make_pair(pMaterial, connection));
+	materials.emplace_back(pMaterial);
+	materialsConnections.emplace(pMaterial.get(), connection);
 	materialToIndexMap.emplace(pMaterial.get(), materialsSsbo.size());
 	materialsSsbo.addElement(pMaterial->getData());
 	if (!pMaterial->isInited()) {
@@ -57,6 +69,7 @@ void Renderer::removeAllMaterials() {
 		std::lock_guard lock(uninitializedMaterialsMutex);
 		uninitializedMaterials.clear();
 	}
+	materialsConnections.clear();
 	materials.clear();
 	materialsSsbo.clear();
 }
@@ -151,6 +164,8 @@ void Renderer::addMesh(const std::shared_ptr<Mesh> &pNewMesh) {
 		info.commandIndices.emplace_back(commands.size());
 
 		commands.emplace_back(cmd);
+		info.materialChangedConnections.emplace_back(primitive->connectOnMaterialChangedSignal(
+			sigc::bind(sigc::mem_fun(*this, &Renderer::onPrimitiveMaterialChanged), pNewMesh.get(), primitive.get())));
 		if (auto mat = primitive->getMaterial())
 			metadata.materialId = static_cast<uint32_t>(materialToIndexMap.at(mat.get()));
 		info.metadataIds.emplace_back(meshMetadataSsbo.size());
@@ -263,6 +278,23 @@ void Renderer::onUninitialize() {
 	uvSsbo.unintialize();
 	normalsVbo.unintialize();
 	colorSsbo.unintialize();
+}
+
+void Renderer::onPrimitiveMaterialChanged(const std::shared_ptr<Material> &pNewMaterial, Mesh* pMesh,
+										  Primitive* pPrimitive) {
+	auto info = getMeshInfo(pMesh);
+	if (!info.has_value()) return;
+	auto matIter = materialToIndexMap.find(pNewMaterial.get());
+	if (matIter == materialToIndexMap.end()) return;
+
+	auto &primitives = pMesh->getPrimitives();
+	auto foundAtIter = std::ranges::find_if(
+		primitives, [pPrimitive](const std::shared_ptr<Primitive> &pElement) { return pElement.get() == pPrimitive; });
+	auto index = static_cast<uint64_t>(foundAtIter - primitives.begin());
+	if (info->metadataIds.size() <= index) return;
+	MeshMetadata &metadata = meshMetadataSsbo.getElement(info->metadataIds.at(index));
+	metadata.materialId = static_cast<uint32_t>(matIter->second);
+	meshMetadataSsbo.markDirty();
 }
 
 void RenderPass::addMeshInstance(Mesh* pMesh, MeshInstance* pMeshInstance) {

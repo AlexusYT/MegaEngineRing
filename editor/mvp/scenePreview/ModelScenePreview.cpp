@@ -29,7 +29,7 @@
 namespace mer::editor::mvp {
 ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper) : selectionHelper(pSelectionHelper) {
 	outlinePass = std::make_shared<sdk::RenderPass>();
-	selectionHelper->getOnNodeSelectionChanged().connect([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+	selectionHelper->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
 		for (auto node: pNodes) {
 			auto meshInst = dynamic_cast<sdk::MeshInstance*>(node);
 			if (!meshInst) continue;
@@ -61,7 +61,5 @@ void ModelScenePreview::addSelectedMeshNode(sdk::MeshInstance* pMeshInstance) {
 	selectionHelper->addNode(pMeshInstance);
 }
 
-void ModelScenePreview::clearSelectedMeshes() {
-	selectionHelper->clearSelection();
-}
+void ModelScenePreview::clearSelectedMeshes() { selectionHelper->clearSelection(); }
 } // namespace mer::editor::mvp

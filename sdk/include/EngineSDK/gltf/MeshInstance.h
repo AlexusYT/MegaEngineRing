@@ -89,7 +89,7 @@ public:
 											std::vector<std::pair<glm::vec3, Node*>> &pCandidates);
 
 protected:
-	void onLocalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) override;
+	void onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) override;
 
 	void updateNodeAabb();
 };

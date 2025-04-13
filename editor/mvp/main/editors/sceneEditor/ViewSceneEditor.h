@@ -32,6 +32,7 @@ class Scene3D;
 
 namespace mer::editor::mvp {
 class NodeSelectionHelper;
+class IPresenterObjectProperties;
 class IPresenterObjectsTree;
 class IPresenterScenePreview;
 class SubWindows;
@@ -128,6 +129,8 @@ class SceneEditor : public Editor {
 	std::shared_ptr<EditorTool> scenePreviewView;
 	std::shared_ptr<IPresenterObjectsTree> objTreePresenter;
 	std::shared_ptr<EditorTool> objTreeView;
+	std::shared_ptr<IPresenterObjectProperties> propertiesPresenter;
+	std::shared_ptr<EditorTool> propertiesViewTool;
 	std::shared_ptr<NodeSelectionHelper> selection;
 
 	std::shared_ptr<sdk::Scene3D> scene3D;

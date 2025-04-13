@@ -31,6 +31,7 @@
 #include "Initializable.h"
 
 namespace mer::sdk {
+class Primitive;
 class Renderer;
 class MeshInstanceSsbo;
 class Mesh;
@@ -58,6 +59,7 @@ struct MeshMetadata {
 struct MeshInfo {
 	std::vector<uint64_t> commandIndices;
 	std::vector<uint64_t> metadataIds;
+	std::vector<sigc::connection> materialChangedConnections;
 };
 
 class RenderPass : public Initializable {
@@ -101,7 +103,8 @@ protected:
 };
 
 class Renderer : public Initializable {
-	std::vector<std::pair<std::shared_ptr<Material>, sigc::scoped_connection>> materials;
+	std::vector<std::shared_ptr<Material>> materials;
+	std::unordered_map<Material*, sigc::scoped_connection> materialsConnections;
 	std::unordered_map<Material*, size_t /*index*/> materialToIndexMap;
 	std::vector<Material*> uninitializedMaterials;
 	std::mutex uninitializedMaterialsMutex;
@@ -174,10 +177,14 @@ public:
 
 	[[nodiscard]] uint32_t getVao() const { return vao; }
 
+	[[nodiscard]] const std::vector<std::shared_ptr<Material>> &getMaterials() const { return materials; }
+
 protected:
 	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
+
+	void onPrimitiveMaterialChanged(const std::shared_ptr<Material> &pNewMaterial, Mesh* pMesh, Primitive* pPrimitive);
 };
 
 } // namespace mer::sdk
