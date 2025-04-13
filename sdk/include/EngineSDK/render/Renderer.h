@@ -31,6 +31,7 @@
 #include "Initializable.h"
 
 namespace mer::sdk {
+class Primitive;
 class Renderer;
 class MeshInstanceSsbo;
 class Mesh;
@@ -58,6 +59,7 @@ struct MeshMetadata {
 struct MeshInfo {
 	std::vector<uint64_t> commandIndices;
 	std::vector<uint64_t> metadataIds;
+	std::vector<sigc::connection> materialChangedConnections;
 };
 
 class RenderPass : public Initializable {
@@ -181,6 +183,8 @@ protected:
 	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
+
+	void onPrimitiveMaterialChanged(const std::shared_ptr<Material> &pNewMaterial, Mesh* pMesh, Primitive* pPrimitive);
 };
 
 } // namespace mer::sdk
