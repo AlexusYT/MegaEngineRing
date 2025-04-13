@@ -141,11 +141,11 @@ void ViewPrefabEditor::updateUi() {
 			"Combine it with Shift to accelerate or Alt to decelerate.");
 
 
-		ImGui::DragFloat3("Translate", translation, 0.01f);
+		ImGui::DragFloat3("Translate", &translation.x, 0.01f);
 		ImGui::SetItemTooltip("Set the position of the preview instance.");
-		ImGui::DragFloat3("Rotation, deg", rotation, 0.01f);
+		ImGui::DragFloat3("Rotation, deg", &rotation.x, 0.01f);
 		ImGui::SetItemTooltip("Set the euler rotation of the preview instance in degrees.");
-		ImGui::DragFloat3("Scale", scale, 0.01f, 0.02f, 1000000.0f);
+		ImGui::DragFloat3("Scale", &scale.x, 0.01f, 0.02f, 1000000.0f);
 		ImGui::SetItemTooltip("Set the scale of the preview instance.");
 		/*auto transform = instance->getLocalTransform();
 		transform->reset();
