@@ -39,7 +39,6 @@ class Scene3D : public Initializable, public IRenderable {
 	std::vector<Node*> rootNodes;
 	sigc::signal<void()> onNodeCollectionChanged;
 
-	std::vector<std::shared_ptr<Material>> materials;
 
 protected:
 	Scene3D();
@@ -58,6 +57,8 @@ public:
 	void addMesh(const std::shared_ptr<Mesh> &pMesh) const;
 
 	void addMaterial(const std::shared_ptr<Material> &pMaterial) const;
+
+	[[nodiscard]] const std::vector<std::shared_ptr<Material>> &getMaterials() const;
 
 	[[nodiscard]] const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }
 

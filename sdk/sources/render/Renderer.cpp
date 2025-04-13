@@ -43,7 +43,8 @@ void Renderer::addMaterial(const std::shared_ptr<Material> &pMaterial) {
 		auto index = materialToIndexMap.at(pChangedMaterial);
 		materialsSsbo.setElement(index, pChangedMaterial->getData());
 	});
-	materials.emplace_back(std::make_pair(pMaterial, connection));
+	materials.emplace_back(pMaterial);
+	materialsConnections.emplace(pMaterial.get(), connection);
 	materialToIndexMap.emplace(pMaterial.get(), materialsSsbo.size());
 	materialsSsbo.addElement(pMaterial->getData());
 	if (!pMaterial->isInited()) {
@@ -57,6 +58,7 @@ void Renderer::removeAllMaterials() {
 		std::lock_guard lock(uninitializedMaterialsMutex);
 		uninitializedMaterials.clear();
 	}
+	materialsConnections.clear();
 	materials.clear();
 	materialsSsbo.clear();
 }

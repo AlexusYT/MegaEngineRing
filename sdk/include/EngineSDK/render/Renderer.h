@@ -101,7 +101,8 @@ protected:
 };
 
 class Renderer : public Initializable {
-	std::vector<std::pair<std::shared_ptr<Material>, sigc::scoped_connection>> materials;
+	std::vector<std::shared_ptr<Material>> materials;
+	std::unordered_map<Material*, sigc::scoped_connection> materialsConnections;
 	std::unordered_map<Material*, size_t /*index*/> materialToIndexMap;
 	std::vector<Material*> uninitializedMaterials;
 	std::mutex uninitializedMaterialsMutex;
@@ -173,6 +174,8 @@ public:
 	[[nodiscard]] std::shared_ptr<RenderPass> getMainRenderPass() const { return getRenderPass(getMainPassName()); }
 
 	[[nodiscard]] uint32_t getVao() const { return vao; }
+
+	[[nodiscard]] const std::vector<std::shared_ptr<Material>> &getMaterials() const { return materials; }
 
 protected:
 	ReportMessagePtr onInitialize() override;
