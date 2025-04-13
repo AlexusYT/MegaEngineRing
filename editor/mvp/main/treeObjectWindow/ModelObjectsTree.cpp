@@ -27,7 +27,7 @@
 
 namespace mer::editor::mvp {
 ModelObjectsTree::ModelObjectsTree(NodeSelectionHelper* pSelection) : selection(pSelection) {
-	selection->getOnNodeSelectionChanged().connect([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+	selection->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
 		if (presenter) presenter->onSelectionChanged(pNodes, pSelected);
 	});
 }

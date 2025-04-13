@@ -51,8 +51,11 @@ public:
 
 	[[nodiscard]] const std::vector<sdk::Node*> &getSelectedNodes() const { return selectedNodes; }
 
-	[[nodiscard]] sigc::signal<void(const std::vector<sdk::Node*> &pNodes, bool pSelected)> &getOnNodeSelectionChanged() {
-		return onNodeSelectionChanged;
+	sigc::connection connectOnNodeSelectionChanged(
+		const sigc::slot<void(const std::vector<sdk::Node*> &pNodes, bool pSelected)> &pSlot) {
+		return onNodeSelectionChanged.connect(pSlot);
+	}
+
 	}
 };
 } // namespace mer::editor::mvp
