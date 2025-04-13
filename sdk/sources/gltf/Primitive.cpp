@@ -21,9 +21,9 @@
 
 #include "EngineSDK/gltf/Primitive.h"
 
+#include "EngineSDK/bounding/VolumeAabb.h"
 #include "EngineSDK/gltf/Accessor.h"
 #include "EngineSDK/gltf/Material.h"
-#include "EngineSDK/bounding/VolumeAabb.h"
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 #include "GLTFSDK/GLTF.h"
 
@@ -48,6 +48,7 @@ std::shared_ptr<Primitive> Primitive::create(const MeshMode &pMeshMode,
 void Primitive::setMaterial(const std::shared_ptr<Material> &pMaterial) {
 	if (material == pMaterial) return;
 	material = pMaterial;
+	onMaterialChangedSignal(material);
 }
 
 } // namespace mer::sdk
