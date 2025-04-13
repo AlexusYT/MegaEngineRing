@@ -36,7 +36,17 @@ class Logger;
 
 RenderPass::RenderPass() {}
 
-Renderer::Renderer() { addRenderPass(getMainPassName(), std::make_shared<RenderPass>()); }
+Renderer::Renderer() {
+	addRenderPass(getMainPassName(), std::make_shared<RenderPass>());
+	materialToIndexMap.emplace(nullptr, 0);
+	MaterialData defaultMaterial;
+	//defaultMaterial.baseColorFactor = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+	defaultMaterial.baseColorFactor = glm::vec4(1.0f);
+	defaultMaterial.metallicRoughnessInfo = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	defaultMaterial.emissiveFactor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+	materialsSsbo.addElement(defaultMaterial);
+}
 
 void Renderer::addMaterial(const std::shared_ptr<Material> &pMaterial) {
 
