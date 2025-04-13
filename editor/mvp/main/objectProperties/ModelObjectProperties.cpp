@@ -19,18 +19,22 @@
 // Created by alexus on 26.09.24.
 //
 
-#ifndef IVIEWOBJECTPROPERTIES_H
-#define IVIEWOBJECTPROPERTIES_H
-#include "mvp/IView.h"
+
+#include "ModelObjectProperties.h"
+
+#include "mvp/main/editors/sceneEditor/NodeSelectionHelper.h"
+#include "mvp/main/objectProperties/PresenterObjectProperties.h"
 
 namespace mer::editor::mvp {
-class ExplorerObject;
+ModelObjectProperties::ModelObjectProperties(NodeSelectionHelper* pSelectionHelper)
+	: selectionHelper(pSelectionHelper) {
+	selectionHelper->connectOnEditingNodeChanged([this](sdk::Node* pNode) {
+		if (presenter) presenter->onEditingNodeChanged(pNode);
+	});
+}
 
-class IViewObjectProperties : public IView {
-public:
-	virtual void setObject(ExplorerObject* pObject) = 0;
-};
+void ModelObjectProperties::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
+	scene = pScene;
+	if (presenter) presenter->onSceneChanged(pScene);
+}
 } // namespace mer::editor::mvp
-
-
-#endif //IVIEWOBJECTPROPERTIES_H

@@ -21,34 +21,43 @@
 
 #ifndef PRESENTEROBJECTPROPERTIES_H
 #define PRESENTEROBJECTPROPERTIES_H
-#include "IPresenterObjectProperties.h"
+#include "EngineSDK/scene/Scene3D.h"
+#include "mvp/PresenterBase.h"
+
+namespace mer::sdk {
+class Node;
+}
 
 namespace mer::editor::mvp {
 class IViewObjectProperties;
-}
-
-namespace mer::editor::mvp {
 class IModelObjectProperties;
-}
 
-namespace mer::editor::mvp {
+class IPresenterObjectProperties : public PresenterBase {
+public:
+	virtual void onEditingNodeChanged(sdk::Node* pNode) = 0;
+
+	virtual void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+};
 
 class PresenterObjectProperties : public IPresenterObjectProperties {
 	std::shared_ptr<IModelObjectProperties> model;
-	std::vector<std::shared_ptr<IViewObjectProperties>> views;
+	std::shared_ptr<IViewObjectProperties> view;
 
 public:
-	explicit PresenterObjectProperties(const std::shared_ptr<IModelObjectProperties> &pModel) : model(pModel) {}
+	explicit PresenterObjectProperties(const std::shared_ptr<IViewObjectProperties> &pView,
+									   const std::shared_ptr<IModelObjectProperties> &pModel);
 
 	void run() override;
 
 	void stop() override;
 
+	void onEditingNodeChanged(sdk::Node* pNode) override;
+
+	void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) override;
+
 	void addView(const std::shared_ptr<IView> &) override;
 
-	std::string getTypeName() override {
-		return "PresenterObjectProperties";
-	}
+	std::string getTypeName() override { return "PresenterObjectProperties"; }
 };
 
 } // namespace mer::editor::mvp

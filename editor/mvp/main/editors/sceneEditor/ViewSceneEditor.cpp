@@ -33,6 +33,9 @@
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/main/centerWindow/TabPlaceholder.h"
 #include "mvp/main/editors/IPresenterSceneEditor.h"
+#include "mvp/main/objectProperties/ModelObjectProperties.h"
+#include "mvp/main/objectProperties/PresenterObjectProperties.h"
+#include "mvp/main/objectProperties/ViewObjectProperties.h"
 #include "mvp/main/treeObjectWindow/ModelObjectsTree.h"
 #include "mvp/main/treeObjectWindow/PresenterObjectsTree.h"
 #include "mvp/main/treeObjectWindow/ViewObjectsTree.h"
@@ -179,6 +182,13 @@ SceneEditor::SceneEditor(const std::string &pName) : Editor(pName) {
 	objTreeModel->setScene(scene3D);
 	objTreePresenter = std::make_shared<PresenterObjectsTree>(objView, objTreeModel);
 	objTreePresenter->run();
+
+	auto propertiesView = std::make_shared<ViewObjectProperties>(EditorContext::create(this));
+	propertiesViewTool = propertiesView;
+	auto propertiesModel = std::make_shared<ModelObjectProperties>(selection.get());
+	propertiesModel->setScene(scene3D);
+	propertiesPresenter = std::make_shared<PresenterObjectProperties>(propertiesView, propertiesModel);
+	propertiesPresenter->run();
 }
 
 void SceneEditor::updateUi() {
@@ -205,10 +215,13 @@ void SceneEditor::loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiD
 	ImGui::DockBuilderAddNode(dockMainId, ImGuiDockNodeFlags_DockSpace);
 	ImGui::DockBuilderSetNodeSize(dockMainId, pDockspaceSize);
 	ImGuiID dockIdRight = ImGui::DockBuilderSplitNode(dockMainId, ImGuiDir_Right, 0.20f, NULL, &dockMainId);
+	ImGuiID dockIdRightUp{};
+	ImGuiID dockIdRightDown = ImGui::DockBuilderSplitNode(dockIdRight, ImGuiDir_Down, 0.50f, NULL, &dockIdRightUp);
 
 	ImGui::DockBuilderDockWindow(scenePreviewView->getWindowName(currDockspaceId).c_str(), dockMainId);
 
-	ImGui::DockBuilderDockWindow(objTreeView->getWindowName(currDockspaceId).c_str(), dockIdRight);
+	ImGui::DockBuilderDockWindow(objTreeView->getWindowName(currDockspaceId).c_str(), dockIdRightUp);
+	ImGui::DockBuilderDockWindow(propertiesViewTool->getWindowName(currDockspaceId).c_str(), dockIdRightDown);
 	ImGui::DockBuilderFinish(pDockspaceId);
 }
 

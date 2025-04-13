@@ -21,35 +21,53 @@
 
 #ifndef OBJECTPROPERTIESWINDOW_H
 #define OBJECTPROPERTIESWINDOW_H
-#include "IViewObjectProperties.h"
 
-namespace mer::editor::ui {
-class CustomTreeView;
-}
+#include "mvp/IView.h"
+#include "mvp/editor/Editor.h"
+
+namespace mer::sdk {
+class Scene3D;
+class MeshInstance;
+class Node;
+} // namespace mer::sdk
 
 namespace mer::editor::mvp {
-class ExplorerObject;
+class IPresenterObjectProperties;
 
-class ViewObjectProperties : public IViewObjectProperties {
-	Gtk::Box mainWidget;
-	Gtk::MenuButton addBtn;
-	Gtk::Button removeBtn;
-	ui::CustomTreeView* propertiesTree;
+class IViewObjectProperties : public IView {
+public:
+	virtual void setPresenter(IPresenterObjectProperties* pPresenter) = 0;
+
+	virtual void setSelectedNode(sdk::Node* pSelectedNode) = 0;
+
+	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+};
+
+class ViewObjectProperties : public IViewObjectProperties, public EditorTool {
 	std::shared_ptr<IWidgetContext> context;
+	IPresenterObjectProperties* presenter{};
+	sdk::Node* selectedNode{};
+	std::shared_ptr<sdk::Scene3D> scene{};
 
 public:
 	ViewObjectProperties(const std::shared_ptr<IWidgetContext> &pContext);
 
-	void setObject(ExplorerObject* pObject) override;
+	void onUpdate(bool pVisible) override;
 
-	static std::shared_ptr<Gtk::ColumnViewColumn> createNameColumn();
+	void setPresenter(IPresenterObjectProperties* pPresenter) override { presenter = pPresenter; }
 
-	static std::shared_ptr<Gtk::ColumnViewColumn> createValueColumn();
+	void setSelectedNode(sdk::Node* pSelectedNode) override { selectedNode = pSelectedNode; }
+
+	void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) override { scene = pScene; }
 
 private:
 	void openView() override;
 
 	void closeView() override;
+
+	void drawTransformation();
+
+	void drawMaterial(sdk::MeshInstance* pMeshNode);
 };
 
 } // namespace mer::editor::mvp

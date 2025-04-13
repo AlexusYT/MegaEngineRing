@@ -21,157 +21,187 @@
 
 #include "ViewObjectProperties.h"
 
-#include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/resources/models/IModel3DObject.h"
-#include "ObjectPropertyEntry.h"
-#include "PropertyRenderer.h"
+#include "EngineSDK/gltf/Material.h"
+#include "EngineSDK/gltf/Mesh.h"
+#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/gltf/Primitive.h"
+#include "EngineSDK/scene/Scene3D.h"
+#include "EngineSDK/utils/Transformation.h"
 #include "mvp/contexts/IWidgetContext.h"
-#include "mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.h"
-#include "ui/customWidgets/CustomSignalListItemFactory.h"
-#include "ui/customWidgets/CustomTreeView.h"
 
 namespace mer::editor::mvp {
-ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext> &pContext) : context(pContext) {
+ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext> &pContext)
+	: EditorTool("ViewObjectPropertiesTool"), context(pContext) {}
 
-	Gtk::Box buttonBox;
-	addBtn.set_label("Add");
-	auto menu = Gio::Menu::create();
-	for (auto extension: sdk::ExtensionRegistry::getExtensions()) {
-		if (extension.first == sdk::MainObjectExtension::typeName()) continue;
-		auto item = Gio::MenuItem::create(extension.first, "");
+void ViewObjectProperties::onUpdate(bool /*pVisible*/) {
+	if (!ImGui::BeginTabBar("MyTabBar", 0)) return;
+	if (ImGui::BeginTabItem("Scene", nullptr, 0)) { ImGui::EndTabItem(); }
 
-		item->set_action_and_target("object.selected.extension.new",
-									Glib::Variant<std::string>::create(extension.first));
-		menu->append_item(item);
+	// ReSharper disable once CppDFAConstantConditions
+	if (selectedNode) {
+		// ReSharper disable once CppDFAUnreachableCode
+		if (ImGui::BeginTabItem("Instance", nullptr, ImGuiTabItemFlags_SetSelected)) {
+
+			auto nodeName = selectedNode->getName();
+			if (ImGui::InputText("Name", nodeName)) selectedNode->setName(nodeName);
+			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+			if (ImGui::TreeNodeEx("Transformation", ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_NoAutoOpenOnLog)) {
+				drawTransformation();
+				ImGui::TreePop();
+			}
+			if (auto meshNode = dynamic_cast<sdk::MeshInstance*>(selectedNode)) {
+
+				ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+				if (ImGui::TreeNodeEx("Material", ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_NoAutoOpenOnLog)) {
+					drawMaterial(meshNode);
+					ImGui::TreePop();
+				}
+			}
+			ImGui::EndTabItem();
+		}
 	}
-	addBtn.set_menu_model(menu);
-	addBtn.set_sensitive(false);
-
-	removeBtn.set_label("Remove");
-	removeBtn.set_sensitive(false);
-	buttonBox.append(addBtn);
-	buttonBox.append(removeBtn);
-	removeBtn.signal_clicked().connect([this] {
-		auto selectedItem = propertiesTree->getSelectedItem();
-		sdk::Extension* extToRemove{};
-		if (const auto property = std::dynamic_pointer_cast<ObjectPropertyEntry>(selectedItem)) {
-			extToRemove = property->getExtension();
-		} else if (const auto extension = std::dynamic_pointer_cast<ObjectExtensionEntry>(selectedItem)) {
-			extToRemove = extension->getNativeExtension();
-		}
-		if (!extToRemove) return;
-		const auto variant = Glib::Variant<uintptr_t>::create(reinterpret_cast<uintptr_t>(extToRemove));
-
-		mainWidget.activate_action("object.extension.remove", variant);
-		propertiesTree->unselect();
-		removeBtn.set_sensitive(false);
-	});
-	mainWidget.set_orientation(Gtk::Orientation::VERTICAL);
-	mainWidget.append(buttonBox);
-	propertiesTree = Gtk::make_managed<ui::CustomTreeView>();
-	Gtk::ScrolledWindow propertiesScrolledWindow;
-	propertiesScrolledWindow.set_expand(true);
-	propertiesScrolledWindow.set_child(*propertiesTree);
-	mainWidget.append(propertiesScrolledWindow);
-
-
-	const auto nameColumn = createNameColumn();
-	nameColumn->set_resizable(true);
-	nameColumn->set_fixed_width(100);
-	propertiesTree->append_column(nameColumn);
-	const auto valueColumn = createValueColumn();
-	valueColumn->set_resizable(true);
-	propertiesTree->append_column(valueColumn);
-
-	propertiesTree->setSlotSelectionChanged([this](Glib::ObjectBase* pObjectBase) {
-		auto mainExtTypeName = sdk::MainObjectExtension::typeName();
-		if (auto entry = dynamic_cast<ObjectPropertyEntry*>(pObjectBase)) {
-			removeBtn.set_sensitive(entry->getExtension()->getTypeName() != mainExtTypeName);
-		} else if (auto ext = dynamic_cast<ObjectExtensionEntry*>(pObjectBase)) {
-			removeBtn.set_sensitive(ext->getNativeExtension()->getTypeName() != mainExtTypeName);
-		}
-		//if (entrySelectionChanged) entrySelectionChanged(dynamic_cast<ObjectPropertyEntryBase*>(pObjectBase));
-	});
+	ImGui::EndTabBar();
 }
 
-void ViewObjectProperties::setObject(ExplorerObject* pObject) {
-	addBtn.set_sensitive(pObject != nullptr);
-	propertiesTree->setSlotCreateModel(
-		[this, pObject](const Glib::RefPtr<Glib::ObjectBase> &pItem) -> Glib::RefPtr<Gio::ListModel> {
-			if (const auto col = std::dynamic_pointer_cast<ObjectExtensionEntry>(pItem))
-				//
-				return col->getChildren();
-			if (std::dynamic_pointer_cast<ObjectPropertyEntry>(pItem)) return nullptr;
-			if (pObject) return pObject->getPropertyEntries();
-
-			return Gio::ListStore<ObjectExtensionEntry>::create();
-		});
-	propertiesTree->unselect();
-}
-
-std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createNameColumn() {
-	const auto factory = ui::CustomSignalListItemFactory::create();
-	factory->signal_setup().connect([](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
-		auto* expander = Gtk::make_managed<Gtk::TreeExpander>();
-		auto* label = Gtk::make_managed<Gtk::Label>();
-		label->set_halign(Gtk::Align::END);
-		label->set_margin(3);
-		label->set_ellipsize(Pango::EllipsizeMode::END);
-		expander->set_child(*label);
-		pListItem->set_child(*expander);
-	});
-	factory->signal_bind().connect([](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
-		const auto row = std::dynamic_pointer_cast<Gtk::TreeListRow>(pListItem->get_item());
-		if (!row) return;
-
-		const auto col = std::dynamic_pointer_cast<ObjectPropertyEntryBase>(row->get_item());
-		if (!col) return;
-		auto* const expander = dynamic_cast<Gtk::TreeExpander*>(pListItem->get_child());
-		if (!expander) return;
-		expander->set_list_row(row);
-		expander->set_hide_expander(false);
-		auto* label = dynamic_cast<Gtk::Label*>(expander->get_child());
-		if (!label) return;
-		label->set_text(col->getName());
-	});
-
-	return Gtk::ColumnViewColumn::create("Name", factory);
-}
-
-Gtk::Entry* createEntry() {
-	auto* entry = Gtk::make_managed<Gtk::Entry>();
-	entry->set_size_request();
-
-	return entry;
-}
-
-std::shared_ptr<Gtk::ColumnViewColumn> ViewObjectProperties::createValueColumn() {
-	const auto factory = ui::CustomSignalListItemFactory::create();
-	factory->signal_setup().connect([](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
-		const auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
-		box->set_margin(5);
-		pListItem->set_child(*box);
-	});
-	factory->signal_bind().connect([](const Glib::RefPtr<Gtk::ListItem> &pListItem) {
-		const auto row = std::dynamic_pointer_cast<Gtk::TreeListRow>(pListItem->get_item());
-		if (!row) return;
-
-		const auto col = std::dynamic_pointer_cast<ObjectPropertyEntry>(row->get_item());
-		if (!col) return;
-		auto* const box = dynamic_cast<Gtk::Box*>(pListItem->get_child());
-		auto children = box->observe_children();
-		for (uint32_t i = 0, maxI = children->get_n_items(); i < maxI; i++) {
-			auto child = children->get_typed_object<Gtk::Widget>(0);
-			child->unparent();
-		}
-		box->append(*col->getRenderer()->getWidget());
-	});
-
-	return Gtk::ColumnViewColumn::create("Value", factory);
-}
-
-void ViewObjectProperties::openView() { context->addWidget(&mainWidget); }
+void ViewObjectProperties::openView() { context->addTool(this); }
 
 void ViewObjectProperties::closeView() { context->removeWidget(); }
+
+bool DragProperty(const char* pLabel, float* pV, float pSpeed, const char* pRoundFormat, const char* pDisplayFormat) {
+	return ImGui::DragFloat(pLabel, pV, pSpeed, 0, 0, pRoundFormat, pDisplayFormat, ImGuiSliderFlags_NoSpeedTweaks);
+}
+
+int rotationUnit = 1;
+
+void ViewObjectProperties::drawTransformation() {
+	float speed = 0.005f;
+	const char* roundFormat = "%.2f";
+	if (ImGui::IsWindowFocused()) {
+		auto ctrlDown = ImGui::IsKeyDown(ImGuiMod_Ctrl);
+		auto shiftDown = ImGui::IsKeyDown(ImGuiMod_Shift);
+		if (ctrlDown && !shiftDown) { //Only ctrl is pressed
+			roundFormat = "%0.0f";
+			speed = 0.01f;
+		} else if (!ctrlDown && shiftDown) { //Only shift is pressed
+			roundFormat = "%0.3f";
+			speed = 0.0005f;
+		} else if (ctrlDown && shiftDown) { //Both ctrl and shift are pressed
+			roundFormat = "%0.1f";
+			speed = 0.005f;
+		}
+	}
+	auto &local = selectedNode->getLocalTransform();
+
+	ImGui::Text("Position");
+	auto pos = local->getPosition();
+	bool posChanged = false;
+	posChanged |= DragProperty("X##pos", &pos.x, speed, roundFormat, "%0.3f");
+	posChanged |= DragProperty("Y##pos", &pos.y, speed, roundFormat, "%0.3f");
+	posChanged |= DragProperty("Z##pos", &pos.z, speed, roundFormat, "%0.3f");
+	if (posChanged) local->setPosition(pos);
+
+	ImGui::Text("Rotation");
+	static int curType = 0;
+	ImGui::Combo("Type", &curType, "Quaternion\0XYZ Euler\0Axis Angle\0");
+	bool rotChanged = false;
+	auto rotationQuat = local->getRotation();
+	if (curType == 0) {
+		rotChanged |= DragProperty("W##rotQuat", &rotationQuat.w, speed, roundFormat, "%0.3f");
+		rotChanged |= DragProperty("X##rotQuat", &rotationQuat.x, speed, roundFormat, "%0.3f");
+		rotChanged |= DragProperty("Y##rotQuat", &rotationQuat.y, speed, roundFormat, "%0.3f");
+		rotChanged |= DragProperty("Z##rotQuat", &rotationQuat.z, speed, roundFormat, "%0.3f");
+		if (rotChanged) local->setRotationQuaternion(glm::normalize(rotationQuat));
+	} else if (curType == 1) {
+		glm::vec3 euler = glm::eulerAngles(rotationQuat);
+		const char* displayFormat = "%0.3f";
+		if (rotationUnit == 1) {
+			euler = glm::degrees(euler);
+			displayFormat = "%0.3f°";
+		}
+		rotChanged |= ImGui::DragFloat("X##rotEuler", &euler.x, speed * 10, 0, 0, roundFormat, displayFormat,
+									   ImGuiSliderFlags_NoSpeedTweaks | ImGuiSliderFlags_WrapAround);
+		rotChanged |= ImGui::DragFloat("Y##rotEuler", &euler.y, speed * 10, 0, 0, roundFormat, displayFormat,
+									   ImGuiSliderFlags_NoSpeedTweaks | ImGuiSliderFlags_WrapAround);
+		rotChanged |= ImGui::DragFloat("Z##rotEuler", &euler.z, speed * 10, 0, 0, roundFormat, displayFormat,
+									   ImGuiSliderFlags_NoSpeedTweaks | ImGuiSliderFlags_WrapAround);
+		if (rotationUnit == 1) {
+			/*if (euler.y > 90) {
+						euler.y = 90;
+						euler.x += 180;
+						euler.z -= 180;
+					}
+					if (euler.z > 180) { euler.z = 360 - euler.z; }*/
+			/*if (euler.y > 90.f) {
+						euler.x -= 180.f;
+						euler.y -= 180.f;
+						euler.y *= -1.f;
+						euler.z += 180.f;
+
+						if (euler.x > 0.f) { euler.x += 360.f; }
+					}*/
+			euler = glm::radians(euler);
+		}
+		if (rotChanged) local->setRotationQuaternion(glm::fquat{euler});
+	} else {
+		auto axisVal = axis(rotationQuat);
+		auto angleVal = angle(rotationQuat);
+		if (rotationUnit == 1) { angleVal = glm::degrees(angleVal); }
+		rotChanged |=
+			DragProperty("W##rotQuat", &angleVal, speed * 10, roundFormat, rotationUnit == 1 ? "%0.3f" : "%0.3f°");
+		rotChanged |= DragProperty("X##rotQuat", &axisVal.x, speed, roundFormat, "%0.3f");
+		rotChanged |= DragProperty("Y##rotQuat", &axisVal.y, speed, roundFormat, "%0.3f");
+		rotChanged |= DragProperty("Z##rotQuat", &axisVal.z, speed, roundFormat, "%0.3f");
+		if (rotationUnit == 1) { angleVal = glm::radians(angleVal); }
+		if (rotChanged) local->setRotationQuaternion(glm::normalize(glm::angleAxis(angleVal, axisVal)));
+	}
+
+
+	auto scale = local->getScale();
+	bool scaleChanged = false;
+	ImGui::Text("Scale");
+	scaleChanged |= DragProperty("X##scale", &scale.x, speed, roundFormat, "%0.3f");
+	scaleChanged |= DragProperty("Y##scale", &scale.y, speed, roundFormat, "%0.3f");
+	scaleChanged |= DragProperty("Z##scale", &scale.z, speed, roundFormat, "%0.3f");
+	if (scaleChanged) local->setScale(scale);
+}
+
+void ViewObjectProperties::drawMaterial(sdk::MeshInstance* pMeshNode) {
+	auto mesh = pMeshNode->getMesh();
+	std::shared_ptr<sdk::Primitive> curPrimitive{};
+	for (auto primitive: mesh->getPrimitives()) {
+		curPrimitive = primitive;
+		break; //TODO Take only first primitive. For now.
+	}
+	if (!curPrimitive) {
+		ImGui::Text("No primitives in mesh. This message is a stub");
+		return;
+	}
+	auto selectedMaterial = curPrimitive->getMaterial();
+
+	const char* comboPreviewValue = selectedMaterial == nullptr ? "None" : selectedMaterial->getName().c_str();
+	if (ImGui::BeginCombo("Material", comboPreviewValue, 0)) {
+		if (scene) {
+			bool isSelected = selectedMaterial == nullptr;
+			if (ImGui::Selectable("None", isSelected)) {
+				selectedMaterial = nullptr;
+				curPrimitive->setMaterial(nullptr);
+			}
+			if (isSelected) ImGui::SetItemDefaultFocus();
+			for (auto material: scene->getMaterials()) {
+				isSelected = selectedMaterial == material;
+				if (ImGui::Selectable(material->getName().c_str(), isSelected)) {
+					selectedMaterial = material;
+					curPrimitive->setMaterial(material);
+				}
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (isSelected) ImGui::SetItemDefaultFocus();
+			}
+		} else {
+			ImGui::Text("Programmer error. No Scene specified for %s", __FILE_NAME__);
+		}
+		ImGui::EndCombo();
+	}
+}
 } // namespace mer::editor::mvp
