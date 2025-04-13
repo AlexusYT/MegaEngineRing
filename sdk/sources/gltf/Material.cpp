@@ -33,6 +33,7 @@ Material::Material(const Microsoft::glTF::Material &pMaterial,
 				   const std::unordered_map<Microsoft::glTF::TextureType, std::shared_ptr<Texture>> &pUsedTextures)
 	: usedTextures(pUsedTextures) {
 	using namespace Microsoft::glTF;
+	name = pMaterial.name;
 	alphaMode = static_cast<int>(pMaterial.alphaMode);
 	alphaCutoff = pMaterial.alphaCutoff;
 	doubleSided = pMaterial.doubleSided;
