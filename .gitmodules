@@ -4,3 +4,6 @@
 [submodule "submodules/glTF-SDK"]
 	path = submodules/glTF-SDK
 	url = https://github.com/microsoft/glTF-SDK.git
+[submodule "submodules/ImGuiFileDialog"]
+	path = submodules/ImGuiFileDialog
+	url = https://github.com/aiekick/ImGuiFileDialog.git

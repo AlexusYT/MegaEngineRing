@@ -49,6 +49,11 @@ target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui/backends")
 
 target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/imconfig_custom.h>\"")
 
+add_subdirectory(submodules/ImGuiFileDialog)
+target_link_libraries(ImGuiFileDialog PRIVATE ImGUI)
+target_compile_definitions(ImGuiFileDialog PUBLIC "CUSTOM_IMGUIFILEDIALOG_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor/ImGuiFileDialogConfigCustom.h>\"")
+
+
 add_subdirectory(utils)
 add_subdirectory(sdk)
 add_subdirectory(editor)
