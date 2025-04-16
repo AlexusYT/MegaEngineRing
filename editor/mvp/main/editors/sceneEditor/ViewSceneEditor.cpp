@@ -28,6 +28,7 @@
 #include "EngineSDK/meshes/BlockPlaneMesh.h"
 #include "EngineSDK/scene/Scene.h"
 #include "EngineSDK/scene/Scene3D.h"
+#include "Globals.h"
 #include "NodeSelectionHelper.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
@@ -201,12 +202,33 @@ void SceneEditor::updateUi() {
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Model")) {
-				if (ImGui::MenuItem("GLTF...")) { addGltfModel(); }
+				if (ImGui::BeginMenu("glTF")) {
+					if (ImGui::MenuItem("From File...")) {
+						IGFD::FileDialogConfig config;
+						config.path = Globals::getProjectsPath().string();
+						config.countSelectionMax = 1;
+						ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File",
+																"glTF files (.glb,.gltf){.glb,.gltf}", config);
+					}
+					ImGui::BeginDisabled(true);
+					if (ImGui::MenuItem("From Sketchfab...")) {}
+					if (ImGui::MenuItem("From Favorites...")) {}
+					ImGui::EndDisabled();
+					ImGui::EndMenu();
+				}
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
+	}
+	ImGui::SetNextWindowSize(ImVec2(700, 500), ImGuiCond_Appearing);
+	if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey", ImGuiWindowFlags_NoCollapse, ImVec2(300, 200))) {
+		if (ImGuiFileDialog::Instance()->IsOk()) {
+			std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+			addGltfModel(filePathName);
+		}
+		ImGuiFileDialog::Instance()->Close();
 	}
 }
 
@@ -242,13 +264,11 @@ void SceneEditor::addPlane() {
 	//if (scenePreviewPresenter) scenePreviewPresenter->addPlane();
 }
 
-void SceneEditor::addGltfModel() {
+void SceneEditor::addGltfModel(const std::string &pPath) {
 
 	sdk::ReportMessagePtr msg;
-	auto gltf = sdk::GltfModel::createFromFile("/home/alexus/.cache/MegaEngineRing/halo.glb", msg);
+	auto gltf = sdk::GltfModel::createFromFile(pPath, msg);
 
-	//auto gltf = sdk::GltfModel::createFromFile("/home/alexus/Downloads/models/Sphere.glb", msg);
-	//auto gltf = sdk::GltfModel::createFromFile("/home/alexus/Downloads/models/OrientationTest.gltf", msg);
 	if (!gltf) {
 		sdk::Logger::error(msg);
 		return;
@@ -263,11 +283,5 @@ void SceneEditor::addGltfModel() {
 	for (auto mesh: gltf->getMeshes()) { scene->addMesh(mesh); }
 
 	scene->mergeNodes(gltf->getNodes());
-	//for (auto rootNode: gltf->getDefaultScene()->getRootNodes()) { scene->addNode(nullptr, rootNode); }
-	/*for (auto node: gltf->getNodes()) {
-		if (auto meshInstance = std::dynamic_pointer_cast<sdk::MeshInstance>(node))
-			modelPreview->addNode(meshInstance->getMesh(), meshInstance);
-	}*/
-	//modelPreview->setScene(gltf->getDefaultScene());
 }
 } // namespace mer::editor::mvp

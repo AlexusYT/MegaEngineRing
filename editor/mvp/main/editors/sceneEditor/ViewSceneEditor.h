@@ -148,7 +148,7 @@ protected:
 private:
 	void addPlane();
 
-	void addGltfModel();
+	void addGltfModel(const std::string &pPath);
 };
 } // namespace mer::editor::mvp
 
