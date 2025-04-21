@@ -79,6 +79,7 @@ struct InstanceData {
 	//Material material;
 	mat4 modelMat;
 	mat4 normalMat;
+	int lightDataId;
 };
 
 layout(std430, binding = 1) buffer Instances {
@@ -101,17 +102,6 @@ layout(std430, binding = 4) buffer MeshInfoSsbo {
 layout(std430, binding = 2) buffer Materials {
 	Material materials[];
 };
-// lights
-/*struct LightData{
-	vec4 position;
-	vec4 color;
-	float power;
-};
-layout(std430, binding = 3) buffer Lights {
-	LightData lightsData[];
-};
-*/
-
 out flat int instanceId;
 out vec2 UVCoords;
 out vec3 WorldPos;
@@ -192,6 +182,7 @@ struct InstanceData {
 	//Material material;
 	mat4 modelMat;
 	mat4 normalMat;
+	int lightDataId;
 };
 
 layout(std430, binding = 1) buffer Instances {
@@ -199,16 +190,25 @@ layout(std430, binding = 1) buffer Instances {
 };
 
 struct LightData{
-	vec4 position;
-	vec4 color;
-	float power;
-};
 
-// lights
-layout(std430, binding = 3) buffer Lights {
+	//xyz - color, w - type.
+	vec4 colorAndType;
+	float intensity;
+	//for spot and point light
+	float range;
+
+	//for spotlight
+	float innerConeAngle;
+	float outerConeAngle;
+};
+layout(std430, binding = 3) buffer LightDatas {
 	LightData lightsData[];
 };
 
+layout(std430, binding = 6) buffer LitBy {
+	int lightInstanceIdsCount;
+	int lightInstanceIds[];
+};
 const float PI = 3.14159265359;
 
 vec3 getNormalFromMap(Material mat)
@@ -261,27 +261,12 @@ float GeometrySchlickGGX(float NdotV, float roughness)
 	return nom / denom;
 }
 
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
-{
-	float NdotV = max(dot(N, V), 0.0);
-	float NdotL = max(dot(N, L), 0.0);
-	float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-	float ggx1 = GeometrySchlickGGX(NdotL, roughness);
-
-	return ggx1 * ggx2;
-}
-
 vec3 fresnelSchlick(float cosTheta, vec3 F0)
 {
 	return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 #define COLORS_FLAG 4u
 
-/*
-bool hasColors(){
-	return (shaderSettings & COLORS_FLAG) == COLORS_FLAG;
-}
-*/
 
 void main()
 {
@@ -328,23 +313,39 @@ void main()
 
 	// reflectance equation
 	vec3 Lo = vec3(0.0);
-	/*for(int i = 0; i < lightsData.length(); ++i)
+	for(int i = 0; i < lightInstanceIdsCount; ++i)
 	{
-		LightData light = lightsData[i];
+		int lightInstance = lightInstanceIds[i];
+		InstanceData instData = instancesData[lightInstance];
+		LightData light = lightsData[instData.lightDataId];
+
 		// calculate per-light radiance
-		vec3 L = normalize(light.position.xyz - WorldPos);
-		vec3 H = normalize(V + L);
-		float distance = length(light.position.xyz - WorldPos);
+		vec3 lightPos = instData.modelMat[3].xyz;
+		vec3 lightDir;
+		if(light.colorAndType.w == 0){//directional
+			lightDir = normalize(-vec3(instData.modelMat[0][2], instData.modelMat[1][2], instData.modelMat[2][2]));
+		}else
+			lightDir = normalize(lightPos.xyz - WorldPos);
+		vec3 H = normalize(V + lightDir);
+
+		float distance = length(lightPos.xyz - WorldPos);
 		float attenuation = 1.0 / (distance * distance);
-		vec3 radiance = light.color.xyz*light.power * attenuation;
+		vec3 radiance = light.colorAndType.xyz*light.intensity;
+
 
 		// Cook-Torrance BRDF
 		float NDF = DistributionGGX(N, H, roughness);
-		float G   = GeometrySmith(N, V, L, roughness);
-		vec3 F    = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
+		float NdotV = max(dot(N, V), 0.0);
+		float NdotL = max(dot(N, lightDir), 0.0);
+		float HdotV = max(dot(H, V), 0.0);
+		float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+		float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+
+		float G   = ggx1 * ggx2;
+		vec3 F    = fresnelSchlick(HdotV, F0);
 		vec3 numerator    = NDF * G * F;
-		float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+		float denominator = 4.0 * NdotV * NdotL + 0.0001; // + 0.0001 to prevent divide by zero
 		vec3 specular = numerator / denominator;
 
 		// kS is equal to Fresnel
@@ -359,11 +360,10 @@ void main()
 		kD *= 1.0 - metallic;
 
 		// scale light by NdotL
-		float NdotL = max(dot(N, L), 0.0);
 
 		// add to outgoing radiance Lo
 		Lo += (kD * albedo / PI + specular) * radiance * NdotL;  // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
-	}*/
+	}
 
 	vec3 ambient = vec3(0.03) * albedo * ao;
 

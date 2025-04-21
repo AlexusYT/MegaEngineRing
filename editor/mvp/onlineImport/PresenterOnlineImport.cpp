@@ -221,6 +221,7 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 			}
 			auto scene = sdk::Scene3D::create();
 			for (auto material: gltfModel->getMaterials()) { scene->addMaterial(material); }
+			for (auto light: gltfModel->getLights()) { scene->addLightSource(light); }
 			for (auto mesh: gltfModel->getMeshes()) { scene->addMesh(mesh); }
 
 			scene->mergeNodes(gltfModel->getNodes());

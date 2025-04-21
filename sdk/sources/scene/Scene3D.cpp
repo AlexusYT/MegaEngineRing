@@ -39,6 +39,7 @@ void Scene3D::addRootNode(const std::shared_ptr<Node> &pNewNode) {
 
 void Scene3D::addNode(const std::shared_ptr<Node> &pParentNode, const std::shared_ptr<Node> &pNode) {
 	if (auto meshInstance = std::dynamic_pointer_cast<MeshInstance>(pNode)) { addToMainRenderPass(meshInstance); }
+	if (auto lightInstance = std::dynamic_pointer_cast<LightInstance>(pNode)) { addToMainRenderPass(lightInstance); }
 	if (!pParentNode) rootNodes.emplace_back(pNode.get());
 	else
 		pParentNode->addChild(pNode.get());
@@ -51,6 +52,7 @@ void Scene3D::mergeNodes(const std::vector<std::shared_ptr<Node>> &pNodes) {
 	for (auto node: pNodes) {
 		if (!node->getParentNode()) rootNodes.emplace_back(node.get());
 		if (auto meshInstance = std::dynamic_pointer_cast<MeshInstance>(node)) { addToMainRenderPass(meshInstance); }
+		if (auto lightInstance = std::dynamic_pointer_cast<LightInstance>(node)) { addToMainRenderPass(lightInstance); }
 	}
 	onNodeCollectionChanged();
 }
@@ -58,6 +60,8 @@ void Scene3D::mergeNodes(const std::vector<std::shared_ptr<Node>> &pNodes) {
 void Scene3D::addMesh(const std::shared_ptr<Mesh> &pMesh) const { renderer->addMesh(pMesh); }
 
 void Scene3D::addMaterial(const std::shared_ptr<Material> &pMaterial) const { renderer->addMaterial(pMaterial); }
+
+void Scene3D::addLightSource(const std::shared_ptr<Light> &pLight) const { renderer->addLightSource(pLight); }
 
 const std::vector<std::shared_ptr<Material>> &Scene3D::getMaterials() const { return renderer->getMaterials(); }
 
@@ -69,4 +73,7 @@ void Scene3D::addToMainRenderPass(const std::shared_ptr<MeshInstance> &pMeshInst
 	renderer->getMainRenderPass()->addMeshInstance(pMeshInstance->getMesh().get(), pMeshInstance.get());
 }
 
+void Scene3D::addToMainRenderPass(const std::shared_ptr<LightInstance> &pLightInstance) const {
+	renderer->getMainRenderPass()->addLightInstance(pLightInstance.get());
+}
 } // namespace mer::sdk

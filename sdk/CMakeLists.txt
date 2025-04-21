@@ -76,6 +76,8 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/render/Renderer.cpp
         sources/buffers/VertexBufferObject.cpp
         sources/buffers/BasicBuffer.cpp
+        sources/gltf/khr/KhrLightsPunctual.cpp
+        sources/gltf/Light.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/context/Window.h
@@ -200,6 +202,8 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/render/Renderer.h
         include/EngineSDK/buffers/VertexBufferObject.h
         include/EngineSDK/buffers/BasicBuffer.h
+        include/EngineSDK/gltf/khr/KhrLightsPunctual.h
+        include/EngineSDK/gltf/Light.h
 )
 
 foreach (SOURCE IN ITEMS ${ENGINE_SOURCES})

@@ -29,8 +29,11 @@
 #include "EngineSDK/gltf/Primitive.h"
 #include "EngineSDK/gltf/Sampler.h"
 #include "EngineSDK/gltf/Texture.h"
+#include "EngineSDK/gltf/khr/KhrLightsPunctual.h"
 #include "EngineUtils/utils/Logger.h"
 #include "GLTFSDK/Deserialize.h"
+#include "GLTFSDK/ExtensionHandlers.h"
+#include "GLTFSDK/ExtensionsKHR.h"
 #include "GLTFSDK/GLBResourceReader.h"
 #include "GLTFSDK/GLTFResourceReader.h"
 #include "GLTFSDK/IStreamReader.h"
@@ -150,7 +153,10 @@ ReportMessagePtr GltfModel::loadFromFile(const std::filesystem::path &pFilePath)
 
 ReportMessagePtr GltfModel::deserializeManifest(const std::string &pJson, Document &pDocumentOut) {
 	try {
-		pDocumentOut = Deserialize(pJson);
+		ExtensionDeserializer deserializer = KHR::GetKHRExtensionDeserializer();
+		KhrLightsPunctual::addHandlers(deserializer);
+
+		pDocumentOut = Deserialize(pJson, deserializer);
 		return nullptr;
 	} catch (...) {
 		auto msg = ReportMessage::create();
@@ -163,6 +169,10 @@ ReportMessagePtr GltfModel::deserializeManifest(const std::string &pJson, Docume
 ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceReader> &pReader,
 										   const Document &pDocument) {
 
+	if (pDocument.IsExtensionUsed(KhrLightsPunctual::EXTENSION_NAME)) {
+		auto &ext = pDocument.GetExtension<KhrLightsPunctual>();
+		lights = ext.getLights();
+	}
 	for (auto &accessor: pDocument.accessors.Elements()) {
 		accessors.emplace_back(Accessor::create(accessor, pDocument, pReader));
 	}
@@ -255,6 +265,9 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 			auto mesh = meshes.at(pDocument.meshes.GetIndex(element.meshId));
 			auto instance = MeshInstance::create(element, mesh);
 			node = instance;
+		} else if (element.HasExtension<KhrLightsPunctual::Node>()) {
+			auto &ext = element.GetExtension<KhrLightsPunctual::Node>();
+			node = LightInstance::create(element, ext.light);
 		} else {
 			node = Node::create(element);
 		}

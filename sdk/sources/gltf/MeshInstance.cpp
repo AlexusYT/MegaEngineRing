@@ -119,6 +119,22 @@ void Node::updateNodeAabb() {
 	nodeAabb->setBounds(min, max);
 }
 
+LightInstance::LightInstance(const Microsoft::glTF::Node &pNode, int32_t pLightDataId)
+	: Node(pNode), lightDataId(pLightDataId), data(nullptr, "") {
+	data->lightDataId = pLightDataId;
+	data.notifyChanged();
+	onDataChanged(this);
+	LightInstance::onGlobalTransformChanged(getGlobalTransform());
+}
+
+void LightInstance::onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) {
+
+	data->modelMat = pTransformation->getModelMatrix();
+	data->normalMat = glm::transpose(glm::inverse(glm::mat3(data->modelMat)));
+	data.notifyChanged();
+	onDataChanged(this);
+}
+
 MeshInstance::MeshInstance(const Microsoft::glTF::Node &pNode, const std::shared_ptr<Mesh> &pMesh)
 	: Node(pNode), mesh(pMesh), data(nullptr, "") {
 	mesh->getAabb().connectEvent(
