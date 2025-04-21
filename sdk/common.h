@@ -21,7 +21,8 @@
 
 #ifndef COMMON_H
 #define COMMON_H
-
+#define JSON_DISABLE_ENUM_SERIALIZATION 1
+#define JSON_USE_IMPLICIT_CONVERSIONS 0
 #include <glm/detail/type_vec1.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>

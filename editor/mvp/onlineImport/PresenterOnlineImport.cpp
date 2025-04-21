@@ -100,7 +100,7 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 			nlohmann::json j = nlohmann::json::parse(ss.str());
 			if (auto it = j.find("error"); it != j.end()) {
 				auto it1 = j.find("error_description");
-				view->loginError(it.value(), std::string(it1 != j.end() ? it1.value() : ""));
+				view->loginError(it.value().get<std::string>(), std::string(it1 != j.end() ? it1.value() : ""));
 				return;
 			}
 			if (j.contains("access_token")) {
