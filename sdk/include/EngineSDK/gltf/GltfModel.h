@@ -25,6 +25,7 @@
 #include "GLTFSDK/Document.h"
 
 namespace mer::sdk {
+struct Light;
 class Scene3D;
 class Material;
 class Texture;
@@ -47,6 +48,7 @@ class Accessor;
 
 class GltfModel {
 
+	std::vector<std::shared_ptr<Light>> lights;
 	std::vector<std::shared_ptr<Mesh>> meshes;
 	std::vector<std::shared_ptr<Accessor>> accessors;
 	std::vector<std::shared_ptr<Node>> nodes;
@@ -73,6 +75,8 @@ public:
 	[[nodiscard]] const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }
 
 	[[nodiscard]] const std::vector<std::shared_ptr<Node>> &getRootNodes() const { return rootNodes; }
+
+	[[nodiscard]] const std::vector<std::shared_ptr<Light>> &getLights() const { return lights; }
 
 private:
 	ReportMessagePtr loadFromStream(const std::shared_ptr<std::istream> &pStream);

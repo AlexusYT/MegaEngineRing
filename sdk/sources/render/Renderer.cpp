@@ -34,7 +34,7 @@
 namespace mer::sdk {
 class Logger;
 
-RenderPass::RenderPass() {}
+RenderPass::RenderPass() { litByInstancesSsbo.addElement(0); }
 
 Renderer::Renderer() {
 	addRenderPass(getMainPassName(), std::make_shared<RenderPass>());
@@ -188,6 +188,17 @@ void Renderer::removeAllMeshes() {
 	indices.clear();
 }
 
+void Renderer::addLightSource(const std::shared_ptr<Light> &pNewLight) {
+	auto connection = pNewLight->connectOnChanged([this](Light* pChangedLight) {
+		auto index = lightToIndexMap.at(pChangedLight);
+		lightsSsbo.setElement(index, pChangedLight->getData());
+	});
+	lights.emplace_back(pNewLight);
+	lightsConnections.emplace(pNewLight.get(), connection);
+	lightToIndexMap.emplace(pNewLight.get(), lightsSsbo.size());
+	lightsSsbo.addElement(pNewLight->getData());
+}
+
 void Renderer::updateBuffers() {
 	if (eboDirty && indicesMutex.try_lock()) {
 		if (ebo) glDeleteBuffers(1, &ebo);
@@ -210,6 +221,7 @@ void Renderer::updateBuffers() {
 	if (vbo.tryUpdate()) vbo.bindVertexArray(vao, 0);
 	if (normalsVbo.tryUpdate()) normalsVbo.bindVertexArray(vao, 3);
 	if (materialsSsbo.tryUpdate()) materialsSsbo.bindBufferBase(2);
+	if (lightsSsbo.tryUpdate()) lightsSsbo.bindBufferBase(3);
 	if (meshMetadataSsbo.tryUpdate()) meshMetadataSsbo.bindBufferBase(4);
 	if (uvSsbo.tryUpdate()) uvSsbo.bindBufferBase(5);
 	if (!colorSsbo.empty() && colorSsbo.tryUpdate()) colorSsbo.bindBufferBase(7);
@@ -346,6 +358,19 @@ void RenderPass::removeMeshInstance(Mesh* pMesh, MeshInstance* pMeshInstance) {
 	commandsBufferDirty = true;
 }
 
+void RenderPass::addLightInstance(LightInstance* pLightInstance) {
+
+	auto connection = pLightInstance->connectDataChanged([this](LightInstance* pChangedInstance) {
+		const auto &val = instances.at(pChangedInstance);
+		meshInstanceSsbo.setElement(val.first, pChangedInstance->getData());
+	});
+	auto newIndex = meshInstanceSsbo.size();
+	instances.emplace(pLightInstance, std::make_pair(newIndex, connection));
+	meshInstanceSsbo.addElement(pLightInstance->getData());
+	litByInstancesSsbo.setElement(0, static_cast<const int &>(litByInstancesSsbo.size()));
+	litByInstancesSsbo.addElement(static_cast<const int &>(newIndex));
+}
+
 void RenderPass::removeAllMeshInstances() {
 	commands.clear();
 	instances.clear();
@@ -411,6 +436,7 @@ void RenderPass::render() {
 
 	meshInstanceSsbo.update();
 	meshInstanceSsbo.bindBufferBase(1);
+	if (litByInstancesSsbo.tryUpdate()) litByInstancesSsbo.bindBufferBase(6);
 	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawCmdBuffer);
 	glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_SHORT, nullptr, static_cast<GLsizei>(commandsBufferSize), 0);
 	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);

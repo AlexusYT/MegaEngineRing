@@ -21,16 +21,18 @@
 
 #ifndef RENDERER_H
 #define RENDERER_H
-#include <set>
+
 #include <unordered_map>
 
 #include "EngineSDK/buffers/SSBO.h"
 #include "EngineSDK/buffers/VertexBufferObject.h"
+#include "EngineSDK/gltf/Light.h"
 #include "EngineSDK/gltf/Material.h"
 #include "EngineSDK/gltf/MeshInstance.h"
 #include "Initializable.h"
 
 namespace mer::sdk {
+class Light;
 class Primitive;
 class Renderer;
 class MeshInstanceSsbo;
@@ -45,21 +47,6 @@ struct DrawElementsIndirectCommand {
 	//interpreted as an addition to whatever index is read from the element array buffer.
 	int baseVertex{};
 	unsigned int baseInstance{};
-};
-
-struct MeshMetadata {
-	uint32_t uvStartPos{};
-	uint32_t uvCount{};
-	uint32_t colorStartPos{};
-	uint32_t colorCount{};
-	uint32_t materialId{};
-	uint32_t instanceId{};
-};
-
-struct MeshInfo {
-	std::vector<uint64_t> commandIndices;
-	std::vector<uint64_t> metadataIds;
-	std::vector<sigc::connection> materialChangedConnections;
 };
 
 class RenderPass : public Initializable {
@@ -80,7 +67,8 @@ class RenderPass : public Initializable {
 	bool meshIndicesBufferDirty{true};
 
 	Ssbo<std::vector<MeshInstanceData>> meshInstanceSsbo;
-	std::unordered_map<MeshInstance*, std::pair<size_t /*index*/, sigc::scoped_connection>> instances;
+	std::unordered_map<Node*, std::pair<size_t /*index*/, sigc::scoped_connection>> instances;
+	Ssbo<std::vector<int32_t>> litByInstancesSsbo;
 
 
 public:
@@ -91,6 +79,8 @@ public:
 
 	void removeMeshInstance(Mesh* pMesh, MeshInstance* pMeshInstance);
 
+	void addLightInstance(LightInstance* pLightInstance);
+
 	void removeAllMeshInstances();
 
 
@@ -100,6 +90,21 @@ protected:
 	void onUninitialize() override;
 
 	void render();
+};
+
+struct MeshMetadata {
+	uint32_t uvStartPos{};
+	uint32_t uvCount{};
+	uint32_t colorStartPos{};
+	uint32_t colorCount{};
+	uint32_t materialId{};
+	uint32_t instanceId{};
+};
+
+struct MeshInfo {
+	std::vector<uint64_t> commandIndices;
+	std::vector<uint64_t> metadataIds;
+	std::vector<sigc::connection> materialChangedConnections;
 };
 
 class Renderer : public Initializable {
@@ -114,6 +119,11 @@ class Renderer : public Initializable {
 	std::unordered_map<Mesh*, MeshInfo> meshToInfoMap;
 
 	std::vector<DrawElementsIndirectCommand> commands;
+
+	std::vector<std::shared_ptr<Light>> lights;
+	std::unordered_map<Light*, sigc::scoped_connection> lightsConnections;
+	std::unordered_map<Light*, size_t /*index*/> lightToIndexMap;
+	Ssbo<std::vector<LightData>> lightsSsbo;
 
 	std::vector<uint16_t> indices;
 	uint32_t ebo{};
@@ -140,6 +150,8 @@ public:
 	void removeMesh(Mesh* pMesh);
 
 	void removeAllMeshes();
+
+	void addLightSource(const std::shared_ptr<Light> &pNewLight);
 
 	void updateBuffers();
 

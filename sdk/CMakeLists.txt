@@ -36,7 +36,7 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/resources/textures/TextureResource.cpp
         sources/resources/textures/TextureLoader.cpp
         sources/extensions/LightExtension.cpp
-        sources/light/LightInstance.cpp
+        sources/light/LightInstance1.cpp
         sources/light/LightSources.cpp
         sources/resources/materials/MaterialResource.cpp
         sources/resources/materials/MaterialLoader.cpp
@@ -76,6 +76,8 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/render/Renderer.cpp
         sources/buffers/VertexBufferObject.cpp
         sources/buffers/BasicBuffer.cpp
+        sources/gltf/khr/KhrLightsPunctual.cpp
+        sources/gltf/Light.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/context/Window.h
@@ -150,7 +152,7 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/extensions/LightExtension.h
         include/EngineSDK/light/ILightInstance.h
         include/EngineSDK/light/ILightSources.h
-        include/EngineSDK/light/LightInstance.h
+        include/EngineSDK/light/LightInstance1.h
         include/EngineSDK/light/LightInstanceData.h
         include/EngineSDK/light/LightSources.h
         include/EngineSDK/resources/materials/IMaterialResource.h
@@ -200,6 +202,8 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/render/Renderer.h
         include/EngineSDK/buffers/VertexBufferObject.h
         include/EngineSDK/buffers/BasicBuffer.h
+        include/EngineSDK/gltf/khr/KhrLightsPunctual.h
+        include/EngineSDK/gltf/Light.h
 )
 
 foreach (SOURCE IN ITEMS ${ENGINE_SOURCES})

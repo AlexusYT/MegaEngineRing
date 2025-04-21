@@ -21,13 +21,13 @@
 
 #ifndef LIGHTEXTENSION_H
 #define LIGHTEXTENSION_H
-#include "EngineSDK/light/LightInstance.h"
+#include "EngineSDK/light/LightInstance1.h"
 #include "EngineSDK/light/LightInstanceData.h"
 #include "Extension.h"
 
 namespace mer::sdk {
 
-class LightExtension : public Extension, public LightInstance {
+class LightExtension : public Extension, public LightInstance1 {
 	LightInstanceData data;
 
 public:

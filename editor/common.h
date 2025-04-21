@@ -22,6 +22,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define JSON_DISABLE_ENUM_SERIALIZATION 1
+#define JSON_USE_IMPLICIT_CONVERSIONS 0
 #include <glm/glm.hpp>
 
 

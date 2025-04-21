@@ -280,6 +280,7 @@ void SceneEditor::addGltfModel(const std::string &pPath) {
 		model->setScene(scene);
 	}
 	for (auto material: gltf->getMaterials()) { scene->addMaterial(material); }
+	for (auto light: gltf->getLights()) { scene->addLightSource(light); }
 	for (auto mesh: gltf->getMeshes()) { scene->addMesh(mesh); }
 
 	scene->mergeNodes(gltf->getNodes());

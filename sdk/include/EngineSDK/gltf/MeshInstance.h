@@ -45,6 +45,10 @@ namespace mer::sdk {
 struct MeshInstanceData {
 	glm::mat4 modelMat;
 	glm::mat4 normalMat;
+	int32_t lightDataId{-1};
+	int32_t padding0;
+	int32_t padding1;
+	int32_t padding2;
 };
 class Mesh;
 
@@ -92,6 +96,29 @@ protected:
 	void onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) override;
 
 	void updateNodeAabb();
+};
+
+class LightInstance : public Node {
+	int32_t lightDataId;
+	Property<MeshInstanceData> data;
+	sigc::signal<void(LightInstance* pSelf)> onDataChanged;
+
+protected:
+	LightInstance(const Microsoft::glTF::Node &pNode, int32_t pLightDataId);
+
+public:
+	static std::shared_ptr<LightInstance> create(const Microsoft::glTF::Node &pNode, const int32_t pLightDataId) {
+		return std::shared_ptr<LightInstance>(new LightInstance(pNode, pLightDataId));
+	}
+
+	[[nodiscard]] PropertyReadOnly<MeshInstanceData> getData() { return data.getReadOnly(); }
+
+	sigc::connection connectDataChanged(const sigc::slot<void(LightInstance* pSelf)> &pSlot) {
+		return onDataChanged.connect(pSlot);
+	}
+
+protected:
+	void onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) override;
 };
 
 class MeshInstance : public Node {
