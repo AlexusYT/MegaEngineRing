@@ -19,12 +19,11 @@
 // Created by alexus on 23.10.24.
 //
 
-#include "EngineSDK/light/LightInstance.h"
-
 #include "EngineSDK/light/ILightSources.h"
+#include "EngineSDK/light/LightInstance1.h"
 
 namespace mer::sdk {
-void LightInstance::notifyDataChanged() {
+void LightInstance1::notifyDataChanged() {
 	if (lightSources) lightSources->onInstanceDataChanged(this);
 }
 } // namespace mer::sdk

@@ -29,7 +29,7 @@ class ILightSources;
 
 namespace mer::sdk {
 
-class LightInstance : public ILightInstance {
+class LightInstance1 : public ILightInstance {
 	ILightSources* lightSources{};
 
 public:
