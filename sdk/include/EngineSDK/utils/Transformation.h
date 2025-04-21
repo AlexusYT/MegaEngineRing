@@ -36,7 +36,7 @@ protected:
 	glm::vec3 positionVal{};
 	glm::mat4 translationMatrix{1};
 	bool positionValChanged{};
-	glm::quat rotationVal{};
+	glm::quat rotationVal{1, 0, 0, 0};
 	glm::mat4 rotationMatrix{1};
 	bool rotationValChanged{};
 	glm::vec3 scaleVal{1};
