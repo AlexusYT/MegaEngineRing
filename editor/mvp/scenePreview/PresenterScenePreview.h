@@ -25,7 +25,6 @@
 
 namespace mer::sdk {
 class RenderPass;
-class MeshInstance;
 } // namespace mer::sdk
 
 namespace mer::sdk {
@@ -46,7 +45,7 @@ protected:
 	std::shared_ptr<IViewScenePreview> view;
 	std::shared_ptr<IModelScenePreview> model;
 	std::shared_ptr<sdk::VolumeAabb> test;
-	sdk::MeshInstance* hoveredMeshNode{};
+	sdk::Node* hoveredMeshNode{};
 	std::shared_ptr<sdk::BoundingVolumeProgram> boundingProgram{};
 
 	bool movingNode{};

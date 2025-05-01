@@ -23,7 +23,7 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/extensions/cameras/PerspectiveProjectionCameraMod.cpp
         sources/extensions/OrbitCameraExtension.cpp
         sources/resources/models/Model3DLoader.cpp
-        sources/extensions/ModelRenderExtension.cpp
+        sources/extensions/MeshExtension.cpp
         sources/scripting/Script.cpp
         sources/extensions/MainObjectExtension.cpp
         sources/utils/PropertyJsonSerializers.cpp
@@ -36,7 +36,6 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/resources/textures/TextureResource.cpp
         sources/resources/textures/TextureLoader.cpp
         sources/extensions/LightExtension.cpp
-        sources/light/LightInstance1.cpp
         sources/light/LightSources.cpp
         sources/resources/materials/MaterialResource.cpp
         sources/resources/materials/MaterialLoader.cpp
@@ -63,7 +62,7 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/gltf/Primitive.cpp
         sources/gltf/GltfModel.cpp
         sources/gltf/Mesh.cpp
-        sources/gltf/MeshInstance.cpp
+        sources/gltf/Node.cpp
         sources/gltf/Sampler.cpp
         sources/gltf/Texture.cpp
         sources/gltf/Image.cpp
@@ -118,7 +117,7 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/utils/MouseButton.h
         include/EngineSDK/extensions/MouseButtonExtension.h
         include/EngineSDK/resources/models/Model3DLoader.h
-        include/EngineSDK/extensions/ModelRenderExtension.h
+        include/EngineSDK/extensions/MeshExtension.h
         include/EngineSDK/context/IApplication.h
         include/EngineSDK/scripting/IScript.h
         include/EngineSDK/scripting/Script.h
@@ -152,7 +151,6 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/extensions/LightExtension.h
         include/EngineSDK/light/ILightInstance.h
         include/EngineSDK/light/ILightSources.h
-        include/EngineSDK/light/LightInstance1.h
         include/EngineSDK/light/LightInstanceData.h
         include/EngineSDK/light/LightSources.h
         include/EngineSDK/resources/materials/IMaterialResource.h
@@ -188,7 +186,7 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/gltf/Primitive.h
         include/EngineSDK/gltf/GltfModel.h
         include/EngineSDK/gltf/Mesh.h
-        include/EngineSDK/gltf/MeshInstance.h
+        include/EngineSDK/gltf/Node.h
         include/EngineSDK/gltf/Sampler.h
         include/EngineSDK/gltf/Texture.h
         include/EngineSDK/gltf/Image.h

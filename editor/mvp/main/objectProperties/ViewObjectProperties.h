@@ -22,12 +22,18 @@
 #ifndef OBJECTPROPERTIESWINDOW_H
 #define OBJECTPROPERTIESWINDOW_H
 
+#include "EngineSDK/extensions/LightExtension.h"
 #include "mvp/IView.h"
 #include "mvp/editor/Editor.h"
 
+namespace std {
+struct type_index;
+}
+
 namespace mer::sdk {
+class Light;
+class MeshExtension;
 class Scene3D;
-class MeshInstance;
 class Node;
 } // namespace mer::sdk
 
@@ -44,6 +50,8 @@ public:
 };
 
 class ViewObjectProperties : public IViewObjectProperties, public EditorTool {
+	static std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> &pExt)>>
+		extRenderers;
 	std::shared_ptr<IWidgetContext> context;
 	IPresenterObjectProperties* presenter{};
 	sdk::Node* selectedNode{};
@@ -67,7 +75,39 @@ private:
 
 	void drawTransformation();
 
-	void drawMaterial(sdk::MeshInstance* pMeshNode);
+	ImGuiID drawMeshTab(const std::shared_ptr<sdk::MeshExtension> &pExt);
+
+	static bool confirmationMenuItem(const char* pLabel, const char* pShortcut = nullptr, float pTimeout = 0.5f,
+									 bool pSelected = false, bool pEnabled = true);
+
+	ImGuiID drawLightTab(const std::shared_ptr<sdk::LightExtension> &pExt);
+
+	void drawLightSourceSettings(const std::shared_ptr<sdk::Light> &pLight);
+
+	static void getSpeeds(float &pSpeed, const char*&pRoundFormat) {
+		pSpeed = 0.005f;
+		pRoundFormat = "%.2f";
+		if (ImGui::IsWindowFocused()) {
+			auto ctrlDown = ImGui::IsKeyDown(ImGuiMod_Ctrl);
+			auto shiftDown = ImGui::IsKeyDown(ImGuiMod_Shift);
+			if (ctrlDown && !shiftDown) { //Only ctrl is pressed
+				pRoundFormat = "%0.0f";
+				pSpeed = 0.01f;
+			} else if (!ctrlDown && shiftDown) { //Only shift is pressed
+				pRoundFormat = "%0.3f";
+				pSpeed = 0.0005f;
+			} else if (ctrlDown && shiftDown) { //Both ctrl and shift are pressed
+				pRoundFormat = "%0.1f";
+				pSpeed = 0.005f;
+			}
+		}
+	}
+
+	enum class AngleUnit { RADIANS, DEGREES };
+
+	static AngleUnit getAngleUnit() { return AngleUnit::DEGREES; }
+
+	static bool isDegrees() { return getAngleUnit() == AngleUnit::DEGREES; }
 };
 
 } // namespace mer::editor::mvp

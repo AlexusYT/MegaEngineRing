@@ -31,6 +31,10 @@
 #include "ExtensionProperty.h"
 
 namespace mer::sdk {
+class Node;
+}
+
+namespace mer::sdk {
 class ModifierKeys;
 enum class KeyboardKey;
 } // namespace mer::sdk
@@ -49,6 +53,7 @@ class Extension : public virtual IPropertyProvider {
 	std::vector<PropertyBase*> properties;
 	friend SceneObject;
 	SceneObject* object{};
+	Node* node{};
 	std::vector<sigc::connection> connectionStorage;
 	std::string typeNameStr;
 	std::string name;
@@ -139,6 +144,17 @@ public:
 
 	bool notifyOnMouseScroll(double pDx, double pDy);
 
+	void setNode(Node* pNode) {
+		if (node == pNode) return;
+		auto oldNode = node;
+		node = pNode;
+		onNodeChanged(oldNode);
+	}
+
+	virtual void onNodeChanged(Node* pOldNode);
+
+	[[nodiscard]] Node* getNode() const { return node; }
+
 protected:
 	void putConnectionToStorage(const sigc::connection &pConnection) { connectionStorage.emplace_back(pConnection); }
 
@@ -162,9 +178,10 @@ protected:
 
 	virtual bool onMouseScroll(double pDx, double pDy);
 
-private:
+public:
 	void setObject(SceneObject* const pObject) { object = pObject; }
 
+private:
 	static void getTypeNameFor(Extension* pExt, std::string &pNameOut);
 
 	void addProperty(PropertyBase* pProperty) override;

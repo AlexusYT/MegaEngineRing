@@ -28,7 +28,7 @@
 #include "EngineSDK/buffers/VertexBufferObject.h"
 #include "EngineSDK/gltf/Light.h"
 #include "EngineSDK/gltf/Material.h"
-#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/gltf/Node.h"
 #include "Initializable.h"
 
 namespace mer::sdk {
@@ -75,13 +75,13 @@ public:
 	RenderPass();
 
 
-	void addMeshInstance(Mesh* pMesh, MeshInstance* pMeshInstance);
+	void addNode(Node* pNode);
 
-	void removeMeshInstance(Mesh* pMesh, MeshInstance* pMeshInstance);
-
-	void addLightInstance(LightInstance* pLightInstance);
+	void removeNode(Node* pNode);
 
 	void removeAllMeshInstances();
+
+	void changeMesh(Node* pNode, Mesh* pMesh);
 
 
 protected:
@@ -90,6 +90,8 @@ protected:
 	void onUninitialize() override;
 
 	void render();
+
+	void removeInstanceFromMesh(Node* pNode);
 };
 
 struct MeshMetadata {
@@ -153,6 +155,8 @@ public:
 
 	void addLightSource(const std::shared_ptr<Light> &pNewLight);
 
+	[[nodiscard]] const std::vector<std::shared_ptr<Light>> &getLights() const { return lights; }
+
 	void updateBuffers();
 
 	std::vector<DrawElementsIndirectCommand> getCommandsByInfo(const MeshInfo &pMeshInfo);
@@ -182,6 +186,10 @@ public:
 		if (iter == renderPasses.end()) return nullptr;
 		return iter->second;
 	}
+
+	[[nodiscard]] const std::vector<std::shared_ptr<Mesh>> &getMeshes() const { return meshes; }
+
+	void changeMesh(Node* pNode, Mesh* pMesh);
 
 	static const char* getMainPassName() { return "MainPass"; }
 

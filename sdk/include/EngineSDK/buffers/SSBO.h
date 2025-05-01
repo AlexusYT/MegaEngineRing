@@ -79,6 +79,12 @@ public:
 		dirty = true;
 	}
 
+	template<typename InputIterator>
+	InputIterator find(InputIterator pFirst, InputIterator pLast, const T &pVal) {
+		std::lock_guard lock(mutex);
+		return std::find(pFirst, pLast, pVal);
+	}
+
 	/**
 	 * @brief Get an element at specified @a pIndex.
 	 * @warning You must call markDirty() method if you are changed the data.
@@ -144,6 +150,10 @@ public:
 	typename std::vector<T>::const_iterator begin() const { return data.begin(); }
 
 	typename std::vector<T>::const_iterator end() const { return data.end(); }
+
+	typename std::vector<T>::iterator begin() { return data.begin(); }
+
+	typename std::vector<T>::iterator end() { return data.end(); }
 
 	void clear() {
 		data.clear();

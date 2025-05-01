@@ -21,40 +21,34 @@
 
 #ifndef MODELRENDEREXTENSION_H
 #define MODELRENDEREXTENSION_H
-#include "EngineSDK/render/RenderInstance.h"
-#include "EngineSDK/render/RenderInstanceData.h"
-#include "EngineSDK/resources/materials/IMaterialResource.h"
+
+#include "EngineSDK/gltf/Mesh.h"
 #include "Extension.h"
 
 namespace mer::sdk {
-class IMaterialResource;
-class IModel3DObject;
+class Mesh;
 
-class ModelRenderExtension : public Extension, public RenderInstance {
-
-	RenderInstanceData data;
+class MeshExtension : public Extension {
+	sigc::scoped_connection aabbChangedConnection;
 
 protected:
-	ModelRenderExtension();
+	MeshExtension();
 
 public:
-	ExtensionProperty<std::shared_ptr<IModel3DObject>> propertyModel;
-	ExtensionProperty<std::shared_ptr<IMaterialResource>> propertyMaterial;
+	ExtensionProperty<std::shared_ptr<Mesh>> mesh;
 
-	METHOD_CREATE(ModelRenderExtension)
 
-	EXT_TYPE_NAME("ModelRenderExtension")
+	~MeshExtension() override;
 
-	const RenderInstanceData &getRenderInstanceData() override { return data; }
+	METHOD_CREATE(MeshExtension)
 
-	std::shared_ptr<ShaderProgram> getShader() override { return nullptr; }
+	EXT_TYPE_NAME("MeshExtension")
 
-protected:
-	ReportMessagePtr onInit() override;
 
-	ReportMessagePtr onDeinit() override;
+	bool isGeometryIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRayDir, glm::vec2 &pIntersectsAt,
+							  float &pIntersectDistance) const;
 
-	void onRender() override;
+	void onNodeChanged(Node* pNode) override;
 };
 } // namespace mer::sdk
 

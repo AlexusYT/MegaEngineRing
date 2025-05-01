@@ -29,7 +29,7 @@
 #include <thread>
 
 #include "EngineSDK/gltf/GltfModel.h"
-#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/gltf/Node.h"
 #include "EngineSDK/render/Renderer.h"
 #include "EngineSDK/scene/Scene3D.h"
 #include "Globals.h"

@@ -24,7 +24,7 @@
 #include "EngineSDK/extensions/BasicRenderExtension.h"
 #include "EngineSDK/extensions/LightExtension.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/extensions/ModelRenderExtension.h"
+#include "EngineSDK/extensions/MeshExtension.h"
 #include "EngineSDK/extensions/MouseButtonExtension.h"
 #include "EngineSDK/extensions/cameras/CameraExtension.h"
 #include "EngineSDK/extensions/cameras/CameraKeyboardExtension.h"
@@ -36,14 +36,14 @@
 namespace mer::sdk {
 
 void ExtensionRegistry::init() {
-	registerClass<MainObjectExtension>();
+	/*registerClass<MainObjectExtension>();
 	registerClass<BasicRenderExtension>();
 	registerClass<CameraExtension>();
 	registerClass<CameraKeyboardExtension>();
 	registerClass<CameraMouseExtension>();
 	registerClass<OrbitCameraExtension>();
-	registerClass<MouseButtonExtension>();
-	registerClass<ModelRenderExtension>();
+	registerClass<MouseButtonExtension>();*/
+	registerClass<MeshExtension>();
 	registerClass<LightExtension>();
 }
 

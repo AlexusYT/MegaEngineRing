@@ -22,16 +22,24 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 #include <glm/vec4.hpp>
+#include <math.h>
 #include <nlohmann/detail/macro_scope.hpp>
 #include <nlohmann/json_fwd.hpp>
 #include <sigc++/signal.h>
 
 namespace mer::sdk {
 
-enum class LightType { DIRECTIONAL, POINT, SPOT };
+enum class LightType { DIRECTIONAL, POINT, SPOT, LIGHT_TYPE_MAX };
+inline const char* light_type_array_str[3] = {"directional", "point", "spot"};
 
-NLOHMANN_JSON_SERIALIZE_ENUM(
-	LightType, {{LightType::DIRECTIONAL, "directional"}, {LightType::POINT, "point"}, {LightType::SPOT, "spot"}})
+inline const char* to_string(const LightType pE) {
+	if (pE < LightType::DIRECTIONAL || pE > LightType::LIGHT_TYPE_MAX) return "unknown";
+	return light_type_array_str[static_cast<size_t>(pE)];
+}
+
+NLOHMANN_JSON_SERIALIZE_ENUM(LightType, {{LightType::DIRECTIONAL, to_string(LightType::DIRECTIONAL)},
+										 {LightType::POINT, to_string(LightType::POINT)},
+										 {LightType::SPOT, to_string(LightType::SPOT)}})
 
 struct LightData {
 	//xyz - color, w - type.
@@ -50,7 +58,25 @@ class Light {
 	LightData data{};
 	sigc::signal<void(Light* pSelf)> onLightChanged;
 
+protected:
+	explicit Light(const std::string &pName);
+
 public:
+	static std::shared_ptr<Light> create(const std::string &pName = "Unnamed") {
+		return std::shared_ptr<Light>(new Light(pName));
+	}
+
+	/**
+	 * @brief Clone this instance. You can set a new name to the new instance.
+	 * @param pNewName Name for new instance. Default is "Unnamed Copy".
+	 * @return Duplicated instance.
+	 */
+	std::shared_ptr<Light> duplicate(const std::string &pNewName = "Unnamed Copy") const {
+		auto newLight = create(pNewName);
+		newLight->data = data;
+		return newLight;
+	}
+
 	[[nodiscard]] const std::string &getName() const { return name; }
 
 	void setName(const std::string &pName) { name = pName; }
@@ -88,6 +114,8 @@ public:
 	[[nodiscard]] float getInnerConeAngle() const { return data.innerConeAngle; }
 
 	void setInnerConeAngle(float pInnerConeAngle) {
+		pInnerConeAngle = std::clamp(pInnerConeAngle, 0.0f, data.outerConeAngle);
+		if (data.innerConeAngle == pInnerConeAngle) return;
 		data.innerConeAngle = pInnerConeAngle;
 		onLightChanged(this);
 	}
@@ -95,6 +123,8 @@ public:
 	[[nodiscard]] float getOuterConeAngle() const { return data.outerConeAngle; }
 
 	void setOuterConeAngle(float pOuterConeAngle) {
+		pOuterConeAngle = std::clamp(pOuterConeAngle, data.innerConeAngle, M_PI_2f);
+		if (data.outerConeAngle == pOuterConeAngle) return;
 		data.outerConeAngle = pOuterConeAngle;
 		onLightChanged(this);
 	}
@@ -112,7 +142,7 @@ public:
 	void deserialize(const nlohmann::json &pJson);
 
 	friend void from_json(const nlohmann::json &pJson, std::shared_ptr<Light> &pType) {
-		pType = std::make_shared<Light>();
+		pType = create();
 		pType->deserialize(pJson);
 	}
 };

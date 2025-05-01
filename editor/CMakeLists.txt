@@ -48,7 +48,6 @@ add_library(
         mvp/main/projectExplorer/ViewProjectExplorer.h
         ui/widgetWindows/projectExplorer/ProjectExplorerEntry.cpp
         ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h
-        mvp/main/editors/IPresenterSceneEditor.h
         project/generatedFiles/ApplicationInfo.cpp
         project/generatedFiles/ApplicationInfo.h
         project/generators/cpp/CppGenerator.cpp
@@ -100,11 +99,6 @@ add_library(
         mvp/main/editors/appInfo/ModelAppInfo.h
         mvp/main/editors/appInfo/PresenterAppInfo.cpp
         mvp/main/editors/appInfo/PresenterAppInfo.h
-        mvp/main/editors/sceneEditor/IViewSceneEditor.h
-        mvp/main/editors/sceneEditor/IModelSceneEditor.h
-        mvp/main/editors/sceneEditor/PresenterSceneEditor.cpp
-        mvp/main/editors/sceneEditor/PresenterSceneEditor.h
-        mvp/main/editors/sceneEditor/ModelSceneEditor.h
         mvp/main/editors/sceneEditor/ViewSceneEditor.cpp
         mvp/main/editors/sceneEditor/ViewSceneEditor.h
         project/generators/cpp/CppHeaderFile.cpp
@@ -117,8 +111,6 @@ add_library(
         project/generators/cpp/CppClassMember.h
         project/generators/cpp/CppExternC.cpp
         project/generators/cpp/CppExternC.h
-        mvp/main/objectProperties/ObjectPropertyEntry.cpp
-        mvp/main/objectProperties/ObjectPropertyEntry.h
         project/scripting/ScriptParser.cpp
         project/scripting/ScriptParser.h
         project/scripting/ScriptNode.cpp
@@ -167,7 +159,6 @@ add_library(
         mvp/main/centerWindow/TabPlaceholder.cpp
         mvp/main/centerWindow/TabPlaceholder.h
         mvp/main/centerWindow/ITabPlaceholder.h
-        mvp/main/editors/sceneEditor/ModelSceneEditor.cpp
         mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.cpp
         mvp/main/editors/sceneEditor/explorerObjects/ExplorerObject.h
         mvp/main/editors/sceneEditor/explorerObjects/RootExplorerObject.h
@@ -248,9 +239,6 @@ add_library(
         ui/customWidgets/resourceSelector/SourceSelectionNone.h
         ui/customWidgets/resourceSelector/resources/SourceSelectionModel3D.cpp
         ui/customWidgets/resourceSelector/resources/SourceSelectionModel3D.h
-        mvp/main/objectProperties/PropertyRenderer.cpp
-        mvp/main/objectProperties/PropertyRenderer.h
-        mvp/main/objectProperties/PropertyRendererType.h
         project/EditorFileSystemResourceBundle.cpp
         project/EditorFileSystemResourceBundle.h
         ui/customWidgets/resourceSelector/ISourceSelectionResult.h

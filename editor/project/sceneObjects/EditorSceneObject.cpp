@@ -22,16 +22,13 @@
 //TODO delete file
 #include "EditorSceneObject.h"
 
-#include "mvp/main/objectProperties/ObjectPropertyEntry.h"
 #include "EngineSDK/extensions/Extension.h"
 #include "mvp/main/centerWindow/ViewCenterWindow.h"
 #include "project/generatedFiles/GraphicsScript.h"
 
 namespace mer::editor::ui {
-EditorSceneObject::EditorSceneObject(sdk::ISceneObject* const pNativeObject,
-									 std::shared_ptr<project::Project> pProject)
-	: GeneratedFiles(pProject), childrenUi(Gio::ListStore<EditorSceneObject>::create()),
-	  propertyEntries(Gio::ListStore<mvp::ObjectPropertyEntry>::create()), nativeObject(pNativeObject) {
+EditorSceneObject::EditorSceneObject(sdk::ISceneObject* const pNativeObject, std::shared_ptr<project::Project> pProject)
+	: GeneratedFiles(pProject), childrenUi(Gio::ListStore<EditorSceneObject>::create()), nativeObject(pNativeObject) {
 
 	graphicsScript = std::make_shared<project::GraphicsScript>(this, pProject);
 

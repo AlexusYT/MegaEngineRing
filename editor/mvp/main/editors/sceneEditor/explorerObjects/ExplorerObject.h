@@ -43,8 +43,6 @@ public:
 	void removeChild(const std::shared_ptr<ExplorerObject> &pChild) const;
 
 	void clearChildren() const;
-
-	virtual std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> getPropertyEntries() const = 0;
 };
 } // namespace mer::editor::mvp
 

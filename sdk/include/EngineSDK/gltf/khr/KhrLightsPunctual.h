@@ -38,7 +38,7 @@ class KhrLightsPunctual : public Microsoft::glTF::Extension {
 public:
 	class Node : public Extension {
 	public:
-		int32_t light{};
+		int32_t light{-1};
 
 		std::unique_ptr<Extension> Clone() const override { return std::make_unique<Node>(*this); }
 

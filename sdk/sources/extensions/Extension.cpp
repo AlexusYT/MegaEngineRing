@@ -49,12 +49,14 @@ IScene* Extension::getScene() const { return getObject()->getScene(); }
 
 bool Extension::notifyOnMouseScroll(double pDx, double pDy) { return onMouseScroll(pDx, pDy); }
 
+void Extension::onNodeChanged(Node* /*pOldNode*/) {}
+
 void Extension::onWindowSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
 
 void Extension::onCursorPosChanged(const double /*pX*/, const double /*pY*/) {}
 
-void Extension::onKeyStateChanged(const KeyboardKey /*pKey*/, const bool /*pPressed*/,
-								  const ModifierKeys & /*pMods*/) {}
+void Extension::onKeyStateChanged(const KeyboardKey /*pKey*/, const bool /*pPressed*/, const ModifierKeys & /*pMods*/) {
+}
 
 void Extension::onMouseButtonStateChanged(MouseButton /*pButton*/, bool /*pPressed*/, double /*pX*/,
 										  double /*pY*/) const {}

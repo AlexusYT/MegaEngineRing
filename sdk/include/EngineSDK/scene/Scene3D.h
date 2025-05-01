@@ -32,7 +32,6 @@ class Light;
 } // namespace mer::sdk
 
 namespace mer::sdk {
-class MeshInstance;
 class Renderer;
 class Material;
 class Node;
@@ -61,9 +60,15 @@ public:
 
 	void addMesh(const std::shared_ptr<Mesh> &pMesh) const;
 
+	[[nodiscard]] const std::vector<std::shared_ptr<Mesh>> &getMeshes() const;
+
 	void addMaterial(const std::shared_ptr<Material> &pMaterial) const;
 
 	void addLightSource(const std::shared_ptr<Light> &pLight) const;
+
+	[[nodiscard]] const std::vector<std::shared_ptr<Light>> &getLights() const;
+
+	void changeMesh(Node* pNode, Mesh* pMesh) const;
 
 	[[nodiscard]] const std::vector<std::shared_ptr<Material>> &getMaterials() const;
 
@@ -82,9 +87,7 @@ protected:
 
 	void onUninitialize() override;
 
-	void addToMainRenderPass(const std::shared_ptr<MeshInstance> &pMeshInstance) const;
-
-	void addToMainRenderPass(const std::shared_ptr<LightInstance> &pLightInstance) const;
+	void addToMainRenderPass(const std::shared_ptr<Node> &pNode) const;
 };
 
 } // namespace mer::sdk

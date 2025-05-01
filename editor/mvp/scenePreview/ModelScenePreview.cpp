@@ -21,7 +21,8 @@
 
 #include "ModelScenePreview.h"
 
-#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/extensions/MeshExtension.h"
+#include "EngineSDK/gltf/Node.h"
 #include "EngineSDK/render/Renderer.h"
 #include "EngineSDK/scene/Scene3D.h"
 #include "mvp/main/editors/sceneEditor/NodeSelectionHelper.h"
@@ -31,16 +32,14 @@ ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper) : se
 	outlinePass = std::make_shared<sdk::RenderPass>();
 	selectionHelper->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
 		for (auto node: pNodes) {
-			auto meshInst = dynamic_cast<sdk::MeshInstance*>(node);
-			if (!meshInst) continue;
-			auto oldMesh = meshInst->getMesh();
-			if (pSelected) {
-				scene->getRenderer()->getMainRenderPass()->removeMeshInstance(oldMesh.get(), meshInst);
-				outlinePass->addMeshInstance(oldMesh.get(), meshInst);
-			} else {
-
-				outlinePass->removeMeshInstance(oldMesh.get(), meshInst);
-				scene->getRenderer()->getMainRenderPass()->addMeshInstance(oldMesh.get(), meshInst);
+			if (node->hasExtension<sdk::MeshExtension>()) {
+				if (pSelected) {
+					scene->getRenderer()->getMainRenderPass()->removeNode(node);
+					outlinePass->addNode(node);
+				} else {
+					outlinePass->removeNode(node);
+					scene->getRenderer()->getMainRenderPass()->addNode(node);
+				}
 			}
 		}
 	});
@@ -57,9 +56,7 @@ void ModelScenePreview::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
 	if (presenter) presenter->onSceneChanged();
 }
 
-void ModelScenePreview::addSelectedMeshNode(sdk::MeshInstance* pMeshInstance) {
-	selectionHelper->addNode(pMeshInstance);
-}
+void ModelScenePreview::addSelectedMeshNode(sdk::Node* pNode) { selectionHelper->addNode(pNode); }
 
 void ModelScenePreview::clearSelectedMeshes() { selectionHelper->clearSelection(); }
 } // namespace mer::editor::mvp

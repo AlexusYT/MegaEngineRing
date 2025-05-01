@@ -25,8 +25,9 @@
 
 #include "EngineSDK/bounding/DebugGeometry.h"
 #include "EngineSDK/bounding/VolumeAabb.h"
+#include "EngineSDK/extensions/MeshExtension.h"
 #include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/gltf/Node.h"
 #include "EngineSDK/render/Renderer.h"
 #include "EngineSDK/resources/shaders/builtin/BoundingVolumeProgram.h"
 #include "EngineSDK/resources/shaders/builtin/DefaultProgram.h"
@@ -80,15 +81,15 @@ void PresenterScenePreview::renderGeometryBoundingVolumes() {
 	if (candidates.empty()) return;
 
 	float minDistance = std::numeric_limits<float>::max();
-	for (auto &candidate: candidates) {
+	for (auto &[coordinate, node]: candidates) {
 
-		if (auto meshInst = dynamic_cast<sdk::MeshInstance*>(candidate.second)) {
+		if (auto ext = node->getExtension<sdk::MeshExtension>()) {
 			glm::vec2 coord;
 			float distance;
-			if (meshInst->isGeometryIntersects(origin, glm::normalize(dir - origin), coord, distance)) {
+			if (ext->isGeometryIntersects(origin, glm::normalize(dir - origin), coord, distance)) {
 				if (minDistance > distance) {
 					minDistance = distance;
-					hoveredMeshNode = meshInst;
+					hoveredMeshNode = node;
 				}
 				//selectedByRay.emplace_back(std::make_pair(distance, meshInst));
 			}
@@ -104,11 +105,12 @@ void PresenterScenePreview::renderGeometryBoundingVolumes() {
 	if (!hoveredMeshNode) return;
 	if (!hoveredMeshNode->debugGeometry->isInited()) hoveredMeshNode->debugGeometry->initialize();
 	boundingProgram->setUniform("color", glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
-	hoveredMeshNode->debugGeometry->render();
-	auto aabb = hoveredMeshNode->getGeometryAabb();
+	//hoveredMeshNode->debugGeometry->render();
+	auto aabb = hoveredMeshNode->getContentAabb();
 	if (!aabb->isInited()) aabb->initialize();
 	boundingProgram->setUniform("color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 	aabb->render();
+
 	//if (view->isRotate()) selectedMesh->getLocalTransform()->translate(0.1f, 0, 0);
 	//	break;
 	i++;

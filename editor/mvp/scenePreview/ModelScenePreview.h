@@ -71,7 +71,7 @@ public:
 		return selectionHelper->getSelectedNodes();
 	}
 
-	void addSelectedMeshNode(sdk::MeshInstance* pMeshInstance) override;
+	void addSelectedMeshNode(sdk::Node* pNode) override;
 
 	void clearSelectedMeshes() override;
 };
