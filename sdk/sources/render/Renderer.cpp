@@ -25,6 +25,8 @@
 #include <mutex>
 #include <sigc++/adaptors/bind.h>
 
+#include "EngineSDK/extensions/LightExtension.h"
+#include "EngineSDK/extensions/MeshExtension.h"
 #include "EngineSDK/gltf/Accessor.h"
 #include "EngineSDK/gltf/Material.h"
 #include "EngineSDK/gltf/Mesh.h"
@@ -35,6 +37,192 @@ namespace mer::sdk {
 class Logger;
 
 RenderPass::RenderPass() { litByInstancesSsbo.addElement(0); }
+
+void RenderPass::addNode(Node* pNode) {
+	bool shouldAddInstance{};
+	auto newIndex = meshInstanceSsbo.size();
+	if (auto modelExt = pNode->getExtension<MeshExtension>()) {
+		shouldAddInstance = true;
+		auto mesh = modelExt->mesh.getValue().get();
+		auto iter = meshesToRender.find(mesh);
+		if (iter == meshesToRender.end()) { iter = meshesToRender.emplace_hint(iter, mesh, 0); }
+
+		iter->second.emplace_back(newIndex);
+		commandsBufferDirty = true;
+	}
+	if ([[maybe_unused]] auto modelExt = pNode->getExtension<LightExtension>()) {
+		shouldAddInstance = true;
+
+		litByInstancesSsbo.setElement(0, static_cast<const int &>(litByInstancesSsbo.size()));
+		litByInstancesSsbo.addElement(static_cast<const int &>(newIndex));
+	}
+	if (!shouldAddInstance) return;
+	auto connection = pNode->connectDataChanged([this](Node* pChangedInstance) {
+		const auto &val = instances.at(pChangedInstance);
+		meshInstanceSsbo.setElement(val.first, pChangedInstance->getData());
+	});
+	instances.emplace(pNode, std::make_pair(newIndex, connection));
+	meshInstanceSsbo.addElement(pNode->getData());
+}
+
+void RenderPass::removeNode(Node* pNode) {
+	auto instIter = instances.find(pNode);
+	if (instIter == instances.end()) { return; }
+	auto instanceIndex = instIter->second.first;
+	bool shouldRemoveInstance{};
+	if (auto modelExt = pNode->getExtension<MeshExtension>()) {
+		shouldRemoveInstance = true;
+		if (const auto iter = meshesToRender.find(modelExt->mesh.getValue().get()); iter != meshesToRender.end()) {
+			erase(iter->second, instanceIndex);
+			if (iter->second.empty()) { meshesToRender.erase(iter); }
+			commandsBufferDirty = true;
+		}
+		for (auto &meshes: meshesToRender) {
+			for (unsigned long &index: meshes.second) {
+				if (index > instanceIndex) { index--; }
+			}
+		}
+	}
+
+	if ([[maybe_unused]] auto modelExt = pNode->getExtension<LightExtension>()) {
+		shouldRemoveInstance = true;
+		auto litIter = litByInstancesSsbo.find(litByInstancesSsbo.begin() + 1, litByInstancesSsbo.end(),
+											   static_cast<const int &>(instanceIndex));
+		if (litIter != litByInstancesSsbo.end()) litByInstancesSsbo.removeElement(litIter);
+		litByInstancesSsbo.setElement(0, static_cast<const int &>(litByInstancesSsbo.size()));
+	}
+	if (!shouldRemoveInstance) return;
+
+	meshInstanceSsbo.removeElement(meshInstanceSsbo.begin() + static_cast<long int>(instanceIndex));
+	for (auto &instance: instances) {
+		if (instance.second.first > instanceIndex) { instance.second.first--; }
+	}
+	for (bool firstSkipped = false; auto &index: litByInstancesSsbo) {
+		if (!firstSkipped) {
+			firstSkipped = true;
+			continue;
+		}
+
+		if (index > static_cast<int32_t>(instanceIndex)) { index--; }
+	}
+	litByInstancesSsbo.markDirty();
+
+	instances.erase(instIter);
+}
+
+void RenderPass::removeAllMeshInstances() {
+	commands.clear();
+	instances.clear();
+	meshInstanceSsbo.clear();
+}
+
+void RenderPass::changeMesh(Node* pNode, Mesh* pNewMesh) {
+	auto ext = pNode->getExtension<MeshExtension>();
+	if (!ext) return;
+	auto instIter = instances.find(pNode);
+	if (instIter == instances.end()) return;
+	std::lock_guard lock(commandsBufferMutex);
+
+	bool isDirty{};
+	if (const auto oldMesh = ext->mesh.getValue().get()) {
+		if (const auto oldMeshIter = meshesToRender.find(oldMesh); oldMeshIter != meshesToRender.end()) {
+			erase(oldMeshIter->second, instIter->second.first);
+			if (oldMeshIter->second.empty()) { meshesToRender.erase(oldMeshIter); }
+
+			for (auto &meshes: meshesToRender) {
+				for (unsigned long &index: meshes.second) {
+					if (index > instIter->second.first) { index--; }
+				}
+			}
+			isDirty = true;
+		}
+	}
+	if (pNewMesh) {
+		auto newMeshIter = meshesToRender.find(pNewMesh);
+		if (newMeshIter == meshesToRender.end()) newMeshIter = meshesToRender.emplace(pNewMesh, 0).first;
+		newMeshIter->second.emplace_back(instIter->second.first);
+		isDirty = true;
+	}
+	commandsBufferDirty = isDirty;
+}
+
+void RenderPass::render() {
+	if (meshesToRender.empty()) return;
+	if (commandsBufferDirty && commandsBufferMutex.try_lock()) {
+		commands.clear();
+		instanceIndices.clear();
+		meshIndices.clear();
+		/*for (const auto &[instance, data]: instances) {
+			auto mesh = instance->getMesh().get();
+			auto info = renderer->getMeshInfo(mesh);
+			if (!info.has_value()) continue;
+			auto instances for (auto commandsByInfo: renderer->getCommandsByInfo(info.value())) {
+				commandsByInfo.instanceCount = mesh.second.size();
+				commands.emplace_back(commandsByInfo);
+			}
+		}*/
+		for (auto &mesh: meshesToRender) {
+			if (mesh.second.empty()) continue;
+			auto info = renderer->getMeshInfo(mesh.first);
+			if (!info.has_value()) continue;
+			meshIndices.insert(meshIndices.cend(), info->metadataIds.begin(), info->metadataIds.end());
+			for (auto commandsByInfo: renderer->getCommandsByInfo(info.value())) {
+				commandsByInfo.instanceCount = static_cast<unsigned int>(mesh.second.size());
+				commandsByInfo.baseInstance = static_cast<unsigned int>(instanceIndices.size());
+				commands.emplace_back(commandsByInfo);
+			}
+			for (unsigned long instanceId: mesh.second) { instanceIndices.emplace_back(instanceId); }
+		}
+		if (drawCmdBuffer) glDeleteBuffers(1, &drawCmdBuffer);
+		glCreateBuffers(1, &drawCmdBuffer);
+		glNamedBufferStorage(drawCmdBuffer,
+							 static_cast<GLsizeiptr>(sizeof(DrawElementsIndirectCommand) * commands.size()),
+							 static_cast<const void*>(commands.data()), GL_DYNAMIC_STORAGE_BIT);
+		commandsBufferDirty = false;
+		commandsBufferSize = commands.size();
+		commandsBufferMutex.unlock();
+
+		if (instanceIndicesBuffer) glDeleteBuffers(1, &instanceIndicesBuffer);
+		glCreateBuffers(1, &instanceIndicesBuffer);
+		glNamedBufferData(instanceIndicesBuffer, static_cast<GLsizeiptr>(sizeof(uint32_t) * instanceIndices.size()),
+						  static_cast<const void*>(instanceIndices.data()), GL_STATIC_DRAW);
+
+		if (meshIndicesBuffer) glDeleteBuffers(1, &meshIndicesBuffer);
+		glCreateBuffers(1, &meshIndicesBuffer);
+		glNamedBufferData(meshIndicesBuffer, static_cast<GLsizeiptr>(sizeof(uint32_t) * meshIndices.size()),
+						  static_cast<const void*>(meshIndices.data()), GL_STATIC_DRAW);
+		meshIndicesBufferDirty = false;
+	}
+
+	glVertexArrayVertexBuffer(renderer->getVao(), 1, instanceIndicesBuffer, 0, sizeof(uint32_t));
+	glVertexArrayVertexBuffer(renderer->getVao(), 2, meshIndicesBuffer, 0, sizeof(uint32_t));
+
+	meshInstanceSsbo.update();
+	meshInstanceSsbo.bindBufferBase(1);
+	if (litByInstancesSsbo.tryUpdate()) litByInstancesSsbo.bindBufferBase(6);
+	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawCmdBuffer);
+	glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_SHORT, nullptr, static_cast<GLsizei>(commandsBufferSize), 0);
+	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
+}
+
+ReportMessagePtr RenderPass::onInitialize() {
+	//
+
+
+	return Initializable::onInitialize();
+}
+
+void RenderPass::onUninitialize() {
+	if (drawCmdBuffer) {
+		glDeleteBuffers(1, &drawCmdBuffer);
+		drawCmdBuffer = 0;
+	}
+	if (instanceIndicesBuffer) {
+		glDeleteBuffers(1, &instanceIndicesBuffer);
+		instanceIndicesBuffer = 0;
+	}
+	meshInstanceSsbo.unintialize();
+}
 
 Renderer::Renderer() {
 	addRenderPass(getMainPassName(), std::make_shared<RenderPass>());
@@ -249,6 +437,10 @@ void Renderer::executeRenderPass(const std::string &pPassName) {
 	glBindVertexArray(0);
 }
 
+void Renderer::changeMesh(Node* pNode, Mesh* pMesh) {
+	for (const auto &renderPass: renderPasses | std::views::values) { renderPass->changeMesh(pNode, pMesh); }
+}
+
 ReportMessagePtr Renderer::onInitialize() {
 	glCreateVertexArrays(1, &vao);
 
@@ -307,158 +499,6 @@ void Renderer::onPrimitiveMaterialChanged(const std::shared_ptr<Material> &pNewM
 	MeshMetadata &metadata = meshMetadataSsbo.getElement(info->metadataIds.at(index));
 	metadata.materialId = static_cast<uint32_t>(matIter->second);
 	meshMetadataSsbo.markDirty();
-}
-
-void RenderPass::addMeshInstance(Mesh* pMesh, MeshInstance* pMeshInstance) {
-	auto iter = meshesToRender.find(pMesh);
-	if (iter == meshesToRender.end()) {
-		iter = meshesToRender.emplace_hint(iter, pMesh, 0);
-		commandsBufferDirty = true;
-	}
-
-	auto connection = pMeshInstance->connectDataChanged([this](MeshInstance* pChangedInstance) {
-		const auto &val = instances.at(pChangedInstance);
-		meshInstanceSsbo.setElement(val.first, pChangedInstance->getData());
-	});
-	auto newIndex = meshInstanceSsbo.size();
-	iter->second.emplace_back(newIndex);
-	instances.emplace(pMeshInstance, std::make_pair(newIndex, connection));
-	meshInstanceSsbo.addElement(pMeshInstance->getData());
-
-	/*{
-		std::lock_guard lock(commandsBufferMutex);
-
-		for (auto commandsByInfo: renderer->getCommandsByInfo(iter->second)) {
-			commandsByInfo.instanceCount = 1;
-			commands.emplace_back(commandsByInfo);
-		}
-	}*/
-}
-
-void RenderPass::removeMeshInstance(Mesh* pMesh, MeshInstance* pMeshInstance) {
-	std::lock_guard lock(commandsBufferMutex);
-	auto iter = meshesToRender.find(pMesh);
-	if (iter == meshesToRender.end()) { return; }
-	auto instIter = instances.find(pMeshInstance);
-	if (instIter == instances.end()) { return; }
-	auto &instanceInfo = instIter->second;
-
-	erase(iter->second, instanceInfo.first);
-	if (iter->second.empty()) { meshesToRender.erase(iter); }
-	/*meshInstanceSsbo.removeElement(meshInstanceSsbo.begin() + static_cast<long int>(instanceInfo.first));
-
-	for (auto &[instance, instanceData]: instances) {
-		if (instanceData.first > instanceInfo.first) instanceData.first--;
-	}
-	for (auto &mesh: meshesToRender) {
-		for (unsigned long &second: mesh.second)
-			if (second > instanceInfo.first) second--;
-	}*/
-	instances.erase(instIter);
-	commandsBufferDirty = true;
-}
-
-void RenderPass::addLightInstance(LightInstance* pLightInstance) {
-
-	auto connection = pLightInstance->connectDataChanged([this](LightInstance* pChangedInstance) {
-		const auto &val = instances.at(pChangedInstance);
-		meshInstanceSsbo.setElement(val.first, pChangedInstance->getData());
-	});
-	auto newIndex = meshInstanceSsbo.size();
-	instances.emplace(pLightInstance, std::make_pair(newIndex, connection));
-	meshInstanceSsbo.addElement(pLightInstance->getData());
-	litByInstancesSsbo.setElement(0, static_cast<const int &>(litByInstancesSsbo.size()));
-	litByInstancesSsbo.addElement(static_cast<const int &>(newIndex));
-}
-
-void RenderPass::removeAllMeshInstances() {
-	commands.clear();
-	instances.clear();
-	meshInstanceSsbo.clear();
-}
-
-void RenderPass::render() {
-	if (meshesToRender.empty()) return;
-	static int i = 0;
-	if (commandsBufferDirty && commandsBufferMutex.try_lock()) {
-		commands.clear();
-		instanceIndices.clear();
-		meshIndices.clear();
-		/*for (const auto &[instance, data]: instances) {
-			auto mesh = instance->getMesh().get();
-			auto info = renderer->getMeshInfo(mesh);
-			if (!info.has_value()) continue;
-			auto instances for (auto commandsByInfo: renderer->getCommandsByInfo(info.value())) {
-				commandsByInfo.instanceCount = mesh.second.size();
-				commands.emplace_back(commandsByInfo);
-			}
-		}*/
-		for (auto &mesh: meshesToRender) {
-			if (mesh.second.empty()) continue;
-			auto info = renderer->getMeshInfo(mesh.first);
-			if (!info.has_value()) continue;
-			meshIndices.insert(meshIndices.cend(), info->metadataIds.begin(), info->metadataIds.end());
-			for (auto commandsByInfo: renderer->getCommandsByInfo(info.value())) {
-				commandsByInfo.instanceCount = static_cast<unsigned int>(mesh.second.size());
-				commandsByInfo.baseInstance = static_cast<unsigned int>(instanceIndices.size());
-				commands.emplace_back(commandsByInfo);
-			}
-			for (unsigned long instanceId: mesh.second) { instanceIndices.emplace_back(instanceId); }
-			i++;
-			//if (i > 0) break;
-		}
-		if (drawCmdBuffer) glDeleteBuffers(1, &drawCmdBuffer);
-		glCreateBuffers(1, &drawCmdBuffer);
-		glNamedBufferStorage(drawCmdBuffer,
-							 static_cast<GLsizeiptr>(sizeof(DrawElementsIndirectCommand) * commands.size()),
-							 static_cast<const void*>(commands.data()), GL_DYNAMIC_STORAGE_BIT);
-		commandsBufferDirty = false;
-		commandsBufferSize = commands.size();
-		commandsBufferMutex.unlock();
-
-		if (instanceIndicesBuffer) glDeleteBuffers(1, &instanceIndicesBuffer);
-		glCreateBuffers(1, &instanceIndicesBuffer);
-		glNamedBufferData(instanceIndicesBuffer, static_cast<GLsizeiptr>(sizeof(uint32_t) * instanceIndices.size()),
-						  static_cast<const void*>(instanceIndices.data()), GL_STATIC_DRAW);
-
-		if (meshIndicesBuffer) glDeleteBuffers(1, &meshIndicesBuffer);
-		glCreateBuffers(1, &meshIndicesBuffer);
-		glNamedBufferData(meshIndicesBuffer, static_cast<GLsizeiptr>(sizeof(uint32_t) * meshIndices.size()),
-						  static_cast<const void*>(meshIndices.data()), GL_STATIC_DRAW);
-		meshIndicesBufferDirty = false;
-
-
-	} else
-		i = 0;
-
-	glVertexArrayVertexBuffer(renderer->getVao(), 1, instanceIndicesBuffer, 0, sizeof(uint32_t));
-	glVertexArrayVertexBuffer(renderer->getVao(), 2, meshIndicesBuffer, 0, sizeof(uint32_t));
-
-	meshInstanceSsbo.update();
-	meshInstanceSsbo.bindBufferBase(1);
-	if (litByInstancesSsbo.tryUpdate()) litByInstancesSsbo.bindBufferBase(6);
-	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawCmdBuffer);
-	glMultiDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_SHORT, nullptr, static_cast<GLsizei>(commandsBufferSize), 0);
-	glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);
-}
-
-ReportMessagePtr RenderPass::onInitialize() {
-	//
-
-
-	return Initializable::onInitialize();
-}
-
-void RenderPass::onUninitialize() {
-	if (drawCmdBuffer) {
-		glDeleteBuffers(1, &drawCmdBuffer);
-		drawCmdBuffer = 0;
-	}
-	if (instanceIndicesBuffer) {
-		glDeleteBuffers(1, &instanceIndicesBuffer);
-		instanceIndicesBuffer = 0;
-	}
-	meshInstanceSsbo.unintialize();
 }
 
 } // namespace mer::sdk

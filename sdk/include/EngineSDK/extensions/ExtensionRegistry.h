@@ -64,6 +64,10 @@ public:
 		return extensions;
 	}
 
+	[[nodiscard]] static const std::unordered_map<std::type_index, ExtensionClassInfo> &getExtensionsByType() {
+		return extensionByType;
+	}
+
 	static std::shared_ptr<Extension> newInstance(const std::string &pTypeName);
 
 	template<typename ClassT>

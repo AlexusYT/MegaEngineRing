@@ -38,8 +38,8 @@ void Scene3D::addRootNode(const std::shared_ptr<Node> &pNewNode) {
 }
 
 void Scene3D::addNode(const std::shared_ptr<Node> &pParentNode, const std::shared_ptr<Node> &pNode) {
-	if (auto meshInstance = std::dynamic_pointer_cast<MeshInstance>(pNode)) { addToMainRenderPass(meshInstance); }
-	if (auto lightInstance = std::dynamic_pointer_cast<LightInstance>(pNode)) { addToMainRenderPass(lightInstance); }
+	pNode->setScene(this);
+	addToMainRenderPass(pNode);
 	if (!pParentNode) rootNodes.emplace_back(pNode.get());
 	else
 		pParentNode->addChild(pNode.get());
@@ -50,18 +50,24 @@ void Scene3D::addNode(const std::shared_ptr<Node> &pParentNode, const std::share
 void Scene3D::mergeNodes(const std::vector<std::shared_ptr<Node>> &pNodes) {
 	nodes.insert(nodes.cend(), pNodes.begin(), pNodes.end());
 	for (auto node: pNodes) {
+		node->setScene(this);
 		if (!node->getParentNode()) rootNodes.emplace_back(node.get());
-		if (auto meshInstance = std::dynamic_pointer_cast<MeshInstance>(node)) { addToMainRenderPass(meshInstance); }
-		if (auto lightInstance = std::dynamic_pointer_cast<LightInstance>(node)) { addToMainRenderPass(lightInstance); }
+		addToMainRenderPass(node);
 	}
 	onNodeCollectionChanged();
 }
 
 void Scene3D::addMesh(const std::shared_ptr<Mesh> &pMesh) const { renderer->addMesh(pMesh); }
 
+const std::vector<std::shared_ptr<Mesh>> &Scene3D::getMeshes() const { return renderer->getMeshes(); }
+
 void Scene3D::addMaterial(const std::shared_ptr<Material> &pMaterial) const { renderer->addMaterial(pMaterial); }
 
 void Scene3D::addLightSource(const std::shared_ptr<Light> &pLight) const { renderer->addLightSource(pLight); }
+
+const std::vector<std::shared_ptr<Light>> &Scene3D::getLights() const { return renderer->getLights(); }
+
+void Scene3D::changeMesh(Node* pNode, Mesh* pNewMesh) const { renderer->changeMesh(pNode, pNewMesh); }
 
 const std::vector<std::shared_ptr<Material>> &Scene3D::getMaterials() const { return renderer->getMaterials(); }
 
@@ -69,11 +75,8 @@ ReportMessagePtr Scene3D::onInitialize() { return Initializable::onInitialize();
 
 void Scene3D::onUninitialize() { Initializable::onUninitialize(); }
 
-void Scene3D::addToMainRenderPass(const std::shared_ptr<MeshInstance> &pMeshInstance) const {
-	renderer->getMainRenderPass()->addMeshInstance(pMeshInstance->getMesh().get(), pMeshInstance.get());
+void Scene3D::addToMainRenderPass(const std::shared_ptr<Node> &pNode) const {
+	renderer->getMainRenderPass()->addNode(pNode.get());
 }
 
-void Scene3D::addToMainRenderPass(const std::shared_ptr<LightInstance> &pLightInstance) const {
-	renderer->getMainRenderPass()->addLightInstance(pLightInstance.get());
-}
 } // namespace mer::sdk

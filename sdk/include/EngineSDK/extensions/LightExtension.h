@@ -21,29 +21,23 @@
 
 #ifndef LIGHTEXTENSION_H
 #define LIGHTEXTENSION_H
-#include "EngineSDK/light/LightInstance1.h"
-#include "EngineSDK/light/LightInstanceData.h"
 #include "Extension.h"
 
 namespace mer::sdk {
 
-class LightExtension : public Extension, public LightInstance1 {
-	LightInstanceData data;
-
+class LightExtension : public Extension {
 public:
-	ExtensionProperty<float> propertyPower;
-	ExtensionProperty<glm::vec3> propertyColor;
+	ExtensionProperty<int32_t> lightDataId;
 
 	LightExtension();
+
+	~LightExtension() override;
 
 	METHOD_CREATE(LightExtension)
 
 	EXT_TYPE_NAME("LightExtension")
 
-private:
-	[[nodiscard]] const LightInstanceData &getLightInstanceData() const override { return data; }
-
-	ReportMessagePtr onInit() override;
+	void onNodeChanged(Node* pOldNode) override;
 };
 
 } // namespace mer::sdk

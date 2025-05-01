@@ -23,7 +23,9 @@
 
 #include <project/Project.h>
 
-#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/extensions/LightExtension.h"
+#include "EngineSDK/extensions/MeshExtension.h"
+#include "EngineSDK/gltf/Node.h"
 #include "EngineSDK/scene/Scene3D.h"
 #include "PresenterObjectsTree.h"
 #include "mvp/contexts/IWidgetContext.h"
@@ -81,6 +83,7 @@ void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 		if (iter != selectedMap.end() && iter->second) flags |= ImGuiTreeNodeFlags_Selected;
 		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 		bool nodeOpen = ImGui::TreeNodeEx(node->getName().c_str(), flags);
+		ImGui::SetItemTooltip("%s", node->getName().c_str());
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)) {
 			if (ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonRight)) {
 				ImGui::OpenPopup("ContextMenu", ImGuiPopupFlags_MouseButtonRight);
@@ -94,9 +97,14 @@ void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 		}
 		//ImGui::OpenPopupOnItemClick(id.c_str(), ImGuiPopupFlags_MouseButtonRight);
 		ImGui::TableNextColumn();
-		if (/*auto mesh =*/dynamic_cast<sdk::MeshInstance*>(node)) ImGui::TextUnformatted("Mesh");
-		else
-			ImGui::TextUnformatted("Node");
+		for (auto &extension: node->getExtensions()) {
+			if (extension.first == typeid(sdk::MeshExtension)) {
+				ImGui::TextUnformatted("M");
+			} else if (extension.first == typeid(sdk::LightExtension)) {
+				ImGui::TextUnformatted("L");
+			}
+			ImGui::SameLine();
+		}
 
 		if (nodeOpen && folder) {
 

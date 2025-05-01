@@ -21,16 +21,12 @@
 
 #include "SceneExplorerObject.h"
 
-#include "EngineSDK/scene/objects/ISceneObject.h"
 #include "EngineSDK/extensions/Extension.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
-#include "mvp/main/objectProperties/ObjectPropertyEntry.h"
+#include "EngineSDK/scene/objects/ISceneObject.h"
 
 namespace mer::editor::mvp {
-SceneExplorerObject::SceneExplorerObject(sdk::ISceneObject* pObject)
-	: propertyEntries(Gio::ListStore<ObjectExtensionEntry>::create()) {
-	setObject(pObject);
-}
+SceneExplorerObject::SceneExplorerObject(sdk::ISceneObject* pObject) { setObject(pObject); }
 
 std::shared_ptr<SceneExplorerObject> SceneExplorerObject::create(sdk::ISceneObject* pObject) {
 	return Glib::make_refptr_for_instance(new SceneExplorerObject(pObject));
@@ -40,51 +36,11 @@ const std::string &SceneExplorerObject::getName() const { return object->getMain
 
 void SceneExplorerObject::setName(const std::string &pName) { object->getMainExtension()->propertyName = pName; }
 
-std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> SceneExplorerObject::getPropertyEntries() const {
-	return propertyEntries;
-}
-
 void SceneExplorerObject::setObject(sdk::ISceneObject* pObject) {
 	if (object == pObject) return;
 	object = pObject;
-	propertyEntries->remove_all();
 	for (auto connection: connections) { connection.disconnect(); }
 	connections.clear();
-	/*connections.push_back(
-		pObject->connectOnNameChanged([this](const std::string & pOldName, const std::string &pNewName) {
-			name = pNewName;
-		}));*/
-
-	/*auto basicGroup = std::make_shared<sdk::ExtensionPropertyGroup>();
-	basicGroup->setPropertyName("Basic properties");
-	auto nameProp = std::make_shared<sdk::ExtensionProperty<std::string>>();
-	nameProp->setName("Object name");
-	nameProp->setGetterFunc(sigc::mem_fun(*object, &sdk::ISceneObject::getName));
-	nameProp->setSetterFunc(sigc::mem_fun(*object, &sdk::ISceneObject::setName));
-	basicGroup->addChild(nameProp);
-	auto positionProp = std::make_shared<sdk::ExtensionProperty<glm::vec3>>();
-	positionProp->setName("Position");
-	positionProp->setGetterFunc(sigc::mem_fun(*object, &sdk::ISceneObject::getPosition));
-	positionProp->setSetterFunc(sigc::mem_fun(*object, &sdk::ISceneObject::setPosition));
-	basicGroup->addChild(positionProp);
-
-	propertyEntries->append(ObjectPropertyEntry::create(basicGroup));*/
-
-	for (const auto &extension: object->getExtensions()) { addExtension(extension.second); }
-
-	connections.push_back(object->connectOnExtensionAdded(
-		[this](const std::shared_ptr<sdk::Extension> &pNewExt) { addExtension(pNewExt); }));
-	connections.push_back(
-		object->connectOnExtensionRemoved([this](const std::shared_ptr<sdk::Extension> &pNewExt) {
-			for (uint32_t i = 0; i < propertyEntries->get_n_items(); i++) {
-				auto entry = propertyEntries->get_item(i);
-				if (!entry || !entry->getNativeExtension()) continue;
-				if (entry->getNativeExtension() == pNewExt.get()) {
-					propertyEntries->remove(i);
-					break;
-				}
-			}
-		}));
 }
 
 Glib::RefPtr<Gio::MenuModel> SceneExplorerObject::getMenu() {
@@ -93,15 +49,6 @@ Glib::RefPtr<Gio::MenuModel> SceneExplorerObject::getMenu() {
 	menu->append_item(createItem("New Object", "object.manage.new.object", variant));
 	menu->append_item(createItem("Delete", "object.manage.remove.object", variant));
 	return menu;
-}
-
-void SceneExplorerObject::addExtension(const std::shared_ptr<sdk::Extension> &pExtension) const {
-	/*auto group = std::make_shared<sdk::ExtensionPropertyGroup>();
-	group->setPropertyName(pExtension->getTypeName());
-	for (auto properties = pExtension->getProperties(); const auto &extensionPropertyBase: properties) {
-		group->addChild(extensionPropertyBase);
-	}*/
-	propertyEntries->append(ObjectExtensionEntry::create(pExtension.get()));
 }
 
 std::shared_ptr<Gio::MenuItem> SceneExplorerObject::createItem(const std::string &pName, const std::string &pAction,

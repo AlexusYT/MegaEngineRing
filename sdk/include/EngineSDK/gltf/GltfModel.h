@@ -40,7 +40,6 @@ class GLTFResourceReader;
 
 namespace mer::sdk {
 class Node;
-class MeshInstance;
 class Mesh;
 class Prefab;
 class Primitive;

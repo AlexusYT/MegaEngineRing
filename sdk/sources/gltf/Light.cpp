@@ -24,6 +24,13 @@
 #include <nlohmann/json.hpp>
 
 namespace mer::sdk {
+Light::Light(const std::string &pName) : name(pName) {
+	data.colorAndType = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+	data.intensity = 1.0f;
+	data.innerConeAngle = 0.0f;
+	data.outerConeAngle = M_PI_4f;
+}
+
 void Light::serialize(nlohmann::json &pJson) { pJson["name"] = name; }
 
 void Light::deserialize(const nlohmann::json &pJson) {

@@ -21,8 +21,6 @@
 
 #include "ViewCenterWindow.h"
 
-#include <mvp/main/editors/IPresenterSceneEditor.h>
-
 #include "IPresenterCenterWindow.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h"

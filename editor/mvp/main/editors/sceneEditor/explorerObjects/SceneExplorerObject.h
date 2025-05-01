@@ -32,7 +32,6 @@ namespace mer::editor::mvp {
 class SceneExplorerObject : public ExplorerObject {
 	sdk::ISceneObject* object;
 	std::vector<sigc::connection> connections;
-	std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> propertyEntries;
 
 
 	explicit SceneExplorerObject(sdk::ISceneObject* pObject);
@@ -44,8 +43,6 @@ public:
 
 	void setName(const std::string &pName) override;
 
-	std::shared_ptr<Gio::ListStore<ObjectExtensionEntry>> getPropertyEntries() const override;
-
 	[[nodiscard]] sdk::ISceneObject* getObject() const { return object; }
 
 	void setObject(sdk::ISceneObject* pObject);
@@ -53,8 +50,6 @@ public:
 	Glib::RefPtr<Gio::MenuModel> getMenu() override;
 
 private:
-	void addExtension(const std::shared_ptr<sdk::Extension> &pExtension) const;
-
 	static std::shared_ptr<Gio::MenuItem> createItem(const std::string &pName, const std::string &pAction,
 													 const Glib::VariantBase &pVariant);
 };

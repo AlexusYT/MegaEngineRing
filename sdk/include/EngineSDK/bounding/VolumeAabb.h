@@ -21,7 +21,13 @@
 
 #ifndef VOLUMEAABB_H
 #define VOLUMEAABB_H
+#include <glm/fwd.hpp>
+
 #include "BoundingVolume.h"
+
+namespace mer::sdk {
+class Transformation;
+}
 
 namespace mer::sdk {
 
@@ -65,6 +71,8 @@ public:
 
 #define RAYAABB_EPSILON 0.00001f
 	bool isIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRayDir, glm::vec3 &pIntersectCoordOut);
+
+	void transform(const glm::mat4 &pTransformMatrix, glm::vec3 &pNewMin, glm::vec3 &pNewMax) const;
 
 	[[nodiscard]] const glm::vec3 &getMin() const { return min; }
 

@@ -34,38 +34,26 @@
 #include "EngineSDK/resources/textures/TextureResource.h"
 #include "Globals.h"
 #include "PanedLayoutTab.h"
-#include "centerWindow/PresenterCenterWindow.h"
-#include "centerWindow/ViewCenterWindow.h"
-#include "editors/sceneEditor/ModelSceneEditor.h"
-#include "editors/sceneEditor/PresenterSceneEditor.h"
-#include "editors/sceneEditor/ViewSceneEditor.h"
-#include "editors/sceneEditor/explorerObjects/ExplorerObject.h"
-#include "editors/sceneEditor/explorerObjects/SceneExplorerObject.h"
 #include "mvp/ApplicationController.h"
 #include "mvp/contexts/ApplicationContext.h"
 #include "mvp/contexts/MultiPanedContext.h"
 #include "mvp/contexts/UiWindowContext.h"
-#include "mvp/onlineImport/ModelOnlineImport.h"
 #include "mvp/onlineImport/PresenterOnlineImport.h"
 #include "mvp/onlineImport/ViewOnlineImport.h"
 #include "mvp/prefabEditor/ModelPrefabEditor.h"
 #include "mvp/prefabEditor/PresenterPrefabEditor.h"
 #include "mvp/prefabEditor/ViewPrefabEditor.h"
 #include "mvp/resourceEditor/EditingResourceList.h"
-#include "mvp/resourceEditor/ModelResourceEditor.h"
 #include "mvp/resourceEditor/PresenterResourceEditor.h"
 #include "mvp/resourceEditor/ViewResourceEditor.h"
 #include "mvp/resourceSelection/ModelResourceSelection.h"
 #include "mvp/resourceSelection/PresenterResourceSelection.h"
 #include "mvp/resourceSelection/ViewResourceSelection.h"
-#include "objectProperties/ModelObjectProperties.h"
 #include "objectProperties/PresenterObjectProperties.h"
 #include "objectProperties/ViewObjectProperties.h"
-#include "project/LoadedScene.h"
 #include "projectExplorer/ModelProjectExplorer.h"
 #include "projectExplorer/PresenterProjectExplorer.h"
 #include "projectExplorer/ViewProjectExplorer.h"
-#include "treeObjectWindow/ModelObjectsTree.h"
 #include "treeObjectWindow/PresenterObjectsTree.h"
 #include "treeObjectWindow/ViewObjectsTree.h"
 
@@ -142,14 +130,6 @@ void PresenterMain::run() {
 	loadedScene->connectErrorOccurred([this](auto pMsg) { displayError(pMsg); });
 	loadedScene->setRunDirectory(project->getProjectPath());
 #endif
-	auto modelSceneEditor = std::make_shared<ModelSceneEditor>();
-#ifdef USE_OLD_UI
-	modelSceneEditor->setLoadedScene(loadedScene);
-#endif
-	auto viewSceneEditor = std::make_shared<ViewSceneEditor>(UiWindowContext::create(getAppController()->getSceneUi()));
-	auto presenterSceneEditor = std::make_shared<PresenterSceneEditor>(viewSceneEditor, modelSceneEditor);
-	getAppController()->run(presenterSceneEditor);
-	presenters.push_back(presenterSceneEditor);
 
 	auto modelTextureEditor = std::make_shared<ModelPrefabEditor>();
 	auto viewTextureEditor = ViewPrefabEditor::create(UiWindowContext::create(getAppController()->getSceneUi()));
@@ -214,7 +194,6 @@ std::shared_ptr<IView> PresenterMain::createView(const IPresenter* pPresenter,
 
 	if (dynamic_cast<const PresenterProjectExplorer*>(pPresenter))
 		return std::make_shared<ViewProjectExplorer>(pContext);
-	if (dynamic_cast<const PresenterSceneEditor*>(pPresenter)) return std::make_shared<ViewSceneEditor>(pContext);
 	if (dynamic_cast<const PresenterObjectsTree*>(pPresenter)) return std::make_shared<ViewObjectsTree>(pContext);
 	if (dynamic_cast<const PresenterObjectProperties*>(pPresenter))
 		return std::make_shared<ViewObjectProperties>(pContext);

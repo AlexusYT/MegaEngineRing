@@ -23,29 +23,19 @@
 
 #include <glm/vec4.hpp>
 
-#include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
+#include "EngineSDK/gltf/Node.h"
 
 namespace mer::sdk {
-LightExtension::LightExtension() : propertyPower(this, "Power"), propertyColor(this, "Light color") {
-	propertyPower.getEvent().connect([this](const float &pNewVal) {
-		data.power = pNewVal;
-		notifyDataChanged();
+LightExtension::LightExtension() : lightDataId(this, "LightSource") { lightDataId = -1; }
+
+LightExtension::~LightExtension() { lightDataId = -1; }
+
+void LightExtension::onNodeChanged(Node* /*pOldNode*/) {
+	lightDataId.connectEvent([this](int32_t pNewIndex) {
+		auto nodeSelf = getNode();
+		if (!nodeSelf) return;
+		nodeSelf->setLightDataId(pNewIndex);
 	});
-	propertyPower.setValue(10.0f);
-	propertyColor.getEvent().connect([this](const glm::vec3 &pNewVal) {
-		data.color = glm::vec4(pNewVal, 1.0f);
-		notifyDataChanged();
-	});
-	propertyColor.setValue(glm::vec3(1.0f, 1.0f, 1.0f));
 }
 
-ReportMessagePtr LightExtension::onInit() {
-	auto mainExt = getObject()->getMainExtension();
-	mainExt->propertyPosition.connectEvent([this](const glm::vec3 &pPos) {
-		data.position = glm::vec4(pPos, 1.0f);
-		notifyDataChanged();
-	});
-	return nullptr;
-}
 } // namespace mer::sdk

@@ -22,6 +22,8 @@
 #include "EngineSDK/bounding/VolumeAabb.h"
 
 #include <cmath>
+#include <glm/mat4x4.hpp>
+#include <glm/vec4.hpp>
 
 namespace mer::sdk {
 std::shared_ptr<VolumeAabb> VolumeAabb::create(const glm::vec3 &pMin, const glm::vec3 &pMax) {
@@ -105,6 +107,31 @@ bool VolumeAabb::isIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRay
 	if (tzmin > tmin) tmin = tzmin;
 	if (tzmax < tmax) tmax = tzmax;
 	return ((tmin < t1) && (tmax > t0));*/
+}
+
+void VolumeAabb::transform(const glm::mat4 &pTransformMatrix, glm::vec3 &pNewMin, glm::vec3 &pNewMax) const {
+
+	auto center{(max + min) * 0.5f};
+	auto extents{(max - min) * 0.5f};
+	const glm::vec3 globalCenter{pTransformMatrix * glm::vec4(center, 1.f)};
+
+	// Scaled orientation
+	const glm::vec3 right = pTransformMatrix[0] * extents.x;
+	const glm::vec3 up = pTransformMatrix[1] * extents.y;
+	const glm::vec3 forward = -pTransformMatrix[2] * extents.z;
+
+	glm::vec3 x{1.f, 0.f, 0.f};
+	const float newIi = std::abs(glm::dot(x, right)) + std::abs(glm::dot(x, up)) + std::abs(glm::dot(x, forward));
+
+	glm::vec3 y{0.f, 1.f, 0.f};
+	const float newIj = std::abs(glm::dot(y, right)) + std::abs(glm::dot(y, up)) + std::abs(glm::dot(y, forward));
+
+	glm::vec3 z{0.f, 0.f, 1.f};
+	const float newIk = std::abs(glm::dot(z, right)) + std::abs(glm::dot(z, up)) + std::abs(glm::dot(z, forward));
+
+	auto newExtents = glm::vec3(newIi, newIj, newIk);
+	pNewMin = globalCenter - newExtents;
+	pNewMax = globalCenter + newExtents;
 }
 
 std::vector<float> VolumeAabb::getVertices() {

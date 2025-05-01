@@ -45,7 +45,6 @@ class ISceneObject;
 namespace mer::editor::ui {
 class EditorSceneObject : public project::GeneratedFiles {
 	std::shared_ptr<Gio::ListStore<EditorSceneObject>> childrenUi;
-	std::shared_ptr<Gio::ListStore<mvp::ObjectPropertyEntry>> propertyEntries;
 
 	std::shared_ptr<project::GraphicsScript> graphicsScript;
 	sdk::ISceneObject* nativeObject{};
@@ -82,10 +81,6 @@ public:
 	void setNativeObject(sdk::ISceneObject* pNativeObject) { nativeObject = pNativeObject; }
 
 	[[nodiscard]] sdk::ISceneObject* getNativeObject() const { return nativeObject; }
-
-	[[nodiscard]] const std::shared_ptr<Gio::ListStore<mvp::ObjectPropertyEntry>> &getPropertyEntries() const {
-		return propertyEntries;
-	}
 
 	[[nodiscard]] const std::shared_ptr<project::GraphicsScript> &getGraphicsScript() const { return graphicsScript; }
 

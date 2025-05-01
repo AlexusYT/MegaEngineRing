@@ -33,8 +33,7 @@ class ExtensionProperty : public Property<T>, public ISerializable {
 
 
 public:
-	ExtensionProperty(IPropertyProvider* pProvider, const std::string &pName,
-					  const std::string &pDescription = {})
+	ExtensionProperty(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription = {})
 		: Property<T>(pProvider, pName, pDescription) {}
 
 	ExtensionProperty &operator=(const T &pOther) {
@@ -47,17 +46,17 @@ public:
 		return *this;
 	}
 
-	void serialize(nlohmann::json &pJson, Extension* pExtension) override {
-		pJson[this->Property<T>::PropertyBase::getPropertyName()] =
-			PropertyJsonSerializer<T>::serialize(Property<T>::getValue(), pExtension);
+	void serialize(nlohmann::json & /*pJson*/, Extension* /*pExtension*/) override {
+		//pJson[this->Property<T>::PropertyBase::getPropertyName()] =
+		//	PropertyJsonSerializer<T>::serialize(Property<T>::getValue(), pExtension);
 	}
 
-	void deserialize(const nlohmann::json &pJson, Extension* pExtension) override {
-		if (pJson.contains(this->Property<T>::getPropertyName()))
+	void deserialize(const nlohmann::json & /*pJson*/, Extension* /*pExtension*/) override {
+		/*if (pJson.contains(this->Property<T>::getPropertyName()))
 			Property<T>::setValue(PropertyJsonSerializer<T>::deserialize(
 				pJson.at(this->Property<T>::getPropertyName()), pExtension));
 		else
-			Property<T>::setValue({});
+			Property<T>::setValue({});*/
 	}
 };
 

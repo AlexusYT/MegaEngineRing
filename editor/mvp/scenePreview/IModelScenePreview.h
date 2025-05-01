@@ -30,7 +30,6 @@ namespace mer::sdk {
 class Node;
 class Renderer;
 class Scene3D;
-class MeshInstance;
 class Mesh;
 class RenderPass;
 class Material;
@@ -56,7 +55,7 @@ public:
 
 	[[nodiscard]] virtual const std::vector<sdk::Node*> &getSelectedMeshNodes() const = 0;
 
-	virtual void addSelectedMeshNode(sdk::MeshInstance* pMeshInstance) = 0;
+	virtual void addSelectedMeshNode(sdk::Node* pNode) = 0;
 
 	virtual void clearSelectedMeshes() = 0;
 };

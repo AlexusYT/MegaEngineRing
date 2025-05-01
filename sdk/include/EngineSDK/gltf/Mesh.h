@@ -33,6 +33,7 @@ class Mesh {
 	std::vector<std::shared_ptr<Primitive>> primitives;
 	std::vector<sigc::scoped_connection> connections;
 	Property<std::shared_ptr<VolumeAabb>> aabb;
+	std::string name;
 
 protected:
 	Mesh();
@@ -41,6 +42,10 @@ public:
 	static std::shared_ptr<Mesh> create();
 
 	[[nodiscard]] PropertyReadOnly<std::shared_ptr<VolumeAabb>> getAabb() { return aabb.getReadOnly(); }
+
+	[[nodiscard]] const std::string &getName() const { return name; }
+
+	void setName(const std::string &pName) { name = pName; }
 
 	void addPrimitive(const std::shared_ptr<Primitive> &pPrimitive);
 

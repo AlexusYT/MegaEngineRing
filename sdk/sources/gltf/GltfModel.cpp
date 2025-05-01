@@ -21,11 +21,13 @@
 
 #include "EngineSDK/gltf/GltfModel.h"
 
+#include "EngineSDK/extensions/LightExtension.h"
+#include "EngineSDK/extensions/MeshExtension.h"
 #include "EngineSDK/gltf/Accessor.h"
 #include "EngineSDK/gltf/Image.h"
 #include "EngineSDK/gltf/Material.h"
 #include "EngineSDK/gltf/Mesh.h"
-#include "EngineSDK/gltf/MeshInstance.h"
+#include "EngineSDK/gltf/Node.h"
 #include "EngineSDK/gltf/Primitive.h"
 #include "EngineSDK/gltf/Sampler.h"
 #include "EngineSDK/gltf/Texture.h"
@@ -257,19 +259,22 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 
 		auto mesh = meshes.emplace_back(Mesh::create());
 		mesh->setPrimitives(primitives);
+		mesh->setName(meshData.name);
 	}
 
 	for (auto &element: pDocument.nodes.Elements()) {
-		std::shared_ptr<Node> node{};
+		auto node = Node::create(element);
 		if (!element.meshId.empty()) {
 			auto mesh = meshes.at(pDocument.meshes.GetIndex(element.meshId));
-			auto instance = MeshInstance::create(element, mesh);
-			node = instance;
+			auto ext = MeshExtension::create();
+			ext->mesh = mesh;
+			node->addExtension(ext);
 		} else if (element.HasExtension<KhrLightsPunctual::Node>()) {
 			auto &ext = element.GetExtension<KhrLightsPunctual::Node>();
-			node = LightInstance::create(element, ext.light);
-		} else {
-			node = Node::create(element);
+
+			auto lightExt = LightExtension::create();
+			lightExt->lightDataId = ext.light;
+			node->addExtension(lightExt);
 		}
 		nodes.emplace_back(node);
 	}

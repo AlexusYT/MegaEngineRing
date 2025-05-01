@@ -49,7 +49,7 @@ std::unique_ptr<Microsoft::glTF::Extension> KhrLightsPunctual::deserializeNode(
 	try {
 		auto json = nlohmann::json ::parse(pJson);
 		json.at("light").get_to(ext->light);
-	} catch (...) { ext->light = 0; }
+	} catch (...) { ext->light = -1; }
 	return ext;
 }
 

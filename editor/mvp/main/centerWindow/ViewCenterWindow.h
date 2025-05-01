@@ -41,7 +41,6 @@ class ViewCenterWindow : public IViewCenterWindow, public ThreadDispatcher {
 
 	struct Page {
 		int pageNum;
-		std::shared_ptr<IPresenterSceneEditor> widget;
 	};
 
 	std::unordered_map<ui::ProjectExplorerEntry* /*entry*/, Page /*pageInfo*/> openedPages;
