@@ -24,7 +24,6 @@
 #include <SQLiteCpp/Database.h>
 #include <nlohmann/json.hpp>
 
-#include "EditorFileSystemResourceBundle.h"
 #include "EngineSDK/context/Application.h"
 #include "EngineSDK/context/IApplicationSettings.h"
 #include "EngineSDK/extensions/Extension.h"
@@ -39,24 +38,20 @@
 #include "EngineSDK/scene/objects/ISceneObject.h"
 #include "EngineSDK/scene/objects/SceneObject.h"
 #include "EngineUtils/utils/UUID.h"
-#include "mvp/main/editors/sceneEditor/EditorCameraScript.h"
-#include "mvp/main/editors/sceneEditor/ResourcesContext.h"
-#include "mvp/main/editors/sceneEditor/explorerObjects/RootExplorerObject.h"
-#include "mvp/main/editors/sceneEditor/explorerObjects/SceneExplorerObject.h"
+#include "mvp/sceneEditor/ResourcesContext.h"
 
 namespace mer::sdk {
 class PropertyBase;
 }
 
 namespace mer::editor::project {
-LoadedScene::LoadedScene() : mainObject(mvp::RootExplorerObject::create()) {
+LoadedScene::LoadedScene() {
 	app = sdk::Application::create();
 	app->initEngine();
 }
 
 void LoadedScene::setRunDirectory(const std::filesystem::path &pPath) const {
 	app->getApplicationSettings()->setRunDirectory(pPath.string());
-	app->setResourceBundle(EditorFileSystemResourceBundle::create(pPath / "data"));
 }
 
 bool LoadedScene::hasScene() const { return scene != nullptr; }
@@ -107,29 +102,6 @@ sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 		databaseLocked = false;
 		return msg;
 	}
-	if (auto msg = readSceneSettings()) {
-		databaseLocked = false;
-		return msg;
-	}
-	connections.push_back(scene->getOnObjectAddedSignal().connect([this](sdk::ISceneObject* pObject) {
-		if (pObject == cameraObject.get()) return;
-		auto explorerObject = mvp::SceneExplorerObject::create(pObject);
-
-		sceneObjByExplorer.emplace(explorerObject.get(), pObject);
-		explorerBySceneObj.emplace(pObject, explorerObject);
-		mainObject->addChild(explorerObject);
-		//std::thread([this, explorerObject] { addObjectToDatabase(explorerObject); }).detach();
-	}));
-
-	connections.push_back(scene->getOnObjectRemovedSignal().connect([this](sdk::ISceneObject* pObject) {
-		auto iter = explorerBySceneObj.find(pObject);
-		if (iter == explorerBySceneObj.end()) return;
-		auto sceneObj = iter->second;
-		if (selectedObject == sceneObj.get()) { selectObject(nullptr); }
-		mainObject->removeChild(sceneObj);
-		sceneObjByExplorer.erase(sceneObj.get());
-		explorerBySceneObj.erase(iter);
-	}));
 
 	if (auto msg = readObjects()) {
 		databaseLocked = false;
@@ -153,8 +125,6 @@ sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 	cameraObject->addExtension("camera", camera);
 	editorCamera = camera;
 	cameraObject->getMainExtension()->propertyName = "EditorCamera";
-	auto editorCameraScript = std::make_shared<mvp::EditorCameraScript>();
-	cameraObject->setScript(editorCameraScript);
 	//viewSceneEditor->makeCurrent();
 	scene->switchCamera(editorCamera.get());
 	scene->addObject(cameraObject);
@@ -165,38 +135,13 @@ sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 void LoadedScene::unload() {
 	for (auto connection: connections) { connection.disconnect(); }
 	connections.clear();
-	selectObject(nullptr);
 	cameraObject.reset();
-	mainObject->clearChildren();
-	sceneObjByExplorer.clear();
-	explorerBySceneObj.clear();
 	database.reset();
 	if (scene) {
 		scene->deinitScene();
 		scene.reset();
 	}
 	name.clear();
-}
-
-sdk::ReportMessagePtr LoadedScene::readSceneSettings() {
-	if (!database->tableExists("Settings")) return nullptr;
-
-	try {
-		//language=sql
-		SQLite::Statement statement(*database, "SELECT * FROM Settings");
-		while (statement.executeStep()) {
-			std::string propertyName = statement.getColumn(1);
-			const auto &column = statement.getColumn(2);
-			if (propertyName == "Name") { setName(column.getString()); }
-		}
-	} catch (...) {
-		auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to parse scene settings");
-		msg->setMessage("Exception occurred while querying the data");
-		return msg;
-	}
-
-	return nullptr;
 }
 
 sdk::ReportMessagePtr LoadedScene::readObjects() {
@@ -389,12 +334,6 @@ void LoadedScene::onCursorPosChanged(const double pX, const double pY) const {
 void LoadedScene::onMouseButtonStateChanged(const sdk::MouseButton pButton, const bool pPressed, const double pX,
 											const double pY) const {
 	if (cameraObject) cameraObject->onMouseButtonStateChanged(pButton, pPressed, pX, pY);
-}
-
-void LoadedScene::selectObject(mvp::ExplorerObject* pObjectToSelect) {
-	if (selectedObject == pObjectToSelect) return;
-	selectedObject = pObjectToSelect;
-	onSelectionChanged(selectedObject);
 }
 
 std::shared_ptr<sdk::ISceneObject> LoadedScene::createObject() const {

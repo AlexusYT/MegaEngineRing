@@ -39,17 +39,4 @@ void EditorContext::removeWidget() {
 
 void EditorContext::setTitle(const std::string & /*pTitle*/) {}
 
-void UiWindowContext::addWindow(sdk::UiBase* pWidget) {
-	if (auto win = dynamic_cast<sdk::UiWindow*>(pWidget)) {
-		uiWindow = win;
-		sceneUi->addUiWindow(win);
-	}
-}
-
-void UiWindowContext::removeWidget() {
-	if (!uiWindow) return;
-	sceneUi->removeUiWindow(uiWindow->getName());
-}
-
-void UiWindowContext::setTitle(const std::string & /*pTitle*/) {}
 } // namespace mer::editor::mvp

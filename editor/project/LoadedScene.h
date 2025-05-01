@@ -28,7 +28,6 @@ enum class MouseButton;
 
 namespace mer::editor::mvp {
 class ResourcesContext;
-class ExplorerObject;
 } // namespace mer::editor::mvp
 
 namespace mer::sdk {
@@ -49,10 +48,7 @@ class LoadedScene {
 	std::shared_ptr<SQLite::Database> database;
 	sigc::signal<void(const std::string &pName)> onNameChanged;
 	std::shared_ptr<sdk::IScene> scene;
-	std::shared_ptr<mvp::ExplorerObject> mainObject;
 	sigc::signal<void(const sdk::ReportMessagePtr &pError)> onErrorOccurred;
-	std::unordered_map<mvp::ExplorerObject*, sdk::ISceneObject*> sceneObjByExplorer;
-	std::unordered_map<sdk::ISceneObject*, std::shared_ptr<mvp::ExplorerObject>> explorerBySceneObj;
 	/**=
 	 * @brief Locks the database from performing the insert operations. Typically, this is used to prevent duplication of
 	 * data when reading it.
@@ -64,8 +60,6 @@ class LoadedScene {
 
 	sigc::signal<void()> onLoadingSignal;
 	sigc::signal<void()> onLoadedSignal;
-	mvp::ExplorerObject* selectedObject{};
-	sigc::signal<void(mvp::ExplorerObject* pSelectedObject)> onSelectionChanged;
 	std::vector<sigc::connection> connections;
 	std::shared_ptr<mvp::ResourcesContext> context;
 
@@ -100,8 +94,6 @@ public:
 
 	void unload();
 
-	sdk::ReportMessagePtr readSceneSettings();
-
 	sdk::ReportMessagePtr readObjects();
 
 	void setName(const std::string &pName) {
@@ -111,8 +103,6 @@ public:
 	}
 
 	const std::string &getName() const { return name; }
-
-	[[nodiscard]] const std::shared_ptr<mvp::ExplorerObject> &getMainObject() const { return mainObject; }
 
 	sigc::connection connectNameChanged(const sigc::slot<void(const std::string &pName)> &pSlot) {
 		pSlot(name);
@@ -130,15 +120,6 @@ public:
 	std::shared_ptr<sdk::Extension> addExtension(sdk::ISceneObject* pObject, const std::string &pType,
 												 const std::string &pName) const;
 
-	sigc::connection connectExtensionAdded(const sigc::slot<void(sdk::Extension* pExtension)> &pSlot) {
-		return onExtensionAdded.connect(pSlot);
-	}
-
-	sigc::connection connectSelectionChanged(const sigc::slot<void(mvp::ExplorerObject* pSelectedObject)> &pSlot) {
-		pSlot(selectedObject);
-		return onSelectionChanged.connect(pSlot);
-	}
-
 	void saveObject(sdk::ISceneObject* pObject) const;
 
 	void addObjectToDatabase(const std::shared_ptr<sdk::ISceneObject> &pObject) const;
@@ -150,10 +131,6 @@ public:
 	void onCursorPosChanged(double pX, double pY) const;
 
 	void onMouseButtonStateChanged(sdk::MouseButton pButton, bool pPressed, double pX, double pY) const;
-
-	void selectObject(mvp::ExplorerObject* pObjectToSelect);
-
-	[[nodiscard]] mvp::ExplorerObject* getSelectedObject() const { return selectedObject; }
 
 	[[nodiscard]] const std::shared_ptr<sdk::Application> &getApp() const { return app; }
 

@@ -27,13 +27,12 @@
 #include "EngineSDK/buffers/Framebuffer.h"
 #include "EngineSDK/buffers/ProgramWideShaderBuffer.h"
 #include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineSDK/resources/shaders/builtin/BoundingVolumeProgram.h"
 #include "EngineSDK/resources/shaders/builtin/DefaultProgram.h"
 #include "IPresenterScenePreview.h"
 #include "examples/libs/glfw/include/GLFW/glfw3.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/IWidgetContext.h"
-#include "mvp/main/editors/sceneEditor/SceneOverlayElements.h"
+#include "mvp/sceneEditor/SceneOverlayElements.h"
 
 namespace mer::editor::mvp {
 ViewScenePreview::ViewScenePreview(const std::string &pName, const std::shared_ptr<IWidgetContext> &pContext)

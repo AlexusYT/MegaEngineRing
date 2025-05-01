@@ -36,9 +36,6 @@ class IWidgetContext {
 public:
 	virtual ~IWidgetContext() = default;
 
-	virtual void addWidget(Gtk::Widget* pWidget) = 0;
-
-	virtual void addWindow(sdk::UiBase* pWidget);
 
 	virtual void addTool(EditorTool* pWidget);
 
@@ -46,8 +43,6 @@ public:
 
 	virtual void setTitle(const std::string &pTitle) = 0;
 };
-
-inline void IWidgetContext::addWindow(sdk::UiBase* /*pWidget*/) {}
 
 inline void IWidgetContext::addTool(EditorTool* /*pWidget*/) {}
 } // namespace mer::editor::mvp

@@ -24,7 +24,6 @@
 
 namespace mer::editor::mvp {
 class IView;
-class ApplicationController;
 
 class IPresenter {
 public:
@@ -39,10 +38,6 @@ public:
 	virtual void removeView(const std::shared_ptr<IView> &pOldView);
 
 	virtual std::string getTypeName() = 0;
-
-	[[nodiscard]] virtual ApplicationController* getAppController() const = 0;
-
-	virtual void setAppController(ApplicationController* pAppController) = 0;
 };
 
 inline void IPresenter::addView(const std::shared_ptr<IView> & /*pNewView*/) {}

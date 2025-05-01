@@ -24,27 +24,17 @@
 
 #define JSON_DISABLE_ENUM_SERIALIZATION 1
 #define JSON_USE_IMPLICIT_CONVERSIONS 0
-#include <glm/glm.hpp>
-
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdouble-promotion"
-#pragma GCC diagnostic ignored "-Wextra-semi"
-//#define USE_OLD_UI
-#define GDKMM_DISABLE_DEPRECATED
-#include <glibmm.h>
-#define GTKMM_DISABLE_DEPRECATED
-#include <gtkmm.h>
-#pragma GCC diagnostic pop
 #include <EngineUtils/utils/Logger.h>
 #include <EngineUtils/utils/ReportMessage.h>
 #include <filesystem>
 #include <fstream>
 #include <glm/ext.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/glm.hpp>
 #include <iostream>
 #include <list>
 #include <ranges>
+#include <sigc++/sigc++.h>
 #include <string>
 #include <unordered_map>
 #include <vector>

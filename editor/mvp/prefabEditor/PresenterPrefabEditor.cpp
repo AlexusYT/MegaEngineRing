@@ -25,7 +25,6 @@
 #include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
 #include "IModelPrefabEditor.h"
 #include "IViewPrefabEditor.h"
-#include "mvp/resourceEditor/readers/ObjFileResourceReader.h"
 #include "mvp/scenePreview/ViewScenePreview.h"
 
 namespace mer::editor::mvp {
@@ -40,16 +39,7 @@ std::shared_ptr<PresenterPrefabEditor> PresenterPrefabEditor::create(const std::
 	return std::shared_ptr<PresenterPrefabEditor>(new PresenterPrefabEditor(pModel, pView));
 }
 
-void PresenterPrefabEditor::addMeshesFrom(const std::filesystem::path &pPath) {
-	auto reader = std::make_shared<ObjFileResourceReader>(pPath);
-	reader->checkType();
-	for (auto &objectName: reader->getObjectsName()) {
-		auto element = sdk::MeshPrefabElement::create();
-		element->setName(objectName);
-		element->setMesh(reader->generateObject(objectName));
-		model->getSelectedPrefab()->addElement(element);
-	}
-}
+void PresenterPrefabEditor::addMeshesFrom(const std::filesystem::path & /*pPath*/) {}
 
 void PresenterPrefabEditor::setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pPrefab) {
 	model->setSelectedPrefab(pPrefab);

@@ -21,24 +21,9 @@
 
 #ifndef PROJECT_H
 #define PROJECT_H
-#include <SQLiteCpp/SQLiteCpp.h>
 #include <future>
-#include <ui/widgetWindows/projectExplorer/ProjectExplorerEntry.h>
-
-#include "generatedFiles/ApplicationInfo.h"
-#include "generatedFiles/GeneratedFiles.h"
-#include "sceneObjects/EditorSceneObject.h"
-
-namespace mer::sdk {
-class Application;
-}
-
-namespace mer::editor::ui {
-class ProjectExplorerEntry;
-} // namespace mer::editor::ui
 
 namespace mer::editor::project {
-class ScriptParser;
 
 class Project : public std::enable_shared_from_this<Project> {
 	std::filesystem::path projectPath;
@@ -47,35 +32,13 @@ class Project : public std::enable_shared_from_this<Project> {
 	std::filesystem::path projectDataPath;
 	std::string projectName;
 
-	Glib::RefPtr<Gio::ListStore<ui::ProjectExplorerEntry>> projectExplorerEntries;
-	std::shared_ptr<SQLite::Database> database;
-	std::shared_ptr<GeneratedFiles> engineFileEntries;
-	std::shared_ptr<ApplicationInfo> applicationInfo;
-	std::shared_ptr<ScriptParser> scriptParser;
 
-	sigc::signal<void(const sdk::ReportMessagePtr &pError)> onErrorSignal;
-	std::atomic<bool> editorLibLoading{};
-	std::atomic<sdk::ReportMessagePtr> editorLibError{nullptr};
-
-	std::shared_ptr<sdk::Application> application;
 	Project();
 
 public:
 	~Project();
 
 	static std::shared_ptr<Project> create() { return std::shared_ptr<Project>(new (std::nothrow) Project()); }
-
-	sdk::ReportMessagePtr openDatabase();
-
-	void initProject();
-
-	sdk::ReportMessagePtr loadProject();
-
-	sdk::ReportMessagePtr saveProject();
-
-	sdk::ReportMessagePtr saveFiles() const;
-
-	Glib::RefPtr<Gio::SimpleActionGroup> getActionGroups() const;
 
 	[[nodiscard]] const std::filesystem::path &getProjectPath() { return projectPath; }
 
@@ -92,10 +55,6 @@ public:
 
 	void setProjectName(const std::string &pProjectName) { projectName = pProjectName; }
 
-	[[nodiscard]] const Glib::RefPtr<Gio::ListStore<ui::ProjectExplorerEntry>> &getProjectExplorerEntries() const {
-		return projectExplorerEntries;
-	}
-
 	[[nodiscard]] const std::filesystem::path &getProjectBuildPath() const { return projectBuildPath; }
 
 	void setProjectBuildPath(const std::filesystem::path &pProjectBuildPath) { projectBuildPath = pProjectBuildPath; }
@@ -103,22 +62,6 @@ public:
 	[[nodiscard]] const std::filesystem::path &getProjectDataPath() const { return projectDataPath; }
 
 	void setProjectDataPath(const std::filesystem::path &pProjectDataPath) { projectDataPath = pProjectDataPath; }
-
-	[[nodiscard]] const std::shared_ptr<SQLite::Database> &getDatabase() const { return database; }
-
-	sigc::connection connectOnErrorSignal(const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pSlot) {
-		return onErrorSignal.connect(pSlot);
-	}
-
-	[[nodiscard]] const std::atomic<bool> &getEditorLibLoading() const { return editorLibLoading; }
-
-	[[nodiscard]] const std::atomic<sdk::ReportMessagePtr> &getEditorLibError() const { return editorLibError; }
-
-	void errorOccurred(const sdk::ReportMessagePtr &pError) const { onErrorSignal(pError); }
-
-	[[nodiscard]] const std::shared_ptr<ScriptParser> &getScriptParser() const { return scriptParser; }
-
-	void setScriptParser(const std::shared_ptr<ScriptParser> &pScriptParser) { scriptParser = pScriptParser; }
 };
 } // namespace mer::editor::project
 
