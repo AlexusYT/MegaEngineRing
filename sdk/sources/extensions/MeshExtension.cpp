@@ -33,7 +33,7 @@ namespace mer::sdk {
 
 MeshExtension::MeshExtension() : mesh(this, "Mesh") {}
 
-MeshExtension::~MeshExtension() { mesh = nullptr; }
+MeshExtension::~MeshExtension() {}
 
 bool MeshExtension::isGeometryIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRayDir,
 										 glm::vec2 &pIntersectsAt, float &pIntersectDistance) const {
