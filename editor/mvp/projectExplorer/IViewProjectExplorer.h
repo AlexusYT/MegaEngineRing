@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,42 +16,26 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 10.02.25.
+// Created by alexus on 12.08.24.
 //
 
-#ifndef UIWINDOWCONTEXT_H
-#define UIWINDOWCONTEXT_H
-#include "IWidgetContext.h"
+#ifndef IVIEWPROJECTEXPLORER_H
+#define IVIEWPROJECTEXPLORER_H
+
+#include "mvp/IView.h"
 
 namespace mer::editor::mvp {
-class Editor;
-}
+class IPresenterProjectExplorer;
+class ProjectExplorerElement;
 
-namespace mer::sdk {
-class UiWindow;
-class SceneUi;
-} // namespace mer::sdk
-
-namespace mer::editor::mvp {
-
-class EditorContext : public IWidgetContext {
-	EditorTool* tool{};
-	Editor* editor{};
-
-	explicit EditorContext(Editor* pEditor) : editor(pEditor) {}
-
+class IViewProjectExplorer : public IView {
 public:
-	static std::shared_ptr<IWidgetContext> create(Editor* pEditor) {
-		return std::shared_ptr<EditorContext>(new EditorContext(pEditor));
-	}
+	virtual void setElements(const std::vector<std::shared_ptr<ProjectExplorerElement>> &pArray) = 0;
 
-	inline void addTool(EditorTool* pWidget) override;
+	[[nodiscard]] virtual IPresenterProjectExplorer* getPresenter() const = 0;
 
-	void removeWidget() override;
-
-	void setTitle(const std::string &pTitle) override;
+	virtual void setPresenter(IPresenterProjectExplorer* pPresenter) = 0;
 };
-
 } // namespace mer::editor::mvp
 
-#endif //UIWINDOWCONTEXT_H
+#endif //IVIEWPROJECTEXPLORER_H

@@ -25,7 +25,7 @@
 #include <memory>
 #include <thread>
 
-#include "mvp/PresenterBase.h"
+#include "mvp/IPresenter.h"
 #include "mvp/scenePreview/ModelScenePreview.h"
 
 namespace mer::sdk {
@@ -40,7 +40,7 @@ class IModelScenePreview;
 class IModelOnlineImport;
 class IViewOnlineImport;
 
-class IPresenterOnlineImport : public PresenterBase {
+class IPresenterOnlineImport : public IPresenter {
 public:
 	~IPresenterOnlineImport() override = default;
 

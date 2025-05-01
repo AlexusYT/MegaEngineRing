@@ -25,8 +25,7 @@
 
 #include "IModelScenePreview.h"
 #include "IPresenterScenePreview.h"
-#include "mvp/main/editors/sceneEditor/NodeSelectionHelper.h"
-#include "mvp/main/editors/sceneEditor/ViewSceneEditor.h"
+#include "mvp/sceneEditor/NodeSelectionHelper.h"
 
 namespace mer::sdk {
 class Renderer;

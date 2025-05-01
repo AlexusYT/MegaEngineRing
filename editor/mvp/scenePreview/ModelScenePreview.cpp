@@ -25,7 +25,7 @@
 #include "EngineSDK/gltf/Node.h"
 #include "EngineSDK/render/Renderer.h"
 #include "EngineSDK/scene/Scene3D.h"
-#include "mvp/main/editors/sceneEditor/NodeSelectionHelper.h"
+#include "mvp/sceneEditor/NodeSelectionHelper.h"
 
 namespace mer::editor::mvp {
 ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper) : selectionHelper(pSelectionHelper) {

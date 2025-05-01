@@ -21,7 +21,7 @@
 
 #ifndef IPRESENTERPREFABEDITOR_H
 #define IPRESENTERPREFABEDITOR_H
-#include "mvp/PresenterBase.h"
+#include "mvp/IPresenter.h"
 
 namespace mer::sdk {
 class Prefab;
@@ -29,7 +29,7 @@ class Prefab;
 
 namespace mer::editor::mvp {
 
-class IPresenterPrefabEditor : public PresenterBase {
+class IPresenterPrefabEditor : public IPresenter {
 public:
 	~IPresenterPrefabEditor() override = default;
 

@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,42 +16,25 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 10.02.25.
+// Created by alexus on 12.08.24.
 //
 
-#ifndef UIWINDOWCONTEXT_H
-#define UIWINDOWCONTEXT_H
-#include "IWidgetContext.h"
+#ifndef IPRESENTERPROJECTEXPLORER_H
+#define IPRESENTERPROJECTEXPLORER_H
+#include "mvp/IPresenter.h"
+
+namespace mer::editor::ui {}
 
 namespace mer::editor::mvp {
-class Editor;
-}
-
-namespace mer::sdk {
-class UiWindow;
-class SceneUi;
-} // namespace mer::sdk
-
-namespace mer::editor::mvp {
-
-class EditorContext : public IWidgetContext {
-	EditorTool* tool{};
-	Editor* editor{};
-
-	explicit EditorContext(Editor* pEditor) : editor(pEditor) {}
-
+class IPresenterProjectExplorer : public IPresenter {
 public:
-	static std::shared_ptr<IWidgetContext> create(Editor* pEditor) {
-		return std::shared_ptr<EditorContext>(new EditorContext(pEditor));
-	}
+	virtual void createScene(const std::filesystem::path &pPathToFile) = 0;
 
-	inline void addTool(EditorTool* pWidget) override;
+	virtual void openInFilesystem(const std::filesystem::path &pPathToFile) = 0;
 
-	void removeWidget() override;
-
-	void setTitle(const std::string &pTitle) override;
+	virtual void deleteFile(const std::filesystem::path &pPathToDelete) = 0;
 };
-
 } // namespace mer::editor::mvp
 
-#endif //UIWINDOWCONTEXT_H
+
+#endif //IPRESENTERPROJECTEXPLORER_H

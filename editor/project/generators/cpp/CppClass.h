@@ -21,6 +21,7 @@
 
 #ifndef CPPCLASS_H
 #define CPPCLASS_H
+#include <algorithm>
 #include <project/generators/GeneratorElement.h>
 #include <project/generators/cpp/AccessModifier.h>
 

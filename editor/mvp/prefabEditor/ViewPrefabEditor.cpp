@@ -33,7 +33,7 @@
 #include "IPresenterPrefabEditor.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/IWidgetContext.h"
-#include "mvp/main/editors/sceneEditor/SceneOverlayElements.h"
+#include "mvp/sceneEditor/SceneOverlayElements.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
@@ -159,7 +159,7 @@ void ViewPrefabEditor::updateUi() {
 }
 
 void ViewPrefabEditor::openView() {
-	context->addWindow(this);
+	//context->addWindow(this);
 	frameBuffer = std::make_shared<sdk::Framebuffer>();
 	frameBuffer->initialize();
 }

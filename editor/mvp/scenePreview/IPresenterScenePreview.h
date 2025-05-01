@@ -21,12 +21,12 @@
 
 #ifndef IPRESENTERSCENEPREVIEW_H
 #define IPRESENTERSCENEPREVIEW_H
-#include "mvp/PresenterBase.h"
+#include "mvp/IPresenter.h"
 
 namespace mer::editor::mvp {
 class IModelScenePreview;
 
-class IPresenterScenePreview : public PresenterBase {
+class IPresenterScenePreview : public IPresenter {
 public:
 	virtual void renderScene() = 0;
 

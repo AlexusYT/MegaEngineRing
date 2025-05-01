@@ -16,42 +16,28 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 10.02.25.
+// Created by alexus on 10.04.25.
 //
 
-#ifndef UIWINDOWCONTEXT_H
-#define UIWINDOWCONTEXT_H
-#include "IWidgetContext.h"
+
+#include "ModelObjectsTree.h"
+
+#include "PresenterObjectsTree.h"
+#include "mvp/sceneEditor/NodeSelectionHelper.h"
 
 namespace mer::editor::mvp {
-class Editor;
+ModelObjectsTree::ModelObjectsTree(NodeSelectionHelper* pSelection) : selection(pSelection) {
+	selection->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+		if (presenter) presenter->onSelectionChanged(pNodes, pSelected);
+	});
 }
 
-namespace mer::sdk {
-class UiWindow;
-class SceneUi;
-} // namespace mer::sdk
+void ModelObjectsTree::setScene(const std::shared_ptr<sdk::Scene3D> &pNewScene3D) {
+	scene = pNewScene3D;
+	if (presenter) presenter->onSceneChanged(scene);
+}
 
-namespace mer::editor::mvp {
+void ModelObjectsTree::clearSelection() { selection->clearSelection(); }
 
-class EditorContext : public IWidgetContext {
-	EditorTool* tool{};
-	Editor* editor{};
-
-	explicit EditorContext(Editor* pEditor) : editor(pEditor) {}
-
-public:
-	static std::shared_ptr<IWidgetContext> create(Editor* pEditor) {
-		return std::shared_ptr<EditorContext>(new EditorContext(pEditor));
-	}
-
-	inline void addTool(EditorTool* pWidget) override;
-
-	void removeWidget() override;
-
-	void setTitle(const std::string &pTitle) override;
-};
-
+void ModelObjectsTree::select(sdk::Node* pNode) { selection->addNode(pNode); }
 } // namespace mer::editor::mvp
-
-#endif //UIWINDOWCONTEXT_H
