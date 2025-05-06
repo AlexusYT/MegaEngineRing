@@ -54,9 +54,13 @@ public:
 
 	void addRootNode(const std::shared_ptr<Node> &pNewNode);
 
-	void addNode(const std::shared_ptr<Node> &pParentNode, const std::shared_ptr<Node> &pNode);
+	void addNode(Node* pParentNode, const std::shared_ptr<Node> &pNode);
+
+	void reparentNode(Node* pNode, Node* pNewParent);
 
 	void mergeNodes(const std::vector<std::shared_ptr<Node>> &pNodes);
+
+	void removeNode(Node* pNode);
 
 	void addMesh(const std::shared_ptr<Mesh> &pMesh) const;
 
@@ -88,6 +92,14 @@ protected:
 	void onUninitialize() override;
 
 	void addToMainRenderPass(const std::shared_ptr<Node> &pNode) const;
+
+	void removeNodeImpl(Node* pNode);
+
+	void removeChildImpl(Node* pNode);
+
+	void removeFromRootNodes(Node* pNode) { std::erase(rootNodes, pNode); }
+
+	void addToRootNodes(Node* pNode) { rootNodes.emplace_back(pNode); }
 };
 
 } // namespace mer::sdk
