@@ -82,6 +82,7 @@ void Node::removeChild(Node* pChild) {
 	auto iter = std::ranges::remove(children, pChild).begin();
 	auto e = iter - children.begin();
 	signalConnections.erase(signalConnections.begin() + e);
+	children.erase(iter);
 	pChild->parentNode = nullptr;
 	pChild->setTransformParent(nullptr);
 	updateNodeAabb();

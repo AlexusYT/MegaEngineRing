@@ -49,6 +49,10 @@ class ViewObjectsTree : public IViewObjectsTree, public EditorTool {
 	std::unordered_map<sdk::Node*, bool> selectedMap;
 	sigc::scoped_connection sceneNodesChangedConnection;
 	IPresenterObjectsTree* presenter;
+	sdk::Node* selectedNodeForContext{};
+	sdk::Node* hoveredNode{};
+	uint32_t contextMenuImguiId{};
+	sdk::Node* nodeToReparent{};
 
 public:
 	ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext);

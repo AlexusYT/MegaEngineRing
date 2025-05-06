@@ -28,6 +28,7 @@
 #include "EngineSDK/gltf/Node.h"
 #include "EngineSDK/scene/Scene3D.h"
 #include "PresenterObjectsTree.h"
+#include "imgui_internal.h"
 #include "mvp/contexts/IWidgetContext.h"
 
 namespace mer::editor::mvp {
@@ -41,6 +42,10 @@ void ViewObjectsTree::closeView() { context->removeWidget(); }
 
 void ViewObjectsTree::onUpdate(bool pVisible) {
 	if (!pVisible) return;
+	if (!scene) {
+		ImGui::Text("Programmer error. No Scene specified for %s", __FILE_NAME__);
+		return;
+	}
 	const float textBaseWidth = ImGui::CalcTextSize("A").x;
 
 	static ImGuiTableFlags table_flags = ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg |
@@ -53,18 +58,81 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 		ImGui::TableSetupScrollFreeze(0, 1);
 		ImGui::TableHeadersRow();
 
-		if (scene) updateTreeLevel(scene->getRootNodes());
+		hoveredNode = nullptr;
+		updateTreeLevel(scene->getRootNodes());
 
-		if (ImGui::BeginPopup("ContextMenu")) {
-			ImGui::BeginDisabled();
-			if (ImGui::MenuItem("Rename")) {}
-			ImGui::SetItemTooltip("Not implemented yet");
-			if (ImGui::MenuItem("Delete")) {}
-			ImGui::SetItemTooltip("Not implemented yet");
-			ImGui::EndDisabled();
-			ImGui::EndPopup();
+		if (hoveredNode) {
+			if (!nodeToReparent) {
+				if (ImGui::IsMouseClicked(ImGuiPopupFlags_MouseButtonRight)) {
+					ImGui::OpenPopup(contextMenuImguiId, ImGuiPopupFlags_MouseButtonRight);
+					selectedNodeForContext = hoveredNode;
+				} else if (ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonLeft)) {
+					if (presenter) {
+						presenter->clearSelection();
+						presenter->select(hoveredNode);
+					}
+				}
+			}
 		}
 
+		if (contextMenuImguiId == 0) contextMenuImguiId = ImGui::GetID("ContextMenu");
+		if (ImGui::BeginPopup("ContextMenu")) {
+
+			if (ImGui::MenuItem("Add")) {
+				auto newNode = sdk::Node::create("Unnamed");
+				scene->addNode(selectedNodeForContext, newNode);
+			}
+			if (selectedNodeForContext) {
+				if (ImGui::MenuItem("Reparent")) { nodeToReparent = selectedNodeForContext; }
+				if (ImGui::MenuItem("Remove")) {
+					if (presenter) presenter->clearSelection();
+					scene->removeNode(selectedNodeForContext);
+				}
+			}
+			ImGui::EndPopup();
+		} else
+			selectedNodeForContext = nullptr;
+		if (nodeToReparent) {
+			if (ImGui::IsKeyReleased(ImGuiKey_Escape) || ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
+				nodeToReparent = nullptr;
+			}
+
+			std::string tooltipText;
+			const std::string unformattedText = R"(Left click to reparent to the "{}".
+)";
+			if (hoveredNode && nodeToReparent != hoveredNode) {
+				tooltipText = std::vformat(unformattedText, std::make_format_args(hoveredNode->getName()));
+				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+					scene->reparentNode(nodeToReparent, hoveredNode);
+					nodeToReparent = nullptr;
+				}
+			} else if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ForTooltip)) {
+				tooltipText = std::vformat(unformattedText, std::make_format_args("Root of the scene"));
+
+				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+					scene->reparentNode(nodeToReparent, nullptr);
+					nodeToReparent = nullptr;
+				}
+			}
+			tooltipText += "Right click to cancel.";
+			if (ImGui::BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None)) {
+				ImGui::TextUnformatted(tooltipText.c_str());
+				ImGui::EndTooltip();
+			}
+		} else {
+			/*if (hoveredNode) {
+				if (ImGui::BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None)) {
+					ImGui::TextUnformatted(hoveredNode->getName().c_str());
+					ImGui::EndTooltip();
+				}
+			}*/
+
+			if (!selectedNodeForContext && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) &&
+				ImGui::IsMouseClicked(ImGuiPopupFlags_MouseButtonRight)) {
+
+				ImGui::OpenPopup(contextMenuImguiId, ImGuiPopupFlags_MouseButtonRight);
+			}
+		}
 		ImGui::EndTable();
 	}
 }
@@ -72,6 +140,7 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 	for (auto node: pNodes) {
 		ImGui::TableNextRow();
+
 		ImGui::TableNextColumn();
 		auto &children = node->getChildren();
 		bool folder = !children.empty();
@@ -81,30 +150,21 @@ void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 		if (!folder) { flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; }
 		auto iter = selectedMap.find(node);
 		if (iter != selectedMap.end() && iter->second) flags |= ImGuiTreeNodeFlags_Selected;
-		ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+		if (children.size() == 1) ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 		bool nodeOpen = ImGui::TreeNodeEx(node->getName().c_str(), flags);
-		ImGui::SetItemTooltip("%s", node->getName().c_str());
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)) {
-			if (ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonRight)) {
-				ImGui::OpenPopup("ContextMenu", ImGuiPopupFlags_MouseButtonRight);
-				//selectedElement = node;
-			} else if (ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonLeft)) {
-				if (presenter) {
-					presenter->clearSelection();
-					presenter->select(node);
-				}
-			}
-		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)) { hoveredNode = node; }
+
 		//ImGui::OpenPopupOnItemClick(id.c_str(), ImGuiPopupFlags_MouseButtonRight);
 		ImGui::TableNextColumn();
+		std::string types;
 		for (auto &extension: node->getExtensions()) {
 			if (extension.first == typeid(sdk::MeshExtension)) {
-				ImGui::TextUnformatted("M");
+				types += "M ";
 			} else if (extension.first == typeid(sdk::LightExtension)) {
-				ImGui::TextUnformatted("L");
+				types += "L ";
 			}
-			ImGui::SameLine();
 		}
+		ImGui::TextUnformatted(types.c_str());
 
 		if (nodeOpen && folder) {
 

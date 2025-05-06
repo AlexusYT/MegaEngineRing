@@ -191,6 +191,8 @@ public:
 
 	void changeMesh(Node* pNode, Mesh* pMesh);
 
+	void removeNode(Node* pNode);
+
 	static const char* getMainPassName() { return "MainPass"; }
 
 	[[nodiscard]] std::shared_ptr<RenderPass> getMainRenderPass() const { return getRenderPass(getMainPassName()); }

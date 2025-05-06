@@ -441,6 +441,10 @@ void Renderer::changeMesh(Node* pNode, Mesh* pMesh) {
 	for (const auto &renderPass: renderPasses | std::views::values) { renderPass->changeMesh(pNode, pMesh); }
 }
 
+void Renderer::removeNode(Node* pNode) {
+	for (const auto &renderPass: renderPasses | std::views::values) { renderPass->removeNode(pNode); }
+}
+
 ReportMessagePtr Renderer::onInitialize() {
 	glCreateVertexArrays(1, &vao);
 
