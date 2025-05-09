@@ -143,5 +143,4 @@ pkg_check_modules(nlohmann_json REQUIRED IMPORTED_TARGET nlohmann_json)
 target_link_libraries(MegaEngineEditor_lib PRIVATE ${nlohmann_json_LIBRARIES})
 set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
 
-find_package(CURL REQUIRED)
 target_link_libraries(MegaEngineEditor_lib PRIVATE curl)
