@@ -219,8 +219,11 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 			sdk::ReportMessagePtr errorMsg;
 			auto gltfModel = sdk::GltfModel::createFromStream(stream, errorMsg);
 			if (!gltfModel) {
+				view->setProgressMode(IViewOnlineImport::ProgressMode::NONE);
+				view->hideModelLoading();
 				errorMsg->setTitle("Model parsing error");
 				sdk::Logger::error(errorMsg);
+				return;
 			}
 			auto scene = sdk::Scene3D::create();
 			for (auto material: gltfModel->getMaterials()) { scene->addMaterial(material); }
