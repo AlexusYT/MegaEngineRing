@@ -53,6 +53,7 @@ target_compile_options(ImGUI PRIVATE -fPIC)
 target_compile_options(ImGUI BEFORE PRIVATE -w)
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui")
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui/backends")
+target_link_libraries(ImGUI PUBLIC glm::glm)
 
 target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/imconfig_custom.h>\"")
 
