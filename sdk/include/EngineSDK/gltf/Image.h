@@ -21,12 +21,14 @@
 
 #ifndef IMAGE_H
 #define IMAGE_H
-#include <png++/io_base.hpp>
 
 #include "EngineSDK/render/Initializable.h"
 #include "EngineUtils/utils/IReportable.h"
 #include "GLTFSDK/Document.h"
 #include "GLTFSDK/GLTFResourceReader.h"
+
+struct spng_ihdr;
+typedef struct spng_ctx spng_ctx;
 
 namespace Microsoft::glTF {
 struct Image;
@@ -72,7 +74,9 @@ protected:
 
 	void onUninitialize() override;
 
-	ReportMessagePtr readPng(const png::io_base &pReader, MyIstream &pStream);
+	ReportMessagePtr readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> &pCtx, const spng_ihdr &pIhdr);
+
+	std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> isPng(ReportMessagePtr &pErrorOut, spng_ihdr &pIhdrOut) const;
 };
 
 

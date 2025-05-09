@@ -249,8 +249,6 @@ else ()
     target_link_libraries(MegaEngineSDK_shared PUBLIC glfw3)
 endif ()
 
-find_path(PNGPP_INCLUDE_DIRS "png++/color.hpp")
-
 target_precompile_headers(MegaEngineSDK_shared
         PRIVATE common.h
 )
@@ -263,8 +261,7 @@ target_include_directories(
 target_link_libraries(MegaEngineSDK_shared PUBLIC PkgConfig::epoxy)
 target_link_libraries(MegaEngineSDK_shared PUBLIC glm::glm)
 target_link_libraries(MegaEngineSDK_shared PUBLIC stdc++exp MegaEngineUtils)
-target_include_directories(MegaEngineSDK_shared SYSTEM PUBLIC ${PNGPP_INCLUDE_DIRS})
-target_link_libraries(MegaEngineSDK_shared PUBLIC PNG::PNG)
+target_link_libraries(MegaEngineSDK_shared PUBLIC spng)
 target_link_libraries(MegaEngineSDK_shared PUBLIC GLTFSDK)
 
 set_property(TARGET MegaEngineSDK_shared PROPERTY OUTPUT_NAME MegaEngineSDK)

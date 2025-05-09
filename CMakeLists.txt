@@ -19,8 +19,7 @@ include(cmake/variables.cmake)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(sigc++-3 REQUIRED IMPORTED_TARGET sigc++-3.0)
-
-find_package(PNG REQUIRED)
+pkg_check_modules(spng REQUIRED IMPORTED_TARGET spng)
 find_package(glm CONFIG REQUIRED)
 pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 include(GNUInstallDirs)

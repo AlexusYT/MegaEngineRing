@@ -6,7 +6,6 @@ project(MegaEngineSDKTests LANGUAGES CXX)
 
 # ---- Dependencies ----
 
-find_path(PNGPP_INCLUDE_DIRS "png++/color.hpp")
 find_package(GTest CONFIG REQUIRED)
 include(GoogleTest)
 
