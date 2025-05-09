@@ -136,10 +136,6 @@ target_compile_features(MegaEngineEditor_lib PRIVATE cxx_std_23)
 target_link_libraries(MegaEngineEditor_lib PRIVATE ImGUI)
 target_link_libraries(MegaEngineEditor_lib PRIVATE ImGuiFileDialog)
 
-# this is heuristically generated, and may not be correct
-find_package(SQLiteCpp REQUIRED)
-target_link_libraries(MegaEngineEditor_lib PRIVATE SQLiteCpp)
-
 #find_package(nlohmann_json CONFIG REQUIRED)
 pkg_check_modules(nlohmann_json REQUIRED IMPORTED_TARGET nlohmann_json)
 target_link_libraries(MegaEngineEditor_lib PRIVATE ${nlohmann_json_LIBRARIES})
