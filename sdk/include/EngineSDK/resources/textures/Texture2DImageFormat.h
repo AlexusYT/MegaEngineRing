@@ -25,7 +25,7 @@
 namespace mer::sdk {
 
 enum class Texture2DImageFormat {
-
+	UNDEFINED = 0,
 	RED = 0x1903,
 	RG = 0x8227,
 	RGB = 0x1907,
@@ -46,6 +46,7 @@ enum class Texture2DImageFormat {
 
 inline const char* to_string(const Texture2DImageFormat pE) {
 	switch (pE) {
+		case Texture2DImageFormat::UNDEFINED: return "UNDEFINED";
 		case Texture2DImageFormat::RED: return "RED";
 		case Texture2DImageFormat::RG: return "RG";
 		case Texture2DImageFormat::RGB: return "RGB";
@@ -66,6 +67,6 @@ inline const char* to_string(const Texture2DImageFormat pE) {
 }
 
 
-}
+} // namespace mer::sdk
 
 #endif //TEXTURE2DIMAGEFORMAT_H

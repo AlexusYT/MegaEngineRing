@@ -31,7 +31,8 @@
 
 namespace mer::sdk {
 Image::Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
-			 const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader) {
+			 const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader)
+	: width(-1), height(-1), format(Texture2DImageFormat::UNDEFINED), type(Texture2DType::UNDEFINED) {
 
 	rawData = pReader->ReadBinaryData(pDocument, pImage);
 	name = pImage.name;
