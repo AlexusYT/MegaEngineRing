@@ -10,23 +10,7 @@
 			"name": "dev-mode",
 			"hidden": true,
 			"cacheVariables": {
-				"MegaEngine_DEVELOPER_MODE": "ON",
-				"VCPKG_MANIFEST_FEATURES": "test"
-			}
-		},
-		{
-			"name": "vcpkg",
-			"hidden": true,
-			"cacheVariables": {
-				"CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake"
-			}
-		},
-		{
-			"name": "vcpkg-win64-static",
-			"hidden": true,
-			"cacheVariables": {
-				"VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
-				"VCPKG_HOST_TRIPLET": "x64-mingw-dynamic"
+				"MegaEngine_DEVELOPER_MODE": "ON"
 			}
 		},
 		{
@@ -168,7 +152,6 @@
 			"inherits": [
 				"ci-build",
 				"ci-linux",
-				"vcpkg",
 				"dev-mode"
 			]
 		},
@@ -177,7 +160,6 @@
 			"inherits": [
 				"ci-build",
 				"ci-win64",
-				"vcpkg",
 				"dev-mode"
 			]
 		}
