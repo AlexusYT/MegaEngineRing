@@ -21,8 +21,6 @@
 
 #include "ViewOnlineImport.h"
 
-#include <curlpp/Easy.hpp>
-#include <curlpp/Infos.hpp>
 #include <nlohmann/json.hpp>
 #include <thread>
 
@@ -35,10 +33,6 @@
 #include "mvp/scenePreview/ViewScenePreview.h"
 #include "mvp/scenePreview/onlineImport/PresenterOnlineImportPreview.h"
 #include "sketchfab/SketchfabSearch.h"
-
-#define SKETCHFAB_SITE "https://sketchfab.com"
-#define SKETCHFAB_OAUTH SKETCHFAB_SITE "/oauth2/token/"
-#define CLIENT_ID "hGC7unF4BHyEB0s7Orz5E1mBd3LluEG0ILBiZvF9"
 
 namespace mer::editor::mvp {
 

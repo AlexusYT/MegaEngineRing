@@ -110,6 +110,8 @@ add_library(
         mvp/editor/EditorUi.cpp
         mvp/editor/EditorUi.h
         mvp/sceneEditor/NodeSelectionHelper.h
+        Utils.cpp
+        Utils.h
 
 )
 target_compile_options(MegaEngineEditor_lib PRIVATE -Werror)
@@ -141,5 +143,5 @@ pkg_check_modules(nlohmann_json REQUIRED IMPORTED_TARGET nlohmann_json)
 target_link_libraries(MegaEngineEditor_lib PRIVATE ${nlohmann_json_LIBRARIES})
 set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
 
-find_package(unofficial-curlpp CONFIG REQUIRED)
-target_link_libraries(MegaEngineEditor_lib PRIVATE unofficial::curlpp::curlpp)
+find_package(CURL REQUIRED)
+target_link_libraries(MegaEngineEditor_lib PRIVATE curl)
