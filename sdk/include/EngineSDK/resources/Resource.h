@@ -65,7 +65,7 @@ public:
 
 	[[nodiscard]] bool isIncomplete() const final { return incomplete; }
 
-	void addReportInfo(const ReportMessagePtr &pMsg) override;
+	void addReportInfo(const ReportMessagePtr &pMsg) const override;
 
 private:
 	void setIncomplete(const bool pIncomplete) final { incomplete = pIncomplete; }

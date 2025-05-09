@@ -75,7 +75,7 @@ public:
 
 	void onUninitialize() override;
 
-	void addReportInfo(const ReportMessagePtr &pMsg) override;
+	void addReportInfo(const ReportMessagePtr &pMsg) const override;
 };
 
 

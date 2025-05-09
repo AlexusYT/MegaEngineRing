@@ -29,7 +29,7 @@ class IReportable {
 public:
 	virtual ~IReportable() = default;
 
-	virtual void addReportInfo(const ReportMessagePtr &pMsg) = 0;
+	virtual void addReportInfo(const ReportMessagePtr &pMsg) const = 0;
 };
 
 } // namespace mer::sdk

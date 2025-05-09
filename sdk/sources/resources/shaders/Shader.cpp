@@ -132,7 +132,7 @@ void Shader::onUninitialize() {
 	}
 }
 
-void Shader::addReportInfo(const ReportMessagePtr &pMsg) {
+void Shader::addReportInfo(const ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Shader type: {}", to_string(type));
 	pMsg->addInfoLine("Is compiled: {}", getCompileStatus());
 }
