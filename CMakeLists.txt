@@ -19,6 +19,8 @@ include(cmake/variables.cmake)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(sigc++-3 REQUIRED IMPORTED_TARGET sigc++-3.0)
+
+pkg_check_modules(libjpeg REQUIRED IMPORTED_TARGET libjpeg)
 if (WIN32)
     pkg_check_modules(libspng REQUIRED IMPORTED_TARGET libspng)
 else ()
