@@ -24,6 +24,7 @@
 #include <png++/io_base.hpp>
 
 #include "EngineSDK/render/Initializable.h"
+#include "EngineUtils/utils/IReportable.h"
 #include "GLTFSDK/Document.h"
 #include "GLTFSDK/GLTFResourceReader.h"
 
@@ -36,13 +37,14 @@ class MyIstream;
 enum class Texture2DType;
 enum class Texture2DImageFormat;
 
-class Image : public Initializable {
+class Image : public Initializable, public IReportable {
 	std::vector<uint8_t> rawData;
 	int32_t width;
 	int32_t height;
 	Texture2DImageFormat format;
 	Texture2DType type;
 	std::vector<uint8_t> data;
+	std::string name;
 
 
 	explicit Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
@@ -62,6 +64,8 @@ public:
 	[[nodiscard]] Texture2DType getType() const { return type; }
 
 	[[nodiscard]] const std::vector<uint8_t> &getData() const { return data; }
+
+	void addReportInfo(const ReportMessagePtr &pMsg) const override;
 
 protected:
 	ReportMessagePtr onInitialize() override;

@@ -34,6 +34,7 @@ Image::Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Docume
 			 const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader) {
 
 	rawData = pReader->ReadBinaryData(pDocument, pImage);
+	name = pImage.name;
 }
 
 std::shared_ptr<Image> Image::create(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
@@ -76,6 +77,11 @@ std::vector<uint8_t> get_data(const int32_t pWidth, const int32_t pHeight, MyIst
 	}
 
 	return pixelsOut;
+void Image::addReportInfo(const ReportMessagePtr &pMsg) const {
+	pMsg->addInfoLine("Image name: {}", name.empty() ? "(null)" : name);
+	pMsg->addInfoLine("Image size: {}x{}", width, height);
+	pMsg->addInfoLine("Image color format: {} ({})", to_string(format), static_cast<int>(format));
+	pMsg->addInfoLine("Image bit depth: {} ({})", to_string(type), static_cast<int>(type));
 }
 
 ReportMessagePtr Image::onInitialize() {
