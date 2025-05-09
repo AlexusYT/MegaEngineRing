@@ -22,6 +22,7 @@
 #include <EngineUtils/utils/UUID.h>
 #include <regex>
 
+namespace mer::sdk {
 std::shared_ptr<UUID> UUID::parse(const std::string &pString, mer::sdk::ReportMessagePtr &pError) {
 	//language=regexp
 	static std::regex regex(
@@ -52,3 +53,4 @@ std::shared_ptr<UUID> UUID::parse(const std::string &pString, mer::sdk::ReportMe
 		return nullptr;
 	}
 }
+} // namespace mer::sdk

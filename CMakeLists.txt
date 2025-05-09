@@ -22,7 +22,7 @@ pkg_check_modules(sigc++-3 REQUIRED IMPORTED_TARGET sigc++-3.0)
 
 pkg_check_modules(libcurl REQUIRED IMPORTED_TARGET libcurl)
 
-pkg_check_modules(libjpeg REQUIRED IMPORTED_TARGET libjpeg)
+pkg_check_modules(libturbojpeg REQUIRED IMPORTED_TARGET libturbojpeg)
 if (WIN32)
     pkg_check_modules(libspng REQUIRED IMPORTED_TARGET libspng)
 else ()

@@ -26,10 +26,8 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 #include "IResource.h"
 
-
-class UUID;
-
 namespace mer::sdk {
+class UUID;
 
 class Resource : public IResource, public Initializable, public IPropertyProvider {
 	std::vector<PropertyBase*> properties;

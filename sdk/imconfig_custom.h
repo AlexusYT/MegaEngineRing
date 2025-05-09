@@ -169,14 +169,15 @@
 
 //---- Tip: You can add extra functions within the ImGui:: namespace from anywhere (e.g. your own sources/header files)
 
-
+namespace mer::sdk {
 class UUID;
+}
 
 namespace ImGui {
 bool InputText(const char* pName, std::string &pText, int pFlags = 0);
 bool InputTextWithHint(const char* pName, const char* pHint, std::string &pText, int pFlags = 0);
 
-bool UuidText(const char* pName, const UUID &pUuid, int pFlags = 0);
+bool UuidText(const char* pName, const mer::sdk::UUID &pUuid, int pFlags = 0);
 
 bool DragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* roundFormat,
 			   const char* displayFormat, int flags);
