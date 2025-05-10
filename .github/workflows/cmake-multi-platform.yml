@@ -56,7 +56,6 @@ jobs:
           echo $XDG_DATA_HOME
           echo $XDG_DATA_DIRS
           /c/msys64/usr/bin/pacman --noconfirm -S mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsigc++-3.0 mingw-w64-x86_64-libspng mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-glm mingw-w64-x86_64-libepoxy mingw-w64-x86_64-glfw mingw-w64-x86_64-nlohmann-json mingw-w64-x86_64-gtest mingw-w64-x86_64-curl-gnutls mingw-w64-x86_64-openssl mingw-w64-x86_64-zlib
-          dir /c/msys64/mingw64/include
 
         # choco install ninja
       - name: Configure CMake Ubuntu
