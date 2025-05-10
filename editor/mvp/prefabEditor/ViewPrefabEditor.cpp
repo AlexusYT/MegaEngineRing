@@ -34,7 +34,6 @@
 #include "imgui_internal.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "mvp/sceneEditor/SceneOverlayElements.h"
-#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
@@ -272,7 +271,7 @@ void ViewPrefabEditor::updateElements(const std::shared_ptr<sdk::Prefab> &pSelec
 	static size_t selectedElementIndex = 0;
 	auto elements = pSelectedPrefab->getElements();
 	if (ImGui::BeginListBox("##ElementsListBox")) {
-		selectedElementIndex = std::clamp(selectedElementIndex, 0ul, std::max(elements.size() - 1ul, 0ul));
+		selectedElementIndex = std::clamp(selectedElementIndex, 0ull, std::max(elements.size() - 1ull, 0ull));
 		for (size_t n = 0; auto element: elements | std::views::values) {
 			const bool isSelected = (selectedElementIndex == n);
 			std::string label = element->getName() + "##" + element->getUuid().toString();

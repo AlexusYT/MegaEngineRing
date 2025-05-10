@@ -22,7 +22,6 @@
 
 #include <EngineSDK/extensions/cameras/CameraExtension.h>
 
-#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/polar_coordinates.hpp>

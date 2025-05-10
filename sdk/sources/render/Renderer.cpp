@@ -78,7 +78,7 @@ void RenderPass::removeNode(Node* pNode) {
 			commandsBufferDirty = true;
 		}
 		for (auto &meshes: meshesToRender) {
-			for (unsigned long &index: meshes.second) {
+			for (auto &index: meshes.second) {
 				if (index > instanceIndex) { index--; }
 			}
 		}
@@ -130,7 +130,7 @@ void RenderPass::changeMesh(Node* pNode, Mesh* pNewMesh) {
 			if (oldMeshIter->second.empty()) { meshesToRender.erase(oldMeshIter); }
 
 			for (auto &meshes: meshesToRender) {
-				for (unsigned long &index: meshes.second) {
+				for (auto &index: meshes.second) {
 					if (index > instIter->second.first) { index--; }
 				}
 			}
@@ -171,7 +171,7 @@ void RenderPass::render() {
 				commandsByInfo.baseInstance = static_cast<unsigned int>(instanceIndices.size());
 				commands.emplace_back(commandsByInfo);
 			}
-			for (unsigned long instanceId: mesh.second) { instanceIndices.emplace_back(instanceId); }
+			for (auto instanceId: mesh.second) { instanceIndices.emplace_back(instanceId); }
 		}
 		if (drawCmdBuffer) glDeleteBuffers(1, &drawCmdBuffer);
 		glCreateBuffers(1, &drawCmdBuffer);

@@ -28,7 +28,6 @@
 #include <EngineUtils/utils/ReportMessage.h>
 #include <filesystem>
 #include <fstream>
-#include <glm/ext.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <iostream>

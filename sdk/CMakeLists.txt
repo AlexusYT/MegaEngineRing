@@ -238,6 +238,7 @@ add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} imconfig_custom.cpp ${
 
 target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
+target_compile_definitions(MegaEngineSDK_shared PUBLIC GLM_ENABLE_EXPERIMENTAL)
 target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
 
 target_link_libraries(MegaEngineSDK_shared PRIVATE ImGUI)

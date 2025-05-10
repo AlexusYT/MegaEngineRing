@@ -132,7 +132,7 @@ target_include_directories(
 )
 
 target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineSDK_shared)
-
+target_compile_definitions(MegaEngineEditor_lib PRIVATE GLM_ENABLE_EXPERIMENTAL)
 target_compile_features(MegaEngineEditor_lib PRIVATE cxx_std_23)
 
 target_link_libraries(MegaEngineEditor_lib PRIVATE ImGUI)

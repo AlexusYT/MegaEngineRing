@@ -145,7 +145,7 @@ sdk::ReportMessagePtr SketchfabAccount::getRequest(const std::string &pUrl, cons
 		curl_easy_setopt(request.get(), CURLOPT_XFERINFODATA, &pProgress);
 		curl_easy_setopt(request.get(), CURLOPT_XFERINFOFUNCTION,
 						 static_cast<curl_xferinfo_callback>(
-							 [](void* clientp, long pDltotal, long pDlnow, long /*ultotal*/, long /*ulnow*/) {
+							 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/, curl_off_t /*ulnow*/) {
 								 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
 								 static_cast<std::atomic<float>*>(clientp)->store(progress);
 								 return 0;
@@ -242,7 +242,7 @@ sdk::ReportMessagePtr SketchfabAccount::downloadModel(const std::string &pUrl,
 			curl_easy_setopt(request.get(), CURLOPT_XFERINFODATA, &pProgress);
 			curl_easy_setopt(request.get(), CURLOPT_XFERINFOFUNCTION,
 							 static_cast<curl_xferinfo_callback>(
-								 [](void* clientp, long pDltotal, long pDlnow, long /*ultotal*/, long /*ulnow*/) {
+								 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/, curl_off_t /*ulnow*/) {
 									 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
 									 *static_cast<float*>(clientp) = progress;
 									 return 0;
