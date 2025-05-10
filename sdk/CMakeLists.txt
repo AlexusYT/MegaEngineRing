@@ -234,7 +234,7 @@ foreach (HEADER IN ITEMS ${ENGINE_HEADERS})
     endif ()
 endforeach ()
 
-add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} imconfig_custom.cpp ${ENGINE_HEADERS})
+add_library(MegaEngineSDK_shared STATIC ${ENGINE_SOURCES} imconfig_custom.cpp ${ENGINE_HEADERS})
 
 target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 

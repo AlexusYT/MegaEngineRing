@@ -26,7 +26,7 @@
 #include "EngineSDK/resources/materials/IMaterialComponent.h"
 
 namespace mer::sdk {
-std::shared_ptr<MaterialResource> MaterialResource::defaultMaterial = create();
+std::shared_ptr<MaterialResource> MaterialResource::defaultMaterial = nullptr;
 
 MaterialResource::MaterialResource()
 	: baseColorMap(this, "Albedo map (base color)"), normalMap(this, "Normal map"), metallicMap(this, "Metallic map"),

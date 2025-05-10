@@ -38,6 +38,5 @@
 #include <unordered_map>
 #include <vector>
 
-#include "ImGuiFileDialog.h"
 
 #endif //COMMON_H

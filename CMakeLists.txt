@@ -37,7 +37,7 @@ add_subdirectory(submodules/glTF-SDK)
 target_include_directories(GLTFSDK SYSTEM PUBLIC "submodules/glTF-SDK/GLTFSDK/Inc/")
 target_compile_options(GLTFSDK PRIVATE -fPIC)
 
-add_library(ImGUI STATIC
+add_library(ImGUI OBJECT
         submodules/imgui/imgui.cpp
         submodules/imgui/imgui.h
         submodules/imgui/imgui_internal.h
