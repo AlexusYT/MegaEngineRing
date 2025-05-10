@@ -38,6 +38,7 @@
 #include "mvp/treeObjectWindow/ModelObjectsTree.h"
 #include "mvp/treeObjectWindow/PresenterObjectsTree.h"
 #include "mvp/treeObjectWindow/ViewObjectsTree.h"
+#include "ImGuiFileDialog.h"
 
 namespace mer::editor::mvp {
 

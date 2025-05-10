@@ -71,7 +71,7 @@ mer::sdk::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, con
 	}
 	int width;
 	int height;
-	if (tjDecompressHeader(decompressor, pDataBuffer, pDataSize, &width, &height) == -1) {
+	if (tjDecompressHeader(decompressor, pDataBuffer, static_cast<unsigned long>(pDataSize), &width, &height) == -1) {
 		pOutData.clear();
 		auto msg = mer::sdk::ReportMessage::create();
 		msg->setTitle("Image loading failed");
@@ -84,7 +84,7 @@ mer::sdk::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, con
 	}
 	pOutData.resize(static_cast<uint64_t>(width * height * 3));
 
-	if (tjDecompress2(decompressor, pDataBuffer, pDataSize, pOutData.data(), width, 0, height, TJPF_RGB,
+	if (tjDecompress2(decompressor, pDataBuffer, static_cast<unsigned long>(pDataSize), pOutData.data(), width, 0, height, TJPF_RGB,
 					  TJFLAG_FASTDCT) == -1) {
 		pOutData.clear();
 		auto msg = mer::sdk::ReportMessage::create();

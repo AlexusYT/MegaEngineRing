@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,22 +16,23 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 10.11.24.
+// Created by alexus on 08.05.2025.
 //
 
-#ifndef IREPORTABLE_H
-#define IREPORTABLE_H
-#include "ReportMessageFwd.h"
+#include "Utils.h"
 
-namespace mer::sdk {
+#include <curl/curl.h>
 
-class IReportable {
-public:
-	virtual ~IReportable() = default;
+namespace mer::editor {
+std::unique_ptr<curl_slist, void (*)(curl_slist*)> Utils::getCurlList(const std::list<std::string> &pList) {
+	curl_slist* slistTmp{};
+	for (auto &str: pList) {
 
-	virtual void addReportInfo(const ReportMessagePtr &pMsg) const = 0;
-};
-
-} // namespace mer::sdk
-
-#endif //IREPORTABLE_H
+		if (curl_slist* tmp = curl_slist_append(slistTmp, str.c_str())) {
+			slistTmp = tmp;
+		} else
+			break;
+	}
+	return std::unique_ptr<curl_slist, void (*)(curl_slist*)>(slistTmp, curl_slist_free_all);
+}
+} // namespace mer::editor

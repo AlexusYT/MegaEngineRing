@@ -41,8 +41,8 @@ target_include_directories(MegaEngineUtils SYSTEM PUBLIC ${sigc++-3_INCLUDE_DIRS
 target_link_libraries(MegaEngineUtils PUBLIC ${sigc++-3_LDFLAGS})
 target_compile_options(MegaEngineUtils PRIVATE -fPIC)
 target_compile_options(MegaEngineUtils PRIVATE -Werror)
-find_package(libjpeg-turbo CONFIG REQUIRED)
-target_link_libraries(MegaEngineUtils PUBLIC $<IF:$<TARGET_EXISTS:libjpeg-turbo::turbojpeg>,libjpeg-turbo::turbojpeg,libjpeg-turbo::turbojpeg-static>)
+target_link_libraries(MegaEngineUtils PUBLIC turbojpeg)
+target_include_directories(MegaEngineUtils SYSTEM PUBLIC ${libturbojpeg_INCLUDE_DIRS})
 set_property(TARGET MegaEngineUtils PROPERTY OUTPUT_NAME MegaEngineUtils)
 set_property(TARGET MegaEngineUtils PROPERTY PREFIX "")
 

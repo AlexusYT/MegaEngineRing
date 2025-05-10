@@ -30,6 +30,7 @@
 
 #include "Logger.h"
 
+namespace mer::sdk {
 class UUID {
 	friend struct std::hash<UUID>;
 
@@ -118,15 +119,16 @@ public:
 		return seed;
 	}
 };
+} // namespace mer::sdk
 
 // Custom specialization of std::hash can be injected in namespace std.
 template<>
-struct std::hash<UUID> {
-	std::size_t operator()(const UUID &s) const noexcept { return hash_value(s); }
+struct std::hash<mer::sdk::UUID> {
+	std::size_t operator()(const mer::sdk::UUID &s) const noexcept { return hash_value(s); }
 };
 
 template<>
-struct std::formatter<UUID> {
+struct std::formatter<mer::sdk::UUID> {
 	bool upperCase{};
 
 	constexpr auto parse(std::format_parse_context &ctx) {
@@ -138,13 +140,13 @@ struct std::formatter<UUID> {
 		return pos;
 	}
 
-	auto format(const UUID &obj, std::format_context &ctx) const {
+	auto format(const mer::sdk::UUID &obj, std::format_context &ctx) const {
 		return std::format_to(ctx.out(), "{}", obj.toString(upperCase));
 	}
 };
 
 template<>
-struct std::formatter<std::shared_ptr<UUID>> {
+struct std::formatter<std::shared_ptr<mer::sdk::UUID>> {
 	bool upperCase{};
 
 	constexpr auto parse(std::format_parse_context &ctx) {
@@ -156,13 +158,13 @@ struct std::formatter<std::shared_ptr<UUID>> {
 		return pos;
 	}
 
-	auto format(const std::shared_ptr<UUID> &obj, std::format_context &ctx) const {
+	auto format(const std::shared_ptr<mer::sdk::UUID> &obj, std::format_context &ctx) const {
 		return std::format_to(ctx.out(), "{}", obj->toString(upperCase));
 	}
 };
 
 template<>
-struct std::formatter<UUID*> {
+struct std::formatter<mer::sdk::UUID*> {
 	bool upperCase{};
 
 	constexpr auto parse(std::format_parse_context &ctx) {
@@ -174,7 +176,7 @@ struct std::formatter<UUID*> {
 		return pos;
 	}
 
-	auto format(UUID* obj, std::format_context &ctx) const {
+	auto format(mer::sdk::UUID* obj, std::format_context &ctx) const {
 		return std::format_to(ctx.out(), "{}", obj->toString(upperCase));
 	}
 };

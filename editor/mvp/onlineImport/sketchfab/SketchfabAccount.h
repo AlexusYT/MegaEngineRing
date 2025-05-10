@@ -22,10 +22,7 @@
 #ifndef SKETCHFABACCOUNT_H
 	#define SKETCHFABACCOUNT_
 	#include <nlohmann/json_fwd.hpp>
-
-namespace curlpp::internal {
-class CurlHandle;
-}
+#include <atomic>
 
 namespace mer::sdk {
 class GltfModel;
@@ -57,7 +54,6 @@ class SketchfabAccount {
 	std::string scope;
 	std::string refreshToken;
 	std::shared_ptr<SketchfabCache> cache;
-	std::unique_ptr<curlpp::internal::CurlHandle> handle;
 
 	bool loaded{false};
 

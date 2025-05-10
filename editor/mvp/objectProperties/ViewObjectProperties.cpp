@@ -21,6 +21,7 @@
 
 #include "ViewObjectProperties.h"
 
+#include <glm/ext/scalar_common.hpp>
 #include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "EngineSDK/extensions/LightExtension.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
@@ -365,7 +366,7 @@ void ViewObjectProperties::drawLightSourceSettings(const std::shared_ptr<sdk::Li
 			pLight->setRange(lightRange);
 	}
 	if (lightType == sdk::LightType::SPOT) {
-		float maxAngle = M_PI_2f;
+		float maxAngle = std::numbers::pi_v<float> / 2.0f;
 		float lightInnerCone = pLight->getInnerConeAngle();
 		float lightOuterCone = pLight->getOuterConeAngle();
 		if (isDegrees()) {

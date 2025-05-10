@@ -33,7 +33,7 @@ void Resource::removeProperty(PropertyBase* pProperty) { erase(properties, pProp
 
 void Resource::propertyChanged(PropertyBase* /*pProperty*/) {}
 
-void Resource::addReportInfo(const ReportMessagePtr &pMsg) {
+void Resource::addReportInfo(const ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Resource uri: {}", resourceUri.string());
 	pMsg->addInfoLine("Resource UUID: {}", uuid->toString());
 	pMsg->addInfoLine("Is resource inited: {}", isInited());

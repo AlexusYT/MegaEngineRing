@@ -38,22 +38,12 @@ class ISceneObject;
 class IScene;
 } // namespace mer::sdk
 
-namespace SQLite {
-class Database;
-}
-
 namespace mer::editor::project {
 class LoadedScene {
 	std::string name;
-	std::shared_ptr<SQLite::Database> database;
 	sigc::signal<void(const std::string &pName)> onNameChanged;
 	std::shared_ptr<sdk::IScene> scene;
 	sigc::signal<void(const sdk::ReportMessagePtr &pError)> onErrorOccurred;
-	/**=
-	 * @brief Locks the database from performing the insert operations. Typically, this is used to prevent duplication of
-	 * data when reading it.
-	 */
-	bool databaseLocked{};
 	sigc::signal<void(sdk::Extension* pObject)> onExtensionAdded;
 	std::shared_ptr<sdk::Application> app;
 	std::shared_ptr<sdk::ISceneObject> cameraObject;
@@ -124,8 +114,6 @@ public:
 
 	void addObjectToDatabase(const std::shared_ptr<sdk::ISceneObject> &pObject) const;
 
-	void removeObjectFromDatabase(sdk::ISceneObject* pObject) const;
-
 	[[nodiscard]] const std::shared_ptr<sdk::IScene> &getScene() const { return scene; }
 
 	void onCursorPosChanged(double pX, double pY) const;
@@ -136,8 +124,6 @@ public:
 
 private:
 	std::shared_ptr<sdk::ISceneObject> createObject() const;
-
-	sdk::ReportMessagePtr createObjectsTable() const;
 };
 } // namespace mer::editor::project
 

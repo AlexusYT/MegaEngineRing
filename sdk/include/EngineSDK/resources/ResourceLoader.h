@@ -23,10 +23,8 @@
 #define RESOURCELOADER_H
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
-
-class UUID;
-
 namespace mer::sdk {
+class UUID;
 class IApplication;
 class IResource;
 class IResourceLoadExecutor;
@@ -38,11 +36,11 @@ public:
 	virtual std::shared_ptr<IResource> createResource() = 0;
 
 	virtual ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
-											const std::shared_ptr<std::istream> &pShared,
-											const std::shared_ptr<IResource> &pResource) = 0;
+									 const std::shared_ptr<std::istream> &pShared,
+									 const std::shared_ptr<IResource> &pResource) = 0;
 
 	virtual ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
-										 const std::shared_ptr<IResource> &pResource) = 0;
+								  const std::shared_ptr<IResource> &pResource) = 0;
 
 
 	[[nodiscard]] virtual IApplication* getApplication() const = 0;
@@ -56,9 +54,8 @@ class ResourceLoader : public IResourceLoader {
 	IApplication* application{};
 
 public:
-	ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
-									const std::shared_ptr<std::istream> &pStream,
-									const std::shared_ptr<IResource> &pResource) override;
+	ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext, const std::shared_ptr<std::istream> &pStream,
+							 const std::shared_ptr<IResource> &pResource) override;
 
 	[[nodiscard]] IApplication* getApplication() const override { return application; }
 

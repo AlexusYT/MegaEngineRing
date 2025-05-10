@@ -42,6 +42,7 @@ Window::~Window() {
 void Window::show() {
 	if (!native) {
 		native = glfwCreateWindow(width, height, title.c_str(), nullptr, sharedWindow ? sharedWindow->native : nullptr);
+		if (!native) return;
 		glfwDefaultWindowHints();
 		glfwSetWindowUserPointer(native, this);
 		glfwSetWindowSizeCallback(native, [](GLFWwindow* pWindow, const int pWidth, const int pHeight) {
@@ -213,6 +214,7 @@ void Window::runMainLoop() {
 
 	// Create window with graphics context
 	show();
+	if (!native) return;
 	glfwMaximizeWindow(native);
 	glfwSwapInterval(1); // Enable vsync
 	IMGUI_CHECKVERSION();

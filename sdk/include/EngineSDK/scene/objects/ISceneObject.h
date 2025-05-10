@@ -27,9 +27,8 @@
 
 #include "EngineUtils/utils/PropertyBase.h"
 
-class UUID;
-
 namespace mer::sdk {
+class UUID;
 enum class MouseButton;
 class ModifierKeys;
 enum class KeyboardKey;
@@ -45,11 +44,9 @@ class ISceneObject {
 public:
 	virtual ~ISceneObject() = default;
 
-	virtual ReportMessagePtr addExtension(const std::string &pName,
-												 const std::shared_ptr<Extension> &pExtension) = 0;
+	virtual ReportMessagePtr addExtension(const std::string &pName, const std::shared_ptr<Extension> &pExtension) = 0;
 
-	virtual ReportMessagePtr removeExtension(const std::string &pName,
-													std::shared_ptr<Extension> &pExtension) = 0;
+	virtual ReportMessagePtr removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension) = 0;
 
 	virtual ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) = 0;
 

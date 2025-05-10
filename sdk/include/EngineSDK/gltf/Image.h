@@ -21,11 +21,14 @@
 
 #ifndef IMAGE_H
 #define IMAGE_H
-#include <png++/io_base.hpp>
 
 #include "EngineSDK/render/Initializable.h"
+#include "EngineUtils/utils/IReportable.h"
 #include "GLTFSDK/Document.h"
 #include "GLTFSDK/GLTFResourceReader.h"
+
+struct spng_ihdr;
+typedef struct spng_ctx spng_ctx;
 
 namespace Microsoft::glTF {
 struct Image;
@@ -36,13 +39,14 @@ class MyIstream;
 enum class Texture2DType;
 enum class Texture2DImageFormat;
 
-class Image : public Initializable {
+class Image : public Initializable, public IReportable {
 	std::vector<uint8_t> rawData;
 	int32_t width;
 	int32_t height;
 	Texture2DImageFormat format;
 	Texture2DType type;
 	std::vector<uint8_t> data;
+	std::string name;
 
 
 	explicit Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
@@ -63,12 +67,16 @@ public:
 
 	[[nodiscard]] const std::vector<uint8_t> &getData() const { return data; }
 
+	void addReportInfo(const ReportMessagePtr &pMsg) const override;
+
 protected:
 	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 
-	ReportMessagePtr readPng(const png::io_base &pReader, MyIstream &pStream);
+	ReportMessagePtr readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> &pCtx, const spng_ihdr &pIhdr);
+
+	std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> isPng(ReportMessagePtr &pErrorOut, spng_ihdr &pIhdrOut) const;
 };
 
 

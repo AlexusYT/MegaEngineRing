@@ -21,10 +21,7 @@
 
 #include "PresenterOnlineImport.h"
 
-#include <curlpp/Easy.hpp>
-#include <curlpp/Infos.hpp>
-#include <curlpp/Options.hpp>
-#include <curlpp/cURLpp.hpp>
+#include <curl/curl.h>
 #include <nlohmann/json.hpp>
 #include <thread>
 
@@ -34,6 +31,7 @@
 #include "EngineSDK/scene/Scene3D.h"
 #include "Globals.h"
 #include "ModelOnlineImport.h"
+#include "Utils.h"
 #include "ViewOnlineImport.h"
 #include "mvp/scenePreview/ViewScenePreview.h"
 #include "mvp/scenePreview/prefab/ModelPrefabPreview.h"
@@ -84,19 +82,24 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 		auto str =
 			std::format("grant_type=password&client_id={}&username={}&password={}", CLIENT_ID, pUsername, pPassword);
 		try {
-			curlpp::Easy request;
+			std::unique_ptr<CURL, void (*)(CURL*)> request(curl_easy_init(), curl_easy_cleanup);
 			view->setLoginInProgress();
-			request.setOpt(curlpp::options::Url(SKETCHFAB_OAUTH));
+			curl_easy_setopt(request.get(), CURLOPT_URL, SKETCHFAB_OAUTH);
 
 			std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
-			request.setOpt(new curlpp::options::HttpHeader(header));
-			request.setOpt(new curlpp::options::PostFields(str));
+			auto curlList = Utils::getCurlList(header);
+			curl_easy_setopt(request.get(), CURLOPT_HTTPHEADER, curlList.get());
+			curl_easy_setopt(request.get(), CURLOPT_POSTFIELDSIZE, str.size());
+			curl_easy_setopt(request.get(), CURLOPT_POSTFIELDS, str.c_str());
 			std::stringstream ss;
-			request.setOpt(new curlpp::options::WriteStream(&ss));
+			curl_easy_setopt(request.get(), CURLOPT_WRITEFUNCTION, Utils::streamWriteCallback);
+			curl_easy_setopt(request.get(), CURLOPT_WRITEDATA, &ss);
 
-			request.perform();
+			curl_easy_perform(request.get());
+			request.reset();
+			curlList.reset();
 
-			std::cout << "Response code: " << curlpp::infos::ResponseCode::get(request) << std::endl;
+			//std::cout << "Response code: " << curlpp::infos::ResponseCode::get(request) << std::endl;
 			nlohmann::json j = nlohmann::json::parse(ss.str());
 			if (auto it = j.find("error"); it != j.end()) {
 				auto it1 = j.find("error_description");
@@ -120,8 +123,8 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 			view->loginError("invalid_response", "Internal error");
 		}
 
-		catch (curlpp::RuntimeError &e) {
-			view->loginError("runtime_error", e.what());
+		catch (...) {
+			view->loginError("runtime_error", "");
 			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Login failed");
 			msg->setMessage("Exception occurred during login");
@@ -216,8 +219,11 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 			sdk::ReportMessagePtr errorMsg;
 			auto gltfModel = sdk::GltfModel::createFromStream(stream, errorMsg);
 			if (!gltfModel) {
+				view->setProgressMode(IViewOnlineImport::ProgressMode::NONE);
+				view->hideModelLoading();
 				errorMsg->setTitle("Model parsing error");
 				sdk::Logger::error(errorMsg);
+				return;
 			}
 			auto scene = sdk::Scene3D::create();
 			for (auto material: gltfModel->getMaterials()) { scene->addMaterial(material); }

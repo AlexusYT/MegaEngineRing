@@ -26,6 +26,7 @@ namespace mer::sdk {
 
 enum class Texture2DType {
 
+	UNDEFINED = 0,
 	UNSIGNED_BYTE = 0x1401,
 	BYTE = 0x1400,
 	UNSIGNED_SHORT = 0x1403,
@@ -48,6 +49,33 @@ enum class Texture2DType {
 
 };
 
+inline const char* to_string(const Texture2DType pE) {
+	switch (pE) {
+		case Texture2DType::UNDEFINED: return "UNDEFINED";
+		case Texture2DType::UNSIGNED_BYTE: return "UNSIGNED_BYTE";
+		case Texture2DType::BYTE: return "BYTE";
+		case Texture2DType::UNSIGNED_SHORT: return "UNSIGNED_SHORT";
+		case Texture2DType::SHORT: return "SHORT";
+		case Texture2DType::UNSIGNED_INT: return "UNSIGNED_INT";
+		case Texture2DType::INT: return "INT";
+		case Texture2DType::FLOAT: return "FLOAT";
+		case Texture2DType::UNSIGNED_BYTE_3_3_2: return "UNSIGNED_BYTE_3_3_2";
+		case Texture2DType::UNSIGNED_BYTE_2_3_3_REV: return "UNSIGNED_BYTE_2_3_3_REV";
+		case Texture2DType::UNSIGNED_SHORT_5_6_5: return "UNSIGNED_SHORT_5_6_5";
+		case Texture2DType::UNSIGNED_SHORT_5_6_5_REV: return "UNSIGNED_SHORT_5_6_5_REV";
+		case Texture2DType::UNSIGNED_SHORT_4_4_4_4: return "UNSIGNED_SHORT_4_4_4_4";
+		case Texture2DType::UNSIGNED_SHORT_4_4_4_4_REV: return "UNSIGNED_SHORT_4_4_4_4_REV";
+		case Texture2DType::UNSIGNED_SHORT_5_5_5_1: return "UNSIGNED_SHORT_5_5_5_1";
+		case Texture2DType::UNSIGNED_SHORT_1_5_5_5_REV: return "UNSIGNED_SHORT_1_5_5_5_REV";
+		case Texture2DType::UNSIGNED_INT_8_8_8_8: return "UNSIGNED_INT_8_8_8_8";
+		case Texture2DType::UNSIGNED_INT_8_8_8_8_REV: return "UNSIGNED_INT_8_8_8_8_REV";
+		case Texture2DType::UNSIGNED_INT_10_10_10_2: return "UNSIGNED_INT_10_10_10_2";
+		case Texture2DType::UNSIGNED_INT_2_10_10_10_REV: return "UNSIGNED_INT_2_10_10_10_REV";
+		default: return "unknown";
+	}
 }
+
+
+} // namespace mer::sdk
 
 #endif //TEXTURE2DTYPE_H

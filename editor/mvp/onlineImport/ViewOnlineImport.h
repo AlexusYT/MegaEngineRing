@@ -21,6 +21,8 @@
 
 #ifndef VIEWONLINEIMPORT_H
 #define VIEWONLINEIMPORT_H
+#include <atomic>
+
 #include "mvp/IView.h"
 #include "mvp/editor/Editor.h"
 

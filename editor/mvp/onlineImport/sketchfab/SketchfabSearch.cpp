@@ -363,7 +363,7 @@ std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<f
 	return nullptr;
 }
 
-void ModelSearchList::addReportInfo(const sdk::ReportMessagePtr &pMsg) {
+void ModelSearchList::addReportInfo(const sdk::ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Model UID: {}", uid);
 	pMsg->addInfoLine("Model name: {}", name);
 	pMsg->addInfoLine("Model viewer url: {}", viewerUrl);

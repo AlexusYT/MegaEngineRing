@@ -20,6 +20,8 @@
 
 #include "EngineUtils/utils/UUID.h"
 
+using namespace mer::sdk;
+
 TEST(UUID_TESTS, ZeroUUIDToString) {
 	constexpr UUID uuid;
 	EXPECT_EQ(uuid.toString(false), "00000000-0000-0000-0000-000000000000");

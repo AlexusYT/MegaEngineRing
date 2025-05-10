@@ -21,9 +21,7 @@
 
 #include "EngineSDK/gltf/Image.h"
 
-#include <png++/image.hpp>
-#include <png++/reader.hpp>
-#include <turbojpeg.h>
+#include <spng.h>
 
 #include "EngineSDK/resources/textures/Texture2DImageFormat.h"
 #include "EngineSDK/resources/textures/Texture2DType.h"
@@ -31,9 +29,11 @@
 
 namespace mer::sdk {
 Image::Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
-			 const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader) {
+			 const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader)
+	: width(-1), height(-1), format(Texture2DImageFormat::UNDEFINED), type(Texture2DType::UNDEFINED) {
 
 	rawData = pReader->ReadBinaryData(pDocument, pImage);
+	name = pImage.name;
 }
 
 std::shared_ptr<Image> Image::create(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
@@ -41,76 +41,45 @@ std::shared_ptr<Image> Image::create(const Microsoft::glTF::Image &pImage, const
 	return std::shared_ptr<Image>(new Image(pImage, pDocument, pReader));
 }
 
-class MyIstream {
-	std::vector<uint8_t> data;
-	size_t pos = 0;
-
-public:
-	explicit MyIstream(const std::vector<uint8_t> &pData) : data(pData) {}
-
-	void read(char* pStr, size_t pSize) {
-		if (pos + pSize > data.size()) { return; }
-		std::string s(data.begin() + static_cast<long int>(pos), data.begin() + static_cast<long int>(pos + pSize));
-		memcpy(pStr, s.data(), pSize);
-		pos += pSize;
-	}
-
-	bool good() const { return pos <= data.size(); }
-
-	void seekg(size_t pNewPow) { pos = pNewPow; }
-
-	size_t tellg() const { return pos; }
-};
-
-template<typename PixelType>
-std::vector<uint8_t> get_data(const int32_t pWidth, const int32_t pHeight, MyIstream &pStream) {
-	std::vector<uint8_t> pixelsOut;
-	pixelsOut.resize(static_cast<size_t>(pWidth * pHeight) * sizeof(PixelType));
-	png::image<PixelType> img;
-	img.read_stream(pStream);
-	auto &pixelBuffer = img.get_pixbuf();
-
-	for (int32_t x = 0; x < pHeight; ++x) {
-		memcpy(&pixelsOut[static_cast<size_t>(x * pWidth) * sizeof(PixelType)],
-			   pixelBuffer.get_row(static_cast<size_t>(x)).data(), static_cast<size_t>(pWidth) * sizeof(PixelType));
-	}
-
-	return pixelsOut;
+void Image::addReportInfo(const ReportMessagePtr &pMsg) const {
+	pMsg->addInfoLine("Image name: {}", name.empty() ? "(null)" : name);
+	pMsg->addInfoLine("Image size: {}x{}", width, height);
+	pMsg->addInfoLine("Image color format: {} ({})", to_string(format), static_cast<int>(format));
+	pMsg->addInfoLine("Image bit depth: {} ({})", to_string(type), static_cast<int>(type));
 }
 
 ReportMessagePtr Image::onInitialize() {
+	ReportMessagePtr msg;
+
 	try {
-		MyIstream stream(rawData);
-		const auto pos = stream.tellg();
-		png::reader reader(stream);
-		reader.read_info();
-		stream.seekg(pos);
-		if (auto msg = readPng(reader, stream)) return msg;
-	} catch (png::error &) {
-		if (auto msg = Utils::decompressJpeg(rawData.data(), rawData.size(), data, &width, &height)) return msg;
-		//TODO Read from JPEG file
-		format = Texture2DImageFormat::RGB;
-		type = Texture2DType::UNSIGNED_BYTE;
+
+		if (spng_ihdr ihdrOut; auto ctx = isPng(msg, ihdrOut)) {
+			msg = readPng(ctx, ihdrOut);
+		} else if (msg = Utils::decompressJpeg(rawData.data(), rawData.size(), data, &width, &height); !msg) {
+			//TODO Read from JPEG file
+			format = Texture2DImageFormat::RGB;
+			type = Texture2DType::UNSIGNED_BYTE;
+		}
 	} catch (...) {
-		auto msg = ReportMessage::create();
+		msg = ReportMessage::create();
 		msg->setTitle("Failed to read image");
 		msg->setMessage("Exception occurred");
-		return msg;
+		addReportInfo(msg);
 	}
 
 	rawData.clear();
 
-	return nullptr;
+	return msg;
 }
 
 void Image::onUninitialize() { Initializable::onUninitialize(); }
 
-ReportMessagePtr Image::readPng(const png::io_base &pReader, MyIstream &pStream) {
+ReportMessagePtr Image::readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> &pCtx, const spng_ihdr &pIhdr) {
 	try {
-		width = static_cast<int32_t>(pReader.get_width());
-		height = static_cast<int32_t>(pReader.get_height());
-		const png::color_type colorType = pReader.get_color_type();
-		const int bitDepth = pReader.get_bit_depth();
+		width = static_cast<int32_t>(pIhdr.width);
+		height = static_cast<int32_t>(pIhdr.height);
+		const auto colorType = pIhdr.color_type;
+		const int bitDepth = pIhdr.bit_depth;
 		switch (bitDepth) {
 			case 4: type = Texture2DType::UNSIGNED_BYTE; break;
 			case 8: type = Texture2DType::UNSIGNED_BYTE; break;
@@ -120,48 +89,139 @@ ReportMessagePtr Image::readPng(const png::io_base &pReader, MyIstream &pStream)
 				auto msg = ReportMessage::create();
 				msg->setTitle("Failed to read image");
 				msg->setMessage("Unsupported image bit depth");
-				msg->addInfoLine("Image size: {}x{}", width, height);
-				msg->addInfoLine("Bit depth: {}", bitDepth);
+				msg->addInfoLine("File bit depth: {}", bitDepth);
+				addReportInfo(msg);
 				return msg;
 		}
 		switch (colorType) {
-
-			case png::color_type_gray:
-				format = Texture2DImageFormat::RED;
-				data = get_data<png::gray_pixel>(width, height, pStream);
-				break;
-			case png::color_type_rgb:
-				format = Texture2DImageFormat::RGB;
-				data = get_data<png::rgb_pixel>(width, height, pStream);
-				break;
-			case png::color_type_rgb_alpha:
-				format = Texture2DImageFormat::RGBA;
-				data = get_data<png::rgba_pixel>(width, height, pStream);
-				break;
-			case png::color_type_gray_alpha:
-				format = Texture2DImageFormat::RG;
-				data = get_data<png::ga_pixel>(width, height, pStream);
-				break;
-			case png::color_type_palette:
-				format = Texture2DImageFormat::RGB;
-				data = get_data<png::rgb_pixel>(width, height, pStream);
-				break;
+			case SPNG_COLOR_TYPE_GRAYSCALE: format = Texture2DImageFormat::RED; break;
+			case SPNG_COLOR_TYPE_TRUECOLOR: format = Texture2DImageFormat::RGB; break;
+			case SPNG_COLOR_TYPE_TRUECOLOR_ALPHA: format = Texture2DImageFormat::RGBA; break;
+			case SPNG_COLOR_TYPE_GRAYSCALE_ALPHA: format = Texture2DImageFormat::RG; break;
+			case SPNG_COLOR_TYPE_INDEXED: format = Texture2DImageFormat::RGB; break;
 			default:
 				auto msg = ReportMessage::create();
 				msg->setTitle("Failed to read image");
 				msg->setMessage("Unsupported image type");
-				msg->addInfoLine("Image size: {}x{}", width, height);
-				msg->addInfoLine("Bit depth: {}", bitDepth);
-				msg->addInfoLine("Color type: {}", static_cast<int>(colorType));
+				msg->addInfoLine("File color type: {}", static_cast<int>(colorType));
+				addReportInfo(msg);
 				return msg;
 		}
 	} catch (...) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to read image");
 		msg->setMessage("Exception occurred");
+		addReportInfo(msg);
 		return msg;
 	}
+	/*spng_plte plte{};
+	ret = spng_get_plte(ctx.get(), &plte);
+
+	if (ret && ret != SPNG_ECHUNKAVAIL) { printf("spng_get_plte() error: %s\n", spng_strerror(ret)); }
+
+	if (!ret) printf("palette entries: %u\n", plte.n_entries);*/
+
+
+	size_t image_size;
+
+	/* Output format, does not depend on source PNG format except for
+	   SPNG_FMT_PNG, which is the PNG's format in host-endian or
+	   big-endian for SPNG_FMT_RAW.
+	   Note that for these two formats <8-bit images are left byte-packed */
+	int fmt = SPNG_FMT_PNG;
+
+	/* With SPNG_FMT_PNG indexed color images are output as palette indices,
+	   pick another format to expand them. */
+	if (pIhdr.color_type == SPNG_COLOR_TYPE_INDEXED) fmt = SPNG_FMT_RGB8;
+
+
+	if (auto ret = spng_decoded_image_size(pCtx.get(), fmt, &image_size)) {
+		auto msg = ReportMessage::create();
+		msg->setTitle("Failed to read png image");
+		msg->setMessage("Function spng_decoded_image_size failed");
+		msg->addInfoLine("Error message: {} ({})", spng_strerror(ret), ret);
+		addReportInfo(msg);
+		return msg;
+	}
+
+	std::vector<unsigned char> image(image_size);
+
+	/* Decode the image in one go */
+	/* ret = spng_decode_image(ctx, image, image_size, SPNG_FMT_RGBA8, 0);
+
+	if(ret)
+	{
+		printf("spng_decode_image() error: %s\n", spng_strerror(ret));
+		goto error;
+	}*/
+
+	/* Alternatively, you can decode the image progressively;
+	   this requires an initialization step. */
+
+
+	if (auto ret = spng_decode_image(pCtx.get(), NULL, 0, fmt, SPNG_DECODE_PROGRESSIVE)) {
+		auto msg = ReportMessage::create();
+		msg->setTitle("Failed to read png image");
+		msg->setMessage("Function spng_decode_image failed");
+		msg->addInfoLine("Error message: {} ({})", spng_strerror(ret), ret);
+		addReportInfo(msg);
+		return msg;
+	}
+
+	/* ihdr.height will always be non-zero if spng_get_ihdr() succeeds */
+	size_t image_width = image_size / static_cast<size_t>(height);
+
+	spng_row_info rowInfo = {};
+	int ret;
+	do {
+		ret = spng_get_row_info(pCtx.get(), &rowInfo);
+		if (ret) break;
+
+		ret = spng_decode_row(pCtx.get(), image.data() + rowInfo.row_num * image_width, image_width);
+	} while (!ret);
+
+	if (ret != SPNG_EOI) {
+		auto msg = ReportMessage::create();
+		msg->setTitle("Failed to read png image");
+		msg->setMessage("Progressive decoding failed");
+		msg->addInfoLine("Error message: {} ({})", spng_strerror(ret), ret);
+		if (pIhdr.interlace_method) msg->addInfoLine("Last pass: {}, scanline: {}", rowInfo.pass, rowInfo.scanline_idx);
+		else
+			msg->addInfoLine("last row: {}", rowInfo.row_num);
+		addReportInfo(msg);
+	}
+	data = image;
 	return nullptr;
+}
+
+std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> Image::isPng(ReportMessagePtr &pErrorOut, spng_ihdr &pIhdrOut) const {
+	std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> ctx(spng_ctx_new(0), spng_ctx_free);
+
+	/* Ignore and don't calculate chunk CRC's */
+	spng_set_crc_action(ctx.get(), SPNG_CRC_USE, SPNG_CRC_USE);
+
+	/* Set memory usage limits for storing standard and unknown chunks,
+		   this is important when reading untrusted files! */
+	size_t limit = 1024 * 1024 * 64;
+	spng_set_chunk_limits(ctx.get(), limit, limit);
+
+	/* Set source PNG */
+	spng_set_png_buffer(ctx.get(), rawData.data(), rawData.size());
+
+	auto ret = spng_get_ihdr(ctx.get(), &pIhdrOut);
+
+	if (ret == SPNG_ESIGNATURE) {
+		ctx.reset();
+	} else if (ret != SPNG_OK) {
+		const auto msg = ReportMessage::create();
+		msg->setTitle("Failed to read png image");
+		msg->setMessage("Function spng_get_ihdr failed");
+		msg->addInfoLine("Error message: {} ({})", spng_strerror(ret), ret);
+		addReportInfo(msg);
+		pErrorOut = msg;
+		ctx.reset();
+	}
+	return ctx;
 }
 
 } // namespace mer::sdk

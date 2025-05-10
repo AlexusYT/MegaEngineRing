@@ -259,7 +259,7 @@ public:
 
 	std::shared_ptr<sdk::ReportMessage> downloadLinks(std::atomic<float> &pProgress);
 
-	void addReportInfo(const sdk::ReportMessagePtr &pMsg) override;
+	void addReportInfo(const sdk::ReportMessagePtr &pMsg) const override;
 
 	//Call downloadLinks() first
 	[[nodiscard]] const std::shared_ptr<DownloadLinks> &getLinks() const { return links; }

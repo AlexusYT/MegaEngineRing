@@ -20,7 +20,6 @@
 //
 
 
-#define GLM_ENABLE_EXPERIMENTAL
 
 #include "EngineSDK/utils/Transformation.h"
 

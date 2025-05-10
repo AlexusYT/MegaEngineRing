@@ -21,7 +21,6 @@
 
 #include "LoadedScene.h"
 
-#include <SQLiteCpp/Database.h>
 #include <nlohmann/json.hpp>
 
 #include "EngineSDK/context/Application.h"
@@ -81,7 +80,7 @@ void LoadedScene::render() const {
 	scene->render();
 }
 
-sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
+sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path & /*pPath*/) {
 
 	auto resourcesContext = std::make_shared<mvp::ResourcesContext>();
 	setupResourcesContext(resourcesContext);
@@ -90,23 +89,8 @@ sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 	scene->setResourceExecutor(context.get());
 	onLoadingSignal();
 	setName("Untitled Scene");
-	databaseLocked = true;
 
-	try {
-		database = std::make_shared<SQLite::Database>(pPath, SQLite::OPEN_CREATE | SQLite::OPEN_READWRITE);
-	} catch (...) {
-		auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to open scene file");
-		msg->setMessage("Database connection failed");
-		msg->addInfoLine("File path: {}", pPath.string());
-		databaseLocked = false;
-		return msg;
-	}
-
-	if (auto msg = readObjects()) {
-		databaseLocked = false;
-		return msg;
-	}
+	if (auto msg = readObjects()) { return msg; }
 	onLoadedSignal();
 
 	std::shared_ptr<sdk::ICamera> editorCamera;
@@ -128,7 +112,6 @@ sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path &pPath) {
 	//viewSceneEditor->makeCurrent();
 	scene->switchCamera(editorCamera.get());
 	scene->addObject(cameraObject);
-	databaseLocked = false;
 	return nullptr;
 }
 
@@ -136,7 +119,6 @@ void LoadedScene::unload() {
 	for (auto connection: connections) { connection.disconnect(); }
 	connections.clear();
 	cameraObject.reset();
-	database.reset();
 	if (scene) {
 		scene->deinitScene();
 		scene.reset();
@@ -144,45 +126,7 @@ void LoadedScene::unload() {
 	name.clear();
 }
 
-sdk::ReportMessagePtr LoadedScene::readObjects() {
-	if (!database->tableExists("Objects")) return nullptr;
-
-	try {
-		//language=sql
-		SQLite::Statement statement(*database, "SELECT * FROM Objects");
-		while (statement.executeStep()) {
-			auto object = sdk::SceneObject::create();
-			object->setUuid(UUID::parse(statement.getColumn(1)));
-			scene->addObject(object);
-			nlohmann::json json = nlohmann::json::parse(statement.getColumn(2).getString());
-			if (json.is_array()) {
-				for (const auto &ext: json) {
-					if (ext.is_object()) {
-						sdk::Extension* extension;
-						auto extType = ext.at("ExtensionType").get<std::string>();
-						if (extType == sdk::MainObjectExtension::typeName()) {
-							extension = object->getMainExtension();
-						} else {
-							auto extName = ext.at("ExtensionName").get<std::string>();
-							extension = addExtension(object.get(), extType, extName).get();
-						}
-						extension->deserialize(ext);
-					}
-				}
-			}
-			object->connectOnExtensionPropertyChanged(
-				[this, object](sdk::Extension* /*pExtension*/, sdk::PropertyBase* /*pProperty*/) {
-					std::thread([this, object] { saveObject(object.get()); }).detach();
-				});
-		}
-	} catch (...) {
-		auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to parse scene objects");
-		msg->setMessage("Exception occurred while querying the data");
-		return msg;
-	}
-	return nullptr;
-}
+sdk::ReportMessagePtr LoadedScene::readObjects() { return nullptr; }
 
 void LoadedScene::addObject() {
 	auto obj = createObject();
@@ -193,7 +137,6 @@ void LoadedScene::addObject() {
 void LoadedScene::removeObject(sdk::ISceneObject* pObjectToRemove) {
 
 	std::thread([this, pObjectToRemove] {
-		removeObjectFromDatabase(pObjectToRemove);
 		if (scene) scene->removeObject(pObjectToRemove);
 	}).detach();
 }
@@ -223,44 +166,9 @@ std::shared_ptr<sdk::Extension> LoadedScene::addExtension(sdk::ISceneObject* pOb
 	return ext;
 }
 
-void LoadedScene::saveObject(sdk::ISceneObject* pObject) const {
-	if (databaseLocked) return;
-	if (!database->tableExists("Objects")) return;
-	nlohmann::json json;
-	for (auto [extName, ext]: pObject->getExtensions()) {
-		nlohmann::json arrayElement;
-		arrayElement["ExtensionName"] = ext->getName();
-		arrayElement["ExtensionType"] = ext->getTypeName();
-		ext->serialize(arrayElement);
-		json.emplace_back(arrayElement);
-	}
-	try {
-		//language=sql
-		SQLite::Statement statement(*database, R"(
-UPDATE Objects SET Extensions = ? WHERE UUID = ?
-)");
-		statement.bind(1, json.dump(4));
-		statement.bind(2, pObject->getUuid()->toString());
-		statement.executeStep();
-		statement.clearBindings();
-		statement.reset();
-	} catch (...) {
-		auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to save the object to the table");
-		msg->setMessage("Exception occurred while executing query");
-		onErrorOccurred(msg);
-	}
-}
+void LoadedScene::saveObject(sdk::ISceneObject* /*pObject*/) const {}
 
 void LoadedScene::addObjectToDatabase(const std::shared_ptr<sdk::ISceneObject> &pObject) const {
-	if (databaseLocked) return;
-
-	if (!database->tableExists("Objects")) {
-		if (const auto msg = createObjectsTable()) {
-			onErrorOccurred(msg);
-			return;
-		}
-	}
 	nlohmann::json json;
 	for (auto [extName, ext]: pObject->getExtensions()) {
 		nlohmann::json arrayElement;
@@ -269,62 +177,6 @@ void LoadedScene::addObjectToDatabase(const std::shared_ptr<sdk::ISceneObject> &
 		ext->serialize(arrayElement);
 		json.emplace_back(arrayElement);
 	}
-
-	try {
-		//language=sql
-		SQLite::Statement statement(*database, R"(
-INSERT INTO Objects (UUID, Extensions) VALUES (?, ?)
-)");
-		statement.bind(1, pObject->getUuid()->toString());
-		statement.bind(2, json.dump(4));
-		statement.executeStep();
-		statement.clearBindings();
-		statement.reset();
-	} catch (...) {
-		const auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to insert the new object to the table");
-		msg->setMessage("Exception occurred while executing query");
-		onErrorOccurred(msg);
-	}
-}
-
-void LoadedScene::removeObjectFromDatabase(sdk::ISceneObject* pObject) const {
-	if (!database->tableExists("Objects")) return;
-
-	try {
-		//language=sql
-		SQLite::Statement statement(*database, R"(DELETE FROM Objects WHERE (UUID = ?))");
-		statement.bind(1, pObject->getUuid()->toString());
-		statement.executeStep();
-		statement.clearBindings();
-		statement.reset();
-	} catch (...) {
-		const auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to delete the object from the table");
-		msg->setMessage("Exception occurred while executing query");
-		onErrorOccurred(msg);
-	}
-}
-
-sdk::ReportMessagePtr LoadedScene::createObjectsTable() const {
-	try {
-		//language=sql
-		database->exec(R"(CREATE TABLE Objects
-(
-    Id    INTEGER
-        CONSTRAINT Objects_pk
-            PRIMARY KEY AUTOINCREMENT,
-    UUID  TEXT    NOT NULL,
-    Extensions  TEXT    NOT NULL
-);
-)");
-	} catch (...) {
-		auto msg = sdk::ReportMessage::create();
-		msg->setTitle("Failed to create the objects table");
-		msg->setMessage("Exception occurred while executing query");
-		return msg;
-	}
-	return nullptr;
 }
 
 void LoadedScene::onCursorPosChanged(const double pX, const double pY) const {

@@ -54,7 +54,7 @@ bool InputTextWithHint(const char* pName, const char* pHint, std::string &pText,
 		&pText);
 }
 
-bool UuidText(const char* pName, const UUID &pUuid, int pFlags) {
+bool UuidText(const char* pName, const mer::sdk::UUID &pUuid, int pFlags) {
 	auto uuidText = pUuid.toString(true);
 
 	ImGuiContext &g = *GImGui;
@@ -63,7 +63,6 @@ bool UuidText(const char* pName, const UUID &pUuid, int pFlags) {
 	PopStyleVar();
 	return result;
 }
-
 
 static const float DRAG_MOUSE_THRESHOLD_FACTOR =
 	0.50f; // Multiplier for the default value of io.MouseDragThreshold to make DragFloat/DragInt react faster to mouse drags.

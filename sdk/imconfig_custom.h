@@ -145,7 +145,7 @@
 	}
 
 //---- ...Or use Dear ImGui's own very basic math operators.
-//#define IMGUI_DEFINE_MATH_OPERATORS
+#define IMGUI_DEFINE_MATH_OPERATORS
 
 //---- Use 32-bit vertex indices (default is 16-bit) is one way to allow large meshes with more than 64K vertices.
 // Your renderer backend will need to support it (most example renderer backends support both 16/32-bit indices).
@@ -169,14 +169,15 @@
 
 //---- Tip: You can add extra functions within the ImGui:: namespace from anywhere (e.g. your own sources/header files)
 
-
+namespace mer::sdk {
 class UUID;
+}
 
 namespace ImGui {
 bool InputText(const char* pName, std::string &pText, int pFlags = 0);
 bool InputTextWithHint(const char* pName, const char* pHint, std::string &pText, int pFlags = 0);
 
-bool UuidText(const char* pName, const UUID &pUuid, int pFlags = 0);
+bool UuidText(const char* pName, const mer::sdk::UUID &pUuid, int pFlags = 0);
 
 bool DragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* roundFormat,
 			   const char* displayFormat, int flags);

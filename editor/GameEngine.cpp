@@ -28,6 +28,8 @@
 	#include <windows.h>
 #endif
 
+#include <curl/curl.h>
+
 #include "EngineSDK/context/Application.h"
 #include "EngineSDK/context/Window.h"
 #include "Globals.h"
@@ -70,11 +72,22 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 	auto application = sdk::Application::create();
 
 	application->initEngine();
+
+	if (auto ret = curl_global_init(CURL_GLOBAL_DEFAULT); ret != CURLE_OK) {
+		auto msg = sdk::ReportMessage::create();
+		msg->setTitle("Failed to initialize CURL");
+		msg->setMessage("Function curl_global_init returned an error");
+		msg->addInfoLine("Error: {}", curl_easy_strerror(ret));
+		sdk::Logger::error(msg);
+		return 1;
+	}
+
 	auto window = std::make_shared<EditorWindow>();
 	application->registerWindow(window);
 
 
 	auto result = application->runMainLoop(pArgc, pArgv);
+	curl_global_cleanup();
 	return result;
 }
 
