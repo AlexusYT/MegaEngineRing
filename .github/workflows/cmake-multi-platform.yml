@@ -27,14 +27,14 @@ jobs:
         with:
           update: true
           install: >-
-            mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsigc++-3.0 mingw-w64-x86_64-libspng 
+            mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsigc++-3.0 mingw-w64-x86_64-libspng 
             mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-glm mingw-w64-x86_64-libepoxy mingw-w64-x86_64-glfw 
             mingw-w64-x86_64-nlohmann-json mingw-w64-x86_64-gtest mingw-w64-x86_64-curl-gnutls mingw-w64-x86_64-openssl 
             mingw-w64-x86_64-zlib
 
       - name: Configure CMake
         shell: msys2 {0}
-        run: cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
+        run: cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-windows" "-S ${{ github.workspace }}"
 
       - name: Build
         shell: msys2 {0}
@@ -64,7 +64,7 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.install-output-dir }} -DCMAKE_CXX_COMPILER=g++-14 "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
+          cmake -DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.install-output-dir }} -DCMAKE_CXX_COMPILER=g++-14 "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-ubuntu" "-S ${{ github.workspace }}"
 
       - name: Build
         run: |
