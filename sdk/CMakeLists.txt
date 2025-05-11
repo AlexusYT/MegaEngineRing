@@ -280,7 +280,6 @@ if (WIN32)
             POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
             DIRECTORIES
             $<TARGET_FILE_DIR:MegaEngineSDK_shared>
-            "C:\\msys64\\mingw64\\bin"
             ARCHIVE
             DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
             COMPONENT sdk
