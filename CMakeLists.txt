@@ -92,6 +92,7 @@ if (WIN32)
             POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
             DIRECTORIES $<TARGET_FILE_DIR:MegaEngineEditor>
             $<TARGET_FILE_DIR:MegaEngineSDK_shared>
+            $ENV{PATH}
     )
 else ()
 
