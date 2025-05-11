@@ -7,26 +7,8 @@ on:
     branches: [ "main", "AlexusYT-ci-config" ]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os.version }}
-
-    strategy:
-      # Set fail-fast to false to ensure that feedback is delivered for all matrix combinations. Consider changing this to true when your workflow is stable.
-      fail-fast: false
-
-      # Set up a matrix to run the following 3 configurations:
-      # 1. <Windows, Release, latest MSVC compiler toolchain on the default runner image, default generator>
-      # 2. <Linux, Release, latest GCC compiler toolchain on the default runner image, default generator>
-      #
-      # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
-      matrix:
-        os:
-          - name: ubuntu
-            version: ubuntu-24.04
-          - name: windows
-            version: windows-2025
-        build_type: [ Release ]
-    
+  build-windows:
+    runs-on: windows-2025
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,38 +23,51 @@ jobs:
           echo "install-output-dir=${{ github.workspace }}/install" >> "$GITHUB_OUTPUT"
 
       - name: Install tools
-        if: matrix.os.name == 'ubuntu'
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >-
+            mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsigc++-3.0 mingw-w64-x86_64-libspng 
+            mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-glm mingw-w64-x86_64-libepoxy mingw-w64-x86_64-glfw 
+            mingw-w64-x86_64-nlohmann-json mingw-w64-x86_64-gtest mingw-w64-x86_64-curl-gnutls mingw-w64-x86_64-openssl 
+            mingw-w64-x86_64-zlib
+
+      - name: Configure CMake
+        shell: msys2 {0}
+        run: cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
+
+      - name: Build
+        shell: msys2 {0}
+        run: |
+          cmake --build ${{ steps.strings.outputs.build-output-dir }} --target install #--config ${{ matrix.build_type }}
+
+  build-linux:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set reusable strings
+        # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+          echo "install-output-dir=${{ github.workspace }}/install" >> "$GITHUB_OUTPUT"
+
+      - name: Install tools
         run: |
           sudo apt-get update
           sudo apt-get install ninja-build libxi-dev libx11-dev libxft-dev libxext-dev  libxinerama-dev xorg-dev libglu1-mesa-dev libxcursor-dev libxdamage-dev libsigc++-3.0-dev libspng-dev libturbojpeg0-dev libglm-dev libepoxy-dev libglfw3-dev nlohmann-json3-dev libgtest-dev libgmock-dev libcurl4-gnutls-dev
 
-      - name: Install tools
-
-        if: matrix.os.name == 'windows'
-        shell: C:\msys64\usr\bin\bash.exe {0}
-        run: |
-          echo "/c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:" >> $GITHUB_PATH
-          export XDG_DATA_DIRS="C:/msys64/mingw64/share;${{ env.XDG_DATA_DIRS }}"
-          echo $XDG_DATA_HOME
-          echo $XDG_DATA_DIRS
-          /c/msys64/usr/bin/pacman --noconfirm -S mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsigc++-3.0 mingw-w64-x86_64-libspng mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-glm mingw-w64-x86_64-libepoxy mingw-w64-x86_64-glfw mingw-w64-x86_64-nlohmann-json mingw-w64-x86_64-gtest mingw-w64-x86_64-curl-gnutls mingw-w64-x86_64-openssl mingw-w64-x86_64-zlib
-
-        # choco install ninja
-      - name: Configure CMake Ubuntu
-        if: matrix.os.name == 'ubuntu'
+      - name: Configure CMake
         run: |
           cmake -DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.install-output-dir }} -DCMAKE_CXX_COMPILER=g++-14 "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
 
-      - name: Configure CMake Windows
-        if: matrix.os.name == 'windows'
-        shell: C:\msys64\usr\bin\bash.exe {0}
-        run: cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-${{ matrix.os.name }}" "-S ${{ github.workspace }}"
-
       - name: Build
         run: |
-          echo "/c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:" >> $GITHUB_PATH
-          echo  $GITHUB_PATH
-          echo  $PATH
           cmake --build ${{ steps.strings.outputs.build-output-dir }} --target install #--config ${{ matrix.build_type }}
 
         #- name: Test
