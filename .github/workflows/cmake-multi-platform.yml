@@ -34,7 +34,8 @@ jobs:
 
       - name: Configure CMake
         shell: msys2 {0}
-        run: cmake "-B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-windows" "-S ${{ github.workspace }}"
+        run: |
+          cmake "-DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.install-output-dir }} -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-windows" "-S ${{ github.workspace }}"
 
       - name: Build
         shell: msys2 {0}
