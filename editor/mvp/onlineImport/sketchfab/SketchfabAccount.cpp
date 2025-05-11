@@ -21,9 +21,7 @@
 
 #include "SketchfabAccount.h"
 
-#include <curlpp/Easy.hpp>
-#include <curlpp/Infos.hpp>
-#include <curlpp/Options.hpp>
+#include <curl/curl.h>
 #include <nlohmann/json.hpp>
 
 #include "EngineSDK/gltf/GltfModel.h"
@@ -31,13 +29,13 @@
 #include "Globals.h"
 #include "SketchfabCache.h"
 #include "SketchfabSearch.h"
+#include "Utils.h"
 
 namespace mer::editor::mvp {
 
 
 SketchfabAccount::SketchfabAccount() {
 	cache = std::make_shared<SketchfabCache>(Globals::getCachePath() / "SketchfabCache");
-	handle = std::make_unique<curlpp::internal::CurlHandle>();
 }
 
 std::shared_ptr<SketchfabAccount> SketchfabAccount::createFromFile(const std::filesystem::path &pFilePath,
@@ -133,24 +131,28 @@ sdk::ReportMessagePtr SketchfabAccount::getRequest(const std::string &pUrl, cons
 		pProgress.store(-1.0f);
 		sdk::Logger::out("Request: {}?{}", pUrl, pData);
 		auto startTime = std::chrono::steady_clock::now();
-		curlpp::Easy request(handle->clone());
-		request.setOpt(curlpp::options::Url(pUrl + "?" + pData));
+		std::unique_ptr<CURL, void (*)(CURL*)> request(curl_easy_init(), curl_easy_cleanup);
+		curl_easy_setopt(request.get(), CURLOPT_URL, (pUrl + "?" + pData).c_str());
 
 		std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
 		header.emplace_back("Authorization: " + tokenType + " " + accessToken);
-		request.setOpt(curlpp::options::HttpHeader(header));
+		auto curlList = Utils::getCurlList(header);
+		curl_easy_setopt(request.get(), CURLOPT_HTTPHEADER, curlList.get());
 		std::stringstream ss;
-		request.setOpt(curlpp::options::WriteStream(&ss));
-		curlpp::options::ProgressFunction progressBar(
-			[&pProgress](double pDltotal, double pDlnow, double /*ultotal*/, double /*ulnow*/) {
-				auto progress = static_cast<float>(pDlnow / pDltotal);
-				//sdk::Logger::out("Progress: {}", progress);
-				pProgress.store(progress);
-				return 0;
-			});
-		request.setOpt(curlpp::options::NoProgress(false));
-		request.setOpt(progressBar);
-		request.perform();
+		curl_easy_setopt(request.get(), CURLOPT_WRITEFUNCTION, Utils::streamWriteCallback);
+		curl_easy_setopt(request.get(), CURLOPT_WRITEDATA, static_cast<void*>(&ss));
+		curl_easy_setopt(request.get(), CURLOPT_NOPROGRESS, false);
+		curl_easy_setopt(request.get(), CURLOPT_XFERINFODATA, &pProgress);
+		curl_easy_setopt(request.get(), CURLOPT_XFERINFOFUNCTION,
+						 static_cast<curl_xferinfo_callback>(
+							 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/, curl_off_t /*ulnow*/) {
+								 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
+								 static_cast<std::atomic<float>*>(clientp)->store(progress);
+								 return 0;
+							 }));
+		curl_easy_perform(request.get());
+		curlList.reset();
+		request.reset();
 		auto endTime = std::chrono::steady_clock::now();
 		auto duration = endTime - startTime;
 
@@ -183,20 +185,15 @@ sdk::ReportMessagePtr SketchfabAccount::downloadImage(
 	}
 	try {
 		sdk::Logger::out("Downloading image: {}", pUrl);
-		//curlpp::
-		curlpp::Easy request(handle->clone());
-		request.setOpt(curlpp::options::Url(pUrl));
+		std::unique_ptr<CURL, void (*)(CURL*)> request(curl_easy_init(), curl_easy_cleanup);
+		curl_easy_setopt(request.get(), CURLOPT_URL, pUrl.c_str());
 
 		/*std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
 				request.setOpt(new curlpp::options::HttpHeader(header));*/
-		request.setOpt(curlpp::options::WriteFunction(
-			[&pUncompressedJpegData](const char* pBuf, const size_t pSize, const size_t pNmemb) -> size_t {
-				std::string str(pBuf, pSize * pNmemb);
-				pUncompressedJpegData.insert(pUncompressedJpegData.cend(), str.begin(), str.end());
-				return pSize * pNmemb;
-			}));
+		curl_easy_setopt(request.get(), CURLOPT_WRITEFUNCTION, Utils::rawDataWriteCallback);
+		curl_easy_setopt(request.get(), CURLOPT_WRITEDATA, &pUncompressedJpegData);
 
-		request.perform();
+		curl_easy_perform(request.get());
 
 	} catch (...) {
 		auto msg = sdk::ReportMessage::create();
@@ -208,24 +205,13 @@ sdk::ReportMessagePtr SketchfabAccount::downloadImage(
 	if ((pCache & CACHE_NO_SAVE) != CACHE_NO_SAVE) {
 		if (auto msg = cache->saveCache(pathToCache, pUncompressedJpegData)) { sdk::Logger::error(msg); }
 	}
-	/*uint64_t jpegSize = uncompressedJpegData.size();
-	std::vector<unsigned char> data;
-	unsigned char* compressedImage = uncompressedJpegData.data();
-	if (auto msg = decompressJpeg(compressedImage, jpegSize, data)) {
-		msg->setTitle("Image downloading error");
-		msg->addInfoLine("Address: {}", pUrl);
-		return msg;
-	}*/
 	return nullptr;
 }
 
 sdk::ReportMessagePtr SketchfabAccount::downloadModel(const std::string &pUrl,
 													  std::shared_ptr<std::iostream> &pStreamOut,
 													  std::atomic<float> &pProgress, const CacheSettings &pCache) {
-
 	pProgress.store(-1.0f);
-
-
 	std::string pathToCache;
 
 	if (size_t index = pUrl.find("archives/"); index != std::string::npos) {
@@ -243,23 +229,27 @@ sdk::ReportMessagePtr SketchfabAccount::downloadModel(const std::string &pUrl,
 	if (!hasCache) {
 		try {
 			sdk::Logger::out("Downloading model: {}", pUrl);
-			curlpp::Easy request(handle->clone());
-			request.setOpt(curlpp::options::Url(pUrl));
+			std::unique_ptr<CURL, void (*)(CURL*)> request(curl_easy_init(), curl_easy_cleanup);
+			curl_easy_setopt(request.get(), CURLOPT_URL, pUrl.c_str());
 
 			/*std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
 				request.setOpt(new curlpp::options::HttpHeader(header));*/
 			pStreamOut = std::make_shared<std::stringstream>();
-			request.setOpt(curlpp::options::WriteStream(pStreamOut.get()));
-			curlpp::options::ProgressFunction progressBar(
-				[&pProgress](double pDltotal, double pDlnow, double /*ultotal*/, double /*ulnow*/) {
-					pProgress = static_cast<float>(pDlnow / pDltotal);
-					return 0;
-				});
-			request.setOpt(curlpp::options::NoProgress(false));
-			request.setOpt(progressBar);
+
+			curl_easy_setopt(request.get(), CURLOPT_WRITEFUNCTION, Utils::streamWriteCallback);
+			curl_easy_setopt(request.get(), CURLOPT_WRITEDATA, pStreamOut.get());
+			curl_easy_setopt(request.get(), CURLOPT_NOPROGRESS, false);
+			curl_easy_setopt(request.get(), CURLOPT_XFERINFODATA, &pProgress);
+			curl_easy_setopt(request.get(), CURLOPT_XFERINFOFUNCTION,
+							 static_cast<curl_xferinfo_callback>(
+								 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/, curl_off_t /*ulnow*/) {
+									 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
+									 *static_cast<float*>(clientp) = progress;
+									 return 0;
+								 }));
 
 			//TODO use curl_multi_perform
-			request.perform();
+			curl_easy_perform(request.get());
 
 		} catch (...) {
 			pStreamOut.reset();

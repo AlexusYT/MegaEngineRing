@@ -110,6 +110,8 @@ add_library(
         mvp/editor/EditorUi.cpp
         mvp/editor/EditorUi.h
         mvp/sceneEditor/NodeSelectionHelper.h
+        Utils.cpp
+        Utils.h
 
 )
 target_compile_options(MegaEngineEditor_lib PRIVATE -Werror)
@@ -130,20 +132,15 @@ target_include_directories(
 )
 
 target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineSDK_shared)
-
+target_compile_definitions(MegaEngineEditor_lib PRIVATE GLM_ENABLE_EXPERIMENTAL)
 target_compile_features(MegaEngineEditor_lib PRIVATE cxx_std_23)
 
 target_link_libraries(MegaEngineEditor_lib PRIVATE ImGUI)
 target_link_libraries(MegaEngineEditor_lib PRIVATE ImGuiFileDialog)
-
-# this is heuristically generated, and may not be correct
-find_package(SQLiteCpp REQUIRED)
-target_link_libraries(MegaEngineEditor_lib PRIVATE SQLiteCpp)
 
 #find_package(nlohmann_json CONFIG REQUIRED)
 pkg_check_modules(nlohmann_json REQUIRED IMPORTED_TARGET nlohmann_json)
 target_link_libraries(MegaEngineEditor_lib PRIVATE ${nlohmann_json_LIBRARIES})
 set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
 
-find_package(unofficial-curlpp CONFIG REQUIRED)
-target_link_libraries(MegaEngineEditor_lib PRIVATE unofficial::curlpp::curlpp)
+target_link_libraries(MegaEngineEditor_lib PRIVATE curl)

@@ -10,23 +10,7 @@
 			"name": "dev-mode",
 			"hidden": true,
 			"cacheVariables": {
-				"MegaEngine_DEVELOPER_MODE": "ON",
-				"VCPKG_MANIFEST_FEATURES": "test"
-			}
-		},
-		{
-			"name": "vcpkg",
-			"hidden": true,
-			"cacheVariables": {
-				"CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake"
-			}
-		},
-		{
-			"name": "vcpkg-win64-static",
-			"hidden": true,
-			"cacheVariables": {
-				"VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic",
-				"VCPKG_HOST_TRIPLET": "x64-mingw-dynamic"
+				"MegaEngine_DEVELOPER_MODE": "ON"
 			}
 		},
 		{
@@ -75,7 +59,7 @@
 			"description": "Note that all the flags after /W4 are required for MSVC to conform to the language standard",
 			"hidden": true,
 			"cacheVariables": {
-				"CMAKE_CXX_FLAGS": "-fconcepts-diagnostics-depth=4 -Werror -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS=1 -fstack-protector-strong -fcf-protection=full -fstack-clash-protection -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor",
+				"CMAKE_CXX_FLAGS": "-fconcepts-diagnostics-depth=4 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS=1 -fstack-protector-strong -fcf-protection=full -fstack-clash-protection -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wcast-qual -Wformat=2 -Wundef -Wshadow -Wcast-align -Wunused -Wnull-dereference -Wdouble-promotion -Wimplicit-fallthrough -Wextra-semi -Woverloaded-virtual -Wnon-virtual-dtor",
 				"CMAKE_EXE_LINKER_FLAGS": "-Wl,--allow-shlib-undefined,--as-needed",
 				"CMAKE_SHARED_LINKER_FLAGS": "-Wl,--allow-shlib-undefined,--as-needed"
 			}
@@ -111,7 +95,10 @@
 				"ci-std"
 			],
 			"generator": "Ninja",
-			"hidden": true
+			"hidden": true,
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
 		},
 		{
 			"name": "coverage-linux",
@@ -168,7 +155,6 @@
 			"inherits": [
 				"ci-build",
 				"ci-linux",
-				"vcpkg",
 				"dev-mode"
 			]
 		},
@@ -177,7 +163,6 @@
 			"inherits": [
 				"ci-build",
 				"ci-win64",
-				"vcpkg",
 				"dev-mode"
 			]
 		}

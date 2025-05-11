@@ -23,8 +23,10 @@
 
 #include <epoxy/gl.h>
 
+#include "EngineSDK/buffers/Framebuffer.h"
 #include "EngineSDK/buffers/ProgramWideShaderBuffer.h"
 #include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
+#include "EngineSDK/gltf/GltfModel.h"
 #include "EngineSDK/prefabs/Prefab.h"
 #include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
 #include "EngineSDK/prefabs/elements/PrefabElement.h"
@@ -34,12 +36,6 @@
 #include "imgui_internal.h"
 #include "mvp/contexts/IWidgetContext.h"
 #include "mvp/sceneEditor/SceneOverlayElements.h"
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/euler_angles.hpp>
-#include <glm/gtx/matrix_decompose.hpp>
-
-#include "EngineSDK/buffers/Framebuffer.h"
-#include "EngineSDK/gltf/GltfModel.h"
 
 namespace mer::editor::mvp {
 ViewPrefabEditor::ViewPrefabEditor(const std::shared_ptr<IWidgetContext> &pContext)
@@ -272,7 +268,9 @@ void ViewPrefabEditor::updateElements(const std::shared_ptr<sdk::Prefab> &pSelec
 	static size_t selectedElementIndex = 0;
 	auto elements = pSelectedPrefab->getElements();
 	if (ImGui::BeginListBox("##ElementsListBox")) {
-		selectedElementIndex = std::clamp(selectedElementIndex, 0ul, std::max(elements.size() - 1ul, 0ul));
+		using size_type = decltype(elements)::size_type;
+		selectedElementIndex =
+			std::clamp<size_type>(selectedElementIndex, 0, std::max<size_type>(elements.size() - 1, 0));
 		for (size_t n = 0; auto element: elements | std::views::values) {
 			const bool isSelected = (selectedElementIndex == n);
 			std::string label = element->getName() + "##" + element->getUuid().toString();

@@ -19,8 +19,13 @@ include(cmake/variables.cmake)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(sigc++-3 REQUIRED IMPORTED_TARGET sigc++-3.0)
-
-find_package(PNG REQUIRED)
+pkg_check_modules(libcurl REQUIRED IMPORTED_TARGET libcurl)
+pkg_check_modules(libturbojpeg REQUIRED IMPORTED_TARGET libturbojpeg)
+if (WIN32)
+    pkg_check_modules(libspng REQUIRED IMPORTED_TARGET libspng)
+else ()
+    pkg_check_modules(spng REQUIRED IMPORTED_TARGET spng)
+endif ()
 find_package(glm CONFIG REQUIRED)
 pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 include(GNUInstallDirs)
@@ -32,7 +37,7 @@ add_subdirectory(submodules/glTF-SDK)
 target_include_directories(GLTFSDK SYSTEM PUBLIC "submodules/glTF-SDK/GLTFSDK/Inc/")
 target_compile_options(GLTFSDK PRIVATE -fPIC)
 
-add_library(ImGUI STATIC
+add_library(ImGUI OBJECT
         submodules/imgui/imgui.cpp
         submodules/imgui/imgui.h
         submodules/imgui/imgui_internal.h
@@ -46,6 +51,7 @@ target_compile_options(ImGUI PRIVATE -fPIC)
 target_compile_options(ImGUI BEFORE PRIVATE -w)
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui")
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui/backends")
+target_link_libraries(ImGUI PUBLIC glm::glm)
 
 target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/imconfig_custom.h>\"")
 
@@ -86,7 +92,7 @@ if (WIN32)
             POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
             DIRECTORIES $<TARGET_FILE_DIR:MegaEngineEditor>
             $<TARGET_FILE_DIR:MegaEngineSDK_shared>
-            "C:\\msys64\\mingw64\\bin"
+            $ENV{PATH}
     )
 else ()
 

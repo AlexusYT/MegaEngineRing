@@ -28,7 +28,7 @@ Light::Light(const std::string &pName) : name(pName) {
 	data.colorAndType = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
 	data.intensity = 1.0f;
 	data.innerConeAngle = 0.0f;
-	data.outerConeAngle = M_PI_4f;
+	data.outerConeAngle = std::numbers::pi_v<float> / 4.0f;
 }
 
 void Light::serialize(nlohmann::json &pJson) { pJson["name"] = name; }
@@ -61,7 +61,7 @@ void Light::deserialize(const nlohmann::json &pJson) {
 
 	if (getType() == LightType::SPOT) {
 		float innerConeAngle = 0.0f;
-		float outerConeAngle = M_PI_4f;
+		float outerConeAngle = std::numbers::pi_v<float> / 4.0f;
 		if (auto iter = pJson.find("spot"); iter != pJson.end()) {
 			auto &val = iter.value();
 			if (auto innerIter = val.find("innerConeAngle"); innerIter != val.end())
@@ -69,8 +69,8 @@ void Light::deserialize(const nlohmann::json &pJson) {
 			if (auto innerIter = val.find("outerConeAngle"); innerIter != val.end())
 				innerIter.value().get_to(outerConeAngle);
 		}
-		innerConeAngle = std::clamp(innerConeAngle, 0.0f, M_PI_2f);
-		outerConeAngle = std::clamp(outerConeAngle, 0.0f, M_PI_2f);
+		innerConeAngle = std::clamp(innerConeAngle, 0.0f, std::numbers::pi_v<float> / 2.0f);
+		outerConeAngle = std::clamp(outerConeAngle, 0.0f, std::numbers::pi_v<float> / 2.0f);
 		setInnerConeAngle(innerConeAngle);
 		setOuterConeAngle(outerConeAngle);
 	}

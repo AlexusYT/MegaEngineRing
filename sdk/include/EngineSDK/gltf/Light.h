@@ -123,7 +123,7 @@ public:
 	[[nodiscard]] float getOuterConeAngle() const { return data.outerConeAngle; }
 
 	void setOuterConeAngle(float pOuterConeAngle) {
-		pOuterConeAngle = std::clamp(pOuterConeAngle, data.innerConeAngle, M_PI_2f);
+		pOuterConeAngle = std::clamp(pOuterConeAngle, data.innerConeAngle, std::numbers::pi_v<float> / 2.0f);
 		if (data.outerConeAngle == pOuterConeAngle) return;
 		data.outerConeAngle = pOuterConeAngle;
 		onLightChanged(this);

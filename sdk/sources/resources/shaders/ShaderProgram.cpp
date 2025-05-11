@@ -132,7 +132,7 @@ void ShaderProgram::onUninitialize() {
 	if (name != 0) glDeleteProgram(name);
 }
 
-void ShaderProgram::addReportInfo(const ReportMessagePtr &pMsg) {
+void ShaderProgram::addReportInfo(const ReportMessagePtr &pMsg) const {
 	Resource::addReportInfo(pMsg);
 	pMsg->addInfoLine("Attached shaders:");
 	for (auto shader: attachedShaders) { shader->addReportInfo(pMsg); }

@@ -25,10 +25,8 @@
 
 #include "EngineUtils/utils/IReportable.h"
 
-
-class UUID;
-
 namespace mer::sdk {
+class UUID;
 enum class ResourceType;
 
 class IResource : public IReportable {

@@ -28,7 +28,6 @@
 #include <EngineUtils/utils/ReportMessage.h>
 #include <filesystem>
 #include <fstream>
-#include <glm/ext.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -39,6 +38,5 @@
 #include <unordered_map>
 #include <vector>
 
-#include "ImGuiFileDialog.h"
 
 #endif //COMMON_H

@@ -22,10 +22,8 @@
 #ifndef IPREFABINSTANCE_H
 #define IPREFABINSTANCE_H
 
-
-class UUID;
-
 namespace mer::sdk {
+class UUID;
 class PrefabElementInstance;
 
 class IPrefabInstance {

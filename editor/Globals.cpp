@@ -26,7 +26,9 @@ void Globals::init() {
 
 	const auto local = getenv("LOCALAPPDATA");
 	if (!local) throw std::runtime_error("Error while getting LOCALAPPDATA");
-	logPath = std::filesystem::path(local) / "MegaEngineRing/logs";
+	cachePath = std::filesystem::path(local) / "MegaEngineRing";
+	create_directories(cachePath);
+	logPath = cachePath / "logs";
 	create_directories(logPath);
 
 	const auto home = getenv("USERPROFILE");
@@ -38,8 +40,6 @@ void Globals::init() {
 	if (!config) throw std::runtime_error("Error while getting APPDATA");
 	configPath = std::filesystem::path(config) / "MegaEngineRing";
 	create_directories(configPath);
-	cachePath = home / ".cache/MegaEngineRing/";
-	create_directories(cachePath);
 
 	#else
 

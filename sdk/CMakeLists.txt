@@ -234,10 +234,11 @@ foreach (HEADER IN ITEMS ${ENGINE_HEADERS})
     endif ()
 endforeach ()
 
-add_library(MegaEngineSDK_shared SHARED ${ENGINE_SOURCES} imconfig_custom.cpp ${ENGINE_HEADERS})
+add_library(MegaEngineSDK_shared STATIC ${ENGINE_SOURCES} imconfig_custom.cpp ${ENGINE_HEADERS})
 
 target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
 
+target_compile_definitions(MegaEngineSDK_shared PUBLIC GLM_ENABLE_EXPERIMENTAL)
 target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
 
 target_link_libraries(MegaEngineSDK_shared PRIVATE ImGUI)
@@ -248,8 +249,6 @@ if (LINUX)
 else ()
     target_link_libraries(MegaEngineSDK_shared PUBLIC glfw3)
 endif ()
-
-find_path(PNGPP_INCLUDE_DIRS "png++/color.hpp")
 
 target_precompile_headers(MegaEngineSDK_shared
         PRIVATE common.h
@@ -263,8 +262,7 @@ target_include_directories(
 target_link_libraries(MegaEngineSDK_shared PUBLIC PkgConfig::epoxy)
 target_link_libraries(MegaEngineSDK_shared PUBLIC glm::glm)
 target_link_libraries(MegaEngineSDK_shared PUBLIC stdc++exp MegaEngineUtils)
-target_include_directories(MegaEngineSDK_shared SYSTEM PUBLIC ${PNGPP_INCLUDE_DIRS})
-target_link_libraries(MegaEngineSDK_shared PUBLIC PNG::PNG)
+target_link_libraries(MegaEngineSDK_shared PUBLIC spng)
 target_link_libraries(MegaEngineSDK_shared PUBLIC GLTFSDK)
 
 set_property(TARGET MegaEngineSDK_shared PROPERTY OUTPUT_NAME MegaEngineSDK)
@@ -282,7 +280,6 @@ if (WIN32)
             POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
             DIRECTORIES
             $<TARGET_FILE_DIR:MegaEngineSDK_shared>
-            "C:\\msys64\\mingw64\\bin"
             ARCHIVE
             DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
             COMPONENT sdk

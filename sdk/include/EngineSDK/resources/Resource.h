@@ -26,10 +26,8 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 #include "IResource.h"
 
-
-class UUID;
-
 namespace mer::sdk {
+class UUID;
 
 class Resource : public IResource, public Initializable, public IPropertyProvider {
 	std::vector<PropertyBase*> properties;
@@ -65,7 +63,7 @@ public:
 
 	[[nodiscard]] bool isIncomplete() const final { return incomplete; }
 
-	void addReportInfo(const ReportMessagePtr &pMsg) override;
+	void addReportInfo(const ReportMessagePtr &pMsg) const override;
 
 private:
 	void setIncomplete(const bool pIncomplete) final { incomplete = pIncomplete; }

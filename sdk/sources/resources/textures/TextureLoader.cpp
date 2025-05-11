@@ -21,15 +21,14 @@
 
 #include "EngineSDK/resources/textures/TextureLoader.h"
 
-#include "png++/png.hpp"
-#include "EngineUtils/utils/ReportMessage.h"
 #include "EngineSDK/resources/textures/Texture2DImageFormat.h"
 #include "EngineSDK/resources/textures/Texture2DType.h"
 #include "EngineSDK/resources/textures/TextureResource.h"
+#include "EngineUtils/utils/ReportMessage.h"
 
 namespace mer::sdk {
 
-template<typename PixelType>
+/*template<typename PixelType>
 std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, std::istream &pStream) {
 	std::vector<PixelType> pixelsOut;
 	pixelsOut.resize(pWidth * pHeight);
@@ -40,14 +39,14 @@ std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, s
 			   static_cast<uint32_t>(pWidth * sizeof(PixelType)));
 	}
 	return pixelsOut;
-}
+}*/
 
 std::shared_ptr<IResource> TextureLoader::createResource() { return TextureResource::create(); }
 
 ReportMessagePtr TextureLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
-											std::shared_ptr<std::istream> &pStream,
-											const std::shared_ptr<IResource> &pResource) {
-	auto resource = std::dynamic_pointer_cast<TextureResource>(pResource);
+									 std::shared_ptr<std::istream> & /*pStream*/,
+									 const std::shared_ptr<IResource> & /*pResource*/) {
+	/*auto resource = std::dynamic_pointer_cast<TextureResource>(pResource);
 
 	try {
 		if (pStream->get() == std::istream::traits_type::eof()) return nullptr;
@@ -86,7 +85,7 @@ ReportMessagePtr TextureLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
 		msg->setTitle("Failed to load texture resource");
 		msg->setMessage("Exception thrown while parsing");
 		return msg;
-	}
+	}*/
 	return nullptr;
 }
 
