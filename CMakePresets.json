@@ -95,7 +95,10 @@
 				"ci-std"
 			],
 			"generator": "Ninja",
-			"hidden": true
+			"hidden": true,
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
+			}
 		},
 		{
 			"name": "coverage-linux",
