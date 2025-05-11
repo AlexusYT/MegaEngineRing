@@ -35,7 +35,7 @@ jobs:
       - name: Configure CMake
         shell: msys2 {0}
         run: |
-          cmake "-DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.install-output-dir }} -B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-windows" "-S ${{ github.workspace }}" -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          cmake " -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=${{ steps.strings.outputs.install-output-dir }} -B ${{ steps.strings.outputs.build-output-dir }}" "--preset=ci-windows" "-S ${{ github.workspace }}"
 
       - name: Build
         shell: msys2 {0}
