@@ -71,6 +71,8 @@ jobs:
       - name: Build
         run: |
           echo "/c/msys64/usr/bin:/c/msys64/bin:/c/msys64/mingw64/bin:" >> $GITHUB_PATH
+          echo  $GITHUB_PATH
+          echo  $PATH
           cmake --build ${{ steps.strings.outputs.build-output-dir }} --target install #--config ${{ matrix.build_type }}
 
         #- name: Test
