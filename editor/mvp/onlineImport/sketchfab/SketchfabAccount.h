@@ -20,9 +20,9 @@
 //
 
 #ifndef SKETCHFABACCOUNT_H
-	#define SKETCHFABACCOUNT_
-	#include <nlohmann/json_fwd.hpp>
+#define SKETCHFABACCOUNT_H
 #include <atomic>
+#include <nlohmann/json_fwd.hpp>
 
 namespace mer::sdk {
 class GltfModel;
