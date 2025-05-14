@@ -45,7 +45,8 @@ to <alexus.github@mail.ru>.
 
 ## I Have a Question
 
-> If you want to ask a question, we assume that you have read the available [Documentation]().
+> If you want to ask a question, we assume that you have read the
+> available [Documentation](https://alexusyt.github.io/MegaEngineRing/).
 
 Before you ask a question, it is best to search for existing [Issues](https://github.com/AlexusYT/MegaEngineRing/issues)
 that might help you. In case you have found a suitable issue and still need clarification, you can write your question
@@ -92,7 +93,8 @@ following steps in advance to help us fix any potential bug as fast as possible.
 
 - Make sure that you are using the latest version.
 - Determine if your bug is really a bug and not an error on your side, e.g. using incompatible environment
-  components/versions (Make sure that you have read the [documentation](). If you are looking for support, you might
+  components/versions (Make sure that you have read the [documentation](https://alexusyt.github.io/MegaEngineRing/). If
+  you are looking for support, you might
   want to check [this section](#i-have-a-question)).
 - To see if other users have experienced (and potentially already solved) the same issue you are having, check if there
   is not already a bug report existing for your bug or error in
@@ -146,7 +148,8 @@ community to understand your suggestion and find related suggestions.
 #### Before Submitting an Enhancement
 
 - Make sure that you are using the latest version.
-- Read the [documentation]() carefully and find out if the functionality is already covered, maybe by an individual
+- Read the [documentation](https://alexusyt.github.io/MegaEngineRing/) carefully and find out if the functionality is
+  already covered, maybe by an individual
   configuration.
 - Perform a [search](https://github.com/AlexusYT/MegaEngineRing/issues) to see if the enhancement has already been
   suggested. If it has, add a comment to the existing issue instead of opening a new one.
@@ -177,17 +180,16 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/Alexus
 
 ### Your First Code Contribution
 
-To help the project, you will probably need to set up the environment and IDE.
+To help the project, you will need to set up the environment and IDE.
 
 > The following instruction is intended for Linux, but for Windows, it should be similar.
 
 1. Select the IDE that you will use. The author uses CLion.
 2. Clone the repository into your IDE.
-3. Set up the environment. The process is described in the file [README.md](README.md#installing).
+3. Set up the environment (tools and libraries). The process is described in
+   here [README.md](README.md#required-software-and-libraries).
    If you have selected CLion and installed all the tools and libraries on your computer, then the IDE setup will be
-   only in specifying the path to CMake, Ninja, vcpkg and GCC.
-   Configuring CLion to use a Docker container can be challenging because the IDE is trying to run
-   the application is in this container.
+   only in specifying the path to CMake, Ninja and GCC.
 4. Create your presets in the CMakeUserPresets.json in the project root:
 
 ```json
@@ -202,20 +204,10 @@ To help the project, you will probably need to set up the environment and IDE.
 		{
 			"name": "dev",
 			"binaryDir": "${sourceDir}/build/dev",
-			"inherits": [
-				"dev-mode",
-				"vcpkg",
-				"ci-linux"
-			],
+			"inherits": "ci-ubuntu",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Debug",
 				"CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-			},
-			"environment": {
-				"VCPKG_INSTALLATION_ROOT": "<PATH-TO-VCPKG>",
-				"CC": "<PATH-TO-GCC-COMPILER>",
-				"CXX": "<PATH-TO-G++-COMPILER>",
-				"LD_LIBRARY_PATH": "<PATH-TO-GCC-LIB64>"
 			}
 		}
 	],
@@ -245,13 +237,8 @@ To help the project, you will probably need to set up the environment and IDE.
 
 ```
 
-Specify this environment variables only if CMake cannot find the required tools.
-
-* `<PATH-TO-VCPKG>` is a path to vcpkg installation.
-* `<PATH-TO-GCC-COMPILER>` is a C compiler executable.
-* `<PATH-TO-G++-COMPILER>` is a C++ compiler executable.
-* `<PATH-TO-GCC-LIB64>` path to directory that contains libstdc++.so.6.
-
+Change `"inherits": "ci-ubuntu"` to `"inherits": "ci-windows"` if you're on Windows.
+<!--
 If your IDE doesn't support CMake, you can use the following commands:
 
 * to generate the build files
@@ -265,6 +252,7 @@ cmake --preset dev -S ./ -B build/dev
 ```shell
 cmake --build --target {TARGET} --preset dev
 ```
+-->
 
 ### Improving The Documentation
 

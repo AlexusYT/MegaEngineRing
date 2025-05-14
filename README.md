@@ -1,130 +1,181 @@
 # MegaEngineRing
 
-MegaEngineRing is a game engine, written on C++.
+[![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](LICENSE)
+[![C++](https://img.shields.io/badge/C++-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
+[![CMake on multiple platforms](https://github.com/AlexusYT/MegaEngineRing/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/AlexusYT/MegaEngineRing/actions/workflows/cmake-multi-platform.yml)
 
-As of October 30, 2024, the engine is at the concept stage.
+MegaEngineRing is a modern C++ game engine focused on performance and extensibility. The engine provides a comprehensive
+set of tools and features for game development, including 3D model support, scene editing, and integration with popular
+3D model platforms.
 
-The project consists of some components:
+## 🚧 Project Status
 
-* Projects Editor
-* Engine SDK
-* Utils
+Currently in early development (Alpha). While core functionality is being implemented, the engine is not yet ready for
+production use.
 
-# INSTALLING
+## ✨ Features
 
-## Windows
+- Modern C++23 codebase
+- 3D model loading and manipulation
+- [SketchFab.com](https://sketchfab.com/) integration
+- Scene editor with real-time preview
 
-Installing on the Windows is currently unsupported, but with some minor you can do that.
+## 📸 Screenshots & Features
 
-## Linux
+### SketchFab Integration
 
-### 1. Preparing
+![SketchFab Integration](docs/images/SketchFabIntegration.png)
+*SketchFab model browser with search capabilities (Under development)*
 
-To install it on Linux (tested on Ubuntu 23.10, but should work on earlier versions), you need:
+### Model Preview
 
-- [gcc](https://gcc.gnu.org/) 14+ (or 12+ with --enable-libstdcxx-backtrace=yes)
-- [CMake](https://cmake.org/)* v3.27+
-- [ninja](https://github.com/ninja-build/ninja) v1.11.1
-- [vcpkg](https://github.com/microsoft/vcpkg)
+![Model Preview](docs/images/ModelPreview.png)
+*3D model preview window with customizable viewing options*
 
-*It is very likely that earlier versions of CMake can be used, but this has not been tested yet.
+### Scene Editor
 
-Also, you may need to install some additional libraries for project dependencies:
+![Scene Editor](docs/images/SceneEditor.png)
+*Scene editor for game environment creation*
 
-- libx11-dev
-- libxft-dev
-- libxext-dev
-- libxinerama-dev
-- libxcursor-dev
-- xorg-dev
-- libglu1-mesa-dev
+## 🔧 Prerequisites
 
-Install it with
+### System Requirements
 
-```shell
-sudo apt install libx11-dev libxft-dev libxext-dev libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev
+- 4GB RAM (minimum)
+- Graphics card with OpenGL 4.5+ support
+- 1GB free disk space
+
+### Required Software and Libraries
+
+Currently, only Windows and Linux are supported.
+
+> If you want to set up the engine devenv, see the [Contributing](CONTRIBUTING.md#your-first-code-contribution) file.
+
+- [GCC](https://gcc.gnu.org/) 14+ or compatible compiler
+- [CMake](https://cmake.org/) 3.14+
+- [Ninja](https://github.com/ninja-build/ninja) build system
+- [MSYS2](https://www.msys2.org/#installation) (Windows only)
+- pkgconf
+- libsigc++-3.0
+- libspng
+- libjpeg-turbo
+- glm
+- libepoxy
+- glfw
+- nlohmann-json
+- gtest
+- curl-gnutls
+- openssl
+- zlib
+
+For Linux:
+
+```bash
+sudo apt-get install g++ cmake ninja-build libxi-dev libx11-dev libxft-dev libxext-dev  libxinerama-dev xorg-dev libglu1-mesa-dev libxcursor-dev libxdamage-dev libsigc++-3.0-dev libspng-dev libturbojpeg0-dev libglm-dev libepoxy-dev libglfw3-dev nlohmann-json3-dev libgtest-dev libgmock-dev libcurl4-gnutls-dev
 ```
 
-### 2. Configuring
+For Windows (In Mingw64 shell):
 
-First of all, you need to specify the path to the vcpkg using VCPKG_INSTALLATION_ROOT env variable. For example,
-
-```shell
-export VCPKG_INSTALLATION_ROOT="/home/builder/vcpkg"
+```bash
+pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsigc++-3.0 mingw-w64-x86_64-libspng  mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-glm mingw-w64-x86_64-libepoxy mingw-w64-x86_64-glfw mingw-w64-x86_64-nlohmann-json mingw-w64-x86_64-gtest mingw-w64-x86_64-curl-gnutls mingw-w64-x86_64-openssl mingw-w64-x86_64-zlib
 ```
 
-And for gcc:
+### Building
 
-```shell
-export CXX="/home/builder/gcc/bin/g++"
+#### Step 1. Preparing
+
+> Note that the project uses some git submodules, so remember to clone them too!
+
+Here is the list of submodules:
+
+- [glTF-SDK](https://github.com/AlexusYT/glTF-SDK) (forked from [original](https://github.com/microsoft/glTF-SDK) repo)
+	- [rapidjson](https://github.com/AlexusYT/rapidjson) (forked from [original](https://github.com/Tencent/rapidjson)
+	  repo)
+	- [googletest](https://github.com/google/googletest)
+- [imgui](https://github.com/ocornut/imgui)
+- [ImGuiFileDialog](https://github.com/aiekick/ImGuiFileDialog)
+
+Clone the repository with the submodules into a directory:
+
+```bash
+git clone --recurse-submodules -j4 https://github.com/AlexusYT/MegaEngineRing.git
+cd MegaEngineRing
 ```
 
-Run the following command in the project root:
+#### Step 2. Configuring
 
-```shell
-cmake -DCMAKE_INSTALL_PREFIX={INSTALLATION_PATH} --preset ci-ubuntu -S ./ -B build/ci-ubuntu
+For Windows:
+
+```bash
+cmake -B "build/" --preset=ci-windows
 ```
 
-Replace the {INSTALLATION_PATH} with your path. It's optional. Default path is `/usr/local`. For more info,
+For Linux:
+
+```bash
+cmake -B "build/" --preset=ci-ubuntu
+```
+
+where ` -B "build/"` is a path to build directory.
+
+If you need to install the engine to different from default* directory, use
+`-DCMAKE_INSTALL_PREFIX` flag.
+For example, to install the program at the repository root:
+
+```bash
+cmake -DCMAKE_INSTALL_PREFIX="install/" -B "build/" ...
+```
+
+For more info,
 see [CMake Documentation](https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html)
 and [GNU Coding Standards](https://www.gnu.org/prep/standards/html_node/Directory-Variables.html).
 
-Also, you can change a binary, sdk and resources installation path:
+*Default directory for Windows is `C:\Program Files` and for Linux is `/usr/local`.
 
-* `CMAKE_INSTALL_LOCALSTATEDIR` for sdk installation path. Default is `$(prefix)/var`
-* `CMAKE_INSTALL_DATADIR` for resource installation path. Default is `$(datarootdir)`
-* `CMAKE_INSTALL_BINDIR` for binary installation path. Default is `$(exec_prefix)/bin`
+#### Step 3. Building and Installing
 
-CMake will run vcpkg to install the required dependencies.
-
-### 3. Building and Installing
-
-To build and install the whole project, run
+To build and install the project, run
 
 ```shell
-cmake --build build/ci-ubuntu
-cmake --install build/ci-ubuntu
+cmake --build build/ -j 4
+cmake --install build/
 ```
 
-If you want to build and install only a specific program component
+You will see the compiler warnings and notes when compiling the third-party libraries.
+This is the normal behavior, you should ignore it.
 
-```shell
-cmake --build build/ci-ubuntu --target={TARGET}
-cmake --install build/ci-ubuntu --component={COMPONENT}
-```
+> Note that the installation script does not add a desktop icon and uninstall scripts.
+> Here is
+> the [issue](https://github.com/AlexusYT/MegaEngineRing/issues/80)
+> about that.
 
-| Program component | {TARGET}         | {COMPONENT} |
-|-------------------|------------------|-------------|
-| SDK               | MegaEngineSDK    | sdk         |
-| Editor            | MegaEngineEditor | editor      |
+## Quick Start Guide
 
-If you encounter any problems, please feel free to create a new issue.
+_To be filled_
 
-### 4. Running
+## Documentation
 
-> MegaEngineSDK target now links to MegaEngineEditor directly, so no need to manually specify `--sdk-path` or
-`--sdk-version`
+Engine documentation stored on the repository [GitHub Pages](https://alexusyt.github.io/MegaEngineRing/)
+(Maybe a bit outdated).
 
+## Support
 
-~~Editor requires SDK to run. Normally it installs to `/usr/local/var/MegaEngineRing/sdk`. If SDK not found at this
-path,
-you can specify a path to SDK directory and SDK version manually.~~
+If you have a question, suggestion, or problem with the program, feel free to create an issue.
 
-* ~~`--sdk-path` to set a path to SDK directory.~~
-* ~~`--sdk-version` to set an SDK version. By default, it is randomly selected. Currently only `0.1.0` version is
-  available, so it's not a big problem.~~
+<!--
+Add issues templates and describe them here.
+-->
 
-### Another way
+## Roadmap
 
-To simplify the installation process, I created the [Dockerfile](Dockerfile), that can build image for your Docker with
-all necessary libraries and tools.
-
-Note that the image creation process can take about an hour, but you can find the already created image
-[here](https://hub.docker.com/r/alexusxx/mer-builder). How to use it is described in the Overview section.
-
-## MacOS
-
-Installing on the macOS is currently unsupported.
+- Fill the Quick Start Guide and Roadmap sections of README
+- Embed glTF-SDK code into engine codebase .
+	- Make glTF-SDK to use nlohmann-json instead of
+	  rapidjson ([#76](https://github.com/AlexusYT/MegaEngineRing/issues/79)).
+- Add packaging with CPack to simplify the delivery to
+  end-user ([#80](https://github.com/AlexusYT/MegaEngineRing/issues/80)).
+-
+- _To be filled..._
 
 # CONTRIBUTING
 
