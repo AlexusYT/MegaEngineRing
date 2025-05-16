@@ -15,10 +15,9 @@ if (NOT IS_DIRECTORY "${mcss_SOURCE_DIR}")
     file(MAKE_DIRECTORY "${mcss_SOURCE_DIR}")
     file(
             DOWNLOAD
-            https://github.com/friendlyanon/m.css/releases/download/release-1/mcss.zip
+            https://github.com/mosra/m.css/archive/refs/heads/master.zip
             "${mcss_SOURCE_DIR}/mcss.zip"
             STATUS status
-            EXPECTED_MD5 00cd2757ebafb9bcba7f5d399b3bec7f
     )
     if (NOT status MATCHES "^0;")
         message(FATAL_ERROR "Download failed with ${status}")
@@ -97,13 +96,25 @@ foreach (file IN ITEMS Doxyfile conf.py)
     configure_file("${src}/docs/${file}.in" "${bin}/docs/${file}" @ONLY)
 endforeach ()
 
-set(mcss_script "${mcss_SOURCE_DIR}/documentation/doxygen.py")
+set(mcss_script "${mcss_SOURCE_DIR}/m.css-master/documentation/doxygen.py")
+set(postprocess_script "${mcss_SOURCE_DIR}/m.css-master/css/postprocess.py")
 set(config "${bin}/docs/conf.py")
 
 file(REMOVE_RECURSE "${out}/html" "${out}/xml")
+execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/custom-pages" "html"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/templates" "templates"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/css" "css"
+        COMMAND "${Python3_EXECUTABLE}" "${postprocess_script}" "m-dark.css" --output=m-dark.compiled.css
+        WORKING_DIRECTORY "${bin}/docs"
+)
+execute_process(
+        COMMAND "${Python3_EXECUTABLE}" "${postprocess_script}" "m-dark.css" --output=m-dark.compiled.css
+        WORKING_DIRECTORY "${bin}/docs/css"
+)
 
 execute_process(
-        COMMAND "${Python3_EXECUTABLE}" "${mcss_script}" "${config}"
+        COMMAND "${Python3_EXECUTABLE}" "${mcss_script}" --templates=templates/doxygen "${config}"
         WORKING_DIRECTORY "${bin}/docs"
         RESULT_VARIABLE result
 )

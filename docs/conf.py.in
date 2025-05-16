@@ -1,6 +1,13 @@
 DOXYFILE = 'Doxyfile'
 
+STYLESHEETS=[
+    'css/m-dark.compiled.css'
+]
 LINKS_NAVBAR1 = [
-    (None, 'pages', [(None, 'about')]),
-    (None, 'namespaces', []),
+]
+LINKS_NAVBAR2 = [
+    #('Гайды', 'guides', [('Управление ресурсами', 'about')]),
+    #('Пространства имён', 'namespaces', []),
+    #('Классы', 'annotated', []),
+    #('Файлы', 'files', [])
 ]

@@ -8,8 +8,7 @@ endif ()
 include(FetchContent)
 FetchContent_Declare(
         mcss URL
-        https://github.com/friendlyanon/m.css/releases/download/release-1/mcss.zip
-        URL_MD5 00cd2757ebafb9bcba7f5d399b3bec7f
+        https://github.com/mosra/m.css/archive/refs/heads/master.zip
         SOURCE_DIR "${PROJECT_BINARY_DIR}/mcss"
         UPDATE_DISCONNECTED YES
         ${extract_timestamps}
@@ -21,17 +20,18 @@ find_package(Python3 3.6 REQUIRED)
 # ---- Declare documentation target ----
 
 set(
-        DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/sdk/docs"
+        DOXYGEN_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/docs"
         CACHE PATH "Path for the generated Doxygen documentation"
 )
 
-set(working_dir "${PROJECT_BINARY_DIR}/sdk/docs")
+set(working_dir "${PROJECT_BINARY_DIR}/docs")
 
 foreach (file IN ITEMS Doxyfile conf.py)
-    configure_file("sdk/docs/${file}.in" "${working_dir}/${file}" @ONLY)
+    configure_file("docs/${file}.in" "${working_dir}/${file}" @ONLY)
 endforeach ()
 
 set(mcss_script "${mcss_SOURCE_DIR}/documentation/doxygen.py")
+set(postprocess_script "${mcss_SOURCE_DIR}/css/postprocess.py")
 set(config "${working_dir}/conf.py")
 
 add_custom_target(
@@ -40,8 +40,13 @@ add_custom_target(
         "${DOXYGEN_OUTPUT_DIRECTORY}/html"
         "${DOXYGEN_OUTPUT_DIRECTORY}/xml"
         "${DOXYGEN_OUTPUT_DIRECTORY}/templates"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/sdk/docs/templates" "${DOXYGEN_OUTPUT_DIRECTORY}/templates"
-        COMMAND "${Python3_EXECUTABLE}" "${mcss_script}" --templates=templates/doxygen --debug "${config}"
+        "${DOXYGEN_OUTPUT_DIRECTORY}/css"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/custom-pages" "${DOXYGEN_OUTPUT_DIRECTORY}/html"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/templates" "${DOXYGEN_OUTPUT_DIRECTORY}/templates"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/css" "${DOXYGEN_OUTPUT_DIRECTORY}/css"
+        COMMAND cd css && "${Python3_EXECUTABLE}" "${postprocess_script}" "m-dark.css" --output=m-dark.compiled.css
+        COMMAND cd ../ && "${Python3_EXECUTABLE}" "${mcss_script}" --templates=templates/doxygen "${config}"
+
         COMMENT "Building documentation using Doxygen and m.css"
         WORKING_DIRECTORY "${working_dir}"
         VERBATIM
