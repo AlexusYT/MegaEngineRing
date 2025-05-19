@@ -103,6 +103,7 @@ set(config "${bin}/docs/conf.py")
 file(REMOVE_RECURSE "${out}/html" "${out}/xml")
 execute_process(
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/custom-pages" "html"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/images" "html/images"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/templates" "templates"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/css" "css"
         COMMAND "${Python3_EXECUTABLE}" "${postprocess_script}" "m-dark.css" --output=m-dark.compiled.css

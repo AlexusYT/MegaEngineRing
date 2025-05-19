@@ -3,136 +3,153 @@
 <head>
     <script>
 
-        var pageAddress = undefined;
-        var pageName = undefined;
-        var userLang = "";
-        function fillPageInfo(){
-            anchorStr = "";
-            if(window.location.href.includes("docs/html")){
+        let pageAddress = undefined;
+        let pageName = undefined;
+        let userLang = "";
+
+        function fillPageInfo() {
+            let anchorStr = "";
+            if (window.location.href.includes("docs/html")) {
                 anchorStr = "docs/html";
-            }else if(window.location.href.includes("{{ PROJECT_NAME }}")){
+            } else if (window.location.href.includes("{{ PROJECT_NAME }}")) {
                 anchorStr = "{{ PROJECT_NAME }}";
             }
 
-            pathname = window.location.pathname;
-            idx = pathname.indexOf(anchorStr)+anchorStr.length;
+            let pathname = window.location.pathname;
+            let idx = pathname.indexOf(anchorStr) + anchorStr.length;
             pageAddress = pathname.substring(0, idx);
             pageName = pathname.substring(idx);
 
-            var browserLang = (navigator.language || navigator.userLanguage).split("-")[0];
-            if(browserLang == "ru") userLang = "ru";
+            let browserLang = (navigator.language || navigator.userLanguage).split("-")[0];
+            if (browserLang === "ru") userLang = "ru";
             else userLang = "en";
         }
+
         fillPageInfo();
 
         loadContent(getContentName(), getContentLang());
 
-        function getContentName(){
+        function getContentName() {
             const params = new URLSearchParams(window.location.search);
             const pageParam = params.get("page");
-            if(pageParam != null && pageParam != ""){
+            if (pageParam != null && pageParam !== "") {
                 return pageParam;
-            }else
+            } else
                 return "index";
         }
-        function getContentLang(){
+
+        function getContentLang() {
             const params = new URLSearchParams(window.location.search);
             const langParam = params.get("lang");
-            if(langParam != null && langParam != ""){
+            if (langParam != null && langParam !== "") {
                 return langParam;
-            }else
+            } else
                 return userLang;
         }
 
-        function switchContent(newContent){
-            switchContent(newContent, null);
-        }
-
-        function switchContent(newContent, language){
-            lang = language == null ? getContentLang() : language;
-            history.pushState({"page":newContent, "language":lang}, "", "?page="+newContent+"&lang="+lang)
+        function switchContent(newContent, language = null) {
+            if (newContent == null || newContent === '') return;
+            let lang = language == null ? getContentLang() : language;
+            history.pushState({"page": newContent, "language": lang}, "", "?page=" + newContent + "&lang=" + lang)
             loadContent(newContent, lang)
         }
 
         window.onpopstate = (event) => {
-            if(event.state == null) return;
+            if (event.state == null) return;
             loadContent(event.state["page"], event.state["language"]);
         };
 
-        function loadContent(ajaxPage, language){
-            ReadFile(pageAddress+"/"+ajaxPage+"-"+language+".html", "main-content");
+        function loadContent(ajaxPage, language) {
+            ReadFile(pageAddress + "/" + ajaxPage + "-" + language + ".html", "main-content");
+            updateSiteNavbar(language, ajaxPage);
         }
 
-        function setLang(newLang){
-            pageLang = getContentLang();
-            if(newLang == pageLang) return;
-            updateSiteLanguage(newLang);
+        function setLang(newLang) {
+            const pageLang = getContentLang();
+            if (newLang === pageLang) return;
             switchContent(getContentName(), newLang);
         }
 
-        window.onload = function() {
-            updateSiteLanguage(getContentLang());
+        window.onload = function () {
+            updateSiteNavbar(getContentLang(), getContentName());
         }
-        function updateSiteLanguage(pageLang){
 
-            var mainPageLink = document.getElementById("main-page").firstElementChild;
-            var guidePageLink = document.getElementById("guide-page").firstElementChild;
-            var docPageLink = document.getElementById("documentation-page").firstElementChild;
+        function updateSiteNavbar(pageLang, currentContent) {
+            if (document.getElementById("navigation") == null) return
+            const mainPageLink = document.getElementById("main-page").firstElementChild;
+            const guidePageLink = document.getElementById("guide-page").firstElementChild;
+            const docPageLink = document.getElementById("documentation-page").firstElementChild;
 
-            var enSwitch = document.getElementById("langSwitch-en").firstElementChild;
-            var ruSwitch = document.getElementById("langSwitch-ru").firstElementChild;
-            if(pageLang == "ru"){
+            const enSwitch = document.getElementById("langSwitch-en").firstElementChild;
+            const ruSwitch = document.getElementById("langSwitch-ru").firstElementChild;
+            if (pageLang === "ru") {
                 mainPageLink.text = 'Главная';
-                guidePageLink.text = 'Руководство';
+                guidePageLink.text = 'Руководство пользователя';
                 docPageLink.text = 'Документация';
                 enSwitch.id = null;
                 ruSwitch.id = "m-navbar-current";
-            }else if(pageLang == "en"){
+            } else if (pageLang === "en") {
                 mainPageLink.text = 'Main';
                 guidePageLink.text = 'User manual';
                 docPageLink.text = 'Documentation';
                 enSwitch.id = "m-navbar-current";
                 ruSwitch.id = null;
             }
-        }
-        function ReadFile(filename, container){
-            var Handler = function(Request) {
-                document.getElementById(container).innerHTML = Request.responseText;
+            if (currentContent === "index") {
+                mainPageLink.id = "m-navbar-current";
+                guidePageLink.id = null;
+                docPageLink.id = null;
+            } else if (currentContent === "manual/index") {
+                mainPageLink.id = null;
+                guidePageLink.id = "m-navbar-current";
+                docPageLink.id = null;
+            } else if (currentContent === "documentation") {
+                mainPageLink.id = null;
+                guidePageLink.id = null;
+                docPageLink.id = "m-navbar-current";
             }
 
-            SendRequest("GET",filename,"",Handler);
+        }
+
+        function ReadFile(filename, container) {
+            const Handler = function (Request) {
+                document.getElementById(container).innerHTML = Request.responseText;
+                const downloadedScript = document.getElementById("runscript");
+                if (downloadedScript) eval(downloadedScript.innerHTML);
+            };
+
+            SendRequest("GET", filename, "", Handler);
 
         }
-        function SendRequest(r_method, r_path, r_args, r_handler){
+
+        function SendRequest(r_method, r_path, r_args, r_handler) {
             var Request = new XMLHttpRequest();
             if (!Request) {
                 return;
             }
 
-            Request.onreadystatechange = function(){
-                if (Request.readyState == 4){
-                    if (Request.status == 200) {
+            Request.onreadystatechange = function () {
+                if (Request.readyState === 4) {
+                    if (Request.status === 200) {
                         r_handler(Request);
-                    }
-                    else{
+                    } else {
                         //TODO Add error handling
                         r_handler(Request);
                     }
-                }else{
+                } else {
                     //TODO Add loading progress bar
                 }
             }
 
-            if (r_method.toLowerCase() == "get" && r_args.length > 0)
-            r_path += "?" + r_args;
+            if (r_method.toLowerCase() === "get" && r_args.length > 0)
+                r_path += "?" + r_args;
 
             Request.open(r_method, r_path, true);
 
-            if (r_method.toLowerCase() == "post"){
-                Request.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=utf-8");
+            if (r_method.toLowerCase() === "post") {
+                Request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
                 Request.send(r_args);
-            }
-            else{
+            } else {
                 Request.send(null);
             }
         }
@@ -159,6 +176,10 @@
     {% if HTML_HEADER %}
     {{ HTML_HEADER|rtrim|indent(2) }}
     {% endif %}
+    <link rel="stylesheet" href="snake/snake.css">
+    <link rel="stylesheet" href="snake/snake-theme.css">
+    <script src="snake/snake.js"></script>
+
 </head>
 <body>
 <header>
@@ -184,6 +205,7 @@
                                   d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
                         </svg>
                     </a>
+
                     {% endif %}
                     <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
                     <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
@@ -196,7 +218,7 @@
                                 <a onclick="switchContent('index')">Main</a>
                             </li>
                             <li id="guide-page">
-                                <a onclick="switchContent('manual')">Guide</a>
+                                <a onclick="switchContent('manual/index')">Guide</a>
                             </li>
                             {% for html, title, link, id, sub in LINKS_NAVBAR1 %}
                             {% if not sub %}
@@ -230,7 +252,7 @@
                         <ol class="m-col-t-6 m-col-m-none" start="{{ start }}">
 
                             <li id="documentation-page">
-                                <a onclick="switchContent('documentation')">Documentation</a>
+                                <a class="site-page" onclick="switchContent('documentation')">Documentation</a>
                             </li>
                             {% for html, title, link, id, sub in LINKS_NAVBAR2 %}
                             {% if not sub %}
@@ -266,12 +288,12 @@
                                 </svg>
                             </a></li>
                             {% endif %}
-                            <li class="m-show-m" id="langSwitch-ru">
-                                <a href="#" class="m-doc-search-icon" title="Set Russian Language"
+                            <li id="langSwitch-ru">
+                                <a class="m-doc-search-icon site-page" title="Set Russian Language"
                                    onclick="setLang('ru')"> ru </a>
                             </li>
-                            <li class="m-show-m" id="langSwitch-en">
-                                <a href="#" class="m-doc-search-icon" title="Set English Language"
+                            <li id="langSwitch-en">
+                                <a class="m-doc-search-icon site-page" title="Set English Language"
                                    onclick="setLang('en')"> en </a>
                             </li>
                         </ol>

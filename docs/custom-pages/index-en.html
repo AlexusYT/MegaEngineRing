@@ -1,1 +1,84 @@
-<p>Still under development</p>
+<style>
+    .slider-img {
+        border: 1px solid #7aff79;
+        width: 100%;
+    }
+
+    .square {
+        padding-bottom: 100%;
+    }
+</style>
+<script id="runscript">
+    new Snake('.screenshots-slider', {
+        infinite: true,
+        speed: 300,
+        dots: false,
+        arrows: true,
+        draggable: false,
+        responsive: [
+            {
+                breakpoint: 991,
+                settings: {
+                    dots: true,
+                    arrows: false,
+                }
+            }
+        ]
+    });
+</script>
+<h2>About the Project</h2>
+<p>MegaEngineRing is a game engine developed in C++.</p>
+
+<h2>Status</h2>
+<p>The engine is in early development stage.
+    If you would like to help the project, you can find all information about support options (not about money) on <a
+            onclick="switchContent('contribution')">this</a> page.</p>
+
+<h2>Documentation</h2>
+<p>The documentation is divided into 3 parts:</p>
+<ul>
+    <li><a onclick="switchContent('manual/index')">Engine User Manual</a> is intended for regular users. It contains
+        information about how to use the editor, what features and limitations the application has.
+    </li>
+    <li><a onclick="switchContent('')">Engine API Code Documentation</a> is needed for developers and advanced engine
+        users.
+    </li>
+    <li><a onclick="switchContent('')">Editor Code Documentation</a> is mainly used by editor developers.
+    </li>
+</ul>
+<p>In the early stage, documentation and manual may lag behind the actual state of affairs, but the Russian version will
+    always be more up-to-date than other versions. If the documentation does not match reality, please create an
+    <a href="https://github.com/AlexusYT/MegaEngineRing/issues/new?template=%D0%BD%D0%B5%D0%B4%D0%BE%D1%81%D1%82%D0%B0%D1%82%D0%BE%D0%BA-%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D0%B8--ru-.md">Issue</a>
+    in the engine repository describing the discrepancy and mark it with "documentation" tag - this way you'll help the
+    project development.
+</p>
+
+<h2>System Requirements</h2>
+<ul>
+    <li>Operating System: Windows 10+ or Ubuntu 22.04+</li>
+    <li>RAM: 4GB+</li>
+    <li>Graphics card with OpenGL 4.5 support, i.e., any modern GPU</li>
+</ul>
+
+<h2>Screenshots</h2>
+<div class="screenshots-slider">
+    <div>
+        <img class="slider-img" src="images/SketchFabIntegration.png" alt="">
+        <h4>Integration with Sketchfab.com online platform</h4>
+    </div>
+    <div>
+        <img class="slider-img" src="images/ModelPreview.png" alt="">
+        <h4>Model Preview</h4>
+    </div>
+    <div>
+        <img class="slider-img" src="images/SceneEditor.png" alt="">
+        <h4>Scene Editor</h4>
+    </div>
+</div>
+
+<h2>Installation</h2>
+<p>Currently, installation is only available from the source code located in the project's <a
+        href="https://github.com/AlexusYT/MegaEngineRing">GitHub repository</a>.</p>
+<p>Required programs and libraries, as well as instructions for building and installing the engine can be found in the
+    corresponding
+    <a href="https://github.com/AlexusYT/MegaEngineRing#-prerequisites">README.md</a> section.</p>
