@@ -1,0 +1,58 @@
+<h2>User Guide</h2>
+<p>Here is all the information that may be needed by the user of the game engine. </p>
+
+<h2>Contents</h2>
+<ul>
+    <li><a href="#first-run"> Introduction and first run</a></li>
+    <li><a href="#window-structure"> Application window structure</a></li>
+    <li><a href="#workspace-list"> List of workspaces and editors</a></li>
+</ul>
+<h2 id="first-run">Introduction and first run</h2>
+<p>At the current moment, there is no straightforward way to install the game engine on your computer. For now, this is
+    not a big issue since the engine is in its early stages of development with limited functionality. Installation will
+    require knowledge of the English language and the ability to build programs from source code. The installation
+    instructions can be found in the <a href="https://github.com/AlexusYT/MegaEngineRing#-prerequisites">README.md</a>
+    repository file.</p>
+<p>The process of starting the program is also not very user-friendly: you need to open the directory where you
+    installed the engine after building it. If you did not specify the installation path in step 2 above, then the
+    directory will depend on your operating system: for Windows 10 and higher - this is <code>C:\Program
+        Files\MegaEngineRing</code>, and for Linux/Ubuntu - this is <code>/usr/local/MegaEngineRing</code>. In this
+    directory, you need to find the <code>bin</code> subdirectory, then the executable file
+    <code>MegaEngineRing.exe</code> for Windows, or <code>MegaEngineRing</code> for Linux.</p>
+<p>When running the executable on Windows, a window will open warning the user that this program is from an unknown
+    publisher. <s>Right.</s> To continue, you need to click the "More info" button, after which a "Run anyway" button
+    will appear at the bottom. Is it dangerous for the computer? As a developer of this application, I can assure you:
+    "No, it's not." If you are unsure, you can check the program files with an online antivirus <a
+            href="https://www.virustotal.com/gui/home/upload">VirusTotal</a> or any other available to you.</p>
+<p>After launching the program, the main window will appear:</p>
+<img style="width: 100%" src="manual/MainScreen.png" alt="">
+
+<p><b>It is important to note that these images and subsequent may differ from reality. If you notice such
+    discrepancies, please report them here:
+    <a href="https://github.com/AlexusYT/MegaEngineRing/issues/new?template=%D0%BD%D0%B5%D0%B4%D0%BE%D1%81%D1%82%D0%B0%D1%82%D0%BE%D0%BA-%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D0%B8--ru-.md">
+        Documentation Issue</a></b>
+</p>
+<h2 id="window-structure">Application Window Structure</h2>
+<p>The window consists of workspaces (editors), which in turn consist of tools.</p>
+
+<ul>
+    <li>A tool is an element of the window that can be associated only with a specific type of workspace. You cannot
+        move a scene editing tool to the import online workspace and vice versa. A tool performs a specific function
+        within a workspace, for example, the <code>ViewObjectPropertiesTool</code> in the screenshot above is only
+        responsible for configuring the selected object in the scene.
+    </li>
+    <li>A workspace (editor) is a set of tools associated with one meaning. In the screenshot above, the <code>Scene
+        1</code> editor is responsible for editing the scene, to which are added tools such as
+        <code>SceneEditorPreview</code> for previewing the scene and its editing results, <code>TreeViewTool</code> for
+        displaying the scene objects in a tree structure, and <code>ViewObjectPropertiesTool</code> for configuring the
+        selected object. For more details about editors, see the <a href="#workspace-list">List of Workspaces and
+            Editors</a> section.
+    </li>
+</ul>
+<p>For editors, workspaces, and tools, there is interface customization available: they can be moved, detached,
+    combined, opened, closed, etc. Try it out. To reset the customization settings, you need to delete the <code>imgui.ini</code>
+    file located next to the executable file.</p>
+<h2 id="workspace-list">List of Workspaces and Editors</h2>
+
+<p><i>In the process of being filled</i></p>
+

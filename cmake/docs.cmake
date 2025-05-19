@@ -42,6 +42,7 @@ add_custom_target(
         "${DOXYGEN_OUTPUT_DIRECTORY}/templates"
         "${DOXYGEN_OUTPUT_DIRECTORY}/css"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/custom-pages" "${DOXYGEN_OUTPUT_DIRECTORY}/html"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/images" "${DOXYGEN_OUTPUT_DIRECTORY}/html/images"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/templates" "${DOXYGEN_OUTPUT_DIRECTORY}/templates"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/docs/css" "${DOXYGEN_OUTPUT_DIRECTORY}/css"
         COMMAND cd css && "${Python3_EXECUTABLE}" "${postprocess_script}" "m-dark.css" --output=m-dark.compiled.css
