@@ -48,7 +48,11 @@ public:
 
 	virtual void loginToken(const std::string &pToken) = 0;
 
-	virtual std::future<std::shared_ptr<sdk::ReportMessage>> nextSearchResult() const = 0;
+	virtual void nextSearchResult() const = 0;
+
+	virtual void onSearchRequestChanged() = 0;
+
+	virtual void onSearchResultLoaded(const sdk::ReportMessagePtr &pError) = 0;
 
 	virtual void selectModel(const std::shared_ptr<ModelSearchList> &pModel) = 0;
 
@@ -61,6 +65,8 @@ public:
 	virtual bool hasDownloadLinks() = 0;
 
 	virtual void setPreviewModel(const std::shared_ptr<ModelScenePreview> &pPreview) = 0;
+
+	virtual bool isSearching() = 0;
 };
 
 class PresenterOnlineImport : public IPresenterOnlineImport {
@@ -68,6 +74,9 @@ class PresenterOnlineImport : public IPresenterOnlineImport {
 	std::shared_ptr<IViewOnlineImport> view;
 	std::shared_ptr<IModelScenePreview> modelPreview;
 	std::optional<std::jthread> loadingThread;
+	std::optional<std::jthread> searchDelayThread;
+
+	std::atomic<std::chrono::steady_clock::time_point> searchTime{};
 
 	PresenterOnlineImport(const std::shared_ptr<IModelOnlineImport> &pModel,
 						  const std::shared_ptr<IViewOnlineImport> &pView);
@@ -84,7 +93,11 @@ public:
 
 	const std::vector<std::shared_ptr<ModelSearchList>> &getSearchResult() const override;
 
-	std::future<std::shared_ptr<sdk::ReportMessage>> nextSearchResult() const override;
+	void nextSearchResult() const override;
+
+	void onSearchRequestChanged() override;
+
+	void onSearchResultLoaded(const sdk::ReportMessagePtr &pError) override;
 
 	void selectModel(const std::shared_ptr<ModelSearchList> &pModel) override;
 
@@ -93,6 +106,8 @@ public:
 	bool hasDownloadLinks() override { return getGltfLinks() != nullptr; }
 
 	void setPreviewModel(const std::shared_ptr<ModelScenePreview> &pPreview) override { modelPreview = pPreview; }
+
+	bool isSearching() override;
 
 	void run() override;
 

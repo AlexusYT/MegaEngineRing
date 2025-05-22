@@ -23,6 +23,8 @@
 #define MODELONLINEIMPORT_H
 #include <future>
 
+#include "sketchfab/SketchfabSearch.h"
+
 namespace mer::sdk {
 class GltfModel;
 }
@@ -47,7 +49,9 @@ public:
 
 	virtual const std::vector<std::shared_ptr<ModelSearchList>> &getSearchResult() const = 0;
 
-	virtual std::future<std::shared_ptr<sdk::ReportMessage>> nextSearchResult() const = 0;
+	virtual void setSearchRequest(const SearchRequest &pRequest) = 0;
+
+	virtual void nextSearchResult() const = 0;
 
 	[[nodiscard]] virtual const std::shared_ptr<ModelSearchList> &getSelectedModel() const = 0;
 
@@ -60,6 +64,8 @@ public:
 	[[nodiscard]] virtual IPresenterOnlineImport* getPresenter() const = 0;
 
 	virtual void setPresenter(IPresenterOnlineImport* pPresenter) = 0;
+
+	virtual bool isSearching() = 0;
 };
 
 class ModelOnlineImport : public IModelOnlineImport {
@@ -81,7 +87,9 @@ public:
 
 	const std::vector<std::shared_ptr<ModelSearchList>> &getSearchResult() const override;
 
-	std::future<std::shared_ptr<sdk::ReportMessage>> nextSearchResult() const override;
+	void setSearchRequest(const SearchRequest &pRequest) override;
+
+	void nextSearchResult() const override;
 
 	[[nodiscard]] const std::shared_ptr<ModelSearchList> &getSelectedModel() const override { return selectedModel; }
 
@@ -94,6 +102,8 @@ public:
 	[[nodiscard]] IPresenterOnlineImport* getPresenter() const override { return presenter; }
 
 	void setPresenter(IPresenterOnlineImport* pPresenter) override { presenter = pPresenter; }
+
+	bool isSearching() override;
 };
 } // namespace mer::editor::mvp
 

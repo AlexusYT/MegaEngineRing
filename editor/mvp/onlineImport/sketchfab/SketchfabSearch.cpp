@@ -369,13 +369,24 @@ void ModelSearchList::addReportInfo(const sdk::ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Model viewer url: {}", viewerUrl);
 }
 
-std::future<std::shared_ptr<sdk::ReportMessage>> SketchfabSearch::next() {
-	return std::async(std::launch::async, [this] -> sdk::ReportMessagePtr {
+void SketchfabSearch::next(const std::function<void(const sdk::ReportMessagePtr &pError)> &pCallback) {
+	{
+		std::lock_guard lock(loadingInProgressMutex);
+		if (loadingInProgress) return;
+	}
+	loadingThread = std::jthread([this, pCallback](const std::stop_token & /*pToken*/) {
+		std::lock_guard lock1(loadingInProgressMutex);
+		if (loadingInProgress) return;
+		loadingInProgress = true;
 		std::string address = API_V3 "/search";
 		std::string requestData = request.getRequestData(static_cast<int>(results.size()));
 		nlohmann::json j;
 		std::atomic<float> progress;
-		if (auto msg = account->getRequest(address, requestData, progress, j)) return msg;
+		if (auto msg = account->getRequest(address, requestData, progress, j)) {
+			pCallback(msg);
+			loadingInProgress = false;
+			return;
+		}
 		if (auto it = j.find("error"); it != j.end()) {
 			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Search Error");
@@ -385,7 +396,9 @@ std::future<std::shared_ptr<sdk::ReportMessage>> SketchfabSearch::next() {
 			msg->addInfoLine("Error: {}", it.value().get<std::string>());
 			if (auto errorIt = j.find("error_description"); it != j.end())
 				msg->addInfoLine("Error description: {}", errorIt.value().get<std::string>());
-			return msg;
+			pCallback(msg);
+			loadingInProgress = false;
+			return;
 		}
 		//sdk::Logger::out("{}", j.dump(2));
 		//j.at("next")
@@ -407,7 +420,8 @@ std::future<std::shared_ptr<sdk::ReportMessage>> SketchfabSearch::next() {
 		/*if (results.size() > 48) {
 			results.erase(results.begin(), results.begin() + static_cast<long int>(results.size() - 48ul));
 		}*/
-		return {};
+		pCallback(nullptr);
+		loadingInProgress = false;
 	});
 }
 } // namespace mer::editor::mvp
