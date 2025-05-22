@@ -244,8 +244,12 @@ void Window::runMainLoop() {
 			// Setup Dear ImGui style
 			ImGui::StyleColorsDark();
 			auto &style = ImGui::GetStyle();
-			style.FrameRounding = 5.0f;
-			style.FrameBorderSize = 2.0f;
+			style.FrameRounding = 8.0f;
+			style.GrabRounding = 8.0f;
+			style.WindowRounding = 12.0f;
+			style.ChildRounding = 8.0f;
+			style.WindowTitleAlign = ImVec2(0.03f, 0.5f);
+			style.WindowMenuButtonPosition = ImGuiDir_Right;
 
 			//ImGui::StyleColorsLight();
 

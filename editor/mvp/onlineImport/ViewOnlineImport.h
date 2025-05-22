@@ -25,6 +25,7 @@
 
 #include "mvp/IView.h"
 #include "mvp/editor/Editor.h"
+#include "sketchfab/SketchfabSearch.h"
 
 namespace mer::editor::mvp {
 class NodeSelectionHelper;
@@ -60,6 +61,12 @@ public:
 	[[nodiscard]] virtual IPresenterOnlineImport* getPresenter() const = 0;
 
 	virtual void setPresenter(IPresenterOnlineImport* pPresenter) = 0;
+
+	virtual const SearchRequest &getSearchRequest() = 0;
+
+	virtual void setResults(const std::vector<std::shared_ptr<ModelSearchList>> &pResults) = 0;
+
+	virtual void toggleSearchFilters() = 0;
 };
 
 class ViewOnlineImport : public IViewOnlineImport, public EditorTool {
@@ -69,11 +76,14 @@ class ViewOnlineImport : public IViewOnlineImport, public EditorTool {
 	std::atomic<bool> loginInProgress{};
 	std::string loginErrorStr{};
 	std::string loginMessageStr;
-	bool shouldSearch{};
 	bool modelLoading{};
 	std::optional<float> searchScrollPos{};
 	std::atomic<ProgressMode> progressMode;
 	std::atomic<float> progress{};
+	bool searchFiltersToggled{};
+	SearchRequest request;
+	std::vector<std::shared_ptr<ModelSearchList>> results;
+	bool resultsInvalidated{};
 
 	explicit ViewOnlineImport(const std::shared_ptr<IWidgetContext> &pContext);
 
@@ -100,6 +110,8 @@ public:
 
 	//void customRender() override;
 
+	void toggleSearchFilters() override { searchFiltersToggled = !searchFiltersToggled; }
+
 	void openView() override;
 
 	void closeView() override;
@@ -108,14 +120,23 @@ public:
 
 	void setPresenter(IPresenterOnlineImport* pPresenter) override { presenter = pPresenter; }
 
+	const SearchRequest &getSearchRequest() override { return request; }
+
+	void setResults(const std::vector<std::shared_ptr<ModelSearchList>> &pResults) override {
+		results = pResults;
+		resultsInvalidated = true;
+	}
+
 private:
 	void renderLoginDialog();
 
 	void renderSearchDialog();
 
-	void renderResult(const std::shared_ptr<ModelSearchList> &pResult, const glm::vec2 &pImageSize);
+	void renderResults();
 
-	void renderImage(ImDrawList* pDl, const std::shared_ptr<ModelSearchList> &pResult, const glm::vec2 &pImageSize);
+	bool renderResult(const std::string &pId, const std::shared_ptr<ModelSearchList> &pResult);
+
+	void drawSearchFiltersButton(float pWidth, bool pTransparent);
 };
 
 class OnlineImportWorkspace : public Editor {

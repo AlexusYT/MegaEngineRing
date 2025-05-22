@@ -150,9 +150,7 @@ const std::vector<std::shared_ptr<ModelSearchList>> &PresenterOnlineImport::getS
 	return model->getSearchResult();
 }
 
-std::future<std::shared_ptr<sdk::ReportMessage>> PresenterOnlineImport::nextSearchResult() const {
-	return model->nextSearchResult();
-}
+void PresenterOnlineImport::nextSearchResult() const { model->nextSearchResult(); }
 
 void PresenterOnlineImport::selectModel(const std::shared_ptr<ModelSearchList> &pModel) {
 	model->setSelectedModel(pModel);
@@ -258,6 +256,32 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 		view->hideModelLoading();
 	}
 }
+
+void PresenterOnlineImport::onSearchRequestChanged() {
+	using namespace std::chrono_literals;
+	searchTime = std::chrono::steady_clock::now() + 1000ms;
+	if (searchDelayThread.has_value()) return;
+	searchDelayThread = std::jthread([this](const std::stop_token &pToken) {
+		while (!pToken.stop_requested()) {
+			if (searchTime.load() != std::chrono::steady_clock::time_point::min()) {
+				std::this_thread::sleep_until(searchTime.load());
+				if (searchTime.load() > std::chrono::steady_clock::now()) continue;
+				model->setSearchRequest(view->getSearchRequest());
+				model->nextSearchResult();
+				searchTime = std::chrono::steady_clock::time_point::min();
+			} else
+				std::this_thread::sleep_for(100ms);
+		}
+	});
+	searchDelayThread->detach();
+}
+
+void PresenterOnlineImport::onSearchResultLoaded(const sdk::ReportMessagePtr &pError) {
+	if (pError) sdk::Logger::error(pError);
+	view->setResults(model->getSearchResult());
+}
+
+bool PresenterOnlineImport::isSearching() { return model->isSearching(); }
 
 void PresenterOnlineImport::run() {
 	view->openView();

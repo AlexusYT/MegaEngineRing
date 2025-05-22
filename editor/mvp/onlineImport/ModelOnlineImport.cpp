@@ -32,14 +32,22 @@ void ModelOnlineImport::setAccount(const std::shared_ptr<SketchfabAccount> &pAcc
 	account = pAccount;
 	search = account->createSearch();
 	if (presenter) presenter->onAccountSet();
-	std::thread([this]() { search->next(); }).detach();
+	nextSearchResult();
 }
 
 const std::vector<std::shared_ptr<ModelSearchList>> &ModelOnlineImport::getSearchResult() const {
 	return search->getResults();
 }
 
-std::future<std::shared_ptr<sdk::ReportMessage>> ModelOnlineImport::nextSearchResult() const { return search->next(); }
+void ModelOnlineImport::setSearchRequest(const SearchRequest &pRequest) {
+	search->clear();
+	search->setRequest(pRequest);
+}
+
+void ModelOnlineImport::nextSearchResult() const {
+	if (!presenter) return;
+	search->next([this](const sdk::ReportMessagePtr &pError) { presenter->onSearchResultLoaded(pError); });
+}
 
 void ModelOnlineImport::setSelectedModel(const std::shared_ptr<ModelSearchList> &pSelectedModel) {
 	selectedModel = pSelectedModel;
@@ -68,4 +76,6 @@ sdk::ReportMessagePtr ModelOnlineImport::loadModelFromCache(std::shared_ptr<std:
 	}
 	return account->loadCachedFile(selectedModel->uid, pData);
 }
+
+bool ModelOnlineImport::isSearching() { return search->isLoadingInProgress(); }
 } // namespace mer::editor::mvp

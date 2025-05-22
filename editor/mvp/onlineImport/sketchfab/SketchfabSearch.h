@@ -23,6 +23,7 @@
 #define SKETCHFABSEARCH_H
 #include <future>
 #include <nlohmann/json_fwd.hpp>
+#include <thread>
 
 #include "EngineUtils/utils/IReportable.h"
 
@@ -269,15 +270,22 @@ class SketchfabSearch {
 	SearchRequest request;
 	SketchfabAccount* account;
 	std::vector<std::shared_ptr<ModelSearchList>> results;
+	std::optional<std::jthread> loadingThread;
+	bool loadingInProgress{};
+	std::mutex loadingInProgressMutex;
 
 public:
 	explicit SketchfabSearch(SketchfabAccount* pAccount) : account(pAccount) {}
 
 	void setRequest(const SearchRequest &pRequest) { request = pRequest; }
 
-	std::future<std::shared_ptr<sdk::ReportMessage>> next();
+	void next(const std::function<void(const sdk::ReportMessagePtr &pError)> &pCallback);
 
 	[[nodiscard]] const std::vector<std::shared_ptr<ModelSearchList>> &getResults() const { return results; }
+
+	[[nodiscard]] bool isLoadingInProgress() const { return loadingInProgress; }
+
+	void clear() { results.clear(); }
 };
 
 } // namespace mer::editor::mvp

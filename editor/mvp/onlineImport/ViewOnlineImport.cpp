@@ -23,6 +23,7 @@
 
 #include <nlohmann/json.hpp>
 #include <thread>
+#include <unordered_map>
 
 #include "ModelOnlineImport.h"
 #include "PresenterOnlineImport.h"
@@ -65,13 +66,13 @@ void ViewOnlineImport::setLoginInProgress() { loginInProgress = true; }
 void ViewOnlineImport::onUpdate(bool pVisible) {
 	if (!presenter || !pVisible) return;
 
+	// ReSharper disable once CppDFAUnreachableCode
 	if (shouldLoginDialog) {
 		renderLoginDialog();
 		return;
 	}
-	//if (shouldSearch) {
 	renderSearchDialog();
-	//}
+	renderResults();
 }
 
 void ViewOnlineImport::openView() { context->addTool(this); }
@@ -144,103 +145,321 @@ void ViewOnlineImport::renderLoginDialog() {
 }
 
 void ViewOnlineImport::renderSearchDialog() {
-	glm::vec2 imageSize{330, 200};
-	ImVec2 buttonSz(imageSize.x, 250);
-	ImGuiStyle &style = ImGui::GetStyle();
-	float window_visible_x2 = ImGui::GetContentRegionAvail().x;
-	auto results = presenter->getSearchResult();
-	auto count = results.size();
-	size_t elementsInRow = static_cast<size_t>(window_visible_x2 / (buttonSz.x + style.ItemSpacing.x));
-	if (elementsInRow == 0) return;
-	if (searchScrollPos.has_value()) {
-		ImGui::SetScrollY(searchScrollPos.value());
-		searchScrollPos.reset();
+	ImVec2 contentStart;
+	float filtersWidth = 250;
+	ImGui::Spacing();
+	ImGui::Indent(6);
+	if (searchFiltersToggled) {
+		auto filtersStart = ImGui::GetCursorScreenPos();
+		filtersStart.x -= 6;
+		filtersStart.y -= 6;
+		ImGui::SetCursorScreenPos(filtersStart);
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {6, 6});
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 12);
+
+		auto visible = ImGui::BeginChild("SearchWindow", {filtersWidth + 12, 0},
+										 ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY |
+											 ImGuiChildFlags_AlwaysUseWindowPadding | ImGuiChildFlags_Borders);
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar(2);
+		drawSearchFiltersButton(filtersWidth, true);
+		ImGui::Separator();
+		if (visible) {
+
+			std::unordered_map<std::string, std::string> sortTypes = {
+				{"likeCount", "Least liked"},		 {"-likeCount", "Most liked"},
+				{"viewCount", "Least viewed"},		 {"-viewCount", "Most viewed"},
+				{"publishedAt", "Latest published"}, {"-publishedAt", "Oldest published"},
+				{"processedAt", "Latest processed"}, {"-processedAt", "Oldest processed"}};
+
+			ImGui::SetNextItemWidth(-1);
+
+			if (ImGui::BeginCombo("##sortBy",
+								  request.sortBy.empty() ? "Relevancy" : sortTypes.at(request.sortBy).c_str(), 0)) {
+				bool isSelected = request.sortBy == "";
+				if (ImGui::Selectable("Relevancy##None", isSelected)) {
+					request.sortBy = "";
+					presenter->onSearchRequestChanged();
+				}
+				for (const auto &[type, matName]: sortTypes) {
+					isSelected = request.sortBy == type;
+					if (ImGui::Selectable(matName.c_str(), isSelected)) {
+						request.sortBy = type;
+						presenter->onSearchRequestChanged();
+					}
+
+					if (isSelected) ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+			ImGui::SetNextItemWidth(-1);
+			if (ImGui::InputTextWithHint("##UserInput", "Models from user...", request.user)) {
+				presenter->onSearchRequestChanged();
+			}
+
+
+			ImGui::SetNextItemWidth(-1);
+			if (ImGui::InputTextWithHint("##CollectionInput", "Collection (uid)...", request.collection)) {
+				presenter->onSearchRequestChanged();
+			}
+
+			int maxFaces = request.maxFaceCount.has_value() ? request.maxFaceCount.value() : 0;
+			int minFaces = request.minFaceCount.has_value() ? request.minFaceCount.value() : 0;
+
+			ImGui::SetNextItemWidth(-1);
+			int lightInnerConeMax = std::min(INT_MAX, maxFaces == 0 ? INT_MAX : maxFaces);
+			if (ImGui::DragInt("##MinFaces", &minFaces, 1, 0, lightInnerConeMax, "Min Faces: %d")) {
+				if (minFaces > 0) request.minFaceCount = minFaces;
+				else
+					request.minFaceCount.reset();
+				presenter->onSearchRequestChanged();
+			}
+			ImGui::SetNextItemWidth(-1);
+			if (ImGui::DragInt("##MaxFaces", &maxFaces, 1, std::max(0, minFaces), INT_MAX, "Max Faces: %d")) {
+				if (maxFaces > 0) request.maxFaceCount = maxFaces;
+				else
+					request.maxFaceCount.reset();
+				presenter->onSearchRequestChanged();
+			}
+
+			if (bool value = request.staffpicked.has_value() && request.staffpicked.value();
+				ImGui::Checkbox("Staff Picked", &value)) {
+				request.staffpicked = value;
+				presenter->onSearchRequestChanged();
+			}
+			//by,by-sa, by-nd, by-nc, by-nc-sa, by-nc-nd, cc0, ed, st
+			std::unordered_map<std::string /*type*/, std::pair<std::string /*name*/, std::string /*tooltip*/>> license =
+				{{"by", {"Creative Commons: Attribution", "Author must be credited. Commercial use is allowed."}},
+				 {"by-sa",
+				  {"Creative Commons: ShareAlike", "Author must be credited. Modified versions must have the same "
+												   "license. Commercial use is allowed."}},
+				 {"by-nd",
+				  {"Creative Commons: NoDerivatives",
+				   "Author must be credited. Modified versions can not be distributed. Commercial use is allowed."}},
+				 {"by-nc", {"Creative Commons: NonCommercial", "Author must be credited. No commercial use."}},
+				 {"by-nc-sa",
+				  {"Creative Commons: NonCommercial-ShareAlike",
+				   "Author must be credited. No commercial use. Modified versions must have the same license."}},
+				 {"by-nc-nd",
+				  {"Creative Commons: NonCommercial-NoDerivatives",
+				   "Author must be credited. No commercial use. Modified versions can not be distributed."}},
+				 {"cc0", {"Creative Commons: Zero", "Credit is not mandatory. Commercial use is allowed."}},
+				 {"ed", {"Editorial", "Use only in connection with events that are newsworthy or of public interest"}},
+				 {"st",
+				  {"Standard",
+				   "Under basic restrictions, use worldwide, on all types of media, commercially or not, and in "
+				   "all types of derivative works"}}};
+			ImGui::SetNextItemWidth(-1);
+			if (ImGui::BeginCombo("##License", request.license.empty() ? "Any License"
+																	   : license.at(request.license).first.c_str())) {
+				bool isSelected = request.license == "";
+				if (ImGui::Selectable("Any License##None", isSelected)) {
+					request.license = "";
+					presenter->onSearchRequestChanged();
+				}
+
+				if (isSelected) ImGui::SetItemDefaultFocus();
+				for (const auto &[type, data]: license) {
+					isSelected = request.license == type;
+					if (ImGui::Selectable(data.first.c_str(), isSelected)) {
+						request.license = type;
+						presenter->onSearchRequestChanged();
+					}
+					ImGui::SetItemTooltip("%s", data.second.c_str());
+
+					if (isSelected) ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+			if (ImGui::CollapsingHeader("Not recommended to change")) {
+				bool downloadable = request.downloadable.has_value() && request.downloadable.value();
+				if (ImGui::Checkbox("Downloadable", &downloadable)) {
+					request.downloadable = downloadable;
+					presenter->onSearchRequestChanged();
+				}
+
+				std::unordered_map<std::string, std::string> types = {{"false", "Simple"},
+																	  {"true", "Physically based only"},
+																	  {"metalness", "Metalness/Roughness"},
+																	  {"specular", "Specular/Glossiness"}};
+
+				if (ImGui::BeginCombo("Material", types.at(request.pbrType).c_str(), ImGuiComboFlags_WidthFitPreview)) {
+					for (const auto &[type, matName]: types) {
+						bool isSelected = request.pbrType == type;
+						if (ImGui::Selectable(matName.c_str(), isSelected)) {
+							request.pbrType = type;
+							presenter->onSearchRequestChanged();
+						}
+
+						if (isSelected) ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+			}
+
+			if (ImGui::CollapsingHeader("Not supported by engine")) {
+				if (bool value = request.animated.has_value() && request.animated.value();
+					ImGui::Checkbox("Animated", &value)) {
+					request.animated = value;
+					presenter->onSearchRequestChanged();
+				}
+				if (bool value = request.staffpicked.has_value() && request.staffpicked.value();
+					ImGui::Checkbox("Has sound", &value)) {
+					request.staffpicked = value;
+					presenter->onSearchRequestChanged();
+				}
+				if (bool value = request.rigged.has_value() && request.rigged.value();
+					ImGui::Checkbox("Rigged", &value)) {
+					request.rigged = value;
+					presenter->onSearchRequestChanged();
+				}
+			}
+		}
+		ImGui::EndChild();
+		filtersStart.x += 6;
+		filtersStart.y += 6;
+		ImGui::SetCursorScreenPos(filtersStart);
+		ImGui::Dummy({filtersWidth, 0});
+		ImGui::SameLine(filtersWidth + 30);
+		contentStart = ImGui::GetCursorScreenPos();
+	} else {
+		contentStart = ImGui::GetCursorScreenPos();
+		drawSearchFiltersButton(0, false);
+		ImGui::SameLine();
 	}
+	ImGui::SetNextItemWidth(350);
+	if (ImGui::InputTextWithHint("##QueryInput", "Enter search keywords", request.query)) {
+		presenter->onSearchRequestChanged();
+	}
+	contentStart.y += ImGui::GetItemRectSize().y + ImGui::GetStyle().ItemSpacing.y;
+	ImGui::SetCursorScreenPos(contentStart);
+}
+
+void ViewOnlineImport::renderResults() {
+	static std::shared_ptr<ModelSearchList> tmp;
+	ImVec2 lastPos{};
+	ImGui::BeginChild("SearchResults", ImVec2(0, 0));
+	float itemWidth = 330;
+	auto count = results.size();
+
 	for (size_t i = 0; i < count; i++) {
 		auto result = results.at(i);
 
 		std::string id1 = std::to_string(i);
-		if (ImGui::BeginChild((id1 + "Window").c_str(), buttonSz)) { renderResult(result, imageSize); }
-		ImGui::EndChild();
-		if (i % elementsInRow < elementsInRow - 1) ImGui::SameLine();
+		ImGui::SetNextItemWidth(itemWidth);
+		if (renderResult(result->name + "##" + id1, result) && !modelLoading) {
+			searchScrollPos = ImGui::GetScrollY();
+			presenter->selectModel(result);
+			tmp = result;
+		}
+		if (tmp == result) lastPos = ImGui::GetItemRectMin();
+		ImGui::SameLine();
+		if (itemWidth > ImGui::GetContentRegionAvail().x) ImGui::NewLine();
 	}
-	using namespace std::chrono_literals;
-	static std::optional<std::future<sdk::ReportMessagePtr>> future;
+	if (!modelLoading) tmp.reset();
+	ImGui::SetCursorScreenPos(lastPos);
+	auto prog = progress.load();
+	prog = prog >= 0 ? prog : -1.0f * static_cast<float>(ImGui::GetTime());
+	std::string progressStr;
+	auto mode = progressMode.load();
+	switch (mode) {
+		case ProgressMode::NONE: break;
+		case ProgressMode::DOWNLOAD_LINKS: progressStr = "Getting download links..."; break;
+		case ProgressMode::DOWNLOAD_MODEL: progressStr = "Downloading model..."; break;
+		case ProgressMode::PARSE_MODEL: progressStr = "Parsing model..."; break;
+	}
+	if (mode != ProgressMode::NONE) ImGui::ProgressBar(prog, ImVec2(itemWidth, 0.0f), progressStr.c_str());
+
 	auto maxScroll = ImGui::GetScrollMaxY();
 	if (maxScroll > 100 && ImGui::GetScrollY() + 100.0f >= maxScroll) {
 
-		if (!future.has_value()) {
-			future = presenter->nextSearchResult();
-		} else if (future.value().wait_for(1ms) == std::future_status::ready) {
-			if (auto msg = future->get()) { sdk::Logger::error(msg); }
-
-			future.reset();
-		}
+		if (!presenter->isSearching() && !resultsInvalidated) presenter->nextSearchResult();
 	}
-	//sdk::Logger::out("{}. {}", ImGui::GetScrollMaxY(), ImGui::GetScrollY());
+	resultsInvalidated = false;
+	ImGui::EndChild();
 }
 
-void ViewOnlineImport::renderResult(const std::shared_ptr<ModelSearchList> &pResult, const glm::vec2 &pImageSize) {
-	//ImGui::PushStyleVar(ImGuiStyleVar_TabRounding, 5);
-	ImDrawList* dl = ImGui::GetWindowDrawList();
-	renderImage(dl, pResult, pImageSize);
-	ImGui::TextUnformatted(pResult->name.c_str());
+bool ViewOnlineImport::renderResult(const std::string &pId, const std::shared_ptr<ModelSearchList> &pResult) {
+	constexpr float aspectRatio = 9.0f / 16.0f;
+	constexpr float rounding = 8;
 	auto screenCursor = ImGui::GetCursorScreenPos();
-	glm::vec2 imageStart = screenCursor + glm::vec2(0, 5);
-	glm::vec2 imageEnd = imageStart + glm::vec2(32);
+	glm::vec2 thumbnailImageStart = screenCursor;
+	auto itemWidth = ImGui::CalcItemWidth();
+	ImVec2 thumbnailImageEnd{thumbnailImageStart.x + itemWidth, thumbnailImageStart.y + aspectRatio * itemWidth};
+	const float itemHeight = ImGui::GetTextLineHeightWithSpacing();
+	glm::vec2 bgStart(thumbnailImageStart.x, thumbnailImageEnd.y - itemHeight - 3);
+
+	glm::vec2 avatarImageStart{thumbnailImageStart.x, thumbnailImageEnd.y + 5};
+	glm::vec2 avatarImageEnd = avatarImageStart + glm::vec2(32);
+
+	ImRect bb(thumbnailImageStart, {thumbnailImageEnd.x, avatarImageEnd.y});
+
+	auto id = ImGui::GetID(pId.c_str());
+	ImGui::ItemSize(bb, ImGui::GetStyle().FramePadding.y);
+	if (!ImGui::ItemAdd(bb, id)) return false;
+
+	bool hovered{};
+	bool held{};
+	bool pressed = ImGui::ButtonBehavior(bb, id, &hovered, &held);
+	uint32_t thumbnailTexId;
+	if (auto thumbnail = pResult->getSmallThumbnail()) {
+		thumbnailTexId = thumbnail->getImageId();
+	} else
+		thumbnailTexId = 0;
+	ImDrawList* dl = ImGui::GetWindowDrawList();
+
+	ImU32 thumbnailColor = ImGui::GetColorU32(ImGuiCol_FrameBg);
+	if (hovered) thumbnailColor = ImGui::GetColorU32(ImGuiCol_FrameBgHovered);
+	if (held) thumbnailColor = ImGui::GetColorU32(ImGuiCol_FrameBgActive);
+	dl->AddRectFilled(bb.Min, bb.Max, thumbnailColor, rounding);
+
+	dl->AddImageRounded(thumbnailTexId, thumbnailImageStart, thumbnailImageEnd, ImVec2(0, 0), ImVec2(1, 1),
+						IM_COL32_WHITE, rounding);
+
+
+	dl->AddRectFilled(bgStart, thumbnailImageEnd, ImColor(0.0f, 0.0f, 0.0f, 0.5f), rounding);
+
+	dl->AddText(
+		{
+			bgStart.x + 5,
+			bgStart.y + 3,
+		},
+		ImGui::GetColorU32(ImGuiCol_Text), pResult->name.c_str(), nullptr);
+
+
 	uint32_t texId;
 	if (auto avatar = pResult->user->getSmallAvatar()) {
 		texId = avatar->getImageId();
 	} else
 		texId = 0;
-	dl->AddImageRounded(texId, imageStart, imageEnd, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, 16);
-	ImGui::SetCursorScreenPos(ImVec2(imageStart.x + 40, imageStart.y + 10));
-	ImGui::TextUnformatted(pResult->user->displayName.c_str());
+	dl->AddImageRounded(texId, avatarImageStart, avatarImageEnd, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, rounding);
+
+
+	dl->AddText(
+		{
+			avatarImageEnd.x + 10,
+			avatarImageStart.y + 8,
+		},
+		ImGui::GetColorU32(ImGuiCol_Text), pResult->user->displayName.c_str(), nullptr);
+	return pressed;
 }
 
-void ViewOnlineImport::renderImage(ImDrawList* pDl, const std::shared_ptr<ModelSearchList> &pResult,
-								   const glm::vec2 &pImageSize) {
-	const float itemHeight = ImGui::GetTextLineHeightWithSpacing();
-	uint32_t texId;
-	if (auto thumbnail = pResult->getSmallThumbnail()) {
-		texId = thumbnail->getImageId();
+void ViewOnlineImport::drawSearchFiltersButton(float pWidth, bool pTransparent) {
+
+	if (pTransparent) {
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10);
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+	}
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.18f, 0.18f, 0.18f, 1.0f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+
+	if (ImGui::Button("Search filters", {pWidth, 0})) toggleSearchFilters();
+	if (pTransparent) {
+		ImGui::PopStyleVar();
+		ImGui::PopStyleColor(3);
 	} else
-		texId = 0;
-	auto screenCursor = ImGui::GetCursorScreenPos();
-	glm::vec2 imageStart = screenCursor;
-	glm::vec2 imageEnd = imageStart + pImageSize;
-	pDl->AddImageRounded(texId, imageStart, imageEnd, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, 8);
-
-	static std::shared_ptr<ModelSearchList> tmp{};
-	if (modelLoading && tmp == pResult) {
-		auto prog = progress.load();
-		prog = prog >= 0 ? prog : -1.0f * static_cast<float>(ImGui::GetTime());
-		std::string progressStr;
-		auto mode = progressMode.load();
-		switch (mode) {
-			case ProgressMode::NONE: break;
-			case ProgressMode::DOWNLOAD_LINKS: progressStr = "Getting download links..."; break;
-			case ProgressMode::DOWNLOAD_MODEL: progressStr = "Downloading model..."; break;
-			case ProgressMode::PARSE_MODEL: progressStr = "Parsing model..."; break;
-		}
-		if (mode != ProgressMode::NONE) ImGui::ProgressBar(prog, ImVec2(0.0f, 0.0f), progressStr.c_str());
-	}
-	if (!modelLoading) tmp.reset();
-	if (!modelLoading && ImGui::IsMouseHoveringRect(imageStart, imageEnd) && ImGui::IsWindowHovered()) {
-		ImGui::Text("Click to view");
-		ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-		if (ImGui::IsMouseClicked(0)) {
-			searchScrollPos = ImGui::GetScrollY();
-			presenter->selectModel(pResult);
-			tmp = pResult;
-		}
-	}
-
-	glm::vec2 bgStart(imageStart.x, imageEnd.y - itemHeight - 3);
-	pDl->AddRectFilled(bgStart, imageEnd, ImColor(0.0f, 0.0f, 0.0f, 0.5f), 8);
-	screenCursor.y += pImageSize.y - itemHeight;
-	screenCursor.x += 5;
-	ImGui::SetCursorScreenPos(screenCursor);
+		ImGui::PopStyleColor(2);
 }
 
 OnlineImportWorkspace::OnlineImportWorkspace() : Editor("OnlineImportWorkspace") {
