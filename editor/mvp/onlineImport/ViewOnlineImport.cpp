@@ -28,7 +28,6 @@
 #include "ModelOnlineImport.h"
 #include "PresenterOnlineImport.h"
 #include "imgui_internal.h"
-#include "mvp/contexts/IWidgetContext.h"
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/scenePreview/ModelScenePreview.h"
 #include "mvp/scenePreview/ViewScenePreview.h"
@@ -75,9 +74,9 @@ void ViewOnlineImport::onUpdate(bool pVisible) {
 	renderResults();
 }
 
-void ViewOnlineImport::openView() { context->addTool(this); }
+void ViewOnlineImport::openView() { context->add(this); }
 
-void ViewOnlineImport::closeView() { context->removeWidget(); }
+void ViewOnlineImport::closeView() { context->remove(); }
 
 void ViewOnlineImport::renderLoginDialog() {
 	static std::string username{};

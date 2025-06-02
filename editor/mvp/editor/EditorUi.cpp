@@ -135,26 +135,33 @@ void EditorUi::addEditor(const std::shared_ptr<Editor> &pEditor) { editors.empla
 
 void EditorUi::customRender() {
 	for (const auto &editor: editors) editor->customRender();
+
+	SceneUi::customRender();
 }
 
 void EditorUi::onSizeChanged(const int pWidth, const int pHeight) {
 	for (const auto &editor: editors) editor->onSizeChanged(pWidth, pHeight);
+	SceneUi::onSizeChanged(pWidth, pHeight);
 }
 
 void EditorUi::onCursorPosChanged(const double pX, const double pY) {
 	for (const auto &editor: editors) editor->onCursorPosChanged(pX, pY);
+	SceneUi::onCursorPosChanged(pX, pY);
 }
 
 void EditorUi::onKeyChanged(const int pKey, const int pScancode, const int pAction, const int pMods) {
 	for (const auto &editor: editors) editor->onKeyChanged(pKey, pScancode, pAction, pMods);
+	SceneUi::onKeyChanged(pKey, pScancode, pAction, pMods);
 }
 
 void EditorUi::onMouseScroll(const double pXOffset, const double pYOffset) {
 	for (const auto &editor: editors) editor->onMouseScroll(pXOffset, pYOffset);
+	SceneUi::onMouseScroll(pXOffset, pYOffset);
 }
 
 void EditorUi::onMouseButton(const int pButton, const int pAction, const int pMods) {
 	for (const auto &editor: editors) editor->onMouseButton(pButton, pAction, pMods);
+	SceneUi::onMouseButton(pButton, pAction, pMods);
 }
 
 } // namespace mer::editor::mvp

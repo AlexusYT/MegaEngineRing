@@ -25,9 +25,6 @@
 
 namespace mer::editor::mvp {
 class Editor;
-}
-
-namespace mer::editor::mvp {
 
 class EditorUi : public sdk::SceneUi {
 	std::vector<std::shared_ptr<Editor>> editors;

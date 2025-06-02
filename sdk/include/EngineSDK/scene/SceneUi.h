@@ -41,6 +41,7 @@ class SceneUi : public Initializable {
 	Window* window{};
 	ImGuiContext* imGuiContext{};
 	std::unordered_map<std::string, UiWindow*> windows;
+	std::unordered_map<std::string, UiPopup*> popups;
 
 
 public:
@@ -57,6 +58,10 @@ public:
 	void addUiWindow(UiWindow* pWindow);
 
 	void removeUiWindow(const std::string &pName);
+
+	void addUiPopup(UiPopup* pWindow);
+
+	void removeUiPopup(const std::string &pName);
 
 	virtual void onSizeChanged(int pWidth, int pHeight);
 

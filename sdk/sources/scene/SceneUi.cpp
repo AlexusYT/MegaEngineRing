@@ -28,9 +28,10 @@
 namespace mer::sdk {
 
 void SceneUi::updateUi() {
-	ImGui::ShowDemoWindow();
 	//const ImGuiViewport* viewport = ImGui::GetMainViewport();
 	//ImGui::DockSpaceOverViewport(0, viewport);
+	for (auto [name, uiWindow]: windows) { uiWindow->render(); }
+	for (auto [name, uiWindow]: popups) { uiWindow->render(); }
 }
 
 void SceneUi::customRender() {
@@ -42,6 +43,10 @@ ImGuiIO &SceneUi::getIo() { return ImGui::GetIO(); }
 void SceneUi::addUiWindow(UiWindow* pWindow) { windows.emplace(pWindow->getName(), pWindow); }
 
 void SceneUi::removeUiWindow(const std::string &pName) { windows.erase(pName); }
+
+void SceneUi::addUiPopup(UiPopup* pWindow) { popups.emplace(pWindow->getName(), pWindow); }
+
+void SceneUi::removeUiPopup(const std::string &pName) { popups.erase(pName); }
 
 void SceneUi::onSizeChanged(int pWidth, int pHeight) {
 	for (auto win: windows) win.second->onSizeChanged(pWidth, pHeight);

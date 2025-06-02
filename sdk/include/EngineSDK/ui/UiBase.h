@@ -34,13 +34,17 @@ protected:
 	glm::vec2 pivot{};
 	glm::vec2 size{};
 	ImGuiWindowFlags windowFlags{};
-	bool dockSpace{};
-	unsigned int id{};
+	unsigned int windowId{};
+	bool open{true};
 
 public:
 	UiBase(const std::string &pName, const std::string &pTitle) : name(pName), title(pTitle) {}
 
-	virtual void updateUi() = 0;
+	/**
+	 * @brief UI update loop. Only here you can use ImGui functions.
+	 * @param pVisible if @a true, the tool window is not clipped or collapsed, and you need to render your UI.
+	 */
+	virtual void onUpdate(bool pVisible) = 0;
 
 	virtual void customRender();
 
@@ -48,8 +52,12 @@ public:
 
 	void setName(const std::string &pName) {
 		name = pName;
-		id = 0;
+		windowId = 0;
 	}
+
+	[[nodiscard]] bool isOpen() const { return open; }
+
+	void setOpen(bool pOpen) { open = pOpen; }
 
 	[[nodiscard]] const std::string &getTitle() const { return title; }
 
@@ -67,15 +75,11 @@ public:
 
 	void setSize(const glm::vec2 &pSize) { size = pSize; }
 
-	[[nodiscard]] bool isDockSpace() const { return dockSpace; }
-
-	void setDockSpace(bool pDockSpace = true) { dockSpace = pDockSpace; }
-
 	[[nodiscard]] ImGuiWindowFlags getWindowFlags() const { return windowFlags; }
 
 	void setWindowFlags(ImGuiWindowFlags pWindowFlags) { windowFlags = pWindowFlags; }
 
-	[[nodiscard]] unsigned int getId() const { return id; }
+	[[nodiscard]] unsigned int getId() const { return windowId; }
 };
 
 } // namespace mer::sdk

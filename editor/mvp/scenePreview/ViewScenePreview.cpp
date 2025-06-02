@@ -31,7 +31,7 @@
 #include "IPresenterScenePreview.h"
 #include "examples/libs/glfw/include/GLFW/glfw3.h"
 #include "imgui_internal.h"
-#include "mvp/contexts/IWidgetContext.h"
+#include "mvp/contexts/UiWindowContext.h"
 #include "mvp/sceneEditor/SceneOverlayElements.h"
 
 namespace mer::editor::mvp {
@@ -122,7 +122,7 @@ void ViewScenePreview::onUpdate(bool pVisible) {
 }
 
 void ViewScenePreview::openView() {
-	context->addTool(this);
+	context->add(this);
 	framebuffer = std::make_shared<sdk::Framebuffer>();
 	framebuffer->initialize();
 	overlay = SceneOverlayElements::create();
@@ -137,7 +137,7 @@ void ViewScenePreview::openView() {
 }
 
 void ViewScenePreview::closeView() {
-	context->removeWidget();
+	context->remove();
 	framebuffer->uninitialize();
 	overlay->uninitialize();
 	programBuffer.reset();

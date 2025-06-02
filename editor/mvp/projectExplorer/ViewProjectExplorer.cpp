@@ -26,8 +26,7 @@
 #include "EngineSDK/ui/UiWindow.h"
 #include "IPresenterProjectExplorer.h"
 #include "entries/ProjectExplorerElement.h"
-#include "imgui_internal.h"
-#include "mvp/contexts/IWidgetContext.h"
+#include "mvp/contexts/UiWindowContext.h"
 #include "mvp/dialogs/confirmationDialog/ConfirmationDialog.h"
 
 namespace mer::editor::mvp {
@@ -46,10 +45,10 @@ void ViewProjectExplorer::setElements(const std::vector<std::shared_ptr<ProjectE
 
 void ViewProjectExplorer::openView() { /*context->addWindow(this); */ }
 
-void ViewProjectExplorer::closeView() { context->removeWidget(); }
+void ViewProjectExplorer::closeView() { context->remove(); }
 
-void ViewProjectExplorer::updateUi() {
-
+void ViewProjectExplorer::onUpdate(bool pVisible) {
+	if (!pVisible) return;
 	const float TEXT_BASE_WIDTH = ImGui::CalcTextSize("A").x;
 	static ImGuiTableFlags table_flags =
 		ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_NoBordersInBody;
@@ -130,7 +129,7 @@ void ViewProjectExplorer::updateTreeLevel(const std::vector<std::shared_ptr<Proj
 
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAllColumns;
 		if (!folder) { flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen; }
-		bool open = ImGui::TreeNodeEx(node->getName().c_str(), flags);
+		bool visible = ImGui::TreeNodeEx(node->getName().c_str(), flags);
 		if (ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonRight) &&
 			ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup)) {
 			ImGui::OpenPopup("Menu123", ImGuiPopupFlags_MouseButtonRight);
@@ -139,7 +138,7 @@ void ViewProjectExplorer::updateTreeLevel(const std::vector<std::shared_ptr<Proj
 		//ImGui::OpenPopupOnItemClick(id.c_str(), ImGuiPopupFlags_MouseButtonRight);
 		ImGui::TableNextColumn();
 		ImGui::TextUnformatted(node->getTypeStr());
-		if (open && folder) {
+		if (visible && folder) {
 
 			updateTreeLevel(node->getChildren());
 			ImGui::TreePop();

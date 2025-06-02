@@ -21,18 +21,25 @@
 
 #ifndef UIWINDOWCONTEXT_H
 #define UIWINDOWCONTEXT_H
-#include "IWidgetContext.h"
-
-namespace mer::editor::mvp {
-class Editor;
-}
 
 namespace mer::sdk {
-class UiWindow;
 class SceneUi;
+class UiWindow;
+class UiBase;
 } // namespace mer::sdk
 
 namespace mer::editor::mvp {
+class Editor;
+class EditorTool;
+
+class IWidgetContext {
+public:
+	virtual ~IWidgetContext() = default;
+
+	virtual void add(sdk::UiBase* pWidget) = 0;
+
+	virtual void remove() = 0;
+};
 
 class EditorContext : public IWidgetContext {
 	EditorTool* tool{};
@@ -45,11 +52,25 @@ public:
 		return std::shared_ptr<EditorContext>(new EditorContext(pEditor));
 	}
 
-	inline void addTool(EditorTool* pWidget) override;
+	void add(sdk::UiBase* pWidget) override;
 
-	void removeWidget() override;
+	void remove() override;
+};
 
-	void setTitle(const std::string &pTitle) override;
+class SceneUiContext : public IWidgetContext {
+	sdk::UiBase* window{};
+	sdk::SceneUi* scene{};
+
+	explicit SceneUiContext(sdk::SceneUi* pScene) : scene(pScene) {}
+
+public:
+	static std::shared_ptr<IWidgetContext> create(sdk::SceneUi* pScene) {
+		return std::shared_ptr<SceneUiContext>(new SceneUiContext(pScene));
+	}
+
+	void add(sdk::UiBase* pWidget) override;
+
+	void remove() override;
 };
 
 } // namespace mer::editor::mvp

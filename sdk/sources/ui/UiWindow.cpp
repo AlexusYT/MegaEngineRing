@@ -46,11 +46,16 @@ void UiWindow::render() {
 	actualSize.x = size.x == SIZE_MATH_PARENT ? viewport->Size.x : size.x;
 	actualSize.y = size.y == SIZE_MATH_PARENT ? viewport->Size.y : size.y;
 	ImGui::SetNextWindowSize(actualSize);
-	if (ImGui::Begin(title.c_str(), nullptr, windowFlags)) {
-		for (auto uiPopup: popups) { uiPopup->render(); }
-		updateUi();
-	}
-	ImGui::End();
+
+	if (open) {
+		if (ImGui::Begin(title.c_str(), &open, windowFlags)) {
+			for (auto uiPopup: popups) { uiPopup->render(); }
+			onUpdate(true);
+		}
+		ImGui::End();
+		onUpdate(false);
+	} else
+		onUpdate(false);
 }
 
 void UiWindow::addPopup(const std::shared_ptr<UiPopup> &pPopup) { popups.emplace_back(pPopup); }

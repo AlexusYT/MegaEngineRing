@@ -37,7 +37,7 @@ class ConfirmationDialog : public sdk::UiPopup {
 public:
 	static std::shared_ptr<ConfirmationDialog> create(const std::string &pName, const std::string &pTitle);
 
-	void updateUi() override;
+	void onUpdate(bool pVisible) override;
 
 	[[nodiscard]] const std::string &getMessage() const { return message; }
 

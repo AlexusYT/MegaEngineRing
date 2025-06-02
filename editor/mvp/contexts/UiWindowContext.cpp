@@ -27,16 +27,31 @@
 
 namespace mer::editor::mvp {
 
-void EditorContext::addTool(EditorTool* pWidget) {
-	tool = pWidget;
-	editor->addTool(pWidget->shared_from_this());
+void EditorContext::add(sdk::UiBase* pWidget) {
+	tool = dynamic_cast<EditorTool*>(pWidget);
+	if (!editor || !tool) return;
+	editor->addTool(tool->shared_from_this());
 }
 
-void EditorContext::removeWidget() {
-	if (!tool) return;
+void EditorContext::remove() {
+	if (!editor || !tool) return;
 	editor->removeTool(tool);
 }
 
-void EditorContext::setTitle(const std::string & /*pTitle*/) {}
+void SceneUiContext::add(sdk::UiBase* pWidget) {
+	if (!scene) return;
+	// ReSharper disable once CppDFAUnreachableCode
+	window = pWidget;
+	if (auto widget = dynamic_cast<sdk::UiWindow*>(pWidget)) scene->addUiWindow(widget);
+	if (auto widget = dynamic_cast<sdk::UiPopup*>(pWidget)) scene->addUiPopup(widget);
+}
+
+void SceneUiContext::remove() {
+	if (!scene || !window) return;
+	// ReSharper disable once CppDFAUnreachableCode
+	if (auto widget = dynamic_cast<sdk::UiWindow*>(window)) scene->removeUiWindow(widget->getName());
+	if (auto widget = dynamic_cast<sdk::UiPopup*>(window)) scene->removeUiWindow(widget->getName());
+}
+
 
 } // namespace mer::editor::mvp

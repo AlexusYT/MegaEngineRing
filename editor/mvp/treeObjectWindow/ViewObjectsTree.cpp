@@ -29,16 +29,16 @@
 #include "EngineSDK/scene/Scene3D.h"
 #include "PresenterObjectsTree.h"
 #include "imgui_internal.h"
-#include "mvp/contexts/IWidgetContext.h"
+#include "mvp/contexts/UiWindowContext.h"
 
 namespace mer::editor::mvp {
 
 ViewObjectsTree::ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext)
 	: EditorTool("TreeViewTool"), context(pContext) {}
 
-void ViewObjectsTree::openView() { context->addTool(this); }
+void ViewObjectsTree::openView() { context->add(this); }
 
-void ViewObjectsTree::closeView() { context->removeWidget(); }
+void ViewObjectsTree::closeView() { context->remove(); }
 
 void ViewObjectsTree::onUpdate(bool pVisible) {
 	if (!pVisible) return;

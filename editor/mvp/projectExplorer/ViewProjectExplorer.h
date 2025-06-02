@@ -48,7 +48,7 @@ public:
 
 	void closeView() override;
 
-	void updateUi() override;
+	void onUpdate(bool pVisible) override;
 
 	void startConfirmation(const std::string &pTitle, const std::string &pMessage,
 						   const std::function<void(int pId)> &pResult,

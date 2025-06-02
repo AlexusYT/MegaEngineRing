@@ -65,7 +65,7 @@ class ViewPrefabEditor : public IViewPrefabEditor, public sdk::UiWindow {
 public:
 	static std::shared_ptr<ViewPrefabEditor> create(const std::shared_ptr<IWidgetContext> &pContext);
 
-	void updateUi() override;
+	void onUpdate(bool pVisible) override;
 
 	void openView() override;
 

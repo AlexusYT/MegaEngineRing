@@ -38,7 +38,6 @@ add_library(
         project/generators/cpp/CppClassMember.h
         project/generators/cpp/CppExternC.cpp
         project/generators/cpp/CppExternC.h
-        mvp/contexts/IWidgetContext.h
         mvp/projectExplorer/IViewProjectExplorer.h
         mvp/projectExplorer/IModelProjectExplorer.h
         mvp/projectExplorer/ModelProjectExplorer.cpp

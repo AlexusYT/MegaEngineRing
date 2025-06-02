@@ -48,13 +48,15 @@ void UiPopup::render() {
 		if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
 		ImGui::EndPopup();
 	}*/
-	if (id == 0) {
+	if (windowId == 0) {
 		ImGuiContext &g = *GImGui;
-		id = g.CurrentWindow->GetID(("###" + getName()).c_str());
+		windowId = g.CurrentWindow->GetID(("###" + getName()).c_str());
 	}
-	if (ImGui::BeginPopupModal((getTitle() + "###" + getName()).c_str(), nullptr, getWindowFlags())) {
-		updateUi();
+	bool openTmp{true};
+	if (ImGui::BeginPopupModal((getTitle() + "###" + getName()).c_str(), &openTmp, getWindowFlags())) {
+		onUpdate(true);
 		ImGui::EndPopup();
-	}
+	} else
+		onUpdate(false);
 }
 } // namespace mer::sdk

@@ -34,7 +34,7 @@
 #include "EngineSDK/resources/shaders/builtin/PrefabProgram.h"
 #include "IPresenterPrefabEditor.h"
 #include "imgui_internal.h"
-#include "mvp/contexts/IWidgetContext.h"
+#include "mvp/contexts/UiWindowContext.h"
 #include "mvp/sceneEditor/SceneOverlayElements.h"
 
 namespace mer::editor::mvp {
@@ -62,7 +62,8 @@ std::shared_ptr<ViewPrefabEditor> ViewPrefabEditor::create(const std::shared_ptr
 	return std::shared_ptr<ViewPrefabEditor>(new ViewPrefabEditor(pContext));
 }
 
-void ViewPrefabEditor::updateUi() {
+void ViewPrefabEditor::onUpdate(bool pVisible) {
+	if (!pVisible) return;
 	ImGui::AlignTextToFramePadding();
 
 	static int index = -1;
@@ -160,7 +161,7 @@ void ViewPrefabEditor::openView() {
 	frameBuffer->initialize();
 }
 
-void ViewPrefabEditor::closeView() { context->removeWidget(); }
+void ViewPrefabEditor::closeView() { context->remove(); }
 
 void ViewPrefabEditor::customRender() {
 	//subWindows->customRenderWindows();

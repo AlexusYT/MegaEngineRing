@@ -21,6 +21,7 @@
 
 #ifndef EDITOR_H
 #define EDITOR_H
+#include "EngineSDK/ui/UiBase.h"
 #include "imgui.h"
 
 
@@ -30,42 +31,27 @@ namespace mer::editor::mvp {
 class EditorUi;
 class Editor;
 
-class EditorTool : public std::enable_shared_from_this<EditorTool> {
+class EditorTool : public std::enable_shared_from_this<EditorTool>, public sdk::UiBase {
 	friend Editor;
 
 protected:
 	Editor* editor{};
-	bool open{true};
-	std::string name;
+	uint32_t dockspaceId{};
 
-	explicit EditorTool(const std::string &pName) : name(pName) {}
+	explicit EditorTool(const std::string &pName) : UiBase(pName, pName) {}
 
 public:
-	virtual ~EditorTool() = default;
+	~EditorTool() override = default;
 
-	/**
-	 * @brief UI update loop. Only here you can use ImGui functions.
-	 * @param pVisible if @a true, the tool window is not clipped or collapsed, and you need to render your UI.
-	 */
-	virtual void onUpdate(bool pVisible) = 0;
+	void render() override;
 
 	[[nodiscard]] Editor* getEditor() const { return editor; }
 
 	void setEditor(Editor* pEditor) { editor = pEditor; }
 
-	[[nodiscard]] bool isOpen() const { return open; }
-
-	void setOpen(bool pOpen) { open = pOpen; }
-
-	[[nodiscard]] const std::string &getDisplayName() const { return name; }
-
-	void setDisplayName(const std::string &pName) { name = pName; }
-
 	std::string getWindowName(uint32_t pDockspaceId) const {
-		return std::format("{}##{:0>8X}", getDisplayName(), pDockspaceId);
+		return std::format("{}##{:0>8X}", getName(), pDockspaceId);
 	}
-
-	virtual void customRender();
 
 	virtual void onSizeChanged(int pWidth, int pHeight);
 
@@ -76,7 +62,20 @@ public:
 	virtual void onMouseScroll(double pXOffset, double pYOffset);
 
 	virtual void onMouseButton(int pButton, int pAction, int pMods);
+
+	void setCurrentDockspace(ImGuiID pDockspaceId);
 };
+
+inline void EditorTool::onSizeChanged(const int /*pWidth*/, const int /*pHeight*/) {}
+
+inline void EditorTool::onCursorPosChanged(const double /*pX*/, const double /*pY*/) {}
+
+inline void EditorTool::onKeyChanged(const int /*pKey*/, const int /*pScancode*/, const int /*pAction*/,
+									 const int /*pMods*/) {}
+
+inline void EditorTool::onMouseScroll(const double /*pXOffset*/, const double /*pYOffset*/) {}
+
+inline void EditorTool::onMouseButton(const int /*pButton*/, const int /*pAction*/, const int /*pMods*/) {}
 
 class Editor {
 	EditorUi* ui{};

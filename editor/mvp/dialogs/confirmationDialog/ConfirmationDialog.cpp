@@ -27,7 +27,8 @@ std::shared_ptr<ConfirmationDialog> ConfirmationDialog::create(const std::string
 	return std::shared_ptr<ConfirmationDialog>(new ConfirmationDialog(pName, pTitle));
 }
 
-void ConfirmationDialog::updateUi() {
+void ConfirmationDialog::onUpdate(bool pVisible) {
+	if (!pVisible) return;
 	ImGui::TextWrapped("%s", message.c_str());
 	ImGui::Separator();
 

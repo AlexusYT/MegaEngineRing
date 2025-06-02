@@ -22,6 +22,7 @@
 #include "ViewObjectProperties.h"
 
 #include <glm/ext/scalar_common.hpp>
+
 #include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "EngineSDK/extensions/LightExtension.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
@@ -34,7 +35,7 @@
 #include "EngineSDK/scene/Scene3D.h"
 #include "EngineSDK/utils/Transformation.h"
 #include "imgui_internal.h"
-#include "mvp/contexts/IWidgetContext.h"
+#include "mvp/contexts/UiWindowContext.h"
 
 namespace mer::editor::mvp {
 std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> &pExt)>>
@@ -150,9 +151,9 @@ bool ViewObjectProperties::confirmationMenuItem(const char* pLabel, const char* 
 	return confirmed;
 }
 
-void ViewObjectProperties::openView() { context->addTool(this); }
+void ViewObjectProperties::openView() { context->add(this); }
 
-void ViewObjectProperties::closeView() { context->removeWidget(); }
+void ViewObjectProperties::closeView() { context->remove(); }
 
 bool DragProperty(const char* pLabel, float* pV, float pSpeed, const char* pRoundFormat, const char* pDisplayFormat) {
 	return ImGui::DragFloat(pLabel, pV, pSpeed, 0, 0, pRoundFormat, pDisplayFormat, ImGuiSliderFlags_NoSpeedTweaks);

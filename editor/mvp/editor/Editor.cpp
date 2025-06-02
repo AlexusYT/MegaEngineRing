@@ -29,18 +29,20 @@
 
 namespace mer::editor::mvp {
 
-void EditorTool::customRender() {}
 
-void EditorTool::onSizeChanged(const int /*pWidth*/, const int /*pHeight*/) {}
+void EditorTool::render() {
+	if (!open) return;
 
-void EditorTool::onCursorPosChanged(const double /*pX*/, const double /*pY*/) {}
+	auto toolWindowName = getWindowName(dockspaceId);
 
-void EditorTool::onKeyChanged(const int /*pKey*/, const int /*pScancode*/, const int /*pAction*/, const int /*pMods*/) {
+	constexpr ImGuiWindowFlags toolsSharedWindowFlags =
+		ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavFocus;
+	bool toolVisible = ImGui::Begin(toolWindowName.c_str(), &open, 0 | toolsSharedWindowFlags);
+	onUpdate(toolVisible);
+	ImGui::End();
 }
 
-void EditorTool::onMouseScroll(const double /*pXOffset*/, const double /*pYOffset*/) {}
-
-void EditorTool::onMouseButton(const int /*pButton*/, const int /*pAction*/, const int /*pMods*/) {}
+void EditorTool::setCurrentDockspace(ImGuiID pDockspaceId) { dockspaceId = pDockspaceId; }
 
 Editor::Editor(const std::string &pName) {
 	id = ImHashStr(name.c_str(), 0);
@@ -213,7 +215,7 @@ void Editor::updateContents() {
 
 	if (ImGui::BeginPopup("ToolsPopup")) {
 		for (auto tool: tools) {
-			if (ImGui::MenuItem(tool->getDisplayName().c_str(), nullptr, &tool->open))
+			if (ImGui::MenuItem(tool->getTitle().c_str(), nullptr, &tool->open))
 				//We should create the dockspace when the tool opens
 				hasToolsOpened = true;
 		}
@@ -229,6 +231,7 @@ void Editor::updateContents() {
 	for (auto editorTool: tools) {
 		if (!editorTool->isOpen()) continue;
 
+		editorTool->setCurrentDockspace(dockspace_id);
 		auto toolWindowName = editorTool->getWindowName(dockspace_id);
 
 		if (const ImGuiWindow* toolWindow = ImGui::FindWindowByName(toolWindowName.c_str())) {
@@ -244,13 +247,8 @@ void Editor::updateContents() {
 				if (windowNode == nullptr || ImGui::DockNodeGetRootNode(windowNode)->ID != dockspace_id) continue;
 			}
 		}
-
-		constexpr ImGuiWindowFlags toolsSharedWindowFlags =
-			ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavFocus;
 		ImGui::SetNextWindowClass(&toolWindowsClass);
-		bool toolVisible = ImGui::Begin(toolWindowName.c_str(), &editorTool->open, 0 | toolsSharedWindowFlags);
-		editorTool->onUpdate(toolVisible);
-		ImGui::End();
+		editorTool->render();
 	}
 }
 
