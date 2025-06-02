@@ -24,6 +24,7 @@
 #include "EngineSDK/scene/SceneUi.h"
 
 namespace mer::editor::mvp {
+class IPresenterSettingsWindow;
 class Editor;
 
 class EditorUi : public sdk::SceneUi {
@@ -31,6 +32,17 @@ class EditorUi : public sdk::SceneUi {
 	Editor* lastActiveEditor{};
 	ImGuiWindowClass topLevelEditorWindowClass;
 	bool optFloatingToolsOnlyVisibleWhenParentIsFocused{true};
+	std::shared_ptr<IPresenterSettingsWindow> settingsWindow{};
+#ifndef IMGUI_DISABLE_DEMO_WINDOWS
+	bool showDemoWindow{};
+	bool showStyleEditor{};
+#endif
+#ifndef IMGUI_DISABLE_DEBUG_TOOLS
+	bool showMetricsWindow{};
+	bool showDebugLogWindow{};
+	bool showIdStackToolWindow{};
+	bool showAboutWindow{};
+#endif
 
 public:
 	ImVector<ImGuiID> topLevelDockNodeIds; // Track active top level docking node to add a + in them

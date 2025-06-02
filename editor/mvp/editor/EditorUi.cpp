@@ -23,6 +23,12 @@
 
 #include "Editor.h"
 #include "imgui_internal.h"
+#include "mvp/contexts/UiWindowContext.h"
+#include "settings/ModelSettingsWindow.h"
+#include "settings/PresenterSettingsWindow.h"
+#include "settings/Settings.h"
+#include "settings/ViewSettingsWindow.h"
+#include "settings/categories/OtherCategory.h"
 
 namespace mer::editor::mvp {
 EditorUi::EditorUi() {
@@ -34,9 +40,28 @@ EditorUi::EditorUi() {
 	topLevelEditorWindowClass.ParentViewportId = 0; // Top level window
 	topLevelEditorWindowClass.DockingAllowUnclassed = false;
 	topLevelEditorWindowClass.DockingAlwaysTabBar = true;
+
+	auto model = ModelSettingsWindow::create();
+	auto view = ViewSettingsWindow::create(SceneUiContext::create(this));
+	settingsWindow = PresenterSettingsWindow::create(view, model);
+	settingsWindow->run();
 }
 
 void EditorUi::updateUi() {
+#ifndef IMGUI_DISABLE_DEMO_WINDOWS
+	if (showDemoWindow) ImGui::ShowDemoWindow(&showDemoWindow);
+	if (showStyleEditor) {
+		ImGui::Begin("Dear ImGui Style Editor", &showStyleEditor);
+		ImGui::ShowStyleEditor();
+		ImGui::End();
+	}
+#endif
+#ifndef IMGUI_DISABLE_DEBUG_TOOLS
+	if (showDebugLogWindow) ImGui::ShowDebugLogWindow(&showDebugLogWindow);
+	if (showIdStackToolWindow) ImGui::ShowIDStackToolWindow(&showIdStackToolWindow);
+	if (showAboutWindow) ImGui::ShowAboutWindow(&showAboutWindow);
+	if (showMetricsWindow) ImGui::ShowMetricsWindow(&showMetricsWindow);
+#endif
 
 	SceneUi::updateUi();
 	// Open default documents on startup
@@ -70,7 +95,8 @@ void EditorUi::updateUi() {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		//PushDocumentColors();
 		auto open_count = getEditorsCount();
-		if (open_count > 0) ImGui::Begin("###DocumentRoot", NULL, flags | ImGuiWindowFlags_NoTitleBar);
+		if (open_count > 0)
+			ImGui::Begin("###DocumentRoot", NULL, flags | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar);
 		else
 			ImGui::Begin("No document###DocumentRoot", NULL, flags | ImGuiWindowFlags_MenuBar);
 		ImGui::PopStyleVar();
@@ -87,7 +113,68 @@ void EditorUi::updateUi() {
 		//PopDocumentColors();
 
 		//if (open_count == 0) MyEditor_TopLevelMenuBar(&g_Editor, NULL, 0, ImVec2(0, 0));
+		if (ImGui::BeginMenuBar()) {
+			if (ImGui::BeginMenu("File")) {
+				ImGui::Separator();
+				ImGui::BeginDisabled();
+				ImGui::MenuItem("Exit", "Alt+F4");
+				ImGui::EndDisabled();
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Edit")) {
+				if (ImGui::MenuItem("Settings...")) { settingsWindow->openPopup(); }
 
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Window")) {
+#ifndef NDEBUG
+				bool debugEnabled = true;
+#else
+				bool debugEnabled = Settings::getOther()->debugEnabled;
+#endif
+				if (debugEnabled && ImGui::BeginMenu("Dear ImGui")) {
+#ifndef IMGUI_DISABLE_DEMO_WINDOWS
+					ImGui::MenuItem("Demo Window", nullptr, &showDemoWindow);
+					ImGui::MenuItem("Style Editor", nullptr, &showStyleEditor);
+#endif
+
+#ifndef IMGUI_DISABLE_DEBUG_TOOLS
+					ImGui::MenuItem("Metrics Window", nullptr, &showMetricsWindow);
+					ImGui::MenuItem("DebugLog Window", nullptr, &showDebugLogWindow);
+					ImGui::MenuItem("IDStackTool Window", nullptr, &showIdStackToolWindow);
+					ImGui::MenuItem("About Window", nullptr, &showAboutWindow);
+	#ifndef NDEBUG
+					bool isDebuggerPresent = true;
+	#else
+					bool isDebuggerPresent = ImGui::GetIO().ConfigDebugIsDebuggerPresent;
+	#endif
+					if (ImGui::MenuItem("Item Picker", NULL, false, isDebuggerPresent)) ImGui::DebugStartItemPicker();
+					if (!isDebuggerPresent)
+						ImGui::SetItemTooltip(
+							"Requires io.ConfigDebugIsDebuggerPresent=true to be set.\n\nWe otherwise disable some "
+							"extra features to avoid casual users crashing the application.");
+
+#endif
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Help")) {
+				if (ImGui::MenuItem("Open website"))
+					ImGui::GetPlatformIO().Platform_OpenInShellFn(GImGui, "https://alexusyt.github.io/MegaEngineRing/");
+				if (ImGui::MenuItem("Open manual"))
+					ImGui::GetPlatformIO().Platform_OpenInShellFn(
+						GImGui, "https://alexusyt.github.io/MegaEngineRing/?page=manual/index");
+
+				ImGui::BeginDisabled();
+				if (ImGui::MenuItem("About...")) {}
+				ImGui::EndDisabled();
+				ImGui::EndMenu();
+			}
+
+
+			ImGui::EndMenuBar();
+		}
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
