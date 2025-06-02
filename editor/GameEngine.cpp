@@ -35,6 +35,7 @@
 #include "Globals.h"
 #include "examples/libs/glfw/include/GLFW/glfw3.h"
 #include "mvp/editor/EditorUi.h"
+#include "mvp/editor/settings/Settings.h"
 #include "mvp/onlineImport/ViewOnlineImport.h"
 #include "mvp/sceneEditor/ViewSceneEditor.h"
 #include "project/Project.h"
@@ -69,9 +70,26 @@ protected:
 
 int GameEngine::run(const int pArgc, char* pArgv[]) {
 	Globals::init();
+	mvp::Settings::init();
 	auto application = sdk::Application::create();
 
 	application->initEngine();
+
+	auto settingsPath = Globals::getConfigPath() / "settings.json";
+	mvp::Settings::setSettingsPath(settingsPath);
+
+	if (std::filesystem::exists(settingsPath)) {
+		if (auto msg = mvp::Settings::load()) {
+			sdk::Logger::error(msg);
+			sdk::Logger::error("Using default settings as a fallback...");
+			mvp::Settings::loadDefaults();
+		} else
+			sdk::Logger::info("Settings are loaded successfully");
+	} else {
+		sdk::Logger::info("Settings file does not exists. Creating with defaults...");
+		mvp::Settings::loadDefaults();
+		if (auto msg = mvp::Settings::save()) sdk::Logger::error(msg);
+	}
 
 	if (auto ret = curl_global_init(CURL_GLOBAL_DEFAULT); ret != CURLE_OK) {
 		auto msg = sdk::ReportMessage::create();

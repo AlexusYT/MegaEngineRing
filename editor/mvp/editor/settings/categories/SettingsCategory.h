@@ -1,5 +1,5 @@
 //  MegaEngineRing is a program that can speed up game development.
-//  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
+//  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,36 +16,34 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 10.08.24.
+// Created by alexus on 31.05.2025.
 //
 
-#ifndef IWIDGETCONTEXT_H
-#define IWIDGETCONTEXT_H
-
-namespace mer::editor::mvp {
-class EditorTool;
-}
-
-namespace mer::sdk {
-class UiBase;
-} // namespace mer::sdk
+#ifndef SETTINGSCATEGORY_H
+#define SETTINGSCATEGORY_H
+#include <nlohmann/json_fwd.hpp>
 
 namespace mer::editor::mvp {
 
-class IWidgetContext {
+class SettingsCategory {
 public:
-	virtual ~IWidgetContext() = default;
+	virtual ~SettingsCategory() = default;
 
+	virtual void save(nlohmann::json &pJson) = 0;
 
-	virtual void addTool(EditorTool* pWidget);
+	virtual void load(const nlohmann::json &pJson) = 0;
 
-	virtual void removeWidget() = 0;
+	virtual void loadDefaults() = 0;
 
-	virtual void setTitle(const std::string &pTitle) = 0;
+	virtual const char* getName() const = 0;
+
+	virtual std::shared_ptr<SettingsCategory> clone() = 0;
+
+	virtual bool check(const std::shared_ptr<SettingsCategory> &pCopy) const = 0;
+
+	virtual void apply(const std::shared_ptr<SettingsCategory> &pCopy) = 0;
 };
 
-inline void IWidgetContext::addTool(EditorTool* /*pWidget*/) {}
 } // namespace mer::editor::mvp
 
-
-#endif //IWIDGETCONTEXT_H
+#endif //SETTINGSCATEGORY_H

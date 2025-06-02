@@ -111,6 +111,19 @@ add_library(
         mvp/sceneEditor/NodeSelectionHelper.h
         Utils.cpp
         Utils.h
+        mvp/editor/settings/ViewSettingsWindow.cpp
+        mvp/editor/settings/ViewSettingsWindow.h
+        mvp/editor/settings/ModelSettingsWindow.cpp
+        mvp/editor/settings/ModelSettingsWindow.h
+        mvp/editor/settings/PresenterSettingsWindow.cpp
+        mvp/editor/settings/PresenterSettingsWindow.h
+        mvp/editor/settings/categories/OtherCategory.cpp
+        mvp/editor/settings/categories/OtherCategory.h
+        mvp/editor/settings/Settings.cpp
+        mvp/editor/settings/Settings.h
+        mvp/editor/settings/categories/SettingsCategory.h
+        mvp/editor/settings/categories/GeneralCategory.cpp
+        mvp/editor/settings/categories/GeneralCategory.h
 
 )
 target_compile_options(MegaEngineEditor_lib PRIVATE -Werror)
