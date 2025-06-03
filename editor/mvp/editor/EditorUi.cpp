@@ -21,11 +21,11 @@
 
 #include "EditorUi.h"
 
+#include "CompressedFonts.h"
 #include "Editor.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
-#include "resources.h"
 #include "settings/ModelSettingsWindow.h"
 #include "settings/PresenterSettingsWindow.h"
 #include "settings/Settings.h"

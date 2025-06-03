@@ -1,16 +1,21 @@
 set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/data")
-add_custom_command(
-        OUTPUT resources.h
-        COMMAND echo "\\#ifndef COMPRESSED_FONTS_H\\\\n\#define COMPRESSED_FONTS_H" > resources.h
-        COMMAND ${CMAKE_BINARY_DIR}/ImGUI_B2C "${RESOURCE_PATH}/fonts/NotoSans/static/NotoSans-Regular.ttf" font_noto_sans_regular >> resources.h
-        COMMAND echo "\\#endif //COMPRESSED_FONTS_H" >> resources.h
-        DEPENDS "${RESOURCE_PATH}"
-        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/editor"
+execute_process(
+        COMMAND ${CMAKE_BINARY_DIR}/ImGuiB2C "${RESOURCE_PATH}/fonts/NotoSans/static/NotoSans-Regular.ttf" font_noto_sans_regular
+        RESULT_VARIABLE RESULT_B2C_EXECUTION
+        ERROR_VARIABLE RESULT_B2C_EXECUTION_ERROR
+        OUTPUT_VARIABLE RESULT_B2C_EXECUTION_OUTPUT
 )
+if (NOT ${RESULT_B2C_COMPILATION} EQUAL 0)
+    message(FATAL_ERROR "Failed to execute ImGuiB2C utility:
+    ${RESULT_B2C_EXECUTION}
+    The utility is used to compress the TTF files and save it as C-array. It is required to run, so, try to fix the error
+    ")
+endif ()
 
+configure_file(CompressedFonts.h.in CompressedFonts.h)
 add_library(
         MegaEngineEditor_lib OBJECT
-        resources.h
+        CompressedFonts.h
         GameEngine.cpp
         project/Project.cpp
         project/Project.h
