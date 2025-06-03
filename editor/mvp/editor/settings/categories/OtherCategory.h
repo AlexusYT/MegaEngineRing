@@ -50,7 +50,7 @@ public:
 		return this->debugEnabled == cat->debugEnabled;
 	}
 
-	void apply(const std::shared_ptr<SettingsCategory> &pCopy) override {
+	void onApply(const std::shared_ptr<SettingsCategory> &pCopy) override {
 		const auto cat = std::dynamic_pointer_cast<OtherCategory>(pCopy);
 		if (!cat) return;
 		this->debugEnabled = cat->debugEnabled;

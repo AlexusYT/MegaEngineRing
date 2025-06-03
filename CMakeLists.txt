@@ -53,6 +53,10 @@ target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui")
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui/backends")
 target_link_libraries(ImGUI PUBLIC glm::glm)
 
+add_executable(ImGUI_B2C submodules/imgui/misc/fonts/binary_to_compressed_c.cpp)
+
+add_dependencies(ImGUI ImGUI_B2C)
+
 target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/imconfig_custom.h>\"")
 
 add_subdirectory(submodules/ImGuiFileDialog)

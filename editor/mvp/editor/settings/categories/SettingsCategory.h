@@ -26,6 +26,8 @@
 namespace mer::editor::mvp {
 
 class SettingsCategory {
+	sigc::signal<void()> onSettingsChanged;
+
 public:
 	virtual ~SettingsCategory() = default;
 
@@ -41,7 +43,16 @@ public:
 
 	virtual bool check(const std::shared_ptr<SettingsCategory> &pCopy) const = 0;
 
-	virtual void apply(const std::shared_ptr<SettingsCategory> &pCopy) = 0;
+	virtual void onApply(const std::shared_ptr<SettingsCategory> &pCopy) = 0;
+
+	void apply(const std::shared_ptr<SettingsCategory> &pCopy) {
+		onApply(pCopy);
+		onSettingsChanged.emit();
+	}
+
+	sigc::connection connectChanged(const sigc::slot<void()> &pCallback) {
+		return onSettingsChanged.connect(pCallback);
+	}
 };
 
 } // namespace mer::editor::mvp

@@ -29,6 +29,7 @@ namespace mer::editor::mvp {
 class GeneralCategory : public SettingsCategory {
 public:
 	std::string language;
+	float fontSize;
 
 	GeneralCategory();
 
@@ -45,13 +46,14 @@ public:
 	bool check(const std::shared_ptr<SettingsCategory> &pCopy) const override {
 		const auto cat = std::dynamic_pointer_cast<GeneralCategory>(pCopy);
 		if (!cat) return false;
-		return this->language == cat->language;
+		return this->language == cat->language && this->fontSize == cat->fontSize;
 	}
 
-	void apply(const std::shared_ptr<SettingsCategory> &pCopy) override {
+	void onApply(const std::shared_ptr<SettingsCategory> &pCopy) override {
 		const auto cat = std::dynamic_pointer_cast<GeneralCategory>(pCopy);
 		if (!cat) return;
 		this->language = cat->language;
+		this->fontSize = cat->fontSize;
 	}
 };
 

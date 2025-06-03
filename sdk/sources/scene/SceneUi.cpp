@@ -27,6 +27,8 @@
 
 namespace mer::sdk {
 
+void SceneUi::beforeUiFrame() {}
+
 void SceneUi::updateUi() {
 	//const ImGuiViewport* viewport = ImGui::GetMainViewport();
 	//ImGui::DockSpaceOverViewport(0, viewport);

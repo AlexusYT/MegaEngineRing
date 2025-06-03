@@ -26,9 +26,18 @@
 namespace mer::editor::mvp {
 GeneralCategory::GeneralCategory() {}
 
-void GeneralCategory::save(nlohmann::json &pJson) { pJson["language"] = language; }
+void GeneralCategory::save(nlohmann::json &pJson) {
+	pJson["language"] = language;
+	pJson["fontSize"] = fontSize;
+}
 
-void GeneralCategory::load(const nlohmann::json &pJson) { pJson.at("language").get_to(language); }
+void GeneralCategory::load(const nlohmann::json &pJson) {
+	pJson.at("language").get_to(language);
+	pJson.at("fontSize").get_to(fontSize);
+}
 
-void GeneralCategory::loadDefaults() { language = "system"; }
+void GeneralCategory::loadDefaults() {
+	language = "system";
+	fontSize = 19;
+}
 } // namespace mer::editor::mvp
