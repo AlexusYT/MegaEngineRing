@@ -61,7 +61,9 @@ void ViewSettingsWindow::onUpdate(bool pVisible) {
 		if (selectedCategory) {
 			ImGui::TextUnformatted(selectedCategory->getName());
 			auto &clonedCategory = clonedCategories.at(selectedCategory->getName());
-			if (auto cat = std::dynamic_pointer_cast<GeneralCategory>(clonedCategory.first)) {}
+			if (auto cat = std::dynamic_pointer_cast<GeneralCategory>(clonedCategory.first)) {
+				if (ImGui::SliderFloat("FontSize", &cat->fontSize, 8.0f, 30.0f, "%.0f")) updateChangedState();
+			}
 			if (auto cat = std::dynamic_pointer_cast<OtherCategory>(clonedCategory.first)) {
 				if (ImGui::Checkbox("DebugEnabled", &cat->debugEnabled)) updateChangedState();
 			}

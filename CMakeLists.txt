@@ -53,6 +53,22 @@ target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui")
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui/backends")
 target_link_libraries(ImGUI PUBLIC glm::glm)
 
+execute_process(
+        COMMAND ${CMAKE_CXX_COMPILER} ${CMAKE_SOURCE_DIR}/submodules/imgui/misc/fonts/binary_to_compressed_c.cpp -o ImGuiB2C
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        RESULT_VARIABLE RESULT_B2C_COMPILATION
+        ERROR_VARIABLE RESULT_B2C_COMPILATION_ERROR
+)
+if (NOT ${RESULT_B2C_COMPILATION} EQUAL 0)
+    message(FATAL_ERROR "Failed to compile ImGuiB2C utility:
+    Compiler: ${CMAKE_CXX_COMPILER}
+    ${RESULT_B2C_COMPILATION_ERROR}
+    The utility is used to compress the TTF files and save it as C-array. It is required to run, so, try to fix the error
+    ")
+else ()
+    message(STATUS "Compilation of ImGuiB2C utility succeeded")
+endif ()
+
 target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/imconfig_custom.h>\"")
 
 add_subdirectory(submodules/ImGuiFileDialog)

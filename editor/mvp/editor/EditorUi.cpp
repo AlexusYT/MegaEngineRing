@@ -21,7 +21,9 @@
 
 #include "EditorUi.h"
 
+#include "CompressedFonts.h"
 #include "Editor.h"
+#include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
 #include "settings/ModelSettingsWindow.h"
@@ -218,7 +220,40 @@ void EditorUi::updateUi() {
 	}*/
 }
 
+void EditorUi::beforeUiFrame() {
+	if (fontSettingsChanged) {
+		fontSettingsChanged = false;
+		ImGuiIO &io = ImGui::GetIO();
+		io.Fonts->Clear();
+		io.Fonts->AddFontFromMemoryCompressedTTF(
+			font_noto_sans_regular_compressed_data, font_noto_sans_regular_compressed_size,
+			Settings::getGeneral()->fontSize, nullptr, io.Fonts->GetGlyphRangesCyrillic());
+		ImGui_ImplOpenGL3_DestroyFontsTexture();
+	}
+}
+
 void EditorUi::addEditor(const std::shared_ptr<Editor> &pEditor) { editors.emplace_back(pEditor)->setUi(this); }
+
+sdk::ReportMessagePtr EditorUi::onInitialize() {
+	Settings::getGeneral()->connectChanged([this]() { fontSettingsChanged = true; });
+	fontSettingsChanged = true;
+	ImGuiIO &io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	auto &style = ImGui::GetStyle();
+	style.FrameRounding = 8.0f;
+	style.GrabRounding = 8.0f;
+	style.WindowRounding = 12.0f;
+	style.ChildRounding = 8.0f;
+	style.WindowTitleAlign = ImVec2(0.03f, 0.5f);
+	style.WindowMenuButtonPosition = ImGuiDir_Right;
+
+	return SceneUi::onInitialize();
+}
 
 void EditorUi::customRender() {
 	for (const auto &editor: editors) editor->customRender();

@@ -218,7 +218,6 @@ void Window::runMainLoop() {
 	glfwMaximizeWindow(native);
 	glfwSwapInterval(1); // Enable vsync
 	IMGUI_CHECKVERSION();
-	for (auto ui: sceneUis) { ui->initialize(); }
 	while (!glfwWindowShouldClose(native)) {
 		glfwMakeContextCurrent(native);
 		glfwPollEvents();
@@ -236,22 +235,7 @@ void Window::runMainLoop() {
 		if (!sceneUis.empty() && !imGuiContext) {
 			imGuiContext = ImGui::CreateContext();
 			ImGui::SetCurrentContext(imGuiContext);
-			ImGuiIO &io = ImGui::GetIO();
-			io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-			io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
-			io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-			// Setup Dear ImGui style
-			ImGui::StyleColorsDark();
-			auto &style = ImGui::GetStyle();
-			style.FrameRounding = 8.0f;
-			style.GrabRounding = 8.0f;
-			style.WindowRounding = 12.0f;
-			style.ChildRounding = 8.0f;
-			style.WindowTitleAlign = ImVec2(0.03f, 0.5f);
-			style.WindowMenuButtonPosition = ImGuiDir_Right;
-
-			//ImGui::StyleColorsLight();
+			for (auto ui: sceneUis) { ui->initialize(); }
 
 			// Setup Platform/Renderer backends
 			ImGui_ImplGlfw_InitForOpenGL(native, true);
@@ -261,6 +245,10 @@ void Window::runMainLoop() {
 		if (imGuiContext) {
 			ImGui::SetCurrentContext(imGuiContext);
 			// Start the Dear ImGui frame
+			for (auto sceneUi: sceneUis) {
+				if (!sceneUi->isInited()) continue;
+				sceneUi->beforeUiFrame();
+			}
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();

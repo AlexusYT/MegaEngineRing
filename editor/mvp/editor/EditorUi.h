@@ -32,6 +32,7 @@ class EditorUi : public sdk::SceneUi {
 	Editor* lastActiveEditor{};
 	ImGuiWindowClass topLevelEditorWindowClass;
 	bool optFloatingToolsOnlyVisibleWhenParentIsFocused{true};
+	bool fontSettingsChanged{};
 	std::shared_ptr<IPresenterSettingsWindow> settingsWindow{};
 #ifndef IMGUI_DISABLE_DEMO_WINDOWS
 	bool showDemoWindow{};
@@ -51,6 +52,7 @@ public:
 
 	void updateUi() override;
 
+	void beforeUiFrame() override;
 
 	void addEditor(const std::shared_ptr<Editor> &pEditor);
 
@@ -75,6 +77,8 @@ public:
 	[[nodiscard]] const ImGuiWindowClass &getTopLevelEditorWindowClass() const { return topLevelEditorWindowClass; }
 
 protected:
+	sdk::ReportMessagePtr onInitialize() override;
+
 	void customRender() override;
 
 	void onSizeChanged(int pWidth, int pHeight) override;

@@ -45,6 +45,8 @@ class SceneUi : public Initializable {
 
 
 public:
+	virtual void beforeUiFrame();
+
 	virtual void updateUi();
 
 	virtual void customRender();

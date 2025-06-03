@@ -16,28 +16,10 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 31.05.2025.
+// Created by alexus on 03.06.2025.
 //
 
-#include "GeneralCategory.h"
-
-#include <nlohmann/json.hpp>
-
-namespace mer::editor::mvp {
-GeneralCategory::GeneralCategory() {}
-
-void GeneralCategory::save(nlohmann::json &pJson) {
-	pJson["language"] = language;
-	pJson["fontSize"] = fontSize;
-}
-
-void GeneralCategory::load(const nlohmann::json &pJson) {
-	pJson.at("language").get_to(language);
-	pJson.at("fontSize").get_to(fontSize);
-}
-
-void GeneralCategory::loadDefaults() {
-	language = "system";
-	fontSize = 19;
-}
-} // namespace mer::editor::mvp
+#ifndef COMPRESSEDFONTS_H
+#define COMPRESSEDFONTS_H
+${RESULT_B2C_EXECUTION_OUTPUT}
+#endif //COMPRESSEDFONTS_H
