@@ -91,6 +91,11 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 		if (auto msg = mvp::Settings::save()) sdk::Logger::error(msg);
 	}
 
+	bindtextdomain("ui", "data/locale");
+	textdomain("ui");
+	sdk::Logger::out("test: {}", gettext("Test msg"));
+
+
 	if (auto ret = curl_global_init(CURL_GLOBAL_DEFAULT); ret != CURLE_OK) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to initialize CURL");

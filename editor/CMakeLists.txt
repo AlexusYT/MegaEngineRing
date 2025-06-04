@@ -13,9 +13,8 @@ if (NOT ${RESULT_B2C_COMPILATION} EQUAL 0)
 endif ()
 
 configure_file(CompressedFonts.h.in CompressedFonts.h)
-add_library(
-        MegaEngineEditor_lib OBJECT
-        CompressedFonts.h
+
+set(EDITOR_SOURCES
         GameEngine.cpp
         project/Project.cpp
         project/Project.h
@@ -140,6 +139,20 @@ add_library(
         mvp/editor/settings/categories/GeneralCategory.cpp
         mvp/editor/settings/categories/GeneralCategory.h
 
+)
+
+add_library(MegaEngineEditor_lib OBJECT CompressedFonts.h ${EDITOR_SOURCES})
+find_program(XGETTEXT_CMD xgettext REQUIRED)
+SET(_potFile ${PROJECT_NAME}.pot)
+ADD_CUSTOM_COMMAND(OUTPUT ${_potFile}
+        COMMAND ${XGETTEXT_CMD} ${_xgettext_option_list} -o ${_potFile} ${EDITOR_SOURCES}
+        DEPENDS ${EDITOR_SOURCES}
+        WORKING_DIRECTORY "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor>"
+        COMMENT "Extract translatable messages to ${_potFile}"
+)
+
+ADD_CUSTOM_TARGET(pot_file ${_all}
+        DEPENDS ${_potFile}
 )
 target_compile_options(MegaEngineEditor_lib PRIVATE -Werror)
 

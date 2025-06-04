@@ -27,6 +27,7 @@ else ()
     pkg_check_modules(spng REQUIRED IMPORTED_TARGET spng)
 endif ()
 find_package(glm CONFIG REQUIRED)
+find_package(Gettext REQUIRED)
 pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 include(GNUInstallDirs)
 
