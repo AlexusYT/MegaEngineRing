@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MegaEngineRing 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-07 00:25+0500\n"
+"POT-Creation-Date: 2025-06-07 16:37+0500\n"
 "PO-Revision-Date: 2025-06-06 13:27+0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -156,6 +156,7 @@ msgid "RemoveLight"
 msgstr ""
 
 #: mvp/objectProperties/ViewObjectProperties.cpp:340
+#: mvp/onlineImport/ViewOnlineImport.cpp:109
 msgid "Not implemented yet"
 msgstr ""
 
@@ -221,15 +222,159 @@ msgstr ""
 msgid "ProjectExplorerTool"
 msgstr ""
 
+#: mvp/sceneEditor/ViewSceneEditor.cpp:71
+msgid "SceneAdd"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:72
+msgid "SceneAddBlocking"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:74
+msgid "SceneAddBlockPlane"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:75
+msgid "SceneAddBlockCube"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:76
+msgid "SceneAddBlockSphere"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:80
+msgid "SceneAddModel"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:82
+msgid "SceneAddFromFile"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:86
+msgid "SceneAddFromFileTitle"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:90
+msgid "SceneAddFromSketchfab"
+msgstr ""
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:91
+msgid "SceneAddFromFavorites"
+msgstr ""
+
 #: mvp/prefabEditor/ViewPrefabEditor.cpp:158
 msgid "PrefabEditor"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:333
+#: mvp/onlineImport/ViewOnlineImport.cpp:95
+msgid "In order to use this feature, you need to login to Sketchfab"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:96
+msgid "Website here:"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:101
+msgid "Login using:"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:103
+msgid "LoginWithUsernamePassword"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:105
+msgid "Use username and password from your Sketchfab.com account"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:107
+msgid "LoginWithAPIToken"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:111
+msgid "Use API token from your Sketchfab.com account"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:114
+msgid "Username"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:114
+msgid "Username cannot be empty"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:116
+msgid "Password"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:116
+msgid "Password cannot be empty"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:129
+msgid "In progress..."
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:133
+msgid "ActionLogin"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:188
+msgid "Author name"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:194
+msgid "Collection (uid)"
+msgstr ""
+
+#. translators: "Faces" is the polygons (triangles), not human face.
+#: mvp/onlineImport/ViewOnlineImport.cpp:204
+#, c-format
+msgid "Min Faces: %d"
+msgstr ""
+
+#. translators: "Faces" is the polygons (triangles), not human face.
+#: mvp/onlineImport/ViewOnlineImport.cpp:212
+#, c-format
+msgid "Max Faces: %d"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:220
+msgid "Staff Picked"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:239
+msgid "Not recommended to change"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:241
+msgid "Downloadable"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:246
+msgid "FilterMaterial"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:262
+msgid "Not yet supported by the engine"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:264
+msgid "FilterAnimated"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:269
+msgid "FilterHasSound"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:274
+msgid "FilterRigged"
+msgstr ""
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:293
 msgid "Enter search keywords"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:458
+#: mvp/onlineImport/ViewOnlineImport.cpp:418
 msgid "Search filters"
 msgstr ""
 
@@ -347,34 +492,164 @@ msgstr "System"
 msgid "AngleDegreeSymbol"
 msgstr ""
 
-#: I18N.cpp:75
+#: I18N.cpp:77
+#, fuzzy
+msgid "SketchfabRelevancy"
+msgstr "Least liked"
+
+#: I18N.cpp:78
 msgid "SketchfabLikeCountAsc"
 msgstr "Least liked"
 
-#: I18N.cpp:76
+#: I18N.cpp:79
 msgid "SketchfabLikeCountDesc"
 msgstr "Most liked"
 
-#: I18N.cpp:77
+#: I18N.cpp:80
 msgid "SketchfabViewCountAsc"
 msgstr "Least viewed"
 
-#: I18N.cpp:78
+#: I18N.cpp:81
 msgid "SketchfabViewCountDesc"
 msgstr "Most viewed"
 
-#: I18N.cpp:79
+#: I18N.cpp:82
 msgid "SketchfabPublishedAtAsc"
 msgstr "Latest published"
 
-#: I18N.cpp:80
+#: I18N.cpp:83
 msgid "SketchfabPublishedAtDesc"
 msgstr "Oldest published"
 
-#: I18N.cpp:81
+#: I18N.cpp:84
 msgid "SketchfabProcessedAtAsc"
 msgstr "Latest processed"
 
-#: I18N.cpp:82
+#: I18N.cpp:85
 msgid "SketchfabProcessedAtDesc"
 msgstr "Oldest processed"
+
+#: I18N.cpp:91
+msgid "Any License"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Any License"
+#: I18N.cpp:93
+msgid "AnyLicenseDescription"
+msgstr ""
+
+#: I18N.cpp:95
+msgid "Creative Commons: Attribution"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Creative Commons: Attribution"
+#: I18N.cpp:97
+msgid "Author must be credited. Commercial use is allowed."
+msgstr ""
+
+#: I18N.cpp:99
+msgid "Creative Commons: ShareAlike"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
+#: I18N.cpp:101
+msgid ""
+"Author must be credited. Modified versions must have the same license. "
+"Commercial use is allowed."
+msgstr ""
+
+#: I18N.cpp:103
+msgid "Creative Commons: NoDerivatives"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
+#: I18N.cpp:105
+msgid ""
+"Author must be credited. Modified versions can not be distributed. "
+"Commercial use is allowed."
+msgstr ""
+
+#: I18N.cpp:107
+msgid "Creative Commons: NonCommercial"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
+#: I18N.cpp:109
+msgid "Author must be credited. No commercial use."
+msgstr ""
+
+#: I18N.cpp:111
+msgid "Creative Commons: NonCommercial-ShareAlike"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
+#: I18N.cpp:113
+msgid ""
+"Author must be credited. No commercial use. Modified versions must have the "
+"same license."
+msgstr ""
+
+#: I18N.cpp:115
+msgid "Creative Commons: NonCommercial-NoDerivatives"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
+#: I18N.cpp:117
+msgid ""
+"Author must be credited. No commercial use. Modified versions can not be "
+"distributed."
+msgstr ""
+
+#: I18N.cpp:119
+msgid "Creative Commons: Zero"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Creative Commons: Zero"
+#: I18N.cpp:121
+msgid "Credit is not mandatory. Commercial use is allowed."
+msgstr ""
+
+#: I18N.cpp:123
+msgid "Editorial"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Editorial"
+#: I18N.cpp:125
+msgid ""
+"Use only in connection with events that are newsworthy or of public interest"
+msgstr ""
+
+#: I18N.cpp:127
+msgid "Standard"
+msgstr ""
+
+#. translators: Description for Sketchfab License filter "Standard"
+#: I18N.cpp:129
+msgid ""
+"Under basic restrictions, use worldwide, on all types of media, commercially "
+"or not, and in all types of derivative works"
+msgstr ""
+
+#: I18N.cpp:133
+#, fuzzy
+msgid "SketchfabMaterialAny"
+msgstr "Least liked"
+
+#: I18N.cpp:134
+msgid "SketchfabMaterialSimple"
+msgstr ""
+
+#: I18N.cpp:135
+#, fuzzy
+msgid "SketchfabMaterialPBROnly"
+msgstr "Least liked"
+
+#: I18N.cpp:136
+#, fuzzy
+msgid "SketchfabMaterialMetalness"
+msgstr "Least liked"
+
+#: I18N.cpp:137
+#, fuzzy
+msgid "SketchfabMaterialSpecular"
+msgstr "Least liked"

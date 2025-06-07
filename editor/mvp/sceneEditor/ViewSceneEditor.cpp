@@ -26,6 +26,7 @@
 #include "EngineSDK/gltf/Node.h"
 #include "EngineSDK/meshes/BlockPlaneMesh.h"
 #include "Globals.h"
+#include "ImGuiFileDialog.h"
 #include "NodeSelectionHelper.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
@@ -38,7 +39,6 @@
 #include "mvp/treeObjectWindow/ModelObjectsTree.h"
 #include "mvp/treeObjectWindow/PresenterObjectsTree.h"
 #include "mvp/treeObjectWindow/ViewObjectsTree.h"
-#include "ImGuiFileDialog.h"
 
 namespace mer::editor::mvp {
 
@@ -68,25 +68,27 @@ SceneEditor::SceneEditor(const std::string &pName) : Editor(pName) {
 
 void SceneEditor::updateUi() {
 	if (ImGui::BeginMenuBar()) {
-		if (ImGui::BeginMenu("Add")) {
-			if (ImGui::BeginMenu("Block")) {
-				if (ImGui::MenuItem("Plane")) { addPlane(); }
-				ImGui::MenuItem("Cube");
-				ImGui::MenuItem("Sphere");
+		if (ImGui::BeginMenu(tr("SceneAdd"))) {
+			if (ImGui::BeginMenu(tr("SceneAddBlocking"))) {
+				ImGui::BeginDisabled(true);
+				if (ImGui::MenuItem(tr("SceneAddBlockPlane"))) { addPlane(); }
+				ImGui::MenuItem(tr("SceneAddBlockCube"));
+				ImGui::MenuItem(tr("SceneAddBlockSphere"));
+				ImGui::EndDisabled();
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Model")) {
+			if (ImGui::BeginMenu(tr("SceneAddModel"))) {
 				if (ImGui::BeginMenu("glTF")) {
-					if (ImGui::MenuItem("From File...")) {
+					if (ImGui::MenuItem(tr("SceneAddFromFile"))) {
 						IGFD::FileDialogConfig config;
 						config.path = Globals::getProjectsPath().string();
 						config.countSelectionMax = 1;
-						ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File",
+						ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", tr("SceneAddFromFileTitle"),
 																"glTF files (.glb,.gltf){.glb,.gltf}", config);
 					}
 					ImGui::BeginDisabled(true);
-					if (ImGui::MenuItem("From Sketchfab...")) {}
-					if (ImGui::MenuItem("From Favorites...")) {}
+					if (ImGui::MenuItem(tr("SceneAddFromSketchfab"))) {}
+					if (ImGui::MenuItem(tr("SceneAddFromFavorites"))) {}
 					ImGui::EndDisabled();
 					ImGui::EndMenu();
 				}

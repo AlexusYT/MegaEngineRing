@@ -83,33 +83,38 @@ void ViewOnlineImport::renderLoginDialog() {
 	static std::string password{};
 	static std::string token{};
 
-	//ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 	static glm::vec2 windowSize{350, 204};
-	glm::vec2 contentSize = ImGui::GetContentRegionAvail();
-	ImGui::SetCursorPos((contentSize - windowSize) / 2.0f);
+	[[maybe_unused]] glm::vec2 contentSize = ImGui::GetContentRegionAvail();
+	//ImGui::SetCursorPos((contentSize - windowSize) / 2.0f);
+	ImGui::SetNextWindowPos(center, ImGuiCond_Always, {0.5f, 0.5f});
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10, 10));
 	if (ImGui::BeginChild("Login", {0, 0},
 						  ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY)) {
 		ImGui::PopStyleVar();
-		ImGui::TextWrapped("In order to use this feature, you need to login to Sketchfab");
-		ImGui::TextWrapped("Website here: ");
+		ImGui::TextWrapped("%s", tr("In order to use this feature, you need to login to Sketchfab"));
+		ImGui::TextWrapped("%s ", tr("Website here:"));
 		ImGui::SameLine(0, 0);
 		ImGui::TextLinkOpenURL("https://sketchfab.com");
 		ImGui::Separator();
 		//ImGui::Dummy({10, 10});
-		ImGui::TextWrapped("Login using: ");
+		ImGui::TextWrapped("%s", tr("Login using:"));
 		static int e = 0;
-		ImGui::RadioButton("Username/Password", &e, 0);
+		ImGui::RadioButton(tr("LoginWithUsernamePassword"), &e, 0);
 		ImGui::SameLine();
-		ImGui::HelpMarker("Use username and password from your Sketchfab.com account");
-		ImGui::RadioButton("API Token", &e, 1);
+		ImGui::HelpMarker(tr("Use username and password from your Sketchfab.com account"));
+		ImGui::BeginDisabled(true);
+		ImGui::RadioButton(tr("LoginWithAPIToken"), &e, 1);
+		ImGui::EndDisabled();
+		ImGui::SetItemTooltip("%s", tr("Not implemented yet"));
 		ImGui::SameLine();
-		ImGui::HelpMarker("Use API token from your Sketchfab.com account");
+		ImGui::HelpMarker(tr("Use API token from your Sketchfab.com account"));
 		bool loginDisabled = false;
 		if (e == 0) {
-			ImGui::InputTextErrored("##Username", "Username", "Username cannot be empty", username.empty(), username);
-			ImGui::InputTextErrored("##Password", "Password", "Password cannot be empty", password.empty(), password,
-									ImGuiInputTextFlags_Password);
+			ImGui::InputTextErrored("##Username", tr("Username"), tr("Username cannot be empty"), username.empty(),
+									username);
+			ImGui::InputTextErrored("##Password", tr("Password"), tr("Password cannot be empty"), password.empty(),
+									password, ImGuiInputTextFlags_Password);
 			if (!loginErrorStr.empty()) ImGui::TextUnformatted(loginErrorStr.c_str());
 			loginDisabled = username.empty() || password.empty();
 		} else {
@@ -121,11 +126,11 @@ void ViewOnlineImport::renderLoginDialog() {
 			loginDisabled = token.empty();
 		}
 		if (loginInProgress) {
-			ImGui::ProgressBar(-1.0f * static_cast<float>(ImGui::GetTime()), ImVec2(0.0f, 0.0f), "In progress...");
+			ImGui::ProgressBar(-1.0f * static_cast<float>(ImGui::GetTime()), ImVec2(0.0f, 0.0f), tr("In progress..."));
 		}
 
 		ImGui::BeginDisabled(loginDisabled);
-		if (ImGui::Button("Login")) {
+		if (ImGui::Button(tr("ActionLogin"))) {
 			if (e == 0) {
 				if (presenter) presenter->loginImplicit(username, password);
 			} else {
@@ -167,17 +172,9 @@ void ViewOnlineImport::renderSearchDialog() {
 		if (visible) {
 
 			ImGui::SetNextItemWidth(-1);
-			if (ImGui::BeginCombo("##sortBy",
-								  request.sortBy.empty() ? "Relevancy"
-														 : I18n::trSketchfabSortTypesMap.at(request.sortBy).c_str(),
-								  0)) {
-				bool isSelected = request.sortBy == "";
-				if (ImGui::Selectable("Relevancy##None", isSelected)) {
-					request.sortBy = "";
-					presenter->onSearchRequestChanged();
-				}
+			if (ImGui::BeginCombo("##sortBy", I18n::trSketchfabSortTypesMap.at(request.sortBy).c_str(), 0)) {
 				for (const auto &type: I18n::trSketchfabSortTypes) {
-					isSelected = request.sortBy == type;
+					bool isSelected = request.sortBy == type;
 					if (ImGui::Selectable(I18n::trSketchfabSortTypesMap.at(type).c_str(), isSelected)) {
 						request.sortBy = type;
 						presenter->onSearchRequestChanged();
@@ -188,13 +185,13 @@ void ViewOnlineImport::renderSearchDialog() {
 				ImGui::EndCombo();
 			}
 			ImGui::SetNextItemWidth(-1);
-			if (ImGui::InputTextWithHint("##UserInput", "Models from user...", request.user)) {
+			if (ImGui::InputTextWithHint("##UserInput", tr("Author name"), request.user)) {
 				presenter->onSearchRequestChanged();
 			}
 
 
 			ImGui::SetNextItemWidth(-1);
-			if (ImGui::InputTextWithHint("##CollectionInput", "Collection (uid)...", request.collection)) {
+			if (ImGui::InputTextWithHint("##CollectionInput", tr("Collection (uid)"), request.collection)) {
 				presenter->onSearchRequestChanged();
 			}
 
@@ -203,14 +200,16 @@ void ViewOnlineImport::renderSearchDialog() {
 
 			ImGui::SetNextItemWidth(-1);
 			int lightInnerConeMax = std::min(INT_MAX, maxFaces == 0 ? INT_MAX : maxFaces);
-			if (ImGui::DragInt("##MinFaces", &minFaces, 1, 0, lightInnerConeMax, "Min Faces: %d")) {
+			//translators: "Faces" is the polygons (triangles), not human face.
+			if (ImGui::DragInt("##MinFaces", &minFaces, 1, 0, lightInnerConeMax, tr("Min Faces: %d"))) {
 				if (minFaces > 0) request.minFaceCount = minFaces;
 				else
 					request.minFaceCount.reset();
 				presenter->onSearchRequestChanged();
 			}
 			ImGui::SetNextItemWidth(-1);
-			if (ImGui::DragInt("##MaxFaces", &maxFaces, 1, std::max(0, minFaces), INT_MAX, "Max Faces: %d")) {
+			//translators: "Faces" is the polygons (triangles), not human face.
+			if (ImGui::DragInt("##MaxFaces", &maxFaces, 1, std::max(0, minFaces), INT_MAX, tr("Max Faces: %d"))) {
 				if (maxFaces > 0) request.maxFaceCount = maxFaces;
 				else
 					request.maxFaceCount.reset();
@@ -218,70 +217,38 @@ void ViewOnlineImport::renderSearchDialog() {
 			}
 
 			if (bool value = request.staffpicked.has_value() && request.staffpicked.value();
-				ImGui::Checkbox("Staff Picked", &value)) {
+				ImGui::Checkbox(tr("Staff Picked"), &value)) {
 				request.staffpicked = value;
 				presenter->onSearchRequestChanged();
 			}
-			//by,by-sa, by-nd, by-nc, by-nc-sa, by-nc-nd, cc0, ed, st
-			std::unordered_map<std::string /*type*/, std::pair<std::string /*name*/, std::string /*tooltip*/>> license =
-				{{"by", {"Creative Commons: Attribution", "Author must be credited. Commercial use is allowed."}},
-				 {"by-sa",
-				  {"Creative Commons: ShareAlike", "Author must be credited. Modified versions must have the same "
-												   "license. Commercial use is allowed."}},
-				 {"by-nd",
-				  {"Creative Commons: NoDerivatives",
-				   "Author must be credited. Modified versions can not be distributed. Commercial use is allowed."}},
-				 {"by-nc", {"Creative Commons: NonCommercial", "Author must be credited. No commercial use."}},
-				 {"by-nc-sa",
-				  {"Creative Commons: NonCommercial-ShareAlike",
-				   "Author must be credited. No commercial use. Modified versions must have the same license."}},
-				 {"by-nc-nd",
-				  {"Creative Commons: NonCommercial-NoDerivatives",
-				   "Author must be credited. No commercial use. Modified versions can not be distributed."}},
-				 {"cc0", {"Creative Commons: Zero", "Credit is not mandatory. Commercial use is allowed."}},
-				 {"ed", {"Editorial", "Use only in connection with events that are newsworthy or of public interest"}},
-				 {"st",
-				  {"Standard",
-				   "Under basic restrictions, use worldwide, on all types of media, commercially or not, and in "
-				   "all types of derivative works"}}};
 			ImGui::SetNextItemWidth(-1);
-			if (ImGui::BeginCombo("##License", request.license.empty() ? "Any License"
-																	   : license.at(request.license).first.c_str())) {
-				bool isSelected = request.license == "";
-				if (ImGui::Selectable("Any License##None", isSelected)) {
-					request.license = "";
-					presenter->onSearchRequestChanged();
-				}
-
-				if (isSelected) ImGui::SetItemDefaultFocus();
-				for (const auto &[type, data]: license) {
-					isSelected = request.license == type;
-					if (ImGui::Selectable(data.first.c_str(), isSelected)) {
+			if (ImGui::BeginCombo("##License", I18n::trSketchfabLicensesMap.at(request.license).first.c_str())) {
+				for (const auto &type: I18n::trSketchfabLicenses) {
+					const bool isSelected = request.license == type;
+					const auto &[title, tooltip] = I18n::trSketchfabLicensesMap[type];
+					if (ImGui::Selectable(title.c_str(), isSelected)) {
 						request.license = type;
 						presenter->onSearchRequestChanged();
 					}
-					ImGui::SetItemTooltip("%s", data.second.c_str());
+					ImGui::SetItemTooltip("%s", tooltip.c_str());
 
 					if (isSelected) ImGui::SetItemDefaultFocus();
 				}
 				ImGui::EndCombo();
 			}
-			if (ImGui::CollapsingHeader("Not recommended to change")) {
+			if (ImGui::CollapsingHeader(tr("Not recommended to change"))) {
 				bool downloadable = request.downloadable.has_value() && request.downloadable.value();
-				if (ImGui::Checkbox("Downloadable", &downloadable)) {
+				if (ImGui::Checkbox(tr("Downloadable"), &downloadable)) {
 					request.downloadable = downloadable;
 					presenter->onSearchRequestChanged();
 				}
 
-				std::unordered_map<std::string, std::string> types = {{"false", "Simple"},
-																	  {"true", "Physically based only"},
-																	  {"metalness", "Metalness/Roughness"},
-																	  {"specular", "Specular/Glossiness"}};
-
-				if (ImGui::BeginCombo("Material", types.at(request.pbrType).c_str(), ImGuiComboFlags_WidthFitPreview)) {
-					for (const auto &[type, matName]: types) {
+				if (ImGui::BeginCombo(tr("FilterMaterial"),
+									  I18n::trSketchfabMaterialTypesMap.at(request.pbrType).c_str(),
+									  ImGuiComboFlags_WidthFitPreview)) {
+					for (const auto &type: I18n::trSketchfabMaterialTypes) {
 						bool isSelected = request.pbrType == type;
-						if (ImGui::Selectable(matName.c_str(), isSelected)) {
+						if (ImGui::Selectable(I18n::trSketchfabMaterialTypesMap.at(type).c_str(), isSelected)) {
 							request.pbrType = type;
 							presenter->onSearchRequestChanged();
 						}
@@ -292,19 +259,19 @@ void ViewOnlineImport::renderSearchDialog() {
 				}
 			}
 
-			if (ImGui::CollapsingHeader("Not supported by engine")) {
+			if (ImGui::CollapsingHeader(tr("Not yet supported by the engine"))) {
 				if (bool value = request.animated.has_value() && request.animated.value();
-					ImGui::Checkbox("Animated", &value)) {
+					ImGui::Checkbox(tr("FilterAnimated"), &value)) {
 					request.animated = value;
 					presenter->onSearchRequestChanged();
 				}
 				if (bool value = request.staffpicked.has_value() && request.staffpicked.value();
-					ImGui::Checkbox("Has sound", &value)) {
+					ImGui::Checkbox(tr("FilterHasSound"), &value)) {
 					request.staffpicked = value;
 					presenter->onSearchRequestChanged();
 				}
 				if (bool value = request.rigged.has_value() && request.rigged.value();
-					ImGui::Checkbox("Rigged", &value)) {
+					ImGui::Checkbox(tr("FilterRigged"), &value)) {
 					request.rigged = value;
 					presenter->onSearchRequestChanged();
 				}

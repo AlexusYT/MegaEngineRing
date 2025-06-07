@@ -65,15 +65,75 @@ void I18n::updateStrings() {
 	trExtensionsMap.emplace("LightExtension", get("LightExtension"));
 	trExtensionsMap.emplace("MeshExtension", get("MeshExtension"));
 
-	trSketchfabSortTypes = {"likeCount",   "-likeCount",   "viewCount",	  "-viewCount",
-							"publishedAt", "-publishedAt", "processedAt", "-processedAt"};
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[0], get("SketchfabLikeCountAsc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[1], get("SketchfabLikeCountDesc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[2], get("SketchfabViewCountAsc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[3], get("SketchfabViewCountDesc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[4], get("SketchfabPublishedAtAsc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[5], get("SketchfabPublishedAtDesc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[6], get("SketchfabProcessedAtAsc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[7], get("SketchfabProcessedAtDesc"));
+	trSketchfabSortTypes = {"",
+							"likeCount",
+							"-likeCount",
+							"viewCount",
+							"-viewCount",
+							"publishedAt",
+							"-publishedAt",
+							"processedAt",
+							"-processedAt"};
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[0], get("SketchfabRelevancy"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[1], get("SketchfabLikeCountAsc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[2], get("SketchfabLikeCountDesc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[3], get("SketchfabViewCountAsc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[4], get("SketchfabViewCountDesc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[5], get("SketchfabPublishedAtAsc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[6], get("SketchfabPublishedAtDesc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[7], get("SketchfabProcessedAtAsc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[8], get("SketchfabProcessedAtDesc"));
+
+	//by,by-sa, by-nd, by-nc, by-nc-sa, by-nc-nd, cc0, ed, st
+	trSketchfabLicenses = {"", "by", "by-sa", "by-nd", "by-nc", "by-nc-sa", "by-nc-nd", "cc0", "ed", "st"};
+	trSketchfabLicensesMap = {
+		{trSketchfabLicenses[0],
+		 {tr("Any License"),
+		  //translators: Description for Sketchfab License filter "Any License"
+		  tr("AnyLicenseDescription")}},
+		{trSketchfabLicenses[1],
+		 {tr("Creative Commons: Attribution"),
+		  //translators: Description for Sketchfab License filter "Creative Commons: Attribution"
+		  tr("Author must be credited. Commercial use is allowed.")}},
+		{trSketchfabLicenses[2],
+		 {tr("Creative Commons: ShareAlike"),
+		  //translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
+		  tr("Author must be credited. Modified versions must have the same license. Commercial use is allowed.")}},
+		{trSketchfabLicenses[3],
+		 {tr("Creative Commons: NoDerivatives"),
+		  //translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
+		  tr("Author must be credited. Modified versions can not be distributed. Commercial use is allowed.")}},
+		{trSketchfabLicenses[4],
+		 {tr("Creative Commons: NonCommercial"),
+		  //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
+		  tr("Author must be credited. No commercial use.")}},
+		{trSketchfabLicenses[5],
+		 {tr("Creative Commons: NonCommercial-ShareAlike"),
+		  //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
+		  tr("Author must be credited. No commercial use. Modified versions must have the same license.")}},
+		{trSketchfabLicenses[6],
+		 {tr("Creative Commons: NonCommercial-NoDerivatives"),
+		  //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
+		  tr("Author must be credited. No commercial use. Modified versions can not be distributed.")}},
+		{trSketchfabLicenses[7],
+		 {tr("Creative Commons: Zero"),
+		  //translators: Description for Sketchfab License filter "Creative Commons: Zero"
+		  tr("Credit is not mandatory. Commercial use is allowed.")}},
+		{trSketchfabLicenses[8],
+		 {tr("Editorial"),
+		  //translators: Description for Sketchfab License filter "Editorial"
+		  tr("Use only in connection with events that are newsworthy or of public interest")}},
+		{trSketchfabLicenses[9],
+		 {tr("Standard"),
+		  //translators: Description for Sketchfab License filter "Standard"
+		  tr("Under basic restrictions, use worldwide, on all types of media, commercially or not, and in "
+			 "all types of derivative works")}}};
+
+	trSketchfabMaterialTypes = {"", "true", "false", "metalness", "specular"};
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[0], get("SketchfabMaterialAny"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[1], get("SketchfabMaterialSimple"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[2], get("SketchfabMaterialPBROnly"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[3], get("SketchfabMaterialMetalness"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[4], get("SketchfabMaterialSpecular"));
 }
 } // namespace mer::editor::mvp

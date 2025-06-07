@@ -39,6 +39,11 @@ public:
 	inline static std::unordered_map<std::string, std::string> trExtensionsMap;
 	inline static std::vector<std::string> trSketchfabSortTypes;
 	inline static std::unordered_map<std::string, std::string> trSketchfabSortTypesMap;
+	inline static std::vector<std::string> trSketchfabLicenses;
+	inline static std::unordered_map<std::string, std::pair<std::string /*name*/, std::string /*tooltip*/>>
+		trSketchfabLicensesMap;
+	inline static std::vector<std::string> trSketchfabMaterialTypes;
+	inline static std::unordered_map<std::string, std::string> trSketchfabMaterialTypesMap;
 	inline static std::string trAngleDegrees;
 
 	static void init();

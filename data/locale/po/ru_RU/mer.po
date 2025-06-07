@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MegaEngineRing 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-07 00:25+0500\n"
-"PO-Revision-Date: 2025-06-07 00:22+0500\n"
+"POT-Creation-Date: 2025-06-07 16:37+0500\n"
+"PO-Revision-Date: 2025-06-07 16:38+0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: ru\n"
@@ -156,6 +156,7 @@ msgid "RemoveLight"
 msgstr "Удалить"
 
 #: mvp/objectProperties/ViewObjectProperties.cpp:340
+#: mvp/onlineImport/ViewOnlineImport.cpp:109
 msgid "Not implemented yet"
 msgstr "Пока не реализовано"
 
@@ -220,15 +221,159 @@ msgstr "Свойства"
 msgid "ProjectExplorerTool"
 msgstr "Эксплорер"
 
+#: mvp/sceneEditor/ViewSceneEditor.cpp:71
+msgid "SceneAdd"
+msgstr "Добавить"
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:72
+msgid "SceneAddBlocking"
+msgstr "Блокинг"
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:74
+msgid "SceneAddBlockPlane"
+msgstr "Плоскость"
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:75
+msgid "SceneAddBlockCube"
+msgstr "Куб"
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:76
+msgid "SceneAddBlockSphere"
+msgstr "Сферу"
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:80
+msgid "SceneAddModel"
+msgstr "Модель"
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:82
+msgid "SceneAddFromFile"
+msgstr "Из файла..."
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:86
+msgid "SceneAddFromFileTitle"
+msgstr "Выберите файл"
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:90
+msgid "SceneAddFromSketchfab"
+msgstr "Из Sketchfab..."
+
+#: mvp/sceneEditor/ViewSceneEditor.cpp:91
+msgid "SceneAddFromFavorites"
+msgstr "Из избранного..."
+
 #: mvp/prefabEditor/ViewPrefabEditor.cpp:158
 msgid "PrefabEditor"
 msgstr "Редактор префабов"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:333
+#: mvp/onlineImport/ViewOnlineImport.cpp:95
+msgid "In order to use this feature, you need to login to Sketchfab"
+msgstr "Чтобы использовать эту функцию, вам нужно войти в Sketchfab-аккаунт"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:96
+msgid "Website here:"
+msgstr "Вот веб-сайт:"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:101
+msgid "Login using:"
+msgstr "Войти с помощью:"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:103
+msgid "LoginWithUsernamePassword"
+msgstr "Имени пользователя и пароля"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:105
+msgid "Use username and password from your Sketchfab.com account"
+msgstr "Используйте имя пользователя и пароль от вашего Sketchfab-аккаунта."
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:107
+msgid "LoginWithAPIToken"
+msgstr "Токена API"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:111
+msgid "Use API token from your Sketchfab.com account"
+msgstr "Используйте токен API для вашего Sketchfab-аккаунта"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:114
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:114
+msgid "Username cannot be empty"
+msgstr "Имя пользователя не может быть пустым"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:116
+msgid "Password"
+msgstr "Пароль"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:116
+msgid "Password cannot be empty"
+msgstr "Пароль не может быть пустым"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:129
+msgid "In progress..."
+msgstr "В процессе..."
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:133
+msgid "ActionLogin"
+msgstr "Войти"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:188
+msgid "Author name"
+msgstr "Ник автора"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:194
+msgid "Collection (uid)"
+msgstr "Коллекция (uid)"
+
+#. translators: "Faces" is the polygons (triangles), not human face.
+#: mvp/onlineImport/ViewOnlineImport.cpp:204
+#, c-format
+msgid "Min Faces: %d"
+msgstr "Минимум треугольников: %d"
+
+#. translators: "Faces" is the polygons (triangles), not human face.
+#: mvp/onlineImport/ViewOnlineImport.cpp:212
+#, c-format
+msgid "Max Faces: %d"
+msgstr "Максимум треугольников: %d"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:220
+msgid "Staff Picked"
+msgstr "Выбрано командой Sketchfab"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:239
+msgid "Not recommended to change"
+msgstr "Не рекомендуется изменять"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:241
+msgid "Downloadable"
+msgstr "Можно скачать"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:246
+msgid "FilterMaterial"
+msgstr "Материал"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:262
+msgid "Not yet supported by the engine"
+msgstr "Пока не поддерживается"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:264
+msgid "FilterAnimated"
+msgstr "Анимация"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:269
+msgid "FilterHasSound"
+msgstr "Звук"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:274
+msgid "FilterRigged"
+msgstr "Риг (скелет)"
+
+#: mvp/onlineImport/ViewOnlineImport.cpp:293
 msgid "Enter search keywords"
 msgstr "Введите ключевые слова"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:458
+#: mvp/onlineImport/ViewOnlineImport.cpp:418
 msgid "Search filters"
 msgstr "Фильтры"
 
@@ -346,34 +491,172 @@ msgstr "Системный"
 msgid "AngleDegreeSymbol"
 msgstr "°"
 
-#: I18N.cpp:75
-msgid "SketchfabLikeCountAsc"
-msgstr "Лайки /\\"
-
-#: I18N.cpp:76
-msgid "SketchfabLikeCountDesc"
-msgstr "Лайки \\/"
-
 #: I18N.cpp:77
-msgid "SketchfabViewCountAsc"
-msgstr "Просмотры /\\"
+msgid "SketchfabRelevancy"
+msgstr "По релевантности"
 
 #: I18N.cpp:78
-msgid "SketchfabViewCountDesc"
-msgstr "Просмотры \\/"
+msgid "SketchfabLikeCountAsc"
+msgstr "По лайкам /\\"
 
 #: I18N.cpp:79
-msgid "SketchfabPublishedAtAsc"
-msgstr "Дата публикации /\\"
+msgid "SketchfabLikeCountDesc"
+msgstr "По лайкам \\/"
 
 #: I18N.cpp:80
-msgid "SketchfabPublishedAtDesc"
-msgstr "Дата публикации \\/"
+msgid "SketchfabViewCountAsc"
+msgstr "По просмотрам /\\"
 
 #: I18N.cpp:81
-msgid "SketchfabProcessedAtAsc"
-msgstr "Дата обработки /\\"
+msgid "SketchfabViewCountDesc"
+msgstr "По просмотрам \\/"
 
 #: I18N.cpp:82
+msgid "SketchfabPublishedAtAsc"
+msgstr "По дате публикации /\\"
+
+#: I18N.cpp:83
+msgid "SketchfabPublishedAtDesc"
+msgstr "По дате публикации \\/"
+
+#: I18N.cpp:84
+msgid "SketchfabProcessedAtAsc"
+msgstr "По дате обработки /\\"
+
+#: I18N.cpp:85
 msgid "SketchfabProcessedAtDesc"
-msgstr "Дата обработки \\/"
+msgstr "По дате обработки \\/"
+
+#: I18N.cpp:91
+msgid "Any License"
+msgstr "Любая лицензия"
+
+#. translators: Description for Sketchfab License filter "Any License"
+#: I18N.cpp:93
+msgid "AnyLicenseDescription"
+msgstr "Поиск без учёта лицензий"
+
+#: I18N.cpp:95
+msgid "Creative Commons: Attribution"
+msgstr "Creative Commons: Attribution"
+
+#. translators: Description for Sketchfab License filter "Creative Commons: Attribution"
+#: I18N.cpp:97
+msgid "Author must be credited. Commercial use is allowed."
+msgstr "Упоминание автора обязательно. Коммерческое использование разрешено."
+
+#: I18N.cpp:99
+msgid "Creative Commons: ShareAlike"
+msgstr "Creative Commons: ShareAlike"
+
+#. translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
+#: I18N.cpp:101
+msgid ""
+"Author must be credited. Modified versions must have the same license. "
+"Commercial use is allowed."
+msgstr ""
+"Упоминание автора обязательно. Модификации должны иметь такую же лицензию. "
+"Коммерческое использование разрешено."
+
+#: I18N.cpp:103
+msgid "Creative Commons: NoDerivatives"
+msgstr "Creative Commons: NoDerivatives"
+
+#. translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
+#: I18N.cpp:105
+msgid ""
+"Author must be credited. Modified versions can not be distributed. "
+"Commercial use is allowed."
+msgstr ""
+"Упоминание автора обязательно. Модификации распространять нельзя. "
+"Коммерческое использование разрешено."
+
+#: I18N.cpp:107
+msgid "Creative Commons: NonCommercial"
+msgstr "Creative Commons: NonCommercial"
+
+#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
+#: I18N.cpp:109
+msgid "Author must be credited. No commercial use."
+msgstr "Упоминание автора обязательно. Запрещено коммерческое использование."
+
+#: I18N.cpp:111
+msgid "Creative Commons: NonCommercial-ShareAlike"
+msgstr "Creative Commons: NonCommercial-ShareAlike"
+
+#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
+#: I18N.cpp:113
+msgid ""
+"Author must be credited. No commercial use. Modified versions must have the "
+"same license."
+msgstr ""
+"Упоминание автора обязательно. Запрещено коммерческое использование. "
+"Модификации должны иметь такую же лицензию."
+
+#: I18N.cpp:115
+msgid "Creative Commons: NonCommercial-NoDerivatives"
+msgstr "Creative Commons: NonCommercial-NoDerivatives"
+
+#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
+#: I18N.cpp:117
+msgid ""
+"Author must be credited. No commercial use. Modified versions can not be "
+"distributed."
+msgstr ""
+"Упоминание автора обязательно. Запрещено коммерческое использование. "
+"Модификации распространять нельзя."
+
+#: I18N.cpp:119
+msgid "Creative Commons: Zero"
+msgstr "Creative Commons: Zero"
+
+#. translators: Description for Sketchfab License filter "Creative Commons: Zero"
+#: I18N.cpp:121
+msgid "Credit is not mandatory. Commercial use is allowed."
+msgstr ""
+"Упоминание автора не обязательно. Коммерческое использование разрешено."
+
+#: I18N.cpp:123
+msgid "Editorial"
+msgstr "Editorial"
+
+#. translators: Description for Sketchfab License filter "Editorial"
+#: I18N.cpp:125
+msgid ""
+"Use only in connection with events that are newsworthy or of public interest"
+msgstr ""
+"Использование только в связи с событиями, которые заслуживают освещения в "
+"печати или представляют общественный интерес."
+
+#: I18N.cpp:127
+msgid "Standard"
+msgstr "Стандартная"
+
+#. translators: Description for Sketchfab License filter "Standard"
+#: I18N.cpp:129
+msgid ""
+"Under basic restrictions, use worldwide, on all types of media, commercially "
+"or not, and in all types of derivative works"
+msgstr ""
+"Под основными ограничениями, использование по всему миру, на всех типах "
+"носителей, коммерческих или нет, а также во всех типах производных работ"
+
+#: I18N.cpp:133
+msgid "SketchfabMaterialAny"
+msgstr "Любой"
+
+#: I18N.cpp:134
+msgid "SketchfabMaterialSimple"
+msgstr "Простой"
+
+#: I18N.cpp:135
+msgid "SketchfabMaterialPBROnly"
+msgstr "Основанный на физике"
+
+#: I18N.cpp:136
+msgid "SketchfabMaterialMetalness"
+msgstr "Metalness/Roughness"
+
+#: I18N.cpp:137
+msgid "SketchfabMaterialSpecular"
+msgstr "Specular/Glossiness"
