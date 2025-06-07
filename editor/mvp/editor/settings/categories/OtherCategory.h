@@ -40,7 +40,7 @@ public:
 
 	void loadDefaults() override;
 
-	const char* getName() const override { return "OtherCategory"; }
+	std::string getName() const override { return trs("OtherCategory"); }
 
 	std::shared_ptr<SettingsCategory> clone() override { return std::make_shared<OtherCategory>(*this); }
 

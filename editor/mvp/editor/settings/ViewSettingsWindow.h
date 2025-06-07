@@ -21,6 +21,8 @@
 
 #ifndef VIEWSETTINGSWINDOW_H
 #define VIEWSETTINGSWINDOW_H
+#include <typeindex>
+
 #include "EngineSDK/ui/UiPopup.h"
 #include "EngineSDK/ui/UiWindow.h"
 #include "mvp/IView.h"
@@ -42,19 +44,21 @@ class ViewSettingsWindow : public IViewSettingsWindow, public sdk::UiPopup {
 	IPresenterSettingsWindow* presenter{};
 	std::shared_ptr<IWidgetContext> context{};
 	std::shared_ptr<SettingsCategory> selectedCategory{};
-	std::unordered_map<std::string, std::pair<std::shared_ptr<SettingsCategory> /*cloned*/,
-											  std::shared_ptr<SettingsCategory> /*original*/>>
+	std::unordered_map<std::type_index, std::pair<std::shared_ptr<SettingsCategory> /*cloned*/,
+												  std::shared_ptr<SettingsCategory> /*original*/>>
 		clonedCategories{};
 	bool settingsChanged{};
 
 protected:
 	explicit ViewSettingsWindow(const std::shared_ptr<IWidgetContext> &pContext)
-		: UiPopup("ViewSettingsWindow", "ViewSettingsWindow"), context(pContext) {}
+		: UiPopup("ViewSettingsWindow"), context(pContext) {}
 
 public:
 	static std::shared_ptr<ViewSettingsWindow> create(const std::shared_ptr<IWidgetContext> &pContext) {
 		return std::shared_ptr<ViewSettingsWindow>(new ViewSettingsWindow(pContext));
 	}
+
+	[[nodiscard]] std::string getTitle() const override { return trs("SettingsWindow"); }
 
 	void openPopup() override;
 

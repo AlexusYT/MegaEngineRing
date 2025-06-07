@@ -1,2 +1,0 @@
-msgid "Test msg"
-msgstr "Тестовое сообщение"

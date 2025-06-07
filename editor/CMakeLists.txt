@@ -138,11 +138,30 @@ set(EDITOR_SOURCES
         mvp/editor/settings/categories/SettingsCategory.h
         mvp/editor/settings/categories/GeneralCategory.cpp
         mvp/editor/settings/categories/GeneralCategory.h
+        I18N.cpp
+        I18N.h
 
 )
 
 add_library(MegaEngineEditor_lib OBJECT CompressedFonts.h ${EDITOR_SOURCES})
-find_program(XGETTEXT_CMD xgettext REQUIRED)
+
+configure_gettext(
+        DOMAIN "mer"
+        TARGET_NAME "MegaEngineEditor_lib-gettext"
+        SOURCES ${EDITOR_SOURCES}
+        POTFILE_DESTINATION "${PROJECT_SOURCE_DIR}/data/locale"
+        GMOFILE_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/locale"
+        BUILD_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/locale"
+        INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_LOCALEDIR}"
+        XGETTEXT_ARGS
+        "--keyword=_" "--keyword=N_" "--keyword=trp:1,2" "--keyword=tr" "--keyword=trs" "--keyword=get" "--add-comments=translators:"
+        "--package-name=${PROJECT_NAME}" "--package-version=${PROJECT_VERSION}" "--foreign-user"
+        "--copyright-holder=\"Timofeev (Alexus_XX) Alexander\"" "--from-code=UTF-8"
+        MSGINIT_ARGS "--no-translator"
+        LANGUAGES "en_US" "ru_RU")
+target_compile_definitions(MegaEngineEditor_lib PUBLIC LOCALE_DIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
+add_dependencies(MegaEngineEditor_lib MegaEngineEditor_lib-gettext)
+#[[find_program(XGETTEXT_CMD xgettext REQUIRED)
 SET(_potFile ${PROJECT_NAME}.pot)
 ADD_CUSTOM_COMMAND(OUTPUT ${_potFile}
         COMMAND ${XGETTEXT_CMD} ${_xgettext_option_list} -o ${_potFile} ${EDITOR_SOURCES}
@@ -150,10 +169,10 @@ ADD_CUSTOM_COMMAND(OUTPUT ${_potFile}
         WORKING_DIRECTORY "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor>"
         COMMENT "Extract translatable messages to ${_potFile}"
 )
-
+gettext_process_pot_file(${_potFile} LANGUAGES data/locale/ru_RU/ui)
 ADD_CUSTOM_TARGET(pot_file ${_all}
         DEPENDS ${_potFile}
-)
+)]]
 target_compile_options(MegaEngineEditor_lib PRIVATE -Werror)
 
 target_precompile_headers(MegaEngineEditor_lib

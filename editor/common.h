@@ -26,6 +26,7 @@
 #define JSON_USE_IMPLICIT_CONVERSIONS 0
 #include <EngineUtils/utils/Logger.h>
 #include <EngineUtils/utils/ReportMessage.h>
+#include <I18N.h>
 #include <filesystem>
 #include <fstream>
 #include <glm/ext/matrix_transform.hpp>
@@ -37,6 +38,12 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#ifdef tr
+	#undef tr
+#endif
+#define tr(__TEXT__) I18n::get((__TEXT__)).c_str()
+#define trp(__TEXT1__, __TEXT2__, __NUM__) ngettext((__TEXT1__), (__TEXT2__), (__NUM__))
+#define trs(__TEXT__) I18n::get((__TEXT__))
 
 
 #endif //COMMON_H

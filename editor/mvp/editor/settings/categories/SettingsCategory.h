@@ -37,7 +37,7 @@ public:
 
 	virtual void loadDefaults() = 0;
 
-	virtual const char* getName() const = 0;
+	virtual std::string getName() const = 0;
 
 	virtual std::shared_ptr<SettingsCategory> clone() = 0;
 

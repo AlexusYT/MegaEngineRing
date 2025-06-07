@@ -67,6 +67,8 @@ public:
 
 	void onUpdate(bool pVisible) override;
 
+	[[nodiscard]] std::string getTitle() const override;
+
 	void openView() override;
 
 	void closeView() override;

@@ -116,19 +116,19 @@ void EditorUi::updateUi() {
 
 		//if (open_count == 0) MyEditor_TopLevelMenuBar(&g_Editor, NULL, 0, ImVec2(0, 0));
 		if (ImGui::BeginMenuBar()) {
-			if (ImGui::BeginMenu("File")) {
+			if (ImGui::BeginMenu(tr("MenuFile"))) {
 				ImGui::Separator();
 				ImGui::BeginDisabled();
-				ImGui::MenuItem("Exit", "Alt+F4");
+				ImGui::MenuItem(tr("MenuExit"), "Alt+F4");
 				ImGui::EndDisabled();
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Edit")) {
-				if (ImGui::MenuItem("Settings...")) { settingsWindow->openPopup(); }
+			if (ImGui::BeginMenu(tr("MenuEdit"))) {
+				if (ImGui::MenuItem(tr("MenuSettings..."))) { settingsWindow->openPopup(); }
 
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Window")) {
+			if (ImGui::BeginMenu(tr("MenuWindow"))) {
 #ifndef NDEBUG
 				bool debugEnabled = true;
 #else
@@ -161,15 +161,15 @@ void EditorUi::updateUi() {
 				}
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Help")) {
-				if (ImGui::MenuItem("Open website"))
+			if (ImGui::BeginMenu(tr("MenuHelp"))) {
+				if (ImGui::MenuItem(tr("Open website")))
 					ImGui::GetPlatformIO().Platform_OpenInShellFn(GImGui, "https://alexusyt.github.io/MegaEngineRing/");
-				if (ImGui::MenuItem("Open manual"))
+				if (ImGui::MenuItem(tr("Open manual")))
 					ImGui::GetPlatformIO().Platform_OpenInShellFn(
 						GImGui, "https://alexusyt.github.io/MegaEngineRing/?page=manual/index");
 
 				ImGui::BeginDisabled();
-				if (ImGui::MenuItem("About...")) {}
+				if (ImGui::MenuItem(tr("MenuAbout..."))) {}
 				ImGui::EndDisabled();
 				ImGui::EndMenu();
 			}

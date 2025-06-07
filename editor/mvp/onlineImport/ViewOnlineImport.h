@@ -127,6 +127,8 @@ public:
 		resultsInvalidated = true;
 	}
 
+	[[nodiscard]] std::string getTitle() const override { return trs("SearchWindowTool"); }
+
 private:
 	void renderLoginDialog();
 

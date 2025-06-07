@@ -57,6 +57,8 @@ class ViewObjectsTree : public IViewObjectsTree, public EditorTool {
 public:
 	ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext);
 
+	[[nodiscard]] std::string getTitle() const override { return trs("TreeViewTool"); }
+
 	void openView() override;
 
 	void closeView() override;

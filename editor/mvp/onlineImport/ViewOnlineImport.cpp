@@ -166,24 +166,19 @@ void ViewOnlineImport::renderSearchDialog() {
 		ImGui::Separator();
 		if (visible) {
 
-			std::unordered_map<std::string, std::string> sortTypes = {
-				{"likeCount", "Least liked"},		 {"-likeCount", "Most liked"},
-				{"viewCount", "Least viewed"},		 {"-viewCount", "Most viewed"},
-				{"publishedAt", "Latest published"}, {"-publishedAt", "Oldest published"},
-				{"processedAt", "Latest processed"}, {"-processedAt", "Oldest processed"}};
-
 			ImGui::SetNextItemWidth(-1);
-
 			if (ImGui::BeginCombo("##sortBy",
-								  request.sortBy.empty() ? "Relevancy" : sortTypes.at(request.sortBy).c_str(), 0)) {
+								  request.sortBy.empty() ? "Relevancy"
+														 : I18n::trSketchfabSortTypesMap.at(request.sortBy).c_str(),
+								  0)) {
 				bool isSelected = request.sortBy == "";
 				if (ImGui::Selectable("Relevancy##None", isSelected)) {
 					request.sortBy = "";
 					presenter->onSearchRequestChanged();
 				}
-				for (const auto &[type, matName]: sortTypes) {
+				for (const auto &type: I18n::trSketchfabSortTypes) {
 					isSelected = request.sortBy == type;
-					if (ImGui::Selectable(matName.c_str(), isSelected)) {
+					if (ImGui::Selectable(I18n::trSketchfabSortTypesMap.at(type).c_str(), isSelected)) {
 						request.sortBy = type;
 						presenter->onSearchRequestChanged();
 					}
@@ -328,7 +323,7 @@ void ViewOnlineImport::renderSearchDialog() {
 		ImGui::SameLine();
 	}
 	ImGui::SetNextItemWidth(350);
-	if (ImGui::InputTextWithHint("##QueryInput", "Enter search keywords", request.query)) {
+	if (ImGui::InputTextWithHint("##QueryInput", tr("Enter search keywords"), request.query)) {
 		presenter->onSearchRequestChanged();
 	}
 	contentStart.y += ImGui::GetItemRectSize().y + ImGui::GetStyle().ItemSpacing.y;
@@ -453,7 +448,7 @@ void ViewOnlineImport::drawSearchFiltersButton(float pWidth, bool pTransparent) 
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.18f, 0.18f, 0.18f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 
-	if (ImGui::Button("Search filters", {pWidth, 0})) toggleSearchFilters();
+	if (ImGui::Button(tr("Search filters"), {pWidth, 0})) toggleSearchFilters();
 	if (pTransparent) {
 		ImGui::PopStyleVar();
 		ImGui::PopStyleColor(3);

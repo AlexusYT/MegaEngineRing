@@ -27,11 +27,13 @@
 namespace mer::editor::mvp {
 
 class GeneralCategory : public SettingsCategory {
+
 public:
 	std::string language;
+	sigc::signal<void(const decltype(language) &pNew, const decltype(language) &pOld)> onLanguageChanged;
 	float fontSize;
 
-	GeneralCategory();
+	GeneralCategory() { GeneralCategory::loadDefaults(); }
 
 	void save(nlohmann::json &pJson) override;
 
@@ -39,7 +41,7 @@ public:
 
 	void loadDefaults() override;
 
-	const char* getName() const override { return "GeneralCategory"; }
+	std::string getName() const override { return trs("GeneralCategory"); }
 
 	std::shared_ptr<SettingsCategory> clone() override { return std::make_shared<GeneralCategory>(*this); }
 
@@ -52,7 +54,10 @@ public:
 	void onApply(const std::shared_ptr<SettingsCategory> &pCopy) override {
 		const auto cat = std::dynamic_pointer_cast<GeneralCategory>(pCopy);
 		if (!cat) return;
-		this->language = cat->language;
+		if (this->language != cat->language) {
+			onLanguageChanged(cat->language, this->language);
+			this->language = cat->language;
+		}
 		this->fontSize = cat->fontSize;
 	}
 };

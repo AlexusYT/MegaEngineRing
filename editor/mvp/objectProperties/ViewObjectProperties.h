@@ -68,6 +68,8 @@ public:
 
 	void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) override { scene = pScene; }
 
+	[[nodiscard]] std::string getTitle() const override { return trs("ObjectPropertiesTool"); }
+
 private:
 	void openView() override;
 
@@ -106,6 +108,8 @@ private:
 	enum class AngleUnit { RADIANS, DEGREES };
 
 	static AngleUnit getAngleUnit() { return AngleUnit::DEGREES; }
+
+	static std::string getAngleUnitStr() { return isDegrees() ? I18n::trAngleDegrees : std::string(""); }
 
 	static bool isDegrees() { return getAngleUnit() == AngleUnit::DEGREES; }
 };

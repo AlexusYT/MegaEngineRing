@@ -75,6 +75,8 @@ public:
 
 	void setPresenter(IPresenterScenePreview* pPresenter) override { presenter = pPresenter; }
 
+	[[nodiscard]] std::string getTitle() const override { return trs("ScenePreviewTool"); }
+
 	void customRender() override;
 
 	void onUpdate(bool pVisible) override;

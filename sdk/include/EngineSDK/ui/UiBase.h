@@ -29,7 +29,6 @@ namespace mer::sdk {
 class UiBase : public IRenderable {
 protected:
 	std::string name;
-	std::string title;
 	glm::vec2 position{};
 	glm::vec2 pivot{};
 	glm::vec2 size{};
@@ -38,7 +37,7 @@ protected:
 	bool open{true};
 
 public:
-	UiBase(const std::string &pName, const std::string &pTitle) : name(pName), title(pTitle) {}
+	UiBase(const std::string &pName) : name(pName) {}
 
 	/**
 	 * @brief UI update loop. Only here you can use ImGui functions.
@@ -59,9 +58,7 @@ public:
 
 	void setOpen(bool pOpen) { open = pOpen; }
 
-	[[nodiscard]] const std::string &getTitle() const { return title; }
-
-	void setTitle(const std::string &pTitle) { title = pTitle; }
+	[[nodiscard]] virtual std::string getTitle() const = 0;
 
 	[[nodiscard]] const glm::vec2 &getPosition() const { return position; }
 

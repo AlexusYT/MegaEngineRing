@@ -44,6 +44,8 @@ public:
 
 	void setElements(const std::vector<std::shared_ptr<ProjectExplorerElement>> &pArray) override;
 
+	[[nodiscard]] std::string getTitle() const override { return trs("ProjectExplorerTool"); }
+
 	void openView() override;
 
 	void closeView() override;

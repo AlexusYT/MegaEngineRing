@@ -28,7 +28,12 @@ OtherCategory::OtherCategory() {}
 
 void OtherCategory::save(nlohmann::json &pJson) { pJson["debugEnabled"] = debugEnabled; }
 
-void OtherCategory::load(const nlohmann::json &pJson) { pJson.at("debugEnabled").get_to(debugEnabled); }
+void OtherCategory::load(const nlohmann::json &pJson) {
+	loadDefaults();
+	try {
+		pJson.at("debugEnabled").get_to(debugEnabled);
+	} catch (...) {}
+}
 
 void OtherCategory::loadDefaults() { debugEnabled = false; }
 

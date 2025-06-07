@@ -24,7 +24,6 @@
 #include <nlohmann/json.hpp>
 
 namespace mer::editor::mvp {
-GeneralCategory::GeneralCategory() {}
 
 void GeneralCategory::save(nlohmann::json &pJson) {
 	pJson["language"] = language;
@@ -32,8 +31,13 @@ void GeneralCategory::save(nlohmann::json &pJson) {
 }
 
 void GeneralCategory::load(const nlohmann::json &pJson) {
-	pJson.at("language").get_to(language);
-	pJson.at("fontSize").get_to(fontSize);
+	loadDefaults();
+	try {
+		pJson.at("language").get_to(language);
+	} catch (...) {}
+	try {
+		pJson.at("fontSize").get_to(fontSize);
+	} catch (...) {}
 }
 
 void GeneralCategory::loadDefaults() {

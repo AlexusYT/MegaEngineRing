@@ -33,6 +33,7 @@
 #include "EngineSDK/context/Application.h"
 #include "EngineSDK/context/Window.h"
 #include "Globals.h"
+#include "I18N.h"
 #include "examples/libs/glfw/include/GLFW/glfw3.h"
 #include "mvp/editor/EditorUi.h"
 #include "mvp/editor/settings/Settings.h"
@@ -90,10 +91,7 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 		mvp::Settings::loadDefaults();
 		if (auto msg = mvp::Settings::save()) sdk::Logger::error(msg);
 	}
-
-	bindtextdomain("ui", "data/locale");
-	textdomain("ui");
-	sdk::Logger::out("test: {}", gettext("Test msg"));
+	mvp::I18n::init();
 
 
 	if (auto ret = curl_global_init(CURL_GLOBAL_DEFAULT); ret != CURLE_OK) {
@@ -111,6 +109,7 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 
 	auto result = application->runMainLoop(pArgc, pArgv);
 	curl_global_cleanup();
+	mvp::I18n::deinit();
 	return result;
 }
 
