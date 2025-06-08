@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Timofeev (Alexus_XX) Alexander
+# Copyright (C) YEAR Timofeev\ (Alexus_XX)\ Alexander
 # This file is distributed under the same license as the MegaEngineRing package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MegaEngineRing 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-08 13:22+0500\n"
+"POT-Creation-Date: 2025-06-08 13:25+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,6 @@ msgstr ""
 
 #. translators: second line in reparent tooltip in an object tree window
 #: mvp/treeObjectWindow/ViewObjectsTree.cpp:102
-#, c++-format
 msgid "Left click to reparent to the \"{}\".\n"
 msgstr ""
 
