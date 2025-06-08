@@ -27,8 +27,6 @@
 
         fillPageInfo();
 
-        loadContent(getContentName(), getContentLang());
-
         function getContentName() {
             const params = new URLSearchParams(window.location.search);
             const pageParam = params.get("page");
@@ -71,7 +69,7 @@
         }
 
         window.onload = function () {
-            updateSiteNavbar(getContentLang(), getContentName());
+            loadContent(getContentName(), getContentLang());
         }
 
         function updateSiteNavbar(pageLang, currentContent) {
@@ -310,6 +308,7 @@
         <div class="m-container m-container-inflatable">
             <div class="m-row">
                 <div class="m-col-l-10 m-push-l-1" id="main-content">
+                    <h1>It's a bug. You shouldn't see this message. Try to reload the page.</h1>
                     {% if PAGE_HEADER %}
                     {{ PAGE_HEADER|replace('{filename}', FILENAME) }}
                     {% endif %}
