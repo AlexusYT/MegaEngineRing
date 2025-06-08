@@ -21,14 +21,24 @@
 
 #include "I18N.h"
 
+#include <libintl.h>
+
 #include "mvp/editor/settings/Settings.h"
+
+#ifdef __MINGW32__
+#include <windows.h>
+#endif
+
+#define LOCALE_DOMAIN "mer"
 
 namespace mer::editor::mvp {
 void I18n::init() {
 	onLanguageChangedConnection = Settings::getGeneral()->onLanguageChanged.connect(
 		[](const std::string &pNew, const std::string & /*pOld*/) { switchTo(pNew); });
 	trLanguages.emplace_back("system");
-
+#ifdef __MINGW32__
+	_configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
+#endif
 	for (auto &entry: std::filesystem::directory_iterator(LOCALE_DIR)) {
 		if (!entry.is_directory()) continue;
 		std::string filename = entry.path().stem().string();
@@ -37,33 +47,61 @@ void I18n::init() {
 		try {
 			//language=regexp
 			static std::regex regex(R"(^[a-z]{2,3}_[A-Z]{2,3}$)");
-			std::regex_match(filename, regex);
-			auto tmpLocale = std::locale(filename + ".UTF-8");
+			if (!std::regex_match(filename, regex)) continue;
 
-			auto &facet = std::use_facet<std::messages<char>>(tmpLocale);
-			auto tmpMessagesCatalog = facet.open("mer", tmpLocale, LOCALE_DIR);
-			if (tmpMessagesCatalog < 0) continue;
-
+			switchTo(filename);
 			//translators: Name of your language. It will be used in the lang settings combobox: LangName (CountryName)
-			langName = get("LangName", facet, tmpMessagesCatalog);
-			//translators: Name of your country. It will be used in the lang settings combobox: LangName (CountryName)
-			countryName = get("CountryName", facet, tmpMessagesCatalog);
-
-			facet.close(tmpMessagesCatalog);
-		} catch (...) { continue; }
+			langName = gettext("LangName");
+			//translators: Name of your language. It will be used in the lang settings combobox: LangName (CountryName)
+			countryName = gettext("CountryName");
+		} catch (...) {
+			auto msg = sdk::ReportMessage::create();
+			msg->setTitle("Failed to load locale");
+			msg->setMessage("Exception occurred");
+			msg->addInfoLine("Locale directory: {}", LOCALE_DIR);
+			msg->addInfoLine("Locale name: {}", filename);
+			sdk::Logger::error(msg);
+			continue;
+		}
 		trLanguages.emplace_back(filename);
 		trLanguagesMap.emplace(filename, std::format("{} ({})", langName, countryName));
 	}
-	switchTo(Settings::getGeneral()->language);
+	if (const auto &locale = Settings::getGeneral()->language; locale.empty() || locale == "system")
+		switchTo("");
+	else
+		switchTo(locale);
+	updateStrings();
+}
+
+
+void I18n::switchTo(const std::string &pLocale) {
+	#ifdef __MINGW32__
+	LCID localeId;
+	if (pLocale.empty()) localeId = LOCALE_USER_DEFAULT;
+	else {
+		const std::wstring localeName(pLocale.begin(), pLocale.end());
+		localeId = LocaleNameToLCID(localeName.c_str(), LOCALE_ALLOW_NEUTRAL_NAMES);
+	}
+	SetThreadLocale(localeId);
+#else
+	if (pLocale.empty())
+		std::setlocale(LC_MESSAGES, "");
+	else
+		std::setlocale(LC_MESSAGES, (pLocale+".UTF-8").c_str());
+#endif
+
+	bindtextdomain(LOCALE_DOMAIN, LOCALE_DIR);
+	textdomain(LOCALE_DOMAIN);
+	bind_textdomain_codeset(LOCALE_DOMAIN, "UTF-8");
 }
 
 void I18n::updateStrings() {
-	if (auto iter = trLanguagesMap.find(trLanguages[0]); iter != trLanguagesMap.end()) iter->second = get("LangSystem");
+	if (auto iter = trLanguagesMap.find(trLanguages[0]); iter != trLanguagesMap.end()) iter->second = tr("LangSystem");
 	else
-		trLanguagesMap.emplace(trLanguages[0], get("LangSystem"));
-	trAngleDegrees = get("AngleDegreeSymbol");
-	trExtensionsMap.emplace("LightExtension", get("LightExtension"));
-	trExtensionsMap.emplace("MeshExtension", get("MeshExtension"));
+		trLanguagesMap.emplace(trLanguages[0], tr("LangSystem"));
+	trAngleDegrees = tr("AngleDegreeSymbol");
+	trExtensionsMap.emplace("LightExtension", tr("LightExtension"));
+	trExtensionsMap.emplace("MeshExtension", tr("MeshExtension"));
 
 	trSketchfabSortTypes = {"",
 							"likeCount",
@@ -74,15 +112,15 @@ void I18n::updateStrings() {
 							"-publishedAt",
 							"processedAt",
 							"-processedAt"};
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[0], get("SketchfabRelevancy"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[1], get("SketchfabLikeCountAsc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[2], get("SketchfabLikeCountDesc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[3], get("SketchfabViewCountAsc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[4], get("SketchfabViewCountDesc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[5], get("SketchfabPublishedAtAsc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[6], get("SketchfabPublishedAtDesc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[7], get("SketchfabProcessedAtAsc"));
-	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[8], get("SketchfabProcessedAtDesc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[0], tr("SketchfabRelevancy"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[1], tr("SketchfabLikeCountAsc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[2], tr("SketchfabLikeCountDesc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[3], tr("SketchfabViewCountAsc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[4], tr("SketchfabViewCountDesc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[5], tr("SketchfabPublishedAtAsc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[6], tr("SketchfabPublishedAtDesc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[7], tr("SketchfabProcessedAtAsc"));
+	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[8], tr("SketchfabProcessedAtDesc"));
 
 	//by,by-sa, by-nd, by-nc, by-nc-sa, by-nc-nd, cc0, ed, st
 	trSketchfabLicenses = {"", "by", "by-sa", "by-nd", "by-nc", "by-nc-sa", "by-nc-nd", "cc0", "ed", "st"};
@@ -130,10 +168,10 @@ void I18n::updateStrings() {
 			 "all types of derivative works")}}};
 
 	trSketchfabMaterialTypes = {"", "true", "false", "metalness", "specular"};
-	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[0], get("SketchfabMaterialAny"));
-	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[1], get("SketchfabMaterialSimple"));
-	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[2], get("SketchfabMaterialPBROnly"));
-	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[3], get("SketchfabMaterialMetalness"));
-	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[4], get("SketchfabMaterialSpecular"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[0], tr("SketchfabMaterialAny"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[1], tr("SketchfabMaterialSimple"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[2], tr("SketchfabMaterialPBROnly"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[3], tr("SketchfabMaterialMetalness"));
+	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[4], tr("SketchfabMaterialSpecular"));
 }
 } // namespace mer::editor::mvp

@@ -38,12 +38,13 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <libintl.h>
 #ifdef tr
 	#undef tr
 #endif
-#define tr(__TEXT__) I18n::get((__TEXT__)).c_str()
+#define tr(__TEXT__) gettext((__TEXT__))
 #define trp(__TEXT1__, __TEXT2__, __NUM__) ngettext((__TEXT1__), (__TEXT2__), (__NUM__))
-#define trs(__TEXT__) I18n::get((__TEXT__))
+#define trs(__TEXT__) std::string(gettext(__TEXT__))
 
 
 #endif //COMMON_H

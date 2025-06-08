@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MegaEngineRing 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-07 16:37+0500\n"
+"POT-Creation-Date: 2025-06-08 13:22+0500\n"
 "PO-Revision-Date: 2025-06-07 16:38+0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -45,6 +45,7 @@ msgstr "Удалить"
 
 #. translators: second line in reparent tooltip in an object tree window
 #: mvp/treeObjectWindow/ViewObjectsTree.cpp:102
+#, c++-format
 msgid "Left click to reparent to the \"{}\".\n"
 msgstr "Кликните ЛКМ чтобы сменить родителя на \"{}\".\n"
 
@@ -111,7 +112,7 @@ msgstr "Ось-угол"
 msgid "Scale"
 msgstr "Масштаб"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:260 I18N.cpp:66
+#: mvp/objectProperties/ViewObjectProperties.cpp:260 I18N.cpp:104
 msgid "MeshExtension"
 msgstr "Меш"
 
@@ -123,7 +124,7 @@ msgstr "Выберите меш"
 msgid "MeshNone"
 msgstr "Нет"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:291 I18N.cpp:65
+#: mvp/objectProperties/ViewObjectProperties.cpp:291 I18N.cpp:103
 msgid "LightExtension"
 msgstr "Освещение"
 
@@ -474,83 +475,83 @@ msgid "GeneralCategory"
 msgstr "Основные"
 
 #. translators: Name of your language. It will be used in the lang settings combobox: LangName (CountryName)
-#: I18N.cpp:48
+#: I18N.cpp:54
 msgid "LangName"
 msgstr "Русский"
 
-#. translators: Name of your country. It will be used in the lang settings combobox: LangName (CountryName)
-#: I18N.cpp:50
+#. translators: Name of your language. It will be used in the lang settings combobox: LangName (CountryName)
+#: I18N.cpp:56
 msgid "CountryName"
 msgstr "Россия"
 
-#: I18N.cpp:61 I18N.cpp:63
+#: I18N.cpp:99 I18N.cpp:101
 msgid "LangSystem"
 msgstr "Системный"
 
-#: I18N.cpp:64
+#: I18N.cpp:102
 msgid "AngleDegreeSymbol"
 msgstr "°"
 
-#: I18N.cpp:77
+#: I18N.cpp:115
 msgid "SketchfabRelevancy"
 msgstr "По релевантности"
 
-#: I18N.cpp:78
+#: I18N.cpp:116
 msgid "SketchfabLikeCountAsc"
 msgstr "По лайкам /\\"
 
-#: I18N.cpp:79
+#: I18N.cpp:117
 msgid "SketchfabLikeCountDesc"
 msgstr "По лайкам \\/"
 
-#: I18N.cpp:80
+#: I18N.cpp:118
 msgid "SketchfabViewCountAsc"
 msgstr "По просмотрам /\\"
 
-#: I18N.cpp:81
+#: I18N.cpp:119
 msgid "SketchfabViewCountDesc"
 msgstr "По просмотрам \\/"
 
-#: I18N.cpp:82
+#: I18N.cpp:120
 msgid "SketchfabPublishedAtAsc"
 msgstr "По дате публикации /\\"
 
-#: I18N.cpp:83
+#: I18N.cpp:121
 msgid "SketchfabPublishedAtDesc"
 msgstr "По дате публикации \\/"
 
-#: I18N.cpp:84
+#: I18N.cpp:122
 msgid "SketchfabProcessedAtAsc"
 msgstr "По дате обработки /\\"
 
-#: I18N.cpp:85
+#: I18N.cpp:123
 msgid "SketchfabProcessedAtDesc"
 msgstr "По дате обработки \\/"
 
-#: I18N.cpp:91
+#: I18N.cpp:129
 msgid "Any License"
 msgstr "Любая лицензия"
 
 #. translators: Description for Sketchfab License filter "Any License"
-#: I18N.cpp:93
+#: I18N.cpp:131
 msgid "AnyLicenseDescription"
 msgstr "Поиск без учёта лицензий"
 
-#: I18N.cpp:95
+#: I18N.cpp:133
 msgid "Creative Commons: Attribution"
 msgstr "Creative Commons: Attribution"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Attribution"
-#: I18N.cpp:97
+#: I18N.cpp:135
 msgid "Author must be credited. Commercial use is allowed."
 msgstr "Упоминание автора обязательно. Коммерческое использование разрешено."
 
-#: I18N.cpp:99
+#: I18N.cpp:137
 msgid "Creative Commons: ShareAlike"
 msgstr "Creative Commons: ShareAlike"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
-#: I18N.cpp:101
+#: I18N.cpp:139
 msgid ""
 "Author must be credited. Modified versions must have the same license. "
 "Commercial use is allowed."
@@ -558,12 +559,12 @@ msgstr ""
 "Упоминание автора обязательно. Модификации должны иметь такую же лицензию. "
 "Коммерческое использование разрешено."
 
-#: I18N.cpp:103
+#: I18N.cpp:141
 msgid "Creative Commons: NoDerivatives"
 msgstr "Creative Commons: NoDerivatives"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
-#: I18N.cpp:105
+#: I18N.cpp:143
 msgid ""
 "Author must be credited. Modified versions can not be distributed. "
 "Commercial use is allowed."
@@ -571,21 +572,21 @@ msgstr ""
 "Упоминание автора обязательно. Модификации распространять нельзя. "
 "Коммерческое использование разрешено."
 
-#: I18N.cpp:107
+#: I18N.cpp:145
 msgid "Creative Commons: NonCommercial"
 msgstr "Creative Commons: NonCommercial"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
-#: I18N.cpp:109
+#: I18N.cpp:147
 msgid "Author must be credited. No commercial use."
 msgstr "Упоминание автора обязательно. Запрещено коммерческое использование."
 
-#: I18N.cpp:111
+#: I18N.cpp:149
 msgid "Creative Commons: NonCommercial-ShareAlike"
 msgstr "Creative Commons: NonCommercial-ShareAlike"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
-#: I18N.cpp:113
+#: I18N.cpp:151
 msgid ""
 "Author must be credited. No commercial use. Modified versions must have the "
 "same license."
@@ -593,12 +594,12 @@ msgstr ""
 "Упоминание автора обязательно. Запрещено коммерческое использование. "
 "Модификации должны иметь такую же лицензию."
 
-#: I18N.cpp:115
+#: I18N.cpp:153
 msgid "Creative Commons: NonCommercial-NoDerivatives"
 msgstr "Creative Commons: NonCommercial-NoDerivatives"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
-#: I18N.cpp:117
+#: I18N.cpp:155
 msgid ""
 "Author must be credited. No commercial use. Modified versions can not be "
 "distributed."
@@ -606,34 +607,34 @@ msgstr ""
 "Упоминание автора обязательно. Запрещено коммерческое использование. "
 "Модификации распространять нельзя."
 
-#: I18N.cpp:119
+#: I18N.cpp:157
 msgid "Creative Commons: Zero"
 msgstr "Creative Commons: Zero"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Zero"
-#: I18N.cpp:121
+#: I18N.cpp:159
 msgid "Credit is not mandatory. Commercial use is allowed."
 msgstr ""
 "Упоминание автора не обязательно. Коммерческое использование разрешено."
 
-#: I18N.cpp:123
+#: I18N.cpp:161
 msgid "Editorial"
 msgstr "Editorial"
 
 #. translators: Description for Sketchfab License filter "Editorial"
-#: I18N.cpp:125
+#: I18N.cpp:163
 msgid ""
 "Use only in connection with events that are newsworthy or of public interest"
 msgstr ""
 "Использование только в связи с событиями, которые заслуживают освещения в "
 "печати или представляют общественный интерес."
 
-#: I18N.cpp:127
+#: I18N.cpp:165
 msgid "Standard"
 msgstr "Стандартная"
 
 #. translators: Description for Sketchfab License filter "Standard"
-#: I18N.cpp:129
+#: I18N.cpp:167
 msgid ""
 "Under basic restrictions, use worldwide, on all types of media, commercially "
 "or not, and in all types of derivative works"
@@ -641,22 +642,22 @@ msgstr ""
 "Под основными ограничениями, использование по всему миру, на всех типах "
 "носителей, коммерческих или нет, а также во всех типах производных работ"
 
-#: I18N.cpp:133
+#: I18N.cpp:171
 msgid "SketchfabMaterialAny"
 msgstr "Любой"
 
-#: I18N.cpp:134
+#: I18N.cpp:172
 msgid "SketchfabMaterialSimple"
 msgstr "Простой"
 
-#: I18N.cpp:135
+#: I18N.cpp:173
 msgid "SketchfabMaterialPBROnly"
 msgstr "Основанный на физике"
 
-#: I18N.cpp:136
+#: I18N.cpp:174
 msgid "SketchfabMaterialMetalness"
 msgstr "Metalness/Roughness"
 
-#: I18N.cpp:137
+#: I18N.cpp:175
 msgid "SketchfabMaterialSpecular"
 msgstr "Specular/Glossiness"

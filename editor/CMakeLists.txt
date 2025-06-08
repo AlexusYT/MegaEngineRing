@@ -189,7 +189,9 @@ target_include_directories(
         PUBLIC
         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor>"
 )
-
+if (WIN32)
+    target_link_libraries(MegaEngineEditor_lib PRIVATE libintl)
+endif ()
 target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineSDK_shared)
 target_compile_definitions(MegaEngineEditor_lib PRIVATE GLM_ENABLE_EXPERIMENTAL)
 target_compile_features(MegaEngineEditor_lib PRIVATE cxx_std_23)

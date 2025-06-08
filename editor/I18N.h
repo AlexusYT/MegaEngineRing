@@ -50,27 +50,9 @@ public:
 
 	static void deinit() {
 		onLanguageChangedConnection.disconnect();
-		auto &facet = std::use_facet<std::messages<char>>(currentLocale);
-		if (messagesCatalog >= 0) facet.close(messagesCatalog);
 	}
 
-	static void switchTo(const std::string &pLocale) {
-		if (pLocale.empty() || pLocale == "system") currentLocale = std::locale("");
-		else
-			currentLocale = std::locale(pLocale + ".UTF-8");
-		auto &facet = std::use_facet<std::messages<char>>(currentLocale);
-		if (messagesCatalog >= 0) facet.close(messagesCatalog);
-		messagesCatalog = facet.open("mer", currentLocale, LOCALE_DIR);
-		updateStrings();
-	}
-
-	static std::string get(const std::string &pStr, const std::messages<char> &pFacet, const int pCatalog) {
-		return pFacet.get(pCatalog, 0, 0, pStr);
-	}
-
-	static std::string get(const std::string &pStr) {
-		return get(pStr, std::use_facet<std::messages<char>>(currentLocale), messagesCatalog);
-	}
+	static void switchTo(const std::string &pLocale);
 
 
 private:
