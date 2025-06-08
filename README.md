@@ -3,6 +3,7 @@
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](LICENSE)
 [![C++](https://img.shields.io/badge/C++-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
 [![CMake on multiple platforms](https://github.com/AlexusYT/MegaEngineRing/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/AlexusYT/MegaEngineRing/actions/workflows/cmake-multi-platform.yml)
+[![Translation status](https://hosted.weblate.org/widget/megaenginering/ui-strings/svg-badge.svg)](https://hosted.weblate.org/engage/megaenginering/)
 
 MegaEngineRing is a modern C++ game engine focused on performance and extensibility. The engine provides a comprehensive
 set of tools and features for game development, including 3D model support, scene editing, and integration with popular
@@ -36,6 +37,12 @@ production use.
 
 ![Scene Editor](docs/images/SceneEditor.png)
 *Scene editor for game environment creation*
+
+### Localization
+
+[![Translated languages](https://hosted.weblate.org/widget/megaenginering/ui-strings/multi-auto.svg)](https://hosted.weblate.org/engage/megaenginering/)
+
+You can help us with translating the engine into other languages on [Weblate](https://hosted.weblate.org/engage/megaenginering/).
 
 ## 🔧 Prerequisites
 
