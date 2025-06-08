@@ -122,6 +122,7 @@ sdk::ReportMessagePtr Settings::save() {
 		msg->addInfoLine("Settings file path: {}", tmpPath.string());
 		return msg;
 	}
+	file.close();
 	if (backupSettingsFile) {
 		if (std::error_code ec; !std::filesystem::remove(path, ec) && ec) {
 			auto msg = sdk::ReportMessage::create();
