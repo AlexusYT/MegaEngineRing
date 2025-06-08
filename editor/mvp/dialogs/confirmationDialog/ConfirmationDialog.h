@@ -27,17 +27,22 @@ namespace mer::editor::mvp {
 
 class ConfirmationDialog : public sdk::UiPopup {
 
+	std::string title;
 	std::string message;
 	std::vector<std::string> buttons;
 
 	std::function<void(int pId)> buttonClickedCallback;
 
-	ConfirmationDialog(const std::string &pName, const std::string &pTitle) : UiPopup(pName, pTitle) {}
+	ConfirmationDialog(const std::string &pName, const std::string &pTitle) : UiPopup(pName), title(pTitle) {}
 
 public:
 	static std::shared_ptr<ConfirmationDialog> create(const std::string &pName, const std::string &pTitle);
 
+	[[nodiscard]] std::string getTitle() const override { return title; }
+
 	void onUpdate(bool pVisible) override;
+
+	void setTitle(const std::string &pTitle) { title = pTitle; }
 
 	[[nodiscard]] const std::string &getMessage() const { return message; }
 

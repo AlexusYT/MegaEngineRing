@@ -39,7 +39,7 @@
 
 namespace mer::editor::mvp {
 ViewPrefabEditor::ViewPrefabEditor(const std::shared_ptr<IWidgetContext> &pContext)
-	: UiWindow("PrefabEditor", "Prefab Editor"), context(pContext) {
+	: UiWindow("PrefabEditor"), context(pContext) {
 	auto prefab = prefabs.emplace_back(sdk::Prefab::create(), false).first;
 	prefab->setName("Prefab");
 	auto program = sdk::DefaultProgram::getInstance();
@@ -154,6 +154,8 @@ void ViewPrefabEditor::onUpdate(bool pVisible) {
 	}
 	//subWindows->renderWindows();
 }
+
+std::string ViewPrefabEditor::getTitle() const { return trs("PrefabEditor"); }
 
 void ViewPrefabEditor::openView() {
 	//context->addWindow(this);

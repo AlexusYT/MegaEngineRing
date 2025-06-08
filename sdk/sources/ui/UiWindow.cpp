@@ -48,7 +48,7 @@ void UiWindow::render() {
 	ImGui::SetNextWindowSize(actualSize);
 
 	if (open) {
-		if (ImGui::Begin(title.c_str(), &open, windowFlags)) {
+		if (ImGui::Begin(getTitle().c_str(), &open, windowFlags)) {
 			for (auto uiPopup: popups) { uiPopup->render(); }
 			onUpdate(true);
 		}

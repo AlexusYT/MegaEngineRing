@@ -30,7 +30,7 @@ jobs:
             mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc mingw-w64-x86_64-ninja mingw-w64-x86_64-pkgconf mingw-w64-x86_64-libsigc++-3.0 mingw-w64-x86_64-libspng 
             mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-glm mingw-w64-x86_64-libepoxy mingw-w64-x86_64-glfw 
             mingw-w64-x86_64-nlohmann-json mingw-w64-x86_64-gtest mingw-w64-x86_64-curl-gnutls mingw-w64-x86_64-openssl 
-            mingw-w64-x86_64-zlib
+            mingw-w64-x86_64-zlib mingw-w64-x86_64-gettext
 
       - name: Configure CMake
         shell: msys2 {0}
@@ -66,7 +66,9 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install ninja-build libxi-dev libx11-dev libxft-dev libxext-dev  libxinerama-dev xorg-dev libglu1-mesa-dev libxcursor-dev libxdamage-dev libsigc++-3.0-dev libspng-dev libturbojpeg0-dev libglm-dev libepoxy-dev libglfw3-dev nlohmann-json3-dev libgtest-dev libgmock-dev libcurl4-gnutls-dev
+          sudo apt-get install ninja-build libxi-dev libx11-dev libxft-dev libxext-dev  libxinerama-dev xorg-dev \
+          libglu1-mesa-dev libxcursor-dev libxdamage-dev libsigc++-3.0-dev libspng-dev libturbojpeg0-dev libglm-dev \
+          libepoxy-dev libglfw3-dev nlohmann-json3-dev libgtest-dev libgmock-dev libcurl4-gnutls-dev gettext
 
       - name: Configure CMake
         run: |

@@ -204,11 +204,11 @@ void Editor::updateContents() {
 			"NoTools", {0, 0}, ImGuiChildFlags_FrameStyle | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY);
 		ImGui::PopStyleVar();
 		if (childVisible) {
-			ImGui::TextWrapped("No opened tools in this workspace");
+			ImGui::TextWrapped("%s", tr("No opened tools in this workspace"));
 
-			auto text = "Select a tool to open...";
-			glm::vec2 textSize = ImGui::CalcTextSize(text);
-			if (ImGui::Button(text, textSize + glm::vec2(30, 30))) ImGui::OpenPopup(val);
+			auto text = trs("Select a tool to open...");
+			glm::vec2 textSize = ImGui::CalcTextSize(text.c_str());
+			if (ImGui::Button(text.c_str(), textSize + glm::vec2(30, 30))) ImGui::OpenPopup(val);
 		}
 		ImGui::EndChild();
 	}
@@ -238,7 +238,7 @@ void Editor::updateContents() {
 			ImGuiDockNode* windowNode = toolWindow->DockNode;
 			if (windowNode && ImGui::DockNodeBeginAmendTabBar(windowNode)) {
 				if (ImGui::TabItemButton("+", ImGuiTabItemFlags_Trailing)) ImGui::OpenPopup(val);
-				ImGui::SetItemTooltip("Open or close the workspace tools");
+				ImGui::SetItemTooltip("%s", tr("Open or close the workspace tools"));
 				ImGui::DockNodeEndAmendTabBar();
 			}
 			if (ui->isOptFloatingToolsOnlyVisibleWhenParentIsFocused() && !isLastFocusedDoc) {

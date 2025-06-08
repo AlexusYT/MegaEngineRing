@@ -21,6 +21,7 @@
 
 #include "ViewSettingsWindow.h"
 
+#include "I18N.h"
 #include "Settings.h"
 #include "mvp/contexts/UiWindowContext.h"
 
@@ -38,15 +39,16 @@ void ViewSettingsWindow::onUpdate(bool pVisible) {
 	{
 		ImGui::BeginChild("left pane1", ImVec2(150, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_ResizeX);
 		auto &categories = Settings::getCategories();
-		for (auto category: categories)
-			if (ImGui::Selectable(category->getName(), selectedCategory == category)) {
+		for (auto category: categories) {
+			auto catName = category->getName();
+			if (ImGui::Selectable(catName.c_str(), selectedCategory == category)) {
 				selectedCategory = category;
-				auto categoryName = category->getName();
-				if (auto iter = clonedCategories.find(categoryName); iter == clonedCategories.end()) {
-					clonedCategories.emplace(categoryName, std::make_pair(category->clone(), category));
+				const auto &typeExpr = *category;
+				if (auto iter = clonedCategories.find(typeid(typeExpr)); iter == clonedCategories.end()) {
+					clonedCategories.emplace(typeid(typeExpr), std::make_pair(category->clone(), category));
 				}
 			}
-
+		}
 		ImGui::EndChild();
 	}
 
@@ -59,26 +61,53 @@ void ViewSettingsWindow::onUpdate(bool pVisible) {
 						  ImVec2(0, -ImGui::GetFrameHeightWithSpacing())); // Leave room for 1 line below us
 
 		if (selectedCategory) {
-			ImGui::TextUnformatted(selectedCategory->getName());
-			auto &clonedCategory = clonedCategories.at(selectedCategory->getName());
+			ImGui::TextUnformatted(selectedCategory->getName().c_str());
+			const auto &typeExpr = *selectedCategory;
+			auto &clonedCategory = clonedCategories.at(typeid(typeExpr));
 			if (auto cat = std::dynamic_pointer_cast<GeneralCategory>(clonedCategory.first)) {
-				if (ImGui::SliderFloat("FontSize", &cat->fontSize, 8.0f, 30.0f, "%.0f")) updateChangedState();
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(tr("InterfaceLanguage"));
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(-1);
+				if (ImGui::BeginCombo("##language",
+									  cat->language.empty() ? "" : I18n::trLanguagesMap.at(cat->language).c_str(), 0)) {
+
+					for (const auto &type: I18n::trLanguages) {
+						bool isSelected = cat->language == type;
+						if (ImGui::Selectable(I18n::trLanguagesMap.at(type).c_str(), isSelected)) {
+							cat->language = type;
+							updateChangedState();
+						}
+
+						if (isSelected) ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
+				ImGui::SetNextItemWidth(-1);
+				if (ImGui::SliderFloat("##fontSize", &cat->fontSize, 8.0f, 30.0f, tr("FontSize: %.0f")))
+					updateChangedState();
 			}
 			if (auto cat = std::dynamic_pointer_cast<OtherCategory>(clonedCategory.first)) {
-				if (ImGui::Checkbox("DebugEnabled", &cat->debugEnabled)) updateChangedState();
+				if (ImGui::Checkbox(tr("DebugEnabled"), &cat->debugEnabled)) updateChangedState();
 			}
 		}
 		ImGui::EndChild();
-		if (ImGui::Button("OK")) {
-			if (settingsChanged) applyChanges();
-			ImGui::CloseCurrentPopup();
+		if (settingsChanged) {
+			//translators: Button in settings window
+			if (ImGui::Button(tr("ApplyAndClose"))) {
+				if (settingsChanged) applyChanges();
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("Close")) { ImGui::CloseCurrentPopup(); }
-		ImGui::SameLine();
-		ImGui::BeginDisabled(!settingsChanged);
-		if (ImGui::Button("Apply")) { applyChanges(); }
-		ImGui::EndDisabled();
+
+		if (settingsChanged) {
+			//translators: Button in settings window
+			if (ImGui::Button(tr("Apply"))) { applyChanges(); }
+			ImGui::SameLine();
+		}
+		//translators: Button in settings window
+		if (ImGui::Button(tr("Close"))) { ImGui::CloseCurrentPopup(); }
 		ImGui::EndGroup();
 	}
 }
@@ -100,6 +129,7 @@ void ViewSettingsWindow::updateChangedState() {
 
 void ViewSettingsWindow::applyChanges() {
 	for (auto &category: clonedCategories | std::views::values) { category.second->apply(category.first); }
+	if (auto msg = Settings::save()) { sdk::Logger::error(msg); }
 	updateChangedState();
 }
 } // namespace mer::editor::mvp

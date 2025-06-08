@@ -28,7 +28,7 @@ namespace mer::sdk {
 class UiPopup : public UiBase {
 
 public:
-	UiPopup(const std::string &pName, const std::string &pTitle) : UiBase(pName, pTitle) {}
+	UiPopup(const std::string &pName) : UiBase(pName) {}
 
 	void render() override;
 };

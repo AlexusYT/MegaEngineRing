@@ -31,7 +31,7 @@
 
 namespace mer::editor::mvp {
 ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &pContext)
-	: sdk::UiWindow("ViewProjectExplorer", "View Project Explorer##ViewProjectExplorer"), context(pContext) {
+	: sdk::UiWindow("ViewProjectExplorer"), context(pContext) {
 
 	dialog = ConfirmationDialog::create("ProjectExplorer-confirm", "ConfirmDeletion");
 	dialog->setWindowFlags(ImGuiWindowFlags_NoResize);

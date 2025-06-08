@@ -53,8 +53,8 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 										 ImGuiTableFlags_ScrollX;
 	if (ImGui::BeginTable("ObjectTreeTable", 2, table_flags)) {
 		// The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
-		ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoResize);
-		ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, textBaseWidth * 6.0f);
+		ImGui::TableSetupColumn(tr("ObjectName"), ImGuiTableColumnFlags_NoResize);
+		ImGui::TableSetupColumn(tr("ObjectType"), ImGuiTableColumnFlags_WidthFixed, textBaseWidth * 6.0f);
 		ImGui::TableSetupScrollFreeze(0, 1);
 		ImGui::TableHeadersRow();
 
@@ -78,13 +78,13 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 		if (contextMenuImguiId == 0) contextMenuImguiId = ImGui::GetID("ContextMenu");
 		if (ImGui::BeginPopup("ContextMenu")) {
 
-			if (ImGui::MenuItem("Add")) {
-				auto newNode = sdk::Node::create("Unnamed");
+			if (ImGui::MenuItem(tr("ObjectAdd"))) {
+				auto newNode = sdk::Node::create(tr("ObjectUnnamed"));
 				scene->addNode(selectedNodeForContext, newNode);
 			}
 			if (selectedNodeForContext) {
-				if (ImGui::MenuItem("Reparent")) { nodeToReparent = selectedNodeForContext; }
-				if (ImGui::MenuItem("Remove")) {
+				if (ImGui::MenuItem(tr("ObjectReparent"))) { nodeToReparent = selectedNodeForContext; }
+				if (ImGui::MenuItem(tr("ObjectRemove"))) {
 					if (presenter) presenter->clearSelection();
 					scene->removeNode(selectedNodeForContext);
 				}
@@ -98,8 +98,8 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 			}
 
 			std::string tooltipText;
-			const std::string unformattedText = R"(Left click to reparent to the "{}".
-)";
+			//translators: second line in reparent tooltip in an object tree window
+			const std::string unformattedText = tr("Left click to reparent to the \"{}\".\n");
 			if (hoveredNode && nodeToReparent != hoveredNode) {
 				tooltipText = std::vformat(unformattedText, std::make_format_args(hoveredNode->getName()));
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
@@ -107,14 +107,17 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 					nodeToReparent = nullptr;
 				}
 			} else if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ForTooltip)) {
-				tooltipText = std::vformat(unformattedText, std::make_format_args("Root of the scene"));
+				//translators: root element in reparent tooltip in an object tree window
+				auto root = trs("Root of the scene");
+				tooltipText = std::vformat(unformattedText, std::make_format_args(root));
 
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
 					scene->reparentNode(nodeToReparent, nullptr);
 					nodeToReparent = nullptr;
 				}
 			}
-			tooltipText += "Right click to cancel.";
+			//translators: second line in reparent tooltip in an object tree window
+			tooltipText += trs("Right click to cancel.");
 			if (ImGui::BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None)) {
 				ImGui::TextUnformatted(tooltipText.c_str());
 				ImGui::EndTooltip();

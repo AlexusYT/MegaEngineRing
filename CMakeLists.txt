@@ -13,6 +13,8 @@ set(SDK_VERSION "0.1.0")
 
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
+include(cmake/gettext-helper.cmake)
+
 
 # ---- Declare library ----
 
@@ -27,6 +29,7 @@ else ()
     pkg_check_modules(spng REQUIRED IMPORTED_TARGET spng)
 endif ()
 find_package(glm CONFIG REQUIRED)
+find_package(Gettext REQUIRED)
 pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
 include(GNUInstallDirs)
 

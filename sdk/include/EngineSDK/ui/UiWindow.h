@@ -36,7 +36,7 @@ class UiWindow : public UiBase {
 	std::vector<std::shared_ptr<UiPopup>> popups;
 
 public:
-	UiWindow(const std::string &pName, const std::string &pTitle) : UiBase(pName, pTitle) {}
+	UiWindow(const std::string &pName) : UiBase(pName) {}
 
 	static constexpr float POSITION_CENTERED = -100000.0f;
 	static constexpr float SIZE_MATH_PARENT = -1.0f;

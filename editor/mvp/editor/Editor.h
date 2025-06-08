@@ -38,7 +38,7 @@ protected:
 	Editor* editor{};
 	uint32_t dockspaceId{};
 
-	explicit EditorTool(const std::string &pName) : UiBase(pName, pName) {}
+	explicit EditorTool(const std::string &pName) : UiBase(pName) {}
 
 public:
 	~EditorTool() override = default;
@@ -50,7 +50,7 @@ public:
 	void setEditor(Editor* pEditor) { editor = pEditor; }
 
 	std::string getWindowName(uint32_t pDockspaceId) const {
-		return std::format("{}##{:0>8X}", getName(), pDockspaceId);
+		return std::format("{}###{}{:0>8X}", getTitle(), getName(), pDockspaceId);
 	}
 
 	virtual void onSizeChanged(int pWidth, int pHeight);
