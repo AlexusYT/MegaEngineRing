@@ -221,43 +221,43 @@ msgstr "Свойства"
 msgid "ProjectExplorerTool"
 msgstr "Эксплорер"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:71
+#: mvp/sceneEditor/ViewSceneEditor.cpp:74
 msgid "SceneAdd"
 msgstr "Добавить"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:72
+#: mvp/sceneEditor/ViewSceneEditor.cpp:75
 msgid "SceneAddBlocking"
 msgstr "Блокинг"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:74
+#: mvp/sceneEditor/ViewSceneEditor.cpp:76
 msgid "SceneAddBlockPlane"
 msgstr "Плоскость"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:75
+#: mvp/sceneEditor/ViewSceneEditor.cpp:77
 msgid "SceneAddBlockCube"
 msgstr "Куб"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:76
+#: mvp/sceneEditor/ViewSceneEditor.cpp:78
 msgid "SceneAddBlockSphere"
 msgstr "Сферу"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:80
+#: mvp/sceneEditor/ViewSceneEditor.cpp:81
 msgid "SceneAddModel"
 msgstr "Модель"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:82
+#: mvp/sceneEditor/ViewSceneEditor.cpp:83
 msgid "SceneAddFromFile"
 msgstr "Из файла..."
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:86
+#: mvp/sceneEditor/ViewSceneEditor.cpp:87
 msgid "SceneAddFromFileTitle"
 msgstr "Выберите файл"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:90
+#: mvp/sceneEditor/ViewSceneEditor.cpp:91
 msgid "SceneAddFromSketchfab"
 msgstr "Из Sketchfab..."
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:91
+#: mvp/sceneEditor/ViewSceneEditor.cpp:92
 msgid "SceneAddFromFavorites"
 msgstr "Из избранного..."
 
