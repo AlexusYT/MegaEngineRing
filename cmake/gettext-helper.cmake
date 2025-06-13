@@ -128,7 +128,7 @@ function(configure_gettext)
         endif ()
 
         # .pot ---{msginit}---> .po
-        if (NOT EXISTS "${GETTEXT_POFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.po")
+        #[[if (NOT EXISTS "${GETTEXT_POFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.po")
             message(STATUS "Creating initial .po file for ${lang}")
             execute_process(
                     COMMAND "${GETTEXT_MSGINIT_COMMAND}" ${GETTEXT_MSGINIT_ARGS}
@@ -146,13 +146,14 @@ function(configure_gettext)
                 DEPENDS "${GETTEXT_POTFILE_DESTINATION}/${GETTEXT_DOMAIN}.pot"
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                 COMMENT "Updating the ${lang} .po file from the .pot file")
-
+]]
         add_custom_command(
                 OUTPUT "${GETTEXT_GMOFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.gmo"
                 COMMAND "${GETTEXT_MSGFMT_COMMAND}" ${GETTEXT_MSGFMT_ARGS}
                 "${GETTEXT_POFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.po"
                 "--output-file=${GETTEXT_GMOFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.gmo"
                 DEPENDS "${GETTEXT_POFILE_DESTINATION}/${lang}/${GETTEXT_DOMAIN}.po"
+                "${GETTEXT_POTFILE_DESTINATION}/${GETTEXT_DOMAIN}.pot"
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
                 COMMENT "Creating the ${lang} .gmo file from the .po file")
 

@@ -77,6 +77,8 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/buffers/BasicBuffer.cpp
         sources/gltf/khr/KhrLightsPunctual.cpp
         sources/gltf/Light.cpp
+        sources/meshes/BlockCubeMesh.cpp
+        sources/meshes/BlockSphereMesh.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/context/Window.h
@@ -202,6 +204,8 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/buffers/BasicBuffer.h
         include/EngineSDK/gltf/khr/KhrLightsPunctual.h
         include/EngineSDK/gltf/Light.h
+        include/EngineSDK/meshes/BlockCubeMesh.h
+        include/EngineSDK/meshes/BlockSphereMesh.h
 )
 
 foreach (SOURCE IN ITEMS ${ENGINE_SOURCES})
