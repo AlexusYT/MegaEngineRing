@@ -29,6 +29,8 @@
 #include "ImGuiFileDialog.h"
 #include "NodeSelectionHelper.h"
 #include "imgui_internal.h"
+#include "EngineSDK/meshes/BlockCubeMesh.h"
+#include "EngineSDK/meshes/BlockSphereMesh.h"
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/objectProperties/ModelObjectProperties.h"
 #include "mvp/objectProperties/PresenterObjectProperties.h"
@@ -70,11 +72,9 @@ void SceneEditor::updateUi() {
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu(tr("SceneAdd"))) {
 			if (ImGui::BeginMenu(tr("SceneAddBlocking"))) {
-				ImGui::BeginDisabled(true);
 				if (ImGui::MenuItem(tr("SceneAddBlockPlane"))) { addPlane(); }
-				ImGui::MenuItem(tr("SceneAddBlockCube"));
-				ImGui::MenuItem(tr("SceneAddBlockSphere"));
-				ImGui::EndDisabled();
+				if (ImGui::MenuItem(tr("SceneAddBlockCube"))) { addCube(); }
+				if (ImGui::MenuItem(tr("SceneAddBlockSphere"))) addSphere();
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu(tr("SceneAddModel"))) {
@@ -84,7 +84,7 @@ void SceneEditor::updateUi() {
 						config.path = Globals::getProjectsPath().string();
 						config.countSelectionMax = 1;
 						ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", tr("SceneAddFromFileTitle"),
-																"glTF files (.glb,.gltf){.glb,.gltf}", config);
+						                                        "glTF files (.glb,.gltf){.glb,.gltf}", config);
 					}
 					ImGui::BeginDisabled(true);
 					if (ImGui::MenuItem(tr("SceneAddFromSketchfab"))) {}
@@ -124,21 +124,34 @@ void SceneEditor::loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiD
 }
 
 void SceneEditor::addPlane() {
-	auto model = scenePreviewPresenter->getModel();
-	auto mesh = std::make_shared<sdk::BlockPlaneMesh>();
-	//mesh->initialize();
-	auto scene = model->getScene();
-	if (!scene) {
-		scene = sdk::Scene3D::create();
-		model->setScene(scene);
-	}
 	auto ext = sdk::MeshExtension::create();
+	auto mesh = std::make_shared<sdk::BlockPlaneMesh>();
 	ext->mesh = mesh;
 	auto instance = sdk::Node::create("");
 	instance->addExtension(ext);
-	scene->addMesh(mesh);
+	scene3D->addMesh(mesh);
 	scene3D->addNode(nullptr, instance);
 	//if (scenePreviewPresenter) scenePreviewPresenter->addPlane();
+}
+
+void SceneEditor::addCube() {
+	auto ext = sdk::MeshExtension::create();
+	auto mesh = std::make_shared<sdk::BlockCubeMesh>();
+	ext->mesh = mesh;
+	auto instance = sdk::Node::create("");
+	instance->addExtension(ext);
+	scene3D->addMesh(mesh);
+	scene3D->addNode(nullptr, instance);
+}
+
+void SceneEditor::addSphere() {
+	auto ext = sdk::MeshExtension::create();
+	auto mesh = std::make_shared<sdk::BlockSphereMesh>();
+	ext->mesh = mesh;
+	auto instance = sdk::Node::create("");
+	instance->addExtension(ext);
+	scene3D->addMesh(mesh);
+	scene3D->addNode(nullptr, instance);
 }
 
 void SceneEditor::addGltfModel(const std::string &pPath) {

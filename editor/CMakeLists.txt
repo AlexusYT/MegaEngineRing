@@ -154,6 +154,7 @@ configure_gettext(
         BUILD_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/locale"
         INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_LOCALEDIR}"
         XGETTEXT_ARGS
+        "--omit-header"
         "--keyword=_" "--keyword=N_" "--keyword=trp:1,2" "--keyword=tr" "--keyword=trs" "--keyword=get" "--add-comments=translators:"
         "--package-name=${PROJECT_NAME}" "--package-version=${PROJECT_VERSION}" "--foreign-user"
         "--copyright-holder=\"Timofeev (Alexus_XX) Alexander\"" "--from-code=UTF-8"

@@ -59,6 +59,10 @@ protected:
 private:
 	void addPlane();
 
+	void addCube();
+
+	void addSphere();
+
 	void addGltfModel(const std::string &pPath);
 };
 } // namespace mer::editor::mvp

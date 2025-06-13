@@ -16,39 +16,83 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 13.03.25.
+// Created by alexus on 13.06.2025.
 //
 
-#include "EngineSDK/meshes/BlockPlaneMesh.h"
+#include "EngineSDK/meshes/BlockCubeMesh.h"
 
 #include "EngineSDK/gltf/Accessor.h"
 #include "EngineSDK/gltf/Primitive.h"
-#include "GLTFSDK/GLTF.h"
 
 namespace mer::sdk {
-BlockPlaneMesh::BlockPlaneMesh() {
-	setName("BlockPlaneMesh");
-	auto indexAccessor = Accessor::createIndexAccessor<uint16_t>({0, 1, 2, 1, 2, 3});
+BlockCubeMesh::BlockCubeMesh() {
+	setName("BlockCubeMesh");
+	auto indexAccessor = Accessor::createIndexAccessor<uint16_t>({
+		4, 2, 0,
+		2, 7, 3,
+		6, 5, 7,
+		1, 7, 5,
+		0, 3, 1,
+
+		4, 1, 5,
+		4, 6, 2,
+		2, 6, 7,
+		6, 4, 5,
+		1, 3, 7,
+		0, 2, 3,
+		4, 0, 1,
+	});
 	auto posAccessor = Accessor::createVertexAccessor(
 		{
-			-0.5f, 0.0f, -0.5f, //0
-			0.5f, 0.0f, -0.5f,  //1
-			-0.5f, 0.0f, 0.5f,  //2
-			0.5f, 0.0f, 0.5f},  //3
+			0.5f, 0.5f, -0.5f,   // 0
+			0.5f, -0.5f, -0.5f,  // 1
+			0.5f, 0.5f, 0.5f,    // 2
+			0.5f, -0.5f, 0.5f,   // 3
+			-0.5f, 0.5f, -0.5f,  // 4
+			-0.5f, -0.5f, -0.5f, // 5
+			-0.5f, 0.5f, 0.5f,   // 6
+			-0.5f, -0.5f, 0.5f   // 7
+		}
+		,
 		Microsoft::glTF::TYPE_VEC3);
 
 	const auto primitive = Primitive::create(MeshMode::MESH_TRIANGLES, posAccessor, indexAccessor);
 
 	auto normalAccessor = Accessor::createVertexAccessor(
 		{
-			0.0f, 1.0f, 0.0f,  //0
-			0.0f, 1.0f, 0.0f,  //1
-			0.0f, 1.0f, 0.0f,  //2
-			0.0f, 1.0f, 0.0f}, //3
+			0.0f, 0.0f, 1.0f, // 0
+			0.0f, 0.0f, 1.0f, // 1
+			0.0f, 0.0f, 1.0f, // 2
+			0.0f, 0.0f, 1.0f, // 3
+
+			0.0f, 0.0f, -1.0f, // 4
+			0.0f, 0.0f, -1.0f, // 5
+			0.0f, 0.0f, -1.0f, // 6
+			0.0f, 0.0f, -1.0f, // 7
+
+			-1.0f, 0.0f, 0.0f, // 0
+			-1.0f, 0.0f, 0.0f, // 4
+			-1.0f, 0.0f, 0.0f, // 6
+			-1.0f, 0.0f, 0.0f, // 2
+
+			1.0f, 0.0f, 0.0f, // 1
+			1.0f, 0.0f, 0.0f, // 5
+			1.0f, 0.0f, 0.0f, // 7
+			1.0f, 0.0f, 0.0f, // 3
+
+			0.0f, 1.0f, 0.0f, // 2
+			0.0f, 1.0f, 0.0f, // 3
+			0.0f, 1.0f, 0.0f, // 7
+			0.0f, 1.0f, 0.0f, // 6
+
+			0.0f, -1.0f, 0.0f, // 0
+			0.0f, -1.0f, 0.0f, // 1
+			0.0f, -1.0f, 0.0f, // 4
+			0.0f, -1.0f, 0.0f, // 5
+		},
 		Microsoft::glTF::TYPE_VEC3);
 
 	primitive->setNormalAccessor(normalAccessor);
 	addPrimitive(primitive);
 }
-
-} // namespace mer::sdk
+}
