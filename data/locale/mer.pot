@@ -28,12 +28,12 @@ msgid "Left click to reparent to the \"{}\".\n"
 msgstr ""
 
 #. translators: root element in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:115
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:112
 msgid "Root of the scene"
 msgstr ""
 
 #. translators: second line in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:124
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:121
 msgid "Right click to cancel."
 msgstr ""
 
@@ -506,123 +506,117 @@ msgstr ""
 msgid "SketchfabProcessedAtDesc"
 msgstr ""
 
-#: I18N.cpp:134
+#: I18N.cpp:131
 msgid "Any License"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Any License"
-#: I18N.cpp:136
+#: I18N.cpp:133
 msgid "AnyLicenseDescription"
 msgstr ""
 
-#: I18N.cpp:142
+#: I18N.cpp:136
 msgid "Creative Commons: Attribution"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Attribution"
-#: I18N.cpp:144
+#: I18N.cpp:138
 msgid "Author must be credited. Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:150
+#: I18N.cpp:140
 msgid "Creative Commons: ShareAlike"
 msgstr ""
 
-#. translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
-#: I18N.cpp:152
+#: I18N.cpp:143
 msgid ""
 "Author must be credited. Modified versions must have the same license. "
 "Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:158
+#: I18N.cpp:145
 msgid "Creative Commons: NoDerivatives"
 msgstr ""
 
-#. translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
-#: I18N.cpp:160
+#: I18N.cpp:148
 msgid ""
 "Author must be credited. Modified versions can not be distributed. "
 "Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:166
+#: I18N.cpp:150
 msgid "Creative Commons: NonCommercial"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
-#: I18N.cpp:168
+#: I18N.cpp:152
 msgid "Author must be credited. No commercial use."
 msgstr ""
 
-#: I18N.cpp:174
+#: I18N.cpp:154
 msgid "Creative Commons: NonCommercial-ShareAlike"
 msgstr ""
 
-#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
-#: I18N.cpp:176
+#: I18N.cpp:157
 msgid ""
 "Author must be credited. No commercial use. Modified versions must have the "
 "same license."
 msgstr ""
 
-#: I18N.cpp:182
+#: I18N.cpp:159
 msgid "Creative Commons: NonCommercial-NoDerivatives"
 msgstr ""
 
-#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
-#: I18N.cpp:184
+#: I18N.cpp:162
 msgid ""
 "Author must be credited. No commercial use. Modified versions can not be "
 "distributed."
 msgstr ""
 
-#: I18N.cpp:190
+#: I18N.cpp:164
 msgid "Creative Commons: Zero"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Zero"
-#: I18N.cpp:192
+#: I18N.cpp:166
 msgid "Credit is not mandatory. Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:198
+#: I18N.cpp:168
 msgid "Editorial"
 msgstr ""
 
-#. translators: Description for Sketchfab License filter "Editorial"
-#: I18N.cpp:200
+#: I18N.cpp:171
 msgid ""
 "Use only in connection with events that are newsworthy or of public interest"
 msgstr ""
 
-#: I18N.cpp:206
+#: I18N.cpp:173
 msgid "Standard"
 msgstr ""
 
-#. translators: Description for Sketchfab License filter "Standard"
-#: I18N.cpp:208
+#: I18N.cpp:176
 msgid ""
 "Under basic restrictions, use worldwide, on all types of media, commercially "
 "or not, and in all types of derivative works"
 msgstr ""
 
-#: I18N.cpp:215
+#: I18N.cpp:180
 msgid "SketchfabMaterialAny"
 msgstr ""
 
-#: I18N.cpp:216
+#: I18N.cpp:181
 msgid "SketchfabMaterialSimple"
 msgstr ""
 
-#: I18N.cpp:217
+#: I18N.cpp:182
 msgid "SketchfabMaterialPBROnly"
 msgstr ""
 
-#: I18N.cpp:218
+#: I18N.cpp:183
 msgid "SketchfabMaterialMetalness"
 msgstr ""
 
-#: I18N.cpp:219
+#: I18N.cpp:184
 msgid "SketchfabMaterialSpecular"
 msgstr ""
