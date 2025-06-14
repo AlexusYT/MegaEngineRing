@@ -47,8 +47,8 @@ ReportMessagePtr Logger::openLog(const std::filesystem::path &pLogPath) {
 	try {
 		logFile.exceptions(std::_S_badbit | std::_S_eofbit | std::_S_failbit);
 		logFile.open(pLogPath);
-	} catch (...) {
-
+	}
+	catch (...) {
 		auto report = ReportMessage::create();
 		report->setTitle("Failed to open new log.");
 		report->setMessage("Exception thrown");
@@ -107,7 +107,8 @@ void Logger::print(const LoggerMsgType pType, const std::string &pMessage) {
 				<< color << result << ConsoleColors::CLEAR << '\n';
 		else
 			(useCErr && pType == LoggerMsgType::ERROR ? std::cerr : std::cout) << result << '\n';
-	} catch (...) { processException(pMessage); }
+	}
+	catch (...) { processException(pMessage); }
 	std::cout.flush();
 }
 

@@ -26,7 +26,8 @@
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
 namespace mer::editor::mvp {
-ModelObjectsTree::ModelObjectsTree(NodeSelectionHelper* pSelection) : selection(pSelection) {
+ModelObjectsTree::ModelObjectsTree(NodeSelectionHelper* pSelection)
+	: selection(pSelection) {
 	selection->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
 		if (presenter) presenter->onSelectionChanged(pNodes, pSelected);
 	});

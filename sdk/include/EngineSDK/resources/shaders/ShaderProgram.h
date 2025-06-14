@@ -77,8 +77,6 @@ public:
 
 	void addReportInfo(const ReportMessagePtr &pMsg) const override;
 };
-
-
 } // namespace mer::sdk
 
 

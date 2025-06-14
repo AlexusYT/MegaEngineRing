@@ -32,8 +32,6 @@
 #include "Utils.h"
 
 namespace mer::editor::mvp {
-
-
 SketchfabAccount::SketchfabAccount() {
 	cache = std::make_shared<SketchfabCache>(Globals::getCachePath() / "SketchfabCache");
 }
@@ -55,7 +53,8 @@ std::shared_ptr<SketchfabAccount> SketchfabAccount::createFromFile(const std::fi
 		file >> json;
 		account->deserialize(json);
 		return account;
-	} catch (...) {
+	}
+	catch (...) {
 		pMessage = sdk::ReportMessage::create();
 		pMessage->setTitle("Failed to read account data");
 		pMessage->setMessage("Exception occurred");
@@ -83,8 +82,8 @@ sdk::ReportMessagePtr SketchfabAccount::saveToFile(const std::filesystem::path &
 		nlohmann::json json;
 		serialize(json);
 		file << json;
-	} catch (...) {
-
+	}
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save account data");
 		msg->setMessage("Exception occurred");
@@ -97,27 +96,23 @@ sdk::ReportMessagePtr SketchfabAccount::saveToFile(const std::filesystem::path &
 std::shared_ptr<SketchfabSearch> SketchfabAccount::createSearch() { return std::make_shared<SketchfabSearch>(this); }
 
 void SketchfabAccount::deserialize(const nlohmann::json &pRoot) {
-	try {
-		pRoot.at("expires_in").get_to(expiresIn);
-	} catch (...) { expiresIn = -1; }
-	try {
-		pRoot.at("token_type").get_to(tokenType);
-	} catch (...) {}
-	try {
-		pRoot.at("scope").get_to(scope);
-	} catch (...) {}
-	try {
-		pRoot.at("refresh_token").get_to(refreshToken);
-	} catch (...) {}
+	try { pRoot.at("expires_in").get_to(expiresIn); }
+	catch (...) { expiresIn = -1; }
+	try { pRoot.at("token_type").get_to(tokenType); }
+	catch (...) {}
+	try { pRoot.at("scope").get_to(scope); }
+	catch (...) {}
+	try { pRoot.at("refresh_token").get_to(refreshToken); }
+	catch (...) {}
 
 	try {
 		pRoot.at("access_token").get_to(accessToken);
 		loaded = true;
-	} catch (...) {}
+	}
+	catch (...) {}
 }
 
 void SketchfabAccount::serialize(nlohmann::json &pRoot) {
-
 	pRoot.emplace("expires_in", expiresIn);
 	pRoot.emplace("token_type", tokenType);
 	pRoot.emplace("scope", scope);
@@ -131,7 +126,8 @@ sdk::ReportMessagePtr SketchfabAccount::getRequest(const std::string &pUrl, cons
 		pProgress.store(-1.0f);
 		sdk::Logger::out("Request: {}?{}", pUrl, pData);
 		auto startTime = std::chrono::steady_clock::now();
-		std::unique_ptr<CURL, void (*)(CURL*)> request(curl_easy_init(), curl_easy_cleanup);
+		std::unique_ptr<CURL, void (*)(CURL*)>
+			request(curl_easy_init(), curl_easy_cleanup);
 		curl_easy_setopt(request.get(), CURLOPT_URL, (pUrl + "?" + pData).c_str());
 
 		std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
@@ -145,10 +141,11 @@ sdk::ReportMessagePtr SketchfabAccount::getRequest(const std::string &pUrl, cons
 		curl_easy_setopt(request.get(), CURLOPT_XFERINFODATA, &pProgress);
 		curl_easy_setopt(request.get(), CURLOPT_XFERINFOFUNCTION,
 						 static_cast<curl_xferinfo_callback>(
-							 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/, curl_off_t /*ulnow*/) {
-								 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
-								 static_cast<std::atomic<float>*>(clientp)->store(progress);
-								 return 0;
+							 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/,
+								 curl_off_t /*ulnow*/) {
+							 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
+							 static_cast<std::atomic<float>*>(clientp)->store(progress);
+							 return 0;
 							 }));
 		curl_easy_perform(request.get());
 		curlList.reset();
@@ -159,8 +156,8 @@ sdk::ReportMessagePtr SketchfabAccount::getRequest(const std::string &pUrl, cons
 		sdk::Logger::out("Response in: {}ms", duration.count() / 1000000);
 		ss >> pResult;
 		return nullptr;
-
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("GET request failed");
 		msg->setMessage("Exception occurred during getting an image");
@@ -172,7 +169,6 @@ sdk::ReportMessagePtr SketchfabAccount::getRequest(const std::string &pUrl, cons
 
 sdk::ReportMessagePtr SketchfabAccount::downloadImage(
 	const std::string &pUrl, std::vector<unsigned char> &pUncompressedJpegData, const CacheSettings &pCache) {
-
 	std::string pathToCache;
 
 	if (size_t index = pUrl.find("thumbnails/"); index != std::string::npos) { pathToCache = pUrl.substr(index + 11); }
@@ -185,7 +181,8 @@ sdk::ReportMessagePtr SketchfabAccount::downloadImage(
 	}
 	try {
 		sdk::Logger::out("Downloading image: {}", pUrl);
-		std::unique_ptr<CURL, void (*)(CURL*)> request(curl_easy_init(), curl_easy_cleanup);
+		std::unique_ptr<CURL, void (*)(CURL*)>
+			request(curl_easy_init(), curl_easy_cleanup);
 		curl_easy_setopt(request.get(), CURLOPT_URL, pUrl.c_str());
 
 		/*std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
@@ -194,8 +191,8 @@ sdk::ReportMessagePtr SketchfabAccount::downloadImage(
 		curl_easy_setopt(request.get(), CURLOPT_WRITEDATA, &pUncompressedJpegData);
 
 		curl_easy_perform(request.get());
-
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Image downloading error");
 		msg->setMessage("Exception occurred during getting an image");
@@ -229,7 +226,8 @@ sdk::ReportMessagePtr SketchfabAccount::downloadModel(const std::string &pUrl,
 	if (!hasCache) {
 		try {
 			sdk::Logger::out("Downloading model: {}", pUrl);
-			std::unique_ptr<CURL, void (*)(CURL*)> request(curl_easy_init(), curl_easy_cleanup);
+			std::unique_ptr<CURL, void (*)(CURL*)>
+				request(curl_easy_init(), curl_easy_cleanup);
 			curl_easy_setopt(request.get(), CURLOPT_URL, pUrl.c_str());
 
 			/*std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
@@ -242,16 +240,17 @@ sdk::ReportMessagePtr SketchfabAccount::downloadModel(const std::string &pUrl,
 			curl_easy_setopt(request.get(), CURLOPT_XFERINFODATA, &pProgress);
 			curl_easy_setopt(request.get(), CURLOPT_XFERINFOFUNCTION,
 							 static_cast<curl_xferinfo_callback>(
-								 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/, curl_off_t /*ulnow*/) {
-									 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
-									 *static_cast<float*>(clientp) = progress;
-									 return 0;
+								 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/,
+									 curl_off_t /*ulnow*/) {
+								 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
+								 *static_cast<float*>(clientp) = progress;
+								 return 0;
 								 }));
 
 			//TODO use curl_multi_perform
 			curl_easy_perform(request.get());
-
-		} catch (...) {
+		}
+		catch (...) {
 			pStreamOut.reset();
 			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Image downloading error");
@@ -273,5 +272,4 @@ sdk::ReportMessagePtr SketchfabAccount::loadCachedFile(const std::string &pUrl,
 													   std::shared_ptr<std::iostream> &pData) const {
 	return cache->loadCache(pUrl, pData);
 }
-
 } // namespace mer::editor::mvp

@@ -40,7 +40,7 @@
 #include <vector>
 #include <libintl.h>
 #ifdef tr
-	#undef tr
+#undef tr
 #endif
 #define tr(__TEXT__) gettext((__TEXT__))
 #define trp(__TEXT1__, __TEXT2__, __NUM__) ngettext((__TEXT1__), (__TEXT2__), (__NUM__))

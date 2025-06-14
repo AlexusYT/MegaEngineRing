@@ -27,8 +27,6 @@
 #include "GLTFSDK/GLTF.h"
 
 namespace mer::sdk {
-
-
 Material::Material(const Microsoft::glTF::Material &pMaterial,
 				   const std::unordered_map<Microsoft::glTF::TextureType, std::shared_ptr<Texture>> &pUsedTextures)
 	: usedTextures(pUsedTextures) {

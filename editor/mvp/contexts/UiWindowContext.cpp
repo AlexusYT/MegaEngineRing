@@ -26,7 +26,6 @@
 #include "mvp/editor/Editor.h"
 
 namespace mer::editor::mvp {
-
 void EditorContext::add(sdk::UiBase* pWidget) {
 	tool = dynamic_cast<EditorTool*>(pWidget);
 	if (!editor || !tool) return;
@@ -52,6 +51,4 @@ void SceneUiContext::remove() {
 	if (auto widget = dynamic_cast<sdk::UiWindow*>(window)) scene->removeUiWindow(widget->getName());
 	if (auto widget = dynamic_cast<sdk::UiPopup*>(window)) scene->removeUiWindow(widget->getName());
 }
-
-
 } // namespace mer::editor::mvp

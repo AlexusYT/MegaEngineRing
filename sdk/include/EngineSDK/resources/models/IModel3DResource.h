@@ -40,12 +40,11 @@ public:
 
 	virtual void removeModelObject(const std::string &pName) = 0;
 
-	[[nodiscard]] virtual const std::unordered_map<std::string, std::shared_ptr<IModel3DObject>> &getModelObjects()
-		const = 0;
+	[[nodiscard]] virtual const std::unordered_map<
+		std::string, std::shared_ptr<IModel3DObject>> &getModelObjects() const = 0;
 
 	virtual IResource* asResource() = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IMODEL3DRESOURCE_H

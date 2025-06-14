@@ -93,7 +93,6 @@ private:
 
 	void onMaterialChanged(const MaterialData &pData);
 };
-
 } // namespace mer::sdk
 
 #endif //PREFABPARTINSTANCE_H

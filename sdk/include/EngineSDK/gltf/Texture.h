@@ -55,7 +55,6 @@ protected:
 
 	void onUninitialize() override;
 };
-
 } // namespace mer::sdk
 
 #endif //TEXTURE_H

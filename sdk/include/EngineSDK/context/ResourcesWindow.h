@@ -23,12 +23,12 @@
 #define RESOURCESWINDOW_H
 
 #ifndef EDITOR_SDK
-	#include <thread>
+#include <thread>
 
-	#include "EngineSDK/resources/IResourceLoadExecutor.h"
-	#include "EngineSDK/resources/Resources.h"
-	#include "EngineSDK/scene/IScene.h"
-	#include "Window.h"
+#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "EngineSDK/resources/Resources.h"
+#include "EngineSDK/scene/IScene.h"
+#include "Window.h"
 
 namespace mer::sdk {
 class ILoadedResources;
@@ -48,12 +48,12 @@ protected:
 	ResourcesWindow();
 
 public:
-	static auto create() { return std::shared_ptr<ResourcesWindow>(new (std::nothrow) ResourcesWindow()); }
+	static auto create() { return std::shared_ptr<ResourcesWindow>(new(std::nothrow) ResourcesWindow()); }
 
 	std::shared_ptr<ResourceLoadResult> loadResourceSync(const std::string &pResourceUri) override;
 
 	void loadResourceAsync(const std::string &pResourceUri,
-						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) override;
+						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) override;
 
 	void requestStopThread();
 
@@ -64,7 +64,7 @@ public:
 	const std::shared_ptr<ILoadedResources> &getResources() override { return resources; }
 
 	static void callSlot(const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
-						 const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot);
+						 const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> &pSlot);
 
 private:
 	void resourceLoop(const std::stop_token &pToken);

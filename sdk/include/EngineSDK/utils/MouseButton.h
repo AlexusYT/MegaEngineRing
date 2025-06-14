@@ -33,7 +33,6 @@ enum class MouseButton {
 	BUTTON_4,
 	BUTTON_5,
 	BUTTON_6
-
 };
 }
 

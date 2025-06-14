@@ -40,7 +40,6 @@ public:
 
 	virtual void removeLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //ILIGHTSOURCES_H

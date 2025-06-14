@@ -25,5 +25,4 @@ namespace mer::editor::project {
 Project::Project() {}
 
 Project::~Project() {}
-
 } // namespace mer::editor::project

@@ -30,9 +30,7 @@ class UiPopup;
 }
 
 namespace mer::sdk {
-
 class UiWindow : public UiBase {
-
 	std::vector<std::shared_ptr<UiPopup>> popups;
 
 public:
@@ -55,7 +53,6 @@ public:
 
 	virtual void onMouseButton(int pButton, int pAction, int pMods);
 };
-
 } // namespace mer::sdk
 
 #endif //UIWINDOW_H

@@ -24,12 +24,10 @@
 #include "mvp/scenePreview/PresenterScenePreview.h"
 
 namespace mer::editor::mvp {
-
 class PresenterPrefabPreview : public PresenterScenePreview {
 protected:
 	PresenterPrefabPreview(const std::shared_ptr<IViewScenePreview> &pView,
-						   const std::shared_ptr<IModelScenePreview> &pModel)
-		: PresenterScenePreview(pView, pModel) {}
+						   const std::shared_ptr<IModelScenePreview> &pModel) : PresenterScenePreview(pView, pModel) {}
 
 public:
 	static std::shared_ptr<PresenterPrefabPreview> create(const std::shared_ptr<IViewScenePreview> &pView,
@@ -37,7 +35,6 @@ public:
 
 	std::string getTypeName() override { return "PrefabPreview"; }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //PRESENTERPREFABPREVIEW_H

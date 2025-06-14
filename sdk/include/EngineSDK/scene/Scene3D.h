@@ -43,7 +43,6 @@ class Scene3D : public Initializable, public IRenderable {
 	std::vector<Node*> rootNodes;
 	sigc::signal<void()> onNodeCollectionChanged;
 
-
 protected:
 	Scene3D();
 
@@ -101,7 +100,6 @@ protected:
 
 	void addToRootNodes(Node* pNode) { rootNodes.emplace_back(pNode); }
 };
-
 } // namespace mer::sdk
 
 #endif //SCENE3D_H

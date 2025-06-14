@@ -43,13 +43,13 @@ class Accessor;
 enum class MeshMode {
 	// No MESH_UNKNOWN because the default of 0 is a valid value in the spec
 	// prefix to avoid name conflicts
-	MESH_POINTS = 0,
-	MESH_LINES = 1,
-	MESH_LINE_LOOP = 2,
-	MESH_LINE_STRIP = 3,
-	MESH_TRIANGLES = 4,
+	MESH_POINTS         = 0,
+	MESH_LINES          = 1,
+	MESH_LINE_LOOP      = 2,
+	MESH_LINE_STRIP     = 3,
+	MESH_TRIANGLES      = 4,
 	MESH_TRIANGLE_STRIP = 5,
-	MESH_TRIANGLE_FAN = 6
+	MESH_TRIANGLE_FAN   = 6
 };
 
 class Primitive {
@@ -118,7 +118,6 @@ public:
 		accessors = pAccessors;
 	}
 };
-
 } // namespace mer::sdk
 
 #endif //PRIMITIVE_H

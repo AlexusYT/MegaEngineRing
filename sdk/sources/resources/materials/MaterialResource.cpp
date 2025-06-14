@@ -29,8 +29,11 @@ namespace mer::sdk {
 std::shared_ptr<MaterialResource> MaterialResource::defaultMaterial = nullptr;
 
 MaterialResource::MaterialResource()
-	: baseColorMap(this, "Albedo map (base color)"), normalMap(this, "Normal map"), metallicMap(this, "Metallic map"),
-	  roughnessMap(this, "Roughness Map"), aoMap(this, "Ambient occlusion map") {
+	: baseColorMap(this, "Albedo map (base color)"),
+	  normalMap(this, "Normal map"),
+	  metallicMap(this, "Metallic map"),
+	  roughnessMap(this, "Roughness Map"),
+	  aoMap(this, "Ambient occlusion map") {
 	data.aoMap = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	data.metallicMap = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
 	data.roughnessMap = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
@@ -66,9 +69,7 @@ void MaterialResource::setAlbedo(const std::shared_ptr<IMaterialComponent> &pBas
 void MaterialResource::setNormal(const std::shared_ptr<IMaterialComponent> &pNormalMap) {
 	if (normalMap == pNormalMap) return;
 	normalMap = pNormalMap;
-	if (pNormalMap) {
-		normalMapConnection = connectComponentValChanged(pNormalMap, &data.normalMap);
-	} else {
+	if (pNormalMap) { normalMapConnection = connectComponentValChanged(pNormalMap, &data.normalMap); } else {
 		if (normalMapConnection) normalMapConnection.disconnect();
 		data.normalMap = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		dirty = true;
@@ -78,9 +79,7 @@ void MaterialResource::setNormal(const std::shared_ptr<IMaterialComponent> &pNor
 void MaterialResource::setMetallic(const std::shared_ptr<IMaterialComponent> &pMetallicMap) {
 	if (metallicMap == pMetallicMap) return;
 	metallicMap = pMetallicMap;
-	if (pMetallicMap) {
-		metallicMapConnection = connectComponentValChanged(pMetallicMap, &data.metallicMap);
-	} else {
+	if (pMetallicMap) { metallicMapConnection = connectComponentValChanged(pMetallicMap, &data.metallicMap); } else {
 		if (metallicMapConnection) metallicMapConnection.disconnect();
 		data.metallicMap = glm::vec4(0.5f, 0.0f, 0.0f, 1.0f);
 		dirty = true;
@@ -102,9 +101,7 @@ void MaterialResource::setRoughness(const std::shared_ptr<IMaterialComponent> &p
 void MaterialResource::setAo(const std::shared_ptr<IMaterialComponent> &pAoMap) {
 	if (aoMap == pAoMap) return;
 	aoMap = pAoMap;
-	if (pAoMap) {
-		aoMapConnection = connectComponentValChanged(pAoMap, &data.aoMap);
-	} else {
+	if (pAoMap) { aoMapConnection = connectComponentValChanged(pAoMap, &data.aoMap); } else {
 		if (aoMapConnection) aoMapConnection.disconnect();
 		data.aoMap = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		dirty = true;

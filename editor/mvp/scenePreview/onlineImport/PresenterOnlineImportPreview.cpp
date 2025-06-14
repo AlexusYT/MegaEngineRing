@@ -25,7 +25,6 @@
 #include "mvp/scenePreview/IViewScenePreview.h"
 
 namespace mer::editor::mvp {
-
 PresenterOnlineImportPreview::PresenterOnlineImportPreview(const std::shared_ptr<IViewScenePreview> &pView,
 														   const std::shared_ptr<IModelScenePreview> &pModel)
 	: PresenterScenePreview(pView, pModel) {}

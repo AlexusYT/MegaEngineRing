@@ -28,7 +28,6 @@ class IModelProjectExplorer;
 class IViewProjectExplorer;
 
 class PresenterProjectExplorer : public IPresenterProjectExplorer {
-
 	std::vector<std::shared_ptr<IViewProjectExplorer>> views;
 	std::shared_ptr<IModelProjectExplorer> model;
 

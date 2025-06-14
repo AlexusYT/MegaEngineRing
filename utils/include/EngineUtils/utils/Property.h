@@ -32,15 +32,14 @@ class IPropertyNotifiable;
 }
 
 namespace mer::sdk {
-template<typename T>
+template <typename T>
 concept IsSharedPtr = requires { std::is_pointer_v<typename T::element_type>; };
 
-template<typename T>
+template <typename T>
 class PropertyReadOnly {
 	const T &value;
 	sigc::signal<void(const T &)> &valueChanged;
 	const sigc::slot<T()> &getter;
-
 
 public:
 	using PropertyT = T;
@@ -52,7 +51,7 @@ public:
 
 	const T &getValue() const { return value; }
 
-	operator const T&() const { return value; }
+	operator const T &() const { return value; }
 
 	const T &operator*() const { return value; }
 
@@ -60,22 +59,12 @@ public:
 
 	bool operator!=(const T &pRhs) { return !(value == pRhs); }
 
-	auto operator->() const
-		requires IsSharedPtr<T>
-	{
-		return value.get();
-	}
+	auto operator->() const requires IsSharedPtr<T> { return value.get(); }
 
-	auto operator->() const
-		requires requires { requires !IsSharedPtr<T>; }
-	{
-		return &value;
-	}
+	auto operator->() const requires requires { requires !IsSharedPtr<T>; } { return &value; }
 
-	template<typename T1>
-	T1 operator+(const T1 &pRhs) const {
-		return value + pRhs;
-	}
+	template <typename T1>
+	T1 operator+(const T1 &pRhs) const { return value + pRhs; }
 
 	[[nodiscard]] sigc::slot<T()> &getGetter() const { return getter; }
 
@@ -87,15 +76,15 @@ public:
 	}
 };
 
-template<typename T>
+template <typename T>
 concept IsConvertibleToNotify = std::convertible_to<typename T::element_type*, IPropertyNotifiable*> ||
 								std::convertible_to<T, IPropertyNotifiable*> ||
 								std::is_convertible_v<std::add_lvalue_reference_t<T>, IPropertyNotifiable &>;
-template<typename T>
+template <typename T>
 concept HasBaseClassNotify = std::is_base_of_v<IPropertyNotifiable, typename T::element_type> ||
 							 std::is_base_of_v<IPropertyNotifiable, std::remove_pointer_t<T>>;
 
-template<typename T>
+template <typename T>
 class Property : public PropertyBase {
 	T value{};
 	sigc::signal<void(const T &)> valueChanged;
@@ -103,15 +92,17 @@ class Property : public PropertyBase {
 	sigc::slot<T()> getter;
 	sigc::slot<void(const T &)> setter;
 
-
 public:
 	using PropertyT = T;
 
 	Property(const Property &pOther) = delete;
 
 	Property(Property &&pOther) noexcept
-		: PropertyBase(std::move(pOther)), value(std::move(pOther.value)), valueChanged(std::move(pOther.valueChanged)),
-		  valueChanging(std::move(pOther.valueChanging)), getter(std::move(pOther.getter)),
+		: PropertyBase(std::move(pOther)),
+		  value(std::move(pOther.value)),
+		  valueChanged(std::move(pOther.valueChanged)),
+		  valueChanging(std::move(pOther.valueChanging)),
+		  getter(std::move(pOther.getter)),
 		  setter(std::move(pOther.setter)) {}
 
 	Property &operator=(const Property &pOther) = delete;
@@ -137,7 +128,7 @@ public:
 
 	const T &getValue() const { return value; }
 
-	operator const T&() const { return value; }
+	operator const T &() const { return value; }
 
 	const T &operator*() const { return value; }
 
@@ -154,7 +145,6 @@ public:
 						  "IPropertyNotifiable must be publicly inherited");
 		}
 		if constexpr (IsConvertibleToNotify<T>) {
-
 			if constexpr (std::__is_shared_ptr<T>) {
 				if (const auto notifiable = dynamic_cast<IPropertyNotifiable*>(value.get())) notifiable->setBase(this);
 			} else if constexpr (std::is_pointer_v<T>) {
@@ -169,7 +159,6 @@ public:
 	}
 
 	virtual Property &operator=(const T &pOther) {
-
 		setValue(pOther);
 		return *this;
 	}
@@ -183,34 +172,16 @@ public:
 
 	bool operator!=(const T &pRhs) { return !(value == pRhs); }
 
-	auto operator->() const
-		requires IsSharedPtr<T>
-	{
-		return value.get();
-	}
+	auto operator->() const requires IsSharedPtr<T> { return value.get(); }
 
-	auto operator->()
-		requires IsSharedPtr<T>
-	{
-		return value.get();
-	}
+	auto operator->() requires IsSharedPtr<T> { return value.get(); }
 
-	auto operator->() const
-		requires requires { requires !IsSharedPtr<T>; }
-	{
-		return &value;
-	}
+	auto operator->() const requires requires { requires !IsSharedPtr<T>; } { return &value; }
 
-	auto operator->()
-		requires requires { requires !IsSharedPtr<T>; }
-	{
-		return &value;
-	}
+	auto operator->() requires requires { requires !IsSharedPtr<T>; } { return &value; }
 
-	template<typename T1>
-	T1 operator+(const T1 &pRhs) const {
-		return value + pRhs;
-	}
+	template <typename T1>
+	T1 operator+(const T1 &pRhs) const { return value + pRhs; }
 
 	[[nodiscard]] sigc::slot<T()> &getGetter() { return getter; }
 
@@ -232,7 +203,6 @@ public:
 
 	PropertyReadOnly<T> getReadOnly() { return PropertyReadOnly<T>(value, valueChanged, getter); }
 };
-
 } // namespace mer::sdk
 
 #endif //PROPERTY_H

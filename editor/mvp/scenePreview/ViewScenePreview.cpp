@@ -93,7 +93,6 @@ void ViewScenePreview::customRender() {
 }
 
 void ViewScenePreview::onUpdate(bool pVisible) {
-
 	if (focusWindow) {
 		ImGui::SetWindowFocus();
 		focusWindow = false;
@@ -148,7 +147,6 @@ void ViewScenePreview::onCursorPosChanged(double pX, double pY) {
 	const glm::dvec2 pos{pX, pY};
 	if (presenter->onCursorPosChanged(pX, pY)) return;
 	if (moveKeyHeld && mouseHeld) {
-
 		if (!lastCursorPosMove) { lastCursorPosMove = pos; }
 		const glm::vec2 delta = glm::vec2(lastCursorPosMove.value() - pos) * 0.002f * zoom;
 		glm::vec3 cameraDirection =
@@ -169,9 +167,7 @@ void ViewScenePreview::onCursorPosChanged(double pX, double pY) {
 		camera->propertyTargetPosition = lastTargetPos + right + fwdBwd;*/
 		//camera->propertyAngle + glm::vec2(0.6f) * glm::vec2(-delta.y, delta.x);
 		//}
-	} else {
-		lastCursorPosMove.reset();
-	}
+	} else { lastCursorPosMove.reset(); }
 	if (!mouseHeld || moveKeyHeld) {
 		lastCursorPos.reset();
 		return;
@@ -188,23 +184,12 @@ void ViewScenePreview::onCursorPosChanged(double pX, double pY) {
 void ViewScenePreview::onKeyChanged(int pKey, int pScancode, int pAction, int pMods) {
 	if (!widgetHovered) return;
 	if (pKey == GLFW_KEY_LEFT_SHIFT || pKey == GLFW_KEY_RIGHT_SHIFT) {
-		if (!mouseHeld) {
-			if (pAction == GLFW_PRESS) {
-				moveKeyHeld = true;
-			} else {
-				moveKeyHeld = false;
-			}
-		} else {
-
+		if (!mouseHeld) { if (pAction == GLFW_PRESS) { moveKeyHeld = true; } else { moveKeyHeld = false; } } else {
 			moveKeyHeld = false;
 		}
 	}
-	if (pKey == GLFW_KEY_G && pAction == GLFW_PRESS) {
-		if (presenter) presenter->startMovingGesture();
-	}
-	if (pKey == GLFW_KEY_ESCAPE && pAction == GLFW_PRESS) {
-		if (presenter) presenter->cancelCurrentAction();
-	}
+	if (pKey == GLFW_KEY_G && pAction == GLFW_PRESS) { if (presenter) presenter->startMovingGesture(); }
+	if (pKey == GLFW_KEY_ESCAPE && pAction == GLFW_PRESS) { if (presenter) presenter->cancelCurrentAction(); }
 	EditorTool::onKeyChanged(pKey, pScancode, pAction, pMods);
 }
 
@@ -229,5 +214,4 @@ void ViewScenePreview::onMouseScroll(double /*pXOffset*/, double pYOffset) {
 bool ViewScenePreview::isRotate() { return rotate; }
 
 void ViewScenePreview::focusOnThis() { focusWindow = true; }
-
 } // namespace mer::editor::mvp

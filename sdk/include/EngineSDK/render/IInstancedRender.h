@@ -27,7 +27,6 @@ namespace mer::sdk {
 class IRenderInstance;
 
 class IInstancedRender {
-
 public:
 	virtual ~IInstancedRender() = default;
 
@@ -35,7 +34,6 @@ public:
 
 	virtual void onMaterialDataChanged(RenderInstance* pRenderInstance) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IINSTANCEDRENDER_H

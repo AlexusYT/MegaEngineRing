@@ -38,7 +38,6 @@ public:
 
 	[[nodiscard]] virtual const LightInstanceData &getLightInstanceData() const = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //ILIGHTINSTANCE_H

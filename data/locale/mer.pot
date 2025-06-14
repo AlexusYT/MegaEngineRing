@@ -1,39 +1,39 @@
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:56
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:55
 msgid "ObjectName"
 msgstr ""
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:57
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:56
 msgid "ObjectType"
 msgstr ""
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:81
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:79
 msgid "ObjectAdd"
 msgstr ""
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:82
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:80
 msgid "ObjectUnnamed"
 msgstr ""
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:86
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:84
 msgid "ObjectReparent"
 msgstr ""
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:87
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:85
 msgid "ObjectRemove"
 msgstr ""
 
 #. translators: second line in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:102
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:100
 msgid "Left click to reparent to the \"{}\".\n"
 msgstr ""
 
 #. translators: root element in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:111
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:115
 msgid "Root of the scene"
 msgstr ""
 
 #. translators: second line in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:120
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:124
 msgid "Right click to cancel."
 msgstr ""
 
@@ -41,154 +41,154 @@ msgstr ""
 msgid "TreeViewTool"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:63
+#: mvp/objectProperties/ViewObjectProperties.cpp:62
 msgid "SceneProperties"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:67
+#: mvp/objectProperties/ViewObjectProperties.cpp:66
 msgid "NodeProperties"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:71
+#: mvp/objectProperties/ViewObjectProperties.cpp:68
 msgid "NodeName"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:73
+#: mvp/objectProperties/ViewObjectProperties.cpp:70
 msgid "NodeTransformation"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:110
+#: mvp/objectProperties/ViewObjectProperties.cpp:108
 msgid "RemoveExtension"
 msgstr ""
 
 #. translators: instruction for removing an element (extension, object, etc)
-#: mvp/objectProperties/ViewObjectProperties.cpp:116
+#: mvp/objectProperties/ViewObjectProperties.cpp:114
 msgid "Hold for 0.5 sec to confirm removing"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:175
+#: mvp/objectProperties/ViewObjectProperties.cpp:171
 msgid "NodePosition"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:183
+#: mvp/objectProperties/ViewObjectProperties.cpp:179
 msgid "NodeOrientation"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:185
+#: mvp/objectProperties/ViewObjectProperties.cpp:181
 msgid "Quaternion"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:185
+#: mvp/objectProperties/ViewObjectProperties.cpp:181
 msgid "XYZ Euler"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:185
+#: mvp/objectProperties/ViewObjectProperties.cpp:181
 msgid "Axis Angle"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:252
+#: mvp/objectProperties/ViewObjectProperties.cpp:247
 msgid "Scale"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:260 I18N.cpp:104
+#: mvp/objectProperties/ViewObjectProperties.cpp:255 I18N.cpp:105
 msgid "MeshExtension"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:263
+#: mvp/objectProperties/ViewObjectProperties.cpp:258
 msgid "Select mesh to use"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:268
+#: mvp/objectProperties/ViewObjectProperties.cpp:263
 msgid "MeshNone"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:291 I18N.cpp:103
+#: mvp/objectProperties/ViewObjectProperties.cpp:286 I18N.cpp:104
 msgid "LightExtension"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:296
+#: mvp/objectProperties/ViewObjectProperties.cpp:291
 msgid "Select light source to use"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:301
+#: mvp/objectProperties/ViewObjectProperties.cpp:296
 msgid "LightNone"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:327
+#: mvp/objectProperties/ViewObjectProperties.cpp:319
 msgid "NewLight"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:328
+#: mvp/objectProperties/ViewObjectProperties.cpp:320
 msgid "LightUnnamed"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:332
+#: mvp/objectProperties/ViewObjectProperties.cpp:324
 msgid "DuplicateLight"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:335
+#: mvp/objectProperties/ViewObjectProperties.cpp:327
 msgid "LightCopy"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:339
+#: mvp/objectProperties/ViewObjectProperties.cpp:331
 msgid "RemoveLight"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:340
-#: mvp/onlineImport/ViewOnlineImport.cpp:109
+#: mvp/objectProperties/ViewObjectProperties.cpp:332
+#: mvp/onlineImport/ViewOnlineImport.cpp:107
 msgid "Not implemented yet"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:351
+#: mvp/objectProperties/ViewObjectProperties.cpp:343
 msgid "Light source settings"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:366
+#: mvp/objectProperties/ViewObjectProperties.cpp:357
 msgid "LightName"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:369
+#: mvp/objectProperties/ViewObjectProperties.cpp:360
 msgid "LightColor"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:373
+#: mvp/objectProperties/ViewObjectProperties.cpp:364
 msgid "LightIntensity"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:379
+#: mvp/objectProperties/ViewObjectProperties.cpp:370
 msgid "LightTypeDirectional"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:379
+#: mvp/objectProperties/ViewObjectProperties.cpp:370
 msgid "LightTypePoint"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:379
+#: mvp/objectProperties/ViewObjectProperties.cpp:370
 msgid "LightTypeSpot"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:382
+#: mvp/objectProperties/ViewObjectProperties.cpp:373
 msgid "LightType"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:392
+#: mvp/objectProperties/ViewObjectProperties.cpp:381
 msgid "LightRange"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:392
+#: mvp/objectProperties/ViewObjectProperties.cpp:381
 msgid "LightRangeInfinite"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:392
+#: mvp/objectProperties/ViewObjectProperties.cpp:381
 #, c-format
 msgid "%0.3f m"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:408
+#: mvp/objectProperties/ViewObjectProperties.cpp:397
 msgid "Inner Cone"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:416
+#: mvp/objectProperties/ViewObjectProperties.cpp:405
 msgid "Outer Cone"
 msgstr ""
 
@@ -200,159 +200,159 @@ msgstr ""
 msgid "ProjectExplorerTool"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:74
+#: mvp/sceneEditor/ViewSceneEditor.cpp:73
 msgid "SceneAdd"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:75
+#: mvp/sceneEditor/ViewSceneEditor.cpp:74
 msgid "SceneAddBlocking"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:76
+#: mvp/sceneEditor/ViewSceneEditor.cpp:75
 msgid "SceneAddBlockPlane"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:77
+#: mvp/sceneEditor/ViewSceneEditor.cpp:76
 msgid "SceneAddBlockCube"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:78
+#: mvp/sceneEditor/ViewSceneEditor.cpp:77
 msgid "SceneAddBlockSphere"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:81
+#: mvp/sceneEditor/ViewSceneEditor.cpp:80
 msgid "SceneAddModel"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:83
+#: mvp/sceneEditor/ViewSceneEditor.cpp:82
 msgid "SceneAddFromFile"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:87
+#: mvp/sceneEditor/ViewSceneEditor.cpp:86
 msgid "SceneAddFromFileTitle"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:91
+#: mvp/sceneEditor/ViewSceneEditor.cpp:90
 msgid "SceneAddFromSketchfab"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:92
+#: mvp/sceneEditor/ViewSceneEditor.cpp:91
 msgid "SceneAddFromFavorites"
 msgstr ""
 
-#: mvp/prefabEditor/ViewPrefabEditor.cpp:158
+#: mvp/prefabEditor/ViewPrefabEditor.cpp:160
 msgid "PrefabEditor"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:95
+#: mvp/onlineImport/ViewOnlineImport.cpp:93
 msgid "In order to use this feature, you need to login to Sketchfab"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:96
+#: mvp/onlineImport/ViewOnlineImport.cpp:94
 msgid "Website here:"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:101
+#: mvp/onlineImport/ViewOnlineImport.cpp:99
 msgid "Login using:"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:103
+#: mvp/onlineImport/ViewOnlineImport.cpp:101
 msgid "LoginWithUsernamePassword"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:105
+#: mvp/onlineImport/ViewOnlineImport.cpp:103
 msgid "Use username and password from your Sketchfab.com account"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:107
+#: mvp/onlineImport/ViewOnlineImport.cpp:105
 msgid "LoginWithAPIToken"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:111
+#: mvp/onlineImport/ViewOnlineImport.cpp:109
 msgid "Use API token from your Sketchfab.com account"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:114
+#: mvp/onlineImport/ViewOnlineImport.cpp:112
 msgid "Username"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:114
+#: mvp/onlineImport/ViewOnlineImport.cpp:112
 msgid "Username cannot be empty"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:116
+#: mvp/onlineImport/ViewOnlineImport.cpp:114
 msgid "Password"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:116
+#: mvp/onlineImport/ViewOnlineImport.cpp:114
 msgid "Password cannot be empty"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:129
+#: mvp/onlineImport/ViewOnlineImport.cpp:127
 msgid "In progress..."
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:133
+#: mvp/onlineImport/ViewOnlineImport.cpp:131
 msgid "ActionLogin"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:188
+#: mvp/onlineImport/ViewOnlineImport.cpp:183
 msgid "Author name"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:194
+#: mvp/onlineImport/ViewOnlineImport.cpp:189
 msgid "Collection (uid)"
 msgstr ""
 
 #. translators: "Faces" is the polygons (triangles), not human face.
-#: mvp/onlineImport/ViewOnlineImport.cpp:204
+#: mvp/onlineImport/ViewOnlineImport.cpp:199
 #, c-format
 msgid "Min Faces: %d"
 msgstr ""
 
 #. translators: "Faces" is the polygons (triangles), not human face.
-#: mvp/onlineImport/ViewOnlineImport.cpp:212
+#: mvp/onlineImport/ViewOnlineImport.cpp:207
 #, c-format
 msgid "Max Faces: %d"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:220
+#: mvp/onlineImport/ViewOnlineImport.cpp:215
 msgid "Staff Picked"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:239
+#: mvp/onlineImport/ViewOnlineImport.cpp:234
 msgid "Not recommended to change"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:241
+#: mvp/onlineImport/ViewOnlineImport.cpp:236
 msgid "Downloadable"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:246
+#: mvp/onlineImport/ViewOnlineImport.cpp:241
 msgid "FilterMaterial"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:262
+#: mvp/onlineImport/ViewOnlineImport.cpp:257
 msgid "Not yet supported by the engine"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:264
+#: mvp/onlineImport/ViewOnlineImport.cpp:259
 msgid "FilterAnimated"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:269
+#: mvp/onlineImport/ViewOnlineImport.cpp:264
 msgid "FilterHasSound"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:274
+#: mvp/onlineImport/ViewOnlineImport.cpp:269
 msgid "FilterRigged"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:293
+#: mvp/onlineImport/ViewOnlineImport.cpp:288
 msgid "Enter search keywords"
 msgstr ""
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:418
+#: mvp/onlineImport/ViewOnlineImport.cpp:410
 msgid "Search filters"
 msgstr ""
 
@@ -360,19 +360,19 @@ msgstr ""
 msgid "SearchWindowTool"
 msgstr ""
 
-#: mvp/scenePreview/ViewScenePreview.h:78
+#: mvp/scenePreview/ViewScenePreview.h:76
 msgid "ScenePreviewTool"
 msgstr ""
 
-#: mvp/editor/Editor.cpp:207
+#: mvp/editor/Editor.cpp:204
 msgid "No opened tools in this workspace"
 msgstr ""
 
-#: mvp/editor/Editor.cpp:209
+#: mvp/editor/Editor.cpp:206
 msgid "Select a tool to open..."
 msgstr ""
 
-#: mvp/editor/Editor.cpp:241
+#: mvp/editor/Editor.cpp:238
 msgid "Open or close the workspace tools"
 msgstr ""
 
@@ -412,31 +412,31 @@ msgstr ""
 msgid "MenuAbout..."
 msgstr ""
 
-#: mvp/editor/settings/ViewSettingsWindow.cpp:69
+#: mvp/editor/settings/ViewSettingsWindow.cpp:68
 msgid "InterfaceLanguage"
 msgstr ""
 
-#: mvp/editor/settings/ViewSettingsWindow.cpp:87
+#: mvp/editor/settings/ViewSettingsWindow.cpp:85
 #, c-format
 msgid "FontSize: %.0f"
 msgstr ""
 
-#: mvp/editor/settings/ViewSettingsWindow.cpp:91
+#: mvp/editor/settings/ViewSettingsWindow.cpp:89
 msgid "DebugEnabled"
 msgstr ""
 
 #. translators: Button in settings window
-#: mvp/editor/settings/ViewSettingsWindow.cpp:97
+#: mvp/editor/settings/ViewSettingsWindow.cpp:95
 msgid "ApplyAndClose"
 msgstr ""
 
 #. translators: Button in settings window
-#: mvp/editor/settings/ViewSettingsWindow.cpp:106
+#: mvp/editor/settings/ViewSettingsWindow.cpp:104
 msgid "Apply"
 msgstr ""
 
 #. translators: Button in settings window
-#: mvp/editor/settings/ViewSettingsWindow.cpp:110
+#: mvp/editor/settings/ViewSettingsWindow.cpp:108
 msgid "Close"
 msgstr ""
 
@@ -444,11 +444,11 @@ msgstr ""
 msgid "SettingsWindow"
 msgstr ""
 
-#: mvp/editor/settings/categories/OtherCategory.h:43
+#: mvp/editor/settings/categories/OtherCategory.h:41
 msgid "OtherCategory"
 msgstr ""
 
-#: mvp/editor/settings/categories/GeneralCategory.h:44
+#: mvp/editor/settings/categories/GeneralCategory.h:42
 msgid "GeneralCategory"
 msgstr ""
 
@@ -462,167 +462,167 @@ msgstr ""
 msgid "CountryName"
 msgstr ""
 
-#: I18N.cpp:99 I18N.cpp:101
+#: I18N.cpp:100 I18N.cpp:102
 msgid "LangSystem"
 msgstr ""
 
-#: I18N.cpp:102
+#: I18N.cpp:103
 msgid "AngleDegreeSymbol"
 msgstr ""
 
-#: I18N.cpp:115
+#: I18N.cpp:118
 msgid "SketchfabRelevancy"
 msgstr ""
 
-#: I18N.cpp:116
+#: I18N.cpp:119
 msgid "SketchfabLikeCountAsc"
 msgstr ""
 
-#: I18N.cpp:117
+#: I18N.cpp:120
 msgid "SketchfabLikeCountDesc"
 msgstr ""
 
-#: I18N.cpp:118
+#: I18N.cpp:121
 msgid "SketchfabViewCountAsc"
 msgstr ""
 
-#: I18N.cpp:119
+#: I18N.cpp:122
 msgid "SketchfabViewCountDesc"
 msgstr ""
 
-#: I18N.cpp:120
+#: I18N.cpp:123
 msgid "SketchfabPublishedAtAsc"
 msgstr ""
 
-#: I18N.cpp:121
+#: I18N.cpp:124
 msgid "SketchfabPublishedAtDesc"
 msgstr ""
 
-#: I18N.cpp:122
+#: I18N.cpp:125
 msgid "SketchfabProcessedAtAsc"
 msgstr ""
 
-#: I18N.cpp:123
+#: I18N.cpp:126
 msgid "SketchfabProcessedAtDesc"
 msgstr ""
 
-#: I18N.cpp:129
+#: I18N.cpp:134
 msgid "Any License"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Any License"
-#: I18N.cpp:131
+#: I18N.cpp:136
 msgid "AnyLicenseDescription"
 msgstr ""
 
-#: I18N.cpp:133
+#: I18N.cpp:142
 msgid "Creative Commons: Attribution"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Attribution"
-#: I18N.cpp:135
+#: I18N.cpp:144
 msgid "Author must be credited. Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:137
+#: I18N.cpp:150
 msgid "Creative Commons: ShareAlike"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
-#: I18N.cpp:139
+#: I18N.cpp:152
 msgid ""
 "Author must be credited. Modified versions must have the same license. "
 "Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:141
+#: I18N.cpp:158
 msgid "Creative Commons: NoDerivatives"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
-#: I18N.cpp:143
+#: I18N.cpp:160
 msgid ""
 "Author must be credited. Modified versions can not be distributed. "
 "Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:145
+#: I18N.cpp:166
 msgid "Creative Commons: NonCommercial"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
-#: I18N.cpp:147
+#: I18N.cpp:168
 msgid "Author must be credited. No commercial use."
 msgstr ""
 
-#: I18N.cpp:149
+#: I18N.cpp:174
 msgid "Creative Commons: NonCommercial-ShareAlike"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
-#: I18N.cpp:151
+#: I18N.cpp:176
 msgid ""
 "Author must be credited. No commercial use. Modified versions must have the "
 "same license."
 msgstr ""
 
-#: I18N.cpp:153
+#: I18N.cpp:182
 msgid "Creative Commons: NonCommercial-NoDerivatives"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
-#: I18N.cpp:155
+#: I18N.cpp:184
 msgid ""
 "Author must be credited. No commercial use. Modified versions can not be "
 "distributed."
 msgstr ""
 
-#: I18N.cpp:157
+#: I18N.cpp:190
 msgid "Creative Commons: Zero"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Zero"
-#: I18N.cpp:159
+#: I18N.cpp:192
 msgid "Credit is not mandatory. Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:161
+#: I18N.cpp:198
 msgid "Editorial"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Editorial"
-#: I18N.cpp:163
+#: I18N.cpp:200
 msgid ""
 "Use only in connection with events that are newsworthy or of public interest"
 msgstr ""
 
-#: I18N.cpp:165
+#: I18N.cpp:206
 msgid "Standard"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Standard"
-#: I18N.cpp:167
+#: I18N.cpp:208
 msgid ""
 "Under basic restrictions, use worldwide, on all types of media, commercially "
 "or not, and in all types of derivative works"
 msgstr ""
 
-#: I18N.cpp:171
+#: I18N.cpp:215
 msgid "SketchfabMaterialAny"
 msgstr ""
 
-#: I18N.cpp:172
+#: I18N.cpp:216
 msgid "SketchfabMaterialSimple"
 msgstr ""
 
-#: I18N.cpp:173
+#: I18N.cpp:217
 msgid "SketchfabMaterialPBROnly"
 msgstr ""
 
-#: I18N.cpp:174
+#: I18N.cpp:218
 msgid "SketchfabMaterialMetalness"
 msgstr ""
 
-#: I18N.cpp:175
+#: I18N.cpp:219
 msgid "SketchfabMaterialSpecular"
 msgstr ""

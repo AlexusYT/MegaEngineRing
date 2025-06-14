@@ -35,9 +35,7 @@
 #include "sketchfab/SketchfabSearch.h"
 
 namespace mer::editor::mvp {
-
 void OnlineImportWorkspace::loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir /*pPanelDir*/) {
-
 	ImGuiID dock_main_id = pDockspaceId;
 	ImGui::DockBuilderAddNode(dock_main_id, ImGuiDockNodeFlags_DockSpace);
 	ImGui::DockBuilderSetNodeSize(dock_main_id, pDockspaceSize);
@@ -131,9 +129,7 @@ void ViewOnlineImport::renderLoginDialog() {
 
 		ImGui::BeginDisabled(loginDisabled);
 		if (ImGui::Button(tr("ActionLogin"))) {
-			if (e == 0) {
-				if (presenter) presenter->loginImplicit(username, password);
-			} else {
+			if (e == 0) { if (presenter) presenter->loginImplicit(username, password); } else {
 				if (presenter) presenter->loginToken(token);
 			}
 		}
@@ -164,13 +160,12 @@ void ViewOnlineImport::renderSearchDialog() {
 
 		auto visible = ImGui::BeginChild("SearchWindow", {filtersWidth + 12, 0},
 										 ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY |
-											 ImGuiChildFlags_AlwaysUseWindowPadding | ImGuiChildFlags_Borders);
+										 ImGuiChildFlags_AlwaysUseWindowPadding | ImGuiChildFlags_Borders);
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar(2);
 		drawSearchFiltersButton(filtersWidth, true);
 		ImGui::Separator();
 		if (visible) {
-
 			ImGui::SetNextItemWidth(-1);
 			if (ImGui::BeginCombo("##sortBy", I18n::trSketchfabSortTypesMap.at(request.sortBy).c_str(), 0)) {
 				for (const auto &type: I18n::trSketchfabSortTypes) {
@@ -326,15 +321,17 @@ void ViewOnlineImport::renderResults() {
 	auto mode = progressMode.load();
 	switch (mode) {
 		case ProgressMode::NONE: break;
-		case ProgressMode::DOWNLOAD_LINKS: progressStr = "Getting download links..."; break;
-		case ProgressMode::DOWNLOAD_MODEL: progressStr = "Downloading model..."; break;
-		case ProgressMode::PARSE_MODEL: progressStr = "Parsing model..."; break;
+		case ProgressMode::DOWNLOAD_LINKS: progressStr = "Getting download links...";
+			break;
+		case ProgressMode::DOWNLOAD_MODEL: progressStr = "Downloading model...";
+			break;
+		case ProgressMode::PARSE_MODEL: progressStr = "Parsing model...";
+			break;
 	}
 	if (mode != ProgressMode::NONE) ImGui::ProgressBar(prog, ImVec2(itemWidth, 0.0f), progressStr.c_str());
 
 	auto maxScroll = ImGui::GetScrollMaxY();
 	if (maxScroll > 100 && ImGui::GetScrollY() + 100.0f >= maxScroll) {
-
 		if (!presenter->isSearching() && !resultsInvalidated) presenter->nextSearchResult();
 	}
 	resultsInvalidated = false;
@@ -364,9 +361,7 @@ bool ViewOnlineImport::renderResult(const std::string &pId, const std::shared_pt
 	bool held{};
 	bool pressed = ImGui::ButtonBehavior(bb, id, &hovered, &held);
 	uint32_t thumbnailTexId;
-	if (auto thumbnail = pResult->getSmallThumbnail()) {
-		thumbnailTexId = thumbnail->getImageId();
-	} else
+	if (auto thumbnail = pResult->getSmallThumbnail()) { thumbnailTexId = thumbnail->getImageId(); } else
 		thumbnailTexId = 0;
 	ImDrawList* dl = ImGui::GetWindowDrawList();
 
@@ -390,9 +385,7 @@ bool ViewOnlineImport::renderResult(const std::string &pId, const std::shared_pt
 
 
 	uint32_t texId;
-	if (auto avatar = pResult->user->getSmallAvatar()) {
-		texId = avatar->getImageId();
-	} else
+	if (auto avatar = pResult->user->getSmallAvatar()) { texId = avatar->getImageId(); } else
 		texId = 0;
 	dl->AddImageRounded(texId, avatarImageStart, avatarImageEnd, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, rounding);
 
@@ -407,7 +400,6 @@ bool ViewOnlineImport::renderResult(const std::string &pId, const std::shared_pt
 }
 
 void ViewOnlineImport::drawSearchFiltersButton(float pWidth, bool pTransparent) {
-
 	if (pTransparent) {
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10);
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
@@ -423,7 +415,8 @@ void ViewOnlineImport::drawSearchFiltersButton(float pWidth, bool pTransparent) 
 		ImGui::PopStyleColor(2);
 }
 
-OnlineImportWorkspace::OnlineImportWorkspace() : Editor("OnlineImportWorkspace") {
+OnlineImportWorkspace::OnlineImportWorkspace()
+	: Editor("OnlineImportWorkspace") {
 	selection = std::make_shared<NodeSelectionHelper>();
 	auto previewView = ViewScenePreview::create("PrefabScenePreview", EditorContext::create(this));
 	auto previewModel = std::make_shared<ModelScenePreview>(selection.get());

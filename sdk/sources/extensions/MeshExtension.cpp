@@ -30,7 +30,6 @@
 #include "EngineSDK/utils/Transformation.h"
 
 namespace mer::sdk {
-
 MeshExtension::MeshExtension() : mesh(this, "Mesh") {}
 
 MeshExtension::~MeshExtension() {}
@@ -95,13 +94,10 @@ void MeshExtension::onNodeChanged(Node* pOldNode) {
 		if (!pMesh) {
 			aabbChangedConnection.disconnect();
 			return;
-		}
-		{}
+		} {}
 		aabbChangedConnection = pMesh->getAabb().connectEvent([this](const std::shared_ptr<VolumeAabb> &pValue) {
 			if (const auto nodeSelf = getNode()) nodeSelf->updateContentAabb(pValue);
 		});
 	}));
 }
-
-
 } // namespace mer::sdk

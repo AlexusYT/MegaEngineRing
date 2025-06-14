@@ -29,10 +29,8 @@
 
 namespace mer::sdk {
 class OrbitCameraExtension : public PerspectiveProjectionCameraMod, public ICamera {
-
 protected:
 	OrbitCameraExtension();
-
 
 public:
 	ExtensionProperty<glm::mat4> propertyMatrix;
@@ -55,7 +53,6 @@ public:
 	[[nodiscard]] ExtensionProperty<glm::vec3> &getPosition() override;
 
 	void addAngle(const glm::vec2 &pAngleToAdd) { propertyAngle = propertyAngle + pAngleToAdd; }
-
 
 protected:
 	ReportMessagePtr onInit() override;

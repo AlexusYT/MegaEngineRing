@@ -43,7 +43,6 @@ public:
 inline void IPresenter::addView(const std::shared_ptr<IView> & /*pNewView*/) {}
 
 inline void IPresenter::removeView(const std::shared_ptr<IView> & /*pOldView*/) {}
-
 } // namespace mer::editor::mvp
 
 

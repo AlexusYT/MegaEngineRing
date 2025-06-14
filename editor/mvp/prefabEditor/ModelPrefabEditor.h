@@ -28,7 +28,6 @@ class Prefab;
 }
 
 namespace mer::editor::mvp {
-
 class ModelPrefabEditor : public IModelPrefabEditor {
 	std::shared_ptr<sdk::Prefab> selectedPrefab;
 
@@ -39,7 +38,6 @@ public:
 		selectedPrefab = pSelectedPrefab;
 	}
 };
-
 } // namespace mer::editor::mvp
 
 #endif //MODELTEXTUREEDITOR_H

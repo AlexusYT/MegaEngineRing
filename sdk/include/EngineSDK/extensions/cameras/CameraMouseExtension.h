@@ -30,7 +30,8 @@ class CameraMouseExtension : public Extension {
 	std::optional<glm::dvec2> lastCursorPos{};
 
 protected:
-	CameraMouseExtension() : propertyMouseSensitivity(this, "MouseSensitivity"), propertyAngle(this, "Angle") {
+	CameraMouseExtension()
+		: propertyMouseSensitivity(this, "MouseSensitivity"), propertyAngle(this, "Angle") {
 		propertyMouseSensitivity.setValue(glm::vec2(0.6f));
 	}
 
@@ -44,7 +45,6 @@ public:
 
 protected:
 	void onCursorPosChanged(const double pX, const double pY) override {
-
 		const glm::dvec2 pos{pX, pY};
 		if (lastCursorPos) {
 			const glm::vec2 delta = lastCursorPos.value() - pos;

@@ -27,6 +27,7 @@
 #include "EngineUtils/utils/UUID.h"
 
 #include "EngineSDK/resources/materials/IMaterialResource.h"
+
 namespace mer::sdk {
 class IMaterialResource;
 class Prefab;
@@ -97,7 +98,6 @@ public:
 
 	void onParentMaterialChanged(const std::shared_ptr<IMaterialResource> &pMaterial);
 };
-
 } // namespace mer::sdk
 
 #endif //PREFABELEMENT_H

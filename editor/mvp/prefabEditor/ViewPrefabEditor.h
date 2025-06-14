@@ -40,9 +40,7 @@ class Prefab;
 } // namespace mer::sdk
 
 namespace mer::editor::mvp {
-
 class ViewPrefabEditor : public IViewPrefabEditor, public sdk::UiWindow {
-
 	std::shared_ptr<IWidgetContext> context{};
 	std::vector<std::pair<std::shared_ptr<sdk::Prefab>, bool /*unsaved*/>> prefabs;
 	std::shared_ptr<sdk::Framebuffer> frameBuffer;
@@ -88,7 +86,6 @@ private:
 
 	void updateElements(const std::shared_ptr<sdk::Prefab> &pSelectedPrefab, size_t pPrefabIndex);
 };
-
 } // namespace mer::editor::mvp
 
 #endif //VIEWPREFABEDITOR_H

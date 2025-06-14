@@ -26,7 +26,6 @@
 #include "imgui.h"
 
 namespace mer::sdk {
-
 void SceneUi::beforeUiFrame() {}
 
 void SceneUi::updateUi() {
@@ -36,9 +35,7 @@ void SceneUi::updateUi() {
 	for (auto [name, uiWindow]: popups) { uiWindow->render(); }
 }
 
-void SceneUi::customRender() {
-	for (auto [name, uiWindow]: windows) { uiWindow->customRender(); }
-}
+void SceneUi::customRender() { for (auto [name, uiWindow]: windows) { uiWindow->customRender(); } }
 
 ImGuiIO &SceneUi::getIo() { return ImGui::GetIO(); }
 

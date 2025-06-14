@@ -30,16 +30,19 @@
 #include "EngineUtils/utils/ReportMessage.h"
 
 namespace mer::sdk {
-
 ShaderProgram::ShaderProgram() : name(0) {}
 
 ShaderProgram::~ShaderProgram() { ShaderProgram::uninitialize(); }
 
 void ShaderProgram::attachShader(const std::shared_ptr<Shader> &pShader) { attachedShaders.emplace_back(pShader); }
 
-void ShaderProgram::link() const { glLinkProgram(name); }
+void ShaderProgram::link() const {
+	glLinkProgram(name);
+}
 
-void ShaderProgram::validate() const { glValidateProgram(name); }
+void ShaderProgram::validate() const {
+	glValidateProgram(name);
+}
 
 void ShaderProgram::use() const {
 	//if (this == usedProgram) return;
@@ -48,7 +51,6 @@ void ShaderProgram::use() const {
 }
 
 void ShaderProgram::getInfoLog(std::string &pLogOut) const {
-
 	const int logLen = getInfoLogLength();
 	pLogOut.resize(static_cast<size_t>(logLen));
 	glGetProgramInfoLog(name, logLen, nullptr, pLogOut.data());
@@ -113,7 +115,6 @@ ReportMessagePtr ShaderProgram::onInitialize() {
 
 	link();
 	if (!getLinkStatus()) {
-
 		auto msg = ReportMessage::create();
 		msg->setStacktrace();
 		msg->setTitle("Failed to link the shader program");
@@ -129,7 +130,8 @@ ReportMessagePtr ShaderProgram::onInitialize() {
 
 void ShaderProgram::onUninitialize() {
 	for (auto shader: attachedShaders) { shader->uninitialize(); }
-	if (name != 0) glDeleteProgram(name);
+	if (name != 0)
+		glDeleteProgram(name);
 }
 
 void ShaderProgram::addReportInfo(const ReportMessagePtr &pMsg) const {
@@ -137,5 +139,4 @@ void ShaderProgram::addReportInfo(const ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Attached shaders:");
 	for (auto shader: attachedShaders) { shader->addReportInfo(pMsg); }
 }
-
 } // namespace mer::sdk

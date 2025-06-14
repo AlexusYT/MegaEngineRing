@@ -63,7 +63,6 @@ private:
 
 	void setPresenter(IPresenterProjectExplorer* pPresenter) override { presenter = pPresenter; }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //PROJECTEXPORERWINDOW_H

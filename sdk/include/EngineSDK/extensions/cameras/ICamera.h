@@ -25,13 +25,12 @@
 #include <sigc++/signal.h>
 
 namespace mer::sdk {
-template<typename T>
+template <typename T>
 class ExtensionProperty;
 
 class ICamera {
 public:
 	virtual ~ICamera() = default;
-
 
 	[[nodiscard]] virtual sigc::signal<void(const glm::mat4 &)> &getOnMatrixChanged() = 0;
 

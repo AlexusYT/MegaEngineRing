@@ -72,7 +72,6 @@ public:
 
 	void remove() override;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //UIWINDOWCONTEXT_H

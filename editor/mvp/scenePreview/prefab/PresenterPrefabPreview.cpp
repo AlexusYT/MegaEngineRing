@@ -25,10 +25,8 @@
 #include "mvp/scenePreview/IViewScenePreview.h"
 
 namespace mer::editor::mvp {
-
 std::shared_ptr<PresenterPrefabPreview> PresenterPrefabPreview::create(
 	const std::shared_ptr<IViewScenePreview> &pView, const std::shared_ptr<IModelScenePreview> &pModel) {
 	return std::shared_ptr<PresenterPrefabPreview>(new PresenterPrefabPreview(pView, pModel));
 }
-
 } // namespace mer::editor::mvp

@@ -26,9 +26,7 @@
 #include "SettingsCategory.h"
 
 namespace mer::editor::mvp {
-
 class OtherCategory : public SettingsCategory {
-
 public:
 	bool debugEnabled{};
 
@@ -56,7 +54,6 @@ public:
 		this->debugEnabled = cat->debugEnabled;
 	}
 };
-
 } // namespace mer::editor::mvp
 
 #endif //OTHERCATEGORY_H

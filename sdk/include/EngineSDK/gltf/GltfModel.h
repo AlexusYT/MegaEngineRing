@@ -46,7 +46,6 @@ class Primitive;
 class Accessor;
 
 class GltfModel {
-
 	std::vector<std::shared_ptr<Light>> lights;
 	std::vector<std::shared_ptr<Mesh>> meshes;
 	std::vector<std::shared_ptr<Accessor>> accessors;
@@ -81,12 +80,12 @@ private:
 	ReportMessagePtr loadFromStream(const std::shared_ptr<std::istream> &pStream);
 
 	ReportMessagePtr loadFromFile(const std::filesystem::path &pFilePath);
+
 	static ReportMessagePtr deserializeManifest(const std::string &pJson, Microsoft::glTF::Document &pDocumentOut);
 
 	ReportMessagePtr parseStructure(const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader,
 									const Microsoft::glTF::Document &pDocument);
 };
-
 } // namespace mer::sdk
 
 #endif //GLTFMODEL_H

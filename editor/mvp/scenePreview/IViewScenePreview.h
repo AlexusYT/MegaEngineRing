@@ -44,7 +44,6 @@ public:
 
 	virtual void focusOnThis() = 0;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //IVIEWSCENEPREVIEW_H

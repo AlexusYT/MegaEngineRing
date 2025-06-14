@@ -237,7 +237,6 @@ protected:
 		calculateModelMatrix();
 	}
 };
-
 } // namespace mer::sdk
 
 #endif //TRANSFORMATION_H

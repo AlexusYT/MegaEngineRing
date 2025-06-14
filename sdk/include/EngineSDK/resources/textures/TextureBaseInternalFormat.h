@@ -23,16 +23,14 @@
 #define TEXTUREBASEINTERNALFORMAT_H
 
 namespace mer::sdk {
-
 enum class TextureBaseInternalFormat {
 	DEPTH_COMPONENT = 0x1902,
-	DEPTH_STENCIL = 0x84F9,
-	RED = 0x1903,
-	RG = 0x8227,
-	RGB = 0x1907,
-	RGBA = 0x1908
+	DEPTH_STENCIL   = 0x84F9,
+	RED             = 0x1903,
+	RG              = 0x8227,
+	RGB             = 0x1907,
+	RGBA            = 0x1908
 };
-
 } // namespace mer::sdk
 
 #endif //TEXTUREBASEINTERNALFORMAT_H

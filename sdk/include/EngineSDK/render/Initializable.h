@@ -24,7 +24,6 @@
 #include "IInitializable.h"
 
 namespace mer::sdk {
-
 class Initializable : public virtual IInitializable {
 	bool inited{false};
 
@@ -51,7 +50,6 @@ protected:
 
 	virtual void onUninitialize() {}
 };
-
 } // namespace mer::sdk
 
 #endif //INITIALIZABLE_H

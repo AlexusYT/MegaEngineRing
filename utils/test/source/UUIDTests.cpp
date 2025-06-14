@@ -37,8 +37,8 @@ TEST(UUID_TESTS, RandomUUID) {
 TEST(UUID_TESTS, RandomUUIDUpper) {
 	auto uuid1 = UUID::create();
 	EXPECT_EQ(uuid1->toString(true), uuid1->toString(false) | std::ranges::views::transform([](char ch) {
-										 return std::toupper(ch);
-									 }) | std::ranges::to<std::string>());
+				  return std::toupper(ch);
+				  }) | std::ranges::to<std::string>());
 }
 
 TEST(UUID_TESTS, ParseUUID) {

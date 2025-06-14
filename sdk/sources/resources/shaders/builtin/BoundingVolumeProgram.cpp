@@ -24,7 +24,6 @@
 #include "EngineSDK/resources/shaders/Shader.h"
 
 namespace mer::sdk {
-
 std::shared_ptr<BoundingVolumeProgram> BoundingVolumeProgram::instance =
 	std::shared_ptr<BoundingVolumeProgram>(new BoundingVolumeProgram);
 

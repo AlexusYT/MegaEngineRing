@@ -34,7 +34,6 @@ public:
 
 	virtual void deserialize(const nlohmann::json &pJson, Extension* pExtension) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //ISERIALIZABLE_H

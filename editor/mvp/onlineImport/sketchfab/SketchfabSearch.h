@@ -287,7 +287,6 @@ public:
 
 	void clear() { results.clear(); }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //SKETCHFABSEARCH_H

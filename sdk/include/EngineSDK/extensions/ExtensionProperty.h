@@ -27,11 +27,8 @@
 #include "EngineUtils/utils/Property.h"
 
 namespace mer::sdk {
-
-template<typename T>
+template <typename T>
 class ExtensionProperty : public Property<T>, public ISerializable {
-
-
 public:
 	ExtensionProperty(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription = {})
 		: Property<T>(pProvider, pName, pDescription) {}
@@ -59,8 +56,6 @@ public:
 			Property<T>::setValue({});*/
 	}
 };
-
-
 } // namespace mer::sdk
 
 #endif //EXTENSIONPROPERTY_H

@@ -24,14 +24,12 @@
 #include "EngineSDK/resources/ResourceLoader.h"
 
 namespace mer::sdk {
-
 class TextureLoader : public ResourceLoader {
 public:
 	std::shared_ptr<IResource> createResource() override;
 
 	ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
-								 const std::shared_ptr<IResource> &pResource) override;
-
+						  const std::shared_ptr<IResource> &pResource) override;
 
 private:
 	std::string getFileExtension() override { return "entex"; }

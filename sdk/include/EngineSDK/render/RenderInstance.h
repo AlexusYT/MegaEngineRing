@@ -36,7 +36,6 @@ public:
 
 	void setInstancedRender(IInstancedRender* pInstancedRender) override { instancedRender = pInstancedRender; }
 };
-
 } // namespace mer::sdk
 
 #endif //RENDERINSTANCE_H

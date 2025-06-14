@@ -120,7 +120,6 @@ private:
 
 	std::shared_ptr<DownloadLinks> getGltfLinks() const;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //PRESENTERONLINEIMPORT_H

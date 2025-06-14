@@ -33,6 +33,7 @@
 namespace mer::sdk {
 class Scene3D;
 }
+
 class DebugGeometry;
 
 namespace mer::sdk {
@@ -52,6 +53,7 @@ struct MeshInstanceData {
 	int32_t padding1;
 	int32_t padding2;
 };
+
 class Mesh;
 
 class Node : public Transformable {
@@ -72,6 +74,7 @@ class Node : public Transformable {
 
 protected:
 	explicit Node(const Microsoft::glTF::Node &pNode);
+
 	explicit Node(const std::string &pName);
 
 public:
@@ -142,17 +145,15 @@ public:
 
 	ReportMessagePtr removeExtension(const std::type_index &pType);
 
-	template<typename T>
-	bool hasExtension() const {
-		return hasExtension(typeid(T));
-	}
+	template <typename T>
+	bool hasExtension() const { return hasExtension(typeid(T)); }
 
 	bool hasExtension(const std::type_index &pType) const {
 		const auto iter = extensions.find(pType);
 		return iter != extensions.end();
 	}
 
-	template<typename T>
+	template <typename T>
 	std::shared_ptr<T> getExtension() const {
 		if (const auto it = extensions.find(typeid(T)); it != extensions.end()) {
 			return std::dynamic_pointer_cast<T>(it->second);
@@ -160,7 +161,7 @@ public:
 		return nullptr;
 	}
 
-	template<typename T>
+	template <typename T>
 	std::shared_ptr<T> getExtension() {
 		if (const auto it = extensions.find(typeid(T)); it != extensions.end()) {
 			return std::dynamic_pointer_cast<T>(it->second);
@@ -181,8 +182,6 @@ protected:
 
 	void updateNodeAabb();
 };
-
-
 } // namespace mer::sdk
 
 #endif //NODE_H

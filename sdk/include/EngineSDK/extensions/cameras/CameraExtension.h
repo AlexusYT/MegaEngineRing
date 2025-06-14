@@ -28,7 +28,6 @@
 
 namespace mer::sdk {
 class CameraExtension : public PerspectiveProjectionCameraMod, public ICamera {
-
 protected:
 	CameraExtension();
 
@@ -50,7 +49,6 @@ public:
 	[[nodiscard]] ExtensionProperty<glm::vec3> &getPosition() override;
 
 	void addAngle(const glm::vec2 &pAngleToAdd) { propertyAngle = propertyAngle + pAngleToAdd; }
-
 
 protected:
 	ReportMessagePtr onInit() override;

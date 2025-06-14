@@ -38,7 +38,6 @@ public:
 
 	virtual ~IResourceLoadExecutor() = default;
 
-
 	virtual std::shared_ptr<ResourceLoadResult> loadResourceSync(const std::string &pResourceUri) = 0;
 
 	virtual void loadResourceAsync(

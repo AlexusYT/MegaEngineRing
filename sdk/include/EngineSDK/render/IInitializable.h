@@ -24,7 +24,6 @@
 #include "EngineUtils/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
-
 class IInitializable {
 public:
 	virtual ~IInitializable() = default;
@@ -37,7 +36,6 @@ public:
 
 	virtual void setInited(bool pInited) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IINITIALIZABLE_H

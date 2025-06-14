@@ -35,9 +35,7 @@ PrefabElement::PrefabElement(const std::string &pName)
 	});
 }
 
-void PrefabElement::update() {
-	if (prefab) prefab->updateElement(this);
-}
+void PrefabElement::update() { if (prefab) prefab->updateElement(this); }
 
 std::shared_ptr<PrefabElementInstance> PrefabElement::createInstance() {
 	auto instance = PrefabElementInstance::create();

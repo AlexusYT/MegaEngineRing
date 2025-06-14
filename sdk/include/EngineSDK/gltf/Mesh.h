@@ -56,7 +56,6 @@ public:
 private:
 	void buildAabb() const;
 };
-
 } // namespace mer::sdk
 
 #endif //MESH_H

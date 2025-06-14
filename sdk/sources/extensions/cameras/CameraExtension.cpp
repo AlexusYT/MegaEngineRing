@@ -32,7 +32,6 @@
 #include "EngineSDK/extensions/MainObjectExtension.h"
 
 namespace mer::sdk {
-
 CameraExtension::CameraExtension()
 	: propertyMatrix(this, "Matrix"), propertyDirection(this, "Direction"), propertyAngle(this, "Angle") {
 	propertyDirection.getEvent().connect(sigc::hide(sigc::mem_fun(*this, &CameraExtension::updateMatrix)));
@@ -57,7 +56,6 @@ ExtensionProperty<glm::vec3> &CameraExtension::getPosition() {
 }
 
 ReportMessagePtr CameraExtension::onInit() {
-
 	putConnectionToStorage(
 		getPosition().getEvent().connect(hide(sigc::mem_fun(*this, &CameraExtension::updateMatrix))));
 	return nullptr;
@@ -76,5 +74,4 @@ void CameraExtension::updateMatrix() {
 	const auto position = objectSelf->getMainExtension()->propertyPosition.getValue();
 	propertyMatrix = getProjMatrix() * lookAt(position, position + propertyDirection.getValue(), {0, 1, 0});
 }
-
 } // namespace mer::sdk

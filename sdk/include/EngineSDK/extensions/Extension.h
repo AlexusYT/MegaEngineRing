@@ -66,14 +66,14 @@ protected:
 
 public:
 	using ValueChanged = sigc::signal<void()>;
-	template<typename... Args>
+	template <typename... Args>
 	using Method = sigc::slot<void(Args...)>;
 
 	static constexpr auto trimFilename(const std::string_view &pFilename) {
 		return pFilename.substr(pFilename.find("include") + 8);
 	}
 
-	template<typename ClassT>
+	template <typename ClassT>
 	static std::shared_ptr<ClassT> create(ClassT* pPtr = new ClassT(), std::string_view pFilePath = "") {
 		static_assert(std::derived_from<ClassT, Extension>, "ClassT must be derived from Extension");
 		auto ptr = std::shared_ptr<ClassT>(pPtr);
@@ -130,7 +130,6 @@ public:
 	 */
 	void loadResourceAsync(const std::string &pResourceUri,
 						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const {
-
 		getScene()->loadResourceAsync(pResourceUri,
 									  [pSlot](const std::shared_ptr<ResourceLoadResult> &pResult) { pSlot(pResult); });
 	}
@@ -140,7 +139,6 @@ public:
 	}
 
 	IScene* getScene() const;
-
 
 	bool notifyOnMouseScroll(double pDx, double pDy);
 
@@ -159,9 +157,7 @@ protected:
 	void putConnectionToStorage(const sigc::connection &pConnection) { connectionStorage.emplace_back(pConnection); }
 
 	void freeConnectionStorage() {
-		for (auto &connection: connectionStorage) {
-			if (connection.connected()) connection.disconnect();
-		}
+		for (auto &connection: connectionStorage) { if (connection.connected()) connection.disconnect(); }
 	}
 
 	virtual void onRender() {}

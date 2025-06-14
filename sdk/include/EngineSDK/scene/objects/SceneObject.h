@@ -56,6 +56,7 @@ public:
 	~SceneObject() override;
 
 	static std::shared_ptr<ISceneObject> create();
+
 	/**
 	 * \brief 
 	 * \param[in] pName
@@ -63,7 +64,7 @@ public:
 	 * \return 
 	 */
 	ReportMessagePtr addExtension(const std::string &pName,
-										 const std::shared_ptr<Extension> &pExtension) override;
+								  const std::shared_ptr<Extension> &pExtension) override;
 
 	ReportMessagePtr removeExtension(const std::string &pName, std::shared_ptr<Extension> &pExtension) override;
 

@@ -90,7 +90,7 @@ void EditorUi::updateUi() {
 
 		ImGuiWindowFlags flags = 0;
 		flags |= ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-				 ImGuiWindowFlags_NoMove;
+			ImGuiWindowFlags_NoMove;
 		flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 		// When we have open documents, use a window without a title bar with a dockspace inside. Otherwise fake the dockspace tab-bar with a regular title bar.
@@ -145,11 +145,11 @@ void EditorUi::updateUi() {
 					ImGui::MenuItem("DebugLog Window", nullptr, &showDebugLogWindow);
 					ImGui::MenuItem("IDStackTool Window", nullptr, &showIdStackToolWindow);
 					ImGui::MenuItem("About Window", nullptr, &showAboutWindow);
-	#ifndef NDEBUG
+#ifndef NDEBUG
 					bool isDebuggerPresent = true;
-	#else
+#else
 					bool isDebuggerPresent = ImGui::GetIO().ConfigDebugIsDebuggerPresent;
-	#endif
+#endif
 					if (ImGui::MenuItem("Item Picker", NULL, false, isDebuggerPresent)) ImGui::DebugStartItemPicker();
 					if (!isDebuggerPresent)
 						ImGui::SetItemTooltip(
@@ -285,5 +285,4 @@ void EditorUi::onMouseButton(const int pButton, const int pAction, const int pMo
 	for (const auto &editor: editors) editor->onMouseButton(pButton, pAction, pMods);
 	SceneUi::onMouseButton(pButton, pAction, pMods);
 }
-
 } // namespace mer::editor::mvp

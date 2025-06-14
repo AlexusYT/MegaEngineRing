@@ -29,12 +29,11 @@
 #include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk {
-
 std::shared_ptr<IResource> MaterialLoader::createResource() { return MaterialResource::create(); }
 
 ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecutor,
-											 std::shared_ptr<std::istream> &pStream,
-											 const std::shared_ptr<IResource> &pResource) {
+									  std::shared_ptr<std::istream> &pStream,
+									  const std::shared_ptr<IResource> &pResource) {
 	auto resource = std::dynamic_pointer_cast<MaterialResource>(pResource);
 	readMaterialComponent(pStream, pLoadExecutor, sigc::mem_fun(*resource, &IMaterialResource::setAlbedo));
 	readMaterialComponent(pStream, pLoadExecutor, sigc::mem_fun(*resource, &IMaterialResource::setMetallic));
@@ -55,9 +54,7 @@ void MaterialLoader::readMaterialComponent(
 			const auto uri = readString(pStream);
 
 			pLoadExecutor->loadResourceAsync(uri, [pSetter](const std::shared_ptr<ResourceLoadResult> &pResult) {
-				if (pResult->isErrored()) {
-					Logger::error(pResult->getError());
-				} else if (pResult->isReady()) {
+				if (pResult->isErrored()) { Logger::error(pResult->getError()); } else if (pResult->isReady()) {
 					if (const auto texture = std::dynamic_pointer_cast<ITextureResource>(pResult->getResource())) {
 						pSetter(texture);
 					}
@@ -71,6 +68,7 @@ void MaterialLoader::readMaterialComponent(
 			component->color->a = readNumber<float>(pStream);
 			pSetter(component);
 		}
-	} catch (...) { pSetter(nullptr); }
+	}
+	catch (...) { pSetter(nullptr); }
 }
 } // namespace mer::sdk

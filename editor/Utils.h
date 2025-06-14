@@ -26,26 +26,24 @@
 struct curl_slist;
 
 namespace mer::editor {
-
 class Utils {
 public:
 	static std::unique_ptr<curl_slist, void (*)(curl_slist*)> getCurlList(const std::list<std::string> &pList);
 
-	static size_t streamWriteCallback(const char* pPtr, const size_t pSize, const size_t pNmemb, std::stringstream* pUserData) {
+	static size_t streamWriteCallback(const char* pPtr, const size_t pSize, const size_t pNmemb,
+									  std::stringstream* pUserData) {
 		size_t realsize = pSize * pNmemb;
 		pUserData->write(pPtr, static_cast<int64_t>(realsize));
 		return realsize;
 	}
 
 	static size_t rawDataWriteCallback(const char* pPtr, const size_t pSize, const size_t pNmemb,
-								 std::vector<unsigned char>* pData) {
+									   std::vector<unsigned char>* pData) {
 		std::string str(pPtr, pSize * pNmemb);
 		pData->insert(pData->cend(), str.begin(), str.end());
 		return pSize * pNmemb;
 	}
 };
-
-
 } // namespace mer::editor
 
 #endif //EUTILS_H

@@ -35,8 +35,11 @@
 
 namespace mer::sdk {
 Prefab::Prefab()
-	: name("UnnamedPrefab"), uuid(UUID::newInstance()), prefabElementsSsbo(PrefabElementsSsbo::create()),
-	  visible(nullptr, ""), material(nullptr, "") {
+	: name("UnnamedPrefab"),
+	  uuid(UUID::newInstance()),
+	  prefabElementsSsbo(PrefabElementsSsbo::create()),
+	  visible(nullptr, ""),
+	  material(nullptr, "") {
 	prefabSsbo = PrefabSsbo::create();
 	visible = true;
 	material.connectEvent([this](const std::shared_ptr<IMaterialResource> &pMaterial) {
@@ -85,7 +88,7 @@ void Prefab::removeElement(const std::shared_ptr<PrefabElement> &pPrefabElement)
 			   data.begin() + static_cast<long int>(elementToRemove->getDataStart() + elementToRemove->getDataCount()));
 	indices.erase(indices.begin() + static_cast<long int>(elementToRemove->getIndicesStart()),
 				  indices.begin() +
-					  static_cast<long int>(elementToRemove->getIndicesStart() + elementToRemove->getIndicesCount()));
+				  static_cast<long int>(elementToRemove->getIndicesStart() + elementToRemove->getIndicesCount()));
 	buffersDirty = true;
 
 	for (auto iter = resultIter, endIter = elementsList.end(); iter != endIter; ++iter) {
@@ -123,7 +126,6 @@ std::shared_ptr<PrefabInstance> Prefab::createInstance() {
 }
 
 void Prefab::addInstance(const std::shared_ptr<PrefabInstance> &pInstance) {
-
 	if (auto interface = std::dynamic_pointer_cast<IPrefabInstance>(pInstance))
 		interface->setInstanceId(static_cast<uint32_t>(instances.size()));
 	instances.emplace_back(pInstance);
@@ -138,7 +140,8 @@ void Prefab::addInstance(const std::shared_ptr<PrefabInstance> &pInstance) {
 	prefabSsbo->trackInstance(pInstance.get());
 }
 
-void Prefab::updateElement(PrefabElement* /*pElement*/) { /*pElement*/ }
+void Prefab::updateElement(PrefabElement* /*pElement*/) { /*pElement*/
+}
 
 ReportMessagePtr Prefab::onInitialize() {
 	prefabElementsSsbo->initialize();
@@ -204,9 +207,12 @@ void Prefab::render() {
 }
 
 void Prefab::deleteBuffers() {
-	if (vao) glDeleteVertexArrays(1, &vao);
-	if (dataBuffer) glGenBuffers(1, &dataBuffer);
-	if (indexBuffer) glGenBuffers(1, &indexBuffer);
+	if (vao)
+		glDeleteVertexArrays(1, &vao);
+	if (dataBuffer)
+		glGenBuffers(1, &dataBuffer);
+	if (indexBuffer)
+		glGenBuffers(1, &indexBuffer);
 }
 
 void Prefab::onUninitialize() {

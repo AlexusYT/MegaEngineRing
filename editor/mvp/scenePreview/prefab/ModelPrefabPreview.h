@@ -24,9 +24,7 @@
 #include "mvp/scenePreview/ModelScenePreview.h"
 
 namespace mer::editor::mvp {
-
 class ModelPrefabPreview : public ModelScenePreview {};
-
 } // namespace mer::editor::mvp
 
 #endif //MODELPREFABPREVIEW_H

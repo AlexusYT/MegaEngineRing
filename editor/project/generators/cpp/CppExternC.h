@@ -54,7 +54,6 @@ public:
 		std::stringstream ss;
 		ss << "extern \"C\"{\n";
 		for (const auto &cppDefinition: definitions) {
-
 			ss << tabs << cppDefinition->getCode(pIndent + 1, pIsHeader) << "\n";
 		}
 		ss << "}\n";

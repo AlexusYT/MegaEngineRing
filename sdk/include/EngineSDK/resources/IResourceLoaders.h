@@ -29,14 +29,12 @@ class IResourceLoaders {
 public:
 	virtual ~IResourceLoaders() = default;
 
-
 	virtual void addLoader(const std::shared_ptr<IResourceLoader> &pLoader) = 0;
 
 	virtual std::shared_ptr<IResourceLoader> getLoader(const std::filesystem::path &pExtension) = 0;
 
 	virtual void initLoaders() = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IRESOURCELOADERS_H

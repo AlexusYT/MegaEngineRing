@@ -46,7 +46,6 @@ public:
 
 	virtual void setInstancedRender(IInstancedRender* pInstancedRender) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IRENDERINSTANCE_H

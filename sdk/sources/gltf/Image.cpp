@@ -31,7 +31,6 @@ namespace mer::sdk {
 Image::Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
 			 const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader)
 	: width(-1), height(-1), format(Texture2DImageFormat::UNDEFINED), type(Texture2DType::UNDEFINED) {
-
 	rawData = pReader->ReadBinaryData(pDocument, pImage);
 	name = pImage.name;
 }
@@ -52,15 +51,14 @@ ReportMessagePtr Image::onInitialize() {
 	ReportMessagePtr msg;
 
 	try {
-
-		if (spng_ihdr ihdrOut; auto ctx = isPng(msg, ihdrOut)) {
-			msg = readPng(ctx, ihdrOut);
-		} else if (msg = Utils::decompressJpeg(rawData.data(), rawData.size(), data, &width, &height); !msg) {
+		if (spng_ihdr ihdrOut; auto ctx = isPng(msg, ihdrOut)) { msg = readPng(ctx, ihdrOut); } else if (
+			msg = Utils::decompressJpeg(rawData.data(), rawData.size(), data, &width, &height); !msg) {
 			//TODO Read from JPEG file
 			format = Texture2DImageFormat::RGB;
 			type = Texture2DType::UNSIGNED_BYTE;
 		}
-	} catch (...) {
+	}
+	catch (...) {
 		msg = ReportMessage::create();
 		msg->setTitle("Failed to read image");
 		msg->setMessage("Exception occurred");
@@ -81,10 +79,14 @@ ReportMessagePtr Image::readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ct
 		const auto colorType = pIhdr.color_type;
 		const int bitDepth = pIhdr.bit_depth;
 		switch (bitDepth) {
-			case 4: type = Texture2DType::UNSIGNED_BYTE; break;
-			case 8: type = Texture2DType::UNSIGNED_BYTE; break;
-			case 16: type = Texture2DType::UNSIGNED_SHORT; break;
-			case 32: type = Texture2DType::UNSIGNED_INT; break;
+			case 4: type = Texture2DType::UNSIGNED_BYTE;
+				break;
+			case 8: type = Texture2DType::UNSIGNED_BYTE;
+				break;
+			case 16: type = Texture2DType::UNSIGNED_SHORT;
+				break;
+			case 32: type = Texture2DType::UNSIGNED_INT;
+				break;
 			default:
 				auto msg = ReportMessage::create();
 				msg->setTitle("Failed to read image");
@@ -94,11 +96,16 @@ ReportMessagePtr Image::readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ct
 				return msg;
 		}
 		switch (colorType) {
-			case SPNG_COLOR_TYPE_GRAYSCALE: format = Texture2DImageFormat::RED; break;
-			case SPNG_COLOR_TYPE_TRUECOLOR: format = Texture2DImageFormat::RGB; break;
-			case SPNG_COLOR_TYPE_TRUECOLOR_ALPHA: format = Texture2DImageFormat::RGBA; break;
-			case SPNG_COLOR_TYPE_GRAYSCALE_ALPHA: format = Texture2DImageFormat::RG; break;
-			case SPNG_COLOR_TYPE_INDEXED: format = Texture2DImageFormat::RGB; break;
+			case SPNG_COLOR_TYPE_GRAYSCALE: format = Texture2DImageFormat::RED;
+				break;
+			case SPNG_COLOR_TYPE_TRUECOLOR: format = Texture2DImageFormat::RGB;
+				break;
+			case SPNG_COLOR_TYPE_TRUECOLOR_ALPHA: format = Texture2DImageFormat::RGBA;
+				break;
+			case SPNG_COLOR_TYPE_GRAYSCALE_ALPHA: format = Texture2DImageFormat::RG;
+				break;
+			case SPNG_COLOR_TYPE_INDEXED: format = Texture2DImageFormat::RGB;
+				break;
 			default:
 				auto msg = ReportMessage::create();
 				msg->setTitle("Failed to read image");
@@ -107,7 +114,8 @@ ReportMessagePtr Image::readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ct
 				addReportInfo(msg);
 				return msg;
 		}
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to read image");
 		msg->setMessage("Exception occurred");
@@ -195,7 +203,8 @@ ReportMessagePtr Image::readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ct
 }
 
 std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> Image::isPng(ReportMessagePtr &pErrorOut, spng_ihdr &pIhdrOut) const {
-	std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> ctx(spng_ctx_new(0), spng_ctx_free);
+	std::unique_ptr<spng_ctx, void (*)(spng_ctx*)>
+		ctx(spng_ctx_new(0), spng_ctx_free);
 
 	/* Ignore and don't calculate chunk CRC's */
 	spng_set_crc_action(ctx.get(), SPNG_CRC_USE, SPNG_CRC_USE);
@@ -210,9 +219,7 @@ std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> Image::isPng(ReportMessagePtr &pE
 
 	auto ret = spng_get_ihdr(ctx.get(), &pIhdrOut);
 
-	if (ret == SPNG_ESIGNATURE) {
-		ctx.reset();
-	} else if (ret != SPNG_OK) {
+	if (ret == SPNG_ESIGNATURE) { ctx.reset(); } else if (ret != SPNG_OK) {
 		const auto msg = ReportMessage::create();
 		msg->setTitle("Failed to read png image");
 		msg->setMessage("Function spng_get_ihdr failed");
@@ -223,5 +230,4 @@ std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> Image::isPng(ReportMessagePtr &pE
 	}
 	return ctx;
 }
-
 } // namespace mer::sdk

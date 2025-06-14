@@ -27,7 +27,6 @@
 #include "EngineUtils/utils/ReportMessage.h"
 
 namespace mer::sdk {
-
 /*template<typename PixelType>
 std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, std::istream &pStream) {
 	std::vector<PixelType> pixelsOut;
@@ -88,5 +87,4 @@ ReportMessagePtr TextureLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
 	}*/
 	return nullptr;
 }
-
 } // namespace mer::sdk

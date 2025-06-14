@@ -24,7 +24,6 @@
 #include <epoxy/gl.h>
 
 namespace mer::sdk {
-
 Framebuffer::Framebuffer() {}
 
 Framebuffer::~Framebuffer() { uninitialize(); }
@@ -34,7 +33,8 @@ uint32_t Framebuffer::getFrameTexture() const { return texture; }
 void Framebuffer::setSize(const int pWidth, const int pHeight) {
 	width = pWidth;
 	height = pHeight;
-	if (textureMs) glDeleteTextures(1, &textureMs);
+	if (textureMs)
+		glDeleteTextures(1, &textureMs);
 	glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &textureMs);
 	glTextureStorage2DMultisample(textureMs, samples, GL_RGB8, pWidth, pHeight, true);
 	glNamedFramebufferTexture(fboMs, GL_COLOR_ATTACHMENT0, textureMs, 0);
@@ -43,7 +43,8 @@ void Framebuffer::setSize(const int pWidth, const int pHeight) {
 	glNamedFramebufferRenderbuffer(fboMs, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboMs);
 
 
-	if (texture) glDeleteTextures(1, &texture);
+	if (texture)
+		glDeleteTextures(1, &texture);
 	glCreateTextures(GL_TEXTURE_2D, 1, &texture);
 	glTextureStorage2D(texture, 1, GL_RGB8, pWidth, pHeight);
 	glTextureParameteri(texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -69,7 +70,6 @@ bool Framebuffer::isComplete() const {
 }
 
 ReportMessagePtr Framebuffer::onInitialize() {
-
 	glCreateFramebuffers(1, &fboMs);
 	glCreateRenderbuffers(1, &rboMs);
 	glCreateFramebuffers(1, &fbo);
@@ -80,13 +80,17 @@ ReportMessagePtr Framebuffer::onInitialize() {
 }
 
 void Framebuffer::onUninitialize() {
-	if (fboMs) glDeleteFramebuffers(1, &fboMs);
-	if (fbo) glDeleteFramebuffers(1, &fbo);
-	if (textureMs) glDeleteTextures(1, &textureMs);
-	if (texture) glDeleteTextures(1, &texture);
-	if (rboMs) glDeleteRenderbuffers(1, &rboMs);
-	if (rbo) glDeleteRenderbuffers(1, &rbo);
+	if (fboMs)
+		glDeleteFramebuffers(1, &fboMs);
+	if (fbo)
+		glDeleteFramebuffers(1, &fbo);
+	if (textureMs)
+		glDeleteTextures(1, &textureMs);
+	if (texture)
+		glDeleteTextures(1, &texture);
+	if (rboMs)
+		glDeleteRenderbuffers(1, &rboMs);
+	if (rbo)
+		glDeleteRenderbuffers(1, &rbo);
 }
-
-
 } // namespace mer::sdk

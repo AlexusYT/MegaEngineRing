@@ -25,7 +25,6 @@
 #include "EngineSDK/render/Renderer.h"
 
 namespace mer::sdk {
-
 Scene3D::Scene3D() : renderer(std::make_shared<Renderer>()) {}
 
 void Scene3D::render() {}
@@ -113,9 +112,7 @@ void Scene3D::addToMainRenderPass(const std::shared_ptr<Node> &pNode) const {
 void Scene3D::removeNodeImpl(Node* pNode) {
 	if (auto parent = pNode->getParentNode(); !parent) removeFromRootNodes(pNode);
 	else { parent->removeChild(pNode); }
-	if (auto &children = pNode->getChildren(); !children.empty()) {
-		for (auto child: children) removeChildImpl(child);
-	}
+	if (auto &children = pNode->getChildren(); !children.empty()) { for (auto child: children) removeChildImpl(child); }
 	removeChildImpl(pNode);
 }
 
@@ -127,6 +124,4 @@ void Scene3D::removeChildImpl(Node* pNode) {
 
 	nodes.erase(iter);
 }
-
-
 } // namespace mer::sdk

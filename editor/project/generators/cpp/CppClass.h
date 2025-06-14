@@ -124,7 +124,6 @@ public:
 		return ss.str();
 	}
 };
-
 } // namespace mer::editor::project
 
 

@@ -30,9 +30,7 @@
 namespace mer::editor::mvp {
 PresenterPrefabEditor::PresenterPrefabEditor(const std::shared_ptr<IModelPrefabEditor> &pModel,
 											 const std::shared_ptr<IViewPrefabEditor> &pView)
-	: model(pModel), view(pView) {
-	view->setPresenter(this);
-}
+	: model(pModel), view(pView) { view->setPresenter(this); }
 
 std::shared_ptr<PresenterPrefabEditor> PresenterPrefabEditor::create(const std::shared_ptr<IModelPrefabEditor> &pModel,
 																	 const std::shared_ptr<IViewPrefabEditor> &pView) {

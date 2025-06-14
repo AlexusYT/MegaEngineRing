@@ -111,8 +111,6 @@ public:
 
 private:
 };
-
-
 } // namespace mer::sdk
 
 #endif //PREFAB_H

@@ -24,7 +24,6 @@
 #include <glm/vec4.hpp>
 
 namespace mer::sdk {
-
 struct MaterialData {
 	glm::vec4 baseColorMap{};
 	glm::vec4 normalMap{};
@@ -32,7 +31,6 @@ struct MaterialData {
 	glm::vec4 roughnessMap{};
 	glm::vec4 aoMap{};
 };
-
 } // namespace mer::sdk
 
 #endif //MATERIALDATA_H

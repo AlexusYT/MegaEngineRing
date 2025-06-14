@@ -81,7 +81,7 @@ class Editor {
 	EditorUi* ui{};
 	std::vector<std::shared_ptr<EditorTool>> tools;
 	std::string name; // Document name
-	uint32_t id;	  // Document identifier (unique)
+	uint32_t id;      // Document identifier (unique)
 	uint32_t setDockId = 0;
 	bool open = true;
 
@@ -91,7 +91,8 @@ class Editor {
 	uint32_t prevLocationId = 0; // Previous dock node we are docked into _OR_ window ID if floating window
 	uint32_t prevDockspaceId = 0;
 	ImGuiWindowClass
-		toolWindowsClass; // All our tools windows will share the same WindowClass (based on ID) to avoid mixing tools from different top-level editor
+	toolWindowsClass;
+	// All our tools windows will share the same WindowClass (based on ID) to avoid mixing tools from different top-level editor
 
 	bool unsaved = false;
 
@@ -155,8 +156,6 @@ protected:
 
 	virtual void loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir pPanelDir) = 0;
 };
-
-
 } // namespace mer::editor::mvp
 
 #endif //EDITOR_H

@@ -25,7 +25,6 @@ namespace mer::editor::mvp {
 ProjectExplorerElement::ProjectExplorerElement(const std::filesystem::path &pPath,
 											   const std::filesystem::path &pRootPath, const bool pDirectory)
 	: directory(pDirectory), path(pPath), rootPath(pRootPath) {
-
 	auto ext = path.extension();
 	if (directory) type = ExplorerElementType::DIRECTORY;
 	else if (ext == ".enscene")
@@ -74,5 +73,4 @@ void ProjectExplorerElement::sort() const {
 		return pFirst->getName().lowercase().compare(pSecond->getName().lowercase());
 	});*/
 }
-
 } // namespace mer::editor::mvp

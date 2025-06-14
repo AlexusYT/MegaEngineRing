@@ -24,16 +24,14 @@
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 
 namespace mer::sdk {
-
 class BoundingVolumeProgram : public ShaderProgram {
-
 	static std::shared_ptr<BoundingVolumeProgram> instance;
+
 	BoundingVolumeProgram();
 
 public:
 	static std::shared_ptr<BoundingVolumeProgram> getInstance();
 };
-
 } // namespace mer::sdk
 
 #endif //BOUNDINGVOLUMEPROGRAM_H

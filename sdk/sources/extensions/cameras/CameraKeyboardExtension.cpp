@@ -31,7 +31,6 @@
 #include "EngineSDK/extensions/MainObjectExtension.h"
 
 namespace mer::sdk {
-
 void CameraKeyboardExtension::onKeyStateChanged(const KeyboardKey pKey, const bool pPressed,
 												const ModifierKeys & /*pMods*/) {
 	if (pKey == propertyForwardKey) fwdPressed = pPressed;

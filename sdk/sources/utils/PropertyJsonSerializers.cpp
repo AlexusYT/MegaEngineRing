@@ -84,9 +84,7 @@ glm::mat4 PropertyJsonSerializer<glm::mat<4, 4, float>>::deserialize(const nlohm
 }
 
 nlohmann::json PropertyJsonSerializer<std::string>::serialize(const std::string &pValue,
-															  Extension* /*pExtension*/) {
-	return pValue;
-}
+															  Extension* /*pExtension*/) { return pValue; }
 
 std::string PropertyJsonSerializer<std::string>::deserialize(const nlohmann::json &pJson,
 															 Extension* /*pExtension*/) {
@@ -114,14 +112,10 @@ std::shared_ptr<IModel3DObject> PropertyJsonSerializer<std::shared_ptr<IModel3DO
 }
 
 nlohmann::json PropertyJsonSerializer<std::shared_ptr<ShaderProgram>>::serialize(
-	const std::shared_ptr<ShaderProgram> &, Extension* /*pExtension*/) {
-	return "Shader";
-}
+	const std::shared_ptr<ShaderProgram> &, Extension* /*pExtension*/) { return "Shader"; }
 
 std::shared_ptr<ShaderProgram> PropertyJsonSerializer<std::shared_ptr<ShaderProgram>>::deserialize(
-	const nlohmann::json & /*pJson*/, Extension* /*pExtension*/) {
-	return nullptr;
-}
+	const nlohmann::json & /*pJson*/, Extension* /*pExtension*/) { return nullptr; }
 
 nlohmann::json PropertyJsonSerializer<std::shared_ptr<ITextureResource>>::serialize(
 	const std::shared_ptr<ITextureResource> &pValue, Extension* /*pExtension*/) {
@@ -131,7 +125,6 @@ nlohmann::json PropertyJsonSerializer<std::shared_ptr<ITextureResource>>::serial
 
 std::shared_ptr<ITextureResource> PropertyJsonSerializer<std::shared_ptr<ITextureResource>>::deserialize(
 	const nlohmann::json &pJson, const Extension* pExtension) {
-
 	if (pJson.is_string() && pJson.get<std::string>() == "null") return nullptr;
 	const auto resourceUri = pJson.get<std::string>();
 	const auto resource = pExtension->loadResourceSync(resourceUri);
@@ -177,7 +170,6 @@ nlohmann::json PropertyJsonSerializer<std::shared_ptr<IMaterialResource>>::seria
 
 std::shared_ptr<IMaterialResource> PropertyJsonSerializer<std::shared_ptr<IMaterialResource>>::deserialize(
 	const nlohmann::json &pJson, const Extension* pExtension) {
-
 	if (pJson.is_string() && pJson.get<std::string>() == "null") return nullptr;
 	const auto resourceUri = pJson.get<std::string>();
 	const auto resource = pExtension->loadResourceSync(resourceUri);

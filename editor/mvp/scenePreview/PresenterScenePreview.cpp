@@ -64,7 +64,7 @@ void PresenterScenePreview::renderGeometryBoundingVolumes() {
 	[[maybe_unused]] glm::vec3 dir =
 		camera->propertyTargetPosition.getValue() +
 		glm::vec3(glm::inverse(camera->getMatrix()) * glm::vec4(mousePos.x, -mousePos.y, 1.0f, 1.0f)) *
-			camera->propertyDistance.getValue();
+		camera->propertyDistance.getValue();
 	glm::vec3 origin = camera->propertyPosition.getValue();
 	test->setBounds(dir, origin);
 	hoveredMeshNode = nullptr;
@@ -82,7 +82,6 @@ void PresenterScenePreview::renderGeometryBoundingVolumes() {
 
 	float minDistance = std::numeric_limits<float>::max();
 	for (auto &[coordinate, node]: candidates) {
-
 		if (auto ext = node->getExtension<sdk::MeshExtension>()) {
 			glm::vec2 coord;
 			float distance;
@@ -138,9 +137,7 @@ void PresenterScenePreview::init() {
 	boundingProgram = sdk::BoundingVolumeProgram::getInstance();
 	if (auto msg = boundingProgram->initialize()) { sdk::Logger::error(msg); }
 	auto defaultProgram = sdk::DefaultProgram::getInstance();
-	if (!defaultProgram->isInited()) {
-		if (auto msg = defaultProgram->initialize()) { sdk::Logger::error(msg); }
-	}
+	if (!defaultProgram->isInited()) { if (auto msg = defaultProgram->initialize()) { sdk::Logger::error(msg); } }
 	test = sdk::VolumeAabb::create();
 	test->initialize();
 }
@@ -154,7 +151,6 @@ void PresenterScenePreview::onPrimaryMouseKeyPressed() {
 void PresenterScenePreview::onSecondaryMouseKeyPressed() { cancelCurrentAction(); }
 
 void PresenterScenePreview::onSceneChanged() {
-
 	/*auto scene = model->getScene();
 	if (!scene) return;*/
 	/*std::vector<sdk::Node*> nodes;
@@ -174,7 +170,6 @@ void PresenterScenePreview::onSceneChanged() {
 void PresenterScenePreview::setFocus() { view->focusOnThis(); }
 
 void PresenterScenePreview::startMovingGesture() {
-
 	if (movingNode) return;
 	auto &nodes = model->getSelectedMeshNodes();
 	if (nodes.empty()) return;

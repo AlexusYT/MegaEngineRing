@@ -107,7 +107,6 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<ILightSources> &getLightSources() const { return lightSources; }
 
-
 protected:
 	void setApplication(IApplication* pApplication) override { application = pApplication; }
 

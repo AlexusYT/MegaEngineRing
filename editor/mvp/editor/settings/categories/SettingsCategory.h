@@ -24,7 +24,6 @@
 #include <nlohmann/json_fwd.hpp>
 
 namespace mer::editor::mvp {
-
 class SettingsCategory {
 	sigc::signal<void()> onSettingsChanged;
 
@@ -54,7 +53,6 @@ public:
 		return onSettingsChanged.connect(pCallback);
 	}
 };
-
 } // namespace mer::editor::mvp
 
 #endif //SETTINGSCATEGORY_H

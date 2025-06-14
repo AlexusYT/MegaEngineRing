@@ -30,7 +30,6 @@ class Transformation;
 }
 
 namespace mer::sdk {
-
 class VolumeAabb : public BoundingVolume {
 	glm::vec3 min{};
 	glm::vec3 max{};
@@ -69,7 +68,6 @@ public:
 		notifyChanged();
 	}
 
-#define RAYAABB_EPSILON 0.00001f
 	bool isIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRayDir, glm::vec3 &pIntersectCoordOut);
 
 	void transform(const glm::mat4 &pTransformMatrix, glm::vec3 &pNewMin, glm::vec3 &pNewMax) const;
@@ -83,8 +81,6 @@ protected:
 
 	std::vector<uint16_t> getIndices() override;
 };
-
-
 } // namespace mer::sdk
 
 #endif //VOLUMEAABB_H

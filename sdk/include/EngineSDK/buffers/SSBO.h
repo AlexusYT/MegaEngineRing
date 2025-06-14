@@ -24,7 +24,6 @@
 #include "BasicBuffer.h"
 
 namespace mer::sdk {
-
 class SsboImpl : public BasicBuffer {
 protected:
 	SsboImpl() = default;
@@ -35,10 +34,9 @@ public:
 	void unbindBufferBase(uint32_t pBinding);
 };
 
-template<typename T>
+template <typename T>
 class Ssbo : public SsboImpl {
 	T data{};
-
 
 public:
 	using ElementT = T;
@@ -58,10 +56,9 @@ public:
 	const void* getBytes() const override { return data.data(); }
 };
 
-template<typename T>
+template <typename T>
 class Ssbo<std::vector<T>> : public SsboImpl {
 	std::vector<T> data{};
-
 
 public:
 	using ElementT = T;
@@ -79,7 +76,7 @@ public:
 		dirty = true;
 	}
 
-	template<typename InputIterator>
+	template <typename InputIterator>
 	InputIterator find(InputIterator pFirst, InputIterator pLast, const T &pVal) {
 		std::lock_guard lock(mutex);
 		return std::find(pFirst, pLast, pVal);
@@ -108,7 +105,7 @@ public:
 		return data.at(pIndex);
 	}
 
-	template<typename InputIterator, typename = std::_RequireInputIter<InputIterator>>
+	template <typename InputIterator, typename = std::_RequireInputIter<InputIterator>>
 	typename std::vector<T>::iterator insertElements(typename std::vector<T>::const_iterator pPosition,
 													 InputIterator pFirst, InputIterator pLast) {
 		std::lock_guard lock(mutex);
@@ -181,7 +178,6 @@ class SSBO {
 	const void* data{};
 	BufferUsageEnum usage;
 
-
 public:
 	SSBO();
 
@@ -211,7 +207,6 @@ public:
 
 	[[nodiscard]] const BufferUsageEnum &getUsage() const { return usage; }
 };
-
 } // namespace mer::sdk
 
 #endif //SSBO_H

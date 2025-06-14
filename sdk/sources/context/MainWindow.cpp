@@ -20,16 +20,15 @@
 //
 
 #ifndef EDITOR_SDK
-	#include "MainWindow.h"
+#include "MainWindow.h"
 
-	#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h>
 
-	#include "EngineSDK/utils/ModifierKeys.h"
-	#include "ResourcesWindow.h"
+#include "EngineSDK/utils/ModifierKeys.h"
+#include "ResourcesWindow.h"
 
 namespace mer::sdk {
 MainWindowWindow() {
-
 	resourcesWindow = ResourcesWindow::create();
 	resourcesWindow->setVisible(false);
 	resourcesWindow->show();
@@ -37,7 +36,6 @@ MainWindowWindow() {
 }
 
 ReportMessagePtr MainWindow::openScene(const std::shared_ptr<IScene> &pNewScene) {
-
 	if (currentScene) {
 		auto oldScene = currentScene;
 		currentScene.reset();

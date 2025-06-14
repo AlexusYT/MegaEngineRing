@@ -86,8 +86,10 @@ void ViewPrefabEditor::onUpdate(bool pVisible) {
 		}
 		ImGui::SetItemTooltip("Controls visibility of all prefab elements");
 
-		const char* items[] = {"AAAA", "BBBB", "CCCC", "DDDD", "EEEE",	  "FFFF", "GGGG",
-							   "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO"};
+		const char* items[] = {
+			"AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG",
+			"HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO"
+		};
 		static int itemSelectedIdx = 0; // Here we store our selection data as an index.
 		if (ImGui::BeginCombo("Material###GlobalPrefabMaterial", items[itemSelectedIdx])) {
 			for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
@@ -196,7 +198,6 @@ void ViewPrefabEditor::customRender() {
 void ViewPrefabEditor::onSizeChanged(int pWidth, int pHeight) { UiWindow::onSizeChanged(pWidth, pHeight); }
 
 void ViewPrefabEditor::onCursorPosChanged(double pX, double pY) {
-
 	static std::optional<glm::dvec2> lastCursorPos{};
 	if (!mouseHeld) {
 		lastCursorPos.reset();

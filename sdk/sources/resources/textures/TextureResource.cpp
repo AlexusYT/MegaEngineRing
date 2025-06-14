@@ -33,7 +33,9 @@
 
 namespace mer::sdk {
 TextureResource::TextureResource()
-	: minFilter(TextureMinFilter::LINEAR), magFilter(TextureMagFilter::LINEAR), textureHandle(nullptr, "TextureHandle"),
+	: minFilter(TextureMinFilter::LINEAR),
+	  magFilter(TextureMagFilter::LINEAR),
+	  textureHandle(nullptr, "TextureHandle"),
 	  materialComponentVal(nullptr, "TextureComponent") {}
 
 std::shared_ptr<TextureResource> TextureResource::create() {
@@ -73,7 +75,8 @@ ReportMessagePtr TextureResource::onInitialize() {
 void TextureResource::render() {}
 
 void TextureResource::onUninitialize() {
-	if (id) glDeleteTextures(1, &id);
+	if (id)
+		glDeleteTextures(1, &id);
 }
 
 void TextureResource::setData(void* pData, uint32_t pWidth, uint32_t pHeight, Texture2DImageFormat pFormat,
@@ -85,25 +88,32 @@ void TextureResource::setData(void* pData, uint32_t pWidth, uint32_t pHeight, Te
 	size_t components{};
 
 	switch (pFormat) {
-		case Texture2DImageFormat::RED: components = 1; break;
-		case Texture2DImageFormat::RG: components = 2; break;
+		case Texture2DImageFormat::RED: components = 1;
+			break;
+		case Texture2DImageFormat::RG: components = 2;
+			break;
 		case Texture2DImageFormat::BGR:
-		case Texture2DImageFormat::RGB: components = 3; break;
+		case Texture2DImageFormat::RGB: components = 3;
+			break;
 		case Texture2DImageFormat::RGBA:
-		case Texture2DImageFormat::BGRA: components = 4; break;
+		case Texture2DImageFormat::BGRA: components = 4;
+			break;
 		default: throw std::runtime_error("Unknown texture image format");
 	}
 	size_t bytesCount{};
 
 	switch (pType) {
-
 		case Texture2DType::UNSIGNED_BYTE:
-		case Texture2DType::BYTE: bytesCount = 1; break;
+		case Texture2DType::BYTE: bytesCount = 1;
+			break;
 		case Texture2DType::UNSIGNED_SHORT:
-		case Texture2DType::SHORT: bytesCount = 2; break;
+		case Texture2DType::SHORT: bytesCount = 2;
+			break;
 		case Texture2DType::UNSIGNED_INT:
-		case Texture2DType::INT: bytesCount = 4; break;
-		case Texture2DType::FLOAT: bytesCount = 4; break;
+		case Texture2DType::INT: bytesCount = 4;
+			break;
+		case Texture2DType::FLOAT: bytesCount = 4;
+			break;
 		default: throw std::runtime_error("Unknown texture pixel type");
 	}
 

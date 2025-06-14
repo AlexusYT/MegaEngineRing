@@ -26,8 +26,6 @@
 #include "BufferUsageEnum.h"
 
 namespace mer::sdk {
-
-
 class BasicBuffer {
 protected:
 	uint32_t name{};
@@ -101,15 +99,12 @@ public:
 
 private:
 	void updateImpl() {
-
-		if (int64_t dataSize = static_cast<int64_t>(getBytesCount()); allocatedSize < dataSize) {
+		if (int64_t dataSize = static_cast<int64_t>(getBytesCount()); allocatedSize < dataSize)
 			reallocate(dataSize, getBytes());
-		} else
+		else
 			bufferSubData(0, dataSize, getBytes());
 	}
 };
-
-
 } // namespace mer::sdk
 
 #endif //BASICBUFFER_H

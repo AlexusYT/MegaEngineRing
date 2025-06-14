@@ -24,7 +24,6 @@
 #include "CppBodyStatement.h"
 
 namespace mer::editor::project {
-
 class CppCustomStatement : public CppBodyStatement {
 	std::string line;
 

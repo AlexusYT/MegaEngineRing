@@ -32,7 +32,6 @@ class IModelPrefabEditor;
 }
 
 namespace mer::editor::mvp {
-
 class PresenterPrefabEditor : public IPresenterPrefabEditor {
 	std::shared_ptr<IModelPrefabEditor> model;
 	std::shared_ptr<IViewPrefabEditor> view;
@@ -47,13 +46,13 @@ public:
 	void addMeshesFrom(const std::filesystem::path &pPath) override;
 
 	void setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pPrefab) override;
+
 	void run() override;
 
 	void stop() override;
 
 	std::string getTypeName() override { return "TextureEditor"; }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //PRESENTERPREFABEEDITOR_H

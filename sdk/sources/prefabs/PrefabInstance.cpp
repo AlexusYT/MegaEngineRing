@@ -27,7 +27,8 @@
 #include "EngineSDK/utils/Transformation.h"
 
 namespace mer::sdk {
-PrefabInstance::PrefabInstance() : data(nullptr, ""), visible(nullptr, ""), material(nullptr, "") {
+PrefabInstance::PrefabInstance()
+	: data(nullptr, ""), visible(nullptr, ""), material(nullptr, "") {
 	visible = true;
 	visible.connectEvent([this](const bool &pVisible) {
 		data->visible = pVisible;
@@ -50,7 +51,6 @@ std::shared_ptr<PrefabElementInstance> PrefabInstance::getElement(const UUID &pU
 }
 
 void PrefabInstance::addElement(const UUID &pUuid, const std::shared_ptr<PrefabElementInstance> &pInstance) {
-
 	pInstance->setTransformParent(this);
 	elements.emplace(pUuid, pInstance);
 }
@@ -65,5 +65,4 @@ void PrefabInstance::removeElement(const UUID &pUuid) {
 void PrefabInstance::onGlobalTransformChanged(const std::shared_ptr<Transformation> & /*pTransformation*/) {
 	for (auto element: elements) { element.second->updateTransform(); }
 }
-
 } // namespace mer::sdk

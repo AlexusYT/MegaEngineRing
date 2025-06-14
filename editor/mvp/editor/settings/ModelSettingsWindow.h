@@ -22,8 +22,6 @@
 #define MODELSETTINGSWINDOW_H
 
 namespace mer::editor::mvp {
-
-
 class IPresenter;
 
 class IModelSettingsWindow {
@@ -32,7 +30,6 @@ public:
 };
 
 class ModelSettingsWindow : public IModelSettingsWindow {
-
 protected:
 	ModelSettingsWindow() = default;
 

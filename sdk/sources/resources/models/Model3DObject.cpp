@@ -29,14 +29,11 @@
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 
 namespace mer::sdk {
-
-
 Model3DObject::~Model3DObject() { Model3DObject::onUninitialize(); }
 
 std::shared_ptr<IModel3DObject> Model3DObject::create() { return std::shared_ptr<Model3DObject>(new Model3DObject()); }
 
 ReportMessagePtr Model3DObject::onInitialize() {
-
 	instancesSsbo = std::make_shared<SSBO>();
 	instancesSsbo->setUsage(DYNAMIC_DRAW);
 	glGenVertexArrays(1, &vao);
@@ -76,9 +73,7 @@ void Model3DObject::render() {
 		else
 			instShader->use();
 		if (const int64_t bufSize = static_cast<int64_t>(instData.size() * sizeof(RenderInstanceData));
-			instancesSsbo->getSize() < bufSize) {
-			instancesSsbo->reallocate(bufSize, instData.data());
-		} else
+			instancesSsbo->getSize() < bufSize) { instancesSsbo->reallocate(bufSize, instData.data()); } else
 			instancesSsbo->bufferSubData(0, bufSize, instData.data());
 		glDrawElementsInstanced(GL_TRIANGLES, static_cast<int32_t>(indices.size()), GL_UNSIGNED_SHORT, nullptr,
 								static_cast<int>(instData.size()));
@@ -110,7 +105,6 @@ void Model3DObject::removeRenderInstance(IRenderInstance* pOldInstance) {
 void Model3DObject::onInstanceDataChanged(IRenderInstance* /*pInstance*/) {
 	instancesData.clear();
 	for (auto instance: instances) {
-
 		auto instanceShader = instance->getShader();
 		//Use object shader if instance shader is not set
 		if (!instanceShader) {

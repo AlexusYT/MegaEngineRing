@@ -45,7 +45,6 @@ void PresenterObjectProperties::onEditingNodeChanged(sdk::Node* pNode) { view->s
 void PresenterObjectProperties::onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) { view->setScene(pScene); }
 
 void PresenterObjectProperties::addView(const std::shared_ptr<IView> & /*pElement*/) {
-
 	/*
 	const auto view = std::dynamic_pointer_cast<IViewObjectProperties>(pElement);
 	if (!view) return;

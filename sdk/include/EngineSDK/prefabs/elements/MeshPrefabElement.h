@@ -48,7 +48,6 @@ public:
 
 	void setMesh(const std::shared_ptr<IModel3DObject> &pMesh) { mesh = pMesh; }
 };
-
 } // namespace mer::sdk
 
 #endif //MESHPREFABELEMENT_H

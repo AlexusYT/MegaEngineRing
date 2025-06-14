@@ -58,7 +58,6 @@ public:
 	[[nodiscard]] ExplorerElementType getType() const { return type; }
 
 	const char* getTypeStr() const {
-
 		switch (type) {
 			case ExplorerElementType::DIRECTORY: return "Folder";
 			case ExplorerElementType::SCENE: return "Scene";

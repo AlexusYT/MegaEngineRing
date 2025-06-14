@@ -32,7 +32,6 @@
 #include "mvp/contexts/UiWindowContext.h"
 
 namespace mer::editor::mvp {
-
 ViewObjectsTree::ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext)
 	: EditorTool("TreeViewTool"), context(pContext) {}
 
@@ -77,7 +76,6 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 
 		if (contextMenuImguiId == 0) contextMenuImguiId = ImGui::GetID("ContextMenu");
 		if (ImGui::BeginPopup("ContextMenu")) {
-
 			if (ImGui::MenuItem(tr("ObjectAdd"))) {
 				auto newNode = sdk::Node::create(tr("ObjectUnnamed"));
 				scene->addNode(selectedNodeForContext, newNode);
@@ -100,7 +98,10 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 			std::string tooltipText;
 			//translators: second line in reparent tooltip in an object tree window
 			const std::string unformattedText = tr("Left click to reparent to the \"{}\".\n");
-			if (hoveredNode && nodeToReparent != hoveredNode) {
+			if (hoveredNode && nodeToReparent
+				!=
+				hoveredNode
+			) {
 				tooltipText = std::vformat(unformattedText, std::make_format_args(hoveredNode->getName()));
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
 					scene->reparentNode(nodeToReparent, hoveredNode);
@@ -132,7 +133,6 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 
 			if (!selectedNodeForContext && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup) &&
 				ImGui::IsMouseClicked(ImGuiPopupFlags_MouseButtonRight)) {
-
 				ImGui::OpenPopup(contextMenuImguiId, ImGuiPopupFlags_MouseButtonRight);
 			}
 		}
@@ -161,16 +161,12 @@ void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 		ImGui::TableNextColumn();
 		std::string types;
 		for (auto &extension: node->getExtensions()) {
-			if (extension.first == typeid(sdk::MeshExtension)) {
-				types += "M ";
-			} else if (extension.first == typeid(sdk::LightExtension)) {
-				types += "L ";
-			}
+			if (extension.first == typeid(sdk::MeshExtension)) { types += "M "; } else if (
+				extension.first == typeid(sdk::LightExtension)) { types += "L "; }
 		}
 		ImGui::TextUnformatted(types.c_str());
 
 		if (nodeOpen && folder) {
-
 			updateTreeLevel(children);
 			ImGui::TreePop();
 		}
@@ -195,5 +191,4 @@ void ViewObjectsTree::markSelected(const std::vector<sdk::Node*> &pNodes, bool p
 		if (auto iter = selectedMap.find(node); iter != selectedMap.end()) iter->second = pSelected;
 	}
 }
-
 } // namespace mer::editor::mvp

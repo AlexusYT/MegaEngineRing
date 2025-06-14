@@ -45,7 +45,7 @@ public:
 
 	[[nodiscard]] static const std::filesystem::path &getCachePath() { return cachePath; }
 
-	static void setCachePath(const std::filesystem::path& pCachePath) { cachePath = pCachePath; }
+	static void setCachePath(const std::filesystem::path &pCachePath) { cachePath = pCachePath; }
 };
 
 

@@ -30,7 +30,6 @@ namespace mer::editor::mvp {
 class ProjectExplorerElement;
 
 class IModelProjectExplorer {
-
 public:
 	virtual ~IModelProjectExplorer() = default;
 

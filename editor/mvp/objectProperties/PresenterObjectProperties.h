@@ -59,7 +59,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterObjectProperties"; }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //PRESENTEROBJECTPROPERTIES_H

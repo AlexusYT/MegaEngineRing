@@ -28,8 +28,11 @@
 
 namespace mer::sdk {
 PerspectiveProjectionCameraMod::PerspectiveProjectionCameraMod()
-	: propertyAspect(this, "Aspect"), propertyFov(this, "Fov"), propertyZNear(this, "ZNear"),
-	  propertyZFar(this, "ZFar"), propertyProjMatrix(this, "ProjMatrix") {
+	: propertyAspect(this, "Aspect"),
+	  propertyFov(this, "Fov"),
+	  propertyZNear(this, "ZNear"),
+	  propertyZFar(this, "ZFar"),
+	  propertyProjMatrix(this, "ProjMatrix") {
 	propertyAspect.getEvent().connect([this](const float &) { updateProjMatrix(); });
 	propertyFov = glm::radians(60.0f);
 	auto updateProjMatrixSlot = hide(sigc::mem_fun(*this, &PerspectiveProjectionCameraMod::updateProjMatrix));

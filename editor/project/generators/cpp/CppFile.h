@@ -59,7 +59,6 @@ public:
 
 	mer::sdk::ReportMessagePtr writeFile(const std::filesystem::path &pPath);
 };
-
 } // namespace mer::editor::project
 
 #endif //CPPFILE_H

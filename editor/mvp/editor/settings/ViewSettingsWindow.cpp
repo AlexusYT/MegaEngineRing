@@ -29,7 +29,6 @@ namespace mer::editor::mvp {
 void ViewSettingsWindow::openPopup() { ImGui::OpenPopup(getId()); }
 
 void ViewSettingsWindow::onUpdate(bool pVisible) {
-
 	if (!pVisible) {
 		if (selectedCategory) selectedCategory.reset();
 		if (!clonedCategories.empty()) clonedCategories.clear();
@@ -71,7 +70,6 @@ void ViewSettingsWindow::onUpdate(bool pVisible) {
 				ImGui::SetNextItemWidth(-1);
 				if (ImGui::BeginCombo("##language",
 									  cat->language.empty() ? "" : I18n::trLanguagesMap.at(cat->language).c_str(), 0)) {
-
 					for (const auto &type: I18n::trLanguages) {
 						bool isSelected = cat->language == type;
 						if (ImGui::Selectable(I18n::trLanguagesMap.at(type).c_str(), isSelected)) {

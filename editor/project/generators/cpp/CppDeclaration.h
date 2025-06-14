@@ -27,6 +27,7 @@ namespace mer::editor::project {
 class CppDeclaration : public CppClassMember {
 public:
 	virtual ~CppDeclaration() = default;
+
 	virtual std::string getCode(uint32_t pIndent, bool pIsHeader) = 0;
 };
 } // namespace mer::editor::project

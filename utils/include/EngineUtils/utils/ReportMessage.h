@@ -29,7 +29,6 @@
 
 namespace mer::sdk {
 class ReportMessage {
-
 	std::string title;
 	std::string message;
 	std::vector<std::string> infoLines{};
@@ -39,10 +38,9 @@ class ReportMessage {
 
 	explicit ReportMessage(std::stacktrace pStacktrace);
 
-
 public:
 	static ReportMessagePtr create(const std::stacktrace &pStacktrace = std::stacktrace::current()) {
-		return ReportMessagePtr(new (std::nothrow) ReportMessage(pStacktrace));
+		return ReportMessagePtr(new(std::nothrow) ReportMessage(pStacktrace));
 	}
 
 	[[nodiscard]] const std::string &getTitle() const { return title; }
@@ -53,7 +51,7 @@ public:
 
 	void setMessage(const std::string &pMessage) { message = pMessage; }
 
-	template<typename... Args>
+	template <typename... Args>
 	void addInfoLine(const std::string_view pFmt, Args &&... pArgs) {
 		addInfoLine(std::vformat(pFmt, std::make_format_args(pArgs...)));
 	}
@@ -70,9 +68,8 @@ public:
 		ss << "Message: " << message << "\n";
 
 		if (exceptionPtr) {
-			try {
-				std::rethrow_exception(exceptionPtr);
-			} catch (std::exception &e) {
+			try { std::rethrow_exception(exceptionPtr); }
+			catch (std::exception &e) {
 				ss << "Exception info:\n";
 				ss << "\tClass: " << Utils::getTypeName(&e) << "\n";
 				ss << "\tMessage: " << e.what() << "\n";

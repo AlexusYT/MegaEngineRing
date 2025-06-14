@@ -33,11 +33,9 @@ public:
 	void bindVertexArray(uint32_t pVao, uint32_t pBindingIndex, uint32_t pOffest = 0) const;
 };
 
-template<typename T, int N>
+template <typename T, int N>
 class VertexBufferObject : public VertexBufferObjectImpl {
-
 	std::vector<T> data{};
-
 
 public:
 	using ElementT = T;
@@ -55,7 +53,7 @@ public:
 		dirty = true;
 	}
 
-	template<typename InputIterator, typename = std::_RequireInputIter<InputIterator>>
+	template <typename InputIterator, typename = std::_RequireInputIter<InputIterator>>
 	typename std::vector<T>::iterator insertElements(typename std::vector<T>::const_iterator pPosition,
 													 InputIterator pFirst, InputIterator pLast) {
 		std::lock_guard lock(mutex);
@@ -115,7 +113,6 @@ public:
 
 	const void* getBytes() const override { return data.data(); }
 };
-
 } // namespace mer::sdk
 
 #endif //VERTEXBUFFEROBJECT_H

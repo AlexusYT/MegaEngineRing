@@ -24,7 +24,6 @@
 #include "mvp/IPresenter.h"
 
 namespace mer::editor::mvp {
-
 class IViewSettingsWindow;
 class IModelSettingsWindow;
 
@@ -39,8 +38,7 @@ class PresenterSettingsWindow : public IPresenterSettingsWindow {
 
 protected:
 	PresenterSettingsWindow(const std::shared_ptr<IViewSettingsWindow> &pView,
-							const std::shared_ptr<IModelSettingsWindow> &pModel)
-		: view(pView), model(pModel) {}
+							const std::shared_ptr<IModelSettingsWindow> &pModel) : view(pView), model(pModel) {}
 
 public:
 	static std::shared_ptr<IPresenterSettingsWindow> create(const std::shared_ptr<IViewSettingsWindow> &pView,
@@ -54,7 +52,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterSettingsWindow"; }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //PRESENTERSETTINGSWINDOW_H

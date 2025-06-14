@@ -25,6 +25,7 @@
 
 namespace mer::sdk {
 class ShaderProgram;
+
 class BasicRenderExtension : public Extension {
 	std::shared_ptr<ShaderProgram> shader;
 
@@ -41,7 +42,9 @@ public:
 
 protected:
 	ReportMessagePtr onInit() override;
+
 	ReportMessagePtr onDeinit() override;
+
 	void onRender() override;
 };
 } // namespace mer::sdk

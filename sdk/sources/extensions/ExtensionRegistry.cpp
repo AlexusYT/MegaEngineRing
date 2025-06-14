@@ -34,7 +34,6 @@
 #include "EngineUtils/utils/Utils.h"
 
 namespace mer::sdk {
-
 void ExtensionRegistry::init() {
 	/*registerClass<MainObjectExtension>();
 	registerClass<BasicRenderExtension>();
@@ -59,7 +58,6 @@ std::shared_ptr<Extension> ExtensionRegistry::newInstance(const std::string &pTy
 }
 
 ReportMessagePtr ExtensionRegistry::getTypeNameFor(Extension* pExt, std::string &pNameOut) {
-
 	auto &type = typeid(*pExt);
 	if (const auto iter = extensionByType.find(std::type_index(type)); iter != extensionByType.end()) {
 		pNameOut = iter->second.typeName;

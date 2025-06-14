@@ -23,7 +23,6 @@
 #define PROPERTIESFOREXTENSION_H
 
 namespace mer::sdk {
-
 class PropertyBase;
 
 /**

@@ -31,9 +31,7 @@
 namespace mer::sdk {
 PrefabElementsSsbo::PrefabElementsSsbo() {}
 
-PrefabElementsSsbo::~PrefabElementsSsbo() {
-	if (ssboData) free(ssboData);
-}
+PrefabElementsSsbo::~PrefabElementsSsbo() { if (ssboData) free(ssboData); }
 
 std::shared_ptr<PrefabElementsSsbo> PrefabElementsSsbo::create() {
 	return std::shared_ptr<PrefabElementsSsbo>(new PrefabElementsSsbo());
@@ -42,7 +40,7 @@ std::shared_ptr<PrefabElementsSsbo> PrefabElementsSsbo::create() {
 void PrefabElementsSsbo::trackInstance(PrefabElementInstance* pInstance) {
 	auto dataProperty = pInstance->getData();
 	instances.emplace(pInstance, dataProperty.connectEvent(
-									 [this](const PrefabElementInstanceData & /*pNewData*/) { onDataChanged(); }));
+						  [this](const PrefabElementInstanceData & /*pNewData*/) { onDataChanged(); }));
 	onDataChanged();
 }
 
@@ -60,9 +58,7 @@ void PrefabElementsSsbo::untrackAll() {
 void PrefabElementsSsbo::render() {
 	if (!dirty) return;
 
-	if (ssbo->getSize() < dataSize) {
-		ssbo->reallocate(dataSize, ssboData);
-	} else
+	if (ssbo->getSize() < dataSize) { ssbo->reallocate(dataSize, ssboData); } else
 		ssbo->bufferSubData(0, dataSize, ssboData);
 	dirty = false;
 }

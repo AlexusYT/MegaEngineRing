@@ -37,7 +37,6 @@ class PrefabElementInstanceData;
 } // namespace mer::sdk
 
 namespace mer::sdk {
-
 class PrefabElementsSsbo : public IRenderable, public Initializable {
 	std::unordered_map<PrefabElementInstance*, sigc::scoped_connection> instances;
 	std::vector<PrefabElementInstanceData> instancesData;
@@ -75,13 +74,12 @@ public:
 
 protected:
 	ReportMessagePtr onInitialize() override;
+
 	void onUninitialize() override;
 
 private:
 	void onDataChanged();
 };
-
-
 } // namespace mer::sdk
 
 #endif //PREFABELEMENTSSSBO_H

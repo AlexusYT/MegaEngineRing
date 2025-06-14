@@ -58,7 +58,6 @@ public:
 private:
 	void onDataChanged();
 };
-
 } // namespace mer::sdk
 
 #endif //PREFABSSBO_H

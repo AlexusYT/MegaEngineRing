@@ -26,7 +26,6 @@
 #include <unordered_map>
 
 namespace mer::editor::mvp {
-
 class I18n {
 	inline static sigc::connection onLanguageChangedConnection;
 
@@ -41,24 +40,20 @@ public:
 	inline static std::unordered_map<std::string, std::string> trSketchfabSortTypesMap;
 	inline static std::vector<std::string> trSketchfabLicenses;
 	inline static std::unordered_map<std::string, std::pair<std::string /*name*/, std::string /*tooltip*/>>
-		trSketchfabLicensesMap;
+	trSketchfabLicensesMap;
 	inline static std::vector<std::string> trSketchfabMaterialTypes;
 	inline static std::unordered_map<std::string, std::string> trSketchfabMaterialTypesMap;
 	inline static std::string trAngleDegrees;
 
 	static void init();
 
-	static void deinit() {
-		onLanguageChangedConnection.disconnect();
-	}
+	static void deinit() { onLanguageChangedConnection.disconnect(); }
 
 	static void switchTo(const std::string &pLocale);
-
 
 private:
 	static void updateStrings();
 };
-
 } // namespace mer::editor::mvp
 
 #endif //I18N_H

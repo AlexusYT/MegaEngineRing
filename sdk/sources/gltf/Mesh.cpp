@@ -25,7 +25,8 @@
 #include "EngineSDK/bounding/VolumeAabb.h"
 
 namespace mer::sdk {
-Mesh::Mesh() : aabb(nullptr, "AABB") {
+Mesh::Mesh()
+	: aabb(nullptr, "AABB") {
 	aabb = VolumeAabb::create();
 	buildAabb();
 }
@@ -51,7 +52,6 @@ void Mesh::setPrimitives(const std::vector<std::shared_ptr<Primitive>> &pPrimiti
 }
 
 void Mesh::buildAabb() const {
-
 	glm::vec3 min(std::numeric_limits<float>::max());
 	glm::vec3 max(std::numeric_limits<float>::lowest());
 	bool minDefined{};

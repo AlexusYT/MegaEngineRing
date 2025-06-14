@@ -75,7 +75,6 @@ protected:
 
 	void setInstanceId(uint32_t pInstanceId) override { instanceId = pInstanceId; }
 };
-
 } // namespace mer::sdk
 
 #endif //PREFABINSTANCE_H

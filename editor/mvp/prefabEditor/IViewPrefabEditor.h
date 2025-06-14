@@ -30,9 +30,9 @@ class IPresenterPrefabEditor;
 class IViewPrefabEditor : public IView {
 public:
 	~IViewPrefabEditor() override = default;
+
 	virtual void setPresenter(IPresenterPrefabEditor* pPresenter) = 0;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //IVIEWPREFABEDIROT_H

@@ -28,8 +28,7 @@
 
 namespace mer::sdk {
 Texture::Texture(const Microsoft::glTF::Texture & /*pTexture*/, const std::shared_ptr<Image> &pImage,
-				 const std::shared_ptr<Sampler> &pSampler)
-	: image(pImage), sampler(pSampler) {}
+				 const std::shared_ptr<Sampler> &pSampler) : image(pImage), sampler(pSampler) {}
 
 std::shared_ptr<Texture> Texture::create(const Microsoft::glTF::Texture &pTexture, const std::shared_ptr<Image> &pImage,
 										 const std::shared_ptr<Sampler> &pSampler) {
@@ -88,7 +87,6 @@ ReportMessagePtr Texture::onInitialize() {
 	glGenerateTextureMipmap(textureId);
 	if (sampler) bindlessHandle = glGetTextureSamplerHandleARB(textureId, sampler->getSamplerId());
 	else {
-
 		//When sampler undefined, a sampler with repeat wrapping and auto filtering SHOULD be used.
 		glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -99,7 +97,6 @@ ReportMessagePtr Texture::onInitialize() {
 }
 
 void Texture::onUninitialize() {
-
 	glDeleteTextures(1, &textureId);
 	Initializable::onUninitialize();
 }

@@ -34,5 +34,4 @@ std::shared_ptr<ColorComponent> ColorComponent::create(const float pRed, const f
 													   const float pAlpha) {
 	return create(glm::vec4(pRed, pGreen, pBlue, pAlpha));
 }
-
 } // namespace mer::sdk

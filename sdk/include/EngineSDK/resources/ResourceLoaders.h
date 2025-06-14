@@ -34,6 +34,7 @@ class ResourceLoaders : public IResourceLoaders {
 
 public:
 	ResourceLoaders() = default;
+
 	~ResourceLoaders() override = default;
 
 	void addLoader(const std::shared_ptr<IResourceLoader> &pLoader) override;
@@ -52,8 +53,6 @@ public:
 
 	static void clearLoaders() { instance.reset(); }
 };
-
-
 } // namespace mer::sdk
 
 #endif //RESOURCELOADERS_H

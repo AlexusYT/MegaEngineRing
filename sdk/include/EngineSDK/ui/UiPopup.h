@@ -24,15 +24,12 @@
 #include "UiBase.h"
 
 namespace mer::sdk {
-
 class UiPopup : public UiBase {
-
 public:
 	UiPopup(const std::string &pName) : UiBase(pName) {}
 
 	void render() override;
 };
-
 } // namespace mer::sdk
 
 #endif //UIPOPUP_H

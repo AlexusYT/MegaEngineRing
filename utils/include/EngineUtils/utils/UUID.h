@@ -122,12 +122,12 @@ public:
 } // namespace mer::sdk
 
 // Custom specialization of std::hash can be injected in namespace std.
-template<>
+template <>
 struct std::hash<mer::sdk::UUID> {
 	std::size_t operator()(const mer::sdk::UUID &s) const noexcept { return hash_value(s); }
 };
 
-template<>
+template <>
 struct std::formatter<mer::sdk::UUID> {
 	bool upperCase{};
 
@@ -145,7 +145,7 @@ struct std::formatter<mer::sdk::UUID> {
 	}
 };
 
-template<>
+template <>
 struct std::formatter<std::shared_ptr<mer::sdk::UUID>> {
 	bool upperCase{};
 
@@ -163,7 +163,7 @@ struct std::formatter<std::shared_ptr<mer::sdk::UUID>> {
 	}
 };
 
-template<>
+template <>
 struct std::formatter<mer::sdk::UUID*> {
 	bool upperCase{};
 

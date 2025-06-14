@@ -45,8 +45,8 @@ ReportMessagePtr BasicRenderExtension::onInit() {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	GLfloat vertices[] = {
 		-10.5f, -10.5f, 0.0f, // Left
-		10.5f,	-10.5f, 0.0f, // Right
-		0.0f,	10.5f,	1.0f  // Top
+		10.5f, -10.5f, 0.0f,  // Right
+		0.0f, 10.5f, 1.0f     // Top
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*) 0);
@@ -65,9 +65,7 @@ ReportMessagePtr BasicRenderExtension::onDeinit() {
 void BasicRenderExtension::onRender() {
 	if (!shader) return;
 	static bool b{};
-	if (!b) {
-		b = true;
-	}
+	if (!b) { b = true; }
 	shader->use();
 	glBindVertexArray(vao);
 

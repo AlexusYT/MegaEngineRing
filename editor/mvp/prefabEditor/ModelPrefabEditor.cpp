@@ -23,6 +23,6 @@
 
 namespace mer {
 namespace editor {
-	namespace mvp {} // namespace mvp
-} // namespace editor
-} // namespace mer
+namespace mvp {} // namespace mvp
+}                // namespace editor
+}                // namespace mer

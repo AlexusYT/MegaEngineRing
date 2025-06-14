@@ -52,7 +52,6 @@ public:
 
 	virtual void setIncomplete(bool pIncomplete) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IRESOURCE_H
