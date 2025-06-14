@@ -19,42 +19,42 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.6\n"
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:56
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:55
 msgid "ObjectName"
 msgstr "Название"
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:57
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:56
 msgid "ObjectType"
 msgstr "Тип"
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:81
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:79
 msgid "ObjectAdd"
 msgstr "Добавить"
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:82
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:80
 msgid "ObjectUnnamed"
 msgstr "Без названия"
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:86
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:84
 msgid "ObjectReparent"
 msgstr "Сменить родителя"
 
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:87
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:85
 msgid "ObjectRemove"
 msgstr "Удалить"
 
 #. translators: second line in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:102
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:100
 msgid "Left click to reparent to the \"{}\".\n"
 msgstr "Кликните ЛКМ чтобы сменить родителя на \"{}\".\n"
 
 #. translators: root element in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:111
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:112
 msgid "Root of the scene"
 msgstr "Корень сцены"
 
 #. translators: second line in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:120
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:121
 msgid "Right click to cancel."
 msgstr "Кликните ПКМ для отмены."
 
@@ -62,154 +62,154 @@ msgstr "Кликните ПКМ для отмены."
 msgid "TreeViewTool"
 msgstr "Дерево объектов"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:63
+#: mvp/objectProperties/ViewObjectProperties.cpp:62
 msgid "SceneProperties"
 msgstr "Сцена"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:67
+#: mvp/objectProperties/ViewObjectProperties.cpp:66
 msgid "NodeProperties"
 msgstr "Узел"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:71
+#: mvp/objectProperties/ViewObjectProperties.cpp:68
 msgid "NodeName"
 msgstr "Название"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:73
+#: mvp/objectProperties/ViewObjectProperties.cpp:70
 msgid "NodeTransformation"
 msgstr "Трансформация"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:110
+#: mvp/objectProperties/ViewObjectProperties.cpp:108
 msgid "RemoveExtension"
 msgstr "Удалить"
 
 #. translators: instruction for removing an element (extension, object, etc)
-#: mvp/objectProperties/ViewObjectProperties.cpp:116
+#: mvp/objectProperties/ViewObjectProperties.cpp:114
 msgid "Hold for 0.5 sec to confirm removing"
 msgstr "Зажмите на 0.5 сек, чтобы подтвердить удаление"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:175
+#: mvp/objectProperties/ViewObjectProperties.cpp:171
 msgid "NodePosition"
 msgstr "Положение"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:183
+#: mvp/objectProperties/ViewObjectProperties.cpp:179
 msgid "NodeOrientation"
 msgstr "Ориентация"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:185
+#: mvp/objectProperties/ViewObjectProperties.cpp:181
 msgid "Quaternion"
 msgstr "Кватернион"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:185
+#: mvp/objectProperties/ViewObjectProperties.cpp:181
 msgid "XYZ Euler"
 msgstr "Углы Эйлера (XYZ)"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:185
+#: mvp/objectProperties/ViewObjectProperties.cpp:181
 msgid "Axis Angle"
 msgstr "Ось-угол"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:252
+#: mvp/objectProperties/ViewObjectProperties.cpp:247
 msgid "Scale"
 msgstr "Масштаб"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:260 I18N.cpp:104
+#: mvp/objectProperties/ViewObjectProperties.cpp:255 I18N.cpp:105
 msgid "MeshExtension"
 msgstr "Меш"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:263
+#: mvp/objectProperties/ViewObjectProperties.cpp:258
 msgid "Select mesh to use"
 msgstr "Выберите меш"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:268
+#: mvp/objectProperties/ViewObjectProperties.cpp:263
 msgid "MeshNone"
 msgstr "Нет"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:291 I18N.cpp:103
+#: mvp/objectProperties/ViewObjectProperties.cpp:286 I18N.cpp:104
 msgid "LightExtension"
 msgstr "Освещение"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:296
+#: mvp/objectProperties/ViewObjectProperties.cpp:291
 msgid "Select light source to use"
 msgstr "Выберите источник света"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:301
+#: mvp/objectProperties/ViewObjectProperties.cpp:296
 msgid "LightNone"
 msgstr "Нет"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:327
+#: mvp/objectProperties/ViewObjectProperties.cpp:319
 msgid "NewLight"
 msgstr "Создать"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:328
+#: mvp/objectProperties/ViewObjectProperties.cpp:320
 msgid "LightUnnamed"
 msgstr "Без названия"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:332
+#: mvp/objectProperties/ViewObjectProperties.cpp:324
 msgid "DuplicateLight"
 msgstr "Дублировать"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:335
+#: mvp/objectProperties/ViewObjectProperties.cpp:327
 msgid "LightCopy"
 msgstr "Копия"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:339
+#: mvp/objectProperties/ViewObjectProperties.cpp:331
 msgid "RemoveLight"
 msgstr "Удалить"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:340
-#: mvp/onlineImport/ViewOnlineImport.cpp:109
+#: mvp/objectProperties/ViewObjectProperties.cpp:332
+#: mvp/onlineImport/ViewOnlineImport.cpp:107
 msgid "Not implemented yet"
 msgstr "Пока не реализовано"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:351
+#: mvp/objectProperties/ViewObjectProperties.cpp:343
 msgid "Light source settings"
 msgstr "Настройки источника"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:366
+#: mvp/objectProperties/ViewObjectProperties.cpp:357
 msgid "LightName"
 msgstr "Название"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:369
+#: mvp/objectProperties/ViewObjectProperties.cpp:360
 msgid "LightColor"
 msgstr "Цвет"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:373
+#: mvp/objectProperties/ViewObjectProperties.cpp:364
 msgid "LightIntensity"
 msgstr "Интенсивность"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:379
+#: mvp/objectProperties/ViewObjectProperties.cpp:370
 msgid "LightTypeDirectional"
 msgstr "Направленный"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:379
+#: mvp/objectProperties/ViewObjectProperties.cpp:370
 msgid "LightTypePoint"
 msgstr "Точечный"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:379
+#: mvp/objectProperties/ViewObjectProperties.cpp:370
 msgid "LightTypeSpot"
 msgstr "Прожектор"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:382
+#: mvp/objectProperties/ViewObjectProperties.cpp:373
 msgid "LightType"
 msgstr "Тип"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:392
+#: mvp/objectProperties/ViewObjectProperties.cpp:381
 msgid "LightRange"
 msgstr "Радиус"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:392
+#: mvp/objectProperties/ViewObjectProperties.cpp:381
 msgid "LightRangeInfinite"
 msgstr "Бесконечный"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:392
+#: mvp/objectProperties/ViewObjectProperties.cpp:381
 #, c-format
 msgid "%0.3f m"
 msgstr "%0.3f м"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:408
+#: mvp/objectProperties/ViewObjectProperties.cpp:397
 msgid "Inner Cone"
 msgstr "Внутренний конус"
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:416
+#: mvp/objectProperties/ViewObjectProperties.cpp:405
 msgid "Outer Cone"
 msgstr "Внешний конус"
 
@@ -221,159 +221,159 @@ msgstr "Свойства"
 msgid "ProjectExplorerTool"
 msgstr "Эксплорер"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:74
+#: mvp/sceneEditor/ViewSceneEditor.cpp:73
 msgid "SceneAdd"
 msgstr "Добавить"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:75
+#: mvp/sceneEditor/ViewSceneEditor.cpp:74
 msgid "SceneAddBlocking"
 msgstr "Блокинг"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:76
+#: mvp/sceneEditor/ViewSceneEditor.cpp:75
 msgid "SceneAddBlockPlane"
 msgstr "Плоскость"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:77
+#: mvp/sceneEditor/ViewSceneEditor.cpp:76
 msgid "SceneAddBlockCube"
 msgstr "Куб"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:78
+#: mvp/sceneEditor/ViewSceneEditor.cpp:77
 msgid "SceneAddBlockSphere"
 msgstr "Сферу"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:81
+#: mvp/sceneEditor/ViewSceneEditor.cpp:80
 msgid "SceneAddModel"
 msgstr "Модель"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:83
+#: mvp/sceneEditor/ViewSceneEditor.cpp:82
 msgid "SceneAddFromFile"
 msgstr "Из файла..."
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:87
+#: mvp/sceneEditor/ViewSceneEditor.cpp:86
 msgid "SceneAddFromFileTitle"
 msgstr "Выберите файл"
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:91
+#: mvp/sceneEditor/ViewSceneEditor.cpp:90
 msgid "SceneAddFromSketchfab"
 msgstr "Из Sketchfab..."
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:92
+#: mvp/sceneEditor/ViewSceneEditor.cpp:91
 msgid "SceneAddFromFavorites"
 msgstr "Из избранного..."
 
-#: mvp/prefabEditor/ViewPrefabEditor.cpp:158
+#: mvp/prefabEditor/ViewPrefabEditor.cpp:160
 msgid "PrefabEditor"
 msgstr "Редактор префабов"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:95
+#: mvp/onlineImport/ViewOnlineImport.cpp:93
 msgid "In order to use this feature, you need to login to Sketchfab"
 msgstr "Чтобы использовать эту функцию, вам нужно войти в Sketchfab-аккаунт"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:96
+#: mvp/onlineImport/ViewOnlineImport.cpp:94
 msgid "Website here:"
 msgstr "Вот веб-сайт:"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:101
+#: mvp/onlineImport/ViewOnlineImport.cpp:99
 msgid "Login using:"
 msgstr "Войти с помощью:"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:103
+#: mvp/onlineImport/ViewOnlineImport.cpp:101
 msgid "LoginWithUsernamePassword"
 msgstr "Имени пользователя и пароля"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:105
+#: mvp/onlineImport/ViewOnlineImport.cpp:103
 msgid "Use username and password from your Sketchfab.com account"
 msgstr "Используйте имя пользователя и пароль от вашего Sketchfab-аккаунта."
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:107
+#: mvp/onlineImport/ViewOnlineImport.cpp:105
 msgid "LoginWithAPIToken"
 msgstr "Токена API"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:111
+#: mvp/onlineImport/ViewOnlineImport.cpp:109
 msgid "Use API token from your Sketchfab.com account"
 msgstr "Используйте токен API для вашего Sketchfab-аккаунта"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:114
+#: mvp/onlineImport/ViewOnlineImport.cpp:112
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:114
+#: mvp/onlineImport/ViewOnlineImport.cpp:112
 msgid "Username cannot be empty"
 msgstr "Имя пользователя не может быть пустым"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:116
+#: mvp/onlineImport/ViewOnlineImport.cpp:114
 msgid "Password"
 msgstr "Пароль"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:116
+#: mvp/onlineImport/ViewOnlineImport.cpp:114
 msgid "Password cannot be empty"
 msgstr "Пароль не может быть пустым"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:129
+#: mvp/onlineImport/ViewOnlineImport.cpp:127
 msgid "In progress..."
 msgstr "В процессе..."
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:133
+#: mvp/onlineImport/ViewOnlineImport.cpp:131
 msgid "ActionLogin"
 msgstr "Войти"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:188
+#: mvp/onlineImport/ViewOnlineImport.cpp:183
 msgid "Author name"
 msgstr "Ник автора"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:194
+#: mvp/onlineImport/ViewOnlineImport.cpp:189
 msgid "Collection (uid)"
 msgstr "Коллекция (uid)"
 
 #. translators: "Faces" is the polygons (triangles), not human face.
-#: mvp/onlineImport/ViewOnlineImport.cpp:204
+#: mvp/onlineImport/ViewOnlineImport.cpp:199
 #, c-format
 msgid "Min Faces: %d"
 msgstr "Минимум треугольников: %d"
 
 #. translators: "Faces" is the polygons (triangles), not human face.
-#: mvp/onlineImport/ViewOnlineImport.cpp:212
+#: mvp/onlineImport/ViewOnlineImport.cpp:207
 #, c-format
 msgid "Max Faces: %d"
 msgstr "Максимум треугольников: %d"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:220
+#: mvp/onlineImport/ViewOnlineImport.cpp:215
 msgid "Staff Picked"
 msgstr "Выбрано командой Sketchfab"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:239
+#: mvp/onlineImport/ViewOnlineImport.cpp:234
 msgid "Not recommended to change"
 msgstr "Не рекомендуется изменять"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:241
+#: mvp/onlineImport/ViewOnlineImport.cpp:236
 msgid "Downloadable"
 msgstr "Можно скачать"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:246
+#: mvp/onlineImport/ViewOnlineImport.cpp:241
 msgid "FilterMaterial"
 msgstr "Материал"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:262
+#: mvp/onlineImport/ViewOnlineImport.cpp:257
 msgid "Not yet supported by the engine"
 msgstr "Пока не поддерживается"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:264
+#: mvp/onlineImport/ViewOnlineImport.cpp:259
 msgid "FilterAnimated"
 msgstr "Анимация"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:269
+#: mvp/onlineImport/ViewOnlineImport.cpp:264
 msgid "FilterHasSound"
 msgstr "Звук"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:274
+#: mvp/onlineImport/ViewOnlineImport.cpp:269
 msgid "FilterRigged"
 msgstr "Риг (скелет)"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:293
+#: mvp/onlineImport/ViewOnlineImport.cpp:288
 msgid "Enter search keywords"
 msgstr "Введите ключевые слова"
 
-#: mvp/onlineImport/ViewOnlineImport.cpp:418
+#: mvp/onlineImport/ViewOnlineImport.cpp:410
 msgid "Search filters"
 msgstr "Фильтры"
 
@@ -381,19 +381,19 @@ msgstr "Фильтры"
 msgid "SearchWindowTool"
 msgstr "Поиск моделей"
 
-#: mvp/scenePreview/ViewScenePreview.h:78
+#: mvp/scenePreview/ViewScenePreview.h:76
 msgid "ScenePreviewTool"
 msgstr "Предпросмотр сцены"
 
-#: mvp/editor/Editor.cpp:207
+#: mvp/editor/Editor.cpp:204
 msgid "No opened tools in this workspace"
 msgstr "Нет открытых инструментов в этом рабочем пространстве"
 
-#: mvp/editor/Editor.cpp:209
+#: mvp/editor/Editor.cpp:206
 msgid "Select a tool to open..."
 msgstr "Выберите инструмент, который нужно открыть..."
 
-#: mvp/editor/Editor.cpp:241
+#: mvp/editor/Editor.cpp:238
 msgid "Open or close the workspace tools"
 msgstr "Открыть или закрыть инструменты рабочего пространства"
 
@@ -433,31 +433,31 @@ msgstr "Открыть руководство"
 msgid "MenuAbout..."
 msgstr "О программе..."
 
-#: mvp/editor/settings/ViewSettingsWindow.cpp:69
+#: mvp/editor/settings/ViewSettingsWindow.cpp:68
 msgid "InterfaceLanguage"
 msgstr "Язык интерфейса"
 
-#: mvp/editor/settings/ViewSettingsWindow.cpp:87
+#: mvp/editor/settings/ViewSettingsWindow.cpp:85
 #, c-format
 msgid "FontSize: %.0f"
 msgstr "Размер шрифта: %.0f"
 
-#: mvp/editor/settings/ViewSettingsWindow.cpp:91
+#: mvp/editor/settings/ViewSettingsWindow.cpp:89
 msgid "DebugEnabled"
 msgstr "Включить режим отладки"
 
 #. translators: Button in settings window
-#: mvp/editor/settings/ViewSettingsWindow.cpp:97
+#: mvp/editor/settings/ViewSettingsWindow.cpp:95
 msgid "ApplyAndClose"
 msgstr "Применить и закрыть"
 
 #. translators: Button in settings window
-#: mvp/editor/settings/ViewSettingsWindow.cpp:106
+#: mvp/editor/settings/ViewSettingsWindow.cpp:104
 msgid "Apply"
 msgstr "Применить"
 
 #. translators: Button in settings window
-#: mvp/editor/settings/ViewSettingsWindow.cpp:110
+#: mvp/editor/settings/ViewSettingsWindow.cpp:108
 msgid "Close"
 msgstr "Закрыть"
 
@@ -465,11 +465,11 @@ msgstr "Закрыть"
 msgid "SettingsWindow"
 msgstr "Настройки"
 
-#: mvp/editor/settings/categories/OtherCategory.h:43
+#: mvp/editor/settings/categories/OtherCategory.h:41
 msgid "OtherCategory"
 msgstr "Прочие"
 
-#: mvp/editor/settings/categories/GeneralCategory.h:44
+#: mvp/editor/settings/categories/GeneralCategory.h:42
 msgid "GeneralCategory"
 msgstr "Основные"
 
@@ -483,74 +483,73 @@ msgstr "Русский"
 msgid "CountryName"
 msgstr "Россия"
 
-#: I18N.cpp:99 I18N.cpp:101
+#: I18N.cpp:100 I18N.cpp:102
 msgid "LangSystem"
 msgstr "Системный"
 
-#: I18N.cpp:102
+#: I18N.cpp:103
 msgid "AngleDegreeSymbol"
 msgstr "°"
 
-#: I18N.cpp:115
+#: I18N.cpp:118
 msgid "SketchfabRelevancy"
 msgstr "По релевантности"
 
-#: I18N.cpp:116
+#: I18N.cpp:119
 msgid "SketchfabLikeCountAsc"
 msgstr "По лайкам /\\"
 
-#: I18N.cpp:117
+#: I18N.cpp:120
 msgid "SketchfabLikeCountDesc"
 msgstr "По лайкам \\/"
 
-#: I18N.cpp:118
+#: I18N.cpp:121
 msgid "SketchfabViewCountAsc"
 msgstr "По просмотрам /\\"
 
-#: I18N.cpp:119
+#: I18N.cpp:122
 msgid "SketchfabViewCountDesc"
 msgstr "По просмотрам \\/"
 
-#: I18N.cpp:120
+#: I18N.cpp:123
 msgid "SketchfabPublishedAtAsc"
 msgstr "По дате публикации /\\"
 
-#: I18N.cpp:121
+#: I18N.cpp:124
 msgid "SketchfabPublishedAtDesc"
 msgstr "По дате публикации \\/"
 
-#: I18N.cpp:122
+#: I18N.cpp:125
 msgid "SketchfabProcessedAtAsc"
 msgstr "По дате обработки /\\"
 
-#: I18N.cpp:123
+#: I18N.cpp:126
 msgid "SketchfabProcessedAtDesc"
 msgstr "По дате обработки \\/"
 
-#: I18N.cpp:129
+#: I18N.cpp:131
 msgid "Any License"
 msgstr "Любая лицензия"
 
 #. translators: Description for Sketchfab License filter "Any License"
-#: I18N.cpp:131
+#: I18N.cpp:133
 msgid "AnyLicenseDescription"
 msgstr "Поиск без учёта лицензий"
 
-#: I18N.cpp:133
+#: I18N.cpp:136
 msgid "Creative Commons: Attribution"
 msgstr "Creative Commons: Attribution"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Attribution"
-#: I18N.cpp:135
+#: I18N.cpp:138
 msgid "Author must be credited. Commercial use is allowed."
 msgstr "Упоминание автора обязательно. Коммерческое использование разрешено."
 
-#: I18N.cpp:137
+#: I18N.cpp:140
 msgid "Creative Commons: ShareAlike"
 msgstr "Creative Commons: ShareAlike"
 
-#. translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
-#: I18N.cpp:139
+#: I18N.cpp:143
 msgid ""
 "Author must be credited. Modified versions must have the same license. "
 "Commercial use is allowed."
@@ -558,12 +557,11 @@ msgstr ""
 "Упоминание автора обязательно. Модификации должны иметь такую же лицензию. "
 "Коммерческое использование разрешено."
 
-#: I18N.cpp:141
+#: I18N.cpp:145
 msgid "Creative Commons: NoDerivatives"
 msgstr "Creative Commons: NoDerivatives"
 
-#. translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
-#: I18N.cpp:143
+#: I18N.cpp:148
 msgid ""
 "Author must be credited. Modified versions can not be distributed. "
 "Commercial use is allowed."
@@ -571,21 +569,20 @@ msgstr ""
 "Упоминание автора обязательно. Модификации распространять нельзя. "
 "Коммерческое использование разрешено."
 
-#: I18N.cpp:145
+#: I18N.cpp:150
 msgid "Creative Commons: NonCommercial"
 msgstr "Creative Commons: NonCommercial"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
-#: I18N.cpp:147
+#: I18N.cpp:152
 msgid "Author must be credited. No commercial use."
 msgstr "Упоминание автора обязательно. Запрещено коммерческое использование."
 
-#: I18N.cpp:149
+#: I18N.cpp:154
 msgid "Creative Commons: NonCommercial-ShareAlike"
 msgstr "Creative Commons: NonCommercial-ShareAlike"
 
-#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
-#: I18N.cpp:151
+#: I18N.cpp:157
 msgid ""
 "Author must be credited. No commercial use. Modified versions must have the "
 "same license."
@@ -593,12 +590,11 @@ msgstr ""
 "Упоминание автора обязательно. Запрещено коммерческое использование. "
 "Модификации должны иметь такую же лицензию."
 
-#: I18N.cpp:153
+#: I18N.cpp:159
 msgid "Creative Commons: NonCommercial-NoDerivatives"
 msgstr "Creative Commons: NonCommercial-NoDerivatives"
 
-#. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
-#: I18N.cpp:155
+#: I18N.cpp:162
 msgid ""
 "Author must be credited. No commercial use. Modified versions can not be "
 "distributed."
@@ -606,34 +602,32 @@ msgstr ""
 "Упоминание автора обязательно. Запрещено коммерческое использование. "
 "Модификации распространять нельзя."
 
-#: I18N.cpp:157
+#: I18N.cpp:164
 msgid "Creative Commons: Zero"
 msgstr "Creative Commons: Zero"
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Zero"
-#: I18N.cpp:159
+#: I18N.cpp:166
 msgid "Credit is not mandatory. Commercial use is allowed."
 msgstr ""
 "Упоминание автора не обязательно. Коммерческое использование разрешено."
 
-#: I18N.cpp:161
+#: I18N.cpp:168
 msgid "Editorial"
 msgstr "Editorial"
 
-#. translators: Description for Sketchfab License filter "Editorial"
-#: I18N.cpp:163
+#: I18N.cpp:171
 msgid ""
 "Use only in connection with events that are newsworthy or of public interest"
 msgstr ""
 "Использование только в связи с событиями, которые заслуживают освещения в "
 "печати или представляют общественный интерес."
 
-#: I18N.cpp:165
+#: I18N.cpp:173
 msgid "Standard"
 msgstr "Стандартная"
 
-#. translators: Description for Sketchfab License filter "Standard"
-#: I18N.cpp:167
+#: I18N.cpp:176
 msgid ""
 "Under basic restrictions, use worldwide, on all types of media, commercially "
 "or not, and in all types of derivative works"
@@ -641,22 +635,22 @@ msgstr ""
 "Под основными ограничениями, использование по всему миру, на всех типах "
 "носителей, коммерческих или нет, а также во всех типах производных работ"
 
-#: I18N.cpp:171
+#: I18N.cpp:180
 msgid "SketchfabMaterialAny"
 msgstr "Любой"
 
-#: I18N.cpp:172
+#: I18N.cpp:181
 msgid "SketchfabMaterialSimple"
 msgstr "Простой"
 
-#: I18N.cpp:173
+#: I18N.cpp:182
 msgid "SketchfabMaterialPBROnly"
 msgstr "Основанный на физике"
 
-#: I18N.cpp:174
+#: I18N.cpp:183
 msgid "SketchfabMaterialMetalness"
 msgstr "Metalness/Roughness"
 
-#: I18N.cpp:175
+#: I18N.cpp:184
 msgid "SketchfabMaterialSpecular"
 msgstr "Specular/Glossiness"
