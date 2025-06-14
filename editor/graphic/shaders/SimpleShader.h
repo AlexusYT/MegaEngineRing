@@ -24,7 +24,6 @@
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 
 namespace mer::editor::graphics {
-
 class SimpleShader : public sdk::ShaderProgram {
 	static std::shared_ptr<SimpleShader> instance;
 
@@ -33,7 +32,6 @@ class SimpleShader : public sdk::ShaderProgram {
 public:
 	static std::shared_ptr<SimpleShader> getInstance();
 };
-
 } // namespace mer::editor::graphics
 
 #endif //SIMPLESHADER_H

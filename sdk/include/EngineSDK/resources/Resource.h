@@ -68,7 +68,6 @@ public:
 private:
 	void setIncomplete(const bool pIncomplete) final { incomplete = pIncomplete; }
 };
-
 } // namespace mer::sdk
 
 #endif //RESOURCE_H

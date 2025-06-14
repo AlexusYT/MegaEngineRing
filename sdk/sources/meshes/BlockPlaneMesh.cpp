@@ -34,21 +34,22 @@ BlockPlaneMesh::BlockPlaneMesh() {
 			-0.5f, 0.0f, -0.5f, //0
 			0.5f, 0.0f, -0.5f,  //1
 			-0.5f, 0.0f, 0.5f,  //2
-			0.5f, 0.0f, 0.5f},  //3
+			0.5f, 0.0f, 0.5f
+		}, //3
 		Microsoft::glTF::TYPE_VEC3);
 
 	const auto primitive = Primitive::create(MeshMode::MESH_TRIANGLES, posAccessor, indexAccessor);
 
 	auto normalAccessor = Accessor::createVertexAccessor(
 		{
-			0.0f, 1.0f, 0.0f,  //0
-			0.0f, 1.0f, 0.0f,  //1
-			0.0f, 1.0f, 0.0f,  //2
-			0.0f, 1.0f, 0.0f}, //3
+			0.0f, 1.0f, 0.0f, //0
+			0.0f, 1.0f, 0.0f, //1
+			0.0f, 1.0f, 0.0f, //2
+			0.0f, 1.0f, 0.0f
+		}, //3
 		Microsoft::glTF::TYPE_VEC3);
 
 	primitive->setNormalAccessor(normalAccessor);
 	addPrimitive(primitive);
 }
-
 } // namespace mer::sdk

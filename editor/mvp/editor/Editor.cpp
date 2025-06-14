@@ -28,8 +28,6 @@
 #define MYEDITOR_CONFIG_ONMERGE_OVERWRITE_WITH_SOURCE_LAYOUT 0
 
 namespace mer::editor::mvp {
-
-
 void EditorTool::render() {
 	if (!open) return;
 
@@ -58,16 +56,15 @@ void Editor::updateLocation(uint32_t pToplevelDockspaceId) {
 	if (setDockId != 0) {
 		ImGui::SetNextWindowDockID(setDockId);
 		setDockId = 0;
-	} else {
-		ImGui::SetNextWindowDockID(pToplevelDockspaceId, ImGuiCond_FirstUseEver);
-	}
+	} else { ImGui::SetNextWindowDockID(pToplevelDockspaceId, ImGuiCond_FirstUseEver); }
 
 	// Create top level editor tab/window
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
 	if (unsaved) window_flags |= ImGuiWindowFlags_UnsavedDocument;
 	//PushDocumentColors();
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	/*bool visible =*/ImGui::Begin(name.c_str(), &open, window_flags);
+	/*bool visible =*/
+	ImGui::Begin(name.c_str(), &open, window_flags);
 	ImGui::PopStyleVar();
 	//PopDocumentColors();
 
@@ -82,7 +79,7 @@ void Editor::updateLocation(uint32_t pToplevelDockspaceId) {
 	toolWindowsClass.ClassId = id;
 	toolWindowsClass.ViewportFlagsOverrideSet = ImGuiViewportFlags_NoTaskBarIcon | ImGuiViewportFlags_NoDecoration;
 	toolWindowsClass.ParentViewportId = ImGui::GetWindowViewport()->ID; // Make child of the top-level editor window
-	toolWindowsClass.FocusRouteParentWindowId = window->ID;				// Setup shortcut routing (#6798)
+	toolWindowsClass.FocusRouteParentWindowId = window->ID;             // Setup shortcut routing (#6798)
 	toolWindowsClass.DockingAllowUnclassed = true;
 
 	// Track LocationID change so we can fork/copy the layout data according to where the window is going + reference count
@@ -270,7 +267,6 @@ ImGuiID Editor::calcDockspaceId() const {
 }
 
 void Editor::layoutPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir pPanelDir) {
-
 	// FIXME: Even though the call to DockBuilderRemoveNodeChildNodes will remove child nodes and move all their child windows to the root of the dockspace,
 	// we won't be catching floating windows (e.g. any Tool Window moved outside) so we need to re-dock them explicitly..
 	// Perhaps we could store some sort of link between those windows and our dockspace. Could this link be stored on imgui side?
@@ -316,9 +312,7 @@ void Editor::layoutPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir 
 	}*/
 }
 
-void Editor::resetToolsVisibility() {
-	for (auto editorTool: tools) { editorTool->setOpen(true); }
-}
+void Editor::resetToolsVisibility() { for (auto editorTool: tools) { editorTool->setOpen(true); } }
 
 void Editor::copyLayout(ImGuiID pSrcDockspaceId, ImGuiID pDstDockspaceId) {
 	IM_ASSERT(pSrcDockspaceId != 0);
@@ -382,9 +376,7 @@ void Editor::copyLayout(ImGuiID pSrcDockspaceId, ImGuiID pDstDockspaceId) {
 	ImGui::DockBuilderFinish(pDstDockspaceId);
 }
 
-void Editor::customRender() {
-	for (const auto &tool: tools) tool->customRender();
-}
+void Editor::customRender() { for (const auto &tool: tools) tool->customRender(); }
 
 void Editor::onSizeChanged(const int pWidth, const int pHeight) {
 	for (const auto &tool: tools) tool->onSizeChanged(pWidth, pHeight);

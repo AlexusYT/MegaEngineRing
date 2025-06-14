@@ -32,8 +32,8 @@ namespace mer::sdk {
 std::shared_ptr<IResource> Model3DLoader::createResource() { return Model3DResource::create(); }
 
 ReportMessagePtr Model3DLoader::preload(IResourceLoadExecutor* pResourcesContext,
-											   const std::shared_ptr<std::istream> &pStream,
-											   const std::shared_ptr<IResource> &pResource) {
+										const std::shared_ptr<std::istream> &pStream,
+										const std::shared_ptr<IResource> &pResource) {
 	if (auto msg = ResourceLoader::preload(pResourcesContext, pStream, pResource)) { return msg; }
 	auto resource = std::dynamic_pointer_cast<Model3DResource>(pResource);
 
@@ -41,7 +41,6 @@ ReportMessagePtr Model3DLoader::preload(IResourceLoadExecutor* pResourcesContext
 	uint16_t objectCount;
 	readNumber(pStream, objectCount);
 	for (uint16_t i = 0; i < objectCount; ++i) {
-
 		auto object = Model3DObject::create();
 		object->setName(readString(pStream));
 		resource->addModelObject(object);
@@ -50,20 +49,18 @@ ReportMessagePtr Model3DLoader::preload(IResourceLoadExecutor* pResourcesContext
 }
 
 ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor,
-											std::shared_ptr<std::istream> &pStream,
-											const std::shared_ptr<IResource> &pResource) {
-
-
+									 std::shared_ptr<std::istream> &pStream,
+									 const std::shared_ptr<IResource> &pResource) {
 	auto resource = std::dynamic_pointer_cast<Model3DResource>(pResource);
 	while (!pStream->eof()) {
-
 		try {
 			if (pStream->get() == std::istream::traits_type::eof()) {
 				//
 				break;
 			}
 			pStream->unget();
-		} catch (...) { break; }
+		}
+		catch (...) { break; }
 		auto objectName = readString(pStream);
 
 		auto object = resource->getModelObject(objectName);
@@ -80,7 +77,8 @@ ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor,
 				return;
 			}
 			if (pResult->isReady()) {
-				if (auto shader = std::dynamic_pointer_cast<ShaderProgram>(pResult->getResource()))
+				if (auto shader = std::dynamic_pointer_cast<ShaderProgram>(
+					pResult->getResource()))
 					object->setShader(shader);
 			}
 		});
@@ -96,6 +94,4 @@ ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor,
 
 	return nullptr;
 }
-
-
 } // namespace mer::sdk

@@ -54,7 +54,8 @@ void I18n::init() {
 			langName = gettext("LangName");
 			//translators: Name of your language. It will be used in the lang settings combobox: LangName (CountryName)
 			countryName = gettext("CountryName");
-		} catch (...) {
+		}
+		catch (...) {
 			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to load locale");
 			msg->setMessage("Exception occurred");
@@ -75,7 +76,7 @@ void I18n::init() {
 
 
 void I18n::switchTo(const std::string &pLocale) {
-	#ifdef __MINGW32__
+#ifdef __MINGW32__
 	LCID localeId;
 	if (pLocale.empty()) localeId = LOCALE_USER_DEFAULT;
 	else {
@@ -87,7 +88,7 @@ void I18n::switchTo(const std::string &pLocale) {
 	if (pLocale.empty())
 		std::setlocale(LC_MESSAGES, "");
 	else
-		std::setlocale(LC_MESSAGES, (pLocale+".UTF-8").c_str());
+		std::setlocale(LC_MESSAGES, (pLocale + ".UTF-8").c_str());
 #endif
 
 	bindtextdomain(LOCALE_DOMAIN, LOCALE_DIR);
@@ -103,15 +104,17 @@ void I18n::updateStrings() {
 	trExtensionsMap.emplace("LightExtension", tr("LightExtension"));
 	trExtensionsMap.emplace("MeshExtension", tr("MeshExtension"));
 
-	trSketchfabSortTypes = {"",
-							"likeCount",
-							"-likeCount",
-							"viewCount",
-							"-viewCount",
-							"publishedAt",
-							"-publishedAt",
-							"processedAt",
-							"-processedAt"};
+	trSketchfabSortTypes = {
+		"",
+		"likeCount",
+		"-likeCount",
+		"viewCount",
+		"-viewCount",
+		"publishedAt",
+		"-publishedAt",
+		"processedAt",
+		"-processedAt"
+	};
 	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[0], tr("SketchfabRelevancy"));
 	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[1], tr("SketchfabLikeCountAsc"));
 	trSketchfabSortTypesMap.emplace(trSketchfabSortTypes[2], tr("SketchfabLikeCountDesc"));
@@ -124,48 +127,54 @@ void I18n::updateStrings() {
 
 	//by,by-sa, by-nd, by-nc, by-nc-sa, by-nc-nd, cc0, ed, st
 	trSketchfabLicenses = {"", "by", "by-sa", "by-nd", "by-nc", "by-nc-sa", "by-nc-nd", "cc0", "ed", "st"};
-	trSketchfabLicensesMap = {
-		{trSketchfabLicenses[0],
-		 {tr("Any License"),
-		  //translators: Description for Sketchfab License filter "Any License"
-		  tr("AnyLicenseDescription")}},
-		{trSketchfabLicenses[1],
-		 {tr("Creative Commons: Attribution"),
-		  //translators: Description for Sketchfab License filter "Creative Commons: Attribution"
-		  tr("Author must be credited. Commercial use is allowed.")}},
-		{trSketchfabLicenses[2],
-		 {tr("Creative Commons: ShareAlike"),
-		  //translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
-		  tr("Author must be credited. Modified versions must have the same license. Commercial use is allowed.")}},
-		{trSketchfabLicenses[3],
-		 {tr("Creative Commons: NoDerivatives"),
-		  //translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
-		  tr("Author must be credited. Modified versions can not be distributed. Commercial use is allowed.")}},
-		{trSketchfabLicenses[4],
-		 {tr("Creative Commons: NonCommercial"),
-		  //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
-		  tr("Author must be credited. No commercial use.")}},
-		{trSketchfabLicenses[5],
-		 {tr("Creative Commons: NonCommercial-ShareAlike"),
-		  //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
-		  tr("Author must be credited. No commercial use. Modified versions must have the same license.")}},
-		{trSketchfabLicenses[6],
-		 {tr("Creative Commons: NonCommercial-NoDerivatives"),
-		  //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
-		  tr("Author must be credited. No commercial use. Modified versions can not be distributed.")}},
-		{trSketchfabLicenses[7],
-		 {tr("Creative Commons: Zero"),
-		  //translators: Description for Sketchfab License filter "Creative Commons: Zero"
-		  tr("Credit is not mandatory. Commercial use is allowed.")}},
-		{trSketchfabLicenses[8],
-		 {tr("Editorial"),
-		  //translators: Description for Sketchfab License filter "Editorial"
-		  tr("Use only in connection with events that are newsworthy or of public interest")}},
-		{trSketchfabLicenses[9],
-		 {tr("Standard"),
-		  //translators: Description for Sketchfab License filter "Standard"
-		  tr("Under basic restrictions, use worldwide, on all types of media, commercially or not, and in "
-			 "all types of derivative works")}}};
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[0], std::make_pair(
+									   tr("Any License"),
+									   //translators: Description for Sketchfab License filter "Any License"
+									   tr("AnyLicenseDescription")
+								   ));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[1], std::make_pair(
+									   tr("Creative Commons: Attribution"),
+									   //translators: Description for Sketchfab License filter "Creative Commons: Attribution"
+									   tr("Author must be credited. Commercial use is allowed.")));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[2], std::make_pair(
+									   tr("Creative Commons: ShareAlike"),
+									   //translators: Description for Sketchfab License filter "Creative Commons: ShareAlike"
+									   tr(
+										   "Author must be credited. Modified versions must have the same license. Commercial use is allowed.")));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[3], std::make_pair(
+									   tr("Creative Commons: NoDerivatives"),
+									   //translators: Description for Sketchfab License filter "Creative Commons: NoDerivatives"
+									   tr(
+										   "Author must be credited. Modified versions can not be distributed. Commercial use is allowed.")));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[4], std::make_pair(
+									   tr("Creative Commons: NonCommercial"),
+									   //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
+									   tr("Author must be credited. No commercial use.")));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[5], std::make_pair(
+									   tr("Creative Commons: NonCommercial-ShareAlike"),
+									   //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-ShareAlike"
+									   tr(
+										   "Author must be credited. No commercial use. Modified versions must have the same license.")));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[6], std::make_pair(
+									   tr("Creative Commons: NonCommercial-NoDerivatives"),
+									   //translators: Description for Sketchfab License filter "Creative Commons: NonCommercial-NoDerivatives"
+									   tr(
+										   "Author must be credited. No commercial use. Modified versions can not be distributed.")));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[7], std::make_pair(
+									   tr("Creative Commons: Zero"),
+									   //translators: Description for Sketchfab License filter "Creative Commons: Zero"
+									   tr("Credit is not mandatory. Commercial use is allowed.")));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[8], std::make_pair(
+									   tr("Editorial"),
+									   //translators: Description for Sketchfab License filter "Editorial"
+									   tr(
+										   "Use only in connection with events that are newsworthy or of public interest")));
+	trSketchfabLicensesMap.emplace(trSketchfabLicenses[9], std::make_pair(
+									   tr("Standard"),
+									   //translators: Description for Sketchfab License filter "Standard"
+									   tr(
+										   "Under basic restrictions, use worldwide, on all types of media, commercially or not, and in "
+										   "all types of derivative works")));
 
 	trSketchfabMaterialTypes = {"", "true", "false", "metalness", "specular"};
 	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[0], tr("SketchfabMaterialAny"));

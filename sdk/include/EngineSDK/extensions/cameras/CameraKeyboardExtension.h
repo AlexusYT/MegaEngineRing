@@ -28,15 +28,16 @@
 
 namespace mer::sdk {
 class CameraKeyboardExtension : public Extension {
-
 	bool fwdPressed{}, bwdPressed{}, strafeLeftPressed{}, strafeRightPressed{};
-
 
 protected:
 	CameraKeyboardExtension()
-		: propertySpeed(this, "Speed"), propertyForwardKey(this, "ForwardKey"),
-		  propertyStrafeLeftKey(this, "StrafeLeftKey"), propertyBackwardKey(this, "BackwardKey"),
-		  propertyStrafeRightKey(this, "StrafeLeftKey"), propertyAngle(this, "Angle") {
+		: propertySpeed(this, "Speed"),
+		  propertyForwardKey(this, "ForwardKey"),
+		  propertyStrafeLeftKey(this, "StrafeLeftKey"),
+		  propertyBackwardKey(this, "BackwardKey"),
+		  propertyStrafeRightKey(this, "StrafeLeftKey"),
+		  propertyAngle(this, "Angle") {
 		propertySpeed = 1.4f;
 		propertyForwardKey = KeyboardKey::KEY_W;
 		propertyStrafeLeftKey = KeyboardKey::KEY_A;

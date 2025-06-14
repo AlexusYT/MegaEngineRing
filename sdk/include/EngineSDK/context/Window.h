@@ -47,7 +47,7 @@ protected:
 public:
 	~Window() override;
 
-	static auto create() { return std::shared_ptr<Window>(new (std::nothrow) Window()); }
+	static auto create() { return std::shared_ptr<Window>(new(std::nothrow) Window()); }
 
 	void show();
 
@@ -101,6 +101,5 @@ private:
 
 	void swapBuffers() const override;
 };
-
 } // namespace mer::sdk
 #endif //WINDOW_H

@@ -38,7 +38,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterOnlineImportPreview"; }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //PRESENTERONLINEIMPORTPREVIEW_H

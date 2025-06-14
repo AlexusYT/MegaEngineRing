@@ -23,8 +23,10 @@
 
 namespace mer::sdk {
 DefaultApplicationSettings::DefaultApplicationSettings()
-	: applicationName(nullptr, "ApplicationName"), applicationDisplayName(nullptr, "AppDisplayName"),
-	  logsDirectory(nullptr, "LogsDir"), runDirectory(nullptr, "RunDir") {}
+	: applicationName(nullptr, "ApplicationName"),
+	  applicationDisplayName(nullptr, "AppDisplayName"),
+	  logsDirectory(nullptr, "LogsDir"),
+	  runDirectory(nullptr, "RunDir") {}
 
 sdk::ReportMessagePtr DefaultApplicationSettings::init() {
 	if (applicationName->empty()) setApplicationName("DefaultApplication");

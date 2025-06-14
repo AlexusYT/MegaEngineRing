@@ -36,9 +36,7 @@ class ITextureResource;
 } // namespace mer::sdk
 
 namespace mer::sdk {
-
 class MaterialResource : public IMaterialResource, public Resource {
-
 	Property<std::shared_ptr<IMaterialComponent>> baseColorMap;
 	sigc::scoped_connection baseColorMapConnection;
 	Property<std::shared_ptr<IMaterialComponent>> normalMap;
@@ -108,8 +106,6 @@ private:
 	sigc::scoped_connection connectComponentValChanged(const std::shared_ptr<IMaterialComponent> &pComponent,
 													   glm::vec4* pMap);
 };
-
-
 } // namespace mer::sdk
 
 #endif //MATERIALRESOURCE_H

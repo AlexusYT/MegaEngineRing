@@ -28,8 +28,8 @@
 #include <sigc++/signal.h>
 
 namespace mer::sdk {
-
 enum class LightType { DIRECTIONAL, POINT, SPOT, LIGHT_TYPE_MAX };
+
 inline const char* light_type_array_str[3] = {"directional", "point", "spot"};
 
 inline const char* to_string(const LightType pE) {
@@ -38,8 +38,8 @@ inline const char* to_string(const LightType pE) {
 }
 
 NLOHMANN_JSON_SERIALIZE_ENUM(LightType, {{LightType::DIRECTIONAL, to_string(LightType::DIRECTIONAL)},
-										 {LightType::POINT, to_string(LightType::POINT)},
-										 {LightType::SPOT, to_string(LightType::SPOT)}})
+							 {LightType::POINT, to_string(LightType::POINT)},
+							 {LightType::SPOT, to_string(LightType::SPOT)}})
 
 struct LightData {
 	//xyz - color, w - type.

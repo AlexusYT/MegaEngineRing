@@ -53,9 +53,7 @@ bool VolumeAabb::isIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRay
 			quadrant[i] = RIGHT;
 			candidatePlane[i] = maxB[i];
 			inside = false;
-		} else {
-			quadrant[i] = MIDDLE;
-		}
+		} else { quadrant[i] = MIDDLE; }
 
 	/* Ray origin inside bounding box */
 	if (inside) {
@@ -81,11 +79,9 @@ bool VolumeAabb::isIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRay
 		if (whichPlane != i) {
 			pIntersectCoordOut[i] = pRayOrigin[i] + maxT[whichPlane] * pRayDir[i];
 			if (pIntersectCoordOut[i] < minB[i] || pIntersectCoordOut[i] > maxB[i]) return (false);
-		} else {
-			pIntersectCoordOut[i] = candidatePlane[i];
-		}
+		} else { pIntersectCoordOut[i] = candidatePlane[i]; }
 	return (true); /* ray hits box */
-				   /*float t0 = 0;
+	/*float t0 = 0;
 	float t1 = 1000;
 	Ray r(Vector3(pRayOrigin.x, pRayOrigin.y, pRayOrigin.z), Vector3(pRayDir.x, pRayDir.y, pRayDir.z));
 	Vector3 parameters[2];
@@ -110,7 +106,6 @@ bool VolumeAabb::isIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRay
 }
 
 void VolumeAabb::transform(const glm::mat4 &pTransformMatrix, glm::vec3 &pNewMin, glm::vec3 &pNewMax) const {
-
 	auto center{(max + min) * 0.5f};
 	auto extents{(max - min) * 0.5f};
 	const glm::vec3 globalCenter{pTransformMatrix * glm::vec4(center, 1.f)};
@@ -152,5 +147,4 @@ std::vector<float> VolumeAabb::getVertices() {
 std::vector<uint16_t> VolumeAabb::getIndices() {
 	return {0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 4, 5, 5, 1, 5, 7, 7, 2, 3, 6, 4, 6, 7, 6};
 }
-
 } // namespace mer::sdk

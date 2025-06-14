@@ -24,7 +24,6 @@
 #include <future>
 
 namespace mer::editor::project {
-
 class Project : public std::enable_shared_from_this<Project> {
 	std::filesystem::path projectPath;
 	std::filesystem::path projectBuildPath;
@@ -38,7 +37,7 @@ class Project : public std::enable_shared_from_this<Project> {
 public:
 	~Project();
 
-	static std::shared_ptr<Project> create() { return std::shared_ptr<Project>(new (std::nothrow) Project()); }
+	static std::shared_ptr<Project> create() { return std::shared_ptr<Project>(new(std::nothrow) Project()); }
 
 	[[nodiscard]] const std::filesystem::path &getProjectPath() { return projectPath; }
 

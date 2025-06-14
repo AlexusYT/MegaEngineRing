@@ -49,7 +49,9 @@ void Shader::getInfoLog(std::string &pLogOut) const {
 	glGetShaderInfoLog(name, logLen, nullptr, pLogOut.data());
 }
 
-void Shader::compile() const { glCompileShader(name); }
+void Shader::compile() const {
+	glCompileShader(name);
+}
 
 ShaderTypeEnum Shader::getShaderType() const {
 	switch (getNativeShaderType()) {
@@ -94,16 +96,20 @@ int Shader::getSourceLength() const {
 }
 
 ReportMessagePtr Shader::onInitialize() {
-
 	uint32_t glType;
 	switch (type) {
-
-		case ShaderTypeEnum::COMPUTE_SHADER: glType = 0x91B9; break;
-		case ShaderTypeEnum::VERTEX_SHADER: glType = 0x8B31; break;
-		case ShaderTypeEnum::TESS_CONTROL_SHADER: glType = 0x8E88; break;
-		case ShaderTypeEnum::TESS_EVALUATION_SHADER: glType = 0x8E87; break;
-		case ShaderTypeEnum::GEOMETRY_SHADER: glType = 0x8DD9; break;
-		case ShaderTypeEnum::FRAGMENT_SHADER: glType = 0x8B30; break;
+		case ShaderTypeEnum::COMPUTE_SHADER: glType = 0x91B9;
+			break;
+		case ShaderTypeEnum::VERTEX_SHADER: glType = 0x8B31;
+			break;
+		case ShaderTypeEnum::TESS_CONTROL_SHADER: glType = 0x8E88;
+			break;
+		case ShaderTypeEnum::TESS_EVALUATION_SHADER: glType = 0x8E87;
+			break;
+		case ShaderTypeEnum::GEOMETRY_SHADER: glType = 0x8DD9;
+			break;
+		case ShaderTypeEnum::FRAGMENT_SHADER: glType = 0x8B30;
+			break;
 		default: glType = 0;
 	}
 	name = glCreateShader(glType);

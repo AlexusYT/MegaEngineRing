@@ -78,9 +78,7 @@ void RenderPass::removeNode(Node* pNode) {
 			commandsBufferDirty = true;
 		}
 		for (auto &meshes: meshesToRender) {
-			for (auto &index: meshes.second) {
-				if (index > instanceIndex) { index--; }
-			}
+			for (auto &index: meshes.second) { if (index > instanceIndex) { index--; } }
 		}
 	}
 
@@ -94,9 +92,7 @@ void RenderPass::removeNode(Node* pNode) {
 	if (!shouldRemoveInstance) return;
 
 	meshInstanceSsbo.removeElement(meshInstanceSsbo.begin() + static_cast<long int>(instanceIndex));
-	for (auto &instance: instances) {
-		if (instance.second.first > instanceIndex) { instance.second.first--; }
-	}
+	for (auto &instance: instances) { if (instance.second.first > instanceIndex) { instance.second.first--; } }
 	for (bool firstSkipped = false; auto &index: litByInstancesSsbo) {
 		if (!firstSkipped) {
 			firstSkipped = true;
@@ -130,9 +126,7 @@ void RenderPass::changeMesh(Node* pNode, Mesh* pNewMesh) {
 			if (oldMeshIter->second.empty()) { meshesToRender.erase(oldMeshIter); }
 
 			for (auto &meshes: meshesToRender) {
-				for (auto &index: meshes.second) {
-					if (index > instIter->second.first) { index--; }
-				}
+				for (auto &index: meshes.second) { if (index > instIter->second.first) { index--; } }
 			}
 			isDirty = true;
 		}
@@ -148,7 +142,11 @@ void RenderPass::changeMesh(Node* pNode, Mesh* pNewMesh) {
 
 void RenderPass::render() {
 	if (meshesToRender.empty()) return;
-	if (commandsBufferDirty && commandsBufferMutex.try_lock()) {
+	if (commandsBufferDirty && commandsBufferMutex
+
+		.
+		try_lock()
+	) {
 		commands.clear();
 		instanceIndices.clear();
 		meshIndices.clear();
@@ -173,7 +171,8 @@ void RenderPass::render() {
 			}
 			for (auto instanceId: mesh.second) { instanceIndices.emplace_back(instanceId); }
 		}
-		if (drawCmdBuffer) glDeleteBuffers(1, &drawCmdBuffer);
+		if (drawCmdBuffer)
+			glDeleteBuffers(1, &drawCmdBuffer);
 		glCreateBuffers(1, &drawCmdBuffer);
 		glNamedBufferStorage(drawCmdBuffer,
 							 static_cast<GLsizeiptr>(sizeof(DrawElementsIndirectCommand) * commands.size()),
@@ -182,12 +181,14 @@ void RenderPass::render() {
 		commandsBufferSize = commands.size();
 		commandsBufferMutex.unlock();
 
-		if (instanceIndicesBuffer) glDeleteBuffers(1, &instanceIndicesBuffer);
+		if (instanceIndicesBuffer)
+			glDeleteBuffers(1, &instanceIndicesBuffer);
 		glCreateBuffers(1, &instanceIndicesBuffer);
 		glNamedBufferData(instanceIndicesBuffer, static_cast<GLsizeiptr>(sizeof(uint32_t) * instanceIndices.size()),
 						  static_cast<const void*>(instanceIndices.data()), GL_STATIC_DRAW);
 
-		if (meshIndicesBuffer) glDeleteBuffers(1, &meshIndicesBuffer);
+		if (meshIndicesBuffer)
+			glDeleteBuffers(1, &meshIndicesBuffer);
 		glCreateBuffers(1, &meshIndicesBuffer);
 		glNamedBufferData(meshIndicesBuffer, static_cast<GLsizeiptr>(sizeof(uint32_t) * meshIndices.size()),
 						  static_cast<const void*>(meshIndices.data()), GL_STATIC_DRAW);
@@ -237,7 +238,6 @@ Renderer::Renderer() {
 }
 
 void Renderer::addMaterial(const std::shared_ptr<Material> &pMaterial) {
-
 	auto connection = pMaterial->connectOnChanged([this](Material* pChangedMaterial) {
 		auto index = materialToIndexMap.at(pChangedMaterial);
 		materialsSsbo.setElement(index, pChangedMaterial->getData());
@@ -388,8 +388,13 @@ void Renderer::addLightSource(const std::shared_ptr<Light> &pNewLight) {
 }
 
 void Renderer::updateBuffers() {
-	if (eboDirty && indicesMutex.try_lock()) {
-		if (ebo) glDeleteBuffers(1, &ebo);
+	if (eboDirty && indicesMutex
+
+		.
+		try_lock()
+	) {
+		if (ebo)
+			glDeleteBuffers(1, &ebo);
 		glCreateBuffers(1, &ebo);
 		glNamedBufferData(ebo, static_cast<GLsizeiptr>(indices.size() * sizeof(uint16_t)), indices.data(),
 						  GL_STATIC_DRAW);
@@ -400,7 +405,6 @@ void Renderer::updateBuffers() {
 
 	if (!uninitializedMaterials.empty()) {
 		if (!uninitializedMaterialsMutex.try_lock()) {
-
 			for (auto uninitializedMaterial: uninitializedMaterials) { uninitializedMaterial->initialize(); }
 			uninitializedMaterials.clear();
 			uninitializedMaterialsMutex.unlock();
@@ -471,7 +475,6 @@ ReportMessagePtr Renderer::onInitialize() {
 }
 
 void Renderer::onUninitialize() {
-
 	if (vao) {
 		glDeleteVertexArrays(1, &vao);
 		vao = 0;
@@ -504,5 +507,4 @@ void Renderer::onPrimitiveMaterialChanged(const std::shared_ptr<Material> &pNewM
 	metadata.materialId = static_cast<uint32_t>(matIter->second);
 	meshMetadataSsbo.markDirty();
 }
-
 } // namespace mer::sdk

@@ -69,8 +69,6 @@ public:
 	static std::unique_ptr<Extension> deserializeNode(
 		const std::string &pJson, const Microsoft::glTF::ExtensionDeserializer & /*pExtensionDeserializer*/);
 };
-
-
 } // namespace mer::sdk
 
 #endif //KHRLIGHTSPUNCTUAL_H

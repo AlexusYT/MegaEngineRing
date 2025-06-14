@@ -56,7 +56,6 @@ class LoadedResources : public ILoadedResources {
 	std::list<std::shared_ptr<IRenderable>> renderables;
 	std::mutex mutex;
 
-
 	LoadedResources();
 
 public:
@@ -73,7 +72,6 @@ public:
 	bool hasResource(const std::string &pResourceUri);
 
 	std::shared_ptr<IResource> getResource(const std::string &pResourceUri) override {
-
 		std::lock_guard lock(mutex);
 		const auto it = resources.find(pResourceUri);
 		if (it == resources.end()) return nullptr;
@@ -90,7 +88,6 @@ public:
 
 private:
 };
-
 } // namespace mer::sdk
 
 

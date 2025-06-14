@@ -37,7 +37,6 @@ struct Accessor;
 } // namespace Microsoft::glTF
 
 namespace mer::sdk {
-
 class Accessor {
 	Microsoft::glTF::ComponentType componentType = Microsoft::glTF::COMPONENT_UNKNOWN;
 	Microsoft::glTF::AccessorType type = Microsoft::glTF::TYPE_UNKNOWN;
@@ -76,7 +75,7 @@ public:
 		return accessor;
 	}
 
-	template<typename T>
+	template <typename T>
 	static std::shared_ptr<Accessor> createIndexAccessor(const std::vector<T> &pData, const bool pNormalized = false) {
 		auto accessor = std::shared_ptr<Accessor>(new Accessor());
 		accessor->type = Microsoft::glTF::TYPE_SCALAR;
@@ -151,10 +150,8 @@ public:
 	[[nodiscard]] const std::vector<int8_t> &getInt8Data() const { return int8Data; }
 
 protected:
-
 	void recalcMinMaxSize();
 };
-
 } // namespace mer::sdk
 
 #endif //ACCESSOR_H

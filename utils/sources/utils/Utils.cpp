@@ -44,13 +44,13 @@ std::string Utils::demangle(const std::string &pMangledName) {
 			replace_name(name, "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >",
 						 "std::string");
 			return name;
-		} catch (...) { return str; }
+		}
+		catch (...) { return str; }
 	}
 	return pMangledName;
 }
 
 std::string Utils::parseDlError(const std::string &pMsg) {
-
 	if (auto iter = pMsg.find("undefined symbol: "); iter != std::string::npos) {
 		return "undefined symbol: " + demangle(pMsg.substr(iter + 18));
 	}
@@ -84,7 +84,8 @@ mer::sdk::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, con
 	}
 	pOutData.resize(static_cast<uint64_t>(width * height * 3));
 
-	if (tjDecompress2(decompressor, pDataBuffer, static_cast<unsigned long>(pDataSize), pOutData.data(), width, 0, height, TJPF_RGB,
+	if (tjDecompress2(decompressor, pDataBuffer, static_cast<unsigned long>(pDataSize), pOutData.data(), width, 0,
+					  height, TJPF_RGB,
 					  TJFLAG_FASTDCT) == -1) {
 		pOutData.clear();
 		auto msg = mer::sdk::ReportMessage::create();

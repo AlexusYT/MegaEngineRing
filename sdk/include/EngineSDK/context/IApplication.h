@@ -29,7 +29,6 @@ class IResourceBundle;
 class IApplicationSettings;
 
 class IApplication {
-
 public:
 	virtual ~IApplication() = default;
 
@@ -38,7 +37,6 @@ public:
 	virtual void deinitEngine() = 0;
 
 	virtual int runMainLoop(int argc, char* argv[]) = 0;
-
 
 	[[nodiscard]] virtual const std::shared_ptr<IApplicationSettings> &getApplicationSettings() const = 0;
 

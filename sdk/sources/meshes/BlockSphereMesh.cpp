@@ -98,5 +98,4 @@ std::tuple<std::vector<float>, std::vector<uint16_t>, std::vector<float>> BlockS
 
 	return {vertices, indices, normals};
 }
-
 }

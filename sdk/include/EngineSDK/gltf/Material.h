@@ -38,7 +38,6 @@ namespace mer::sdk {
 class Texture;
 
 struct MaterialData {
-
 	//xy - metallicRoughness texture handle, z - metallic factor, w - roughness factor
 	glm::vec4 metallicRoughnessInfo{};
 	//xy - texture handle, zw - not used
@@ -91,7 +90,6 @@ protected:
 private:
 	static glm::vec2 handleToVec(const uint64_t pHandle);
 };
-
 } // namespace mer::sdk
 
 #endif //MATERIAL_H

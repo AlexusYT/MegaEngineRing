@@ -30,20 +30,17 @@
 #include "EngineUtils/utils/Logger.h"
 #include "EngineUtils/utils/ReportMessage.h"
 #ifndef EDITOR_SDK
-	#include "EngineSDK/resources/LoadedResources.h"
-	#include "ResourcesWindow.h"
+#include "EngineSDK/resources/LoadedResources.h"
+#include "ResourcesWindow.h"
 
 namespace mer::sdk {
 std::condition_variable cv;
 
 ResourcesWindow::ResourcesWindow()
 	: resources(LoadedResources::create()),
-	  thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) {
-	thread.detach();
-}
+	  thread([this](const std::stop_token &pToken) { this->resourceLoop(pToken); }) { thread.detach(); }
 
 std::shared_ptr<ResourceLoadResult> ResourcesWindow::loadResourceSync(const std::string &pResourceUri) {
-
 	std::lock_guard lock(queueMutex);
 	std::promise<const std::shared_ptr<ResourceLoadResult>> promise;
 
@@ -69,7 +66,6 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 		cv.wait(lck, [this, pToken] { return !queue.empty() || pToken.stop_requested(); });
 		getContext()->makeCurrent();
 		for (auto &[resourceUri, slot]: queue) {
-
 			auto result = ResourceLoadResult::create();
 			if (std::shared_ptr<IResource> resource = resources->getResource(resourceUri)) {
 				result->setResource(resource);
@@ -81,7 +77,6 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 
 			std::filesystem::path uri;
 			try {
-
 				if (!uri.has_extension()) {
 					auto msg = sdk::ReportMessage::create();
 					msg->setTitle("Unable to load resource");
@@ -137,7 +132,8 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 				resources->addResource(resourceUri, resource);
 				result->setState(ResourceLoadResult::State::READY);
 				callSlot(result, slot);
-			} catch (...) {
+			}
+			catch (...) {
 				auto msg = sdk::ReportMessage::create();
 				msg->setTitle("Unable to load resource");
 				msg->setMessage("Exception thrown while executing request");
@@ -153,10 +149,9 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 }
 
 void ResourcesWindow::callSlot(const std::shared_ptr<ResourceLoadResult> &pResult,
-							   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) {
-	try {
-		pSlot(pResult);
-	} catch (...) {
+							   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) {
+	try { pSlot(pResult); }
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to send loading result to the callback");
 		msg->setMessage("Exception thrown in callback");
@@ -169,6 +164,5 @@ void ResourcesWindow::callSlot(const std::shared_ptr<ResourceLoadResult> &pResul
 		Logger::error(msg);
 	}
 }
-
 } // namespace mer::sdk
 #endif

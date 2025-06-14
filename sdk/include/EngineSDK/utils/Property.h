@@ -24,7 +24,6 @@
 #include <sigc++/signal.h>
 
 namespace mer::sdk {
-
 /*
 template<typename T>
 class Property {
@@ -90,7 +89,6 @@ public:
 	[[nodiscard]] const SignalT &getSignalChanged() const { return signalChanged; }
 };
 */
-
 } // namespace mer::sdk
 
 #endif //PROPERTY_H

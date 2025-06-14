@@ -32,7 +32,6 @@
 namespace mer::editor::mvp {
 ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &pContext)
 	: sdk::UiWindow("ViewProjectExplorer"), context(pContext) {
-
 	dialog = ConfirmationDialog::create("ProjectExplorer-confirm", "ConfirmDeletion");
 	dialog->setWindowFlags(ImGuiWindowFlags_NoResize);
 	/*addPopup(dialog);
@@ -43,7 +42,8 @@ void ViewProjectExplorer::setElements(const std::vector<std::shared_ptr<ProjectE
 	array = pArray;
 }
 
-void ViewProjectExplorer::openView() { /*context->addWindow(this); */ }
+void ViewProjectExplorer::openView() { /*context->addWindow(this); */
+}
 
 void ViewProjectExplorer::closeView() { context->remove(); }
 
@@ -117,11 +117,7 @@ void ViewProjectExplorer::startConfirmation(const std::string &pTitle, const std
 }
 
 void ViewProjectExplorer::updateTreeLevel(const std::vector<std::shared_ptr<ProjectExplorerElement>> &pElements) {
-
-
 	for (uint32_t i = 0; i < pElements.size(); ++i) {
-
-
 		auto node = pElements.at(i);
 		ImGui::TableNextRow();
 		ImGui::TableNextColumn();
@@ -139,11 +135,9 @@ void ViewProjectExplorer::updateTreeLevel(const std::vector<std::shared_ptr<Proj
 		ImGui::TableNextColumn();
 		ImGui::TextUnformatted(node->getTypeStr());
 		if (visible && folder) {
-
 			updateTreeLevel(node->getChildren());
 			ImGui::TreePop();
 		}
 	}
 }
-
 } // namespace mer::editor::mvp

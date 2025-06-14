@@ -25,7 +25,6 @@ namespace mer::editor::mvp {
 SketchfabCache::SketchfabCache(const std::filesystem::path &pPath) : pathToCache(pPath) {}
 
 sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const std::vector<unsigned char> &pData) {
-
 	std::stringstream ss;
 	ss.write(reinterpret_cast<const std::ostream::char_type*>(pData.data()),
 			 static_cast<std::streamsize>(pData.size()));
@@ -34,7 +33,6 @@ sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const s
 }
 
 sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const std::ostream &pData) {
-
 	std::lock_guard lock(mutex);
 
 	std::filesystem::path path;
@@ -58,7 +56,8 @@ sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const s
 		outFile.close();
 
 		return nullptr;
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save cache");
 		msg->setMessage("Exception occurred");
@@ -95,7 +94,8 @@ sdk::ReportMessagePtr SketchfabCache::loadCache(const std::string &pUrl, std::sh
 		pData = std::make_shared<std::fstream>(path, std::ios_base::binary | std::ios_base::in);
 		pData->exceptions(std::_S_badbit | std::_S_failbit);
 		return nullptr;
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to load cache");
 		msg->setMessage("Exception occurred while reading");

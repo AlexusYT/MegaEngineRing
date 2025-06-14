@@ -41,7 +41,6 @@ class Model3DResource : public IModel3DResource, public Resource {
 public:
 	static std::shared_ptr<Model3DResource> create();
 
-
 protected:
 	ReportMessagePtr onInitialize() override;
 
@@ -59,16 +58,13 @@ public:
 
 	std::shared_ptr<IModel3DObject> getModelObject(const std::string &pName) override;
 
-	[[nodiscard]] const std::unordered_map<std::string, std::shared_ptr<IModel3DObject>> &getModelObjects()
-		const override {
-		return modelObjects;
-	}
+	[[nodiscard]] const std::unordered_map<
+		std::string, std::shared_ptr<IModel3DObject>> &getModelObjects() const override { return modelObjects; }
 
 	IResource* asResource() override { return this; }
 
 	ResourceType getResourceType() override { return ResourceType::MODEL; }
 };
-
 } // namespace mer::sdk
 
 #endif //MODEL3DRESOURCE_H

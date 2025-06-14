@@ -47,8 +47,8 @@ public:
 		try {
 			stream.exceptions(std::_S_badbit | std::_S_eofbit | std::_S_failbit);
 			stream.open(pPath);
-		} catch (...) {
-
+		}
+		catch (...) {
 			auto msg = mer::sdk::ReportMessage::create();
 			msg->setTitle("Failed to save header file.");
 			msg->setMessage("Exception thrown");
@@ -72,8 +72,8 @@ public:
 		try {
 			stream.exceptions(std::_S_badbit | std::_S_eofbit | std::_S_failbit);
 			stream.open(pPath);
-		} catch (...) {
-
+		}
+		catch (...) {
 			auto msg = mer::sdk::ReportMessage::create();
 			msg->setTitle("Failed to save source file.");
 			msg->setMessage("Exception thrown");

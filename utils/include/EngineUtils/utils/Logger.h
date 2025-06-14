@@ -42,47 +42,42 @@ public:
 
 	static void info(const std::string &pStr) { print(LoggerMsgType::INFO, pStr); }
 
-	template<typename... Args>
+	template <typename... Args>
 	static void info(const std::string_view pFmt, Args &&... pArgs) {
-		try {
-			print(LoggerMsgType::INFO, std::vformat(pFmt, std::make_format_args(pArgs...)));
-		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
+		try { print(LoggerMsgType::INFO, std::vformat(pFmt, std::make_format_args(pArgs...))); }
+		catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
 	static void warn(const std::string &pStr) { print(LoggerMsgType::WARN, pStr); }
 
-	template<typename... Args>
+	template <typename... Args>
 	static void warn(const std::string_view pFmt, Args &&... pArgs) {
-		try {
-			print(LoggerMsgType::WARN, std::vformat(pFmt, std::make_format_args(pArgs...)));
-		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
+		try { print(LoggerMsgType::WARN, std::vformat(pFmt, std::make_format_args(pArgs...))); }
+		catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
 	static void error(const ReportMessagePtr &pMessage) { print(LoggerMsgType::ERROR, pMessage->getReport()); }
 
 	static void error(const std::string &pStr) { print(LoggerMsgType::ERROR, pStr); }
 
-	template<typename... Args>
+	template <typename... Args>
 	static void error(const std::string_view pFmt, Args &&... pArgs) {
-		try {
-			print(LoggerMsgType::ERROR, std::vformat(pFmt, std::make_format_args(pArgs...)));
-		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
+		try { print(LoggerMsgType::ERROR, std::vformat(pFmt, std::make_format_args(pArgs...))); }
+		catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
 	static void out(const std::string &pStr) { print(LoggerMsgType::OUT, pStr); }
 
-	template<typename... Args>
+	template <typename... Args>
 	static void out(const std::string_view pFmt, Args &&... pArgs) {
-		try {
-			print(LoggerMsgType::OUT, std::vformat(pFmt, std::make_format_args(pArgs...)));
-		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
+		try { print(LoggerMsgType::OUT, std::vformat(pFmt, std::make_format_args(pArgs...))); }
+		catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
-	template<typename... Args>
+	template <typename... Args>
 	static void print(const LoggerMsgType pType, const std::string_view pFmt, Args &&... pArgs) {
-		try {
-			print(pType, std::vformat(pFmt, std::make_format_args(pArgs...)));
-		} catch (...) { processException({pFmt.begin(), pFmt.end()}); }
+		try { print(pType, std::vformat(pFmt, std::make_format_args(pArgs...))); }
+		catch (...) { processException({pFmt.begin(), pFmt.end()}); }
 	}
 
 	static void print(LoggerMsgType pType, const std::string &pMessage);

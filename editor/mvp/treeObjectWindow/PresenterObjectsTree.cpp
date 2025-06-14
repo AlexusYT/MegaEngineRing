@@ -38,7 +38,6 @@ void PresenterObjectsTree::run() { view->openView(); }
 void PresenterObjectsTree::stop() { view->closeView(); }
 
 void PresenterObjectsTree::addView(const std::shared_ptr<IView> & /*pNewView*/) {
-
 	/*const auto view = std::dynamic_pointer_cast<IViewObjectsTree>(pNewView);
 	if (!view) return;
 	views.push_back(view);

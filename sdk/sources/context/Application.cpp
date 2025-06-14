@@ -27,7 +27,7 @@
 
 #include "EngineSDK/context/DefaultApplicationSettings.h"
 #ifndef EDITOR_SDK
-	#include "EngineSDK/context/MainWindow.h"
+#include "EngineSDK/context/MainWindow.h"
 #endif
 #include <thread>
 
@@ -43,7 +43,6 @@ namespace mer::sdk {
 std::shared_ptr<Application> Application::create() { return std::shared_ptr<Application>(new Application()); }
 
 ReportMessagePtr Application::initEngine() {
-
 	initSigHandlers();
 	loadSettings();
 	createLog();
@@ -67,9 +66,12 @@ void Application::sigHandler(int pSig) {
 	msg->setMessage("Aborting...");
 	std::string sigName;
 	switch (pSig) {
-		case SIGILL: sigName = "SIGILL"; break;
-		case SIGSEGV: sigName = "SIGSEGV"; break;
-		default: sigName = "Unknown"; break;
+		case SIGILL: sigName = "SIGILL";
+			break;
+		case SIGSEGV: sigName = "SIGSEGV";
+			break;
+		default: sigName = "Unknown";
+			break;
 	}
 	msg->addInfoLine("Signal: {}", sigName);
 	msg->addInfoLine("Code: {}", pSig);
@@ -119,12 +121,8 @@ void Application::createLog() const {
 		if (const auto msg = Logger::openLog(logPath)) {
 			Logger::error("Log file cannot be open, so logging to file feature won't be available");
 			Logger::error(msg);
-		} else {
-			Logger::info("Log opened at {}", logPath.string());
-		}
-	} else {
-		Logger::info("LogsDirectory property is empty. Logging to file will be disabled.");
-	}
+		} else { Logger::info("Log opened at {}", logPath.string()); }
+	} else { Logger::info("LogsDirectory property is empty. Logging to file will be disabled."); }
 }
 
 ReportMessagePtr Application::setupGlfw() {
@@ -174,9 +172,8 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 	window->openScene(getPrimaryScene());
 
 	Logger::info("Starting main loop...");
-	try {
-		window->runMainLoop();
-	} catch (...) {
+	try { window->runMainLoop(); }
+	catch (...) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Exception occurred in main loop");
 		msg->setMessage("Exception occurred in main loop");

@@ -20,7 +20,6 @@
 //
 
 
-
 #include "EngineSDK/utils/Transformation.h"
 
 #include <glm/ext/matrix_transform.hpp>
@@ -28,7 +27,6 @@
 #include <glm/gtx/polar_coordinates.hpp>
 
 namespace mer::sdk {
-
 std::shared_ptr<Transformation> Transformation::clone() const {
 	auto other = create();
 	other->modelMatrix = this->modelMatrix;
@@ -45,7 +43,6 @@ std::shared_ptr<Transformation> Transformation::clone() const {
 }
 
 void Transformation::calculateModelMatrix() {
-
 	if (!positionValChanged && !rotationValChanged && !scaleValChanged) return;
 	if (positionValChanged) {
 		translationMatrix = glm::translate(glm::mat4(1.0f), positionVal);
@@ -63,5 +60,4 @@ void Transformation::calculateModelMatrix() {
 	modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 	onChanged(modelMatrix);
 }
-
 } // namespace mer::sdk

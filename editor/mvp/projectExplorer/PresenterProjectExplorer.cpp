@@ -28,12 +28,9 @@
 
 namespace mer::editor::mvp {
 PresenterProjectExplorer::PresenterProjectExplorer(const std::shared_ptr<IModelProjectExplorer> &pModel)
-	: model(pModel) {
-	for (auto view: views) { view->setPresenter(this); }
-}
+	: model(pModel) { for (auto view: views) { view->setPresenter(this); } }
 
 void PresenterProjectExplorer::createScene(const std::filesystem::path & /*pPathToFile*/) {
-
 	/*std::filesystem::path pathToCreate = !is_directory(pPathToFile) ? pPathToFile.parent_path() : pPathToFile;
 	int id = 0;
 	std::string sceneName;
@@ -103,9 +100,7 @@ void PresenterProjectExplorer::deleteFile(const std::filesystem::path &pPathToDe
 				auto ext = pPathToDelete.extension().string();
 				if (ext == ".enscene") { loadedScene->unload(); }
 				if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") { editingResources->deleteResource(uri); }*/
-			} else if (pId == 1) {
-				sdk::Logger::info("Deletion canceled");
-			}
+			} else if (pId == 1) { sdk::Logger::info("Deletion canceled"); }
 		});
 }
 
@@ -120,9 +115,7 @@ void PresenterProjectExplorer::addView(const std::shared_ptr<IView> &pNewView) {
 
 void PresenterProjectExplorer::removeView(const std::shared_ptr<IView> &pOldView) { erase(views, pOldView); }
 
-void PresenterProjectExplorer::run() {
-	for (const auto &viewProjectExplorer: views) viewProjectExplorer->openView();
-}
+void PresenterProjectExplorer::run() { for (const auto &viewProjectExplorer: views) viewProjectExplorer->openView(); }
 
 void PresenterProjectExplorer::stop() {
 	for (auto viewProjectExplorer: views) { viewProjectExplorer->closeView(); }

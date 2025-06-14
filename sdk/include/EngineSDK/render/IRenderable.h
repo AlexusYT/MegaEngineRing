@@ -23,14 +23,12 @@
 #define IRENDERABLE_H
 
 namespace mer::sdk {
-
 class IRenderable {
 public:
 	virtual ~IRenderable() = default;
 
 	virtual void render() = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IRENDERABLE_H

@@ -24,7 +24,6 @@
 #include "EngineSDK/gltf/Mesh.h"
 
 namespace mer::sdk {
-
 class BlockPlaneMesh : public Mesh {
 public:
 	BlockPlaneMesh();
@@ -32,7 +31,6 @@ public:
 protected:
 public:
 };
-
 } // namespace mer::sdk
 
 #endif //BLOCKPLANEMESH_H

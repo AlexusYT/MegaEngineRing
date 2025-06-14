@@ -23,7 +23,6 @@
 
 namespace mer {
 namespace sdk {
-namespace utils {
-} // utils
-} // sdk
-} // mer
+namespace utils {} // utils
+}                  // sdk
+}                  // mer

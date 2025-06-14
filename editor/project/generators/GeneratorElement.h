@@ -27,11 +27,9 @@ class CppDefinition;
 class CppDeclaration;
 
 class GeneratorElement {
-
 public:
 	virtual ~GeneratorElement() = default;
 };
-
 } // namespace mer::editor::project
 
 #endif //GENERATORELEMENT_H

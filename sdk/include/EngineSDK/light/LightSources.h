@@ -25,7 +25,6 @@
 #include "LightInstanceData.h"
 
 namespace mer::sdk {
-
 class LightSources : public ILightSources {
 	std::vector<std::shared_ptr<ILightInstance>> lights{};
 	std::vector<LightInstanceData> lightsData{};
@@ -47,7 +46,6 @@ public:
 
 	void removeLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) override;
 };
-
 } // namespace mer::sdk
 
 #endif //LIGHTSOURCES_H

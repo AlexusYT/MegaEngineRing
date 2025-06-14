@@ -50,5 +50,4 @@ void Primitive::setMaterial(const std::shared_ptr<Material> &pMaterial) {
 	material = pMaterial;
 	onMaterialChangedSignal(material);
 }
-
 } // namespace mer::sdk

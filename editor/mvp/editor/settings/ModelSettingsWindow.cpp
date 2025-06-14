@@ -22,6 +22,5 @@
 #include "ModelSettingsWindow.h"
 
 namespace mer {
-namespace editor {
-} // editor
-} // mer
+namespace editor {} // editor
+}                   // mer

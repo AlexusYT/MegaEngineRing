@@ -25,7 +25,6 @@
 
 namespace mer::editor::project {
 class CppHeaderFile : public CppFile {
-
 public:
 	std::string getExtension() override { return "h"; }
 
@@ -33,7 +32,6 @@ public:
 };
 
 class CppSourceFile : public CppFile {
-
 public:
 	std::string getExtension() override { return "cpp"; }
 

@@ -27,7 +27,6 @@
 #include "EngineSDK/scripting/IScript.h"
 
 namespace mer::sdk {
-
 SceneObject::SceneObject() {
 	auto mainExt = MainObjectExtension::create();
 	SceneObject::addExtension("Main", mainExt);
@@ -44,7 +43,7 @@ SceneObject::~SceneObject() = default;
 std::shared_ptr<ISceneObject> SceneObject::create() { return std::shared_ptr<ISceneObject>(new SceneObject()); }
 
 ReportMessagePtr SceneObject::addExtension(const std::string &pName,
-												  const std::shared_ptr<Extension> &pExtension) {
+										   const std::shared_ptr<Extension> &pExtension) {
 	if (!pExtension) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Unable to add an extension");
@@ -71,7 +70,8 @@ ReportMessagePtr SceneObject::addExtension(const std::string &pName,
 					msg->addInfoLine("Extension typename: {}", Utils::getTypeName(pExtension.get()));
 					return msg;
 				}
-			} catch (...) {
+			}
+			catch (...) {
 				pExtension->setObject(nullptr);
 				auto msg = ReportMessage::create();
 				msg->setTitle("Unable to add an extension");
@@ -106,7 +106,8 @@ ReportMessagePtr SceneObject::removeExtension(const std::string &pName, std::sha
 				msg->addInfoLine("Extension typename: {}", Utils::getTypeName(ext.get()));
 				return msg;
 			}
-		} catch (...) {
+		}
+		catch (...) {
 			ext->setObject(nullptr);
 			auto msg = ReportMessage::create();
 			msg->setTitle("Unable to remove an extension. It will be destroyed");
@@ -144,9 +145,7 @@ void SceneObject::setScript(const std::shared_ptr<IScript> &pScript) {
 ReportMessagePtr SceneObject::init() {
 	if (inited) return nullptr;
 
-	for (const auto &extension: extensions) {
-		if (auto msg = extension.second->onInit()) return msg;
-	}
+	for (const auto &extension: extensions) { if (auto msg = extension.second->onInit()) return msg; }
 
 	/*if (!scriptName.empty()) {
 
@@ -165,13 +164,9 @@ ReportMessagePtr SceneObject::init() {
 	return nullptr;
 }
 
-void SceneObject::deinit() {
-	for (const auto &extension: extensions) { extension.second->onDeinit(); }
-}
+void SceneObject::deinit() { for (const auto &extension: extensions) { extension.second->onDeinit(); } }
 
-void SceneObject::render() const {
-	for (const auto &extension: extensions) { extension.second->onRender(); }
-}
+void SceneObject::render() const { for (const auto &extension: extensions) { extension.second->onRender(); } }
 
 void SceneObject::onWindowSizeChanged(const int pWidth, const int pHeight) const {
 	for (const auto &extension: extensions) {

@@ -35,7 +35,8 @@
 #include "EngineUtils/utils/Logger.h"
 
 namespace mer::sdk {
-Node::Node(const Microsoft::glTF::Node &pNode) : nodeAabb(nullptr, "AABB"), contentAabb(nullptr, "Geometry AABB") {
+Node::Node(const Microsoft::glTF::Node &pNode)
+	: nodeAabb(nullptr, "AABB"), contentAabb(nullptr, "Geometry AABB") {
 	name = pNode.name;
 	nodeAabb = VolumeAabb::create();
 	contentAabb = VolumeAabb::create();
@@ -43,7 +44,6 @@ Node::Node(const Microsoft::glTF::Node &pNode) : nodeAabb(nullptr, "AABB"), cont
 	debugGeometry->setIndices({0, 1, 1, 2, 2, 0});
 	connection = contentAabb.connectEvent([this](const std::shared_ptr<VolumeAabb> & /*pAabb*/) { updateNodeAabb(); });
 	switch (pNode.GetTransformationType()) {
-
 		case Microsoft::glTF::TRANSFORMATION_IDENTITY: break;
 		case Microsoft::glTF::TRANSFORMATION_MATRIX:
 			getLocalTransform()->setFromMatrix(glm::make_mat4(pNode.matrix.values.data()));
@@ -58,8 +58,8 @@ Node::Node(const Microsoft::glTF::Node &pNode) : nodeAabb(nullptr, "AABB"), cont
 	Node::onGlobalTransformChanged(getGlobalTransform());
 }
 
-Node::Node(const std::string &pName) : nodeAabb(nullptr, "AABB"), contentAabb(nullptr, "Geometry AABB") {
-
+Node::Node(const std::string &pName)
+	: nodeAabb(nullptr, "AABB"), contentAabb(nullptr, "Geometry AABB") {
 	name = pName;
 	nodeAabb = VolumeAabb::create();
 	contentAabb = VolumeAabb::create();
@@ -90,7 +90,6 @@ void Node::removeChild(Node* pChild) {
 
 void Node::listGeometryIntersectsAabb(const glm::vec3 &pRayOrigin, const glm::vec3 &pRayDir,
 									  std::vector<std::pair<glm::vec3, Node*>> &pCandidates) {
-
 	glm::vec3 coord;
 	if (!nodeAabb->isIntersects(pRayOrigin, pRayDir, coord)) return;
 	if (getContentAabb()->isIntersects(pRayOrigin, pRayDir, coord)) {
@@ -115,9 +114,8 @@ ReportMessagePtr Node::addExtension(const std::shared_ptr<Extension> &pExtension
 		msg->addInfoLine("Note that single ext instance can be added to single Node instance");
 		return msg;
 	}
-	try {
-		pExtension->setNode(this);
-	} catch (...) {
+	try { pExtension->setNode(this); }
+	catch (...) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Unable to add an extension");
 		msg->setMessage("Exception occurred in Extension::onNodeChanging()");
@@ -131,9 +129,8 @@ ReportMessagePtr Node::addExtension(const std::shared_ptr<Extension> &pExtension
 ReportMessagePtr Node::removeExtension(const std::type_index &pType) {
 	const auto iter = extensions.find(pType);
 	if (iter == extensions.end()) { return nullptr; }
-	try {
-		iter->second->setNode(nullptr);
-	} catch (...) {
+	try { iter->second->setNode(nullptr); }
+	catch (...) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Unable to remove an extension");
 		msg->setMessage("Exception occurred in Extension::onNodeChanging()");
@@ -175,7 +172,6 @@ void Node::onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTran
 }
 
 void Node::updateNodeAabb() {
-
 	glm::vec3 min;
 	glm::vec3 max;
 	if (contentAabb.getValue()) { contentAabb->getBounds(min, max); }

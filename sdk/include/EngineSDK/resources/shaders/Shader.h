@@ -29,6 +29,7 @@
 
 namespace mer::sdk {
 enum class ShaderTypeEnum;
+
 class Shader : public Initializable, public IReportable {
 	uint32_t name;
 	ShaderTypeEnum type;

@@ -78,8 +78,6 @@ protected:
 
 	std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> isPng(ReportMessagePtr &pErrorOut, spng_ihdr &pIhdrOut) const;
 };
-
-
 } // namespace mer::sdk
 
 #endif //IMAGE_H

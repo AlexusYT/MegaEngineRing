@@ -29,18 +29,13 @@ class Extension;
 }
 
 namespace mer::sdk {
-template<class T>
+template <class T>
 struct PropertyJsonSerializer {
+	template <std::enable_if_t<std::is_arithmetic<T>::value, bool>  = true>
+	static nlohmann::json serialize(const T &pValue, Extension* /*pExtension*/) { return pValue; }
 
-	template<std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
-	static nlohmann::json serialize(const T &pValue, Extension* /*pExtension*/) {
-		return pValue;
-	}
-
-	template<std::enable_if_t<std::is_arithmetic<T>::value, bool> = true>
-	static T deserialize(const nlohmann::json &pJson, Extension* /*pExtension*/) {
-		return pJson.get<T>();
-	}
+	template <std::enable_if_t<std::is_arithmetic<T>::value, bool>  = true>
+	static T deserialize(const nlohmann::json &pJson, Extension* /*pExtension*/) { return pJson.get<T>(); }
 };
 } // namespace mer::sdk
 

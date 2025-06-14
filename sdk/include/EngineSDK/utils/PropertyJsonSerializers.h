@@ -35,60 +35,67 @@ class IModel3DObject;
 } // namespace mer::sdk
 
 namespace mer::sdk {
-
-
 //
-template<>
+template <>
 struct PropertyJsonSerializer<glm::vec4> {
 	static nlohmann::json serialize(const glm::vec4 &pValue, Extension* pExtension);
+
 	static glm::vec4 deserialize(const nlohmann::json &pJson, Extension* pExtension);
 };
 
-template<>
+template <>
 struct PropertyJsonSerializer<glm::vec3> {
 	static nlohmann::json serialize(const glm::vec3 &pValue, Extension* pExtension);
+
 	static glm::vec3 deserialize(const nlohmann::json &pJson, Extension* pExtension);
 };
 
-template<>
+template <>
 struct PropertyJsonSerializer<glm::vec2> {
 	static nlohmann::json serialize(const glm::vec2 &pValue, Extension* pExtension);
+
 	static glm::vec2 deserialize(const nlohmann::json &pJson, Extension* pExtension);
 };
 
-template<>
+template <>
 struct PropertyJsonSerializer<glm::mat4> {
 	static nlohmann::json serialize(const glm::mat4 &pValue, Extension* pExtension);
+
 	static glm::mat4 deserialize(const nlohmann::json &pJson, Extension* pExtension);
 };
 
-template<>
+template <>
 struct PropertyJsonSerializer<std::string> {
 	static nlohmann::json serialize(const std::string &pValue, Extension* pExtension);
+
 	static std::string deserialize(const nlohmann::json &pJson, Extension* pExtension);
 };
 
-template<>
+template <>
 struct PropertyJsonSerializer<std::shared_ptr<IModel3DObject>> {
 	static nlohmann::json serialize(const std::shared_ptr<IModel3DObject> &pValue, Extension* pExtension);
+
 	static std::shared_ptr<IModel3DObject> deserialize(const nlohmann::json &pJson, const Extension* pExtension);
 };
 
-template<>
+template <>
 struct PropertyJsonSerializer<std::shared_ptr<ShaderProgram>> {
 	static nlohmann::json serialize(const std::shared_ptr<ShaderProgram> &pValue, Extension* pExtension);
+
 	static std::shared_ptr<ShaderProgram> deserialize(const nlohmann::json &pJson, Extension* pExtension);
 };
 
-template<>
+template <>
 struct PropertyJsonSerializer<std::shared_ptr<ITextureResource>> {
 	static nlohmann::json serialize(const std::shared_ptr<ITextureResource> &pValue, Extension* pExtension);
+
 	static std::shared_ptr<ITextureResource> deserialize(const nlohmann::json &pJson, const Extension* pExtension);
 };
 
-template<>
+template <>
 struct PropertyJsonSerializer<std::shared_ptr<IMaterialResource>> {
 	static nlohmann::json serialize(const std::shared_ptr<IMaterialResource> &pValue, Extension* pExtension);
+
 	static std::shared_ptr<IMaterialResource> deserialize(const nlohmann::json &pJson, const Extension* pExtension);
 };
 } // namespace mer::sdk

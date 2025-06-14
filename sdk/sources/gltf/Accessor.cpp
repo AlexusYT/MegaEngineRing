@@ -48,7 +48,6 @@ Accessor::Accessor(const Microsoft::glTF::Accessor &pGltf, const Microsoft::glTF
 	type = pGltf.type;
 	count = pGltf.count;
 	switch (componentType) {
-
 		case Microsoft::glTF::COMPONENT_UNKNOWN: break;
 		case Microsoft::glTF::COMPONENT_BYTE:
 			int8Data = pResourceReader->ReadBinaryData<int8_t>(pDocument, pGltf);
@@ -88,13 +87,12 @@ const void* Accessor::getData() const {
 		case Microsoft::glTF::COMPONENT_UNSIGNED_SHORT: return uint16Data.data();
 		case Microsoft::glTF::COMPONENT_UNSIGNED_INT: return uint32Data.data();
 		case Microsoft::glTF::COMPONENT_FLOAT: return floatData.data();
-		default:;
+		default: ;
 	}
 	return nullptr;
 }
 
 void Accessor::recalcMinMaxSize() {
-
 	if (componentType != Microsoft::glTF::COMPONENT_FLOAT) return;
 	if (getTypeCount() != 3) return;
 
@@ -115,5 +113,4 @@ void Accessor::recalcMinMaxSize() {
 	minSize = minSizeVec;
 	maxSize = maxSizeVec;
 }
-
 } // namespace mer::sdk

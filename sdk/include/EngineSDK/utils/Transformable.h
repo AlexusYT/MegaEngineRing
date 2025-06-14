@@ -28,7 +28,6 @@ class Transformation;
 }
 
 namespace mer::sdk {
-
 class Transformable {
 	Transformable* parent{};
 	std::shared_ptr<Transformation> globalTransform;
@@ -58,7 +57,6 @@ protected:
 
 	virtual void onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation);
 };
-
 } // namespace mer::sdk
 
 #endif //TRANSFORMABLE_H

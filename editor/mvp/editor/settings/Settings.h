@@ -27,7 +27,6 @@
 #include "categories/OtherCategory.h"
 
 namespace mer::editor::mvp {
-
 class Settings {
 	inline static std::filesystem::path path;
 	inline static std::unordered_map<std::type_index, std::shared_ptr<SettingsCategory>> categories;
@@ -53,11 +52,10 @@ public:
 
 	static const std::vector<std::shared_ptr<SettingsCategory>> &getCategories() { return categoriesArray; }
 
-
 private:
 	static void addCategory(const std::shared_ptr<SettingsCategory> &pCategory);
 
-	template<typename T>
+	template <typename T>
 	static std::shared_ptr<T> getCategory() {
 		std::shared_ptr<T> result{};
 		if (const auto it = categories.find(typeid(T)); it != categories.end()) {
@@ -67,7 +65,6 @@ private:
 		return result;
 	}
 };
-
 } // namespace mer::editor::mvp
 
 #endif //SETTINGS_H

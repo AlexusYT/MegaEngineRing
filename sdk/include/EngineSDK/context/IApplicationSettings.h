@@ -25,10 +25,10 @@
 #include <EngineUtils/utils/Property.h>
 
 namespace mer::sdk {
-
 class IApplicationSettings {
 public:
 	IApplicationSettings() = default;
+
 	virtual ~IApplicationSettings() = default;
 
 	virtual sdk::ReportMessagePtr init() = 0;
@@ -49,7 +49,6 @@ public:
 
 	virtual void setRunDirectory(const std::string &pRunDirectory) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IAPPLICATIONSETTINGS_H

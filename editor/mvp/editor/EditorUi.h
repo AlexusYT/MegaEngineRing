@@ -91,7 +91,6 @@ protected:
 
 	void onMouseButton(int pButton, int pAction, int pMods) override;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //EDITORUI_H

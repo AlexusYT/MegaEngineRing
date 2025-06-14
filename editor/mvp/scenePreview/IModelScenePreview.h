@@ -36,7 +36,6 @@ class Material;
 } // namespace mer::sdk
 
 namespace mer::editor::mvp {
-
 class IPresenterScenePreview;
 
 class IModelScenePreview {
@@ -59,7 +58,6 @@ public:
 
 	virtual void clearSelectedMeshes() = 0;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //IMODELSCENEPREVIEW_H

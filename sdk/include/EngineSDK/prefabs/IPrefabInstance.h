@@ -38,7 +38,6 @@ public:
 
 	virtual void setInstanceId(uint32_t pInstanceId) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IPREFABINSTANCE_H

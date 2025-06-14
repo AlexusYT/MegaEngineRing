@@ -39,14 +39,11 @@ class PropertyNotifiable : public IPropertyNotifiable {
 public:
 	bool isNotifiable() const { return notifiablePropertyBase != nullptr; }
 
-	void notifyChanged() const {
-		if (notifiablePropertyBase) { notifiablePropertyBase->notifyChanged(); }
-	}
+	void notifyChanged() const { if (notifiablePropertyBase) { notifiablePropertyBase->notifyChanged(); } }
 
 private:
 	void setBase(PropertyBase* pBase) final { notifiablePropertyBase = pBase; }
 };
-
 } // namespace mer::sdk
 
 #endif //PROPERTYNOTIFYABLE_H

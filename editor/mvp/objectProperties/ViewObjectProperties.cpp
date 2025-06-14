@@ -39,7 +39,7 @@
 
 namespace mer::editor::mvp {
 std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> &pExt)>>
-	ViewObjectProperties::extRenderers;
+ViewObjectProperties::extRenderers;
 
 ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext> &pContext)
 	: EditorTool("ViewObjectPropertiesTool"), context(pContext) {
@@ -54,7 +54,6 @@ ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext>
 }
 
 void ViewObjectProperties::onUpdate(bool /*pVisible*/) {
-
 	if (!scene) {
 		ImGui::Text("Programmer error. No Scene specified for %s", __FILE_NAME__);
 		return;
@@ -65,8 +64,6 @@ void ViewObjectProperties::onUpdate(bool /*pVisible*/) {
 	if (selectedNode) {
 		// ReSharper disable once CppDFAUnreachableCode
 		if (ImGui::BeginTabItem(tr("NodeProperties"), nullptr, ImGuiTabItemFlags_None)) {
-
-
 			auto nodeName = selectedNode->getName();
 			if (ImGui::InputText(tr("NodeName"), nodeName)) selectedNode->setName(nodeName);
 			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
@@ -99,7 +96,8 @@ void ViewObjectProperties::onUpdate(bool /*pVisible*/) {
 					if (ImGui::MenuItem(I18n::trExtensionsMap.at(extension.second.typeName).c_str())) {
 						selectedNode->addExtension(extension.second.createFunc());
 					}
-				} catch (...) {}
+				}
+				catch (...) {}
 			}
 			ImGui::EndPopup();
 		}
@@ -123,8 +121,6 @@ void ViewObjectProperties::onUpdate(bool /*pVisible*/) {
 
 bool ViewObjectProperties::confirmationMenuItem(const char* pLabel, const char* pShortcut, float pTimeout,
 												bool pSelected, bool pEnabled) {
-
-
 	ImGui::PushItemFlag(ImGuiItemFlags_AutoClosePopups, false);
 	ImGui::MenuItem(pLabel, pShortcut, pSelected, pEnabled);
 	ImGui::PopItemFlag();
@@ -186,7 +182,6 @@ void ViewObjectProperties::drawTransformation() {
 	ImGui::SetNextItemWidth(-1);
 	if (ImGui::BeginCombo("##NodeOrientationType", types[curType].c_str())) {
 		for (size_t i = 0; i < types.size(); i++) {
-
 			if (ImGui::Selectable(types[i].c_str(), curType == i)) curType = i;
 		}
 		ImGui::EndCombo();
@@ -305,7 +300,6 @@ ImGuiID ViewObjectProperties::drawLightTab(const std::shared_ptr<sdk::LightExten
 		ImGui::OpenPopupOnItemClick("ContextMenu");
 		if (isSelected) ImGui::SetItemDefaultFocus();
 		for (int32_t i = 0; i < static_cast<int32_t>(lights.size()); i++) {
-
 			isSelected = selectedLightId == i;
 			if (ImGui::Selectable(lights.at(static_cast<size_t>(i))->getName().c_str(), isSelected)) {
 				selectedLightId = i;
@@ -317,9 +311,7 @@ ImGuiID ViewObjectProperties::drawLightTab(const std::shared_ptr<sdk::LightExten
 		}
 
 		if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(ImGuiPopupFlags_MouseButtonRight) &&
-			!ImGui::IsPopupOpen("ContextMenu") && hoveredLightId == -1) {
-			ImGui::OpenPopup("ContextMenu");
-		}
+			!ImGui::IsPopupOpen("ContextMenu") && hoveredLightId == -1) { ImGui::OpenPopup("ContextMenu"); }
 
 		if (ImGui::BeginPopup("ContextMenu")) {
 			static int32_t lightId = -1;
@@ -358,7 +350,6 @@ ImGuiID ViewObjectProperties::drawLightTab(const std::shared_ptr<sdk::LightExten
 }
 
 void ViewObjectProperties::drawLightSourceSettings(const std::shared_ptr<sdk::Light> &pLight) {
-
 	float speed;
 	const char* roundFormat;
 	getSpeeds(speed, roundFormat);
@@ -381,9 +372,7 @@ void ViewObjectProperties::drawLightSourceSettings(const std::shared_ptr<sdk::Li
 	ImGui::SetNextItemWidth(-1);
 	if (std::string display = std::format("{}: {}", tr("LightType"), lightTypes[static_cast<size_t>(lightTypeId)]);
 		ImGui::SliderInt("##LightType", &lightTypeId, 0, static_cast<int>(sdk::LightType::LIGHT_TYPE_MAX) - 1,
-						 display.c_str())) {
-		pLight->setType(static_cast<sdk::LightType>(lightTypeId));
-	}
+						 display.c_str())) { pLight->setType(static_cast<sdk::LightType>(lightTypeId)); }
 
 	if (lightType == sdk::LightType::POINT || lightType == sdk::LightType::SPOT) {
 		float lightRange = pLight->getRange();

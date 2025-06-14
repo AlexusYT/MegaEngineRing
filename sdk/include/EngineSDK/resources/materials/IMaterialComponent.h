@@ -27,14 +27,12 @@
 #include "EngineUtils/utils/PropertyReadOnly.h"
 
 namespace mer::sdk {
-
 class IMaterialComponent {
 public:
 	virtual ~IMaterialComponent() = default;
 
 	virtual PropertyReadOnly<glm::vec4> getComponentValueProperty() = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IMATERIALCOMPONENT_H

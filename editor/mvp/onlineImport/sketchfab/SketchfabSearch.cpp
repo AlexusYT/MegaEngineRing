@@ -33,8 +33,6 @@
 #define API_V3 API_ADDRESS "/v3"
 
 namespace mer::editor::mvp {
-
-
 std::string flat(const std::vector<std::string> &pElems, const std::string &pDelimiter) {
 	if (pDelimiter.empty()) return "";
 	return std::accumulate(std::next(pElems.begin()), pElems.end(), pElems[0],
@@ -54,12 +52,13 @@ std::shared_ptr<Image> get_closest_image(const std::vector<std::shared_ptr<Image
 	}
 
 	std::ranges::sort(scores, [](const std::pair<int, std::shared_ptr<Image>> &pA,
-								 const std::pair<int, std::shared_ptr<Image>> &pB) { return pA.first < pB.first; });
+								 const std::pair<int, std::shared_ptr<Image>> &pB) {
+		return pA.first < pB.first;
+	});
 	return scores.front().second;
 }
 
 std::string SearchRequest::getRequestData(int pCursor, int pCount) const {
-
 	using namespace std::string_literals;
 	std::vector<std::string> fields;
 	fields.emplace_back(std::format("type=models&cursor={}&count={}", pCursor, pCount));
@@ -85,46 +84,34 @@ std::string SearchRequest::getRequestData(int pCursor, int pCount) const {
 }
 
 void Image::serialize(const nlohmann::json &pJson) {
-	try {
-		pJson.at("uid").get_to(uid);
-	} catch (...) { uid.clear(); }
-	try {
-		pJson.at("url").get_to(url);
-	} catch (...) { url.clear(); }
+	try { pJson.at("uid").get_to(uid); }
+	catch (...) { uid.clear(); }
+	try { pJson.at("url").get_to(url); }
+	catch (...) { url.clear(); }
 
-	try {
-		width = pJson.at("width").get<int>();
-	} catch (...) { width.reset(); }
-	try {
-		height = pJson.at("height").get<int>();
-	} catch (...) { height.reset(); }
-	try {
-		size = pJson.at("size").get<int>();
-	} catch (...) { size.reset(); }
+	try { width = pJson.at("width").get<int>(); }
+	catch (...) { width.reset(); }
+	try { height = pJson.at("height").get<int>(); }
+	catch (...) { height.reset(); }
+	try { size = pJson.at("size").get<int>(); }
+	catch (...) { size.reset(); }
 }
 
 void UserRelated::serialize(const nlohmann::json &pJson) {
-	try {
-		pJson.at("username").get_to(username);
-	} catch (...) { username.clear(); }
-	try {
-		pJson.at("profileUrl").get_to(profileUrl);
-	} catch (...) { profileUrl.clear(); }
-	try {
-		pJson.at("account").get_to(accountType);
-	} catch (...) { accountType.clear(); }
-	try {
-		pJson.at("displayName").get_to(displayName);
-	} catch (...) { displayName.clear(); }
-	try {
-		pJson.at("uid").get_to(uid);
-	} catch (...) { uid.clear(); }
-	try {
-		pJson.at("uri").get_to(uri);
-	} catch (...) { uri.clear(); }
-	try {
-		pJson.at("avatar").at("images").get_to(avatarImages);
-	} catch (...) { avatarImages.clear(); }
+	try { pJson.at("username").get_to(username); }
+	catch (...) { username.clear(); }
+	try { pJson.at("profileUrl").get_to(profileUrl); }
+	catch (...) { profileUrl.clear(); }
+	try { pJson.at("account").get_to(accountType); }
+	catch (...) { accountType.clear(); }
+	try { pJson.at("displayName").get_to(displayName); }
+	catch (...) { displayName.clear(); }
+	try { pJson.at("uid").get_to(uid); }
+	catch (...) { uid.clear(); }
+	try { pJson.at("uri").get_to(uri); }
+	catch (...) { uri.clear(); }
+	try { pJson.at("avatar").at("images").get_to(avatarImages); }
+	catch (...) { avatarImages.clear(); }
 	if (!avatarImages.empty()) { smallAvatar = get_closest_image(avatarImages, 32, 32); }
 }
 
@@ -143,12 +130,10 @@ bool DownloadableModel::isExpired() const {
 }
 
 void DownloadableModel::serialize(const nlohmann::json &pJson) {
-	try {
-		pJson.at("url").get_to(url);
-	} catch (...) { url.clear(); }
-	try {
-		size = pJson.at("animationCount").get<size_t>();
-	} catch (...) { size.reset(); }
+	try { pJson.at("url").get_to(url); }
+	catch (...) { url.clear(); }
+	try { size = pJson.at("animationCount").get<size_t>(); }
+	catch (...) { size.reset(); }
 	try {
 		int expiresIn;
 		pJson.at("expires").get_to<>(expiresIn);
@@ -157,7 +142,8 @@ void DownloadableModel::serialize(const nlohmann::json &pJson) {
 			expiresAt = now + std::chrono::seconds(expiresIn);
 		} else
 			expiresAt.reset();
-	} catch (...) { expiresAt.reset(); }
+	}
+	catch (...) { expiresAt.reset(); }
 }
 
 std::shared_ptr<sdk::ReportMessage> DownloadableModel::download(std::atomic<float> &pProgress) {
@@ -170,20 +156,16 @@ std::shared_ptr<sdk::ReportMessage> DownloadableModel::download(std::atomic<floa
 }
 
 void DownloadLinks::serialize(const nlohmann::json &pJson) {
-	try {
-		pJson.at("glb").get_to(glb);
-	} catch (...) { glb.reset(); }
+	try { pJson.at("glb").get_to(glb); }
+	catch (...) { glb.reset(); }
 
-	try {
-		pJson.at("gltf").get_to(gltf);
-	} catch (...) { gltf.reset(); }
-	try {
-		pJson.at("usdz").get_to(usdz);
-	} catch (...) { usdz.reset(); }
+	try { pJson.at("gltf").get_to(gltf); }
+	catch (...) { gltf.reset(); }
+	try { pJson.at("usdz").get_to(usdz); }
+	catch (...) { usdz.reset(); }
 
-	try {
-		pJson.at("source").get_to(source);
-	} catch (...) { source.reset(); }
+	try { pJson.at("source").get_to(source); }
+	catch (...) { source.reset(); }
 }
 
 sdk::ReportMessagePtr Image::loadImage() {
@@ -221,81 +203,58 @@ void ModelSearchList::deserialize(nlohmann::json &pJson) const {
 }
 
 void ModelSearchList::serialize(const nlohmann::json &pJson) {
-	try {
-		pJson.at("uid").get_to(uid);
-	} catch (...) { uid.clear(); }
+	try { pJson.at("uid").get_to(uid); }
+	catch (...) { uid.clear(); }
 
-	try {
-		animationCount = pJson.at("animationCount").get<int>();
-	} catch (...) { animationCount.reset(); }
-	try {
-		pJson.at("viewerUrl").get_to(viewerUrl);
-	} catch (...) { viewerUrl.clear(); }
-	try {
-		pJson.at("publishedAt").get_to(publishedAt);
-	} catch (...) { publishedAt.clear(); }
-	try {
-		likeCount = pJson.at("likeCount").get<int>();
-	} catch (...) { likeCount.reset(); }
-	try {
-		commentCount = pJson.at("commentCount").get<int>();
-	} catch (...) { commentCount.reset(); }
-	try {
-		pJson.at("user").get_to(user);
-	} catch (...) { user.reset(); }
-	try {
-		isDownloadable = pJson.at("isDownloadable").get<bool>();
-	} catch (...) { isDownloadable.reset(); }
-	try {
-		pJson.at("name").get_to(name);
-	} catch (...) { name.clear(); }
-	try {
-		viewCount = pJson.at("viewCount").get<int>();
-	} catch (...) { viewCount.reset(); }
-	try {
-		pJson.at("thumbnails").at("images").get_to(thumbnails);
-	} catch (...) { thumbnails.clear(); }
+	try { animationCount = pJson.at("animationCount").get<int>(); }
+	catch (...) { animationCount.reset(); }
+	try { pJson.at("viewerUrl").get_to(viewerUrl); }
+	catch (...) { viewerUrl.clear(); }
+	try { pJson.at("publishedAt").get_to(publishedAt); }
+	catch (...) { publishedAt.clear(); }
+	try { likeCount = pJson.at("likeCount").get<int>(); }
+	catch (...) { likeCount.reset(); }
+	try { commentCount = pJson.at("commentCount").get<int>(); }
+	catch (...) { commentCount.reset(); }
+	try { pJson.at("user").get_to(user); }
+	catch (...) { user.reset(); }
+	try { isDownloadable = pJson.at("isDownloadable").get<bool>(); }
+	catch (...) { isDownloadable.reset(); }
+	try { pJson.at("name").get_to(name); }
+	catch (...) { name.clear(); }
+	try { viewCount = pJson.at("viewCount").get<int>(); }
+	catch (...) { viewCount.reset(); }
+	try { pJson.at("thumbnails").at("images").get_to(thumbnails); }
+	catch (...) { thumbnails.clear(); }
 	if (!thumbnails.empty()) { smallThumbnail = get_closest_image(thumbnails, 330, 200); }
 
-	try {
-		pJson.at("license").get_to(license);
-	} catch (...) { license.clear(); }
-	try {
-		isPublished = pJson.at("isPublished").get<bool>();
-	} catch (...) { isPublished.reset(); }
-	try {
-		pJson.at("staffpickedAt").get_to(staffpickedAt);
-	} catch (...) { staffpickedAt.clear(); }
+	try { pJson.at("license").get_to(license); }
+	catch (...) { license.clear(); }
+	try { isPublished = pJson.at("isPublished").get<bool>(); }
+	catch (...) { isPublished.reset(); }
+	try { pJson.at("staffpickedAt").get_to(staffpickedAt); }
+	catch (...) { staffpickedAt.clear(); }
 	/*try {
 		archives = pJson.at("archives").get<inline_model_7>();
 	} catch (...) { archives.reset(); }*/
-	try {
-		pJson.at("embedUrl").get_to(embedUrl);
-	} catch (...) { embedUrl.clear(); }
-	try {
-		pJson.at("tags").get_to(tags);
-	} catch (...) { tags.clear(); }
-	try {
-		pJson.at("categories").get_to(categories);
-	} catch (...) { categories.clear(); }
-	try {
-		pJson.at("createdAt").get_to(createdAt);
-	} catch (...) { createdAt.clear(); }
-	try {
-		pJson.at("description").get_to(description);
-	} catch (...) { description.clear(); }
-	try {
-		faceCount = pJson.at("faceCount").get<int>();
-	} catch (...) { faceCount.reset(); }
-	try {
-		isAgeRestricted = pJson.at("isAgeRestricted").get<bool>();
-	} catch (...) { isAgeRestricted.reset(); }
-	try {
-		pJson.at("uri").get_to(uri);
-	} catch (...) { uri.clear(); }
-	try {
-		vertexCount = pJson.at("vertexCount").get<int>();
-	} catch (...) { vertexCount.reset(); }
+	try { pJson.at("embedUrl").get_to(embedUrl); }
+	catch (...) { embedUrl.clear(); }
+	try { pJson.at("tags").get_to(tags); }
+	catch (...) { tags.clear(); }
+	try { pJson.at("categories").get_to(categories); }
+	catch (...) { categories.clear(); }
+	try { pJson.at("createdAt").get_to(createdAt); }
+	catch (...) { createdAt.clear(); }
+	try { pJson.at("description").get_to(description); }
+	catch (...) { description.clear(); }
+	try { faceCount = pJson.at("faceCount").get<int>(); }
+	catch (...) { faceCount.reset(); }
+	try { isAgeRestricted = pJson.at("isAgeRestricted").get<bool>(); }
+	catch (...) { isAgeRestricted.reset(); }
+	try { pJson.at("uri").get_to(uri); }
+	catch (...) { uri.clear(); }
+	try { vertexCount = pJson.at("vertexCount").get<int>(); }
+	catch (...) { vertexCount.reset(); }
 }
 
 void ModelSearchList::setAccount(SketchfabAccount* pAccount) {
@@ -312,7 +271,6 @@ void ModelSearchList::setAccount(SketchfabAccount* pAccount) {
 }
 
 std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<float> &pProgress) {
-
 	std::string address = API_V3 "/models/" + uid + "/download";
 	nlohmann::json j;
 	if (auto msg = account->getRequest(address, "", pProgress, j)) {
@@ -337,7 +295,7 @@ std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<f
 		msg->setMessage("Server returned an error.");
 		//TODO renew an expired token
 		msg->addInfoLine("THIS IS A BUG. Token expired, but I'm unable to renew it automatically. You can delete "
-						 "sketchfab-account.json file to force re-login and update the token.");
+			"sketchfab-account.json file to force re-login and update the token.");
 		msg->addInfoLine("File sketchfab-account.json located at {}", Globals::getConfigPath().string());
 		addReportInfo(msg);
 		msg->addInfoLine("Address: {}", address);
@@ -348,7 +306,8 @@ std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<f
 	try {
 		j.get_to(links);
 		links->setAccount(account);
-	} catch (...) {
+	}
+	catch (...) {
 		links.reset();
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to get download links");

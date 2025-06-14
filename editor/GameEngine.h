@@ -24,7 +24,6 @@
 
 namespace mer::editor::ui {
 class GameEngine {
-
 public:
 	static int run(int pArgc, char* pArgv[]);
 };

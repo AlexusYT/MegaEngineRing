@@ -28,7 +28,6 @@
 #include "EngineSDK/prefabs/PrefabInstance.h"
 
 namespace mer::sdk {
-
 PrefabSsbo::PrefabSsbo() {
 	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), STREAM_DRAW);
 }
@@ -50,9 +49,7 @@ void PrefabSsbo::untrackInstance(PrefabInstance* pInstance) {
 void PrefabSsbo::render() {
 	if (!dirty) return;
 
-	if (getSize() < dataSize) {
-		reallocate(dataSize, ssboData);
-	} else
+	if (getSize() < dataSize) { reallocate(dataSize, ssboData); } else
 		bufferSubData(0, dataSize, ssboData);
 	dirty = false;
 }

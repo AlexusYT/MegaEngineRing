@@ -93,14 +93,11 @@ public:
 
 	bool operator<(const IModel3DObject &pRhs) const override;
 
-
 private:
 	void onInstanceDataChanged(IRenderInstance* pInstance) override;
 
 	void onMaterialDataChanged(RenderInstance* pInstance) override;
 };
-
-
 } // namespace mer::sdk
 
 #endif //MODEL3DOBJECT_H

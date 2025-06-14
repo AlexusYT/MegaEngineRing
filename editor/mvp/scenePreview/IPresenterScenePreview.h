@@ -54,7 +54,6 @@ public:
 
 	virtual bool onCursorPosChanged(double pX, double pY) = 0;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //IPRESENTERSCENEPREVIEW_H

@@ -82,14 +82,11 @@ public:
 
 	bool onCursorPosChanged(double pX, double pY) override;
 
-
 protected:
 	void run() override;
 
 	void stop() override;
 };
-
-
 } // namespace mer::editor::mvp
 
 #endif //PRESENTERSCENEPREVIEW_H

@@ -30,7 +30,6 @@
 #include "EngineUtils/utils/PropertyBase.h"
 
 namespace mer::sdk {
-
 Extension::Extension() {}
 
 void Extension::serialize(nlohmann::json &pJson) {
@@ -55,8 +54,8 @@ void Extension::onWindowSizeChanged(int /*pWidth*/, int /*pHeight*/) {}
 
 void Extension::onCursorPosChanged(const double /*pX*/, const double /*pY*/) {}
 
-void Extension::onKeyStateChanged(const KeyboardKey /*pKey*/, const bool /*pPressed*/, const ModifierKeys & /*pMods*/) {
-}
+void Extension::onKeyStateChanged(const KeyboardKey /*pKey*/, const bool /*pPressed*/,
+								  const ModifierKeys & /*pMods*/) {}
 
 void Extension::onMouseButtonStateChanged(MouseButton /*pButton*/, bool /*pPressed*/, double /*pX*/,
 										  double /*pY*/) const {}
@@ -76,5 +75,4 @@ void Extension::removeProperty(PropertyBase* pProperty) { erase(properties, pPro
 void Extension::propertyChanged(PropertyBase* pProperty) {
 	if (object) object->notifyExtensionPropertyChanged(this, pProperty);
 }
-
 } // namespace mer::sdk

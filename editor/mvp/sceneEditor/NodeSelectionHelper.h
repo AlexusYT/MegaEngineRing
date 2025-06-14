@@ -28,7 +28,6 @@ class Node;
 }
 
 namespace mer::editor::mvp {
-
 class NodeSelectionHelper {
 	std::vector<sdk::Node*> selectedNodes{};
 	sigc::signal<void(const std::vector<sdk::Node*> &pNodes, bool pSelected)> onNodeSelectionChanged;

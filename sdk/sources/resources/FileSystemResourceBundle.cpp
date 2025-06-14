@@ -31,7 +31,7 @@ std::shared_ptr<IResourceBundle> FileSystemResourceBundle::create(const std::fil
 }
 
 ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::string &pResourceUri,
-																	std::shared_ptr<std::istream> &pStream) {
+															 std::shared_ptr<std::istream> &pStream) {
 	auto uri = std::filesystem::path(pResourceUri);
 	std::filesystem::path resourcePath = !uri.has_root_directory() ? searchPath / pResourceUri : uri;
 
@@ -65,7 +65,8 @@ ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::string &
 		stream = std::make_shared<std::ifstream>(resource);
 		stream->exceptions(std::_S_badbit | std::_S_failbit);
 		pStream = stream;
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to get resource stream");
 		msg->setMessage("Exception occurred");
@@ -78,7 +79,6 @@ ReportMessagePtr FileSystemResourceBundle::getResourceStream(const std::string &
 }
 
 void FileSystemResourceBundle::listResources(std::vector<std::string> &pUris) const {
-
 	for (const auto &entry: std::filesystem::recursive_directory_iterator(searchPath)) {
 		auto path = entry.path();
 		auto extension = path.extension();

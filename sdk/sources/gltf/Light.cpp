@@ -24,7 +24,8 @@
 #include <nlohmann/json.hpp>
 
 namespace mer::sdk {
-Light::Light(const std::string &pName) : name(pName) {
+Light::Light(const std::string &pName)
+	: name(pName) {
 	data.colorAndType = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
 	data.intensity = 1.0f;
 	data.innerConeAngle = 0.0f;
@@ -41,9 +42,8 @@ void Light::deserialize(const nlohmann::json &pJson) {
 	if (auto iter = pJson.find("color"); iter != pJson.end()) {
 		auto &colorArr = iter.value();
 		for (int i = 0; auto &iterationProxyValue: colorArr) {
-			try {
-				iterationProxyValue.get_to(color[i]);
-			} catch (...) { color[i] = 1.0f; }
+			try { iterationProxyValue.get_to(color[i]); }
+			catch (...) { color[i] = 1.0f; }
 			i++;
 		}
 	}

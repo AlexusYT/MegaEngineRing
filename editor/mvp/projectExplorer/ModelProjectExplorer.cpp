@@ -40,14 +40,11 @@ std::shared_ptr<ProjectExplorerElement> ModelProjectExplorer::getDirectoryEntry(
 	for (const auto &entry: std::filesystem::directory_iterator(pPath)) {
 		auto entryPath = entry.path();
 		if (entryPath.filename().string().starts_with('.')) continue;
-		if (entry.is_directory()) {
-			explorerEntry->addChild(getDirectoryEntry(entry.path(), pRootPath));
-		} else {
+		if (entry.is_directory()) { explorerEntry->addChild(getDirectoryEntry(entry.path(), pRootPath)); } else {
 			explorerEntry->addChild(ProjectExplorerElement::create(entryPath, pRootPath, false));
 		}
 	}
 	explorerEntry->sort();
 	return explorerEntry;
 }
-
 } // namespace mer::editor::mvp

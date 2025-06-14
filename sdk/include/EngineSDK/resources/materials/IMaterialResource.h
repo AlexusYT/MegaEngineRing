@@ -27,7 +27,7 @@
 #include "MaterialData.h"
 
 namespace mer::sdk {
-template<typename T>
+template <typename T>
 class PropertyReadOnly;
 }
 
@@ -66,7 +66,6 @@ public:
 
 	virtual sigc::connection connectOnDataChangedSignal(const sigc::slot<void(const MaterialData &pData)> &pSlot) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IMATERIALRESOURCE_H

@@ -46,7 +46,7 @@ class ViewSettingsWindow : public IViewSettingsWindow, public sdk::UiPopup {
 	std::shared_ptr<SettingsCategory> selectedCategory{};
 	std::unordered_map<std::type_index, std::pair<std::shared_ptr<SettingsCategory> /*cloned*/,
 												  std::shared_ptr<SettingsCategory> /*original*/>>
-		clonedCategories{};
+	clonedCategories{};
 	bool settingsChanged{};
 
 protected:
@@ -75,8 +75,6 @@ private:
 
 	void applyChanges();
 };
-
-
 } // namespace mer::editor::mvp
 
 #endif //VIEWSETTINGSWINDOW_H

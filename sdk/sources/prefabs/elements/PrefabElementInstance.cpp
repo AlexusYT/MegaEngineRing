@@ -28,8 +28,8 @@
 #include "EngineSDK/utils/Transformation.h"
 
 namespace mer::sdk {
-PrefabElementInstance::PrefabElementInstance() : data(nullptr, ""), visible(nullptr, ""), material(nullptr, "") {
-
+PrefabElementInstance::PrefabElementInstance()
+	: data(nullptr, ""), visible(nullptr, ""), material(nullptr, "") {
 	visible = true;
 	visible.connectEvent([this](const bool &pVisible) {
 		data->visible = pVisible;
@@ -39,9 +39,7 @@ PrefabElementInstance::PrefabElementInstance() : data(nullptr, ""), visible(null
 		if (pPropertyMaterial) {
 			materialConnection = pPropertyMaterial->connectOnDataChangedSignal(
 				sigc::mem_fun(*this, &PrefabElementInstance::onMaterialChanged));
-		} else {
-			onMaterialChanged(MaterialResource::defaultMaterial->getData());
-		}
+		} else { onMaterialChanged(MaterialResource::defaultMaterial->getData()); }
 	});
 }
 
@@ -54,9 +52,7 @@ void PrefabElementInstance::onParentMaterialChanged(const std::shared_ptr<IMater
 	if (pMaterial) {
 		materialConnection =
 			pMaterial->connectOnDataChangedSignal(sigc::mem_fun(*this, &PrefabElementInstance::onMaterialChanged));
-	} else {
-		onMaterialChanged(MaterialResource::defaultMaterial->getData());
-	}
+	} else { onMaterialChanged(MaterialResource::defaultMaterial->getData()); }
 }
 
 void PrefabElementInstance::onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation) {
@@ -69,5 +65,4 @@ void PrefabElementInstance::onMaterialChanged(const MaterialData &pData) {
 	data->material = pData;
 	data.notifyChanged();
 }
-
 } // namespace mer::sdk

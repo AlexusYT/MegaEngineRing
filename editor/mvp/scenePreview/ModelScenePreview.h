@@ -42,9 +42,7 @@ class Scene3D;
 }
 
 namespace mer::editor::mvp {
-
 class ModelScenePreview : public IModelScenePreview {
-
 	IPresenterScenePreview* presenter{};
 	std::shared_ptr<sdk::Scene3D> scene{};
 	std::shared_ptr<sdk::RenderPass> outlinePass;
@@ -74,7 +72,6 @@ public:
 
 	void clearSelectedMeshes() override;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //MODELSCENEPREVIEW_H

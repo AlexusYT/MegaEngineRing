@@ -30,11 +30,13 @@
 #include "EngineSDK/scene/objects/SceneObject.h"
 
 namespace mer::sdk {
-
-
 OrbitCameraExtension::OrbitCameraExtension()
-	: propertyMatrix(this, "Matrix"), propertyAngle(this, "Angle"), propertyTargetPosition(this, "TargetPosition"),
-	  propertyDistance(this, "Distance"), propertyPosition(this, "Test"), propertyUp(this, "Up") {
+	: propertyMatrix(this, "Matrix"),
+	  propertyAngle(this, "Angle"),
+	  propertyTargetPosition(this, "TargetPosition"),
+	  propertyDistance(this, "Distance"),
+	  propertyPosition(this, "Test"),
+	  propertyUp(this, "Up") {
 	propertyMatrix.setValue(glm::mat4(1));
 	propertyDistance = 3.0f;
 	auto updateMatrixSlot = hide(sigc::mem_fun(*this, &OrbitCameraExtension::updateMatrix));
@@ -58,7 +60,6 @@ void OrbitCameraExtension::onWindowSizeChanged(const int pWidth, const int pHeig
 void OrbitCameraExtension::projectionMatrixChanged(const glm::mat4 & /*pNewMatrix*/) { updateMatrix(); }
 
 void OrbitCameraExtension::updateMatrix() {
-
 	glm::vec3 globalUp{0, 1, 0};
 	auto &angle = propertyAngle.getValue();
 	glm::mat4 rotationMatrix = glm::yawPitchRoll(glm::radians(angle.y), glm::radians(angle.x), 0.0f);
@@ -73,5 +74,4 @@ void OrbitCameraExtension::updateMatrix() {
 	propertyMatrix = getProjMatrix() * lookAt(position, propertyTargetPosition.getValue(), up);
 	propertyUp = up;
 }
-
 } // namespace mer::sdk

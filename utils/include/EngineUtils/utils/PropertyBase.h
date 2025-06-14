@@ -51,7 +51,6 @@ public:
 	 */
 	virtual void notifyChanged();
 };
-
 } // namespace mer::sdk
 
 

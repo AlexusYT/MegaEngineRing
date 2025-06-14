@@ -50,16 +50,13 @@ namespace mer::editor::mvp {
 PresenterOnlineImport::PresenterOnlineImport(const std::shared_ptr<IModelOnlineImport> &pModel,
 											 const std::shared_ptr<IViewOnlineImport> &pView)
 	: model(pModel), view(pView) {
-
 	view->setPresenter(this);
 	model->setPresenter(this);
 	sdk::ReportMessagePtr message;
 	auto path = Globals::getConfigPath() / "sketchfab-account.json";
 	if (exists(path)) {
 		sdk::Logger::info("Loading Sketchfab account");
-		if (auto account = SketchfabAccount::createFromFile(path, message)) {
-			model->setAccount(account);
-		} else {
+		if (auto account = SketchfabAccount::createFromFile(path, message)) { model->setAccount(account); } else {
 			sdk::Logger::error(message);
 			sdk::Logger::info("Re-login to Sketchfab account required");
 			view->loginError("invalid_save", "Re-login required");
@@ -77,12 +74,12 @@ std::shared_ptr<PresenterOnlineImport> PresenterOnlineImport::create(const std::
 }
 
 void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const std::string &pPassword) {
-
 	std::jthread thread([this, pPassword, pUsername]() {
 		auto str =
 			std::format("grant_type=password&client_id={}&username={}&password={}", CLIENT_ID, pUsername, pPassword);
 		try {
-			std::unique_ptr<CURL, void (*)(CURL*)> request(curl_easy_init(), curl_easy_cleanup);
+			std::unique_ptr<CURL, void (*)(CURL*)>
+				request(curl_easy_init(), curl_easy_cleanup);
 			view->setLoginInProgress();
 			curl_easy_setopt(request.get(), CURLOPT_URL, SKETCHFAB_OAUTH);
 
@@ -111,9 +108,7 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 				account->deserialize(j);
 				if (auto msg = account->saveToFile(Globals::getConfigPath() / "sketchfab-account.json")) {
 					sdk::Logger::error(msg);
-				} else {
-					sdk::Logger::info("Sketchfab account saved");
-				}
+				} else { sdk::Logger::info("Sketchfab account saved"); }
 				model->setAccount(account);
 				view->hideLoginDialog();
 
@@ -197,7 +192,6 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 						link->resetStream();
 						break;
 					}
-
 				} else {
 					if (auto msg = model->loadModelFromCache(stream)) {
 						sdk::Logger::error(msg);
@@ -208,7 +202,6 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 			}
 			if (pToken.stop_requested()) return;
 			if (!stream) {
-
 				view->setProgressMode(IViewOnlineImport::ProgressMode::NONE);
 				return;
 			}
@@ -305,5 +298,4 @@ std::shared_ptr<DownloadLinks> PresenterOnlineImport::getGltfLinks() const {
 	if (!selectedModel) return nullptr;
 	return selectedModel->getLinks();
 }
-
 } // namespace mer::editor::mvp

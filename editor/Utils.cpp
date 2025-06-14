@@ -27,10 +27,7 @@ namespace mer::editor {
 std::unique_ptr<curl_slist, void (*)(curl_slist*)> Utils::getCurlList(const std::list<std::string> &pList) {
 	curl_slist* slistTmp{};
 	for (auto &str: pList) {
-
-		if (curl_slist* tmp = curl_slist_append(slistTmp, str.c_str())) {
-			slistTmp = tmp;
-		} else
+		if (curl_slist* tmp = curl_slist_append(slistTmp, str.c_str())) { slistTmp = tmp; } else
 			break;
 	}
 	return std::unique_ptr<curl_slist, void (*)(curl_slist*)>(slistTmp, curl_slist_free_all);

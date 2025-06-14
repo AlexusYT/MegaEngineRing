@@ -32,10 +32,7 @@ std::shared_ptr<SceneOverlayElements> SceneOverlayElements::create() {
 	return std::shared_ptr<SceneOverlayElements>(new SceneOverlayElements());
 }
 
-void SceneOverlayElements::render() {
-
-	if (gridVisible) renderGrid();
-}
+void SceneOverlayElements::render() { if (gridVisible) renderGrid(); }
 
 void SceneOverlayElements::renderGrid() const {
 	shader->use();

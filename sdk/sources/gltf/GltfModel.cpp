@@ -115,7 +115,8 @@ ReportMessagePtr GltfModel::loadFromFile(const std::filesystem::path &pFilePath)
 	std::string manifest;
 	std::shared_ptr<GLTFResourceReader> resourceReader;
 	try {
-		if (pathFileExt == "."s + GLTF_EXTENSION) {
+		if (pathFileExt == "."s + GLTF_EXTENSION
+		) {
 			auto gltfStream = streamReader->GetInputStream(pathFile.string());
 			auto gltfResourceReader = std::make_shared<GLTFResourceReader>(std::move(streamReader));
 
@@ -124,7 +125,8 @@ ReportMessagePtr GltfModel::loadFromFile(const std::filesystem::path &pFilePath)
 			manifest = manifestStream.str();
 
 			resourceReader = std::move(gltfResourceReader);
-		} else if (pathFileExt == "."s + GLB_EXTENSION) {
+		} else if (pathFileExt == "."s + GLB_EXTENSION
+		) {
 			auto glbStream = streamReader->GetInputStream(pathFile.string());
 			auto glbResourceReader = std::make_shared<GLBResourceReader>(std::move(streamReader), std::move(glbStream));
 
@@ -139,8 +141,8 @@ ReportMessagePtr GltfModel::loadFromFile(const std::filesystem::path &pFilePath)
 			msg->addInfoLine("Actual extension: {}", pathFileExt);
 			return msg;
 		}
-	} catch (...) {
-
+	}
+	catch (...) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("GLTF Model loading failed");
 		msg->setMessage("Exception occurred");
@@ -160,7 +162,8 @@ ReportMessagePtr GltfModel::deserializeManifest(const std::string &pJson, Docume
 
 		pDocumentOut = Deserialize(pJson, deserializer);
 		return nullptr;
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("GLTF Manifest deserialization failed");
 		msg->setMessage("Exception occurred");
@@ -170,7 +173,6 @@ ReportMessagePtr GltfModel::deserializeManifest(const std::string &pJson, Docume
 
 ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceReader> &pReader,
 										   const Document &pDocument) {
-
 	if (pDocument.IsExtensionUsed(KhrLightsPunctual::EXTENSION_NAME)) {
 		auto &ext = pDocument.GetExtension<KhrLightsPunctual>();
 		lights = ext.getLights();
@@ -192,7 +194,6 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 		if (auto &textureId = texture.imageId; !textureId.empty()) {
 			image = images.at(pDocument.images.GetIndex(textureId));
 		} else {
-
 			//TODO Add fallback texture.
 		}
 		std::shared_ptr<Sampler> sampler{};
@@ -206,7 +207,6 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 	for (auto &material: pDocument.materials.Elements()) {
 		std::unordered_map<TextureType, std::shared_ptr<Texture>> usedTextures;
 		for (auto &texture: material.GetTextures()) {
-
 			std::shared_ptr<Texture> tex{};
 			if (auto &textureId = texture.first; !textureId.empty()) {
 				tex = textures.at(pDocument.textures.GetIndex(textureId));
@@ -230,7 +230,8 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 				positionAccessor = accessors.at(index);
 			}
 			auto prim = primitives.emplace_back(
-				Primitive::create(static_cast<MeshMode>(primitive.mode), positionAccessor, indexAccessor));
+				Primitive::create(static_cast<MeshMode>(primitive.mode),
+								  positionAccessor, indexAccessor));
 
 			if (auto &materialId = primitive.materialId; !materialId.empty())
 				prim->setMaterial(materials.at(pDocument.materials.GetIndex(materialId)));
@@ -294,6 +295,4 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 	}
 	return nullptr;
 }
-
-
 } // namespace mer::sdk

@@ -34,8 +34,6 @@
 
 namespace mer::editor::mvp {
 std::shared_ptr<sdk::ResourceLoadResult> ResourcesContext::loadResourceSync(const std::string &pResourceUri) {
-
-
 	std::promise<const std::shared_ptr<sdk::ResourceLoadResult>> promise;
 
 	loadResourceAsync(pResourceUri, [&promise](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
@@ -51,7 +49,6 @@ void ResourcesContext::preloadResources() {
 	application->getResourceBundle()->listResources(uris);
 	std::lock_guard lock(queueMutex);
 	for (auto uri: uris) {
-
 		auto iter = queue.find(uri);
 		if (iter == queue.end()) { iter = queue.emplace(uri, std::make_shared<Request>()).first; }
 		auto &request = iter->second;
@@ -72,7 +69,6 @@ void ResourcesContext::preloadResources() {
 void ResourcesContext::loadResourceAsync(
 	const std::string &pResourceUri,
 	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) {
-
 	if (std::shared_ptr<sdk::IResource> foundResource = resources->getResource(pResourceUri)) {
 		auto result = sdk::ResourceLoadResult::create();
 		result->setResource(foundResource);
@@ -176,7 +172,6 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 
 	auto startTime = std::chrono::steady_clock::now();
 	if (pRequest->type == RequestType::PRELOAD) {
-
 		if (auto msg = loader->preload(this, stream, resource)) {
 			msg->setTitle("Unable to preload resource");
 			result->setError(msg);
@@ -220,7 +215,8 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 
 		result->setState(sdk::ResourceLoadResult::State::READY);
 		callSlot(result, pRequest->callbackSignal);
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception thrown while executing request");
@@ -234,9 +230,8 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 void ResourcesContext::callSlot(
 	const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
 	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) {
-	try {
-		pSlot(pResult);
-	} catch (...) {
+	try { pSlot(pResult); }
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to send loading result to the callback");
 		msg->setMessage("Exception thrown in callback");
@@ -265,7 +260,8 @@ std::shared_ptr<sdk::IResourceLoader> ResourcesContext::getLoader(const std::sha
 			return nullptr;
 		}
 		return loader;
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception occurred while getting the resource loader");
@@ -290,7 +286,8 @@ std::shared_ptr<std::istream> ResourcesContext::getResourceStream(const std::sha
 			return nullptr;
 		}
 		return stream;
-	} catch (...) {
+	}
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception occurred while getting the resource stream");

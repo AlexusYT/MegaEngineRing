@@ -35,7 +35,6 @@ class IViewObjectsTree;
 class IModelObjectsTree;
 
 class IPresenterObjectsTree : public IPresenter {
-
 public:
 	virtual void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
 
@@ -70,7 +69,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterObjectsTree"; }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //PRESENTEROBJECTSTREE_H

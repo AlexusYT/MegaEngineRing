@@ -55,8 +55,6 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<sdk::Scene3D> &getScene() const override { return scene; }
 };
-
-
 } // namespace mer::editor::mvp
 
 #endif //MODELOBJECTPROPERTIES_H

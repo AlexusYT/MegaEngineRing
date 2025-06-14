@@ -28,19 +28,18 @@ struct Sampler;
 }
 
 namespace mer::sdk {
-
 enum class MagFilterMode {
 	NEAREST = 9728,
-	LINEAR = 9729,
+	LINEAR  = 9729,
 };
 
 enum class MinFilterMode {
-	NEAREST = 9728,
-	LINEAR = 9729,
+	NEAREST                = 9728,
+	LINEAR                 = 9729,
 	NEAREST_MIPMAP_NEAREST = 9984,
-	LINEAR_MIPMAP_NEAREST = 9985,
-	NEAREST_MIPMAP_LINEAR = 9986,
-	LINEAR_MIPMAP_LINEAR = 9987
+	LINEAR_MIPMAP_NEAREST  = 9985,
+	NEAREST_MIPMAP_LINEAR  = 9986,
+	LINEAR_MIPMAP_LINEAR   = 9987
 };
 
 enum class WrapMode { REPEAT = 10497, CLAMP_TO_EDGE = 33071, MIRRORED_REPEAT = 33648 };
@@ -61,9 +60,9 @@ public:
 
 protected:
 	ReportMessagePtr onInitialize() override;
+
 	void onUninitialize() override;
 };
-
 } // namespace mer::sdk
 
 #endif //SAMPLER_H

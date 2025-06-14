@@ -43,8 +43,8 @@
 #include "mvp/treeObjectWindow/ViewObjectsTree.h"
 
 namespace mer::editor::mvp {
-
-SceneEditor::SceneEditor(const std::string &pName) : Editor(pName) {
+SceneEditor::SceneEditor(const std::string &pName)
+	: Editor(pName) {
 	selection = std::make_shared<NodeSelectionHelper>();
 	auto previewView = ViewScenePreview::create("SceneEditorPreview", EditorContext::create(this));
 	scenePreviewView = previewView;
@@ -84,7 +84,7 @@ void SceneEditor::updateUi() {
 						config.path = Globals::getProjectsPath().string();
 						config.countSelectionMax = 1;
 						ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", tr("SceneAddFromFileTitle"),
-						                                        "glTF files (.glb,.gltf){.glb,.gltf}", config);
+																"glTF files (.glb,.gltf){.glb,.gltf}", config);
 					}
 					ImGui::BeginDisabled(true);
 					if (ImGui::MenuItem(tr("SceneAddFromSketchfab"))) {}
@@ -155,7 +155,6 @@ void SceneEditor::addSphere() {
 }
 
 void SceneEditor::addGltfModel(const std::string &pPath) {
-
 	sdk::ReportMessagePtr msg;
 	auto gltf = sdk::GltfModel::createFromFile(pPath, msg);
 

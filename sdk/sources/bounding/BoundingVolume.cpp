@@ -27,10 +27,10 @@ namespace mer::sdk {
 void BoundingVolume::render() {
 	if (!isInited()) return;
 	if (shouldUpdateIndices) {
-
 		auto indices = getIndices();
 		indicesCount = indices.size();
-		if (indicesBuffer) glDeleteBuffers(1, &indicesBuffer);
+		if (indicesBuffer)
+			glDeleteBuffers(1, &indicesBuffer);
 		glCreateBuffers(1, &indicesBuffer);
 		glNamedBufferData(indicesBuffer, static_cast<GLsizeiptr>(indices.size() * sizeof(uint16_t)), indices.data(),
 						  GL_STATIC_DRAW);
@@ -38,7 +38,8 @@ void BoundingVolume::render() {
 		shouldUpdateIndices = false;
 	}
 	if (shouldUpdateVertices) {
-		if (verticesBuffer) glDeleteBuffers(1, &verticesBuffer);
+		if (verticesBuffer)
+			glDeleteBuffers(1, &verticesBuffer);
 		glCreateBuffers(1, &verticesBuffer);
 		auto vertices = getVertices();
 		glNamedBufferData(verticesBuffer, static_cast<GLsizeiptr>(vertices.size() * sizeof(float)), vertices.data(),

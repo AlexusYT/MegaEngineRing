@@ -36,7 +36,6 @@ public:
 
 	virtual void setPrefabInstance(PrefabInstance* pPrefabInstance) = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IPREFABELEMENTINSTANCE_H

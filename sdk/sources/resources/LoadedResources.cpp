@@ -82,7 +82,6 @@ bool LoadedResources::hasResource(const std::string &pResourceUri) {
 
 void LoadedResources::render() {
 	for (int i = 0, maxI = std::min(static_cast<int>(resourcesToInit.size()), 10); i < maxI; ++i) {
-
 		auto resource = resourcesToInit.front();
 		if (auto initializable = std::dynamic_pointer_cast<IInitializable>(resource)) {
 			if (auto msg = initializable->initialize()) { Logger::error(msg); }
@@ -99,7 +98,6 @@ void LoadedResources::render() {
 
 void LoadedResources::uninit() {
 	for (const auto &[name, resource]: resources) {
-
 		if (auto initializable = std::dynamic_pointer_cast<IInitializable>(resource)) { initializable->uninitialize(); }
 	}
 }

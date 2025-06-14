@@ -37,13 +37,11 @@ protected:
 public:
 	ExtensionProperty<std::shared_ptr<Mesh>> mesh;
 
-
 	~MeshExtension() override;
 
 	METHOD_CREATE(MeshExtension)
 
 	EXT_TYPE_NAME("MeshExtension")
-
 
 	bool isGeometryIntersects(const glm::vec3 &pRayOrigin, const glm::vec3 &pRayDir, glm::vec2 &pIntersectsAt,
 							  float &pIntersectDistance) const;

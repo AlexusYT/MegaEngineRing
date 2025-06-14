@@ -62,7 +62,6 @@ public:
 
 	virtual bool operator<(const IModel3DObject &pElement) const = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //IMODEL3DOBJECT_H

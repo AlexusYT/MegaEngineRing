@@ -67,13 +67,9 @@ void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesCont
 	pResourcesContext->preloadResources();
 }
 
-void LoadedScene::initScene() {
-	if (scene) scene->initScene();
-}
+void LoadedScene::initScene() { if (scene) scene->initScene(); }
 
-void LoadedScene::uninitScene() const {
-	if (scene) scene->deinitScene();
-}
+void LoadedScene::uninitScene() const { if (scene) scene->deinitScene(); }
 
 void LoadedScene::render() const {
 	scene->resize(100, 100);
@@ -81,7 +77,6 @@ void LoadedScene::render() const {
 }
 
 sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path & /*pPath*/) {
-
 	auto resourcesContext = std::make_shared<mvp::ResourcesContext>();
 	setupResourcesContext(resourcesContext);
 	unload();
@@ -100,7 +95,9 @@ sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path & /*pPath*/)
 	auto mouseButton = sdk::MouseButtonExtension::create();
 	mouseButton->connectButtonSignal(sdk::MouseButton::BUTTON_MIDDLE,
 									 [cameraMouse](sdk::MouseButton /*pButton*/, bool pPressed, double /*pX*/,
-												   double /*pY*/) { cameraMouse->setEnabled(pPressed); });
+												   double /*pY*/) {
+										 cameraMouse->setEnabled(pPressed);
+									 });
 
 	cameraMouse->propertyAngle.getEvent().connect(camera->propertyAngle.getSetter());
 	cameraObject = sdk::SceneObject::create();
@@ -135,10 +132,7 @@ void LoadedScene::addObject() {
 }
 
 void LoadedScene::removeObject(sdk::ISceneObject* pObjectToRemove) {
-
-	std::thread([this, pObjectToRemove] {
-		if (scene) scene->removeObject(pObjectToRemove);
-	}).detach();
+	std::thread([this, pObjectToRemove] { if (scene) scene->removeObject(pObjectToRemove); }).detach();
 }
 
 void LoadedScene::removeExtension(const sdk::Extension* pExtensionToRemove) const {
@@ -197,5 +191,4 @@ std::shared_ptr<sdk::ISceneObject> LoadedScene::createObject() const {
 	scene->addObject(object);
 	return object;
 }
-
 } // namespace mer::editor::project

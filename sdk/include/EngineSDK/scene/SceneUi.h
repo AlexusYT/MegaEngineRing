@@ -36,13 +36,11 @@ class Window;
 } // namespace mer::sdk
 
 namespace mer::sdk {
-
 class SceneUi : public Initializable {
 	Window* window{};
 	ImGuiContext* imGuiContext{};
 	std::unordered_map<std::string, UiWindow*> windows;
 	std::unordered_map<std::string, UiPopup*> popups;
-
 
 public:
 	virtual void beforeUiFrame();
@@ -80,7 +78,6 @@ protected:
 
 	void onUninitialize() override;
 };
-
 } // namespace mer::sdk
 
 #endif //SCENEUI_H

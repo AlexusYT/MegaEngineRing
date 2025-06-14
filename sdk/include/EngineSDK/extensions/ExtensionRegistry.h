@@ -34,13 +34,12 @@ struct ExtensionClassInfo {
 	std::function<std::shared_ptr<Extension>()> createFunc;
 };
 
-template<typename ClassT>
+template <typename ClassT>
 concept ExtensionTypeName = requires {
 	{ ClassT::typeName() } -> std::same_as<const char*>;
 };
 
 class ExtensionRegistry {
-
 	inline static std::unordered_map<std::string, ExtensionClassInfo> extensions;
 	inline static std::unordered_map<std::type_index, ExtensionClassInfo> extensionByType;
 
@@ -49,7 +48,7 @@ public:
 
 	static void deinit();
 
-	template<typename ClassT>
+	template <typename ClassT>
 	static void registerClass() {
 		static_assert(ExtensionTypeName<ClassT>,
 					  "ClassT::typeName() must be declared as public static and return non null string");
@@ -70,7 +69,7 @@ public:
 
 	static std::shared_ptr<Extension> newInstance(const std::string &pTypeName);
 
-	template<typename ClassT>
+	template <typename ClassT>
 	static std::shared_ptr<ClassT> newInstance() {
 		if (auto ptr = newInstance(ClassT::getTypeName())) return std::dynamic_pointer_cast<ClassT>(ptr);
 		return nullptr;

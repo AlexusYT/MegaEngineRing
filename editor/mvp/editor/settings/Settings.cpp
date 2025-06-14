@@ -37,7 +37,6 @@ void Settings::deinit() {
 void Settings::setSettingsPath(const std::filesystem::path &pPath) { path = pPath; }
 
 sdk::ReportMessagePtr Settings::load() {
-
 	std::ifstream file(path);
 	if (!file.is_open()) {
 		auto msg = sdk::ReportMessage::create();
@@ -47,9 +46,8 @@ sdk::ReportMessagePtr Settings::load() {
 		return msg;
 	}
 	nlohmann::json root;
-	try {
-		file >> root;
-	} catch (...) {
+	try { file >> root; }
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to load settings.");
 		msg->setMessage("Exception occurred while parsing json.");
@@ -57,9 +55,8 @@ sdk::ReportMessagePtr Settings::load() {
 		return msg;
 	}
 	for (const auto &category: categoriesArray) {
-		try {
-			category->load(root);
-		} catch (...) {
+		try { category->load(root); }
+		catch (...) {
 			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to load settings.");
 			msg->setMessage("Exception occurred while parsing settings values.");
@@ -71,12 +68,9 @@ sdk::ReportMessagePtr Settings::load() {
 	return nullptr;
 }
 
-void Settings::loadDefaults() {
-	for (const auto &category: categoriesArray) category->loadDefaults();
-}
+void Settings::loadDefaults() { for (const auto &category: categoriesArray) category->loadDefaults(); }
 
 sdk::ReportMessagePtr Settings::save() {
-
 	std::ofstream file;
 	auto tmpPath = path;
 	if (backupSettingsFile) {
@@ -102,9 +96,8 @@ sdk::ReportMessagePtr Settings::save() {
 	}
 	nlohmann::json root;
 	for (const auto &category: categoriesArray) {
-		try {
-			category->save(root);
-		} catch (...) {
+		try { category->save(root); }
+		catch (...) {
 			auto msg = sdk::ReportMessage::create();
 			msg->setTitle("Failed to save settings.");
 			msg->setMessage("Exception occurred while parsing settings values to json");
@@ -113,9 +106,8 @@ sdk::ReportMessagePtr Settings::save() {
 			return msg;
 		}
 	}
-	try {
-		file << root;
-	} catch (...) {
+	try { file << root; }
+	catch (...) {
 		auto msg = sdk::ReportMessage::create();
 		msg->setTitle("Failed to save settings.");
 		msg->setMessage("Exception occurred while saving json to file.");

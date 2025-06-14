@@ -25,9 +25,7 @@
 #include "SettingsCategory.h"
 
 namespace mer::editor::mvp {
-
 class GeneralCategory : public SettingsCategory {
-
 public:
 	std::string language;
 	sigc::signal<void(const decltype(language) &pNew, const decltype(language) &pOld)> onLanguageChanged;
@@ -61,7 +59,6 @@ public:
 		this->fontSize = cat->fontSize;
 	}
 };
-
 } // namespace mer::editor::mvp
 
 #endif //GENERALCATEGORY_H

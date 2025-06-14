@@ -29,7 +29,6 @@ class ShaderProgram;
 }
 
 namespace mer::editor::mvp {
-
 class SceneOverlayElements : public sdk::Initializable, public sdk::IRenderable {
 	uint32_t dataBuffer{};
 	uint32_t indexBuffer{};
@@ -57,7 +56,6 @@ protected:
 
 	void onUninitialize() override;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //SCENEOVERLAYELEMENTS_H

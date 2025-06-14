@@ -21,5 +21,4 @@
 
 #include "CppCustomStatement.h"
 
-namespace mer::editor::project {
-} // mer::editor::project
+namespace mer::editor::project {} // mer::editor::project

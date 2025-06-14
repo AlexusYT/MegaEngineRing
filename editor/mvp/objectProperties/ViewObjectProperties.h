@@ -51,7 +51,7 @@ public:
 
 class ViewObjectProperties : public IViewObjectProperties, public EditorTool {
 	static std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> &pExt)>>
-		extRenderers;
+	extRenderers;
 	std::shared_ptr<IWidgetContext> context;
 	IPresenterObjectProperties* presenter{};
 	sdk::Node* selectedNode{};
@@ -113,7 +113,6 @@ private:
 
 	static bool isDegrees() { return getAngleUnit() == AngleUnit::DEGREES; }
 };
-
 } // namespace mer::editor::mvp
 
 

@@ -24,7 +24,6 @@
 #include "EngineSDK/render/Initializable.h"
 
 namespace mer::sdk {
-
 class Framebuffer : public Initializable {
 	uint32_t fboMs{};
 	uint32_t textureMs{};
@@ -60,7 +59,6 @@ protected:
 
 	void onUninitialize() override;
 };
-
 } // namespace mer::sdk
 
 #endif //FRAMEBUFFER_H

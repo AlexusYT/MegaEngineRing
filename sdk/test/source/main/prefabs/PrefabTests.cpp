@@ -68,7 +68,6 @@ public:
 };
 
 class HiddenWindow : public mer::sdk::Window {
-
 public:
 	HiddenWindow() = default;
 };
@@ -79,7 +78,6 @@ public:
 	inline static std::shared_ptr<HiddenWindow> window;
 
 	static void SetUpTestSuite() {
-
 		glfwInit();
 		glfwSetErrorCallback([](int /*pErrorCode*/, const char* pDescription) { std::cout << pDescription << "\n"; });
 		window = std::make_shared<HiddenWindow>();
@@ -102,7 +100,6 @@ public:
 };
 
 TEST_F(PrefabsFixture, RemoveElement) {
-
 	auto elementToRemove = MeshPrefabElement::create();
 	elementToRemove->setMesh(model->getModelObject("CustomPistol9mm.002"));
 	auto prefab1 = Prefab::create();
@@ -138,6 +135,7 @@ TEST_F(PrefabsFixture, RemoveElement) {
 class PrefabInstanceMock : public PrefabInstance {
 public:
 	~PrefabInstanceMock() override = default;
+
 	MOCK_METHOD(std::shared_ptr<PrefabElementInstance>, getElement, (const UUID &pUuid), (const, override));
 
 	MOCK_METHOD(void, addElement, (const UUID &pUuid, const std::shared_ptr<PrefabElementInstance> &pInstance),

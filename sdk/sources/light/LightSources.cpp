@@ -25,19 +25,14 @@
 #include "EngineSDK/light/ILightInstance.h"
 
 namespace mer::sdk {
-LightSources::LightSources() : lightSsbo(std::make_shared<SSBO>()) {
-
-	lightSsbo->setUsage(DYNAMIC_DRAW);
-}
+LightSources::LightSources() : lightSsbo(std::make_shared<SSBO>()) { lightSsbo->setUsage(DYNAMIC_DRAW); }
 
 std::shared_ptr<LightSources> LightSources::create() { return std::shared_ptr<LightSources>(new LightSources()); }
 
 void LightSources::updateSsbo() {
 	if (!dirty) return;
 	const int64_t bufSize = static_cast<int64_t>(lightsData.size() * sizeof(LightInstanceData));
-	if (lightSsbo->getSize() < bufSize) {
-		lightSsbo->reallocate(bufSize, lightsData.data());
-	} else
+	if (lightSsbo->getSize() < bufSize) { lightSsbo->reallocate(bufSize, lightsData.data()); } else
 		lightSsbo->bufferSubData(0, bufSize, lightsData.data());
 	dirty = false;
 }

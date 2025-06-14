@@ -47,7 +47,6 @@ class IResourceLoadExecutor;
 class ProgramWideShaderBuffer;
 
 class IScene {
-
 public:
 	virtual ~IScene() = default;
 

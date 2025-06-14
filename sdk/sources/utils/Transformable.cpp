@@ -24,7 +24,8 @@
 #include "EngineSDK/utils/Transformation.h"
 
 namespace mer::sdk {
-Transformable::Transformable() : globalTransform(Transformation::create()), localTransform(Transformation::create()) {
+Transformable::Transformable()
+	: globalTransform(Transformation::create()), localTransform(Transformation::create()) {
 	localTransform->connectOnChanged([this](const glm::mat4 & /*pNewMatrix*/) {
 		onLocalTransformChanged(localTransform);
 		updateTransform();
@@ -34,7 +35,6 @@ Transformable::Transformable() : globalTransform(Transformation::create()), loca
 }
 
 void Transformable::updateTransform() {
-
 	glm::mat4 parentMat = parent ? parent->globalTransform->getModelMatrix() : glm::mat4(1);
 	globalTransform->setFromMatrix(parentMat * localTransform->getModelMatrix());
 }

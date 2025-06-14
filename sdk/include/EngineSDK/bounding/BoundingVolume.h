@@ -36,6 +36,7 @@ class BoundingVolume : public IRenderable, public Initializable, public Property
 
 public:
 	virtual ~BoundingVolume() = default;
+
 	void render() override;
 
 protected:

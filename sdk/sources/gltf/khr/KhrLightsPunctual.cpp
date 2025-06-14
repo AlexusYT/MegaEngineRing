@@ -39,7 +39,8 @@ std::unique_ptr<Microsoft::glTF::Extension> KhrLightsPunctual::deserializeDocume
 	try {
 		auto json = nlohmann::json::parse(pJson);
 		json.at("lights").get_to(ext->lights);
-	} catch (...) { ext->lights.clear(); }
+	}
+	catch (...) { ext->lights.clear(); }
 	return ext;
 }
 
@@ -47,10 +48,10 @@ std::unique_ptr<Microsoft::glTF::Extension> KhrLightsPunctual::deserializeNode(
 	const std::string &pJson, const Microsoft::glTF::ExtensionDeserializer &) {
 	auto ext = std::make_unique<Node>();
 	try {
-		auto json = nlohmann::json ::parse(pJson);
+		auto json = nlohmann::json::parse(pJson);
 		json.at("light").get_to(ext->light);
-	} catch (...) { ext->light = -1; }
+	}
+	catch (...) { ext->light = -1; }
 	return ext;
 }
-
 } // namespace mer::sdk

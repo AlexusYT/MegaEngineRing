@@ -24,7 +24,6 @@
 
 namespace mer::sdk {
 enum class ShaderTypeEnum {
-
 	/// Shader that is intended to run on the programmable compute processor.
 	COMPUTE_SHADER,
 	/// Intended to run on the programmable vertex processor.

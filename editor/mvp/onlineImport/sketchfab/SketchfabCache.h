@@ -42,7 +42,6 @@ public:
 
 	sdk::ReportMessagePtr buildPath(const std::string &pUrl, std::filesystem::path &pPathOut) const;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //SKETCHFABCACHE_H

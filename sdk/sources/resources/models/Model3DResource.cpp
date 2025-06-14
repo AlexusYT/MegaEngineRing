@@ -24,7 +24,6 @@
 #include "EngineSDK/resources/models/IModel3DObject.h"
 
 namespace mer::sdk {
-
 std::shared_ptr<Model3DResource> Model3DResource::create() {
 	return std::shared_ptr<Model3DResource>(new Model3DResource());
 }
@@ -34,13 +33,9 @@ ReportMessagePtr Model3DResource::onInitialize() {
 	return nullptr;
 }
 
-void Model3DResource::render() {
-	for (auto &[name, object]: modelObjects) { object->render(); }
-}
+void Model3DResource::render() { for (auto &[name, object]: modelObjects) { object->render(); } }
 
-void Model3DResource::onUninitialize() {
-	for (auto &[name, object]: modelObjects) { object->uninitialize(); }
-}
+void Model3DResource::onUninitialize() { for (auto &[name, object]: modelObjects) { object->uninitialize(); } }
 
 void Model3DResource::addModelObject(const std::shared_ptr<IModel3DObject> &pObject) {
 	pObject->setIModelResource(this);

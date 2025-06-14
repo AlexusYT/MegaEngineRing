@@ -30,13 +30,13 @@ public:
 	std::shared_ptr<IResource> createResource() override;
 
 	ReportMessagePtr preload(IResourceLoadExecutor* pResourcesContext,
-									const std::shared_ptr<std::istream> &pStream,
-									const std::shared_ptr<IResource> &pResource) override;
+							 const std::shared_ptr<std::istream> &pStream,
+							 const std::shared_ptr<IResource> &pResource) override;
 
 	ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
-								 const std::shared_ptr<IResource> &pResource) override;
+						  const std::shared_ptr<IResource> &pResource) override;
 
-	template<typename T>
+	template <typename T>
 	static void readArray(const std::shared_ptr<std::istream> &pStream, std::vector<T> &pArray) {
 		uint64_t size = 0;
 		pStream->read(reinterpret_cast<std::istream::char_type*>(&size), sizeof(size));
@@ -48,7 +48,6 @@ public:
 private:
 	std::string getFileExtension() override { return "enmodel"; }
 };
-
 } // namespace mer::sdk
 
 

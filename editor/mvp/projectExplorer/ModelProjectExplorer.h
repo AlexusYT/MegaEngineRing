@@ -24,7 +24,6 @@
 #include "IModelProjectExplorer.h"
 
 namespace mer::editor::mvp {
-
 class ModelProjectExplorer : public IModelProjectExplorer {
 	std::filesystem::path path;
 	std::shared_ptr<ProjectExplorerElement> elements;

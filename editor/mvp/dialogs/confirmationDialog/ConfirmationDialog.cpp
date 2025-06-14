@@ -22,7 +22,6 @@
 #include "ConfirmationDialog.h"
 
 namespace mer::editor::mvp {
-
 std::shared_ptr<ConfirmationDialog> ConfirmationDialog::create(const std::string &pName, const std::string &pTitle) {
 	return std::shared_ptr<ConfirmationDialog>(new ConfirmationDialog(pName, pTitle));
 }

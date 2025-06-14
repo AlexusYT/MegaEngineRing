@@ -29,7 +29,6 @@
 #include "IProjectionCameraMod.h"
 
 namespace mer::sdk {
-
 class PerspectiveProjectionCameraMod : public Extension, public IProjectionCameraMod {
 protected:
 	PerspectiveProjectionCameraMod();
@@ -48,15 +47,12 @@ public:
 
 	[[nodiscard]] const glm::mat4 &getProjMatrix() const override { return propertyProjMatrix; }
 
-
 protected:
 	virtual void projectionMatrixChanged(const glm::mat4 &pNewMatrix);
 
 private:
 	void updateProjMatrix();
 };
-
-
 } // namespace mer::sdk
 
 #endif //PROJECTIONCAMERAMOD_H

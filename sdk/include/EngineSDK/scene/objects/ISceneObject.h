@@ -101,7 +101,6 @@ protected:
 };
 
 inline bool ISceneObject::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
-
 } // namespace mer::sdk
 
 #endif //ISCENEOBJECT_H

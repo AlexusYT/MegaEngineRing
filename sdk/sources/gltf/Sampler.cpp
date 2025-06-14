@@ -50,5 +50,7 @@ ReportMessagePtr Sampler::onInitialize() {
 	return Initializable::onInitialize();
 }
 
-void Sampler::onUninitialize() { glDeleteSamplers(1, &samplerId); }
+void Sampler::onUninitialize() {
+	glDeleteSamplers(1, &samplerId);
+}
 } // namespace mer::sdk

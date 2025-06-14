@@ -41,7 +41,6 @@ class SceneOverlayElements;
 class IWidgetContext;
 
 class ViewScenePreview : public IViewScenePreview, public EditorTool {
-
 	IPresenterScenePreview* presenter{};
 	std::shared_ptr<IWidgetContext> context;
 	std::shared_ptr<sdk::Framebuffer> framebuffer;
@@ -62,7 +61,6 @@ class ViewScenePreview : public IViewScenePreview, public EditorTool {
 	std::optional<glm::dvec2> lastCursorPos{};
 	bool rotate{};
 	bool focusWindow{};
-
 
 protected:
 	ViewScenePreview(const std::string &pName, const std::shared_ptr<IWidgetContext> &pContext);
@@ -101,7 +99,6 @@ public:
 
 	void focusOnThis() override;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //VIEWSCENEPREVIEW_H

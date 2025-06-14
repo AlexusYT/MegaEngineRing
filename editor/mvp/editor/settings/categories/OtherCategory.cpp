@@ -30,11 +30,9 @@ void OtherCategory::save(nlohmann::json &pJson) { pJson["debugEnabled"] = debugE
 
 void OtherCategory::load(const nlohmann::json &pJson) {
 	loadDefaults();
-	try {
-		pJson.at("debugEnabled").get_to(debugEnabled);
-	} catch (...) {}
+	try { pJson.at("debugEnabled").get_to(debugEnabled); }
+	catch (...) {}
 }
 
 void OtherCategory::loadDefaults() { debugEnabled = false; }
-
 } // namespace mer::editor::mvp

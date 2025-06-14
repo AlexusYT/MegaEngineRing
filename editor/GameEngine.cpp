@@ -25,7 +25,7 @@
 #include <utility>
 
 #if defined _WIN32
-	#include <windows.h>
+#include <windows.h>
 #endif
 
 #include <curl/curl.h>
@@ -42,9 +42,7 @@
 #include "project/Project.h"
 
 namespace mer::editor::ui {
-
 class EditorWindow : public sdk::Window {
-
 public:
 	explicit EditorWindow() { glfwWindowHint(GLFW_SAMPLES, 4); }
 
@@ -112,5 +110,4 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 	mvp::I18n::deinit();
 	return result;
 }
-
 } // namespace mer::editor::ui

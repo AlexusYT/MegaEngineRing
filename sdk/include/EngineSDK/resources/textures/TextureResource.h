@@ -30,7 +30,6 @@
 #include "ITextureResource.h"
 
 namespace mer::sdk {
-
 class TextureResource : public ITextureResource, public Resource {
 	uint32_t id{};
 	void* data{};
@@ -95,14 +94,11 @@ public:
 
 	[[nodiscard]] PropertyReadOnly<uint64_t> getTextureHandle() override { return textureHandle.getReadOnly(); }
 
-	PropertyReadOnly<glm::vec4> getComponentValueProperty() override {
-		return materialComponentVal.getReadOnly();
-	}
+	PropertyReadOnly<glm::vec4> getComponentValueProperty() override { return materialComponentVal.getReadOnly(); }
 
 private:
 	static glm::vec4 handleToVec(uint64_t pHandle);
 };
-
 } // namespace mer::sdk
 
 #endif //TEXTURERESOURCE_H

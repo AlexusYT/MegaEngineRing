@@ -70,7 +70,6 @@ class RenderPass : public Initializable {
 	std::unordered_map<Node*, std::pair<size_t /*index*/, sigc::scoped_connection>> instances;
 	Ssbo<std::vector<int32_t>> litByInstancesSsbo;
 
-
 public:
 	RenderPass();
 
@@ -82,7 +81,6 @@ public:
 	void removeAllMeshInstances();
 
 	void changeMesh(Node* pNode, Mesh* pMesh);
-
 
 protected:
 	ReportMessagePtr onInitialize() override;
@@ -143,6 +141,7 @@ class Renderer : public Initializable {
 
 public:
 	Renderer();
+
 	void addMaterial(const std::shared_ptr<Material> &pMaterial);
 
 	void removeAllMaterials();
@@ -208,7 +207,6 @@ protected:
 
 	void onPrimitiveMaterialChanged(const std::shared_ptr<Material> &pNewMaterial, Mesh* pMesh, Primitive* pPrimitive);
 };
-
 } // namespace mer::sdk
 
 #endif //RENDERER_H

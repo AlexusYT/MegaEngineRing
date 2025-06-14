@@ -37,5 +37,4 @@ void LightExtension::onNodeChanged(Node* /*pOldNode*/) {
 		nodeSelf->setLightDataId(pNewIndex);
 	});
 }
-
 } // namespace mer::sdk

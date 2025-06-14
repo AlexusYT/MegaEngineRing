@@ -24,9 +24,7 @@
 #include "EngineSDK/ui/UiPopup.h"
 
 namespace mer::editor::mvp {
-
 class ConfirmationDialog : public sdk::UiPopup {
-
 	std::string title;
 	std::string message;
 	std::vector<std::string> buttons;
@@ -58,7 +56,6 @@ public:
 		buttonClickedCallback = pButtonClickedCallback;
 	}
 };
-
 } // namespace mer::editor::mvp
 
 #endif //CONFIRMATIONDIALOG_H

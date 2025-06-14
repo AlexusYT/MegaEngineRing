@@ -30,7 +30,6 @@ class IResource;
 }
 
 namespace mer::sdk {
-
 class ResourceLoadResult {
 public:
 	enum class State { NONE = 0, ERRORED, PRELOADED, READY };
@@ -80,7 +79,6 @@ public:
 
 	bool isReady() const { return state == State::READY; }
 };
-
 } // namespace mer::sdk
 
 #endif //RESOURCELOADCALLBACKS_H

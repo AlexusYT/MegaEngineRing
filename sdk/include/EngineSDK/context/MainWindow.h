@@ -23,8 +23,8 @@
 #define MAINWINDOW_H
 
 #ifndef EDITOR_SDK
-	#include "EngineSDK/scene/IScene.h"
-	#include "Window.h"
+#include "EngineSDK/scene/IScene.h"
+#include "Window.h"
 
 namespace mer::sdk {
 class IApplication;
@@ -42,7 +42,7 @@ protected:
 	MainWindow();
 
 public:
-	static auto create() { return std::shared_ptr<MainWindow>(new (std::nothrow) MainWindow()); }
+	static auto create() { return std::shared_ptr<MainWindow>(new(std::nothrow) MainWindow()); }
 
 	sdk::ReportMessagePtr openScene(const std::shared_ptr<IScene> &pNewScene);
 

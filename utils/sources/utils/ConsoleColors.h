@@ -57,7 +57,7 @@
 			return os;                                                                                                 \
 		}
 #else
-	#define ADD_COLOR(name, color)                                                                                     \
+#define ADD_COLOR(name, color)                                                                                     \
 		static inline std::ostream &LIGHT_##name(std::ostream &os) {                                                   \
 			os.flush();                                                                                                \
 			os << "\033[" << color + 60 << "m";                                                                        \
@@ -112,6 +112,7 @@ class ConsoleColors {
 	static void setColor(WORD wRGBI, WORD Mask);
 
 #endif
+
 public:
 #ifdef WIN32
 
@@ -150,11 +151,17 @@ public:
 
 #else
 	ADD_COLOR(RED, 31)
+
 	ADD_COLOR(GREEN, 32)
+
 	ADD_COLOR(BLUE, 34)
+
 	ADD_COLOR(CYAN, 36)
+
 	ADD_COLOR(MAGENTA, 35)
+
 	ADD_COLOR(YELLOW, 33)
+
 	ADD_COLOR(WHITE, 37)
 
 	static inline std::ostream &BLACK(std::ostream &os) {

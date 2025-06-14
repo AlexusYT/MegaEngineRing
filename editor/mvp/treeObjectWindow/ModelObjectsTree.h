@@ -73,8 +73,6 @@ public:
 
 	void select(sdk::Node* pNode) override;
 };
-
-
 } // namespace mer::editor::mvp
 
 #endif //MODELOBJECTSTREE_H

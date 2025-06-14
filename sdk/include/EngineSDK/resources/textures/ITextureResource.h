@@ -25,12 +25,11 @@
 #include "EngineSDK/resources/materials/IMaterialComponent.h"
 
 namespace mer::sdk {
-template<typename T>
+template <typename T>
 class PropertyReadOnly;
 }
 
 namespace mer::sdk {
-
 enum class Texture2DType;
 enum class Texture2DImageFormat;
 enum class TextureBaseInternalFormat;
@@ -73,7 +72,6 @@ public:
 
 	[[nodiscard]] virtual PropertyReadOnly<uint64_t> getTextureHandle() = 0;
 };
-
 } // namespace mer::sdk
 
 #endif //ITEXTURERESOURCE_H

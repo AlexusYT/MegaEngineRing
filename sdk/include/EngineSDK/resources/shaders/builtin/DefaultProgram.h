@@ -24,15 +24,14 @@
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
 
 namespace mer::sdk {
-
 class DefaultProgram : public ShaderProgram {
 	static std::shared_ptr<DefaultProgram> instance;
+
 	DefaultProgram();
 
 public:
 	static std::shared_ptr<DefaultProgram> getInstance();
 };
-
 } // namespace mer::sdk
 
 #endif //DEFAULTPROGRAM_H

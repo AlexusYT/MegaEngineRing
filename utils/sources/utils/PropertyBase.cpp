@@ -25,15 +25,9 @@
 
 namespace mer::sdk {
 PropertyBase::PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription)
-	: name(pName), description(pDescription), provider(pProvider) {
-	if (provider) provider->addProperty(this);
-}
+	: name(pName), description(pDescription), provider(pProvider) { if (provider) provider->addProperty(this); }
 
-PropertyBase::~PropertyBase() {
-	if (provider) provider->removeProperty(this);
-}
+PropertyBase::~PropertyBase() { if (provider) provider->removeProperty(this); }
 
-void PropertyBase::notifyChanged() {
-	if (provider) provider->propertyChanged(this);
-}
+void PropertyBase::notifyChanged() { if (provider) provider->propertyChanged(this); }
 } // namespace mer::sdk

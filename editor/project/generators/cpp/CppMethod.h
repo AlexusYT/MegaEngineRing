@@ -85,19 +85,15 @@ public:
 
 	void setReturnType(const std::string &pReturnType) { returnType = pReturnType; }
 
-	template<typename T>
-	void setReturnType() {
-		returnType = Utils::getTypeName<T>();
-	}
+	template <typename T>
+	void setReturnType() { returnType = Utils::getTypeName<T>(); }
 
 	[[nodiscard]] const std::vector<std::string> &getParamsList() const { return paramsList; }
 
 	void setParamsList(const std::vector<std::string> &pParamsList) { paramsList = pParamsList; }
 
-	template<typename... Params, typename... Names>
-	void setParamsList(Names... pNames) {
-		setParamsList({(Utils::getTypeName<Params>() + " " + pNames)...});
-	}
+	template <typename... Params, typename... Names>
+	void setParamsList(Names... pNames) { setParamsList({(Utils::getTypeName<Params>() + " " + pNames)...}); }
 
 	void addParam(const std::string &pParamName) { paramsList.emplace_back(pParamName); }
 

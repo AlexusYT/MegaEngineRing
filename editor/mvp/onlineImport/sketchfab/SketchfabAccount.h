@@ -111,7 +111,6 @@ public:
 
 	void setLoaded(bool pLoaded) { loaded = pLoaded; }
 };
-
 } // namespace mer::editor::mvp
 
 #endif //SKETCHFABACCOUNT_H

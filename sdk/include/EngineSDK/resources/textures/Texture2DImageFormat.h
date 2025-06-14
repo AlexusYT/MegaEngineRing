@@ -23,25 +23,23 @@
 #define TEXTURE2DIMAGEFORMAT_H
 
 namespace mer::sdk {
-
 enum class Texture2DImageFormat {
-	UNDEFINED = 0,
-	RED = 0x1903,
-	RG = 0x8227,
-	RGB = 0x1907,
-	BGR = 0x80E0,
-	RGBA = 0x1908,
-	BGRA = 0x80E1,
-	RED_INTEGER = 0x8D94,
-	RG_INTEGER = 0x8228,
-	RGB_INTEGER = 0x8D98,
-	BGR_INTEGER = 0x8D9A,
-	RGBA_INTEGER = 0x8D99,
-	BGRA_INTEGER = 0x8D9B,
-	STENCIL_INDEX = 0x1901,
+	UNDEFINED       = 0,
+	RED             = 0x1903,
+	RG              = 0x8227,
+	RGB             = 0x1907,
+	BGR             = 0x80E0,
+	RGBA            = 0x1908,
+	BGRA            = 0x80E1,
+	RED_INTEGER     = 0x8D94,
+	RG_INTEGER      = 0x8228,
+	RGB_INTEGER     = 0x8D98,
+	BGR_INTEGER     = 0x8D9A,
+	RGBA_INTEGER    = 0x8D99,
+	BGRA_INTEGER    = 0x8D9B,
+	STENCIL_INDEX   = 0x1901,
 	DEPTH_COMPONENT = 0x1902,
-	DEPTH_STENCIL = 0x84F9
-
+	DEPTH_STENCIL   = 0x84F9
 };
 
 inline const char* to_string(const Texture2DImageFormat pE) {
@@ -65,8 +63,6 @@ inline const char* to_string(const Texture2DImageFormat pE) {
 		default: return "unknown";
 	}
 }
-
-
 } // namespace mer::sdk
 
 #endif //TEXTURE2DIMAGEFORMAT_H

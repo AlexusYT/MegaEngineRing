@@ -28,7 +28,8 @@
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
 namespace mer::editor::mvp {
-ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper) : selectionHelper(pSelectionHelper) {
+ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper)
+	: selectionHelper(pSelectionHelper) {
 	outlinePass = std::make_shared<sdk::RenderPass>();
 	selectionHelper->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
 		for (auto node: pNodes) {

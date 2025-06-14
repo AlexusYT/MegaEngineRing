@@ -25,7 +25,6 @@
 #include "imgui.h"
 
 namespace mer::sdk {
-
 class UiBase : public IRenderable {
 protected:
 	std::string name;
@@ -78,7 +77,6 @@ public:
 
 	[[nodiscard]] unsigned int getId() const { return windowId; }
 };
-
 } // namespace mer::sdk
 
 #endif //UIBASE_H

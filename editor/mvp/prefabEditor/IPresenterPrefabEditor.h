@@ -28,7 +28,6 @@ class Prefab;
 }
 
 namespace mer::editor::mvp {
-
 class IPresenterPrefabEditor : public IPresenter {
 public:
 	~IPresenterPrefabEditor() override = default;
@@ -37,7 +36,6 @@ public:
 
 	virtual void setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pPrefab) = 0;
 };
-
 } // namespace mer::editor::mvp
 
 #endif //IPRESENTERPREFABEDITOR_H

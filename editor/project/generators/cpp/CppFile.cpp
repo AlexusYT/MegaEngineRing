@@ -46,9 +46,8 @@ mer::sdk::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath
 			stream << cppDeclaration->getCode(0, isHeader()) << "\n";
 		}
 		for (const auto &cppDefinition: getDefinitions()) stream << cppDefinition->getCode(0, isHeader()) << "\n";
-
-	} catch (...) {
-
+	}
+	catch (...) {
 		auto msg = mer::sdk::ReportMessage::create();
 		msg->setTitle("Failed to save the file.");
 		msg->setMessage("Exception thrown");

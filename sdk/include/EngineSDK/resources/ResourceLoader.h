@@ -42,7 +42,6 @@ public:
 	virtual ReportMessagePtr load(IResourceLoadExecutor* pLoadExecutor, std::shared_ptr<std::istream> &pStream,
 								  const std::shared_ptr<IResource> &pResource) = 0;
 
-
 	[[nodiscard]] virtual IApplication* getApplication() const = 0;
 
 	virtual void setApplication(IApplication* pApplication) = 0;
@@ -59,14 +58,13 @@ public:
 
 	[[nodiscard]] IApplication* getApplication() const override { return application; }
 
-
 protected:
 	static std::string readString(const std::shared_ptr<std::istream> &pStream);
-	template<typename T>
-		requires std::integral<T> || std::floating_point<T>
+
+	template <typename T> requires std::integral<T> || std::floating_point<T>
 	static T readNumber(const std::shared_ptr<std::istream> &pStream);
-	template<typename T>
-		requires std::integral<T> || std::floating_point<T>
+
+	template <typename T> requires std::integral<T> || std::floating_point<T>
 	static void readNumber(const std::shared_ptr<std::istream> &pStream, T &pNumOut);
 
 	static std::shared_ptr<UUID> readUuid(const std::shared_ptr<std::istream> &pStream);
@@ -75,16 +73,14 @@ private:
 	void setApplication(IApplication* pApplication) override { application = pApplication; }
 };
 
-template<typename T>
-	requires std::integral<T> || std::floating_point<T>
+template <typename T> requires std::integral<T> || std::floating_point<T>
 T ResourceLoader::readNumber(const std::shared_ptr<std::istream> &pStream) {
 	T val = 0;
 	readNumber(pStream, val);
 	return val;
 }
 
-template<typename T>
-	requires std::integral<T> || std::floating_point<T>
+template <typename T> requires std::integral<T> || std::floating_point<T>
 void ResourceLoader::readNumber(const std::shared_ptr<std::istream> &pStream, T &pNumOut) {
 	pStream->read(reinterpret_cast<std::istream::char_type*>(&pNumOut), sizeof(pNumOut));
 }

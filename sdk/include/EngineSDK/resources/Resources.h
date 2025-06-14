@@ -61,7 +61,7 @@ public:
 	 * \return Указатель на ClassT ресурса или на nullptr в случае, если ресурс не найден или невозможно преобразовать
 	 * ресурс к ClassT. Для проверки существования ресурса, используйте hasResource()
 	 */
-	template<typename ClassT>
+	template <typename ClassT>
 	std::shared_ptr<ClassT> get(const std::string &pName) const {
 		if (const auto res = find(pName)) return std::dynamic_pointer_cast<ClassT>(res);
 		return nullptr;
@@ -71,9 +71,8 @@ public:
 		return resources;
 	}
 
-	void clear() {resources.clear();}
+	void clear() { resources.clear(); }
 };
-
 } // namespace mer::sdk
 
 

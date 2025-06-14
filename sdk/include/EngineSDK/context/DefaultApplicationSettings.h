@@ -28,10 +28,7 @@
 #include "IApplicationSettings.h"
 
 namespace mer::sdk {
-
 class DefaultApplicationSettings : public IApplicationSettings {
-
-
 	/**
 	 * @brief The application name. Used in paths.
 	 */
@@ -87,7 +84,6 @@ private:
 		std::forma
 	}*/
 };
-
 } // namespace mer::sdk
 
 #endif //DEFAULTAPPLICATIONSETTINGS_H
