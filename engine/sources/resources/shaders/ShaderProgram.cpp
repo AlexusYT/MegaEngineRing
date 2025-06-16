@@ -36,9 +36,13 @@ ShaderProgram::~ShaderProgram() { ShaderProgram::uninitialize(); }
 
 void ShaderProgram::attachShader(const std::shared_ptr<Shader> &pShader) { attachedShaders.emplace_back(pShader); }
 
-void ShaderProgram::link() const { glLinkProgram(name); }
+void ShaderProgram::link() const {
+	glLinkProgram(name);
+}
 
-void ShaderProgram::validate() const { glValidateProgram(name); }
+void ShaderProgram::validate() const {
+	glValidateProgram(name);
+}
 
 void ShaderProgram::use() const {
 	//if (this == usedProgram) return;

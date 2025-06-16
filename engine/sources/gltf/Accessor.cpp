@@ -76,7 +76,7 @@ Accessor::Accessor() {}
 std::shared_ptr<Accessor> Accessor::create(
 	const Microsoft::glTF::Accessor &pGltf, const Microsoft::glTF::Document &pDocument,
 	const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pResourceReader) {
-	return std::shared_ptr < Accessor > (new Accessor(pGltf, pDocument, pResourceReader));
+	return std::shared_ptr<Accessor>(new Accessor(pGltf, pDocument, pResourceReader));
 }
 
 const void* Accessor::getData() const {

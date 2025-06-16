@@ -37,7 +37,7 @@ Image::Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Docume
 
 std::shared_ptr<Image> Image::create(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
 									 const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader) {
-	return std::shared_ptr < Image > (new Image(pImage, pDocument, pReader));
+	return std::shared_ptr<Image>(new Image(pImage, pDocument, pReader));
 }
 
 void Image::addReportInfo(const ReportMessagePtr &pMsg) const {
@@ -72,7 +72,7 @@ ReportMessagePtr Image::onInitialize() {
 
 void Image::onUninitialize() { Initializable::onUninitialize(); }
 
-ReportMessagePtr Image::readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> & pCtx, const spng_ihdr & pIhdr) {
+ReportMessagePtr Image::readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> &pCtx, const spng_ihdr &pIhdr) {
 	try {
 		width = static_cast<int32_t>(pIhdr.width);
 		height = static_cast<int32_t>(pIhdr.height);
@@ -204,7 +204,7 @@ ReportMessagePtr Image::readPng(const std::unique_ptr<spng_ctx, void (*)(spng_ct
 
 std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> Image::isPng(ReportMessagePtr &pErrorOut, spng_ihdr &pIhdrOut) const {
 	std::unique_ptr<spng_ctx, void (*)(spng_ctx*)>
-	ctx(spng_ctx_new(0), spng_ctx_free);
+		ctx(spng_ctx_new(0), spng_ctx_free);
 
 	/* Ignore and don't calculate chunk CRC's */
 	spng_set_crc_action(ctx.get(), SPNG_CRC_USE, SPNG_CRC_USE);

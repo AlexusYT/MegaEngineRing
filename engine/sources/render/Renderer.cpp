@@ -142,14 +142,7 @@ void RenderPass::changeMesh(Node* pNode, Mesh* pNewMesh) {
 
 void RenderPass::render() {
 	if (meshesToRender.empty()) return;
-	if (commandsBufferDirty &&commandsBufferMutex
-
-
-	
-	.
-	try_lock()
-	)
-	{
+	if (commandsBufferDirty && commandsBufferMutex.try_lock()) {
 		commands.clear();
 		instanceIndices.clear();
 		meshIndices.clear();
@@ -391,14 +384,7 @@ void Renderer::addLightSource(const std::shared_ptr<Light> &pNewLight) {
 }
 
 void Renderer::updateBuffers() {
-	if (eboDirty &&indicesMutex
-
-
-	
-	.
-	try_lock()
-	)
-	{
+	if (eboDirty && indicesMutex.try_lock()) {
 		if (ebo)
 			glDeleteBuffers(1, &ebo);
 		glCreateBuffers(1, &ebo);

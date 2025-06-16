@@ -52,7 +52,7 @@ Scene::~Scene() {
 	objects.clear();
 }
 
-std::shared_ptr<Scene> Scene::create() { return std::shared_ptr < Scene > (new Scene()); }
+std::shared_ptr<Scene> Scene::create() { return std::shared_ptr<Scene>(new Scene()); }
 
 void Scene::setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const {
 	programBuffer->setViewProjMatrix(pViewProjMatrix);

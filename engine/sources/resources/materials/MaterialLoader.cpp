@@ -46,7 +46,7 @@ ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecutor,
 
 void MaterialLoader::readMaterialComponent(
 	const std::shared_ptr<std::istream> &pStream, IResourceLoadExecutor* pLoadExecutor,
-	const sigc::slot<void(const std::shared_ptr<IMaterialComponent> & pComponent)> &pSetter) {
+	const sigc::slot<void(const std::shared_ptr<IMaterialComponent> &pComponent)> &pSetter) {
 	try {
 		uint8_t type = 0;
 		readNumber(pStream, type);

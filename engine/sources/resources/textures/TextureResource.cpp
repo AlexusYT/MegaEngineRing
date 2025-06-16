@@ -39,7 +39,7 @@ TextureResource::TextureResource()
 	  materialComponentVal(nullptr, "TextureComponent") {}
 
 std::shared_ptr<TextureResource> TextureResource::create() {
-	return std::shared_ptr < TextureResource > (new TextureResource());
+	return std::shared_ptr<TextureResource>(new TextureResource());
 }
 
 TextureResource::~TextureResource() {

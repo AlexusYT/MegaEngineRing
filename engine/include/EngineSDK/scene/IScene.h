@@ -64,7 +64,7 @@ public:
 
 	virtual void loadResourceAsync(
 		const std::string &pResourceUri,
-		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) const = 0;
+		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const = 0;
 
 	virtual void onResourceLoadingError(const std::string &pResourceUri, const ReportMessagePtr &pError) = 0;
 

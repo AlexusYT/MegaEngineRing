@@ -43,7 +43,7 @@ protected:
 	glm::mat4 scaleMatrix{1};
 	bool scaleValChanged{};
 	glm::mat4 modelMatrix{1};
-	sigc::signal<void(const glm::mat4 & pNewMatrix)> onChanged;
+	sigc::signal<void(const glm::mat4 &pNewMatrix)> onChanged;
 
 	Transformation(const glm::mat4 &pModelMatrix) { setFromMatrix(pModelMatrix); }
 
@@ -217,7 +217,7 @@ public:
 
 	[[nodiscard]] const sigc::signal<void(const glm::mat4 &)> &getOnChangedSignal() const { return onChanged; }
 
-	sigc::connection connectOnChanged(const sigc::slot<void(const glm::mat4 & pNewMatrix)> &pSlot) {
+	sigc::connection connectOnChanged(const sigc::slot<void(const glm::mat4 &pNewMatrix)> &pSlot) {
 		pSlot(modelMatrix);
 		return onChanged.connect(pSlot);
 	}

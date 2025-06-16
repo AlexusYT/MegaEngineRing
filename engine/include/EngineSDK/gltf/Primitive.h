@@ -61,7 +61,7 @@ class Primitive {
 	std::shared_ptr<Accessor> normalAccessor;
 	std::shared_ptr<Accessor> colorAccessor;
 	std::shared_ptr<Material> material;
-	sigc::signal<void(const std::shared_ptr<Material> & pNewMaterial)> onMaterialChangedSignal;
+	sigc::signal<void(const std::shared_ptr<Material> &pNewMaterial)> onMaterialChangedSignal;
 	Property<std::shared_ptr<VolumeAabb>> aabb;
 
 	explicit Primitive(const MeshMode &pMeshMode, const std::shared_ptr<Accessor> &pPositionAccessor,
@@ -77,7 +77,7 @@ public:
 	void setMaterial(const std::shared_ptr<Material> &pMaterial);
 
 	sigc::connection connectOnMaterialChangedSignal(
-		const sigc::slot<void(const std::shared_ptr<Material> & pNewMaterial)> &pSlot) {
+		const sigc::slot<void(const std::shared_ptr<Material> &pNewMaterial)> &pSlot) {
 		pSlot(material);
 		return onMaterialChangedSignal.connect(pSlot);
 	}

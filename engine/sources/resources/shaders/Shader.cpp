@@ -49,7 +49,9 @@ void Shader::getInfoLog(std::string &pLogOut) const {
 	glGetShaderInfoLog(name, logLen, nullptr, pLogOut.data());
 }
 
-void Shader::compile() const { glCompileShader(name); }
+void Shader::compile() const {
+	glCompileShader(name);
+}
 
 ShaderTypeEnum Shader::getShaderType() const {
 	switch (getNativeShaderType()) {

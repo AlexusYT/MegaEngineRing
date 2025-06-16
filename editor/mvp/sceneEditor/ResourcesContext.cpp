@@ -68,7 +68,7 @@ void ResourcesContext::preloadResources() {
 
 void ResourcesContext::loadResourceAsync(
 	const std::string &pResourceUri,
-	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> &pSlot) {
+	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) {
 	if (std::shared_ptr<sdk::IResource> foundResource = resources->getResource(pResourceUri)) {
 		auto result = sdk::ResourceLoadResult::create();
 		result->setResource(foundResource);
@@ -229,7 +229,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 
 void ResourcesContext::callSlot(
 	const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
-	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> &pSlot) {
+	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) {
 	try { pSlot(pResult); }
 	catch (...) {
 		auto msg = sdk::ReportMessage::create();

@@ -34,7 +34,7 @@ class IResource;
 
 class IResourceLoadExecutor {
 public:
-	using LoadingFinishedSlot = sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)>;
+	using LoadingFinishedSlot = sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)>;
 
 	virtual ~IResourceLoadExecutor() = default;
 
@@ -42,7 +42,7 @@ public:
 
 	virtual void loadResourceAsync(
 		const std::string &pResourceUri,
-		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) = 0;
+		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) = 0;
 
 	[[nodiscard]] virtual IApplication* getApplication() const = 0;
 

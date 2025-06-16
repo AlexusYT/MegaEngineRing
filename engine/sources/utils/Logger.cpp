@@ -75,7 +75,7 @@ void Logger::print(const LoggerMsgType pType, const std::string &pMessage) {
 		std::string source = std::format("{}:{}", file.filename().string(), frame.source_line());
 		std::string time = std::format("{0:%T}{0:%z}", local);
 		std::string type;
-		std::ostream & (*color)(std::ostream &) = ConsoleColors::DARK_WHITE;
+		std::ostream &(*color)(std::ostream &) = ConsoleColors::DARK_WHITE;
 		switch (pType) {
 			case LoggerMsgType::INFO:
 				type = "I";

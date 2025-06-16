@@ -50,7 +50,7 @@ class MaterialResource : public IMaterialResource, public Resource {
 	MaterialData data;
 	std::atomic<bool> dirty{false};
 
-	sigc::signal<void(const MaterialData & pData)> onDataChangedSignal;
+	sigc::signal<void(const MaterialData &pData)> onDataChangedSignal;
 
 	MaterialResource();
 
@@ -97,7 +97,7 @@ public:
 
 	IResource* asResource() override { return this; }
 
-	sigc::connection connectOnDataChangedSignal(const sigc::slot<void(const MaterialData & pData)> &pSlot) override {
+	sigc::connection connectOnDataChangedSignal(const sigc::slot<void(const MaterialData &pData)> &pSlot) override {
 		pSlot(data);
 		return onDataChangedSignal.connect(pSlot);
 	}

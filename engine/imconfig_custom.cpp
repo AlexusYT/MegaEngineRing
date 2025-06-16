@@ -63,9 +63,8 @@ bool UuidText(const char* pName, const mer::sdk::UUID &pUuid, int pFlags) {
 	return result;
 }
 
-static const float DRAG_MOUSE_THRESHOLD_FACTOR =
-	0.50f;
 // Multiplier for the default value of io.MouseDragThreshold to make DragFloat/DragInt react faster to mouse drags.
+static const float DRAG_MOUSE_THRESHOLD_FACTOR = 0.50f;
 
 bool DragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* roundFormat,
 			   const char* displayFormat, ImGuiSliderFlags flags) {

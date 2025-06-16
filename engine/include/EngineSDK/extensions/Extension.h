@@ -129,7 +129,7 @@ public:
 	 * @param pSlot NOT in a main context
 	 */
 	void loadResourceAsync(const std::string &pResourceUri,
-						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) const {
+						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const {
 		getScene()->loadResourceAsync(pResourceUri,
 									  [pSlot](const std::shared_ptr<ResourceLoadResult> &pResult) { pSlot(pResult); });
 	}
