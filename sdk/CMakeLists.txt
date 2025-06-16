@@ -302,26 +302,26 @@ if (WIN32)
             DIRECTORIES
             $<TARGET_FILE_DIR:KwasarEngineLib>
             ARCHIVE
-            COMPONENT sdk
+            COMPONENT engine
             RUNTIME
-            COMPONENT sdk
+            COMPONENT engine
             LIBRARY
-            COMPONENT sdk
+            COMPONENT engine
             FILE_SET engine_headers
-            COMPONENT sdk
+            COMPONENT engine
 
     )
 else ()
     install(
             TARGETS KwasarEngineLib
             ARCHIVE
-            COMPONENT sdk
+            COMPONENT engine
             RUNTIME
-            COMPONENT sdk
+            COMPONENT engine
             LIBRARY
-            COMPONENT sdk
+            COMPONENT engine
             FILE_SET engine_headers
-            COMPONENT sdk
+            COMPONENT engine
     )
 endif ()
 
