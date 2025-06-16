@@ -21,7 +21,7 @@
 
 #ifndef CONFIRMATIONDIALOG_H
 #define CONFIRMATIONDIALOG_H
-#include "EngineSDK/ui/UiPopup.h"
+#include "KwasarEngine/ui/UiPopup.h"
 
 namespace mer::editor::mvp {
 class ConfirmationDialog : public sdk::UiPopup {

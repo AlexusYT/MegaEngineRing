@@ -19,11 +19,11 @@
 // Created by alexus on 26.02.25.
 //
 
-#include "EngineSDK/gltf/Material.h"
+#include "KwasarEngine/gltf/Material.h"
 
 #include <glm/common.hpp>
 
-#include "EngineSDK/gltf/Texture.h"
+#include "KwasarEngine/gltf/Texture.h"
 #include "GLTFSDK/GLTF.h"
 
 namespace mer::sdk {
@@ -51,7 +51,7 @@ Material::Material(const Microsoft::glTF::Material &pMaterial,
 std::shared_ptr<Material> Material::create(
 	const Microsoft::glTF::Material &pMaterial,
 	const std::unordered_map<Microsoft::glTF::TextureType, std::shared_ptr<Texture>> &pUsedTextures) {
-	return std::shared_ptr<Material>(new Material(pMaterial, pUsedTextures));
+	return std::shared_ptr < Material > (new Material(pMaterial, pUsedTextures));
 }
 
 ReportMessagePtr Material::onInitialize() {

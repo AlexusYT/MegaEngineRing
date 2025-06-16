@@ -19,7 +19,7 @@
 // Created by alexus on 26.02.25.
 //
 
-#include "EngineSDK/gltf/Sampler.h"
+#include "KwasarEngine/gltf/Sampler.h"
 
 #include <epoxy/gl.h>
 
@@ -38,7 +38,7 @@ Sampler::Sampler(const Microsoft::glTF::Sampler &pSampler) {
 }
 
 std::shared_ptr<Sampler> Sampler::create(const Microsoft::glTF::Sampler &pSampler) {
-	return std::shared_ptr<Sampler>(new Sampler(pSampler));
+	return std::shared_ptr < Sampler > (new Sampler(pSampler));
 }
 
 ReportMessagePtr Sampler::onInitialize() {
@@ -50,7 +50,5 @@ ReportMessagePtr Sampler::onInitialize() {
 	return Initializable::onInitialize();
 }
 
-void Sampler::onUninitialize() {
-	glDeleteSamplers(1, &samplerId);
-}
+void Sampler::onUninitialize() { glDeleteSamplers(1, &samplerId); }
 } // namespace mer::sdk

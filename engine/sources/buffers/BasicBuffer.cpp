@@ -19,7 +19,7 @@
 // Created by alexus on 07.04.25.
 //
 
-#include "EngineSDK/buffers/BasicBuffer.h"
+#include "KwasarEngine/buffers/BasicBuffer.h"
 
 #include <epoxy/gl.h>
 

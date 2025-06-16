@@ -19,14 +19,14 @@
 // Created by alexus on 27.11.24.
 //
 
-#include "EngineSDK/prefabs/elements/PrefabElementsSsbo.h"
+#include "KwasarEngine/prefabs/elements/PrefabElementsSsbo.h"
 
 #include <cstring>
 
-#include "EngineSDK/prefabs/Prefab.h"
-#include "EngineSDK/prefabs/PrefabInstance.h"
-#include "EngineSDK/prefabs/elements/PrefabElement.h"
-#include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
+#include "KwasarEngine/prefabs/Prefab.h"
+#include "KwasarEngine/prefabs/PrefabInstance.h"
+#include "KwasarEngine/prefabs/elements/PrefabElement.h"
+#include "KwasarEngine/prefabs/elements/PrefabElementInstance.h"
 
 namespace mer::sdk {
 PrefabElementsSsbo::PrefabElementsSsbo() {}
@@ -34,7 +34,7 @@ PrefabElementsSsbo::PrefabElementsSsbo() {}
 PrefabElementsSsbo::~PrefabElementsSsbo() { if (ssboData) free(ssboData); }
 
 std::shared_ptr<PrefabElementsSsbo> PrefabElementsSsbo::create() {
-	return std::shared_ptr<PrefabElementsSsbo>(new PrefabElementsSsbo());
+	return std::shared_ptr < PrefabElementsSsbo > (new PrefabElementsSsbo());
 }
 
 void PrefabElementsSsbo::trackInstance(PrefabElementInstance* pInstance) {

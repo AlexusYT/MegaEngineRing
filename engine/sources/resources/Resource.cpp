@@ -19,10 +19,10 @@
 // Created by alexus on 05.10.24.
 //
 
-#include "EngineSDK/resources/Resource.h"
+#include "KwasarEngine/resources/Resource.h"
 
-#include "EngineSDK/utils/ReportMessage.h"
-#include "EngineSDK/utils/UUID.h"
+#include "KwasarEngine/utils/ReportMessage.h"
+#include "KwasarEngine/utils/UUID.h"
 
 namespace mer::sdk {
 Resource::Resource() { uuid = UUID::create(); }

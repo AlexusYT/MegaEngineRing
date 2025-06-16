@@ -25,10 +25,10 @@
 #include <nlohmann/json.hpp>
 #include <thread>
 
-#include "EngineSDK/gltf/GltfModel.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/render/Renderer.h"
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/gltf/GltfModel.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/render/Renderer.h"
+#include "KwasarEngine/scene/Scene3D.h"
 #include "Globals.h"
 #include "ModelOnlineImport.h"
 #include "Utils.h"
@@ -70,7 +70,7 @@ PresenterOnlineImport::PresenterOnlineImport(const std::shared_ptr<IModelOnlineI
 
 std::shared_ptr<PresenterOnlineImport> PresenterOnlineImport::create(const std::shared_ptr<IModelOnlineImport> &pModel,
 																	 const std::shared_ptr<IViewOnlineImport> &pView) {
-	return std::shared_ptr<PresenterOnlineImport>(new PresenterOnlineImport(pModel, pView));
+	return std::shared_ptr < PresenterOnlineImport > (new PresenterOnlineImport(pModel, pView));
 }
 
 void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const std::string &pPassword) {
@@ -79,7 +79,7 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 			std::format("grant_type=password&client_id={}&username={}&password={}", CLIENT_ID, pUsername, pPassword);
 		try {
 			std::unique_ptr<CURL, void (*)(CURL*)>
-				request(curl_easy_init(), curl_easy_cleanup);
+			request(curl_easy_init(), curl_easy_cleanup);
 			view->setLoginInProgress();
 			curl_easy_setopt(request.get(), CURLOPT_URL, SKETCHFAB_OAUTH);
 

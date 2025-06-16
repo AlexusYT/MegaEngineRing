@@ -23,10 +23,10 @@
 
 #include <project/Project.h>
 
-#include "EngineSDK/extensions/LightExtension.h"
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/extensions/LightExtension.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/scene/Scene3D.h"
 #include "PresenterObjectsTree.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
@@ -98,10 +98,7 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 			std::string tooltipText;
 			//translators: second line in reparent tooltip in an object tree window
 			const std::string unformattedText = tr("Left click to reparent to the \"{}\".\n");
-			if (hoveredNode && nodeToReparent
-				!=
-				hoveredNode
-			) {
+			if (hoveredNode && nodeToReparent != hoveredNode) {
 				tooltipText = std::vformat(unformattedText, std::make_format_args(hoveredNode->getName()));
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
 					scene->reparentNode(nodeToReparent, hoveredNode);

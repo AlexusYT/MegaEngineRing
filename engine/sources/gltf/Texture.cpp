@@ -19,12 +19,12 @@
 // Created by alexus on 26.02.25.
 //
 
-#include "EngineSDK/gltf/Texture.h"
+#include "KwasarEngine/gltf/Texture.h"
 
 #include <epoxy/gl.h>
 
-#include "EngineSDK/gltf/Image.h"
-#include "EngineSDK/gltf/Sampler.h"
+#include "KwasarEngine/gltf/Image.h"
+#include "KwasarEngine/gltf/Sampler.h"
 
 namespace mer::sdk {
 Texture::Texture(const Microsoft::glTF::Texture & /*pTexture*/, const std::shared_ptr<Image> &pImage,
@@ -32,7 +32,7 @@ Texture::Texture(const Microsoft::glTF::Texture & /*pTexture*/, const std::share
 
 std::shared_ptr<Texture> Texture::create(const Microsoft::glTF::Texture &pTexture, const std::shared_ptr<Image> &pImage,
 										 const std::shared_ptr<Sampler> &pSampler) {
-	return std::shared_ptr<Texture>(new Texture(pTexture, pImage, pSampler));
+	return std::shared_ptr < Texture > (new Texture(pTexture, pImage, pSampler));
 }
 
 ReportMessagePtr Texture::onInitialize() {

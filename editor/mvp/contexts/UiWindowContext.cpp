@@ -21,8 +21,8 @@
 
 #include "UiWindowContext.h"
 
-#include "EngineSDK/scene/SceneUi.h"
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/scene/SceneUi.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/editor/Editor.h"
 
 namespace mer::editor::mvp {

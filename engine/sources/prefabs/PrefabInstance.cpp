@@ -20,11 +20,11 @@
 //
 
 
-#include "EngineSDK/prefabs/PrefabInstance.h"
+#include "KwasarEngine/prefabs/PrefabInstance.h"
 
-#include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
-#include "EngineSDK/resources/materials/IMaterialResource.h"
-#include "EngineSDK/utils/Transformation.h"
+#include "KwasarEngine/prefabs/elements/PrefabElementInstance.h"
+#include "KwasarEngine/resources/materials/IMaterialResource.h"
+#include "KwasarEngine/utils/Transformation.h"
 
 namespace mer::sdk {
 PrefabInstance::PrefabInstance()
@@ -41,7 +41,7 @@ PrefabInstance::PrefabInstance()
 }
 
 std::shared_ptr<PrefabInstance> PrefabInstance::create() {
-	return std::shared_ptr<PrefabInstance>(new PrefabInstance());
+	return std::shared_ptr < PrefabInstance > (new PrefabInstance());
 }
 
 std::shared_ptr<PrefabElementInstance> PrefabInstance::getElement(const UUID &pUuid) const {

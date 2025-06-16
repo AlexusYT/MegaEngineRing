@@ -19,6 +19,6 @@
 // Created by alexus on 01.02.24.
 //
 
-#include "EngineSDK/resources/Resources.h"
+#include "KwasarEngine/resources/Resources.h"
 
 namespace mer::sdk {} // namespace mer::sdk

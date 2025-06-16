@@ -21,8 +21,8 @@
 
 #ifndef SCENEOVERLAYELEMENTS_H
 #define SCENEOVERLAYELEMENTS_H
-#include "EngineSDK/render/IRenderable.h"
-#include "EngineSDK/render/Initializable.h"
+#include "KwasarEngine/render/IRenderable.h"
+#include "KwasarEngine/render/Initializable.h"
 
 namespace mer::sdk {
 class ShaderProgram;

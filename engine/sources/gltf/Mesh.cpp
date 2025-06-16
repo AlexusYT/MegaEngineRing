@@ -19,10 +19,10 @@
 // Created by alexus on 25.02.25.
 //
 
-#include "EngineSDK/gltf/Mesh.h"
+#include "KwasarEngine/gltf/Mesh.h"
 
-#include "EngineSDK/gltf/Primitive.h"
-#include "EngineSDK/bounding/VolumeAabb.h"
+#include "KwasarEngine/gltf/Primitive.h"
+#include "KwasarEngine/bounding/VolumeAabb.h"
 
 namespace mer::sdk {
 Mesh::Mesh()
@@ -31,7 +31,7 @@ Mesh::Mesh()
 	buildAabb();
 }
 
-std::shared_ptr<Mesh> Mesh::create() { return std::shared_ptr<Mesh>(new Mesh()); }
+std::shared_ptr<Mesh> Mesh::create() { return std::shared_ptr < Mesh > (new Mesh()); }
 
 void Mesh::addPrimitive(const std::shared_ptr<Primitive> &pPrimitive) {
 	primitives.emplace_back(pPrimitive);

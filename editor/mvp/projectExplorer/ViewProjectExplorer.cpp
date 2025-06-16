@@ -23,7 +23,7 @@
 
 #include <project/Project.h>
 
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "IPresenterProjectExplorer.h"
 #include "entries/ProjectExplorerElement.h"
 #include "mvp/contexts/UiWindowContext.h"

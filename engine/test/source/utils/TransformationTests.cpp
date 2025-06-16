@@ -21,7 +21,7 @@
 
 #include <gtest/gtest.h>
 
-#include "EngineSDK/utils/Transformation.h"
+#include "KwasarEngine/utils/Transformation.h"
 using namespace mer::sdk;
 
 TEST(TransformationTests, getPosition) {

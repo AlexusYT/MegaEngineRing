@@ -21,8 +21,8 @@
 
 #include <gtest/gtest.h>
 
-#include "EngineSDK/resources/models/Model3DLoader.h"
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/resources/models/Model3DLoader.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 
 TEST(ObjModelLoaderTests, ModelLoading) {
 	/*using namespace mer::sdk;

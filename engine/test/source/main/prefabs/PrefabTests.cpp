@@ -24,15 +24,15 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "EngineSDK/context/Window.h"
-#include "EngineSDK/prefabs/IPrefabInstance.h"
-#include "EngineSDK/prefabs/Prefab.h"
-#include "EngineSDK/prefabs/PrefabInstance.h"
-#include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
-#include "EngineSDK/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/resources/ResourceLoadResult.h"
-#include "EngineSDK/resources/models/Model3DLoader.h"
-#include "EngineSDK/resources/models/Model3DResource.h"
+#include "KwasarEngine/context/Window.h"
+#include "KwasarEngine/prefabs/IPrefabInstance.h"
+#include "KwasarEngine/prefabs/Prefab.h"
+#include "KwasarEngine/prefabs/PrefabInstance.h"
+#include "KwasarEngine/prefabs/elements/MeshPrefabElement.h"
+#include "KwasarEngine/resources/IResourceLoadExecutor.h"
+#include "KwasarEngine/resources/ResourceLoadResult.h"
+#include "KwasarEngine/resources/models/Model3DLoader.h"
+#include "KwasarEngine/resources/models/Model3DResource.h"
 
 using namespace mer::sdk;
 using ::testing::_;
@@ -51,7 +51,8 @@ public:
 	}
 
 	void loadResourceAsync(const std::string &pResourceUri,
-						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) override {
+						   const sigc::slot<void(
+const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) override {
 		auto result = ResourceLoadResult::create();
 		result->setError(nullptr);
 		result->setResource(nullptr);
@@ -136,12 +137,19 @@ class PrefabInstanceMock : public PrefabInstance {
 public:
 	~PrefabInstanceMock() override = default;
 
-	MOCK_METHOD(std::shared_ptr<PrefabElementInstance>, getElement, (const UUID &pUuid), (const, override));
+	MOCK_METHOD(std::shared_ptr<PrefabElementInstance>, getElement, (const UUID &pUuid), (
+	const
+	,
+	override
+	)
+	);
 
 	MOCK_METHOD(void, addElement, (const UUID &pUuid, const std::shared_ptr<PrefabElementInstance> &pInstance),
-				(override));
+		(override)
+	);
 
-	MOCK_METHOD(void, removeElement, (const UUID &pUuid), (override));
+	MOCK_METHOD(void, removeElement, (const UUID &pUuid), (override)
+	);
 };
 
 TEST_F(PrefabsFixture, AddPrefabInstance) {

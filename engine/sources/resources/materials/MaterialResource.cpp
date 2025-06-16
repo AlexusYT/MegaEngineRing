@@ -20,10 +20,10 @@
 //
 
 
-#include "EngineSDK/resources/materials/MaterialResource.h"
+#include "KwasarEngine/resources/materials/MaterialResource.h"
 
-#include "EngineSDK/resources/ResourceType.h"
-#include "EngineSDK/resources/materials/IMaterialComponent.h"
+#include "KwasarEngine/resources/ResourceType.h"
+#include "KwasarEngine/resources/materials/IMaterialComponent.h"
 
 namespace mer::sdk {
 std::shared_ptr<MaterialResource> MaterialResource::defaultMaterial = nullptr;
@@ -42,7 +42,7 @@ MaterialResource::MaterialResource()
 }
 
 std::shared_ptr<MaterialResource> MaterialResource::create() {
-	return std::shared_ptr<MaterialResource>(new MaterialResource());
+	return std::shared_ptr < MaterialResource > (new MaterialResource());
 }
 
 ResourceType MaterialResource::getResourceType() { return ResourceType::MATERIAL; }

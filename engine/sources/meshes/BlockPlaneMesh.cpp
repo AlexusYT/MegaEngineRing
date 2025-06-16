@@ -19,10 +19,10 @@
 // Created by alexus on 13.03.25.
 //
 
-#include "EngineSDK/meshes/BlockPlaneMesh.h"
+#include "KwasarEngine/meshes/BlockPlaneMesh.h"
 
-#include "EngineSDK/gltf/Accessor.h"
-#include "EngineSDK/gltf/Primitive.h"
+#include "KwasarEngine/gltf/Accessor.h"
+#include "KwasarEngine/gltf/Primitive.h"
 #include "GLTFSDK/GLTF.h"
 
 namespace mer::sdk {

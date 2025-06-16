@@ -22,7 +22,7 @@
 #ifndef OBJECTPROPERTIESWINDOW_H
 #define OBJECTPROPERTIESWINDOW_H
 
-#include "EngineSDK/extensions/LightExtension.h"
+#include "KwasarEngine/extensions/LightExtension.h"
 #include "mvp/IView.h"
 #include "mvp/editor/Editor.h"
 
@@ -50,7 +50,7 @@ public:
 };
 
 class ViewObjectProperties : public IViewObjectProperties, public EditorTool {
-	static std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> &pExt)>>
+	static std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> & pExt)>>
 	extRenderers;
 	std::shared_ptr<IWidgetContext> context;
 	IPresenterObjectProperties* presenter{};

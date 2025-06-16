@@ -19,7 +19,7 @@
 // Created by alexus on 14.02.25.
 //
 
-#include "EngineSDK/ui/UiPopup.h"
+#include "KwasarEngine/ui/UiPopup.h"
 
 #include "imgui.h"
 #include "imgui_internal.h"

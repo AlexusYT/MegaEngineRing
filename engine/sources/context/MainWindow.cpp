@@ -24,7 +24,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "EngineSDK/utils/ModifierKeys.h"
+#include "KwasarEngine/utils/ModifierKeys.h"
 #include "ResourcesWindow.h"
 
 namespace mer::sdk {

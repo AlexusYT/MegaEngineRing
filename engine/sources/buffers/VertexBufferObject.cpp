@@ -19,7 +19,7 @@
 // Created by alexus on 07.04.25.
 //
 
-#include "EngineSDK/buffers/VertexBufferObject.h"
+#include "KwasarEngine/buffers/VertexBufferObject.h"
 
 #include <epoxy/gl.h>
 

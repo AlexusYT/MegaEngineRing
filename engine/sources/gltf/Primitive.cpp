@@ -19,12 +19,12 @@
 // Created by alexus on 24.02.25.
 //
 
-#include "EngineSDK/gltf/Primitive.h"
+#include "KwasarEngine/gltf/Primitive.h"
 
-#include "EngineSDK/bounding/VolumeAabb.h"
-#include "EngineSDK/gltf/Accessor.h"
-#include "EngineSDK/gltf/Material.h"
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/bounding/VolumeAabb.h"
+#include "KwasarEngine/gltf/Accessor.h"
+#include "KwasarEngine/gltf/Material.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
 #include "GLTFSDK/GLTF.h"
 
 namespace mer::sdk {
@@ -42,7 +42,7 @@ Primitive::Primitive(const MeshMode &pMeshMode, const std::shared_ptr<Accessor> 
 std::shared_ptr<Primitive> Primitive::create(const MeshMode &pMeshMode,
 											 const std::shared_ptr<Accessor> &pPositionAccessor,
 											 const std::shared_ptr<Accessor> &pIndexAccessor) {
-	return std::shared_ptr<Primitive>(new Primitive(pMeshMode, pPositionAccessor, pIndexAccessor));
+	return std::shared_ptr < Primitive > (new Primitive(pMeshMode, pPositionAccessor, pIndexAccessor));
 }
 
 void Primitive::setMaterial(const std::shared_ptr<Material> &pMaterial) {

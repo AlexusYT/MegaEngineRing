@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/utils/Logger.h"
 using namespace mer::sdk;
 
 class LoggerTestsFixture : public testing::Test {

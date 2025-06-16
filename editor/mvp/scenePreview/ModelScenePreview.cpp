@@ -21,10 +21,10 @@
 
 #include "ModelScenePreview.h"
 
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/render/Renderer.h"
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/render/Renderer.h"
+#include "KwasarEngine/scene/Scene3D.h"
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
 namespace mer::editor::mvp {

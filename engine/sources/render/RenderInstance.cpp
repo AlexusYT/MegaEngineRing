@@ -19,9 +19,9 @@
 // Created by alexus on 02.10.24.
 //
 
-#include "EngineSDK/render/RenderInstance.h"
+#include "KwasarEngine/render/RenderInstance.h"
 
-#include "EngineSDK/render/IInstancedRender.h"
+#include "KwasarEngine/render/IInstancedRender.h"
 
 namespace mer::sdk {
 void RenderInstance::notifyDataChanged() { if (instancedRender) instancedRender->onInstanceDataChanged(this); }

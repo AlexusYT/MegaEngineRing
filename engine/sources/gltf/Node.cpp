@@ -19,20 +19,20 @@
 // Created by alexus on 25.02.25.
 //
 
-#include "EngineSDK/gltf/Node.h"
+#include "KwasarEngine/gltf/Node.h"
 
 #include <cstring>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <sigc++/scoped_connection.h>
 
-#include "EngineSDK/bounding/DebugGeometry.h"
-#include "EngineSDK/bounding/VolumeAabb.h"
-#include "EngineSDK/gltf/Accessor.h"
-#include "EngineSDK/gltf/Mesh.h"
-#include "EngineSDK/gltf/Primitive.h"
-#include "EngineSDK/utils/Transformation.h"
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/bounding/DebugGeometry.h"
+#include "KwasarEngine/bounding/VolumeAabb.h"
+#include "KwasarEngine/gltf/Accessor.h"
+#include "KwasarEngine/gltf/Mesh.h"
+#include "KwasarEngine/gltf/Primitive.h"
+#include "KwasarEngine/utils/Transformation.h"
+#include "KwasarEngine/utils/Logger.h"
 
 namespace mer::sdk {
 Node::Node(const Microsoft::glTF::Node &pNode)

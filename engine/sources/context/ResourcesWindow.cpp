@@ -22,15 +22,15 @@
 #include <condition_variable>
 #include <future>
 
-#include "EngineSDK/context/IApplication.h"
-#include "EngineSDK/resources/IResourceBundle.h"
-#include "EngineSDK/resources/ResourceLoadResult.h"
-#include "EngineSDK/resources/ResourceLoader.h"
-#include "EngineSDK/resources/ResourceLoaders.h"
-#include "EngineSDK/utils/Logger.h"
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/context/IApplication.h"
+#include "KwasarEngine/resources/IResourceBundle.h"
+#include "KwasarEngine/resources/ResourceLoadResult.h"
+#include "KwasarEngine/resources/ResourceLoader.h"
+#include "KwasarEngine/resources/ResourceLoaders.h"
+#include "KwasarEngine/utils/Logger.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 #ifndef EDITOR_SDK
-#include "EngineSDK/resources/LoadedResources.h"
+#include "KwasarEngine/resources/LoadedResources.h"
 #include "ResourcesWindow.h"
 
 namespace mer::sdk {

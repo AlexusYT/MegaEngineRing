@@ -19,12 +19,12 @@
 // Created by alexus on 22.03.24.
 //
 
-#include "EngineSDK/extensions/cameras/PerspectiveProjectionCameraMod.h"
+#include "KwasarEngine/extensions/cameras/PerspectiveProjectionCameraMod.h"
 
 #include <glm/ext/matrix_clip_space.hpp>
 #include <sigc++/adaptors/hide.h>
 
-#include "EngineSDK/extensions/Extension.h"
+#include "KwasarEngine/extensions/Extension.h"
 
 namespace mer::sdk {
 PerspectiveProjectionCameraMod::PerspectiveProjectionCameraMod()

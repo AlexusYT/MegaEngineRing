@@ -19,12 +19,12 @@
 // Created by alexus on 22.10.24.
 //
 
-#include "EngineSDK/resources/textures/TextureLoader.h"
+#include "KwasarEngine/resources/textures/TextureLoader.h"
 
-#include "EngineSDK/resources/textures/Texture2DImageFormat.h"
-#include "EngineSDK/resources/textures/Texture2DType.h"
-#include "EngineSDK/resources/textures/TextureResource.h"
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/resources/textures/Texture2DImageFormat.h"
+#include "KwasarEngine/resources/textures/Texture2DType.h"
+#include "KwasarEngine/resources/textures/TextureResource.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 
 namespace mer::sdk {
 /*template<typename PixelType>

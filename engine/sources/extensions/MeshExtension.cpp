@@ -19,15 +19,15 @@
 // Created by alexus on 29.03.24.
 //
 
-#include "EngineSDK/extensions/MeshExtension.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
 
 #include <glm/gtx/intersect.hpp>
 
-#include "EngineSDK/gltf/Accessor.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/gltf/Primitive.h"
-#include "EngineSDK/scene/Scene3D.h"
-#include "EngineSDK/utils/Transformation.h"
+#include "KwasarEngine/gltf/Accessor.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/gltf/Primitive.h"
+#include "KwasarEngine/scene/Scene3D.h"
+#include "KwasarEngine/utils/Transformation.h"
 
 namespace mer::sdk {
 MeshExtension::MeshExtension() : mesh(this, "Mesh") {}

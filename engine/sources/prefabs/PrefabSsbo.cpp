@@ -20,19 +20,19 @@
 //
 
 
-#include "EngineSDK/prefabs/PrefabSsbo.h"
+#include "KwasarEngine/prefabs/PrefabSsbo.h"
 
 #include <cstring>
 #include <sigc++/scoped_connection.h>
 
-#include "EngineSDK/prefabs/PrefabInstance.h"
+#include "KwasarEngine/prefabs/PrefabInstance.h"
 
 namespace mer::sdk {
 PrefabSsbo::PrefabSsbo() {
 	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), STREAM_DRAW);
 }
 
-std::shared_ptr<PrefabSsbo> PrefabSsbo::create() { return std::shared_ptr<PrefabSsbo>(new PrefabSsbo()); }
+std::shared_ptr<PrefabSsbo> PrefabSsbo::create() { return std::shared_ptr < PrefabSsbo > (new PrefabSsbo()); }
 
 void PrefabSsbo::trackInstance(PrefabInstance* pInstance) {
 	auto dataProperty = pInstance->getData();

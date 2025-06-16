@@ -20,15 +20,15 @@
 //
 
 
-#include <EngineSDK/extensions/cameras/CameraKeyboardExtension.h>
+#include <KwasarEngine/extensions/cameras/CameraKeyboardExtension.h>
 
 #include <cmath>
 #include <glm/detail/func_geometric.inl>
 #include <glm/detail/func_trigonometric.inl>
 #include <glm/vec3.hpp>
 
-#include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
+#include "KwasarEngine/scene/objects/SceneObject.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
 
 namespace mer::sdk {
 void CameraKeyboardExtension::onKeyStateChanged(const KeyboardKey pKey, const bool pPressed,

@@ -19,19 +19,19 @@
 // Created by alexus on 29.09.24.
 //
 
-#include "EngineSDK/utils/PropertyJsonSerializers.h"
+#include "KwasarEngine/utils/PropertyJsonSerializers.h"
 
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
-#include "EngineSDK/extensions/Extension.h"
-#include "EngineSDK/resources/materials/IMaterialResource.h"
-#include "EngineSDK/resources/models/Model3DObject.h"
-#include "EngineSDK/resources/models/Model3DResource.h"
-#include "EngineSDK/resources/textures/ITextureResource.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/extensions/Extension.h"
+#include "KwasarEngine/resources/materials/IMaterialResource.h"
+#include "KwasarEngine/resources/models/Model3DObject.h"
+#include "KwasarEngine/resources/models/Model3DResource.h"
+#include "KwasarEngine/resources/textures/ITextureResource.h"
 
 namespace mer::sdk {
 nlohmann::json PropertyJsonSerializer<glm::vec<4, float>>::serialize(const glm::vec4 &pValue,

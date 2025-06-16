@@ -19,13 +19,13 @@
 // Created by alexus on 26.02.25.
 //
 
-#include "EngineSDK/gltf/Image.h"
+#include "KwasarEngine/gltf/Image.h"
 
 #include <spng.h>
 
-#include "EngineSDK/resources/textures/Texture2DImageFormat.h"
-#include "EngineSDK/resources/textures/Texture2DType.h"
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/resources/textures/Texture2DImageFormat.h"
+#include "KwasarEngine/resources/textures/Texture2DType.h"
+#include "KwasarEngine/utils/Logger.h"
 
 namespace mer::sdk {
 Image::Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,

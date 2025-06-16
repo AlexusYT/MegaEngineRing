@@ -19,7 +19,7 @@
 // Created by alexus on 14.02.25.
 //
 
-#include "EngineSDK/ui/UiBase.h"
+#include "KwasarEngine/ui/UiBase.h"
 
 namespace mer::sdk {
 void UiBase::customRender() {}

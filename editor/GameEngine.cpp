@@ -30,8 +30,8 @@
 
 #include <curl/curl.h>
 
-#include "EngineSDK/context/Application.h"
-#include "EngineSDK/context/Window.h"
+#include "KwasarEngine/context/Application.h"
+#include "KwasarEngine/context/Window.h"
 #include "Globals.h"
 #include "I18N.h"
 #include "examples/libs/glfw/include/GLFW/glfw3.h"

@@ -19,17 +19,17 @@
 // Created by alexus on 12.10.24.
 //
 
-#include "EngineSDK/resources/textures/TextureResource.h"
+#include "KwasarEngine/resources/textures/TextureResource.h"
 
 #include <cstring>
 #include <epoxy/gl.h>
 #include <glm/common.hpp>
 
-#include "EngineSDK/resources/textures/Texture2DImageFormat.h"
-#include "EngineSDK/resources/textures/Texture2DType.h"
-#include "EngineSDK/resources/textures/TextureMagFilter.h"
-#include "EngineSDK/resources/textures/TextureMinFilter.h"
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/resources/textures/Texture2DImageFormat.h"
+#include "KwasarEngine/resources/textures/Texture2DType.h"
+#include "KwasarEngine/resources/textures/TextureMagFilter.h"
+#include "KwasarEngine/resources/textures/TextureMinFilter.h"
+#include "KwasarEngine/utils/Logger.h"
 
 namespace mer::sdk {
 TextureResource::TextureResource()

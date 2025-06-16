@@ -19,21 +19,21 @@
 // Created by alexus on 06.01.24.
 //
 
-#include "EngineSDK/context/Application.h"
+#include "KwasarEngine/context/Application.h"
 
-#include <EngineSDK/utils/Logger.h>
+#include <KwasarEngine/utils/Logger.h>
 #include <GLFW/glfw3.h>
 #include <signal.h>
 
-#include "EngineSDK/context/DefaultApplicationSettings.h"
+#include "KwasarEngine/context/DefaultApplicationSettings.h"
 #ifndef EDITOR_SDK
-#include "EngineSDK/context/MainWindow.h"
+#include "KwasarEngine/context/MainWindow.h"
 #endif
 #include <thread>
 
-#include "EngineSDK/context/Window.h"
-#include "EngineSDK/extensions/ExtensionRegistry.h"
-#include "EngineSDK/resources/ResourceLoaders.h"
+#include "KwasarEngine/context/Window.h"
+#include "KwasarEngine/extensions/ExtensionRegistry.h"
+#include "KwasarEngine/resources/ResourceLoaders.h"
 
 #ifndef EDITOR_SDK
 extern std::shared_ptr<mer::sdk::IScene> getPrimaryScene();

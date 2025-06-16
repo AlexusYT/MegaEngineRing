@@ -20,14 +20,14 @@
 //
 
 
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
 #include <epoxy/gl.h>
 #include <glm/mat4x4.hpp>
 
-#include "EngineSDK/resources/ResourceType.h"
-#include "EngineSDK/resources/shaders/Shader.h"
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/resources/ResourceType.h"
+#include "KwasarEngine/resources/shaders/Shader.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 
 namespace mer::sdk {
 ShaderProgram::ShaderProgram() : name(0) {}

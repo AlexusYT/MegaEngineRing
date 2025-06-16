@@ -19,10 +19,10 @@
 // Created by alexus on 10.02.25.
 //
 
-#include "EngineSDK/scene/SceneUi.h"
+#include "KwasarEngine/scene/SceneUi.h"
 
-#include "EngineSDK/context/Window.h"
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/context/Window.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "imgui.h"
 
 namespace mer::sdk {

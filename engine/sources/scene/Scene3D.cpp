@@ -19,10 +19,10 @@
 // Created by alexus on 24.02.25.
 //
 
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/scene/Scene3D.h"
 
-#include "EngineSDK/gltf/Mesh.h"
-#include "EngineSDK/render/Renderer.h"
+#include "KwasarEngine/gltf/Mesh.h"
+#include "KwasarEngine/render/Renderer.h"
 
 namespace mer::sdk {
 Scene3D::Scene3D() : renderer(std::make_shared<Renderer>()) {}

@@ -21,7 +21,7 @@
 
 #ifndef PRESENTEROBJECTPROPERTIES_H
 #define PRESENTEROBJECTPROPERTIES_H
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/scene/Scene3D.h"
 #include "mvp/IPresenter.h"
 
 namespace mer::sdk {

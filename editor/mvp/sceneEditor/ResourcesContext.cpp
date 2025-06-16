@@ -23,14 +23,14 @@
 
 #include <future>
 
-#include "EngineSDK/context/IApplication.h"
-#include "EngineSDK/resources/IResource.h"
-#include "EngineSDK/resources/IResourceBundle.h"
-#include "EngineSDK/resources/LoadedResources.h"
-#include "EngineSDK/resources/ResourceLoadResult.h"
-#include "EngineSDK/resources/ResourceLoader.h"
-#include "EngineSDK/resources/ResourceLoaders.h"
-#include "EngineSDK/utils/UUID.h"
+#include "KwasarEngine/context/IApplication.h"
+#include "KwasarEngine/resources/IResource.h"
+#include "KwasarEngine/resources/IResourceBundle.h"
+#include "KwasarEngine/resources/LoadedResources.h"
+#include "KwasarEngine/resources/ResourceLoadResult.h"
+#include "KwasarEngine/resources/ResourceLoader.h"
+#include "KwasarEngine/resources/ResourceLoaders.h"
+#include "KwasarEngine/utils/UUID.h"
 
 namespace mer::editor::mvp {
 std::shared_ptr<sdk::ResourceLoadResult> ResourcesContext::loadResourceSync(const std::string &pResourceUri) {

@@ -19,15 +19,15 @@
 // Created by alexus on 27.11.24.
 //
 
-#include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
+#include "KwasarEngine/prefabs/elements/MeshPrefabElement.h"
 
-#include "EngineSDK/resources/models/Model3DObject.h"
+#include "KwasarEngine/resources/models/Model3DObject.h"
 
 namespace mer::sdk {
 MeshPrefabElement::MeshPrefabElement() : PrefabElement("MeshElement") {}
 
 std::shared_ptr<MeshPrefabElement> MeshPrefabElement::create() {
-	return std::shared_ptr<MeshPrefabElement>(new MeshPrefabElement());
+	return std::shared_ptr < MeshPrefabElement > (new MeshPrefabElement());
 }
 
 const std::vector<float> &MeshPrefabElement::getData() const {

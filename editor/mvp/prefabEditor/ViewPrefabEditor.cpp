@@ -23,15 +23,15 @@
 
 #include <epoxy/gl.h>
 
-#include "EngineSDK/buffers/Framebuffer.h"
-#include "EngineSDK/buffers/ProgramWideShaderBuffer.h"
-#include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineSDK/gltf/GltfModel.h"
-#include "EngineSDK/prefabs/Prefab.h"
-#include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
-#include "EngineSDK/prefabs/elements/PrefabElement.h"
-#include "EngineSDK/resources/shaders/builtin/DefaultProgram.h"
-#include "EngineSDK/resources/shaders/builtin/PrefabProgram.h"
+#include "KwasarEngine/buffers/Framebuffer.h"
+#include "KwasarEngine/buffers/ProgramWideShaderBuffer.h"
+#include "KwasarEngine/extensions/cameras/OrbitCameraExtension.h"
+#include "KwasarEngine/gltf/GltfModel.h"
+#include "KwasarEngine/prefabs/Prefab.h"
+#include "KwasarEngine/prefabs/elements/MeshPrefabElement.h"
+#include "KwasarEngine/prefabs/elements/PrefabElement.h"
+#include "KwasarEngine/resources/shaders/builtin/DefaultProgram.h"
+#include "KwasarEngine/resources/shaders/builtin/PrefabProgram.h"
 #include "IPresenterPrefabEditor.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
@@ -59,7 +59,7 @@ ViewPrefabEditor::ViewPrefabEditor(const std::shared_ptr<IWidgetContext> &pConte
 }
 
 std::shared_ptr<ViewPrefabEditor> ViewPrefabEditor::create(const std::shared_ptr<IWidgetContext> &pContext) {
-	return std::shared_ptr<ViewPrefabEditor>(new ViewPrefabEditor(pContext));
+	return std::shared_ptr < ViewPrefabEditor > (new ViewPrefabEditor(pContext));
 }
 
 void ViewPrefabEditor::onUpdate(bool pVisible) {

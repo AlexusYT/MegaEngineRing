@@ -19,10 +19,10 @@
 // Created by alexus on 13.06.2025.
 //
 
-#include "EngineSDK/meshes/BlockSphereMesh.h"
+#include "KwasarEngine/meshes/BlockSphereMesh.h"
 
-#include "EngineSDK/gltf/Accessor.h"
-#include "EngineSDK/gltf/Primitive.h"
+#include "KwasarEngine/gltf/Accessor.h"
+#include "KwasarEngine/gltf/Primitive.h"
 
 namespace mer::sdk {
 BlockSphereMesh::BlockSphereMesh() {

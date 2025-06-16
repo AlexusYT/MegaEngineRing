@@ -20,18 +20,18 @@
 //
 
 
-#include "EngineSDK/prefabs/Prefab.h"
+#include "KwasarEngine/prefabs/Prefab.h"
 
 #include <algorithm>
 #include <epoxy/gl.h>
 
-#include "EngineSDK/prefabs/IPrefabElementInstance.h"
-#include "EngineSDK/prefabs/PrefabSsbo.h"
-#include "EngineSDK/prefabs/elements/PrefabElement.h"
-#include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
-#include "EngineSDK/prefabs/elements/PrefabElementsSsbo.h"
-#include "EngineSDK/resources/materials/IMaterialResource.h"
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/prefabs/IPrefabElementInstance.h"
+#include "KwasarEngine/prefabs/PrefabSsbo.h"
+#include "KwasarEngine/prefabs/elements/PrefabElement.h"
+#include "KwasarEngine/prefabs/elements/PrefabElementInstance.h"
+#include "KwasarEngine/prefabs/elements/PrefabElementsSsbo.h"
+#include "KwasarEngine/resources/materials/IMaterialResource.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
 namespace mer::sdk {
 Prefab::Prefab()
@@ -47,7 +47,7 @@ Prefab::Prefab()
 	});
 }
 
-std::shared_ptr<Prefab> Prefab::create() { return std::shared_ptr<Prefab>(new Prefab()); }
+std::shared_ptr<Prefab> Prefab::create() { return std::shared_ptr < Prefab > (new Prefab()); }
 
 Prefab::~Prefab() {}
 

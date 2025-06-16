@@ -19,11 +19,11 @@
 // Created by alexus on 02.10.24.
 //
 
-#include "EngineSDK/resources/FileSystemResourceBundle.h"
+#include "KwasarEngine/resources/FileSystemResourceBundle.h"
 
 #include <fstream>
 
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 
 namespace mer::sdk {
 std::shared_ptr<IResourceBundle> FileSystemResourceBundle::create(const std::filesystem::path &pSearchPath) {

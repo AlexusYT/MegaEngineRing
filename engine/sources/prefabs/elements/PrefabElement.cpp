@@ -19,12 +19,12 @@
 // Created by alexus on 27.11.24.
 //
 
-#include "EngineSDK/prefabs/elements/PrefabElement.h"
+#include "KwasarEngine/prefabs/elements/PrefabElement.h"
 
-#include "EngineSDK/prefabs/Prefab.h"
-#include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
-#include "EngineSDK/resources/materials/IMaterialResource.h"
-#include "EngineSDK/utils/UUID.h"
+#include "KwasarEngine/prefabs/Prefab.h"
+#include "KwasarEngine/prefabs/elements/PrefabElementInstance.h"
+#include "KwasarEngine/resources/materials/IMaterialResource.h"
+#include "KwasarEngine/utils/UUID.h"
 
 namespace mer::sdk {
 PrefabElement::PrefabElement(const std::string &pName)

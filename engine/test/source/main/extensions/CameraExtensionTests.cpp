@@ -21,9 +21,9 @@
 
 #include <gtest/gtest.h>
 
-#include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineSDK/extensions/ExtensionRegistry.h"
-#include "EngineSDK/extensions/cameras/CameraExtension.h"
+#include "KwasarEngine/scene/objects/SceneObject.h"
+#include "KwasarEngine/extensions/ExtensionRegistry.h"
+#include "KwasarEngine/extensions/cameras/CameraExtension.h"
 
 using namespace mer::sdk;
 

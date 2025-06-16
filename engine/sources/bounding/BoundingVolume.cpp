@@ -19,7 +19,7 @@
 // Created by alexus on 06.03.25.
 //
 
-#include "EngineSDK/bounding/BoundingVolume.h"
+#include "KwasarEngine/bounding/BoundingVolume.h"
 
 #include <epoxy/gl.h>
 

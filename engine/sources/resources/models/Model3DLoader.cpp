@@ -19,14 +19,14 @@
 // Created by alexus on 26.03.24.
 //
 
-#include "EngineSDK/resources/models/Model3DLoader.h"
+#include "KwasarEngine/resources/models/Model3DLoader.h"
 
-#include "EngineSDK/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/resources/ResourceLoadResult.h"
-#include "EngineSDK/resources/models/Model3DObject.h"
-#include "EngineSDK/resources/models/Model3DResource.h"
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/resources/IResourceLoadExecutor.h"
+#include "KwasarEngine/resources/ResourceLoadResult.h"
+#include "KwasarEngine/resources/models/Model3DObject.h"
+#include "KwasarEngine/resources/models/Model3DResource.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/utils/Logger.h"
 
 namespace mer::sdk {
 std::shared_ptr<IResource> Model3DLoader::createResource() { return Model3DResource::create(); }

@@ -19,11 +19,11 @@
 // Created by alexus on 23.10.24.
 //
 
-#include "EngineSDK/extensions/LightExtension.h"
+#include "KwasarEngine/extensions/LightExtension.h"
 
 #include <glm/vec4.hpp>
 
-#include "EngineSDK/gltf/Node.h"
+#include "KwasarEngine/gltf/Node.h"
 
 namespace mer::sdk {
 LightExtension::LightExtension() : lightDataId(this, "LightSource") { lightDataId = -1; }

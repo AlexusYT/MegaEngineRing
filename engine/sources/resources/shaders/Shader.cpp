@@ -20,11 +20,11 @@
 //
 
 
-#include "EngineSDK/resources/shaders/Shader.h"
+#include "KwasarEngine/resources/shaders/Shader.h"
 
 #include <epoxy/gl.h>
 
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 
 namespace mer::sdk {
 Shader::Shader(const ShaderTypeEnum pType) : type(pType) {}

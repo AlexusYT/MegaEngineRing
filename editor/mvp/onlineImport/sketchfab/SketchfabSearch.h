@@ -25,7 +25,7 @@
 #include <nlohmann/json_fwd.hpp>
 #include <thread>
 
-#include "EngineSDK/utils/IReportable.h"
+#include "KwasarEngine/utils/IReportable.h"
 
 namespace mer::sdk {
 class GltfModel;

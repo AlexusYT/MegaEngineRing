@@ -19,15 +19,15 @@
 // Created by alexus on 24.10.24.
 //
 
-#include "EngineSDK/light/LightSources.h"
+#include "KwasarEngine/light/LightSources.h"
 
-#include "EngineSDK/buffers/SSBO.h"
-#include "EngineSDK/light/ILightInstance.h"
+#include "KwasarEngine/buffers/SSBO.h"
+#include "KwasarEngine/light/ILightInstance.h"
 
 namespace mer::sdk {
 LightSources::LightSources() : lightSsbo(std::make_shared<SSBO>()) { lightSsbo->setUsage(DYNAMIC_DRAW); }
 
-std::shared_ptr<LightSources> LightSources::create() { return std::shared_ptr<LightSources>(new LightSources()); }
+std::shared_ptr<LightSources> LightSources::create() { return std::shared_ptr < LightSources > (new LightSources()); }
 
 void LightSources::updateSsbo() {
 	if (!dirty) return;

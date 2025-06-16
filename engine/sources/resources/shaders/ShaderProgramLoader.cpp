@@ -19,11 +19,11 @@
 // Created by alexus on 04.02.24.
 //
 
-#include "EngineSDK/resources/shaders/ShaderProgramLoader.h"
+#include "KwasarEngine/resources/shaders/ShaderProgramLoader.h"
 
-#include "EngineSDK/resources/shaders/Shader.h"
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/resources/shaders/Shader.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 
 namespace mer::sdk {
 std::shared_ptr<IResource> ShaderProgramLoader::createResource() { return std::make_shared<ShaderProgram>(); }

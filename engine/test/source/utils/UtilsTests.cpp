@@ -21,7 +21,7 @@
 #include <fstream>
 #include <gtest/gtest.h>
 
-#include "EngineSDK/utils/Utils.h"
+#include "KwasarEngine/utils/Utils.h"
 
 TEST(UtilsTests, demangleUnknownName) { ASSERT_EQ(Utils::demangle("sssss"), "sssss"); }
 

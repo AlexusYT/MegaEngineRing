@@ -21,7 +21,7 @@
 
 #ifndef VIEWPREFABEDITOR_H
 #define VIEWPREFABEDITOR_H
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "IViewPrefabEditor.h"
 
 namespace mer::editor::mvp {

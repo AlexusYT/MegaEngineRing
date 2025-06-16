@@ -19,9 +19,9 @@
 // Created by alexus on 03.12.24.
 //
 
-#include "EngineSDK/resources/shaders/builtin/PrefabProgram.h"
+#include "KwasarEngine/resources/shaders/builtin/PrefabProgram.h"
 
-#include "EngineSDK/resources/shaders/Shader.h"
+#include "KwasarEngine/resources/shaders/Shader.h"
 
 namespace mer::sdk {
 std::shared_ptr<PrefabProgram> PrefabProgram::instance = std::shared_ptr<PrefabProgram>(new PrefabProgram);

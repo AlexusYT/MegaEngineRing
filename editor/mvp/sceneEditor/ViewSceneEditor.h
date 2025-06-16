@@ -22,7 +22,7 @@
 #ifndef VIEWSCENEEDITOR_H
 #define VIEWSCENEEDITOR_H
 
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/editor/Editor.h"
 
 namespace mer::sdk {

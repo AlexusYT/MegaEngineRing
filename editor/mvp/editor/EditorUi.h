@@ -21,7 +21,7 @@
 
 #ifndef EDITORUI_H
 #define EDITORUI_H
-#include "EngineSDK/scene/SceneUi.h"
+#include "KwasarEngine/scene/SceneUi.h"
 
 namespace mer::editor::mvp {
 class IPresenterSettingsWindow;

@@ -19,7 +19,7 @@
 // Created by alexus on 29.12.23.
 //
 
-#include <EngineSDK/utils/Logger.h>
+#include <KwasarEngine/utils/Logger.h>
 #include <cstring>
 #include <chrono>
 #include <iostream>

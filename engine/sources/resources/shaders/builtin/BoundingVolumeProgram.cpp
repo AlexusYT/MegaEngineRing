@@ -19,9 +19,9 @@
 // Created by alexus on 06.03.25.
 //
 
-#include "EngineSDK/resources/shaders/builtin/BoundingVolumeProgram.h"
+#include "KwasarEngine/resources/shaders/builtin/BoundingVolumeProgram.h"
 
-#include "EngineSDK/resources/shaders/Shader.h"
+#include "KwasarEngine/resources/shaders/Shader.h"
 
 namespace mer::sdk {
 std::shared_ptr<BoundingVolumeProgram> BoundingVolumeProgram::instance =

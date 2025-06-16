@@ -22,7 +22,7 @@
 #ifndef PROJECTEXPORERWINDOW_H
 #define PROJECTEXPORERWINDOW_H
 
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "IViewProjectExplorer.h"
 
 namespace mer::editor::ui {}

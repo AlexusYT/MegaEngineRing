@@ -23,11 +23,11 @@
 
 #include <epoxy/gl.h>
 
-#include "EngineSDK/bounding/VolumeAabb.h"
-#include "EngineSDK/buffers/Framebuffer.h"
-#include "EngineSDK/buffers/ProgramWideShaderBuffer.h"
-#include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineSDK/resources/shaders/builtin/DefaultProgram.h"
+#include "KwasarEngine/bounding/VolumeAabb.h"
+#include "KwasarEngine/buffers/Framebuffer.h"
+#include "KwasarEngine/buffers/ProgramWideShaderBuffer.h"
+#include "KwasarEngine/extensions/cameras/OrbitCameraExtension.h"
+#include "KwasarEngine/resources/shaders/builtin/DefaultProgram.h"
 #include "IPresenterScenePreview.h"
 #include "examples/libs/glfw/include/GLFW/glfw3.h"
 #include "imgui_internal.h"
@@ -40,7 +40,7 @@ ViewScenePreview::ViewScenePreview(const std::string &pName, const std::shared_p
 
 std::shared_ptr<ViewScenePreview> ViewScenePreview::create(const std::string &pName,
 														   const std::shared_ptr<IWidgetContext> &pContext) {
-	return std::shared_ptr<ViewScenePreview>(new ViewScenePreview(pName, pContext));
+	return std::shared_ptr < ViewScenePreview > (new ViewScenePreview(pName, pContext));
 }
 
 void ViewScenePreview::customRender() {

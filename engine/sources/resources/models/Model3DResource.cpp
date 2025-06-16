@@ -19,9 +19,9 @@
 // Created by alexus on 01.10.24.
 //
 
-#include "EngineSDK/resources/models/Model3DResource.h"
+#include "KwasarEngine/resources/models/Model3DResource.h"
 
-#include "EngineSDK/resources/models/IModel3DObject.h"
+#include "KwasarEngine/resources/models/IModel3DObject.h"
 
 namespace mer::sdk {
 std::shared_ptr<Model3DResource> Model3DResource::create() {

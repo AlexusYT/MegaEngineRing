@@ -19,7 +19,7 @@
 // Created by alexus on 17.04.25.
 //
 
-#include "EngineSDK/gltf/Light.h"
+#include "KwasarEngine/gltf/Light.h"
 
 #include <nlohmann/json.hpp>
 

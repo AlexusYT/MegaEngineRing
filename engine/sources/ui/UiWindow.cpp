@@ -19,9 +19,9 @@
 // Created by alexus on 10.02.25.
 //
 
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiWindow.h"
 
-#include "EngineSDK/ui/UiPopup.h"
+#include "KwasarEngine/ui/UiPopup.h"
 
 namespace mer::sdk {
 void UiWindow::render() {

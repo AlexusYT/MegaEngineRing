@@ -19,9 +19,9 @@
 // Created by alexus on 28.10.24.
 //
 
-#include "EngineSDK/utils/PropertyBase.h"
+#include "KwasarEngine/utils/PropertyBase.h"
 
-#include "EngineSDK/utils/IPropertyProvider.h"
+#include "KwasarEngine/utils/IPropertyProvider.h"
 
 namespace mer::sdk {
 PropertyBase::PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription)

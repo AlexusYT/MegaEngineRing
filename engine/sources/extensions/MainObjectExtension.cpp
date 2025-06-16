@@ -19,7 +19,7 @@
 // Created by alexus on 28.09.24.
 //
 
-#include "EngineSDK/extensions/MainObjectExtension.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
 
 namespace mer::sdk {
 MainObjectExtension::MainObjectExtension() : propertyName(this, "Name"), propertyPosition(this, "Position") {}

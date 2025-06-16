@@ -19,12 +19,12 @@
 // Created by alexus on 24.02.25.
 //
 
-#include "EngineSDK/gltf/Accessor.h"
+#include "KwasarEngine/gltf/Accessor.h"
 
 #include <epoxy/gl.h>
 #include <glm/ext/scalar_common.hpp>
 
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 #include "GLTFSDK/GLTF.h"
 #include "GLTFSDK/GLTFResourceReader.h"
 

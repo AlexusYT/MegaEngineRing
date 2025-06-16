@@ -19,7 +19,7 @@
 // Created by alexus on 06.03.25.
 //
 
-#include "EngineSDK/bounding/VolumeAabb.h"
+#include "KwasarEngine/bounding/VolumeAabb.h"
 
 #include <cmath>
 #include <glm/mat4x4.hpp>

@@ -19,9 +19,9 @@
 // Created by alexus on 16.02.25.
 //
 
-#include "EngineSDK/resources/shaders/builtin/DefaultProgram.h"
+#include "KwasarEngine/resources/shaders/builtin/DefaultProgram.h"
 
-#include "EngineSDK/resources/shaders/Shader.h"
+#include "KwasarEngine/resources/shaders/Shader.h"
 
 namespace mer::sdk {
 std::shared_ptr<DefaultProgram> DefaultProgram::instance = std::shared_ptr<DefaultProgram>(new DefaultProgram);

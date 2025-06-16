@@ -19,7 +19,7 @@
 // Created by alexus on 23.11.24.
 //
 
-#include "EngineSDK/resources/materials/ColorComponent.h"
+#include "KwasarEngine/resources/materials/ColorComponent.h"
 
 namespace mer::sdk {
 ColorComponent::ColorComponent(const glm::vec4 &pColor) : color(nullptr, "ColorComponent") { color = pColor; }
@@ -27,7 +27,7 @@ ColorComponent::ColorComponent(const glm::vec4 &pColor) : color(nullptr, "ColorC
 std::shared_ptr<ColorComponent> ColorComponent::create() { return create({0.0f, 0.0f, 0.0f, 1.0f}); }
 
 std::shared_ptr<ColorComponent> ColorComponent::create(const glm::vec4 &pColor) {
-	return std::shared_ptr<ColorComponent>(new ColorComponent(pColor));
+	return std::shared_ptr < ColorComponent > (new ColorComponent(pColor));
 }
 
 std::shared_ptr<ColorComponent> ColorComponent::create(const float pRed, const float pGreen, const float pBlue,

@@ -19,19 +19,19 @@
 // Created by alexus on 14.03.25.
 //
 
-#include "EngineSDK/render/Renderer.h"
+#include "KwasarEngine/render/Renderer.h"
 
 #include <epoxy/gl.h>
 #include <mutex>
 #include <sigc++/adaptors/bind.h>
 
-#include "EngineSDK/extensions/LightExtension.h"
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/gltf/Accessor.h"
-#include "EngineSDK/gltf/Material.h"
-#include "EngineSDK/gltf/Mesh.h"
-#include "EngineSDK/gltf/Primitive.h"
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/extensions/LightExtension.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/gltf/Accessor.h"
+#include "KwasarEngine/gltf/Material.h"
+#include "KwasarEngine/gltf/Mesh.h"
+#include "KwasarEngine/gltf/Primitive.h"
+#include "KwasarEngine/utils/Logger.h"
 
 namespace mer::sdk {
 class Logger;

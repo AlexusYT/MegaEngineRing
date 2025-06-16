@@ -19,16 +19,16 @@
 // Created by alexus on 31.01.24.
 //
 
-#include "EngineSDK/context/Window.h"
+#include "KwasarEngine/context/Window.h"
 
-#include <EngineSDK/utils/ReportMessage.h>
+#include <KwasarEngine/utils/ReportMessage.h>
 #include <epoxy/gl.h>
 // Must be included after epoxy
 #include <GLFW/glfw3.h>
 #include <thread>
 
-#include "EngineSDK/scene/SceneUi.h"
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/scene/SceneUi.h"
+#include "KwasarEngine/utils/Logger.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 

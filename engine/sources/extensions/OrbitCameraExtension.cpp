@@ -19,15 +19,15 @@
 // Created by alexus on 24.03.24.
 //
 
-#include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
+#include "KwasarEngine/extensions/cameras/OrbitCameraExtension.h"
 
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/polar_coordinates.hpp>
 
-#include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/scene/Scene.h"
-#include "EngineSDK/scene/objects/SceneObject.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
+#include "KwasarEngine/scene/Scene.h"
+#include "KwasarEngine/scene/objects/SceneObject.h"
 
 namespace mer::sdk {
 OrbitCameraExtension::OrbitCameraExtension()

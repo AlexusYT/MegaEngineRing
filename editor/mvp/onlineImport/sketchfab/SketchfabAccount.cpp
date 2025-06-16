@@ -24,7 +24,7 @@
 #include <curl/curl.h>
 #include <nlohmann/json.hpp>
 
-#include "EngineSDK/gltf/GltfModel.h"
+#include "KwasarEngine/gltf/GltfModel.h"
 #include "GLTFSDK/IStreamReader.h"
 #include "Globals.h"
 #include "SketchfabCache.h"
@@ -64,7 +64,7 @@ std::shared_ptr<SketchfabAccount> SketchfabAccount::createFromFile(const std::fi
 }
 
 std::shared_ptr<SketchfabAccount> SketchfabAccount::create() {
-	return std::shared_ptr<SketchfabAccount>(new SketchfabAccount());
+	return std::shared_ptr < SketchfabAccount > (new SketchfabAccount());
 }
 
 sdk::ReportMessagePtr SketchfabAccount::saveToFile(const std::filesystem::path &pFilePath) {
@@ -127,7 +127,7 @@ sdk::ReportMessagePtr SketchfabAccount::getRequest(const std::string &pUrl, cons
 		sdk::Logger::out("Request: {}?{}", pUrl, pData);
 		auto startTime = std::chrono::steady_clock::now();
 		std::unique_ptr<CURL, void (*)(CURL*)>
-			request(curl_easy_init(), curl_easy_cleanup);
+		request(curl_easy_init(), curl_easy_cleanup);
 		curl_easy_setopt(request.get(), CURLOPT_URL, (pUrl + "?" + pData).c_str());
 
 		std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
@@ -142,10 +142,10 @@ sdk::ReportMessagePtr SketchfabAccount::getRequest(const std::string &pUrl, cons
 		curl_easy_setopt(request.get(), CURLOPT_XFERINFOFUNCTION,
 						 static_cast<curl_xferinfo_callback>(
 							 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/,
-								 curl_off_t /*ulnow*/) {
-							 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
-							 static_cast<std::atomic<float>*>(clientp)->store(progress);
-							 return 0;
+								curl_off_t /*ulnow*/) {
+								 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
+								 static_cast<std::atomic<float>*>(clientp)->store(progress);
+								 return 0;
 							 }));
 		curl_easy_perform(request.get());
 		curlList.reset();
@@ -182,7 +182,7 @@ sdk::ReportMessagePtr SketchfabAccount::downloadImage(
 	try {
 		sdk::Logger::out("Downloading image: {}", pUrl);
 		std::unique_ptr<CURL, void (*)(CURL*)>
-			request(curl_easy_init(), curl_easy_cleanup);
+		request(curl_easy_init(), curl_easy_cleanup);
 		curl_easy_setopt(request.get(), CURLOPT_URL, pUrl.c_str());
 
 		/*std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
@@ -227,7 +227,7 @@ sdk::ReportMessagePtr SketchfabAccount::downloadModel(const std::string &pUrl,
 		try {
 			sdk::Logger::out("Downloading model: {}", pUrl);
 			std::unique_ptr<CURL, void (*)(CURL*)>
-				request(curl_easy_init(), curl_easy_cleanup);
+			request(curl_easy_init(), curl_easy_cleanup);
 			curl_easy_setopt(request.get(), CURLOPT_URL, pUrl.c_str());
 
 			/*std::list<std::string> header = {"Content-Type: application/x-www-form-urlencoded"};
@@ -241,10 +241,10 @@ sdk::ReportMessagePtr SketchfabAccount::downloadModel(const std::string &pUrl,
 			curl_easy_setopt(request.get(), CURLOPT_XFERINFOFUNCTION,
 							 static_cast<curl_xferinfo_callback>(
 								 [](void* clientp, curl_off_t pDltotal, curl_off_t pDlnow, curl_off_t /*ultotal*/,
-									 curl_off_t /*ulnow*/) {
-								 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
-								 *static_cast<float*>(clientp) = progress;
-								 return 0;
+									curl_off_t /*ulnow*/) {
+									 auto progress = static_cast<float>(pDlnow) / static_cast<float>(pDltotal);
+									 *static_cast<float*>(clientp) = progress;
+									 return 0;
 								 }));
 
 			//TODO use curl_multi_perform

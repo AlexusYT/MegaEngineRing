@@ -19,13 +19,13 @@
 // Created by alexus on 31.01.24.
 //
 
-#include "EngineSDK/resources/LoadedResources.h"
+#include "KwasarEngine/resources/LoadedResources.h"
 
-#include "EngineSDK/utils/Logger.h"
-#include "EngineSDK/render/IRenderable.h"
-#include "EngineSDK/render/Initializable.h"
-#include "EngineSDK/resources/IResource.h"
-#include "EngineSDK/resources/shaders/builtin/PrefabProgram.h"
+#include "KwasarEngine/utils/Logger.h"
+#include "KwasarEngine/render/IRenderable.h"
+#include "KwasarEngine/render/Initializable.h"
+#include "KwasarEngine/resources/IResource.h"
+#include "KwasarEngine/resources/shaders/builtin/PrefabProgram.h"
 
 namespace mer::sdk {
 LoadedResources::LoadedResources() {

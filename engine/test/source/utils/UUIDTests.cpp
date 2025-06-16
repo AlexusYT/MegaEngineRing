@@ -18,8 +18,8 @@
 #include <gtest/gtest.h>
 #include <ranges>
 
-#include "EngineSDK/utils/UUID.h"
-#include "EngineSDK/utils/ReportMessage.h"
+#include "KwasarEngine/utils/UUID.h"
+#include "KwasarEngine/utils/ReportMessage.h"
 
 using namespace mer::sdk;
 

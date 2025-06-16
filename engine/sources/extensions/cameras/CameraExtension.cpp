@@ -20,16 +20,16 @@
 //
 
 
-#include <EngineSDK/extensions/cameras/CameraExtension.h>
+#include <KwasarEngine/extensions/cameras/CameraExtension.h>
 
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/polar_coordinates.hpp>
 #include <sigc++/adaptors/hide.h>
 
-#include "EngineSDK/scene/Scene.h"
-#include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
+#include "KwasarEngine/scene/Scene.h"
+#include "KwasarEngine/scene/objects/SceneObject.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
 
 namespace mer::sdk {
 CameraExtension::CameraExtension()

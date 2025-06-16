@@ -19,14 +19,14 @@
 // Created by alexus on 25.10.24.
 //
 
-#include "EngineSDK/resources/materials/MaterialLoader.h"
+#include "KwasarEngine/resources/materials/MaterialLoader.h"
 
-#include "EngineSDK/resources/IResourceLoadExecutor.h"
-#include "EngineSDK/resources/ResourceLoadResult.h"
-#include "EngineSDK/resources/materials/ColorComponent.h"
-#include "EngineSDK/resources/materials/MaterialResource.h"
-#include "EngineSDK/resources/textures/ITextureResource.h"
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/resources/IResourceLoadExecutor.h"
+#include "KwasarEngine/resources/ResourceLoadResult.h"
+#include "KwasarEngine/resources/materials/ColorComponent.h"
+#include "KwasarEngine/resources/materials/MaterialResource.h"
+#include "KwasarEngine/resources/textures/ITextureResource.h"
+#include "KwasarEngine/utils/Logger.h"
 
 namespace mer::sdk {
 std::shared_ptr<IResource> MaterialLoader::createResource() { return MaterialResource::create(); }

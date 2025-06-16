@@ -21,7 +21,7 @@
 
 #ifndef SIMPLESHADER_H
 #define SIMPLESHADER_H
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
 namespace mer::editor::graphics {
 class SimpleShader : public sdk::ShaderProgram {

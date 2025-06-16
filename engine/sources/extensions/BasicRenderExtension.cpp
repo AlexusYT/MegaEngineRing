@@ -19,14 +19,14 @@
 // Created by alexus on 27.02.24.
 //
 
-#include <EngineSDK/extensions/BasicRenderExtension.h>
+#include <KwasarEngine/extensions/BasicRenderExtension.h>
 
-#include <EngineSDK/utils/Logger.h>
+#include <KwasarEngine/utils/Logger.h>
 #include <epoxy/gl.h>
 
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
-#include "EngineSDK/scene/Scene.h"
-#include "EngineSDK/scene/objects/SceneObject.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/scene/Scene.h"
+#include "KwasarEngine/scene/objects/SceneObject.h"
 
 namespace mer::sdk {
 ReportMessagePtr BasicRenderExtension::onInit() {

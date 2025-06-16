@@ -19,14 +19,14 @@
 // Created by alexus on 02.10.24.
 //
 
-#include "EngineSDK/resources/models/Model3DObject.h"
+#include "KwasarEngine/resources/models/Model3DObject.h"
 
 #include <epoxy/gl.h>
 
-#include "EngineSDK/buffers/SSBO.h"
-#include "EngineSDK/render/IRenderInstance.h"
-#include "EngineSDK/render/RenderInstanceData.h"
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/buffers/SSBO.h"
+#include "KwasarEngine/render/IRenderInstance.h"
+#include "KwasarEngine/render/RenderInstanceData.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
 namespace mer::sdk {
 Model3DObject::~Model3DObject() { Model3DObject::onUninitialize(); }

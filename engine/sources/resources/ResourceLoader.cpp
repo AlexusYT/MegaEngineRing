@@ -19,10 +19,10 @@
 // Created by alexus on 01.02.24.
 //
 
-#include "EngineSDK/resources/ResourceLoader.h"
+#include "KwasarEngine/resources/ResourceLoader.h"
 
-#include "EngineSDK/utils/UUID.h"
-#include "EngineSDK/resources/IResource.h"
+#include "KwasarEngine/utils/UUID.h"
+#include "KwasarEngine/resources/IResource.h"
 
 namespace mer::sdk {
 ReportMessagePtr ResourceLoader::preload(IResourceLoadExecutor* /*pResourcesContext*/,

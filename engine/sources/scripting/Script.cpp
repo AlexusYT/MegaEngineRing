@@ -19,6 +19,6 @@
 // Created by alexus on 25.06.24.
 //
 
-#include "EngineSDK/scripting/Script.h"
+#include "KwasarEngine/scripting/Script.h"
 
 namespace mer::sdk {} // namespace mer::sdk

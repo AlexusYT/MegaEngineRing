@@ -23,8 +23,8 @@
 #define VIEWSETTINGSWINDOW_H
 #include <typeindex>
 
-#include "EngineSDK/ui/UiPopup.h"
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiPopup.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/IView.h"
 
 namespace mer::editor::mvp {

@@ -19,7 +19,7 @@
 // Created by alexus on 27.02.25.
 //
 
-#include "EngineSDK/buffers/Framebuffer.h"
+#include "KwasarEngine/buffers/Framebuffer.h"
 
 #include <epoxy/gl.h>
 

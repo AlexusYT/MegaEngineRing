@@ -24,8 +24,8 @@
 #include <condition_variable>
 #include <thread>
 
-#include "EngineSDK/context/Application.h"
-#include "EngineSDK/resources/IResourceLoadExecutor.h"
+#include "KwasarEngine/context/Application.h"
+#include "KwasarEngine/resources/IResourceLoadExecutor.h"
 
 namespace mer::sdk {
 class IResourceLoader;
@@ -39,7 +39,7 @@ class ResourcesContext : public sdk::IResourceLoadExecutor {
 	struct Request {
 		std::filesystem::path uri;
 		RequestType type;
-		sigc::signal<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> callbackSignal;
+		sigc::signal<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> callbackSignal;
 	};
 
 	std::mutex queueMutex;
@@ -74,7 +74,7 @@ public:
 
 	void loadResourceAsync(
 		const std::string &pResourceUri,
-		const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) override;
+		const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> &pSlot) override;
 
 	void loop(const std::stop_token &pToken);
 
@@ -90,7 +90,7 @@ public:
 
 private:
 	static void callSlot(const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
-						 const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot);
+						 const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> &pSlot);
 
 	static std::shared_ptr<sdk::IResourceLoader> getLoader(const std::shared_ptr<Request> &pRequest);
 

@@ -21,7 +21,7 @@
 
 #include "SimpleShader.h"
 
-#include "EngineSDK/resources/shaders/Shader.h"
+#include "KwasarEngine/resources/shaders/Shader.h"
 
 namespace mer::editor::graphics {
 std::shared_ptr<SimpleShader> SimpleShader::instance = std::shared_ptr<SimpleShader>(new SimpleShader);

@@ -19,12 +19,12 @@
 // Created by alexus on 27.02.24.
 //
 
-#include "EngineSDK/scene/objects/SceneObject.h"
+#include "KwasarEngine/scene/objects/SceneObject.h"
 
-#include "EngineSDK/utils/ReportMessage.h"
-#include "EngineSDK/utils/UUID.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/scripting/IScript.h"
+#include "KwasarEngine/utils/ReportMessage.h"
+#include "KwasarEngine/utils/UUID.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
+#include "KwasarEngine/scripting/IScript.h"
 
 namespace mer::sdk {
 SceneObject::SceneObject() {

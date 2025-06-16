@@ -23,16 +23,16 @@
 
 #include <memory>
 
-#include "EngineSDK/bounding/DebugGeometry.h"
-#include "EngineSDK/bounding/VolumeAabb.h"
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/render/Renderer.h"
-#include "EngineSDK/resources/shaders/builtin/BoundingVolumeProgram.h"
-#include "EngineSDK/resources/shaders/builtin/DefaultProgram.h"
-#include "EngineSDK/scene/Scene3D.h"
-#include "EngineSDK/utils/Transformation.h"
+#include "KwasarEngine/bounding/DebugGeometry.h"
+#include "KwasarEngine/bounding/VolumeAabb.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/extensions/cameras/OrbitCameraExtension.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/render/Renderer.h"
+#include "KwasarEngine/resources/shaders/builtin/BoundingVolumeProgram.h"
+#include "KwasarEngine/resources/shaders/builtin/DefaultProgram.h"
+#include "KwasarEngine/scene/Scene3D.h"
+#include "KwasarEngine/utils/Transformation.h"
 #include "IModelScenePreview.h"
 #include "IViewScenePreview.h"
 

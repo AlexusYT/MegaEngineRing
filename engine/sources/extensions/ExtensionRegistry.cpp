@@ -19,19 +19,19 @@
 // Created by alexus on 15.03.24.
 //
 
-#include "EngineSDK/extensions/ExtensionRegistry.h"
+#include "KwasarEngine/extensions/ExtensionRegistry.h"
 
-#include "EngineSDK/extensions/BasicRenderExtension.h"
-#include "EngineSDK/extensions/LightExtension.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/extensions/MouseButtonExtension.h"
-#include "EngineSDK/extensions/cameras/CameraExtension.h"
-#include "EngineSDK/extensions/cameras/CameraKeyboardExtension.h"
-#include "EngineSDK/extensions/cameras/CameraMouseExtension.h"
-#include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineSDK/utils/ReportMessage.h"
-#include "EngineSDK/utils/Utils.h"
+#include "KwasarEngine/extensions/BasicRenderExtension.h"
+#include "KwasarEngine/extensions/LightExtension.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/extensions/MouseButtonExtension.h"
+#include "KwasarEngine/extensions/cameras/CameraExtension.h"
+#include "KwasarEngine/extensions/cameras/CameraKeyboardExtension.h"
+#include "KwasarEngine/extensions/cameras/CameraMouseExtension.h"
+#include "KwasarEngine/extensions/cameras/OrbitCameraExtension.h"
+#include "KwasarEngine/utils/ReportMessage.h"
+#include "KwasarEngine/utils/Utils.h"
 
 namespace mer::sdk {
 void ExtensionRegistry::init() {

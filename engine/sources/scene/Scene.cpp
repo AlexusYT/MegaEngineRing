@@ -19,27 +19,27 @@
 // Created by alexus on 02.02.24.
 //
 
-#include "EngineSDK/scene/Scene.h"
+#include "KwasarEngine/scene/Scene.h"
 
 #include <epoxy/gl.h>
 
-#include "EngineSDK/extensions/Extension.h"
-#include "EngineSDK/extensions/ExtensionProperty.h"
-#include "EngineSDK/extensions/cameras/ICamera.h"
-#include "EngineSDK/light/ILightInstance.h"
-#include "EngineSDK/light/LightSources.h"
-#include "EngineSDK/prefabs/Prefab.h"
-#include "EngineSDK/prefabs/PrefabInstance.h"
-#include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
-#include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
-#include "EngineSDK/resources/LoadedResources.h"
-#include "EngineSDK/resources/materials/ColorComponent.h"
-#include "EngineSDK/resources/materials/IMaterialResource.h"
-#include "EngineSDK/resources/materials/MaterialResource.h"
-#include "EngineSDK/resources/models/Model3DResource.h"
-#include "EngineSDK/resources/shaders/builtin/PrefabProgram.h"
-#include "EngineSDK/scene/objects/ISceneObject.h"
-#include "EngineSDK/utils/Logger.h"
+#include "KwasarEngine/extensions/Extension.h"
+#include "KwasarEngine/extensions/ExtensionProperty.h"
+#include "KwasarEngine/extensions/cameras/ICamera.h"
+#include "KwasarEngine/light/ILightInstance.h"
+#include "KwasarEngine/light/LightSources.h"
+#include "KwasarEngine/prefabs/Prefab.h"
+#include "KwasarEngine/prefabs/PrefabInstance.h"
+#include "KwasarEngine/prefabs/elements/MeshPrefabElement.h"
+#include "KwasarEngine/prefabs/elements/PrefabElementInstance.h"
+#include "KwasarEngine/resources/LoadedResources.h"
+#include "KwasarEngine/resources/materials/ColorComponent.h"
+#include "KwasarEngine/resources/materials/IMaterialResource.h"
+#include "KwasarEngine/resources/materials/MaterialResource.h"
+#include "KwasarEngine/resources/models/Model3DResource.h"
+#include "KwasarEngine/resources/shaders/builtin/PrefabProgram.h"
+#include "KwasarEngine/scene/objects/ISceneObject.h"
+#include "KwasarEngine/utils/Logger.h"
 
 namespace mer::sdk {
 Scene::Scene()

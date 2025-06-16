@@ -20,14 +20,14 @@
 //
 
 
-#include <EngineSDK/extensions/Extension.h>
+#include <KwasarEngine/extensions/Extension.h>
 
 #include <nlohmann/json.hpp>
 
-#include "EngineSDK/extensions/ExtensionRegistry.h"
-#include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineSDK/utils/Logger.h"
-#include "EngineSDK/utils/PropertyBase.h"
+#include "KwasarEngine/extensions/ExtensionRegistry.h"
+#include "KwasarEngine/scene/objects/SceneObject.h"
+#include "KwasarEngine/utils/Logger.h"
+#include "KwasarEngine/utils/PropertyBase.h"
 
 namespace mer::sdk {
 Extension::Extension() {}

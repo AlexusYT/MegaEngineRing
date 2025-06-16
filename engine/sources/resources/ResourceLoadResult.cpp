@@ -19,7 +19,7 @@
 // Created by alexus on 26.10.24.
 //
 
-#include "EngineSDK/resources/ResourceLoadResult.h"
+#include "KwasarEngine/resources/ResourceLoadResult.h"
 
 namespace mer::sdk {
 std::shared_ptr<ResourceLoadResult> ResourceLoadResult::create() {

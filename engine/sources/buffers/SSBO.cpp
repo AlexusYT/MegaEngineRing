@@ -20,7 +20,7 @@
 //
 
 
-#include "EngineSDK/buffers/SSBO.h"
+#include "KwasarEngine/buffers/SSBO.h"
 
 #include <epoxy/gl.h>
 
@@ -29,17 +29,11 @@ void SsboImpl::bindBufferBase(const uint32_t pBinding) const {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name);
 }
 
-void SsboImpl::unbindBufferBase(const uint32_t pBinding) {
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, 0);
-}
+void SsboImpl::unbindBufferBase(const uint32_t pBinding) { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, 0); }
 
-SSBO::SSBO() {
-	glCreateBuffers(1, &name);
-}
+SSBO::SSBO() { glCreateBuffers(1, &name); }
 
-SSBO::~SSBO() {
-	glDeleteBuffers(1, &name);
-}
+SSBO::~SSBO() { glDeleteBuffers(1, &name); }
 
 void SSBO::setData(const void* pData, const int64_t pSize, const BufferUsageEnum pUsage) {
 	data = pData;
@@ -49,21 +43,15 @@ void SSBO::setData(const void* pData, const int64_t pSize, const BufferUsageEnum
 	glNamedBufferData(name, pSize, pData, usage);
 }
 
-void SSBO::bind() const {
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, name);
-}
+void SSBO::bind() const { glBindBuffer(GL_SHADER_STORAGE_BUFFER, name); }
 
 void SSBO::unbind() const {}
 
 uint32_t SSBO::native() const { return name; }
 
-void SSBO::bindBufferBase(const uint32_t pBinding) {
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name);
-}
+void SSBO::bindBufferBase(const uint32_t pBinding) { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name); }
 
-void SSBO::unbindBufferBase(const uint32_t pBinding) {
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, 0);
-}
+void SSBO::unbindBufferBase(const uint32_t pBinding) { glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, 0); }
 
 void SSBO::bufferSubData(int32_t pOffset, int64_t pSize, const void* pData) {
 	glNamedBufferSubData(name, pOffset, pSize, pData);

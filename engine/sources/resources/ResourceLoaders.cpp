@@ -19,12 +19,12 @@
 // Created by alexus on 02.10.24.
 //
 
-#include "EngineSDK/resources/ResourceLoaders.h"
+#include "KwasarEngine/resources/ResourceLoaders.h"
 
-#include "EngineSDK/resources/materials/MaterialLoader.h"
-#include "EngineSDK/resources/models/Model3DLoader.h"
-#include "EngineSDK/resources/shaders/ShaderProgramLoader.h"
-#include "EngineSDK/resources/textures/TextureLoader.h"
+#include "KwasarEngine/resources/materials/MaterialLoader.h"
+#include "KwasarEngine/resources/models/Model3DLoader.h"
+#include "KwasarEngine/resources/shaders/ShaderProgramLoader.h"
+#include "KwasarEngine/resources/textures/TextureLoader.h"
 
 namespace mer::sdk {
 void ResourceLoaders::addLoader(const std::shared_ptr<IResourceLoader> &pLoader) {

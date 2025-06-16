@@ -20,12 +20,12 @@
 //
 
 
-#include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
+#include "KwasarEngine/prefabs/elements/PrefabElementInstance.h"
 
 #include <glm/ext/matrix_transform.hpp>
 
-#include "EngineSDK/resources/materials/MaterialResource.h"
-#include "EngineSDK/utils/Transformation.h"
+#include "KwasarEngine/resources/materials/MaterialResource.h"
+#include "KwasarEngine/utils/Transformation.h"
 
 namespace mer::sdk {
 PrefabElementInstance::PrefabElementInstance()
@@ -44,7 +44,7 @@ PrefabElementInstance::PrefabElementInstance()
 }
 
 std::shared_ptr<PrefabElementInstance> PrefabElementInstance::create() {
-	return std::shared_ptr<PrefabElementInstance>(new PrefabElementInstance());
+	return std::shared_ptr < PrefabElementInstance > (new PrefabElementInstance());
 }
 
 void PrefabElementInstance::onParentMaterialChanged(const std::shared_ptr<IMaterialResource> &pMaterial) {

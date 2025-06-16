@@ -23,22 +23,22 @@
 
 #include <glm/ext/scalar_common.hpp>
 
-#include "EngineSDK/extensions/ExtensionRegistry.h"
-#include "EngineSDK/extensions/LightExtension.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/gltf/Light.h"
-#include "EngineSDK/gltf/Material.h"
-#include "EngineSDK/gltf/Mesh.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/gltf/Primitive.h"
-#include "EngineSDK/scene/Scene3D.h"
-#include "EngineSDK/utils/Transformation.h"
+#include "KwasarEngine/extensions/ExtensionRegistry.h"
+#include "KwasarEngine/extensions/LightExtension.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/gltf/Light.h"
+#include "KwasarEngine/gltf/Material.h"
+#include "KwasarEngine/gltf/Mesh.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/gltf/Primitive.h"
+#include "KwasarEngine/scene/Scene3D.h"
+#include "KwasarEngine/utils/Transformation.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
 
 namespace mer::editor::mvp {
-std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> &pExt)>>
+std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> & pExt)>>
 ViewObjectProperties::extRenderers;
 
 ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext> &pContext)

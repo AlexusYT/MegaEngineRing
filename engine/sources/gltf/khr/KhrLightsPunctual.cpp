@@ -19,11 +19,11 @@
 // Created by alexus on 17.04.25.
 //
 
-#include "EngineSDK/gltf/khr/KhrLightsPunctual.h"
+#include "KwasarEngine/gltf/khr/KhrLightsPunctual.h"
 
 #include <nlohmann/json.hpp>
 
-#include "EngineSDK/gltf/Light.h"
+#include "KwasarEngine/gltf/Light.h"
 #include "GLTFSDK/Document.h"
 #include "GLTFSDK/ExtensionHandlers.h"
 

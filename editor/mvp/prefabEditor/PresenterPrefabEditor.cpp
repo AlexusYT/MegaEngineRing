@@ -21,8 +21,8 @@
 
 #include "PresenterPrefabEditor.h"
 
-#include "EngineSDK/prefabs/Prefab.h"
-#include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
+#include "KwasarEngine/prefabs/Prefab.h"
+#include "KwasarEngine/prefabs/elements/MeshPrefabElement.h"
 #include "IModelPrefabEditor.h"
 #include "IViewPrefabEditor.h"
 #include "mvp/scenePreview/ViewScenePreview.h"
@@ -34,7 +34,7 @@ PresenterPrefabEditor::PresenterPrefabEditor(const std::shared_ptr<IModelPrefabE
 
 std::shared_ptr<PresenterPrefabEditor> PresenterPrefabEditor::create(const std::shared_ptr<IModelPrefabEditor> &pModel,
 																	 const std::shared_ptr<IViewPrefabEditor> &pView) {
-	return std::shared_ptr<PresenterPrefabEditor>(new PresenterPrefabEditor(pModel, pView));
+	return std::shared_ptr < PresenterPrefabEditor > (new PresenterPrefabEditor(pModel, pView));
 }
 
 void PresenterPrefabEditor::addMeshesFrom(const std::filesystem::path & /*pPath*/) {}
