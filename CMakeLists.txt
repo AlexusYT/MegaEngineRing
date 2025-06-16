@@ -70,14 +70,14 @@ else ()
     message(STATUS "Compilation of ImGuiB2C utility succeeded")
 endif ()
 
-target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/imconfig_custom.h>\"")
+target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/engine/imconfig_custom.h>\"")
 
 add_subdirectory(submodules/ImGuiFileDialog)
 target_link_libraries(ImGuiFileDialog PRIVATE ImGUI)
 target_compile_definitions(ImGuiFileDialog PUBLIC "CUSTOM_IMGUIFILEDIALOG_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor/ImGuiFileDialogConfigCustom.h>\"")
 
 
-add_subdirectory(sdk)
+add_subdirectory(engine)
 add_subdirectory(editor)
 
 # ---- Declare executable ----

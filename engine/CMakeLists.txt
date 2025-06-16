@@ -256,7 +256,7 @@ endforeach ()
 
 add_library(KwasarEngineLib STATIC ${ENGINE_SOURCES} imconfig_custom.cpp ${ENGINE_HEADERS})
 
-target_sources(KwasarEngineLib PUBLIC FILE_SET engine_headers TYPE HEADERS BASE_DIRS "include/" FILES ${ENGINE_HEADERS})
+target_sources(KwasarEngineLib PUBLIC FILE_SET engine_headers TYPE HEADERS BASE_DIRS "include" FILES ${ENGINE_HEADERS})
 
 target_compile_definitions(KwasarEngineLib PUBLIC GLM_ENABLE_EXPERIMENTAL)
 target_compile_definitions(KwasarEngineLib PRIVATE EDITOR_SDK)
@@ -276,7 +276,7 @@ target_precompile_headers(KwasarEngineLib
 target_include_directories(
         KwasarEngineLib ${warning_guard}
         PUBLIC
-        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/include>"
+        "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/engine/include>"
 )
 
 target_link_libraries(KwasarEngineLib PUBLIC PkgConfig::epoxy)
