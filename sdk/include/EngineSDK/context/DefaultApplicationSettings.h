@@ -22,8 +22,8 @@
 #ifndef DEFAULTAPPLICATIONSETTINGS_H
 #define DEFAULTAPPLICATIONSETTINGS_H
 
-#include <EngineUtils/utils/Logger.h>
-#include <EngineUtils/utils/ReportMessage.h>
+#include <EngineSDK/utils/Logger.h>
+#include <EngineSDK/utils/ReportMessage.h>
 
 #include "IApplicationSettings.h"
 

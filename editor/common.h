@@ -24,8 +24,8 @@
 
 #define JSON_DISABLE_ENUM_SERIALIZATION 1
 #define JSON_USE_IMPLICIT_CONVERSIONS 0
-#include <EngineUtils/utils/Logger.h>
-#include <EngineUtils/utils/ReportMessage.h>
+#include <EngineSDK/utils/Logger.h>
+#include <EngineSDK/utils/ReportMessage.h>
 #include <I18N.h>
 #include <filesystem>
 #include <fstream>

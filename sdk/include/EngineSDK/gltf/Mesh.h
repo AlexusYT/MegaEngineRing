@@ -23,7 +23,7 @@
 #define MESH_H
 #include <sigc++/scoped_connection.h>
 
-#include "EngineUtils/utils/Property.h"
+#include "EngineSDK/utils/Property.h"
 
 namespace mer::sdk {
 class VolumeAabb;

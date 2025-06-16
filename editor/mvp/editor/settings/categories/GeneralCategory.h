@@ -21,7 +21,7 @@
 
 #ifndef GENERALCATEGORY_H
 #define GENERALCATEGORY_H
-#include "EngineUtils/utils/Property.h"
+#include "EngineSDK/utils/Property.h"
 #include "SettingsCategory.h"
 
 namespace mer::editor::mvp {

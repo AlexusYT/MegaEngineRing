@@ -29,7 +29,7 @@
 #include "EngineSDK/resources/materials/IMaterialResource.h"
 #include "EngineSDK/resources/materials/MaterialData.h"
 #include "EngineSDK/utils/Transformable.h"
-#include "EngineUtils/utils/Property.h"
+#include "EngineSDK/utils/Property.h"
 
 namespace mer::sdk {
 class PrefabInstance;

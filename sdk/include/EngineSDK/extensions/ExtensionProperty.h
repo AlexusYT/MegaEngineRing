@@ -24,7 +24,7 @@
 
 #include "EngineSDK/utils/ISerializable.h"
 #include "EngineSDK/utils/PropertyJsonSerializers.h"
-#include "EngineUtils/utils/Property.h"
+#include "EngineSDK/utils/Property.h"
 
 namespace mer::sdk {
 template <typename T>

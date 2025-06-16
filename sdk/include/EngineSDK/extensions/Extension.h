@@ -26,8 +26,8 @@
 
 #include "EngineSDK/resources/Resources.h"
 #include "EngineSDK/scene/IScene.h"
-#include "EngineUtils/utils/IPropertyProvider.h"
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/IPropertyProvider.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 #include "ExtensionProperty.h"
 
 namespace mer::sdk {
@@ -129,7 +129,7 @@ public:
 	 * @param pSlot NOT in a main context
 	 */
 	void loadResourceAsync(const std::string &pResourceUri,
-						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const {
+						   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) const {
 		getScene()->loadResourceAsync(pResourceUri,
 									  [pSlot](const std::shared_ptr<ResourceLoadResult> &pResult) { pSlot(pResult); });
 	}

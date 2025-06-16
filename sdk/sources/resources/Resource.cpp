@@ -21,8 +21,8 @@
 
 #include "EngineSDK/resources/Resource.h"
 
-#include "EngineUtils/utils/ReportMessage.h"
-#include "EngineUtils/utils/UUID.h"
+#include "EngineSDK/utils/ReportMessage.h"
+#include "EngineSDK/utils/UUID.h"
 
 namespace mer::sdk {
 Resource::Resource() { uuid = UUID::create(); }

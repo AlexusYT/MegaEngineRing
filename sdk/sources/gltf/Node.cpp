@@ -32,7 +32,7 @@
 #include "EngineSDK/gltf/Mesh.h"
 #include "EngineSDK/gltf/Primitive.h"
 #include "EngineSDK/utils/Transformation.h"
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 
 namespace mer::sdk {
 Node::Node(const Microsoft::glTF::Node &pNode)

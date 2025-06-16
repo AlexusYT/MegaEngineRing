@@ -16,15 +16,18 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 29.12.23.
+// Created by alexus on 28.10.24.
 //
 
+#include "EngineSDK/utils/PropertyBase.h"
 
-#include <EngineUtils/utils/ReportMessage.h>
-#include <cstring>
-#include <utility>
+#include "EngineSDK/utils/IPropertyProvider.h"
 
-mer::sdk::ReportMessage::ReportMessage(std::stacktrace pStacktrace)
-	: stacktrace(std::move(pStacktrace)), exceptionPtr(std::current_exception()) {
-	addInfoLine("Current errno status: {}", strerror(errno));
-}
+namespace mer::sdk {
+PropertyBase::PropertyBase(IPropertyProvider* pProvider, const std::string &pName, const std::string &pDescription)
+	: name(pName), description(pDescription), provider(pProvider) { if (provider) provider->addProperty(this); }
+
+PropertyBase::~PropertyBase() { if (provider) provider->removeProperty(this); }
+
+void PropertyBase::notifyChanged() { if (provider) provider->propertyChanged(this); }
+} // namespace mer::sdk

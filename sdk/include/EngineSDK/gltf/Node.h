@@ -27,7 +27,7 @@
 #include "EngineSDK/bounding/VolumeAabb.h"
 #include "EngineSDK/extensions/cameras/CameraExtension.h"
 #include "EngineSDK/utils/Transformable.h"
-#include "EngineUtils/utils/Property.h"
+#include "EngineSDK/utils/Property.h"
 #include "GLTFSDK/GLTF.h"
 
 namespace mer::sdk {

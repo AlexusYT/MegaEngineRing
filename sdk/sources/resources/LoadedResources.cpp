@@ -21,7 +21,7 @@
 
 #include "EngineSDK/resources/LoadedResources.h"
 
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 #include "EngineSDK/render/IRenderable.h"
 #include "EngineSDK/render/Initializable.h"
 #include "EngineSDK/resources/IResource.h"

@@ -24,7 +24,7 @@
 
 #include <epoxy/gl.h>
 
-#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineSDK/utils/ReportMessage.h"
 
 namespace mer::sdk {
 Shader::Shader(const ShaderTypeEnum pType) : type(pType) {}
@@ -49,9 +49,7 @@ void Shader::getInfoLog(std::string &pLogOut) const {
 	glGetShaderInfoLog(name, logLen, nullptr, pLogOut.data());
 }
 
-void Shader::compile() const {
-	glCompileShader(name);
-}
+void Shader::compile() const { glCompileShader(name); }
 
 ShaderTypeEnum Shader::getShaderType() const {
 	switch (getNativeShaderType()) {

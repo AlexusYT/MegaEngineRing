@@ -32,7 +32,7 @@
 #include "EngineSDK/gltf/Sampler.h"
 #include "EngineSDK/gltf/Texture.h"
 #include "EngineSDK/gltf/khr/KhrLightsPunctual.h"
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 #include "GLTFSDK/Deserialize.h"
 #include "GLTFSDK/ExtensionHandlers.h"
 #include "GLTFSDK/ExtensionsKHR.h"
@@ -116,7 +116,8 @@ ReportMessagePtr GltfModel::loadFromFile(const std::filesystem::path &pFilePath)
 	std::shared_ptr<GLTFResourceReader> resourceReader;
 	try {
 		if (pathFileExt == "."s + GLTF_EXTENSION
-		) {
+		)
+		{
 			auto gltfStream = streamReader->GetInputStream(pathFile.string());
 			auto gltfResourceReader = std::make_shared<GLTFResourceReader>(std::move(streamReader));
 
@@ -125,15 +126,20 @@ ReportMessagePtr GltfModel::loadFromFile(const std::filesystem::path &pFilePath)
 			manifest = manifestStream.str();
 
 			resourceReader = std::move(gltfResourceReader);
-		} else if (pathFileExt == "."s + GLB_EXTENSION
-		) {
+		}
+		else
+		if (pathFileExt == "."s + GLB_EXTENSION
+		)
+		{
 			auto glbStream = streamReader->GetInputStream(pathFile.string());
 			auto glbResourceReader = std::make_shared<GLBResourceReader>(std::move(streamReader), std::move(glbStream));
 
 			manifest = glbResourceReader->GetJson(); // Get the manifest from the JSON chunk
 
 			resourceReader = std::move(glbResourceReader);
-		} else {
+		}
+		else
+		{
 			auto msg = ReportMessage::create();
 			msg->setTitle("GLTF Model loading failed");
 			msg->setMessage("Wrong file extension. Must be .gltf or .glb");

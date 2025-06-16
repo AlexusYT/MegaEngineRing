@@ -23,7 +23,7 @@
 #define IMAGE_H
 
 #include "EngineSDK/render/Initializable.h"
-#include "EngineUtils/utils/IReportable.h"
+#include "EngineSDK/utils/IReportable.h"
 #include "GLTFSDK/Document.h"
 #include "GLTFSDK/GLTFResourceReader.h"
 

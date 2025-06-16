@@ -25,7 +25,7 @@
 #include <memory>
 #include <sigc++/signal.h>
 
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 #include "ISceneObject.h"
 
 namespace mer::sdk {
@@ -41,9 +41,9 @@ class SceneObject : public ISceneObject {
 	IScene* scene{};
 	MainObjectExtension* mainExtension;
 	std::map<std::string, std::shared_ptr<Extension>> extensions;
-	sigc::signal<void(const std::shared_ptr<Extension> &pNewExt)> onExtensionAddedSignal;
-	sigc::signal<void(const std::shared_ptr<Extension> &pExtToRemove)> onExtensionRemovedSignal;
-	sigc::signal<void(Extension* pExtension, PropertyBase* pProperty)> onExtensionPropertyChangedSignal;
+	sigc::signal<void(const std::shared_ptr<Extension> & pNewExt)> onExtensionAddedSignal;
+	sigc::signal<void(const std::shared_ptr<Extension> & pExtToRemove)> onExtensionRemovedSignal;
+	sigc::signal<void(Extension * pExtension, PropertyBase * pProperty)> onExtensionPropertyChangedSignal;
 	bool inited{};
 	std::shared_ptr<IScript> script;
 	std::string scriptName;
@@ -71,17 +71,17 @@ public:
 	ReportMessagePtr transferExtensionTo(const std::string &pName, ISceneObject* pTransferTo) override;
 
 	sigc::connection connectOnExtensionAdded(
-		const sigc::slot<void(const std::shared_ptr<Extension> &pNewExt)> &pSlot) override {
+		const sigc::slot<void(const std::shared_ptr<Extension> & pNewExt)> &pSlot) override {
 		return onExtensionAddedSignal.connect(pSlot);
 	}
 
 	sigc::connection connectOnExtensionRemoved(
-		const sigc::slot<void(const std::shared_ptr<Extension> &pExtToRemove)> &pSlot) override {
+		const sigc::slot<void(const std::shared_ptr<Extension> & pExtToRemove)> &pSlot) override {
 		return onExtensionRemovedSignal.connect(pSlot);
 	}
 
 	sigc::connection connectOnExtensionPropertyChanged(
-		const sigc::slot<void(Extension* pExtension, PropertyBase* pProperty)> &pSlot) final {
+		const sigc::slot<void(Extension * pExtension, PropertyBase * pProperty)> &pSlot) final {
 		return onExtensionPropertyChangedSignal.connect(pSlot);
 	}
 

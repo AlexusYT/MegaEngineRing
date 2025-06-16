@@ -21,7 +21,7 @@
 
 #include "EngineSDK/context/Application.h"
 
-#include <EngineUtils/utils/Logger.h>
+#include <EngineSDK/utils/Logger.h>
 #include <GLFW/glfw3.h>
 #include <signal.h>
 

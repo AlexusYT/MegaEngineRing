@@ -21,7 +21,7 @@
 
 #ifndef IINITIALIZABLE_H
 #define IINITIALIZABLE_H
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
 class IInitializable {

@@ -24,7 +24,7 @@
 
 
 #include "EngineSDK/render/Initializable.h"
-#include "EngineUtils/utils/IReportable.h"
+#include "EngineSDK/utils/IReportable.h"
 #include "ShaderTypeEnum.h"
 
 namespace mer::sdk {

@@ -22,7 +22,7 @@
 #ifndef IAPPLICATIONSETTINGS_H
 #define IAPPLICATIONSETTINGS_H
 
-#include <EngineUtils/utils/Property.h>
+#include <EngineSDK/utils/Property.h>
 
 namespace mer::sdk {
 class IApplicationSettings {

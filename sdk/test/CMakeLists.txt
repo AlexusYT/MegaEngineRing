@@ -15,8 +15,10 @@ add_executable(MegaEngineSDK_test source/main/extensions/CameraExtensionTests.cp
         source/main/resources/models/ObjModelLoaderTests.cpp
         source/main/prefabs/PrefabTests.cpp
         source/utils/TransformationTests.cpp
+        source/utils/LoggerTests.cpp
+        source/utils/UUIDTests.cpp
 )
-target_link_libraries(MegaEngineSDK_test PRIVATE MegaEngineSDK_shared MegaEngineUtils)
+target_link_libraries(MegaEngineSDK_test PRIVATE MegaEngineSDK_shared)
 target_link_libraries(
         MegaEngineSDK_test PRIVATE
         GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main

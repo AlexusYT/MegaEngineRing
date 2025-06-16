@@ -22,10 +22,10 @@
 #ifndef ISCENEOBJECT_H
 #define ISCENEOBJECT_H
 
-#include <EngineUtils/utils/ReportMessageFwd.h>
+#include <EngineSDK/utils/ReportMessageFwd.h>
 #include <map>
 
-#include "EngineUtils/utils/PropertyBase.h"
+#include "EngineSDK/utils/PropertyBase.h"
 
 namespace mer::sdk {
 class UUID;

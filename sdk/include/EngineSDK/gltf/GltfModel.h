@@ -21,7 +21,7 @@
 
 #ifndef GLTFMODEL_H
 #define GLTFMODEL_H
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 #include "GLTFSDK/Document.h"
 
 namespace mer::sdk {

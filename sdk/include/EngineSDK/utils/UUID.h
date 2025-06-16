@@ -28,7 +28,7 @@
 #include <string>
 #include <thread>
 
-#include "Logger.h"
+#include "ReportMessageFwd.h"
 
 namespace mer::sdk {
 class UUID {
@@ -83,11 +83,11 @@ public:
 	}
 
 	static std::shared_ptr<UUID> parse(const std::string &pString) {
-		mer::sdk::ReportMessagePtr error;
+		ReportMessagePtr error;
 		return parse(pString, error);
 	}
 
-	static std::shared_ptr<UUID> parse(const std::string &pString, mer::sdk::ReportMessagePtr &pError);
+	static std::shared_ptr<UUID> parse(const std::string &pString, ReportMessagePtr &pError);
 
 	constexpr std::string toString(const bool pUpperCase = false) const {
 		if (pUpperCase) {

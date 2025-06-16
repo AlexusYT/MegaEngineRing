@@ -21,7 +21,7 @@
 
 #ifndef RESOURCELOADER_H
 #define RESOURCELOADER_H
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
 class UUID;

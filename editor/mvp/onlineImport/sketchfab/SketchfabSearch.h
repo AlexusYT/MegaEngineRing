@@ -25,7 +25,7 @@
 #include <nlohmann/json_fwd.hpp>
 #include <thread>
 
-#include "EngineUtils/utils/IReportable.h"
+#include "EngineSDK/utils/IReportable.h"
 
 namespace mer::sdk {
 class GltfModel;
@@ -279,7 +279,7 @@ public:
 
 	void setRequest(const SearchRequest &pRequest) { request = pRequest; }
 
-	void next(const std::function<void(const sdk::ReportMessagePtr &pError)> &pCallback);
+	void next(const std::function<void(const sdk::ReportMessagePtr & pError)> &pCallback);
 
 	[[nodiscard]] const std::vector<std::shared_ptr<ModelSearchList>> &getResults() const { return results; }
 

@@ -27,8 +27,8 @@
 #include "EngineSDK/resources/ResourceLoadResult.h"
 #include "EngineSDK/resources/ResourceLoader.h"
 #include "EngineSDK/resources/ResourceLoaders.h"
-#include "EngineUtils/utils/Logger.h"
-#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineSDK/utils/Logger.h"
+#include "EngineSDK/utils/ReportMessage.h"
 #ifndef EDITOR_SDK
 #include "EngineSDK/resources/LoadedResources.h"
 #include "ResourcesWindow.h"

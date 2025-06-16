@@ -24,7 +24,7 @@
 
 #include <glm/fwd.hpp>
 
-#include "EngineUtils/utils/PropertyReadOnly.h"
+#include "EngineSDK/utils/PropertyReadOnly.h"
 
 namespace mer::sdk {
 class IMaterialComponent {

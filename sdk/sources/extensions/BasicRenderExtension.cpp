@@ -21,7 +21,7 @@
 
 #include <EngineSDK/extensions/BasicRenderExtension.h>
 
-#include <EngineUtils/utils/Logger.h>
+#include <EngineSDK/utils/Logger.h>
 #include <epoxy/gl.h>
 
 #include "EngineSDK/resources/shaders/ShaderProgram.h"

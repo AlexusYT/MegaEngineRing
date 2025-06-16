@@ -79,6 +79,12 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/gltf/Light.cpp
         sources/meshes/BlockCubeMesh.cpp
         sources/meshes/BlockSphereMesh.cpp
+        sources/utils/Logger.cpp
+        sources/utils/UUID.cpp
+        sources/utils/Utils.cpp
+        sources/utils/ReportMessage.cpp
+        sources/utils/ConsoleColors.cpp
+        sources/utils/PropertyBase.cpp
 )
 set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/context/Window.h
@@ -206,6 +212,16 @@ set(ENGINE_HEADERS include/EngineSDK/context/Application.h
         include/EngineSDK/gltf/Light.h
         include/EngineSDK/meshes/BlockCubeMesh.h
         include/EngineSDK/meshes/BlockSphereMesh.h
+        include/EngineSDK/utils/Logger.h
+        include/EngineSDK/utils/UUID.h
+        include/EngineSDK/utils/Utils.h
+        include/EngineSDK/utils/ReportMessageFwd.h
+        include/EngineSDK/utils/IPropertyProvider.h
+        include/EngineSDK/utils/PropertyBase.h
+        include/EngineSDK/utils/Property.h
+        include/EngineSDK/utils/PropertyReadOnly.h
+        include/EngineSDK/utils/IReportable.h
+        include/EngineSDK/utils/PropertyNotifiable.h
 )
 
 foreach (SOURCE IN ITEMS ${ENGINE_SOURCES})
@@ -265,16 +281,18 @@ target_include_directories(
 
 target_link_libraries(MegaEngineSDK_shared PUBLIC PkgConfig::epoxy)
 target_link_libraries(MegaEngineSDK_shared PUBLIC glm::glm)
-target_link_libraries(MegaEngineSDK_shared PUBLIC stdc++exp MegaEngineUtils)
+target_link_libraries(MegaEngineSDK_shared PUBLIC stdc++exp)
 target_link_libraries(MegaEngineSDK_shared PUBLIC spng)
 target_link_libraries(MegaEngineSDK_shared PUBLIC GLTFSDK)
+target_include_directories(MegaEngineSDK_shared SYSTEM PUBLIC ${sigc++-3_INCLUDE_DIRS})
+target_link_libraries(MegaEngineSDK_shared PUBLIC ${sigc++-3_LDFLAGS})
+target_link_libraries(MegaEngineSDK_shared PUBLIC turbojpeg)
+target_include_directories(MegaEngineSDK_shared SYSTEM PUBLIC ${libturbojpeg_INCLUDE_DIRS})
 
 set_property(TARGET MegaEngineSDK_shared PROPERTY OUTPUT_NAME MegaEngineSDK)
 set_property(TARGET MegaEngineSDK_shared PROPERTY PREFIX "")
 target_compile_options(MegaEngineSDK_shared PRIVATE -Werror)
 
-add_custom_target(MegaEngineSDK)
-add_dependencies(MegaEngineSDK MegaEngineSDK_shared MegaEngineUtils)
 
 if (WIN32)
     install(

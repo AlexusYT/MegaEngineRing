@@ -39,7 +39,7 @@
 #include "EngineSDK/resources/models/Model3DResource.h"
 #include "EngineSDK/resources/shaders/builtin/PrefabProgram.h"
 #include "EngineSDK/scene/objects/ISceneObject.h"
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 
 namespace mer::sdk {
 Scene::Scene()
@@ -52,7 +52,7 @@ Scene::~Scene() {
 	objects.clear();
 }
 
-std::shared_ptr<Scene> Scene::create() { return std::shared_ptr<Scene>(new Scene()); }
+std::shared_ptr<Scene> Scene::create() { return std::shared_ptr < Scene > (new Scene()); }
 
 void Scene::setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const {
 	programBuffer->setViewProjMatrix(pViewProjMatrix);

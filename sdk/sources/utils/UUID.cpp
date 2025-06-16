@@ -19,17 +19,19 @@
 // Created by alexus on 08.01.24.
 //
 
-#include <EngineUtils/utils/UUID.h>
+#include <EngineSDK/utils/UUID.h>
 #include <regex>
 
+#include "EngineSDK/utils/ReportMessage.h"
+
 namespace mer::sdk {
-std::shared_ptr<UUID> UUID::parse(const std::string &pString, mer::sdk::ReportMessagePtr &pError) {
+std::shared_ptr<UUID> UUID::parse(const std::string &pString, ReportMessagePtr &pError) {
 	//language=regexp
 	static std::regex regex(
 		"([0-9a-fA-F]{8})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{4})-([0-9a-fA-F]{8})([0-9a-fA-F]{4})");
 	std::smatch matchResults;
 	if (!std::regex_match(pString, matchResults, regex)) {
-		if (!pError) pError = mer::sdk::ReportMessage::create();
+		if (!pError) pError = ReportMessage::create();
 		pError->setTitle("Failed to parse the given string");
 		pError->setMessage("The string doesn't match the regex");
 		pError->addInfoLine("String to parse: {}", pString);
@@ -47,7 +49,7 @@ std::shared_ptr<UUID> UUID::parse(const std::string &pString, mer::sdk::ReportMe
 		return uuid;
 	}
 	catch (...) {
-		if (!pError) pError = mer::sdk::ReportMessage::create();
+		if (!pError) pError = ReportMessage::create();
 		pError->setTitle("Failed to parse the given string");
 		pError->setMessage("Exception occurred while parsing the values");
 		pError->addInfoLine("String to parse: {}", pString);

@@ -31,7 +31,7 @@
 #include "EngineSDK/gltf/Material.h"
 #include "EngineSDK/gltf/Mesh.h"
 #include "EngineSDK/gltf/Primitive.h"
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 
 namespace mer::sdk {
 class Logger;
@@ -142,11 +142,14 @@ void RenderPass::changeMesh(Node* pNode, Mesh* pNewMesh) {
 
 void RenderPass::render() {
 	if (meshesToRender.empty()) return;
-	if (commandsBufferDirty && commandsBufferMutex
+	if (commandsBufferDirty &&commandsBufferMutex
 
-		.
-		try_lock()
-	) {
+
+	
+	.
+	try_lock()
+	)
+	{
 		commands.clear();
 		instanceIndices.clear();
 		meshIndices.clear();
@@ -388,11 +391,14 @@ void Renderer::addLightSource(const std::shared_ptr<Light> &pNewLight) {
 }
 
 void Renderer::updateBuffers() {
-	if (eboDirty && indicesMutex
+	if (eboDirty &&indicesMutex
 
-		.
-		try_lock()
-	) {
+
+	
+	.
+	try_lock()
+	)
+	{
 		if (ebo)
 			glDeleteBuffers(1, &ebo);
 		glCreateBuffers(1, &ebo);
