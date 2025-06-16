@@ -36,7 +36,7 @@
 #include "EngineSDK/scene/Scene.h"
 #include "EngineSDK/scene/objects/ISceneObject.h"
 #include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineUtils/utils/UUID.h"
+#include "EngineSDK/utils/UUID.h"
 #include "mvp/sceneEditor/ResourcesContext.h"
 
 namespace mer::sdk {

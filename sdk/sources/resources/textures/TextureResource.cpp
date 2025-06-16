@@ -29,7 +29,7 @@
 #include "EngineSDK/resources/textures/Texture2DType.h"
 #include "EngineSDK/resources/textures/TextureMagFilter.h"
 #include "EngineSDK/resources/textures/TextureMinFilter.h"
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 
 namespace mer::sdk {
 TextureResource::TextureResource()
@@ -39,7 +39,7 @@ TextureResource::TextureResource()
 	  materialComponentVal(nullptr, "TextureComponent") {}
 
 std::shared_ptr<TextureResource> TextureResource::create() {
-	return std::shared_ptr<TextureResource>(new TextureResource());
+	return std::shared_ptr < TextureResource > (new TextureResource());
 }
 
 TextureResource::~TextureResource() {

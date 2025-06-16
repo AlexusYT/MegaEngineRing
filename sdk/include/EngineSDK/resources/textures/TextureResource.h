@@ -26,7 +26,7 @@
 
 #include "EngineSDK/resources/Resource.h"
 #include "EngineSDK/resources/ResourceType.h"
-#include "EngineUtils/utils/Property.h"
+#include "EngineSDK/utils/Property.h"
 #include "ITextureResource.h"
 
 namespace mer::sdk {

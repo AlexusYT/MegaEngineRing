@@ -23,7 +23,7 @@
 #define IBOUNDINGVOLUME_H
 #include "EngineSDK/render/IRenderable.h"
 #include "EngineSDK/render/Initializable.h"
-#include "EngineUtils/utils/PropertyNotifiable.h"
+#include "EngineSDK/utils/PropertyNotifiable.h"
 
 namespace mer::sdk {
 class BoundingVolume : public IRenderable, public Initializable, public PropertyNotifiable {

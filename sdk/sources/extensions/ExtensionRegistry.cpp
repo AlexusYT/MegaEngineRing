@@ -30,8 +30,8 @@
 #include "EngineSDK/extensions/cameras/CameraKeyboardExtension.h"
 #include "EngineSDK/extensions/cameras/CameraMouseExtension.h"
 #include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineUtils/utils/ReportMessage.h"
-#include "EngineUtils/utils/Utils.h"
+#include "EngineSDK/utils/ReportMessage.h"
+#include "EngineSDK/utils/Utils.h"
 
 namespace mer::sdk {
 void ExtensionRegistry::init() {

@@ -23,7 +23,7 @@
 
 #include <fstream>
 
-#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineSDK/utils/ReportMessage.h"
 
 namespace mer::sdk {
 std::shared_ptr<IResourceBundle> FileSystemResourceBundle::create(const std::filesystem::path &pSearchPath) {

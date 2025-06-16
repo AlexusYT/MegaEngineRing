@@ -79,7 +79,6 @@ target_link_libraries(ImGuiFileDialog PRIVATE ImGUI)
 target_compile_definitions(ImGuiFileDialog PUBLIC "CUSTOM_IMGUIFILEDIALOG_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor/ImGuiFileDialogConfigCustom.h>\"")
 
 
-add_subdirectory(utils)
 add_subdirectory(sdk)
 add_subdirectory(editor)
 

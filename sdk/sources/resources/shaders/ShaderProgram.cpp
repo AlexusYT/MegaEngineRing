@@ -27,7 +27,7 @@
 
 #include "EngineSDK/resources/ResourceType.h"
 #include "EngineSDK/resources/shaders/Shader.h"
-#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineSDK/utils/ReportMessage.h"
 
 namespace mer::sdk {
 ShaderProgram::ShaderProgram() : name(0) {}
@@ -36,13 +36,9 @@ ShaderProgram::~ShaderProgram() { ShaderProgram::uninitialize(); }
 
 void ShaderProgram::attachShader(const std::shared_ptr<Shader> &pShader) { attachedShaders.emplace_back(pShader); }
 
-void ShaderProgram::link() const {
-	glLinkProgram(name);
-}
+void ShaderProgram::link() const { glLinkProgram(name); }
 
-void ShaderProgram::validate() const {
-	glValidateProgram(name);
-}
+void ShaderProgram::validate() const { glValidateProgram(name); }
 
 void ShaderProgram::use() const {
 	//if (this == usedProgram) return;

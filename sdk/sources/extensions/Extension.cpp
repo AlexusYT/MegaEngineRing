@@ -26,8 +26,8 @@
 
 #include "EngineSDK/extensions/ExtensionRegistry.h"
 #include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineUtils/utils/Logger.h"
-#include "EngineUtils/utils/PropertyBase.h"
+#include "EngineSDK/utils/Logger.h"
+#include "EngineSDK/utils/PropertyBase.h"
 
 namespace mer::sdk {
 Extension::Extension() {}

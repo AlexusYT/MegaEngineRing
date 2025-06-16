@@ -24,7 +24,7 @@
 #include <functional>
 #include <typeindex>
 
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
 class Extension;

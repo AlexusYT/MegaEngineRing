@@ -23,7 +23,7 @@
 
 #include "EngineSDK/resources/shaders/Shader.h"
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
-#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineSDK/utils/ReportMessage.h"
 
 namespace mer::sdk {
 std::shared_ptr<IResource> ShaderProgramLoader::createResource() { return std::make_shared<ShaderProgram>(); }

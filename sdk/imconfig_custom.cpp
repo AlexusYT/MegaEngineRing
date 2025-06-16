@@ -15,7 +15,7 @@
 //  with this program; if not, write to the Free Software Foundation, Inc.,
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-#include "EngineUtils/utils/UUID.h"
+#include "include/EngineSDK/utils/UUID.h"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -39,7 +39,6 @@ bool InputText(const char* pName, std::string &pText, ImGuiInputTextFlags pFlags
 }
 
 bool InputTextWithHint(const char* pName, const char* pHint, std::string &pText, ImGuiInputTextFlags pFlags) {
-
 	return InputTextWithHint(
 		pName, pHint, pText.data(), pText.size() + 1, pFlags | ImGuiInputTextFlags_CallbackResize,
 		[](ImGuiInputTextCallbackData* pData) {
@@ -65,7 +64,8 @@ bool UuidText(const char* pName, const mer::sdk::UUID &pUuid, int pFlags) {
 }
 
 static const float DRAG_MOUSE_THRESHOLD_FACTOR =
-	0.50f; // Multiplier for the default value of io.MouseDragThreshold to make DragFloat/DragInt react faster to mouse drags.
+	0.50f;
+// Multiplier for the default value of io.MouseDragThreshold to make DragFloat/DragInt react faster to mouse drags.
 
 bool DragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* roundFormat,
 			   const char* displayFormat, ImGuiSliderFlags flags) {
@@ -147,9 +147,11 @@ bool DragScalar(const char* label, ImGuiDataType data_type, void* p_data, float 
 	}
 
 	// Draw frame
-	const ImU32 frame_col = GetColorU32(g.ActiveId == id ? ImGuiCol_FrameBgActive
-										: hovered		 ? ImGuiCol_FrameBgHovered
-														 : ImGuiCol_FrameBg);
+	const ImU32 frame_col = GetColorU32(g.ActiveId == id
+											? ImGuiCol_FrameBgActive
+											: hovered
+											? ImGuiCol_FrameBgHovered
+											: ImGuiCol_FrameBg);
 	RenderNavCursor(frame_bb, id);
 	RenderFrame(frame_bb.Min, frame_bb.Max, frame_col, true, style.FrameRounding);
 

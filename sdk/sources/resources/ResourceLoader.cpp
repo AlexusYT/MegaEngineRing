@@ -21,7 +21,7 @@
 
 #include "EngineSDK/resources/ResourceLoader.h"
 
-#include "EngineUtils/utils/UUID.h"
+#include "EngineSDK/utils/UUID.h"
 #include "EngineSDK/resources/IResource.h"
 
 namespace mer::sdk {

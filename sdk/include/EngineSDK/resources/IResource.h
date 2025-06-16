@@ -23,7 +23,7 @@
 #define IRESOURCE_H
 #include <filesystem>
 
-#include "EngineUtils/utils/IReportable.h"
+#include "EngineSDK/utils/IReportable.h"
 
 namespace mer::sdk {
 class UUID;

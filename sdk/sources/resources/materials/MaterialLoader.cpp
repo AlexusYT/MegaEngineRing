@@ -26,7 +26,7 @@
 #include "EngineSDK/resources/materials/ColorComponent.h"
 #include "EngineSDK/resources/materials/MaterialResource.h"
 #include "EngineSDK/resources/textures/ITextureResource.h"
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 
 namespace mer::sdk {
 std::shared_ptr<IResource> MaterialLoader::createResource() { return MaterialResource::create(); }
@@ -46,7 +46,7 @@ ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecutor,
 
 void MaterialLoader::readMaterialComponent(
 	const std::shared_ptr<std::istream> &pStream, IResourceLoadExecutor* pLoadExecutor,
-	const sigc::slot<void(const std::shared_ptr<IMaterialComponent> &pComponent)> &pSetter) {
+	const sigc::slot<void(const std::shared_ptr<IMaterialComponent> & pComponent)> &pSetter) {
 	try {
 		uint8_t type = 0;
 		readNumber(pStream, type);

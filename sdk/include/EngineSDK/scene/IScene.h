@@ -24,7 +24,7 @@
 #include <glm/fwd.hpp>
 #include <sigc++/signal.h>
 
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
 enum class MouseButton;
@@ -64,7 +64,7 @@ public:
 
 	virtual void loadResourceAsync(
 		const std::string &pResourceUri,
-		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> &pResult)> &pSlot) const = 0;
+		const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) const = 0;
 
 	virtual void onResourceLoadingError(const std::string &pResourceUri, const ReportMessagePtr &pError) = 0;
 

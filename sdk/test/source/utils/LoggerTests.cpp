@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 #include <regex>
 
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 using namespace mer::sdk;
 
 class LoggerTestsFixture : public testing::Test {

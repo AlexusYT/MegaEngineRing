@@ -21,7 +21,7 @@
 
 #ifndef ISCRIPT_H
 #define ISCRIPT_H
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
 class SceneObject;

@@ -23,8 +23,8 @@
 #define PREFABELEMENT_H
 #include <string>
 
-#include "EngineUtils/utils/Property.h"
-#include "EngineUtils/utils/UUID.h"
+#include "EngineSDK/utils/Property.h"
+#include "EngineSDK/utils/UUID.h"
 
 #include "EngineSDK/resources/materials/IMaterialResource.h"
 

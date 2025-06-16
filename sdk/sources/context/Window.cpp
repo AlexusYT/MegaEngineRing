@@ -21,14 +21,14 @@
 
 #include "EngineSDK/context/Window.h"
 
-#include <EngineUtils/utils/ReportMessage.h>
+#include <EngineSDK/utils/ReportMessage.h>
 #include <epoxy/gl.h>
 // Must be included after epoxy
 #include <GLFW/glfw3.h>
 #include <thread>
 
 #include "EngineSDK/scene/SceneUi.h"
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 

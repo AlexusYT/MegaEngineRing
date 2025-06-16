@@ -24,7 +24,7 @@
 #include "EngineSDK/resources/textures/Texture2DImageFormat.h"
 #include "EngineSDK/resources/textures/Texture2DType.h"
 #include "EngineSDK/resources/textures/TextureResource.h"
-#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineSDK/utils/ReportMessage.h"
 
 namespace mer::sdk {
 /*template<typename PixelType>

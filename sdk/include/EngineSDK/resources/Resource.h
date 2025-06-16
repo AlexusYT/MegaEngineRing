@@ -22,8 +22,8 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 #include "EngineSDK/render/Initializable.h"
-#include "EngineUtils/utils/IPropertyProvider.h"
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/IPropertyProvider.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 #include "IResource.h"
 
 namespace mer::sdk {

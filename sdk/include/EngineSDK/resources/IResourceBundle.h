@@ -21,7 +21,7 @@
 
 #ifndef IRESOURCEBUNDLE_H
 #define IRESOURCEBUNDLE_H
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
 class IResourceBundle {

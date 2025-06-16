@@ -22,7 +22,7 @@
 #ifndef IAPPLICATION_H
 #define IAPPLICATION_H
 
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
 class IResourceBundle;

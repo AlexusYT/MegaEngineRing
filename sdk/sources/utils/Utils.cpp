@@ -19,13 +19,13 @@
 // Created by alexus on 31.12.23.
 //
 
-#include <EngineUtils/utils/Utils.h>
+#include <EngineSDK/utils/Utils.h>
 #include <cxxabi.h>
 #include <regex>
 #include <turbojpeg.h>
 
-#include "EngineUtils/utils/ReportMessage.h"
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessage.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 void replace_name(std::string &pIn, const std::string &pWhat, const std::string &pReplaceWith) {
 	std::regex regex(pWhat);

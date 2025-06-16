@@ -23,7 +23,7 @@
 #define RESOURCELOADCALLBACKS_H
 #include <sigc++/functors/slot.h>
 
-#include "EngineUtils/utils/ReportMessageFwd.h"
+#include "EngineSDK/utils/ReportMessageFwd.h"
 
 namespace mer::sdk {
 class IResource;

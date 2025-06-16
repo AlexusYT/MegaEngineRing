@@ -24,7 +24,7 @@
 #include "EngineSDK/prefabs/Prefab.h"
 #include "EngineSDK/prefabs/elements/PrefabElementInstance.h"
 #include "EngineSDK/resources/materials/IMaterialResource.h"
-#include "EngineUtils/utils/UUID.h"
+#include "EngineSDK/utils/UUID.h"
 
 namespace mer::sdk {
 PrefabElement::PrefabElement(const std::string &pName)

@@ -26,7 +26,7 @@
 #include "EngineSDK/resources/models/Model3DObject.h"
 #include "EngineSDK/resources/models/Model3DResource.h"
 #include "EngineSDK/resources/shaders/ShaderProgram.h"
-#include "EngineUtils/utils/Logger.h"
+#include "EngineSDK/utils/Logger.h"
 
 namespace mer::sdk {
 std::shared_ptr<IResource> Model3DLoader::createResource() { return Model3DResource::create(); }

@@ -28,8 +28,8 @@
 #include "EngineSDK/utils/Transformable.h"
 #include "EngineSDK/utils/Transformation.h"
 #include "EngineSDK/resources/materials/IMaterialResource.h"
-#include "EngineUtils/utils/Property.h"
-#include "EngineUtils/utils/UUID.h"
+#include "EngineSDK/utils/Property.h"
+#include "EngineSDK/utils/UUID.h"
 #include "IPrefabInstance.h"
 
 namespace mer::sdk {

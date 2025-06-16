@@ -21,8 +21,8 @@
 
 #include "EngineSDK/scene/objects/SceneObject.h"
 
-#include "EngineUtils/utils/ReportMessage.h"
-#include "EngineUtils/utils/UUID.h"
+#include "EngineSDK/utils/ReportMessage.h"
+#include "EngineSDK/utils/UUID.h"
 #include "EngineSDK/extensions/MainObjectExtension.h"
 #include "EngineSDK/scripting/IScript.h"
 

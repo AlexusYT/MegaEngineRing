@@ -22,7 +22,7 @@
 #include <gtest/gtest.h>
 
 #include "EngineSDK/resources/models/Model3DLoader.h"
-#include "EngineUtils/utils/ReportMessage.h"
+#include "EngineSDK/utils/ReportMessage.h"
 
 TEST(ObjModelLoaderTests, ModelLoading) {
 	/*using namespace mer::sdk;
