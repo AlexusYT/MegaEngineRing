@@ -38,7 +38,6 @@ set(ENABLE_UNIT_TESTS OFF)
 set(ENABLE_SAMPLES OFF)
 add_subdirectory(submodules/glTF-SDK)
 target_include_directories(GLTFSDK SYSTEM PUBLIC "submodules/glTF-SDK/GLTFSDK/Inc/")
-target_compile_options(GLTFSDK PRIVATE -fPIC)
 
 add_library(ImGUI OBJECT
         submodules/imgui/imgui.cpp
@@ -50,7 +49,6 @@ add_library(ImGUI OBJECT
         submodules/imgui/imgui_widgets.cpp
         submodules/imgui/backends/imgui_impl_glfw.cpp
         submodules/imgui/backends/imgui_impl_opengl3.cpp)
-target_compile_options(ImGUI PRIVATE -fPIC)
 target_compile_options(ImGUI BEFORE PRIVATE -w)
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui")
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui/backends")
@@ -84,9 +82,6 @@ add_subdirectory(editor)
 
 # ---- Declare executable ----
 
-if (LINUX)
-    target_link_options(MegaEngineEditor PRIVATE -rdynamic)
-endif ()
 add_executable(KwasarEngineEditor source/main.cpp)
 add_executable(KwasarEngine::Editor ALIAS KwasarEngineEditor)
 set_property(TARGET KwasarEngineEditor PROPERTY OUTPUT_NAME KwasarEngineEditor)
