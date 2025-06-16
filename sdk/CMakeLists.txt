@@ -254,54 +254,53 @@ foreach (HEADER IN ITEMS ${ENGINE_HEADERS})
     endif ()
 endforeach ()
 
-add_library(MegaEngineSDK_shared STATIC ${ENGINE_SOURCES} imconfig_custom.cpp ${ENGINE_HEADERS})
+add_library(KwasarEngineLib STATIC ${ENGINE_SOURCES} imconfig_custom.cpp ${ENGINE_HEADERS})
 
-target_sources(MegaEngineSDK_shared PUBLIC FILE_SET engine_headers TYPE HEADERS FILES ${ENGINE_HEADERS})
+target_sources(KwasarEngineLib PUBLIC FILE_SET engine_headers TYPE HEADERS BASE_DIRS "include/" FILES ${ENGINE_HEADERS})
 
-target_compile_definitions(MegaEngineSDK_shared PUBLIC GLM_ENABLE_EXPERIMENTAL)
-target_compile_definitions(MegaEngineSDK_shared PRIVATE EDITOR_SDK)
+target_compile_definitions(KwasarEngineLib PUBLIC GLM_ENABLE_EXPERIMENTAL)
+target_compile_definitions(KwasarEngineLib PRIVATE EDITOR_SDK)
 
-target_link_libraries(MegaEngineSDK_shared PRIVATE ImGUI)
+target_link_libraries(KwasarEngineLib PRIVATE ImGUI)
 
 pkg_check_modules(GLFW REQUIRED IMPORTED_TARGET glfw3)
 if (LINUX)
-    target_link_libraries(MegaEngineSDK_shared PUBLIC glfw)
+    target_link_libraries(KwasarEngineLib PUBLIC glfw)
 else ()
-    target_link_libraries(MegaEngineSDK_shared PUBLIC glfw3)
+    target_link_libraries(KwasarEngineLib PUBLIC glfw3)
 endif ()
 
-target_precompile_headers(MegaEngineSDK_shared
+target_precompile_headers(KwasarEngineLib
         PRIVATE common.h
 )
 target_include_directories(
-        MegaEngineSDK_shared ${warning_guard}
+        KwasarEngineLib ${warning_guard}
         PUBLIC
         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/include>"
 )
 
-target_link_libraries(MegaEngineSDK_shared PUBLIC PkgConfig::epoxy)
-target_link_libraries(MegaEngineSDK_shared PUBLIC glm::glm)
-target_link_libraries(MegaEngineSDK_shared PUBLIC stdc++exp)
-target_link_libraries(MegaEngineSDK_shared PUBLIC spng)
-target_link_libraries(MegaEngineSDK_shared PUBLIC GLTFSDK)
-target_include_directories(MegaEngineSDK_shared SYSTEM PUBLIC ${sigc++-3_INCLUDE_DIRS})
-target_link_libraries(MegaEngineSDK_shared PUBLIC ${sigc++-3_LDFLAGS})
-target_link_libraries(MegaEngineSDK_shared PUBLIC turbojpeg)
-target_include_directories(MegaEngineSDK_shared SYSTEM PUBLIC ${libturbojpeg_INCLUDE_DIRS})
+target_link_libraries(KwasarEngineLib PUBLIC PkgConfig::epoxy)
+target_link_libraries(KwasarEngineLib PUBLIC glm::glm)
+target_link_libraries(KwasarEngineLib PUBLIC stdc++exp)
+target_link_libraries(KwasarEngineLib PUBLIC spng)
+target_link_libraries(KwasarEngineLib PUBLIC GLTFSDK)
+target_include_directories(KwasarEngineLib SYSTEM PUBLIC ${sigc++-3_INCLUDE_DIRS})
+target_link_libraries(KwasarEngineLib PUBLIC ${sigc++-3_LDFLAGS})
+target_link_libraries(KwasarEngineLib PUBLIC turbojpeg)
+target_include_directories(KwasarEngineLib SYSTEM PUBLIC ${libturbojpeg_INCLUDE_DIRS})
 
-set_property(TARGET MegaEngineSDK_shared PROPERTY OUTPUT_NAME MegaEngineSDK)
-set_property(TARGET MegaEngineSDK_shared PROPERTY PREFIX "")
-target_compile_options(MegaEngineSDK_shared PRIVATE -Werror)
+set_property(TARGET KwasarEngineLib PROPERTY OUTPUT_NAME KwasarEngine)
+target_compile_options(KwasarEngineLib PRIVATE -Werror)
 
 
 if (WIN32)
     install(
-            TARGETS MegaEngineSDK_shared
+            TARGETS KwasarEngineLib
             RUNTIME_DEPENDENCIES
             PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
             POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
             DIRECTORIES
-            $<TARGET_FILE_DIR:MegaEngineSDK_shared>
+            $<TARGET_FILE_DIR:KwasarEngineLib>
             ARCHIVE
             DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
             COMPONENT sdk
@@ -318,7 +317,7 @@ if (WIN32)
     )
 else ()
     install(
-            TARGETS MegaEngineSDK_shared
+            TARGETS KwasarEngineLib
             ARCHIVE
             DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LOCALSTATEDIR}/${CMAKE_PROJECT_NAME}/sdk/${SDK_VERSION}/lib/"
             COMPONENT sdk
@@ -334,9 +333,3 @@ else ()
     )
 endif ()
 
-#[[add_custom_command(TARGET MegaEngineSDK_shared POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:MegaEngineSDK_shared> $<TARGET_FILE_DIR:MegaEngineSDK_shared>
-        # COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:MegaEngineSDK_shared> $<TARGET_FILE_DIR:MegaEngineSDK_test>
-
-        COMMAND_EXPAND_LISTS
-)]]

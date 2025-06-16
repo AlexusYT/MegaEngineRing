@@ -18,7 +18,7 @@ add_executable(MegaEngineSDK_test source/main/extensions/CameraExtensionTests.cp
         source/utils/LoggerTests.cpp
         source/utils/UUIDTests.cpp
 )
-target_link_libraries(MegaEngineSDK_test PRIVATE MegaEngineSDK_shared)
+target_link_libraries(MegaEngineSDK_test PRIVATE KwasarEngineLib)
 target_link_libraries(
         MegaEngineSDK_test PRIVATE
         GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main
