@@ -260,7 +260,7 @@ void ViewPrefabEditor::updateElements(const std::shared_ptr<ke::Prefab> &pSelect
 	if (pSelectedPrefab->getElements().empty()) selectedElement.reset();
 
 	if (ImGui::Button("Add from file")) {
-		if (presenter) presenter->addMeshesFrom("/home/alexus/MegaEngineProjects/models/source/Pistol.obj");
+		//if (presenter) presenter->addMeshesFrom("/home/alexus/KwasarEngineProjects/models/source/Pistol.obj");
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("+")) { pSelectedPrefab->addElement(ke::MeshPrefabElement::create()); }

@@ -26,31 +26,31 @@ void Globals::init() {
 
 	const auto local = getenv("LOCALAPPDATA");
 	if (!local) throw std::runtime_error("Error while getting LOCALAPPDATA");
-	cachePath = std::filesystem::path(local) / "MegaEngineRing";
+	cachePath = std::filesystem::path(local) / "KwasarEngineEditor";
 	create_directories(cachePath);
 	logPath = cachePath / "logs";
 	create_directories(logPath);
 
 	const auto home = getenv("USERPROFILE");
 	if (!home) throw std::runtime_error("Error while getting USERPROFILE");
-	projectsPath = std::filesystem::path(home) / "MegaEngineProjects";
+	projectsPath = std::filesystem::path(home) / "KwasarEngineProjects";
 	create_directories(projectsPath);
 
 	const auto config = getenv("APPDATA");
 	if (!config) throw std::runtime_error("Error while getting APPDATA");
-	configPath = std::filesystem::path(config) / "MegaEngineRing";
+	configPath = std::filesystem::path(config) / "KwasarEngineEditor";
 	create_directories(configPath);
 
 #else
 
 	const std::filesystem::path home = getenv("HOME");
-	logPath = home / ".cache/MegaEngineRing/logs";
+	logPath = home / ".cache/KwasarEngineEditor/logs";
 	create_directories(logPath);
-	projectsPath = home / "MegaEngineProjects";
+	projectsPath = home / "KwasarEngineProjects";
 	create_directories(projectsPath);
-	configPath = home / ".config/MegaEngineRing";
+	configPath = home / ".config/KwasarEngineEditor";
 	create_directories(configPath);
-	cachePath = home / ".cache/MegaEngineRing/";
+	cachePath = home / ".cache/KwasarEngineEditor/";
 	create_directories(cachePath);
 #endif
 }
