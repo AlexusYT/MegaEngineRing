@@ -28,7 +28,7 @@ XML_PROGRAMLISTING = NO
 CREATE_SUBDIRS = NO
 
 #Ignore C++ concepts
-EXCLUDE_SYMBOLS=ke::ExtensionTypeName
+EXCLUDE_SYMBOLS=ke::ExtensionTypeName ke::HasBaseClassNotify ke::IsConvertibleToNotify ke::IsSharedPtr
 
 # Include all directories, files and namespaces in the documentation
 # Disable to include only explicitly documented objects
