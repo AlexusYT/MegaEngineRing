@@ -17,12 +17,12 @@ endif ()
 set(warning_guard "")
 if (NOT PROJECT_IS_TOP_LEVEL)
     option(
-            MegaEngine_INCLUDES_WITH_SYSTEM
-            "Use SYSTEM modifier for MegaEngine's includes, disabling warnings"
+            KwasarEngine_INCLUDES_WITH_SYSTEM
+            "Use SYSTEM modifier for KwasarEngine's includes, disabling warnings"
             ON
     )
-    mark_as_advanced(MegaEngine_INCLUDES_WITH_SYSTEM)
-    if (MegaEngine_INCLUDES_WITH_SYSTEM)
+    mark_as_advanced(KwasarEngine_INCLUDES_WITH_SYSTEM)
+    if (KwasarEngine_INCLUDES_WITH_SYSTEM)
         set(warning_guard SYSTEM)
     endif ()
 endif ()
