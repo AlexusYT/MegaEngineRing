@@ -41,20 +41,20 @@
 #include "mvp/sceneEditor/ViewSceneEditor.h"
 #include "project/Project.h"
 
-namespace mer::editor::ui {
+namespace ked {
 class EditorWindow : public ke::Window {
 public:
 	explicit EditorWindow() { glfwWindowHint(GLFW_SAMPLES, 4); }
 
 protected:
 	ke::ReportMessagePtr init() override {
-		auto mainUi = std::make_shared<mvp::EditorUi>();
+		auto mainUi = std::make_shared<EditorUi>();
 
-		mainUi->addEditor(std::make_shared<mvp::OnlineImportWorkspace>());
-		mainUi->addEditor(std::make_shared<mvp::SceneEditor>("Scene 1"));
+		mainUi->addEditor(std::make_shared<OnlineImportWorkspace>());
+		mainUi->addEditor(std::make_shared<SceneEditor>("Scene 1"));
 		addScene(mainUi);
 
-		auto project = project::Project::create();
+		auto project = Project::create();
 		if (!project) return nullptr;
 		project->setProjectName("Untitled");
 		auto path = Globals::getProjectsPath() / "unsaved/Untitled";
@@ -69,27 +69,27 @@ protected:
 
 int GameEngine::run(const int pArgc, char* pArgv[]) {
 	Globals::init();
-	mvp::Settings::init();
+	Settings::init();
 	auto application = ke::Application::create();
 
 	application->initEngine();
 
 	auto settingsPath = Globals::getConfigPath() / "settings.json";
-	mvp::Settings::setSettingsPath(settingsPath);
+	Settings::setSettingsPath(settingsPath);
 
 	if (std::filesystem::exists(settingsPath)) {
-		if (auto msg = mvp::Settings::load()) {
+		if (auto msg = Settings::load()) {
 			ke::Logger::error(msg);
 			ke::Logger::error("Using default settings as a fallback...");
-			mvp::Settings::loadDefaults();
+			Settings::loadDefaults();
 		} else
 			ke::Logger::info("Settings are loaded successfully");
 	} else {
 		ke::Logger::info("Settings file does not exists. Creating with defaults...");
-		mvp::Settings::loadDefaults();
-		if (auto msg = mvp::Settings::save()) ke::Logger::error(msg);
+		Settings::loadDefaults();
+		if (auto msg = Settings::save()) ke::Logger::error(msg);
 	}
-	mvp::I18n::init();
+	I18n::init();
 
 
 	if (auto ret = curl_global_init(CURL_GLOBAL_DEFAULT); ret != CURLE_OK) {
@@ -107,7 +107,7 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 
 	auto result = application->runMainLoop(pArgc, pArgv);
 	curl_global_cleanup();
-	mvp::I18n::deinit();
+	I18n::deinit();
 	return result;
 }
-} // namespace mer::editor::ui
+} // namespace ked

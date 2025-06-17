@@ -23,7 +23,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace mer::editor::mvp {
+namespace ked {
 OtherCategory::OtherCategory() {}
 
 void OtherCategory::save(nlohmann::json &pJson) { pJson["debugEnabled"] = debugEnabled; }
@@ -35,4 +35,4 @@ void OtherCategory::load(const nlohmann::json &pJson) {
 }
 
 void OtherCategory::loadDefaults() { debugEnabled = false; }
-} // namespace mer::editor::mvp
+} // namespace ked

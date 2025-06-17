@@ -23,7 +23,7 @@
 
 #include "KwasarEngine/resources/shaders/Shader.h"
 
-namespace mer::editor::graphics {
+namespace ked {
 std::shared_ptr<SimpleShader> SimpleShader::instance = std::shared_ptr<SimpleShader>(new SimpleShader);
 
 SimpleShader::SimpleShader() {
@@ -109,4 +109,4 @@ void main()
 }
 
 std::shared_ptr<SimpleShader> SimpleShader::getInstance() { return instance; }
-} // namespace mer::editor::graphics
+} // namespace ked

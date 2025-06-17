@@ -27,7 +27,7 @@
 #include "KwasarEngine/scene/Scene3D.h"
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper)
 	: selectionHelper(pSelectionHelper) {
 	outlinePass = std::make_shared<ke::RenderPass>();
@@ -60,4 +60,4 @@ void ModelScenePreview::setScene(const std::shared_ptr<ke::Scene3D> &pScene) {
 void ModelScenePreview::addSelectedMeshNode(ke::Node* pNode) { selectionHelper->addNode(pNode); }
 
 void ModelScenePreview::clearSelectedMeshes() { selectionHelper->clearSelection(); }
-} // namespace mer::editor::mvp
+} // namespace ked

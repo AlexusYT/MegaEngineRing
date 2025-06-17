@@ -34,7 +34,7 @@
 #include "mvp/scenePreview/onlineImport/PresenterOnlineImportPreview.h"
 #include "sketchfab/SketchfabSearch.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 void OnlineImportWorkspace::loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir /*pPanelDir*/) {
 	ImGuiID dock_main_id = pDockspaceId;
 	ImGui::DockBuilderAddNode(dock_main_id, ImGuiDockNodeFlags_DockSpace);
@@ -433,4 +433,4 @@ OnlineImportWorkspace::~OnlineImportWorkspace() {
 	scenePresenter->stop();
 	searchPresenter->stop();
 }
-} // namespace mer::editor::mvp
+} // namespace ked

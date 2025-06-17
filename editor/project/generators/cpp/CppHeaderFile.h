@@ -23,7 +23,7 @@
 #define CPPHEADERFILE_H
 #include "CppFile.h"
 
-namespace mer::editor::project {
+namespace ked {
 class CppHeaderFile : public CppFile {
 public:
 	std::string getExtension() override { return "h"; }
@@ -37,7 +37,7 @@ public:
 
 	bool isHeader() override { return false; }
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //CPPHEADERFILE_H

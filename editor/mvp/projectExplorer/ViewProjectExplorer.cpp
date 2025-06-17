@@ -29,7 +29,7 @@
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/dialogs/confirmationDialog/ConfirmationDialog.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ViewProjectExplorer::ViewProjectExplorer(const std::shared_ptr<IWidgetContext> &pContext)
 	: ke::UiWindow("ViewProjectExplorer"), context(pContext) {
 	dialog = ConfirmationDialog::create("ProjectExplorer-confirm", "ConfirmDeletion");
@@ -140,4 +140,4 @@ void ViewProjectExplorer::updateTreeLevel(const std::vector<std::shared_ptr<Proj
 		}
 	}
 }
-} // namespace mer::editor::mvp
+} // namespace ked

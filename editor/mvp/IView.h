@@ -22,11 +22,11 @@
 #ifndef IVIEW_H
 #define IVIEW_H
 
-namespace mer::editor::mvp {
+namespace ked {
 class IWidgetContext;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IView {
 public:
 	virtual ~IView() = default;
@@ -45,7 +45,7 @@ public:
 inline void IView::startConfirmation(const std::string & /*pTitle*/, const std::string & /*pMessage*/,
 									 const std::function<void(int pId)> & /*pResult*/,
 									 const std::vector<std::string> & /*pButtons*/) {}
-} // namespace mer::editor::mvp
+} // namespace ked
 
 
 #endif //IVIEW_H

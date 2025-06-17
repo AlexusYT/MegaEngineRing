@@ -36,7 +36,7 @@ namespace ke {
 class Node;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelScenePreview;
 class IViewScenePreview;
 
@@ -87,6 +87,6 @@ protected:
 
 	void stop() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTERSCENEPREVIEW_H

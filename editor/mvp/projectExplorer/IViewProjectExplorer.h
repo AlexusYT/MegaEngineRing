@@ -24,7 +24,7 @@
 
 #include "mvp/IView.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterProjectExplorer;
 class ProjectExplorerElement;
 
@@ -36,6 +36,6 @@ public:
 
 	virtual void setPresenter(IPresenterProjectExplorer* pPresenter) = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //IVIEWPROJECTEXPLORER_H

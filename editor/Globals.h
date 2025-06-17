@@ -22,6 +22,7 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+namespace ked {
 class Globals {
 	inline static std::filesystem::path logPath;
 	inline static std::filesystem::path projectsPath;
@@ -47,6 +48,7 @@ public:
 
 	static void setCachePath(const std::filesystem::path &pCachePath) { cachePath = pCachePath; }
 };
+}
 
 
 #endif //GLOBALS_H

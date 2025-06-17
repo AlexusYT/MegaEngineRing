@@ -31,7 +31,7 @@
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ViewObjectsTree::ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext)
 	: EditorTool("TreeViewTool"), context(pContext) {}
 
@@ -188,4 +188,4 @@ void ViewObjectsTree::markSelected(const std::vector<ke::Node*> &pNodes, bool pS
 		if (auto iter = selectedMap.find(node); iter != selectedMap.end()) iter->second = pSelected;
 	}
 }
-} // namespace mer::editor::mvp
+} // namespace ked

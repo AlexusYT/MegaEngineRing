@@ -26,9 +26,9 @@ namespace ke {
 enum class MouseButton;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ResourcesContext;
-} // namespace mer::editor::mvp
+} // namespace ked
 
 namespace ke {
 class IResourceLoadExecutor;
@@ -38,7 +38,7 @@ class ISceneObject;
 class IScene;
 } // namespace ke
 
-namespace mer::editor::project {
+namespace ked {
 class LoadedScene {
 	std::string name;
 	sigc::signal<void(const std::string &pName)> onNameChanged;
@@ -51,7 +51,7 @@ class LoadedScene {
 	sigc::signal<void()> onLoadingSignal;
 	sigc::signal<void()> onLoadedSignal;
 	std::vector<sigc::connection> connections;
-	std::shared_ptr<mvp::ResourcesContext> context;
+	std::shared_ptr<ResourcesContext> context;
 
 public:
 	LoadedScene();
@@ -64,7 +64,7 @@ public:
 
 	ke::IResourceLoadExecutor* getResourceLoadExecutor() const;
 
-	void setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext);
+	void setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext);
 
 	void connectErrorOccurred(const sigc::slot<void(const ke::ReportMessagePtr &pError)> &pSlot) {
 		onErrorOccurred.connect(pSlot);
@@ -125,7 +125,7 @@ public:
 private:
 	std::shared_ptr<ke::ISceneObject> createObject() const;
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //LOADEDSCENE_H

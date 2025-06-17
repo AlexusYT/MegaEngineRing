@@ -30,7 +30,7 @@ class Scene3D;
 class Node;
 } // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class IWidgetContext;
 class IPresenterObjectsTree;
 
@@ -74,6 +74,6 @@ private:
 
 	void setPresenter(IPresenterObjectsTree* pPresenter) override { presenter = pPresenter; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //TREEOBJECTWINDOW_H

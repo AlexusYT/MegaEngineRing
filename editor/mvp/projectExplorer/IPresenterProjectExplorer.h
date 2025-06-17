@@ -23,9 +23,9 @@
 #define IPRESENTERPROJECTEXPLORER_H
 #include "mvp/IPresenter.h"
 
-namespace mer::editor::ui {}
+namespace ked {}
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterProjectExplorer : public IPresenter {
 public:
 	virtual void createScene(const std::filesystem::path &pPathToFile) = 0;
@@ -34,7 +34,7 @@ public:
 
 	virtual void deleteFile(const std::filesystem::path &pPathToDelete) = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 
 #endif //IPRESENTERPROJECTEXPLORER_H

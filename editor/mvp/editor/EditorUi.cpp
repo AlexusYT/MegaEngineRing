@@ -32,7 +32,7 @@
 #include "settings/ViewSettingsWindow.h"
 #include "settings/categories/OtherCategory.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 EditorUi::EditorUi() {
 	// Unique identifier to match/filter top level editors with the top level dockspace. This could be a user enum.
 	topLevelEditorWindowClass.ClassId = ImHashStr("MY_TOPLEVEL_EDITOR", 0);
@@ -285,4 +285,4 @@ void EditorUi::onMouseButton(const int pButton, const int pAction, const int pMo
 	for (const auto &editor: editors) editor->onMouseButton(pButton, pAction, pMods);
 	SceneUi::onMouseButton(pButton, pAction, pMods);
 }
-} // namespace mer::editor::mvp
+} // namespace ked

@@ -43,7 +43,7 @@ namespace ke {
 class PropertyBase;
 }
 
-namespace mer::editor::project {
+namespace ked {
 LoadedScene::LoadedScene() {
 	app = ke::Application::create();
 	app->initEngine();
@@ -59,7 +59,7 @@ bool LoadedScene::hasResourcesContext() const { return getResourceLoadExecutor()
 
 ke::IResourceLoadExecutor* LoadedScene::getResourceLoadExecutor() const { return scene->getResourceExecutor(); }
 
-void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) {
+void LoadedScene::setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext) {
 	context = pResourcesContext;
 	const auto resources = ke::LoadedResources::create();
 	pResourcesContext->setResources(resources);
@@ -77,7 +77,7 @@ void LoadedScene::render() const {
 }
 
 ke::ReportMessagePtr LoadedScene::load(const std::filesystem::path & /*pPath*/) {
-	auto resourcesContext = std::make_shared<mvp::ResourcesContext>();
+	auto resourcesContext = std::make_shared<ResourcesContext>();
 	setupResourcesContext(resourcesContext);
 	unload();
 	scene = ke::Scene::create();
@@ -191,4 +191,4 @@ std::shared_ptr<ke::ISceneObject> LoadedScene::createObject() const {
 	scene->addObject(object);
 	return object;
 }
-} // namespace mer::editor::project
+} // namespace ked

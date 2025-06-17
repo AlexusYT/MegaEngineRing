@@ -26,7 +26,7 @@
 #include "categories/GeneralCategory.h"
 #include "categories/OtherCategory.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class Settings {
 	inline static std::filesystem::path path;
 	inline static std::unordered_map<std::type_index, std::shared_ptr<SettingsCategory>> categories;
@@ -65,6 +65,6 @@ private:
 		return result;
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //SETTINGS_H

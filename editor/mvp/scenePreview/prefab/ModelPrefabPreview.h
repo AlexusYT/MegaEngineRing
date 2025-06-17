@@ -23,8 +23,8 @@
 #define MODELPREFABPREVIEW_H
 #include "mvp/scenePreview/ModelScenePreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class ModelPrefabPreview : public ModelScenePreview {};
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELPREFABPREVIEW_H

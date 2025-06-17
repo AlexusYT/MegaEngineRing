@@ -28,7 +28,7 @@ class UiWindow;
 class UiBase;
 } // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class Editor;
 class EditorTool;
 
@@ -72,6 +72,6 @@ public:
 
 	void remove() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //UIWINDOWCONTEXT_H

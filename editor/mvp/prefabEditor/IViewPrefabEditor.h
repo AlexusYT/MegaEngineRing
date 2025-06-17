@@ -23,7 +23,7 @@
 #define IVIEWPREFABEDIROT_H
 #include "mvp/IView.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class SubWindows;
 class IPresenterPrefabEditor;
 
@@ -33,6 +33,6 @@ public:
 
 	virtual void setPresenter(IPresenterPrefabEditor* pPresenter) = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //IVIEWPREFABEDIROT_H

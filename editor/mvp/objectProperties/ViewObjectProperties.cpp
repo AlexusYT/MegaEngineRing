@@ -37,7 +37,7 @@
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<ke::Extension> & pExt)>>
 ViewObjectProperties::extRenderers;
 
@@ -451,4 +451,4 @@ void ViewObjectProperties::drawMaterial(ke::MeshInstance* pMeshNode) {
 		ImGui::EndCombo();
 	}
 }*/
-} // namespace mer::editor::mvp
+} // namespace ked

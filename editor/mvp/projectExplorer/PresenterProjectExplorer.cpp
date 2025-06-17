@@ -26,7 +26,7 @@
 #include "entries/ProjectExplorerElement.h"
 #include "project/Project.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterProjectExplorer::PresenterProjectExplorer(const std::shared_ptr<IModelProjectExplorer> &pModel)
 	: model(pModel) { for (auto view: views) { view->setPresenter(this); } }
 
@@ -121,4 +121,4 @@ void PresenterProjectExplorer::stop() {
 	for (auto viewProjectExplorer: views) { viewProjectExplorer->closeView(); }
 	views.clear();
 }
-} // namespace mer::editor::mvp
+} // namespace ked

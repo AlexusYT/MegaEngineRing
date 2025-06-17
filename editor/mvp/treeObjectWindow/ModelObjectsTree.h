@@ -26,16 +26,16 @@ namespace ke {
 class Node;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterObjectsTree;
 class NodeSelectionHelper;
-} // namespace mer::editor::mvp
+} // namespace ked
 
 namespace ke {
 class Scene3D;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelObjectsTree {
 public:
 	virtual ~IModelObjectsTree() = default;
@@ -73,6 +73,6 @@ public:
 
 	void select(ke::Node* pNode) override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELOBJECTSTREE_H

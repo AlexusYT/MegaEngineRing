@@ -23,7 +23,7 @@
 #define CONFIRMATIONDIALOG_H
 #include "KwasarEngine/ui/UiPopup.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class ConfirmationDialog : public ke::UiPopup {
 	std::string title;
 	std::string message;
@@ -56,6 +56,6 @@ public:
 		buttonClickedCallback = pButtonClickedCallback;
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //CONFIRMATIONDIALOG_H

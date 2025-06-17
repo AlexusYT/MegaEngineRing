@@ -36,7 +36,7 @@
 #include "IModelScenePreview.h"
 #include "IViewScenePreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterScenePreview::PresenterScenePreview(const std::shared_ptr<IViewScenePreview> &pView,
 											 const std::shared_ptr<IModelScenePreview> &pModel)
 	: view(pView), model(pModel) {
@@ -226,4 +226,4 @@ bool PresenterScenePreview::onCursorPosChanged(double pX, double pY) {
 void PresenterScenePreview::run() { view->openView(); }
 
 void PresenterScenePreview::stop() { view->closeView(); }
-} // namespace mer::editor::mvp
+} // namespace ked

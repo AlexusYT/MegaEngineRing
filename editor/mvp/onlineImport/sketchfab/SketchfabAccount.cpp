@@ -31,7 +31,7 @@
 #include "SketchfabSearch.h"
 #include "Utils.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 SketchfabAccount::SketchfabAccount() {
 	cache = std::make_shared<SketchfabCache>(Globals::getCachePath() / "SketchfabCache");
 }
@@ -272,4 +272,4 @@ ke::ReportMessagePtr SketchfabAccount::loadCachedFile(const std::string &pUrl,
 													   std::shared_ptr<std::iostream> &pData) const {
 	return cache->loadCache(pUrl, pData);
 }
-} // namespace mer::editor::mvp
+} // namespace ked

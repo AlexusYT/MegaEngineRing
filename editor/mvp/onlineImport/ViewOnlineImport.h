@@ -27,11 +27,11 @@
 #include "mvp/editor/Editor.h"
 #include "sketchfab/SketchfabSearch.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class NodeSelectionHelper;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterScenePreview;
 class ModelSearchList;
 class IPresenterOnlineImport;
@@ -155,6 +155,6 @@ public:
 
 	void loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir pPanelDir) override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //VIEWONLINEIMPORT_H

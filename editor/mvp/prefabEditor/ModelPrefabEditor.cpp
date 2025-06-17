@@ -21,8 +21,4 @@
 
 #include "ModelPrefabEditor.h"
 
-namespace mer {
-namespace editor {
-namespace mvp {} // namespace mvp
-}                // namespace editor
-}                // namespace mer
+namespace ked {}

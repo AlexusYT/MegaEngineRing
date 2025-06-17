@@ -28,7 +28,7 @@ namespace ke {
 class GltfModel;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class SketchfabSearch;
 class SketchfabCache;
 class SketchfabAccount;
@@ -111,6 +111,6 @@ public:
 
 	void setLoaded(bool pLoaded) { loaded = pLoaded; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //SKETCHFABACCOUNT_H

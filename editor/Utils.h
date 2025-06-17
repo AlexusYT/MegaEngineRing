@@ -25,7 +25,7 @@
 
 struct curl_slist;
 
-namespace mer::editor {
+namespace ked {
 class Utils {
 public:
 	static std::unique_ptr<curl_slist, void (*)(curl_slist*)> getCurlList(const std::list<std::string> &pList);
@@ -44,6 +44,6 @@ public:
 		return pSize * pNmemb;
 	}
 };
-} // namespace mer::editor
+} // namespace ked
 
 #endif //EUTILS_H

@@ -23,7 +23,7 @@
 
 #include "ViewSettingsWindow.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 std::shared_ptr<IPresenterSettingsWindow> PresenterSettingsWindow::create(
 	const std::shared_ptr<IViewSettingsWindow> &pView, const std::shared_ptr<IModelSettingsWindow> &pModel) {
 	return std::shared_ptr<IPresenterSettingsWindow>(new PresenterSettingsWindow(pView, pModel));
@@ -34,4 +34,4 @@ void PresenterSettingsWindow::openPopup() { view->openPopup(); }
 void PresenterSettingsWindow::run() { view->openView(); }
 
 void PresenterSettingsWindow::stop() { view->closeView(); }
-} // namespace mer::editor::mvp
+} // namespace ked

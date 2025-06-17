@@ -21,4 +21,4 @@
 
 #include "CppGenerator.h"
 
-namespace mer::editor::project {}
+namespace ked {}

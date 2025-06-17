@@ -28,11 +28,11 @@
 #include "CppClass.h"
 #include "CppClassMember.h"
 
-namespace mer::editor::project {
+namespace ked {
 class CppClass;
 }
 
-namespace mer::editor::project {
+namespace ked {
 class CppMethod : public CppClassMember, public std::enable_shared_from_this<CppMethod> {
 	std::string name;
 	std::string returnType;
@@ -86,14 +86,14 @@ public:
 	void setReturnType(const std::string &pReturnType) { returnType = pReturnType; }
 
 	template <typename T>
-	void setReturnType() { returnType = Utils::getTypeName<T>(); }
+	void setReturnType() { returnType = ke::Utils::getTypeName<T>(); }
 
 	[[nodiscard]] const std::vector<std::string> &getParamsList() const { return paramsList; }
 
 	void setParamsList(const std::vector<std::string> &pParamsList) { paramsList = pParamsList; }
 
 	template <typename... Params, typename... Names>
-	void setParamsList(Names... pNames) { setParamsList({(Utils::getTypeName<Params>() + " " + pNames)...}); }
+	void setParamsList(Names... pNames) { setParamsList({(ke::Utils::getTypeName<Params>() + " " + pNames)...}); }
 
 	void addParam(const std::string &pParamName) { paramsList.emplace_back(pParamName); }
 
@@ -219,7 +219,7 @@ public:
 		return ss.str();
 	}
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //CPPMETHOD_H

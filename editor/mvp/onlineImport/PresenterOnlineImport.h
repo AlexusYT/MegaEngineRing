@@ -32,7 +32,7 @@ namespace ke {
 class GltfModel;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ModelSearchList;
 class DownloadableModel;
 class DownloadLinks;
@@ -120,6 +120,6 @@ private:
 
 	std::shared_ptr<DownloadLinks> getGltfLinks() const;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTERONLINEIMPORT_H

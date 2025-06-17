@@ -25,7 +25,7 @@
 #include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/editor/Editor.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 void EditorContext::add(ke::UiBase* pWidget) {
 	tool = dynamic_cast<EditorTool*>(pWidget);
 	if (!editor || !tool) return;
@@ -51,4 +51,4 @@ void SceneUiContext::remove() {
 	if (auto widget = dynamic_cast<ke::UiWindow*>(window)) scene->removeUiWindow(widget->getName());
 	if (auto widget = dynamic_cast<ke::UiPopup*>(window)) scene->removeUiWindow(widget->getName());
 }
-} // namespace mer::editor::mvp
+} // namespace ked

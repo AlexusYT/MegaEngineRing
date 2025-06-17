@@ -29,7 +29,7 @@ namespace ke {
 class Scene3D;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class NodeSelectionHelper;
 class IPresenterObjectProperties;
 class IPresenterObjectsTree;
@@ -65,6 +65,6 @@ private:
 
 	void addGltfModel(const std::string &pPath);
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //VIEWSCENEEDITOR_H

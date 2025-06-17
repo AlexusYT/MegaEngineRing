@@ -37,7 +37,7 @@
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/sceneEditor/SceneOverlayElements.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ViewPrefabEditor::ViewPrefabEditor(const std::shared_ptr<IWidgetContext> &pContext)
 	: UiWindow("PrefabEditor"), context(pContext) {
 	auto prefab = prefabs.emplace_back(ke::Prefab::create(), false).first;
@@ -307,4 +307,4 @@ void ViewPrefabEditor::updateElements(const std::shared_ptr<ke::Prefab> &pSelect
 	ImGui::UuidText("Element UUID", selectedElement->getUuid());
 	ImGui::SetItemTooltip("Prefab Element UUID. This field is not editable, but copyable");
 }
-} // namespace mer::editor::mvp
+} // namespace ked

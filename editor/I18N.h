@@ -25,7 +25,7 @@
 #include <sigc++/connection.h>
 #include <unordered_map>
 
-namespace mer::editor::mvp {
+namespace ked {
 class I18n {
 	inline static sigc::connection onLanguageChangedConnection;
 
@@ -54,6 +54,6 @@ public:
 private:
 	static void updateStrings();
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //I18N_H

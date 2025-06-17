@@ -23,7 +23,7 @@
 #define MODELPROJECTEXPLORER_H
 #include "IModelProjectExplorer.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class ModelProjectExplorer : public IModelProjectExplorer {
 	std::filesystem::path path;
 	std::shared_ptr<ProjectExplorerElement> elements;
@@ -41,7 +41,7 @@ private:
 	static std::shared_ptr<ProjectExplorerElement> getDirectoryEntry(const std::filesystem::path &pPath,
 																	 const std::filesystem::path &pRootPath);
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 
 #endif //MODELPROJECTEXPLORER_H

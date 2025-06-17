@@ -27,6 +27,7 @@
 #include "KwasarEngine/utils/ReportMessage.h"
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
+namespace ke {
 void replace_name(std::string &pIn, const std::string &pWhat, const std::string &pReplaceWith) {
 	std::regex regex(pWhat);
 	pIn = std::regex_replace(pIn, regex, pReplaceWith);
@@ -58,8 +59,8 @@ std::string Utils::parseDlError(const std::string &pMsg) {
 }
 
 ke::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, const uint64_t pDataSize,
-												 std::vector<unsigned char> &pOutData, int* pWidthOut,
-												 int* pHeightOut) noexcept {
+										   std::vector<unsigned char> &pOutData, int* pWidthOut,
+										   int* pHeightOut) noexcept {
 	tjhandle decompressor = tjInitDecompress();
 	if (!decompressor) {
 		auto msg = ke::ReportMessage::create();
@@ -102,4 +103,5 @@ ke::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, const uin
 	if (pWidthOut) *pWidthOut = width;
 	if (pHeightOut) *pHeightOut = height;
 	return nullptr;
+}
 }

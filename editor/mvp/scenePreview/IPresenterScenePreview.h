@@ -23,7 +23,7 @@
 #define IPRESENTERSCENEPREVIEW_H
 #include "mvp/IPresenter.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelScenePreview;
 
 class IPresenterScenePreview : public IPresenter {
@@ -54,6 +54,6 @@ public:
 
 	virtual bool onCursorPosChanged(double pX, double pY) = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //IPRESENTERSCENEPREVIEW_H

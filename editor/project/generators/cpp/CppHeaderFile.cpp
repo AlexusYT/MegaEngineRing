@@ -21,4 +21,4 @@
 
 #include "CppHeaderFile.h"
 
-namespace mer::editor::project {} // namespace mer::editor::project
+namespace ked {} // namespace ked

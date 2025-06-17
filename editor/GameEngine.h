@@ -22,11 +22,11 @@
 #ifndef GAMEENGINE_GAMEENGINE_H
 #define GAMEENGINE_GAMEENGINE_H
 
-namespace mer::editor::ui {
+namespace ked {
 class GameEngine {
 public:
 	static int run(int pArgc, char* pArgv[]);
 };
-} // namespace mer::editor::ui
+} // namespace ked
 
 #endif //GAMEENGINE_GAMEENGINE_H

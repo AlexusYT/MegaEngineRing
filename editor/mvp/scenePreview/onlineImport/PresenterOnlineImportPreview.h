@@ -23,7 +23,7 @@
 #define PRESENTERONLINEIMPORTPREVIEW_H
 #include "mvp/scenePreview/PresenterScenePreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelScenePreview;
 class IViewScenePreview;
 
@@ -38,6 +38,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterOnlineImportPreview"; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTERONLINEIMPORTPREVIEW_H

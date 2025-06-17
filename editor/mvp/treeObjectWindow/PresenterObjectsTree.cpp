@@ -24,7 +24,7 @@
 #include "ModelObjectsTree.h"
 #include "ViewObjectsTree.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterObjectsTree::PresenterObjectsTree(const std::shared_ptr<IViewObjectsTree> &pView,
 										   const std::shared_ptr<IModelObjectsTree> &pModel)
 	: model(pModel), view(pView) {
@@ -56,4 +56,4 @@ void PresenterObjectsTree::onSelectionChanged(const std::vector<ke::Node*> &pNod
 void PresenterObjectsTree::clearSelection() { model->clearSelection(); }
 
 void PresenterObjectsTree::select(ke::Node* pNode) { model->select(pNode); }
-} // namespace mer::editor::mvp
+} // namespace ked

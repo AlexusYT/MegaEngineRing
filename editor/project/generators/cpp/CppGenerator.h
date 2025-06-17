@@ -23,7 +23,7 @@
 #define CPPGENERATOR_H
 #include <project/generators/GeneratorElement.h>
 
-namespace mer::editor::project {
+namespace ked {
 class CppGenerator {
 	std::vector<std::string> includes;
 	std::vector<GeneratorElement*> elements;
@@ -90,7 +90,7 @@ public:
 		return nullptr;
 	}
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //CPPGENERATOR_H

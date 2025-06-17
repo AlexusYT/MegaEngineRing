@@ -20,7 +20,7 @@
 //
 
 #include "Globals.h"
-
+namespace ked {
 void Globals::init() {
 #if defined __MINGW32__
 
@@ -53,4 +53,5 @@ void Globals::init() {
 	cachePath = home / ".cache/MegaEngineRing/";
 	create_directories(cachePath);
 #endif
+}
 }

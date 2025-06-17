@@ -32,7 +32,7 @@
 #include "KwasarEngine/resources/ResourceLoaders.h"
 #include "KwasarEngine/utils/UUID.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 std::shared_ptr<ke::ResourceLoadResult> ResourcesContext::loadResourceSync(const std::string &pResourceUri) {
 	std::promise<const std::shared_ptr<ke::ResourceLoadResult>> promise;
 
@@ -298,4 +298,4 @@ std::shared_ptr<std::istream> ResourcesContext::getResourceStream(const std::sha
 		return nullptr;
 	}
 }
-} // namespace mer::editor::mvp
+} // namespace ked

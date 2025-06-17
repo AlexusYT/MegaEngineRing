@@ -22,7 +22,7 @@
 #ifndef ACCESSMODIFIER_H
 #define ACCESSMODIFIER_H
 
-namespace mer::editor::project {
+namespace ked {
 enum class AccessModifier { PUBLIC, PROTECTED, PRIVATE };
 
 inline const char* to_string(const AccessModifier pE) {
@@ -33,7 +33,7 @@ inline const char* to_string(const AccessModifier pE) {
 		default: return "";
 	}
 }
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //ACCESSMODIFIER_H

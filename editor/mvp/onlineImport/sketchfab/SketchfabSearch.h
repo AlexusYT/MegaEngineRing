@@ -31,7 +31,7 @@ namespace ke {
 class GltfModel;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class SketchfabAccount;
 
 class SearchRequest {
@@ -287,6 +287,6 @@ public:
 
 	void clear() { results.clear(); }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //SKETCHFABSEARCH_H

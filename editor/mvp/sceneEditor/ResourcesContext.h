@@ -32,7 +32,7 @@ class IResourceLoader;
 class ILoadedResources;
 } // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class ResourcesContext : public ke::IResourceLoadExecutor {
 	enum class RequestType { PRELOAD, LOAD };
 
@@ -96,7 +96,7 @@ private:
 
 	std::shared_ptr<std::istream> getResourceStream(const std::shared_ptr<Request> &pRequest) const;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 
 #endif //RESOURCESCONTEXT_H

@@ -23,7 +23,7 @@
 #define PRESENTERSETTINGSWINDOW_H
 #include "mvp/IPresenter.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class IViewSettingsWindow;
 class IModelSettingsWindow;
 
@@ -52,6 +52,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterSettingsWindow"; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTERSETTINGSWINDOW_H

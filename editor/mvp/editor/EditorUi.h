@@ -23,7 +23,7 @@
 #define EDITORUI_H
 #include "KwasarEngine/scene/SceneUi.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterSettingsWindow;
 class Editor;
 
@@ -91,6 +91,6 @@ protected:
 
 	void onMouseButton(int pButton, int pAction, int pMods) override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //EDITORUI_H

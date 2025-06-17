@@ -42,7 +42,7 @@
 #include "mvp/treeObjectWindow/PresenterObjectsTree.h"
 #include "mvp/treeObjectWindow/ViewObjectsTree.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 SceneEditor::SceneEditor(const std::string &pName)
 	: Editor(pName) {
 	selection = std::make_shared<NodeSelectionHelper>();
@@ -174,4 +174,4 @@ void SceneEditor::addGltfModel(const std::string &pPath) {
 
 	scene->mergeNodes(gltf->getNodes());
 }
-} // namespace mer::editor::mvp
+} // namespace ked

@@ -32,10 +32,6 @@ class ModifierKeys;
 enum class KeyboardKey;
 } // namespace ke
 
-namespace mer::editor::mvp {
-class PresenterSceneEditor;
-} // namespace mer::editor::mvp
-
 namespace ke {
 class ResourceLoadResult;
 class IApplication;

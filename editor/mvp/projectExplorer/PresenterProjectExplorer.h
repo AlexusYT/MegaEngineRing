@@ -23,7 +23,7 @@
 #define PRESENTERPROJECTEXPLORER_H
 #include "IPresenterProjectExplorer.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelProjectExplorer;
 class IViewProjectExplorer;
 
@@ -50,7 +50,7 @@ public:
 
 	std::string getTypeName() override { return "PresenterProjectExplorer"; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 
 #endif //PRESENTERPROJECTEXPLORER_H

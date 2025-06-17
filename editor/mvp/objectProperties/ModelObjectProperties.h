@@ -26,7 +26,7 @@ namespace ke {
 class Scene3D;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class NodeSelectionHelper;
 class IPresenterObjectProperties;
 
@@ -55,6 +55,6 @@ public:
 
 	[[nodiscard]] const std::shared_ptr<ke::Scene3D> &getScene() const override { return scene; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELOBJECTPROPERTIES_H

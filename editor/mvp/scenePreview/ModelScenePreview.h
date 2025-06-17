@@ -41,7 +41,7 @@ namespace ke {
 class Scene3D;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ModelScenePreview : public IModelScenePreview {
 	IPresenterScenePreview* presenter{};
 	std::shared_ptr<ke::Scene3D> scene{};
@@ -72,6 +72,6 @@ public:
 
 	void clearSelectedMeshes() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELSCENEPREVIEW_H

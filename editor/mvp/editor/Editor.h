@@ -27,7 +27,7 @@
 
 struct ImGuiWindow;
 
-namespace mer::editor::mvp {
+namespace ked {
 class EditorUi;
 class Editor;
 
@@ -156,6 +156,6 @@ protected:
 
 	virtual void loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiDir pPanelDir) = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //EDITOR_H

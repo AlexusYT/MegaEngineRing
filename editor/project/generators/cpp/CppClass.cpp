@@ -23,7 +23,7 @@
 
 #include "CppMethod.h"
 
-namespace mer::editor::project {
+namespace ked {
 /*void CppClass::addElement(GeneratorElement* pElement, AccessModifier pModifier) {
 	if (auto* method = dynamic_cast<CppMethod*>(pElement)) { method->setClass(this); }
 	body.emplace_back(pModifier, pElement);
@@ -38,4 +38,4 @@ void CppClass::addDeclaration(std::shared_ptr<CppDeclaration> pElement, AccessMo
 	pElement->setKlass(this);
 	declarations.emplace_back(pModifier, pElement);
 }
-} // namespace mer::editor::project
+} // namespace ked

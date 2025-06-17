@@ -23,15 +23,15 @@
 #define PRESENTERPREFABEDITOR_H
 #include "IPresenterPrefabEditor.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class IViewPrefabEditor;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelPrefabEditor;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class PresenterPrefabEditor : public IPresenterPrefabEditor {
 	std::shared_ptr<IModelPrefabEditor> model;
 	std::shared_ptr<IViewPrefabEditor> view;
@@ -53,6 +53,6 @@ public:
 
 	std::string getTypeName() override { return "TextureEditor"; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTERPREFABEEDITOR_H

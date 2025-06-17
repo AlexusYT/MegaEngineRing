@@ -25,7 +25,7 @@
 
 #include "graphic/shaders/SimpleShader.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 SceneOverlayElements::SceneOverlayElements() {}
 
 std::shared_ptr<SceneOverlayElements> SceneOverlayElements::create() {
@@ -46,7 +46,7 @@ void SceneOverlayElements::renderGrid() const {
 }
 
 ke::ReportMessagePtr SceneOverlayElements::onInitialize() {
-	shader = graphics::SimpleShader::getInstance();
+	shader = SimpleShader::getInstance();
 	if (auto msg = shader->initialize()) return msg;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &dataBuffer);
@@ -105,4 +105,4 @@ ke::ReportMessagePtr SceneOverlayElements::onInitialize() {
 }
 
 void SceneOverlayElements::onUninitialize() { shader->uninitialize(); }
-} // namespace mer::editor::mvp
+} // namespace ked

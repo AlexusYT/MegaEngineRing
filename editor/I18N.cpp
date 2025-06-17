@@ -31,7 +31,7 @@
 
 #define LOCALE_DOMAIN "mer"
 
-namespace mer::editor::mvp {
+namespace ked {
 void I18n::init() {
 	onLanguageChangedConnection = Settings::getGeneral()->onLanguageChanged.connect(
 		[](const std::string &pNew, const std::string & /*pOld*/) { switchTo(pNew); });
@@ -183,4 +183,4 @@ void I18n::updateStrings() {
 	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[3], tr("SketchfabMaterialMetalness"));
 	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[4], tr("SketchfabMaterialSpecular"));
 }
-} // namespace mer::editor::mvp
+} // namespace ked

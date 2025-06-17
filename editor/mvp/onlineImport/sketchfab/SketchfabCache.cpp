@@ -21,7 +21,7 @@
 
 #include "SketchfabCache.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 SketchfabCache::SketchfabCache(const std::filesystem::path &pPath) : pathToCache(pPath) {}
 
 ke::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const std::vector<unsigned char> &pData) {
@@ -121,4 +121,4 @@ ke::ReportMessagePtr SketchfabCache::buildPath(const std::string &pUrl, std::fil
 	pPathOut = pathToCache / pUrl.substr(0, 2) / pUrl;
 	return nullptr;
 }
-} // namespace mer::editor::mvp
+} // namespace ked

@@ -25,7 +25,7 @@
 #include "mvp/objectProperties/PresenterObjectProperties.h"
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ModelObjectProperties::ModelObjectProperties(NodeSelectionHelper* pSelectionHelper)
 	: selectionHelper(pSelectionHelper) {
 	selectionHelper->connectOnEditingNodeChanged([this](ke::Node* pNode) {
@@ -37,4 +37,4 @@ void ModelObjectProperties::setScene(const std::shared_ptr<ke::Scene3D> &pScene)
 	scene = pScene;
 	if (presenter) presenter->onSceneChanged(pScene);
 }
-} // namespace mer::editor::mvp
+} // namespace ked

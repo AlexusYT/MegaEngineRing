@@ -24,7 +24,7 @@
 #include "CppDeclaration.h"
 #include "CppDefinition.h"
 
-namespace mer::editor::project {
+namespace ked {
 ke::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath) {
 	std::filesystem::path path = pPath;
 	path.replace_extension(getExtension());
@@ -56,4 +56,4 @@ ke::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath) {
 	}
 	return nullptr;
 }
-} // namespace mer::editor::project
+} // namespace ked

@@ -22,7 +22,7 @@
 #ifndef PROJECTEXPLORERELEMENT_H
 #define PROJECTEXPLORERELEMENT_H
 
-namespace mer::editor::mvp {
+namespace ked {
 enum class ExplorerElementType {
 	NONE = 0,
 	DIRECTORY,
@@ -82,7 +82,7 @@ public:
 
 	[[nodiscard]] const std::vector<std::shared_ptr<ProjectExplorerElement>> &getChildren() const { return children; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 
 #endif //PROJECTEXPLORERELEMENT_H

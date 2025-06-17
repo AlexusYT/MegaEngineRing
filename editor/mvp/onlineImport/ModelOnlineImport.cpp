@@ -27,7 +27,7 @@
 #include "sketchfab/SketchfabAccount.h"
 #include "sketchfab/SketchfabSearch.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 void ModelOnlineImport::setAccount(const std::shared_ptr<SketchfabAccount> &pAccount) {
 	account = pAccount;
 	search = account->createSearch();
@@ -78,4 +78,4 @@ ke::ReportMessagePtr ModelOnlineImport::loadModelFromCache(std::shared_ptr<std::
 }
 
 bool ModelOnlineImport::isSearching() { return search->isLoadingInProgress(); }
-} // namespace mer::editor::mvp
+} // namespace ked

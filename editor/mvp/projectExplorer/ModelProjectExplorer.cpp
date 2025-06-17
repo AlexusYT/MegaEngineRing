@@ -23,7 +23,7 @@
 
 #include "entries/ProjectExplorerElement.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ModelProjectExplorer::ModelProjectExplorer(const std::filesystem::path &pPath) {
 	ModelProjectExplorer::setRootPath(pPath);
 }
@@ -47,4 +47,4 @@ std::shared_ptr<ProjectExplorerElement> ModelProjectExplorer::getDirectoryEntry(
 	explorerEntry->sort();
 	return explorerEntry;
 }
-} // namespace mer::editor::mvp
+} // namespace ked

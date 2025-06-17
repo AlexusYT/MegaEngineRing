@@ -25,7 +25,7 @@
 #include "PresenterObjectsTree.h"
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ModelObjectsTree::ModelObjectsTree(NodeSelectionHelper* pSelection)
 	: selection(pSelection) {
 	selection->connectOnNodeSelectionChanged([this](const std::vector<ke::Node*> &pNodes, bool pSelected) {
@@ -41,4 +41,4 @@ void ModelObjectsTree::setScene(const std::shared_ptr<ke::Scene3D> &pNewScene3D)
 void ModelObjectsTree::clearSelection() { selection->clearSelection(); }
 
 void ModelObjectsTree::select(ke::Node* pNode) { selection->addNode(pNode); }
-} // namespace mer::editor::mvp
+} // namespace ked

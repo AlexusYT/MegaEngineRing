@@ -28,7 +28,7 @@ namespace ke {
 class Node;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IViewObjectProperties;
 class IModelObjectProperties;
 
@@ -59,6 +59,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterObjectProperties"; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTEROBJECTPROPERTIES_H

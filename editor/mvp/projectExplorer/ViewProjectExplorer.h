@@ -25,9 +25,9 @@
 #include "KwasarEngine/ui/UiWindow.h"
 #include "IViewProjectExplorer.h"
 
-namespace mer::editor::ui {}
+namespace ked {}
 
-namespace mer::editor::mvp {
+namespace ked {
 class ConfirmationDialog;
 class ProjectExplorerElement;
 
@@ -63,6 +63,6 @@ private:
 
 	void setPresenter(IPresenterProjectExplorer* pPresenter) override { presenter = pPresenter; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PROJECTEXPORERWINDOW_H

@@ -23,7 +23,7 @@
 #define SETTINGSCATEGORY_H
 #include <nlohmann/json_fwd.hpp>
 
-namespace mer::editor::mvp {
+namespace ked {
 class SettingsCategory {
 	sigc::signal<void()> onSettingsChanged;
 
@@ -53,6 +53,6 @@ public:
 		return onSettingsChanged.connect(pCallback);
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //SETTINGSCATEGORY_H

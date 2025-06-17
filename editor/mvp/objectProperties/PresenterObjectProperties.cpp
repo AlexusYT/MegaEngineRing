@@ -24,7 +24,7 @@
 #include "ModelObjectProperties.h"
 #include "ViewObjectProperties.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterObjectProperties::PresenterObjectProperties(const std::shared_ptr<IViewObjectProperties> &pView,
 													 const std::shared_ptr<IModelObjectProperties> &pModel)
 	: model(pModel), view(pView) {
@@ -53,4 +53,4 @@ void PresenterObjectProperties::addView(const std::shared_ptr<IView> & /*pElemen
 	loadedScene->connectSelectionChanged([view](ExplorerObject* pSelectedObject) { view->setObject(pSelectedObject); });
 	view->openView();*/
 }
-} // namespace mer::editor::mvp
+} // namespace ked

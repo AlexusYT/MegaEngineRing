@@ -21,8 +21,4 @@
 
 #include "ModelPrefabPreview.h"
 
-namespace mer {
-namespace editor {
-namespace mvp {} // mvp
-}                // editor
-}                // mer
+namespace ked {}

@@ -23,7 +23,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace mer::editor::mvp {
+namespace ked {
 void Settings::init() {
 	addCategory(std::make_shared<GeneralCategory>());
 	addCategory(std::make_shared<OtherCategory>());
@@ -150,4 +150,4 @@ void Settings::addCategory(const std::shared_ptr<SettingsCategory> &pCategory) {
 	categories.emplace(typeid(typeExpr), pCategory);
 	categoriesArray.emplace_back(pCategory);
 }
-} // namespace mer::editor::mvp
+} // namespace ked

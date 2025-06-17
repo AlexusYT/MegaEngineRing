@@ -27,7 +27,7 @@
 #include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/IView.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class SettingsCategory;
 class IPresenterSettingsWindow;
 
@@ -75,6 +75,6 @@ private:
 
 	void applyChanges();
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //VIEWSETTINGSWINDOW_H

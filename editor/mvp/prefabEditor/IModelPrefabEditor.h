@@ -26,7 +26,7 @@ namespace ke {
 class Prefab;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelPrefabEditor {
 public:
 	virtual ~IModelPrefabEditor() = default;
@@ -35,6 +35,6 @@ public:
 
 	virtual void setSelectedPrefab(const std::shared_ptr<ke::Prefab> &pSelectedPrefab) = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //IMODELPREFABEDITOR_H

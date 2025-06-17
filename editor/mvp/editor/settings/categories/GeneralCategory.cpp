@@ -23,7 +23,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace mer::editor::mvp {
+namespace ked {
 void GeneralCategory::save(nlohmann::json &pJson) {
 	pJson["language"] = language;
 	pJson["fontSize"] = fontSize;
@@ -41,4 +41,4 @@ void GeneralCategory::loadDefaults() {
 	language = "system";
 	fontSize = 19;
 }
-} // namespace mer::editor::mvp
+} // namespace ked

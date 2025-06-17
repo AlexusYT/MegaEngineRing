@@ -23,14 +23,14 @@
 #define CPPDECLARATION_H
 #include "CppClassMember.h"
 
-namespace mer::editor::project {
+namespace ked {
 class CppDeclaration : public CppClassMember {
 public:
 	virtual ~CppDeclaration() = default;
 
 	virtual std::string getCode(uint32_t pIndent, bool pIsHeader) = 0;
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //CPPDECLARATION_H

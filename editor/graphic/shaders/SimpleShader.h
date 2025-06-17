@@ -23,7 +23,7 @@
 #define SIMPLESHADER_H
 #include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
-namespace mer::editor::graphics {
+namespace ked {
 class SimpleShader : public ke::ShaderProgram {
 	static std::shared_ptr<SimpleShader> instance;
 
@@ -32,6 +32,6 @@ class SimpleShader : public ke::ShaderProgram {
 public:
 	static std::shared_ptr<SimpleShader> getInstance();
 };
-} // namespace mer::editor::graphics
+} // namespace ked
 
 #endif //SIMPLESHADER_H

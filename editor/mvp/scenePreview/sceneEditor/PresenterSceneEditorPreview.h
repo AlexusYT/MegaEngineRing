@@ -23,7 +23,7 @@
 #define PRESENTERSCENEEDITORPREVIEW_H
 #include "mvp/scenePreview/PresenterScenePreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class PresenterSceneEditorPreview : public PresenterScenePreview {
 	PresenterSceneEditorPreview(const std::shared_ptr<IViewScenePreview> &pView,
 								const std::shared_ptr<IModelScenePreview> &pModel)
@@ -35,6 +35,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterSceneEditorPreview"; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTERSCENEEDITORPREVIEW_H

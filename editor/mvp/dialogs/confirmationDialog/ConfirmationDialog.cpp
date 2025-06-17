@@ -21,7 +21,7 @@
 
 #include "ConfirmationDialog.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 std::shared_ptr<ConfirmationDialog> ConfirmationDialog::create(const std::string &pName, const std::string &pTitle) {
 	return std::shared_ptr<ConfirmationDialog>(new ConfirmationDialog(pName, pTitle));
 }
@@ -43,4 +43,4 @@ void ConfirmationDialog::onUpdate(bool pVisible) {
 	}
 	//if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
 }
-} // namespace mer::editor::mvp
+} // namespace ked

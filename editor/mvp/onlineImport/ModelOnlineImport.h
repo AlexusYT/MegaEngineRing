@@ -29,7 +29,7 @@ namespace ke {
 class GltfModel;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class SketchfabSearch;
 class ModelSearchList;
 class IPresenterOnlineImport;
@@ -105,6 +105,6 @@ public:
 
 	bool isSearching() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELONLINEIMPORT_H

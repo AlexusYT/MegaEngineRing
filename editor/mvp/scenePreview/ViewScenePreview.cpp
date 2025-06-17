@@ -34,7 +34,7 @@
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/sceneEditor/SceneOverlayElements.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ViewScenePreview::ViewScenePreview(const std::string &pName, const std::shared_ptr<IWidgetContext> &pContext)
 	: EditorTool(pName), context(pContext) {}
 
@@ -214,4 +214,4 @@ void ViewScenePreview::onMouseScroll(double /*pXOffset*/, double pYOffset) {
 bool ViewScenePreview::isRotate() { return rotate; }
 
 void ViewScenePreview::focusOnThis() { focusWindow = true; }
-} // namespace mer::editor::mvp
+} // namespace ked

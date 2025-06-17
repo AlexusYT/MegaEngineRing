@@ -27,7 +27,7 @@ namespace ke {
 class Node;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class NodeSelectionHelper {
 	std::vector<ke::Node*> selectedNodes{};
 	sigc::signal<void(const std::vector<ke::Node*> &pNodes, bool pSelected)> onNodeSelectionChanged;
@@ -68,6 +68,6 @@ public:
 		return onEditingNodeChanged.connect(pSlot);
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //NODESELECTIONHELPER_H

@@ -22,7 +22,7 @@
 #ifndef SKETCHFABCACHE_H
 #define SKETCHFABCACHE_H
 
-namespace mer::editor::mvp {
+namespace ked {
 class SketchfabCache {
 	std::filesystem::path pathToCache;
 	std::mutex mutex;
@@ -42,6 +42,6 @@ public:
 
 	ke::ReportMessagePtr buildPath(const std::string &pUrl, std::filesystem::path &pPathOut) const;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //SKETCHFABCACHE_H

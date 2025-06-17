@@ -23,7 +23,7 @@
 #define CPPCUSTOMSTATEMENT_H
 #include "CppBodyStatement.h"
 
-namespace mer::editor::project {
+namespace ked {
 class CppCustomStatement : public CppBodyStatement {
 	std::string line;
 
@@ -52,6 +52,6 @@ public:
 		return ss.str();
 	}
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 #endif //CPPCUSTOMSTATEMENT_H

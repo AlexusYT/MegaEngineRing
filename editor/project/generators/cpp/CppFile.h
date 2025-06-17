@@ -22,7 +22,7 @@
 #ifndef CPPFILE_H
 #define CPPFILE_H
 
-namespace mer::editor::project {
+namespace ked {
 class GeneratorElement;
 class CppDefinition;
 class CppDeclaration;
@@ -59,6 +59,6 @@ public:
 
 	ke::ReportMessagePtr writeFile(const std::filesystem::path &pPath);
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 #endif //CPPFILE_H

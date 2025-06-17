@@ -23,7 +23,7 @@
 
 #include <curl/curl.h>
 
-namespace mer::editor {
+namespace ked {
 std::unique_ptr<curl_slist, void (*)(curl_slist*)> Utils::getCurlList(const std::list<std::string> &pList) {
 	curl_slist* slistTmp{};
 	for (auto &str: pList) {
@@ -32,4 +32,4 @@ std::unique_ptr<curl_slist, void (*)(curl_slist*)> Utils::getCurlList(const std:
 	}
 	return std::unique_ptr<curl_slist, void (*)(curl_slist*)>(slistTmp, curl_slist_free_all);
 }
-} // namespace mer::editor
+} // namespace ked

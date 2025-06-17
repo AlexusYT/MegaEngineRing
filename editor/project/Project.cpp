@@ -21,8 +21,8 @@
 
 #include "Project.h"
 
-namespace mer::editor::project {
+namespace ked {
 Project::Project() {}
 
 Project::~Project() {}
-} // namespace mer::editor::project
+} // namespace ked

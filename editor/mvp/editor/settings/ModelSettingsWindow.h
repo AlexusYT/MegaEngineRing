@@ -21,7 +21,7 @@
 #ifndef MODELSETTINGSWINDOW_H
 #define MODELSETTINGSWINDOW_H
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenter;
 
 class IModelSettingsWindow {
@@ -40,6 +40,6 @@ public:
 		return std::shared_ptr<ModelSettingsWindow>(new ModelSettingsWindow());
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELSETTINGSWINDOW_H

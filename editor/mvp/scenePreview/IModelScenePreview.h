@@ -22,7 +22,7 @@
 #ifndef IMODELSCENEPREVIEW_H
 #define IMODELSCENEPREVIEW_H
 
-namespace mer::editor::project {
+namespace ked {
 class Scene3DEditor;
 }
 
@@ -35,7 +35,7 @@ class RenderPass;
 class Material;
 } // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterScenePreview;
 
 class IModelScenePreview {
@@ -58,6 +58,6 @@ public:
 
 	virtual void clearSelectedMeshes() = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //IMODELSCENEPREVIEW_H

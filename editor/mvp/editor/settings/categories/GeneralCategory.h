@@ -24,7 +24,7 @@
 #include "KwasarEngine/utils/Property.h"
 #include "SettingsCategory.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class GeneralCategory : public SettingsCategory {
 public:
 	std::string language;
@@ -59,6 +59,6 @@ public:
 		this->fontSize = cat->fontSize;
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //GENERALCATEGORY_H

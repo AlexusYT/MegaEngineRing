@@ -24,7 +24,7 @@
 #include "mvp/scenePreview/IModelScenePreview.h"
 #include "mvp/scenePreview/IViewScenePreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterOnlineImportPreview::PresenterOnlineImportPreview(const std::shared_ptr<IViewScenePreview> &pView,
 														   const std::shared_ptr<IModelScenePreview> &pModel)
 	: PresenterScenePreview(pView, pModel) {}
@@ -33,4 +33,4 @@ std::shared_ptr<PresenterOnlineImportPreview> PresenterOnlineImportPreview::crea
 	const std::shared_ptr<IViewScenePreview> &pView, const std::shared_ptr<IModelScenePreview> &pModel) {
 	return std::shared_ptr<PresenterOnlineImportPreview>(new PresenterOnlineImportPreview(pView, pModel));
 }
-} // namespace mer::editor::mvp
+} // namespace ked

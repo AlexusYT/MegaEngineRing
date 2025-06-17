@@ -46,7 +46,7 @@ namespace Microsoft::glTF {
 class GLTFResourceReader;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterOnlineImport::PresenterOnlineImport(const std::shared_ptr<IModelOnlineImport> &pModel,
 											 const std::shared_ptr<IViewOnlineImport> &pView)
 	: model(pModel), view(pView) {
@@ -298,4 +298,4 @@ std::shared_ptr<DownloadLinks> PresenterOnlineImport::getGltfLinks() const {
 	if (!selectedModel) return nullptr;
 	return selectedModel->getLinks();
 }
-} // namespace mer::editor::mvp
+} // namespace ked

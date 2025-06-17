@@ -25,7 +25,7 @@
 #include "Settings.h"
 #include "mvp/contexts/UiWindowContext.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 void ViewSettingsWindow::openPopup() { ImGui::OpenPopup(getId()); }
 
 void ViewSettingsWindow::onUpdate(bool pVisible) {
@@ -130,4 +130,4 @@ void ViewSettingsWindow::applyChanges() {
 	if (auto msg = Settings::save()) { ke::Logger::error(msg); }
 	updateChangedState();
 }
-} // namespace mer::editor::mvp
+} // namespace ked

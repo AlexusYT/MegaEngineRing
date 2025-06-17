@@ -23,11 +23,11 @@
 #define CPPEXTERNC_H
 #include "CppDefinition.h"
 
-namespace mer::editor::project {
+namespace ked {
 class CppExternC : public std::enable_shared_from_this<CppExternC> {
 	std::list<std::shared_ptr<CppDefinition>> definitions;
 
-	class CppExternCDefinition : public mer::editor::project::CppDefinition {
+	class CppExternCDefinition : public ked::CppDefinition {
 		std::shared_ptr<CppExternC> parent;
 
 	public:
@@ -60,6 +60,6 @@ public:
 		return ss.str();
 	}
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 #endif //CPPEXTERNC_H

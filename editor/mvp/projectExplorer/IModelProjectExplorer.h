@@ -22,11 +22,11 @@
 #ifndef IMODELPROJECTEXPLORER_H
 #define IMODELPROJECTEXPLORER_H
 
-namespace mer::editor::project {
+namespace ked {
 class Project;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ProjectExplorerElement;
 
 class IModelProjectExplorer {
@@ -39,7 +39,7 @@ public:
 
 	[[nodiscard]] virtual const std::shared_ptr<ProjectExplorerElement> &getElements() const = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 
 #endif //IMODELPROJECTEXPLORER_H

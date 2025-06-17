@@ -24,11 +24,11 @@
 #include "KwasarEngine/ui/UiWindow.h"
 #include "IViewPrefabEditor.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class SubWindows;
 class SceneOverlayElements;
 class IPresenterPrefabEditor;
-} // namespace mer::editor::mvp
+} // namespace ked
 
 namespace ke {
 class Framebuffer;
@@ -39,7 +39,7 @@ class OrbitCameraExtension;
 class Prefab;
 } // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class ViewPrefabEditor : public IViewPrefabEditor, public ke::UiWindow {
 	std::shared_ptr<IWidgetContext> context{};
 	std::vector<std::pair<std::shared_ptr<ke::Prefab>, bool /*unsaved*/>> prefabs;
@@ -86,6 +86,6 @@ private:
 
 	void updateElements(const std::shared_ptr<ke::Prefab> &pSelectedPrefab, size_t pPrefabIndex);
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //VIEWPREFABEDITOR_H

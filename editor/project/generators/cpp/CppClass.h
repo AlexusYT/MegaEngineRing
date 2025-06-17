@@ -28,7 +28,7 @@
 #include "CppDeclaration.h"
 #include "CppDefinition.h"
 
-namespace mer::editor::project {
+namespace ked {
 class CppClass : public GeneratorElement, public std::enable_shared_from_this<CppClass> {
 	std::string name;
 	std::list<std::string> implementsList;
@@ -124,7 +124,7 @@ public:
 		return ss.str();
 	}
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //CPPCLASS_H

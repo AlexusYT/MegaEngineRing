@@ -32,7 +32,7 @@
 #define API_ADDRESS "https://api.sketchfab.com"
 #define API_V3 API_ADDRESS "/v3"
 
-namespace mer::editor::mvp {
+namespace ked {
 std::string flat(const std::vector<std::string> &pElems, const std::string &pDelimiter) {
 	if (pDelimiter.empty()) return "";
 	return std::accumulate(std::next(pElems.begin()), pElems.end(), pElems[0],
@@ -176,7 +176,7 @@ ke::ReportMessagePtr Image::loadImage() {
 	}
 
 	dataLoaded = false;
-	if (auto msg = Utils::decompressJpeg(jpegData.data(), jpegData.size(), data)) {
+	if (auto msg = ke::Utils::decompressJpeg(jpegData.data(), jpegData.size(), data)) {
 		msg->addInfoLine("Address: {}", url);
 		return msg;
 	}
@@ -383,4 +383,4 @@ void SketchfabSearch::next(const std::function<void(const ke::ReportMessagePtr &
 		loadingInProgress = false;
 	});
 }
-} // namespace mer::editor::mvp
+} // namespace ked

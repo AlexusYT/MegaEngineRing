@@ -21,9 +21,9 @@
 
 #include "PresenterSceneEditorPreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 std::shared_ptr<PresenterSceneEditorPreview> PresenterSceneEditorPreview::create(
 	const std::shared_ptr<IViewScenePreview> &pView, const std::shared_ptr<IModelScenePreview> &pModel) {
 	return std::shared_ptr<PresenterSceneEditorPreview>(new PresenterSceneEditorPreview(pView, pModel));
 }
-} // namespace mer::editor::mvp
+} // namespace ked

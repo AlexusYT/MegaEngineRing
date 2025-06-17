@@ -21,7 +21,7 @@
 
 #include "ProjectExplorerElement.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ProjectExplorerElement::ProjectExplorerElement(const std::filesystem::path &pPath,
 											   const std::filesystem::path &pRootPath, const bool pDirectory)
 	: directory(pDirectory), path(pPath), rootPath(pRootPath) {
@@ -73,4 +73,4 @@ void ProjectExplorerElement::sort() const {
 		return pFirst->getName().lowercase().compare(pSecond->getName().lowercase());
 	});*/
 }
-} // namespace mer::editor::mvp
+} // namespace ked

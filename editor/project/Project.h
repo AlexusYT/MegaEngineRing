@@ -23,7 +23,7 @@
 #define PROJECT_H
 #include <future>
 
-namespace mer::editor::project {
+namespace ked {
 class Project : public std::enable_shared_from_this<Project> {
 	std::filesystem::path projectPath;
 	std::filesystem::path projectBuildPath;
@@ -62,6 +62,6 @@ public:
 
 	void setProjectDataPath(const std::filesystem::path &pProjectDataPath) { projectDataPath = pProjectDataPath; }
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 #endif //PROJECT_H

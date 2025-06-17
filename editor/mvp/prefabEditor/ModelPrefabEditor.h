@@ -27,7 +27,7 @@ namespace ke {
 class Prefab;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ModelPrefabEditor : public IModelPrefabEditor {
 	std::shared_ptr<ke::Prefab> selectedPrefab;
 
@@ -38,6 +38,6 @@ public:
 		selectedPrefab = pSelectedPrefab;
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELTEXTUREEDITOR_H

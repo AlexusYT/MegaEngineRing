@@ -27,7 +27,7 @@ namespace ke {
 class OrbitCameraExtension;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterScenePreview;
 
 class IViewScenePreview : public IView {
@@ -44,6 +44,6 @@ public:
 
 	virtual void focusOnThis() = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //IVIEWSCENEPREVIEW_H

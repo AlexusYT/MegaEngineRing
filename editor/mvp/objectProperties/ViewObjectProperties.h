@@ -37,7 +37,7 @@ class Scene3D;
 class Node;
 } // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterObjectProperties;
 
 class IViewObjectProperties : public IView {
@@ -113,7 +113,7 @@ private:
 
 	static bool isDegrees() { return getAngleUnit() == AngleUnit::DEGREES; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 
 #endif //OBJECTPROPERTIESWINDOW_H

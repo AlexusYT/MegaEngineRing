@@ -28,7 +28,7 @@ namespace ke {
 class ShaderProgram;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class SceneOverlayElements : public ke::Initializable, public ke::IRenderable {
 	uint32_t dataBuffer{};
 	uint32_t indexBuffer{};
@@ -56,6 +56,6 @@ protected:
 
 	void onUninitialize() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //SCENEOVERLAYELEMENTS_H

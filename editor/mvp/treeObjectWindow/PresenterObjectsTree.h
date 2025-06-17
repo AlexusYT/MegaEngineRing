@@ -30,7 +30,7 @@ class Node;
 class Scene3D;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IViewObjectsTree;
 class IModelObjectsTree;
 
@@ -69,6 +69,6 @@ public:
 
 	std::string getTypeName() override { return "PresenterObjectsTree"; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTEROBJECTSTREE_H

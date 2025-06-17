@@ -36,7 +36,7 @@ class OrbitCameraExtension;
 class Framebuffer;
 } // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class SceneOverlayElements;
 class IWidgetContext;
 
@@ -99,6 +99,6 @@ public:
 
 	void focusOnThis() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //VIEWSCENEPREVIEW_H

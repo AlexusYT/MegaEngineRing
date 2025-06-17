@@ -27,7 +27,7 @@
 #include "IViewPrefabEditor.h"
 #include "mvp/scenePreview/ViewScenePreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterPrefabEditor::PresenterPrefabEditor(const std::shared_ptr<IModelPrefabEditor> &pModel,
 											 const std::shared_ptr<IViewPrefabEditor> &pView)
 	: model(pModel), view(pView) { view->setPresenter(this); }
@@ -53,4 +53,4 @@ void PresenterPrefabEditor::run() {
 }
 
 void PresenterPrefabEditor::stop() { view->closeView(); }
-} // namespace mer::editor::mvp
+} // namespace ked
