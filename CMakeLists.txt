@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.21)
 include(cmake/prelude.cmake)
 
 project(
-        MegaEngineRing
+        KwasarEngine
         VERSION 0.1.0
         DESCRIPTION "Game engine"
         HOMEPAGE_URL "https://example.com/"
@@ -116,7 +116,7 @@ endif ()
 
 # ---- Developer mode ----
 
-if (NOT MegaEngine_DEVELOPER_MODE)
+if (NOT KwasarEngine_DEVELOPER_MODE)
     return()
 elseif (NOT PROJECT_IS_TOP_LEVEL)
     message(
