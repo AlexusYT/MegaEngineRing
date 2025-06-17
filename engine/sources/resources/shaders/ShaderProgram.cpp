@@ -29,7 +29,7 @@
 #include "KwasarEngine/resources/shaders/Shader.h"
 #include "KwasarEngine/utils/ReportMessage.h"
 
-namespace mer::sdk {
+namespace ke {
 ShaderProgram::ShaderProgram() : name(0) {}
 
 ShaderProgram::~ShaderProgram() { ShaderProgram::uninitialize(); }
@@ -139,4 +139,4 @@ void ShaderProgram::addReportInfo(const ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Attached shaders:");
 	for (auto shader: attachedShaders) { shader->addReportInfo(pMsg); }
 }
-} // namespace mer::sdk
+} // namespace ke

@@ -22,7 +22,7 @@
 #include <gtest/gtest.h>
 
 #include "KwasarEngine/utils/Transformation.h"
-using namespace mer::sdk;
+using namespace ke;
 
 TEST(TransformationTests, getPosition) {
 	{

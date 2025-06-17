@@ -24,7 +24,7 @@
 #include <atomic>
 #include <nlohmann/json_fwd.hpp>
 
-namespace mer::sdk {
+namespace ke {
 class GltfModel;
 }
 
@@ -61,11 +61,11 @@ class SketchfabAccount {
 
 public:
 	static std::shared_ptr<SketchfabAccount> createFromFile(const std::filesystem::path &pFilePath,
-															sdk::ReportMessagePtr &pMessage);
+															ke::ReportMessagePtr &pMessage);
 
 	static std::shared_ptr<SketchfabAccount> create();
 
-	sdk::ReportMessagePtr saveToFile(const std::filesystem::path &pFilePath);
+	ke::ReportMessagePtr saveToFile(const std::filesystem::path &pFilePath);
 
 	std::shared_ptr<SketchfabSearch> createSearch();
 
@@ -73,19 +73,19 @@ public:
 
 	void serialize(nlohmann::json &pRoot);
 
-	sdk::ReportMessagePtr getRequest(const std::string &pUrl, const std::string &pData, std::atomic<float> &pProgress,
+	ke::ReportMessagePtr getRequest(const std::string &pUrl, const std::string &pData, std::atomic<float> &pProgress,
 									 nlohmann::json &pResult);
 
-	sdk::ReportMessagePtr downloadImage(const std::string &pUrl, std::vector<unsigned char> &pUncompressedJpegData,
+	ke::ReportMessagePtr downloadImage(const std::string &pUrl, std::vector<unsigned char> &pUncompressedJpegData,
 										const CacheSettings &pCache = CACHE_DEFAULT);
 
-	sdk::ReportMessagePtr downloadModel(const std::string &pUrl, std::shared_ptr<std::iostream> &pStreamOut,
+	ke::ReportMessagePtr downloadModel(const std::string &pUrl, std::shared_ptr<std::iostream> &pStreamOut,
 										std::atomic<float> &pProgress, const CacheSettings &pCache = CACHE_NO_LOAD);
 
 	bool isFileCached(const std::string &pUrl) const;
 
 
-	sdk::ReportMessagePtr loadCachedFile(const std::string &pUrl, std::shared_ptr<std::iostream> &pData) const;
+	ke::ReportMessagePtr loadCachedFile(const std::string &pUrl, std::shared_ptr<std::iostream> &pData) const;
 
 	[[nodiscard]] const std::string &getAccessToken() const { return accessToken; }
 

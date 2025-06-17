@@ -23,7 +23,7 @@
 #define DEFAULTPROGRAM_H
 #include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
-namespace mer::sdk {
+namespace ke {
 class DefaultProgram : public ShaderProgram {
 	static std::shared_ptr<DefaultProgram> instance;
 
@@ -32,6 +32,6 @@ class DefaultProgram : public ShaderProgram {
 public:
 	static std::shared_ptr<DefaultProgram> getInstance();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //DEFAULTPROGRAM_H

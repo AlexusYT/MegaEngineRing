@@ -28,7 +28,7 @@
 #include "mvp/IPresenter.h"
 #include "mvp/scenePreview/ModelScenePreview.h"
 
-namespace mer::sdk {
+namespace ke {
 class GltfModel;
 }
 
@@ -52,7 +52,7 @@ public:
 
 	virtual void onSearchRequestChanged() = 0;
 
-	virtual void onSearchResultLoaded(const sdk::ReportMessagePtr &pError) = 0;
+	virtual void onSearchResultLoaded(const ke::ReportMessagePtr &pError) = 0;
 
 	virtual void selectModel(const std::shared_ptr<ModelSearchList> &pModel) = 0;
 
@@ -97,7 +97,7 @@ public:
 
 	void onSearchRequestChanged() override;
 
-	void onSearchResultLoaded(const sdk::ReportMessagePtr &pError) override;
+	void onSearchResultLoaded(const ke::ReportMessagePtr &pError) override;
 
 	void selectModel(const std::shared_ptr<ModelSearchList> &pModel) override;
 

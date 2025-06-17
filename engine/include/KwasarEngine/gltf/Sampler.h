@@ -27,7 +27,7 @@ namespace Microsoft::glTF {
 struct Sampler;
 }
 
-namespace mer::sdk {
+namespace ke {
 enum class MagFilterMode {
 	NEAREST = 9728,
 	LINEAR  = 9729,
@@ -63,6 +63,6 @@ protected:
 
 	void onUninitialize() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //SAMPLER_H

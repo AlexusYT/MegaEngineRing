@@ -26,7 +26,7 @@
 #include "KwasarEngine/utils/PropertyJsonSerializers.h"
 #include "KwasarEngine/utils/Property.h"
 
-namespace mer::sdk {
+namespace ke {
 template <typename T>
 class ExtensionProperty : public Property<T>, public ISerializable {
 public:
@@ -56,6 +56,6 @@ public:
 			Property<T>::setValue({});*/
 	}
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //EXTENSIONPROPERTY_H

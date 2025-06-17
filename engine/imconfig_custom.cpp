@@ -53,7 +53,7 @@ bool InputTextWithHint(const char* pName, const char* pHint, std::string &pText,
 		&pText);
 }
 
-bool UuidText(const char* pName, const mer::sdk::UUID &pUuid, int pFlags) {
+bool UuidText(const char* pName, const ke::UUID &pUuid, int pFlags) {
 	auto uuidText = pUuid.toString(true);
 
 	ImGuiContext &g = *GImGui;

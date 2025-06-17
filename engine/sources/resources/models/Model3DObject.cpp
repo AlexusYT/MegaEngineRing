@@ -28,7 +28,7 @@
 #include "KwasarEngine/render/RenderInstanceData.h"
 #include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
-namespace mer::sdk {
+namespace ke {
 Model3DObject::~Model3DObject() { Model3DObject::onUninitialize(); }
 
 std::shared_ptr<IModel3DObject> Model3DObject::create() { return std::shared_ptr<Model3DObject>(new Model3DObject()); }
@@ -129,4 +129,4 @@ bool Model3DObject::operator<(const IModel3DObject &pRhs) const {
 
 	return this->indices < pRhs.getIndices();
 }
-} // namespace mer::sdk
+} // namespace ke

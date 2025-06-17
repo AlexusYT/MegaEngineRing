@@ -26,7 +26,7 @@
 #include "KwasarEngine/extensions/Extension.h"
 #include "KwasarEngine/utils/KeyboardKey.h"
 
-namespace mer::sdk {
+namespace ke {
 class CameraKeyboardExtension : public Extension {
 	bool fwdPressed{}, bwdPressed{}, strafeLeftPressed{}, strafeRightPressed{};
 
@@ -65,7 +65,7 @@ protected:
 
 	void onRender() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //CAMERAKEYBOARDEXTENSION_H

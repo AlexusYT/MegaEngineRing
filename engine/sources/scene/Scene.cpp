@@ -41,7 +41,7 @@
 #include "KwasarEngine/scene/objects/ISceneObject.h"
 #include "KwasarEngine/utils/Logger.h"
 
-namespace mer::sdk {
+namespace ke {
 Scene::Scene()
 	: programBuffer(std::make_shared<ProgramWideShaderBuffer>()), lightSources(LightSources::create()) {
 	prefab = Prefab::create();
@@ -58,8 +58,8 @@ void Scene::setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const {
 	programBuffer->setViewProjMatrix(pViewProjMatrix);
 }
 
-void Scene::onResourceLoadingError(const std::string & /*pRequest*/, const sdk::ReportMessagePtr &pError) {
-	sdk::Logger::error(pError);
+void Scene::onResourceLoadingError(const std::string & /*pRequest*/, const ke::ReportMessagePtr &pError) {
+	ke::Logger::error(pError);
 }
 
 void Scene::switchCamera(ICamera* pNewCamera) {
@@ -77,7 +77,7 @@ void Scene::beforeRender() {
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-sdk::ReportMessagePtr Scene::initScene() {
+ke::ReportMessagePtr Scene::initScene() {
 	if (inited) return nullptr;
 	for (const auto &object: objects) { if (auto msg = object->init()) return msg; }
 	resourceExecutor->loadResourceAsync("Test.enmodel",
@@ -286,4 +286,4 @@ bool Scene::notifyOnMouseScroll(double pDx, double pDy) {
 	for (const auto &object: objects) handled = object->notifyOnMouseScroll(pDx, pDy) || handled;
 	return handled;
 }
-} // namespace mer::sdk
+} // namespace ke

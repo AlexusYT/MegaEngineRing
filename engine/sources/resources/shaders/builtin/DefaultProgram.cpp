@@ -23,7 +23,7 @@
 
 #include "KwasarEngine/resources/shaders/Shader.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<DefaultProgram> DefaultProgram::instance = std::shared_ptr<DefaultProgram>(new DefaultProgram);
 
 DefaultProgram::DefaultProgram() {
@@ -384,4 +384,4 @@ void main()
 }
 
 std::shared_ptr<DefaultProgram> DefaultProgram::getInstance() { return instance; }
-} // namespace mer::sdk
+} // namespace ke

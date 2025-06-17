@@ -23,7 +23,7 @@
 #define LIGHTEXTENSION_H
 #include "Extension.h"
 
-namespace mer::sdk {
+namespace ke {
 class LightExtension : public Extension {
 public:
 	ExtensionProperty<int32_t> lightDataId;
@@ -38,6 +38,6 @@ public:
 
 	void onNodeChanged(Node* pOldNode) override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //LIGHTEXTENSION_H

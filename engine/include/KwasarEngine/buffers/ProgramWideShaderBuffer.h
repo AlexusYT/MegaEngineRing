@@ -26,7 +26,7 @@
 
 #include "SSBO.h"
 
-namespace mer::sdk {
+namespace ke {
 enum class RenderPassMode : int32_t { REGULAR, OUTLINE };
 
 class ProgramWideShaderBuffer : public SSBO {
@@ -72,7 +72,7 @@ public:
 		dirty = true;
 	}
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //PROGRAMWIDESHADERBUFFER_H

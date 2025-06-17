@@ -26,7 +26,7 @@ namespace sigc {
 struct connection;
 }
 
-namespace mer::sdk {
+namespace ke {
 class ShaderProgram;
 struct MaterialData;
 class RenderInstanceData;
@@ -46,6 +46,6 @@ public:
 
 	virtual void setInstancedRender(IInstancedRender* pInstancedRender) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IRENDERINSTANCE_H

@@ -24,7 +24,7 @@
 namespace mer::editor::mvp {
 SketchfabCache::SketchfabCache(const std::filesystem::path &pPath) : pathToCache(pPath) {}
 
-sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const std::vector<unsigned char> &pData) {
+ke::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const std::vector<unsigned char> &pData) {
 	std::stringstream ss;
 	ss.write(reinterpret_cast<const std::ostream::char_type*>(pData.data()),
 			 static_cast<std::streamsize>(pData.size()));
@@ -32,7 +32,7 @@ sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const s
 	return nullptr;
 }
 
-sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const std::ostream &pData) {
+ke::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const std::ostream &pData) {
 	std::lock_guard lock(mutex);
 
 	std::filesystem::path path;
@@ -40,7 +40,7 @@ sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const s
 	std::error_code ec;
 	create_directories(path.parent_path(), ec);
 	if (ec) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to save cache");
 		msg->setMessage("Unable to create directory");
 		msg->addInfoLine("Error: {}", ec.message());
@@ -58,7 +58,7 @@ sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const s
 		return nullptr;
 	}
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to save cache");
 		msg->setMessage("Exception occurred");
 		msg->addInfoLine("Url: {}", pUrl);
@@ -66,7 +66,7 @@ sdk::ReportMessagePtr SketchfabCache::saveCache(const std::string &pUrl, const s
 	}
 }
 
-sdk::ReportMessagePtr SketchfabCache::loadCache(const std::string &pUrl, std::vector<unsigned char> &pData) {
+ke::ReportMessagePtr SketchfabCache::loadCache(const std::string &pUrl, std::vector<unsigned char> &pData) {
 	std::shared_ptr<std::iostream> stream;
 	if (auto msg = loadCache(pUrl, stream)) {
 		//
@@ -79,12 +79,12 @@ sdk::ReportMessagePtr SketchfabCache::loadCache(const std::string &pUrl, std::ve
 	return nullptr;
 }
 
-sdk::ReportMessagePtr SketchfabCache::loadCache(const std::string &pUrl, std::shared_ptr<std::iostream> &pData) {
+ke::ReportMessagePtr SketchfabCache::loadCache(const std::string &pUrl, std::shared_ptr<std::iostream> &pData) {
 	std::lock_guard lock(mutex);
 	std::filesystem::path path;
 	if (auto msg = buildPath(pUrl, path)) { return msg; }
 	if (!exists(path)) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to load cache");
 		msg->setMessage("No cache file");
 		msg->addInfoLine("Path to file: {}", path.string());
@@ -96,7 +96,7 @@ sdk::ReportMessagePtr SketchfabCache::loadCache(const std::string &pUrl, std::sh
 		return nullptr;
 	}
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to load cache");
 		msg->setMessage("Exception occurred while reading");
 		msg->addInfoLine("Path to file: {}", path.string());
@@ -110,9 +110,9 @@ bool SketchfabCache::isCached(const std::string &pUrl) const {
 	return exists(path);
 }
 
-sdk::ReportMessagePtr SketchfabCache::buildPath(const std::string &pUrl, std::filesystem::path &pPathOut) const {
+ke::ReportMessagePtr SketchfabCache::buildPath(const std::string &pUrl, std::filesystem::path &pPathOut) const {
 	if (pUrl.size() < 2) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to load cache");
 		msg->setMessage("Invalid url");
 		msg->addInfoLine("Url: {}", pUrl);

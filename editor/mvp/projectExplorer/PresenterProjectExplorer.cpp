@@ -41,23 +41,23 @@ void PresenterProjectExplorer::createScene(const std::filesystem::path & /*pPath
 }
 
 void PresenterProjectExplorer::openInFilesystem(const std::filesystem::path &pPathToFile) {
-	sdk::Logger::info("Show {} in Files", pPathToFile.string());
+	ke::Logger::info("Show {} in Files", pPathToFile.string());
 }
 
 void PresenterProjectExplorer::deleteFile(const std::filesystem::path &pPathToDelete) {
 	using namespace std::filesystem;
 
-	sdk::Logger::info("Starting {} deletion", pPathToDelete.string());
+	ke::Logger::info("Starting {} deletion", pPathToDelete.string());
 	/*std::error_code error;
 	auto type = status(pPathToDelete, error).type();
 	if (error) {
 
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to delete file");
 		msg->setMessage(error.message());
 		msg->addInfoLine("File path: {}", pPathToDelete.string());
 
-		sdk::Logger::error(msg);
+		ke::Logger::error(msg);
 		return;
 	}
 
@@ -69,13 +69,13 @@ void PresenterProjectExplorer::deleteFile(const std::filesystem::path &pPathToDe
 	} else if (type == file_type::symlink) {
 		name = "symlink";
 	} else {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to delete the file");
 		msg->setMessage("Trying to delete the file with the unknown type");
 		msg->addInfoLine("Type must be directory or file");
 		msg->addInfoLine("File path: {}", pPathToDelete.string());
 
-		sdk::Logger::error(msg);
+		ke::Logger::error(msg);
 		return;
 	}*/
 
@@ -85,22 +85,22 @@ void PresenterProjectExplorer::deleteFile(const std::filesystem::path &pPathToDe
 		[pPathToDelete](const int pId) {
 			if (pId == 0) {
 				if (std::error_code removeError; !remove_all(pPathToDelete, removeError)) {
-					const auto msg = sdk::ReportMessage::create();
+					const auto msg = ke::ReportMessage::create();
 					msg->setTitle("Failed to delete file");
 					msg->setMessage(removeError.message());
 					msg->addInfoLine("File path: {}", pPathToDelete.string());
 
-					sdk::Logger::error(msg);
+					ke::Logger::error(msg);
 					return;
 				}
-				sdk::Logger::info("File deleted");
+				ke::Logger::info("File deleted");
 				/*path uri = "/";
 				auto root = modelMain->getProject()->getProjectDataPath();
 				if (pPathToDelete != "/" && pPathToDelete != root) { uri = relative(pPathToDelete, root); }
 				auto ext = pPathToDelete.extension().string();
 				if (ext == ".enscene") { loadedScene->unload(); }
 				if (ext == ".enmodel" || ext == ".entex" || ext == ".enmat") { editingResources->deleteResource(uri); }*/
-			} else if (pId == 1) { sdk::Logger::info("Deletion canceled"); }
+			} else if (pId == 1) { ke::Logger::info("Deletion canceled"); }
 		});
 }
 

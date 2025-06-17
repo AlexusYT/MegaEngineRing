@@ -28,7 +28,7 @@
 #include "KwasarEngine/resources/textures/ITextureResource.h"
 #include "KwasarEngine/utils/Logger.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<IResource> MaterialLoader::createResource() { return MaterialResource::create(); }
 
 ReportMessagePtr MaterialLoader::load(IResourceLoadExecutor* pLoadExecutor,
@@ -71,4 +71,4 @@ void MaterialLoader::readMaterialComponent(
 	}
 	catch (...) { pSetter(nullptr); }
 }
-} // namespace mer::sdk
+} // namespace ke

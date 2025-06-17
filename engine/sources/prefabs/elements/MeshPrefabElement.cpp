@@ -23,7 +23,7 @@
 
 #include "KwasarEngine/resources/models/Model3DObject.h"
 
-namespace mer::sdk {
+namespace ke {
 MeshPrefabElement::MeshPrefabElement() : PrefabElement("MeshElement") {}
 
 std::shared_ptr<MeshPrefabElement> MeshPrefabElement::create() {
@@ -39,4 +39,4 @@ const std::vector<uint16_t> &MeshPrefabElement::getIndices() const {
 	if (!mesh) return defaultIndices;
 	return mesh->getIndices();
 }
-} // namespace mer::sdk
+} // namespace ke

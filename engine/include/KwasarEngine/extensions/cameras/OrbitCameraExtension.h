@@ -27,7 +27,7 @@
 #include "ICamera.h"
 #include "PerspectiveProjectionCameraMod.h"
 
-namespace mer::sdk {
+namespace ke {
 class OrbitCameraExtension : public PerspectiveProjectionCameraMod, public ICamera {
 protected:
 	OrbitCameraExtension();
@@ -64,7 +64,7 @@ private:
 
 	void updateMatrix() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //ORBITCAMERAEXTENSION_H

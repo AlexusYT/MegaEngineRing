@@ -29,7 +29,7 @@
 struct ImGuiContext;
 typedef struct GLFWwindow GLFWwindow;
 
-namespace mer::sdk {
+namespace ke {
 class SceneUi;
 
 class Window : IContext {
@@ -57,7 +57,7 @@ public:
 
 	void setCloseRequest(bool pState) const;
 
-	sdk::ReportMessagePtr setContextVersion(int pMajor, int pMinor) const;
+	ke::ReportMessagePtr setContextVersion(int pMajor, int pMinor) const;
 
 	bool isCloseRequest() const;
 
@@ -101,5 +101,5 @@ private:
 
 	void swapBuffers() const override;
 };
-} // namespace mer::sdk
+} // namespace ke
 #endif //WINDOW_H

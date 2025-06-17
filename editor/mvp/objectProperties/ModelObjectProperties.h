@@ -22,7 +22,7 @@
 #ifndef MODELOBJECTPROPERTIES_H
 #define MODELOBJECTPROPERTIES_H
 
-namespace mer::sdk {
+namespace ke {
 class Scene3D;
 }
 
@@ -36,14 +36,14 @@ public:
 
 	virtual void setPresenter(IPresenterObjectProperties* pPresenter) = 0;
 
-	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void setScene(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::Scene3D> &getScene() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::Scene3D> &getScene() const = 0;
 };
 
 class ModelObjectProperties : public IModelObjectProperties {
 	NodeSelectionHelper* selectionHelper{};
-	std::shared_ptr<sdk::Scene3D> scene{};
+	std::shared_ptr<ke::Scene3D> scene{};
 	IPresenterObjectProperties* presenter{};
 
 public:
@@ -51,9 +51,9 @@ public:
 
 	void setPresenter(IPresenterObjectProperties* pPresenter) override { presenter = pPresenter; }
 
-	void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) override;
+	void setScene(const std::shared_ptr<ke::Scene3D> &pScene) override;
 
-	[[nodiscard]] const std::shared_ptr<sdk::Scene3D> &getScene() const override { return scene; }
+	[[nodiscard]] const std::shared_ptr<ke::Scene3D> &getScene() const override { return scene; }
 };
 } // namespace mer::editor::mvp
 

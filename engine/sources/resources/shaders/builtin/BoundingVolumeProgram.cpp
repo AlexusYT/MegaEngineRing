@@ -23,7 +23,7 @@
 
 #include "KwasarEngine/resources/shaders/Shader.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<BoundingVolumeProgram> BoundingVolumeProgram::instance =
 	std::shared_ptr<BoundingVolumeProgram>(new BoundingVolumeProgram);
 
@@ -71,4 +71,4 @@ void main() {
 }
 
 std::shared_ptr<BoundingVolumeProgram> BoundingVolumeProgram::getInstance() { return instance; }
-} // namespace mer::sdk
+} // namespace ke

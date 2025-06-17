@@ -31,7 +31,7 @@ namespace mer::editor::mvp {
 class EditorUi;
 class Editor;
 
-class EditorTool : public std::enable_shared_from_this<EditorTool>, public sdk::UiBase {
+class EditorTool : public std::enable_shared_from_this<EditorTool>, public ke::UiBase {
 	friend Editor;
 
 protected:

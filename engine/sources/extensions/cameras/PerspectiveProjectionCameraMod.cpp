@@ -26,7 +26,7 @@
 
 #include "KwasarEngine/extensions/Extension.h"
 
-namespace mer::sdk {
+namespace ke {
 PerspectiveProjectionCameraMod::PerspectiveProjectionCameraMod()
 	: propertyAspect(this, "Aspect"),
 	  propertyFov(this, "Fov"),
@@ -52,4 +52,4 @@ void PerspectiveProjectionCameraMod::updateProjMatrix() {
 	propertyProjMatrix = glm::perspective(propertyFov.getValue(), propertyAspect.getValue(), propertyZNear.getValue(),
 										  propertyZFar.getValue());
 }
-} // namespace mer::sdk
+} // namespace ke

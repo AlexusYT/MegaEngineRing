@@ -32,7 +32,7 @@ namespace sigc {
 struct scoped_connection;
 }
 
-namespace mer::sdk {
+namespace ke {
 struct PrefabInstanceData;
 class PrefabInstance;
 
@@ -58,6 +58,6 @@ public:
 private:
 	void onDataChanged();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PREFABSSBO_H

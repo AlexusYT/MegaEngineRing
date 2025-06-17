@@ -27,7 +27,7 @@
 
 #include "KwasarEngine/utils/IReportable.h"
 
-namespace mer::sdk {
+namespace ke {
 class GltfModel;
 }
 
@@ -97,7 +97,7 @@ public:
 
 	void serialize(const nlohmann::json &pJson);
 
-	sdk::ReportMessagePtr loadImage();
+	ke::ReportMessagePtr loadImage();
 
 	[[nodiscard]] bool isLoaded() const { return !data.empty(); }
 
@@ -171,7 +171,7 @@ public:
 
 	void serialize(const nlohmann::json &pJson);
 
-	std::shared_ptr<sdk::ReportMessage> download(std::atomic<float> &pProgress);
+	std::shared_ptr<ke::ReportMessage> download(std::atomic<float> &pProgress);
 
 	[[nodiscard]] SketchfabAccount* getAccount() const { return account; }
 
@@ -209,7 +209,7 @@ public:
 	}
 };
 
-class ModelSearchList : public sdk::IReportable {
+class ModelSearchList : public ke::IReportable {
 	std::shared_ptr<Image> smallThumbnail;
 	SketchfabAccount* account;
 	//Call downloadLinks() first
@@ -258,9 +258,9 @@ public:
 
 	void setAccount(SketchfabAccount* pAccount);
 
-	std::shared_ptr<sdk::ReportMessage> downloadLinks(std::atomic<float> &pProgress);
+	std::shared_ptr<ke::ReportMessage> downloadLinks(std::atomic<float> &pProgress);
 
-	void addReportInfo(const sdk::ReportMessagePtr &pMsg) const override;
+	void addReportInfo(const ke::ReportMessagePtr &pMsg) const override;
 
 	//Call downloadLinks() first
 	[[nodiscard]] const std::shared_ptr<DownloadLinks> &getLinks() const { return links; }
@@ -279,7 +279,7 @@ public:
 
 	void setRequest(const SearchRequest &pRequest) { request = pRequest; }
 
-	void next(const std::function<void(const sdk::ReportMessagePtr &pError)> &pCallback);
+	void next(const std::function<void(const ke::ReportMessagePtr &pError)> &pCallback);
 
 	[[nodiscard]] const std::vector<std::shared_ptr<ModelSearchList>> &getResults() const { return results; }
 

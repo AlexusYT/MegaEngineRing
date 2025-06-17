@@ -31,7 +31,7 @@
 #include "KwasarEngine/gltf/Node.h"
 #include "Initializable.h"
 
-namespace mer::sdk {
+namespace ke {
 class Light;
 class Primitive;
 class Renderer;
@@ -207,6 +207,6 @@ protected:
 
 	void onPrimitiveMaterialChanged(const std::shared_ptr<Material> &pNewMaterial, Mesh* pMesh, Primitive* pPrimitive);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //RENDERER_H

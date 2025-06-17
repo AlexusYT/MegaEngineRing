@@ -26,7 +26,7 @@
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 #include "IResource.h"
 
-namespace mer::sdk {
+namespace ke {
 class UUID;
 
 class Resource : public IResource, public Initializable, public IPropertyProvider {
@@ -68,6 +68,6 @@ public:
 private:
 	void setIncomplete(const bool pIncomplete) final { incomplete = pIncomplete; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //RESOURCE_H

@@ -26,7 +26,7 @@
 #include "KwasarEngine/resources/shaders/ShaderProgramLoader.h"
 #include "KwasarEngine/resources/textures/TextureLoader.h"
 
-namespace mer::sdk {
+namespace ke {
 void ResourceLoaders::addLoader(const std::shared_ptr<IResourceLoader> &pLoader) {
 	loaders.emplace(pLoader->getFileExtension(), pLoader);
 }
@@ -43,4 +43,4 @@ std::shared_ptr<IResourceLoader> ResourceLoaders::getLoader(const std::filesyste
 	if (iter == loaders.end()) { return nullptr; }
 	return iter->second;
 }
-} // namespace mer::sdk
+} // namespace ke

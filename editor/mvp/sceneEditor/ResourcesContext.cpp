@@ -33,10 +33,10 @@
 #include "KwasarEngine/utils/UUID.h"
 
 namespace mer::editor::mvp {
-std::shared_ptr<sdk::ResourceLoadResult> ResourcesContext::loadResourceSync(const std::string &pResourceUri) {
-	std::promise<const std::shared_ptr<sdk::ResourceLoadResult>> promise;
+std::shared_ptr<ke::ResourceLoadResult> ResourcesContext::loadResourceSync(const std::string &pResourceUri) {
+	std::promise<const std::shared_ptr<ke::ResourceLoadResult>> promise;
 
-	loadResourceAsync(pResourceUri, [&promise](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
+	loadResourceAsync(pResourceUri, [&promise](const std::shared_ptr<ke::ResourceLoadResult> &pResult) {
 		if (!pResult->isPreLoaded()) promise.set_value(pResult);
 	});
 	auto future = promise.get_future();
@@ -54,12 +54,12 @@ void ResourcesContext::preloadResources() {
 		auto &request = iter->second;
 		request->uri = uri;
 		request->type = RequestType::PRELOAD;
-		request->callbackSignal.connect([](const std::shared_ptr<sdk::ResourceLoadResult> &pResult) {
+		request->callbackSignal.connect([](const std::shared_ptr<ke::ResourceLoadResult> &pResult) {
 			if (pResult->isErrored()) {
-				sdk::Logger::error(pResult->getError());
+				ke::Logger::error(pResult->getError());
 				return;
 			}
-			/*sdk::Logger::out("Resource {} ({}) preloaded", pResult->getRequestedUri(),
+			/*ke::Logger::out("Resource {} ({}) preloaded", pResult->getRequestedUri(),
 									pResult->getResource()->getUuid());*/
 		});
 	}
@@ -68,14 +68,14 @@ void ResourcesContext::preloadResources() {
 
 void ResourcesContext::loadResourceAsync(
 	const std::string &pResourceUri,
-	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) {
-	if (std::shared_ptr<sdk::IResource> foundResource = resources->getResource(pResourceUri)) {
-		auto result = sdk::ResourceLoadResult::create();
+	const sigc::slot<void(const std::shared_ptr<ke::ResourceLoadResult> &pResult)> &pSlot) {
+	if (std::shared_ptr<ke::IResource> foundResource = resources->getResource(pResourceUri)) {
+		auto result = ke::ResourceLoadResult::create();
 		result->setResource(foundResource);
 		result->setRequestedUri(pResourceUri);
 
 		if (!foundResource->isIncomplete()) {
-			result->setState(sdk::ResourceLoadResult::State::READY);
+			result->setState(ke::ResourceLoadResult::State::READY);
 			callSlot(result, pSlot);
 			return;
 		}
@@ -104,9 +104,9 @@ void ResourcesContext::loop(const std::stop_token &pToken) {
 	while (!pToken.stop_requested()) {
 		{
 			std::unique_lock lck(waitMutex);
-			//sdk::Logger::out("Thread {} waiting", std::this_thread::get_id());
+			//ke::Logger::out("Thread {} waiting", std::this_thread::get_id());
 			cv.wait(lck, [this, pToken]() { return !queue.empty() || pToken.stop_requested(); });
-			//sdk::Logger::out("Thread {} notified", std::this_thread::get_id());
+			//ke::Logger::out("Thread {} notified", std::this_thread::get_id());
 		}
 
 		std::shared_ptr<Request> request;
@@ -119,7 +119,7 @@ void ResourcesContext::loop(const std::stop_token &pToken) {
 			queue.erase(iter);
 			processingQueue.emplace(request->uri, request);
 		}
-		//sdk::Logger::out("Thread {} grabbed request {}", std::this_thread::get_id(), request->uri.string());
+		//ke::Logger::out("Thread {} grabbed request {}", std::this_thread::get_id(), request->uri.string());
 		processRequest(request);
 		{
 			std::lock_guard lock(processingQueueMutex);
@@ -129,23 +129,23 @@ void ResourcesContext::loop(const std::stop_token &pToken) {
 }
 
 void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) {
-	auto result = sdk::ResourceLoadResult::create();
+	auto result = ke::ResourceLoadResult::create();
 	//PRELOAD incomplete = PRELOADED
 	//PRELOAD complete = PRELOADED
 	//LOAD incomplete = resource loading required
 	//LOAD complete = READY
-	std::shared_ptr<sdk::IResource> resource;
-	if (std::shared_ptr<sdk::IResource> foundResource = resources->getResource(pRequest->uri.string())) {
+	std::shared_ptr<ke::IResource> resource;
+	if (std::shared_ptr<ke::IResource> foundResource = resources->getResource(pRequest->uri.string())) {
 		result->setResource(foundResource);
 		result->setRequestedUri(pRequest->uri.string());
 
 		if (pRequest->type == RequestType::PRELOAD) {
-			result->setState(sdk::ResourceLoadResult::State::PRELOADED);
+			result->setState(ke::ResourceLoadResult::State::PRELOADED);
 			callSlot(result, pRequest->callbackSignal);
 			return;
 		}
 		if (!foundResource->isIncomplete()) {
-			result->setState(sdk::ResourceLoadResult::State::READY);
+			result->setState(ke::ResourceLoadResult::State::READY);
 			callSlot(result, pRequest->callbackSignal);
 			return;
 		}
@@ -154,7 +154,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 
 
 	if (!pRequest->uri.has_extension()) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("No resource extension in uri");
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
@@ -164,7 +164,7 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 		return;
 	}
 
-	std::shared_ptr<sdk::IResourceLoader> loader = getLoader(pRequest);
+	std::shared_ptr<ke::IResourceLoader> loader = getLoader(pRequest);
 	if (!loader) return;
 	std::shared_ptr<std::istream> stream = getResourceStream(pRequest);
 	if (!stream) return;
@@ -203,21 +203,21 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 		auto endTime = std::chrono::steady_clock::now();
 		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 		if (duration.count() > 500) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Too long duration");
 			msg->setMessage("Resource loading took to long");
 			msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
 			msg->addInfoLine("Duration: {}ms", duration.count());
-			sdk::Logger::warn(msg->getReport(false));
+			ke::Logger::warn(msg->getReport(false));
 		}
 		result->setResource(resource);
 		result->setRequestedUri(pRequest->uri.string());
 
-		result->setState(sdk::ResourceLoadResult::State::READY);
+		result->setState(ke::ResourceLoadResult::State::READY);
 		callSlot(result, pRequest->callbackSignal);
 	}
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception thrown while executing request");
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
@@ -228,32 +228,32 @@ void ResourcesContext::processRequest(const std::shared_ptr<Request> &pRequest) 
 }
 
 void ResourcesContext::callSlot(
-	const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
-	const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> &pResult)> &pSlot) {
+	const std::shared_ptr<ke::ResourceLoadResult> &pResult,
+	const sigc::slot<void(const std::shared_ptr<ke::ResourceLoadResult> &pResult)> &pSlot) {
 	try { pSlot(pResult); }
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to send loading result to the callback");
 		msg->setMessage("Exception thrown in callback");
 		msg->addInfoLine("Result state: {}", pResult->getStateStr());
 		msg->addInfoLine("Requested resource URI: {}", pResult->getRequestedUri());
 		if (pResult->isErrored()) {
 			msg->addInfoLine("Result error reported earlier");
-			sdk::Logger::error(pResult->getError());
+			ke::Logger::error(pResult->getError());
 		}
-		sdk::Logger::error(msg);
+		ke::Logger::error(msg);
 	}
 }
 
-std::shared_ptr<sdk::IResourceLoader> ResourcesContext::getLoader(const std::shared_ptr<Request> &pRequest) {
+std::shared_ptr<ke::IResourceLoader> ResourcesContext::getLoader(const std::shared_ptr<Request> &pRequest) {
 	try {
-		auto loader = sdk::ResourceLoaders::getInstance()->getLoader(pRequest->uri.extension());
+		auto loader = ke::ResourceLoaders::getInstance()->getLoader(pRequest->uri.extension());
 		if (!loader) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Unable to load resource");
 			msg->setMessage("No loader registered that can load such resource");
 			msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
-			auto result = sdk::ResourceLoadResult::create();
+			auto result = ke::ResourceLoadResult::create();
 			result->setError(msg);
 			result->setRequestedUri(pRequest->uri.string());
 			callSlot(result, pRequest->callbackSignal);
@@ -262,11 +262,11 @@ std::shared_ptr<sdk::IResourceLoader> ResourcesContext::getLoader(const std::sha
 		return loader;
 	}
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception occurred while getting the resource loader");
 		msg->addInfoLine("Resource URI: {}", pRequest->uri.string());
-		auto result = sdk::ResourceLoadResult::create();
+		auto result = ke::ResourceLoadResult::create();
 		result->setError(msg);
 		result->setRequestedUri(pRequest->uri.string());
 		callSlot(result, pRequest->callbackSignal);
@@ -279,7 +279,7 @@ std::shared_ptr<std::istream> ResourcesContext::getResourceStream(const std::sha
 		std::shared_ptr<std::istream> stream;
 		if (auto msg = application->getResourceBundle()->getResourceStream(pRequest->uri.string(), stream)) {
 			msg->setTitle("Unable to load resource");
-			auto result = sdk::ResourceLoadResult::create();
+			auto result = ke::ResourceLoadResult::create();
 			result->setError(msg);
 			result->setRequestedUri(pRequest->uri.string());
 			callSlot(result, pRequest->callbackSignal);
@@ -288,10 +288,10 @@ std::shared_ptr<std::istream> ResourcesContext::getResourceStream(const std::sha
 		return stream;
 	}
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Unable to load resource");
 		msg->setMessage("Exception occurred while getting the resource stream");
-		auto result = sdk::ResourceLoadResult::create();
+		auto result = ke::ResourceLoadResult::create();
 		result->setError(msg);
 		result->setRequestedUri(pRequest->uri.string());
 		callSlot(result, pRequest->callbackSignal);

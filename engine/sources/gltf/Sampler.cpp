@@ -25,7 +25,7 @@
 
 #include "GLTFSDK/GLTF.h"
 
-namespace mer::sdk {
+namespace ke {
 Sampler::Sampler(const Microsoft::glTF::Sampler &pSampler) {
 	wrapS = static_cast<WrapMode>(pSampler.wrapS);
 	wrapT = static_cast<WrapMode>(pSampler.wrapT);
@@ -51,4 +51,4 @@ ReportMessagePtr Sampler::onInitialize() {
 }
 
 void Sampler::onUninitialize() { glDeleteSamplers(1, &samplerId); }
-} // namespace mer::sdk
+} // namespace ke

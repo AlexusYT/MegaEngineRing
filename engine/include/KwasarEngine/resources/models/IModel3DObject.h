@@ -27,7 +27,7 @@
 #include "KwasarEngine/render/IInitializable.h"
 #include "KwasarEngine/render/IRenderable.h"
 
-namespace mer::sdk {
+namespace ke {
 class IModel3DResource;
 class IRenderInstance;
 class ShaderProgram;
@@ -62,6 +62,6 @@ public:
 
 	virtual bool operator<(const IModel3DObject &pElement) const = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IMODEL3DOBJECT_H

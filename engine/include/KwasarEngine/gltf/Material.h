@@ -34,7 +34,7 @@ enum class TextureType;
 struct Material;
 } // namespace Microsoft::glTF
 
-namespace mer::sdk {
+namespace ke {
 class Texture;
 
 struct MaterialData {
@@ -90,6 +90,6 @@ protected:
 private:
 	static glm::vec2 handleToVec(const uint64_t pHandle);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //MATERIAL_H

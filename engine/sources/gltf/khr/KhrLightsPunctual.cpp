@@ -27,7 +27,7 @@
 #include "GLTFSDK/Document.h"
 #include "GLTFSDK/ExtensionHandlers.h"
 
-namespace mer::sdk {
+namespace ke {
 void KhrLightsPunctual::addHandlers(Microsoft::glTF::ExtensionDeserializer &pDeserializer) {
 	pDeserializer.AddHandler<KhrLightsPunctual, Microsoft::glTF::Document>(EXTENSION_NAME, deserializeDocument);
 	pDeserializer.AddHandler<KhrLightsPunctual, Microsoft::glTF::Node>(EXTENSION_NAME, deserializeNode);
@@ -54,4 +54,4 @@ std::unique_ptr<Microsoft::glTF::Extension> KhrLightsPunctual::deserializeNode(
 	catch (...) { ext->light = -1; }
 	return ext;
 }
-} // namespace mer::sdk
+} // namespace ke

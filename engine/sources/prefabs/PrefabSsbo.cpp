@@ -27,7 +27,7 @@
 
 #include "KwasarEngine/prefabs/PrefabInstance.h"
 
-namespace mer::sdk {
+namespace ke {
 PrefabSsbo::PrefabSsbo() {
 	SSBO::setData(instancesData.data(), static_cast<int64_t>(instancesData.size()), STREAM_DRAW);
 }
@@ -73,4 +73,4 @@ void PrefabSsbo::onDataChanged() {
 
 	dirty = true;
 }
-} // namespace mer::sdk
+} // namespace ke

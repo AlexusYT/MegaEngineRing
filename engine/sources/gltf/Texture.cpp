@@ -26,7 +26,7 @@
 #include "KwasarEngine/gltf/Image.h"
 #include "KwasarEngine/gltf/Sampler.h"
 
-namespace mer::sdk {
+namespace ke {
 Texture::Texture(const Microsoft::glTF::Texture & /*pTexture*/, const std::shared_ptr<Image> &pImage,
 				 const std::shared_ptr<Sampler> &pSampler) : image(pImage), sampler(pSampler) {}
 
@@ -100,4 +100,4 @@ void Texture::onUninitialize() {
 	glDeleteTextures(1, &textureId);
 	Initializable::onUninitialize();
 }
-} // namespace mer::sdk
+} // namespace ke

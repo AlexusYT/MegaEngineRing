@@ -24,7 +24,7 @@
 
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class IResourceBundle;
 class IApplicationSettings;
 
@@ -46,7 +46,7 @@ public:
 
 	virtual void setResourceBundle(const std::shared_ptr<IResourceBundle> &pResourceBundle) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //IAPPLICATION_H

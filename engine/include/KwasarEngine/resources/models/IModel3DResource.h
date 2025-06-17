@@ -24,7 +24,7 @@
 
 #include "KwasarEngine/render/IRenderable.h"
 
-namespace mer::sdk {
+namespace ke {
 class IModel3DObject;
 class IResource;
 
@@ -45,6 +45,6 @@ public:
 
 	virtual IResource* asResource() = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IMODEL3DRESOURCE_H

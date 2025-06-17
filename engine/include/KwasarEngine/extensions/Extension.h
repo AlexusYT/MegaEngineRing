@@ -30,16 +30,16 @@
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 #include "ExtensionProperty.h"
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 }
 
-namespace mer::sdk {
+namespace ke {
 class ModifierKeys;
 enum class KeyboardKey;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class SceneObject;
 
 
@@ -186,7 +186,7 @@ private:
 
 	void propertyChanged(PropertyBase* pProperty) override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //EXTENSION_H

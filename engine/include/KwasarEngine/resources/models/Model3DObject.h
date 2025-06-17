@@ -30,7 +30,7 @@
 #include "KwasarEngine/render/Initializable.h"
 #include "IModel3DObject.h"
 
-namespace mer::sdk {
+namespace ke {
 class SSBO;
 class Model3DResource;
 class RenderInstanceData;
@@ -98,6 +98,6 @@ private:
 
 	void onMaterialDataChanged(RenderInstance* pInstance) override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //MODEL3DOBJECT_H

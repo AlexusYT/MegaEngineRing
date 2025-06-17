@@ -234,7 +234,7 @@ void EditorUi::beforeUiFrame() {
 
 void EditorUi::addEditor(const std::shared_ptr<Editor> &pEditor) { editors.emplace_back(pEditor)->setUi(this); }
 
-sdk::ReportMessagePtr EditorUi::onInitialize() {
+ke::ReportMessagePtr EditorUi::onInitialize() {
 	Settings::getGeneral()->connectChanged([this]() { fontSettingsChanged = true; });
 	fontSettingsChanged = true;
 	ImGuiIO &io = ImGui::GetIO();

@@ -22,7 +22,7 @@
 #ifndef PROPERTIESFOREXTENSION_H
 #define PROPERTIESFOREXTENSION_H
 
-namespace mer::sdk {
+namespace ke {
 class PropertyBase;
 
 /**
@@ -58,6 +58,6 @@ public:
 
 	virtual void propertyChanged(PropertyBase* pProperty) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PROPERTIESFOREXTENSION_H

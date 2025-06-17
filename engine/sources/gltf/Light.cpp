@@ -23,7 +23,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace mer::sdk {
+namespace ke {
 Light::Light(const std::string &pName)
 	: name(pName) {
 	data.colorAndType = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
@@ -75,4 +75,4 @@ void Light::deserialize(const nlohmann::json &pJson) {
 		setOuterConeAngle(outerConeAngle);
 	}
 }
-} // namespace mer::sdk
+} // namespace ke

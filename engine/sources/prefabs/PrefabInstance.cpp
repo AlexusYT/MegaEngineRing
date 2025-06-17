@@ -26,7 +26,7 @@
 #include "KwasarEngine/resources/materials/IMaterialResource.h"
 #include "KwasarEngine/utils/Transformation.h"
 
-namespace mer::sdk {
+namespace ke {
 PrefabInstance::PrefabInstance()
 	: data(nullptr, ""), visible(nullptr, ""), material(nullptr, "") {
 	visible = true;
@@ -65,4 +65,4 @@ void PrefabInstance::removeElement(const UUID &pUuid) {
 void PrefabInstance::onGlobalTransformChanged(const std::shared_ptr<Transformation> & /*pTransformation*/) {
 	for (auto element: elements) { element.second->updateTransform(); }
 }
-} // namespace mer::sdk
+} // namespace ke

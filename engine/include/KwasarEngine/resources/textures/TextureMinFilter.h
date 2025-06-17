@@ -22,7 +22,7 @@
 #ifndef TEXTUREMINFILTER_H
 #define TEXTUREMINFILTER_H
 
-namespace mer::sdk {
+namespace ke {
 enum class TextureMinFilter {
 	/**
 	 * @brief Returns the value of the texture element that is nearest (in Manhattan distance) to the center of the
@@ -62,6 +62,6 @@ enum class TextureMinFilter {
 	 */
 	LINEAR_MIPMAP_LINEAR = 0x2703
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TEXTUREMINFILTER_H

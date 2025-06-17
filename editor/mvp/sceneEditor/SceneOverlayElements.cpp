@@ -45,7 +45,7 @@ void SceneOverlayElements::renderGrid() const {
 	//glBindVertexArray(0);
 }
 
-sdk::ReportMessagePtr SceneOverlayElements::onInitialize() {
+ke::ReportMessagePtr SceneOverlayElements::onInitialize() {
 	shader = graphics::SimpleShader::getInstance();
 	if (auto msg = shader->initialize()) return msg;
 	glGenVertexArrays(1, &vao);

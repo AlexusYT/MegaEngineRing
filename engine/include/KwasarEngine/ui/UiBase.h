@@ -24,7 +24,7 @@
 #include "KwasarEngine/render/IRenderable.h"
 #include "imgui.h"
 
-namespace mer::sdk {
+namespace ke {
 class UiBase : public IRenderable {
 protected:
 	std::string name;
@@ -77,6 +77,6 @@ public:
 
 	[[nodiscard]] unsigned int getId() const { return windowId; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //UIBASE_H

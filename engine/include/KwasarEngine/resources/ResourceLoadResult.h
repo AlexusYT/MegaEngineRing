@@ -25,11 +25,11 @@
 
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class IResource;
 }
 
-namespace mer::sdk {
+namespace ke {
 class ResourceLoadResult {
 public:
 	enum class State { NONE = 0, ERRORED, PRELOADED, READY };
@@ -79,6 +79,6 @@ public:
 
 	bool isReady() const { return state == State::READY; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //RESOURCELOADCALLBACKS_H

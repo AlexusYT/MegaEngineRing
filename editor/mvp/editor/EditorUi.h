@@ -27,7 +27,7 @@ namespace mer::editor::mvp {
 class IPresenterSettingsWindow;
 class Editor;
 
-class EditorUi : public sdk::SceneUi {
+class EditorUi : public ke::SceneUi {
 	std::vector<std::shared_ptr<Editor>> editors;
 	Editor* lastActiveEditor{};
 	ImGuiWindowClass topLevelEditorWindowClass;
@@ -77,7 +77,7 @@ public:
 	[[nodiscard]] const ImGuiWindowClass &getTopLevelEditorWindowClass() const { return topLevelEditorWindowClass; }
 
 protected:
-	sdk::ReportMessagePtr onInitialize() override;
+	ke::ReportMessagePtr onInitialize() override;
 
 	void customRender() override;
 

@@ -30,12 +30,12 @@
 #include "KwasarEngine/utils/Property.h"
 #include "IMaterialResource.h"
 
-namespace mer::sdk {
+namespace ke {
 class IMaterialComponent;
 class ITextureResource;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class MaterialResource : public IMaterialResource, public Resource {
 	Property<std::shared_ptr<IMaterialComponent>> baseColorMap;
 	sigc::scoped_connection baseColorMapConnection;
@@ -106,6 +106,6 @@ private:
 	sigc::scoped_connection connectComponentValChanged(const std::shared_ptr<IMaterialComponent> &pComponent,
 													   glm::vec4* pMap);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //MATERIALRESOURCE_H

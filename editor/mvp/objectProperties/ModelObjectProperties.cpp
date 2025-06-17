@@ -28,12 +28,12 @@
 namespace mer::editor::mvp {
 ModelObjectProperties::ModelObjectProperties(NodeSelectionHelper* pSelectionHelper)
 	: selectionHelper(pSelectionHelper) {
-	selectionHelper->connectOnEditingNodeChanged([this](sdk::Node* pNode) {
+	selectionHelper->connectOnEditingNodeChanged([this](ke::Node* pNode) {
 		if (presenter) presenter->onEditingNodeChanged(pNode);
 	});
 }
 
-void ModelObjectProperties::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
+void ModelObjectProperties::setScene(const std::shared_ptr<ke::Scene3D> &pScene) {
 	scene = pScene;
 	if (presenter) presenter->onSceneChanged(pScene);
 }

@@ -26,7 +26,7 @@
 #include "KwasarEngine/resources/textures/TextureResource.h"
 #include "KwasarEngine/utils/ReportMessage.h"
 
-namespace mer::sdk {
+namespace ke {
 /*template<typename PixelType>
 std::vector<PixelType> get_data(const uint32_t pWidth, const uint32_t pHeight, std::istream &pStream) {
 	std::vector<PixelType> pixelsOut;
@@ -87,4 +87,4 @@ ReportMessagePtr TextureLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
 	}*/
 	return nullptr;
 }
-} // namespace mer::sdk
+} // namespace ke

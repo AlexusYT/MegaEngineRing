@@ -25,7 +25,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec4.hpp>
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<VolumeAabb> VolumeAabb::create(const glm::vec3 &pMin, const glm::vec3 &pMax) {
 	return std::shared_ptr<VolumeAabb>(new VolumeAabb(pMin, pMax));
 }
@@ -147,4 +147,4 @@ std::vector<float> VolumeAabb::getVertices() {
 std::vector<uint16_t> VolumeAabb::getIndices() {
 	return {0, 1, 1, 2, 2, 3, 3, 0, 0, 4, 4, 5, 5, 1, 5, 7, 7, 2, 3, 6, 4, 6, 7, 6};
 }
-} // namespace mer::sdk
+} // namespace ke

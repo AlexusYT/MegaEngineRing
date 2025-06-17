@@ -24,7 +24,7 @@
 
 #include "KwasarEngine/resources/ResourceLoader.h"
 
-namespace mer::sdk {
+namespace ke {
 class Model3DLoader : public ResourceLoader {
 public:
 	std::shared_ptr<IResource> createResource() override;
@@ -48,7 +48,7 @@ public:
 private:
 	std::string getFileExtension() override { return "enmodel"; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //MODEL3DLOADER_H

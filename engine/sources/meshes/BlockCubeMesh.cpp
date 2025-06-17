@@ -24,7 +24,7 @@
 #include "KwasarEngine/gltf/Accessor.h"
 #include "KwasarEngine/gltf/Primitive.h"
 
-namespace mer::sdk {
+namespace ke {
 BlockCubeMesh::BlockCubeMesh() {
 	setName("BlockCubeMesh");
 	auto indexAccessor = Accessor::createIndexAccessor<uint16_t>({

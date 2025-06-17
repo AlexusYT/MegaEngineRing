@@ -22,7 +22,7 @@
 #ifndef TEXTUREMAGFILTER_H
 #define TEXTUREMAGFILTER_H
 
-namespace mer::sdk {
+namespace ke {
 enum class TextureMagFilter {
 	/**
 	 * @brief Returns the value of the texture element that is nearest (in Manhattan distance) to the center of the
@@ -37,6 +37,6 @@ enum class TextureMagFilter {
 	 */
 	LINEAR = 0x2601
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TEXTUREMAGFILTER_H

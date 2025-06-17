@@ -23,7 +23,7 @@
 #define RENDERINSTANCE_H
 #include "IRenderInstance.h"
 
-namespace mer::sdk {
+namespace ke {
 class IInstancedRender;
 
 class RenderInstance : public IRenderInstance {
@@ -36,6 +36,6 @@ public:
 
 	void setInstancedRender(IInstancedRender* pInstancedRender) override { instancedRender = pInstancedRender; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //RENDERINSTANCE_H

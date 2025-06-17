@@ -22,7 +22,7 @@
 #include <regex>
 
 #include "KwasarEngine/utils/Logger.h"
-using namespace mer::sdk;
+using namespace ke;
 
 class LoggerTestsFixture : public testing::Test {
 	bool useColors = true;

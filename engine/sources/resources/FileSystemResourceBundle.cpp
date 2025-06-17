@@ -25,7 +25,7 @@
 
 #include "KwasarEngine/utils/ReportMessage.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<IResourceBundle> FileSystemResourceBundle::create(const std::filesystem::path &pSearchPath) {
 	return std::shared_ptr<FileSystemResourceBundle>(new FileSystemResourceBundle(pSearchPath));
 }
@@ -87,4 +87,4 @@ void FileSystemResourceBundle::listResources(std::vector<std::string> &pUris) co
 		}
 	}
 }
-} // namespace mer::sdk
+} // namespace ke

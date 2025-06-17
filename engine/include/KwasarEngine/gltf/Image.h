@@ -34,7 +34,7 @@ namespace Microsoft::glTF {
 struct Image;
 }
 
-namespace mer::sdk {
+namespace ke {
 class MyIstream;
 enum class Texture2DType;
 enum class Texture2DImageFormat;
@@ -78,6 +78,6 @@ protected:
 
 	std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> isPng(ReportMessagePtr &pErrorOut, spng_ihdr &pIhdrOut) const;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IMAGE_H

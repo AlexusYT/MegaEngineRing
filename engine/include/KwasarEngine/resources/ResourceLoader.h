@@ -23,7 +23,7 @@
 #define RESOURCELOADER_H
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class UUID;
 class IApplication;
 class IResource;
@@ -84,7 +84,7 @@ template <typename T> requires std::integral<T> || std::floating_point<T>
 void ResourceLoader::readNumber(const std::shared_ptr<std::istream> &pStream, T &pNumOut) {
 	pStream->read(reinterpret_cast<std::istream::char_type*>(&pNumOut), sizeof(pNumOut));
 }
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //RESOURCELOADER_H

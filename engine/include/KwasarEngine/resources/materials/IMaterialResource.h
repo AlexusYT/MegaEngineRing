@@ -26,12 +26,12 @@
 #include "KwasarEngine/render/IRenderable.h"
 #include "MaterialData.h"
 
-namespace mer::sdk {
+namespace ke {
 template <typename T>
 class PropertyReadOnly;
 }
 
-namespace mer::sdk {
+namespace ke {
 class IMaterialComponent;
 class ITextureResource;
 class IResource;
@@ -66,6 +66,6 @@ public:
 
 	virtual sigc::connection connectOnDataChangedSignal(const sigc::slot<void(const MaterialData & pData)> &pSlot) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IMATERIALRESOURCE_H

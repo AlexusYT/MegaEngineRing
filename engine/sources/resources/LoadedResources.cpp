@@ -27,7 +27,7 @@
 #include "KwasarEngine/resources/IResource.h"
 #include "KwasarEngine/resources/shaders/builtin/PrefabProgram.h"
 
-namespace mer::sdk {
+namespace ke {
 LoadedResources::LoadedResources() {
 	auto prefabProgram = PrefabProgram::getInstance();
 	LoadedResources::addResource(prefabProgram->getResourceUri().string(), prefabProgram);
@@ -101,4 +101,4 @@ void LoadedResources::uninit() {
 		if (auto initializable = std::dynamic_pointer_cast<IInitializable>(resource)) { initializable->uninitialize(); }
 	}
 }
-} // namespace mer::sdk
+} // namespace ke

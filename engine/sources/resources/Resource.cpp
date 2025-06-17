@@ -24,7 +24,7 @@
 #include "KwasarEngine/utils/ReportMessage.h"
 #include "KwasarEngine/utils/UUID.h"
 
-namespace mer::sdk {
+namespace ke {
 Resource::Resource() { uuid = UUID::create(); }
 
 void Resource::addProperty(PropertyBase* pProperty) { properties.push_back(pProperty); }
@@ -39,4 +39,4 @@ void Resource::addReportInfo(const ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Is resource inited: {}", isInited());
 	pMsg->addInfoLine("Is resource incomplete: {}", incomplete);
 }
-} // namespace mer::sdk
+} // namespace ke

@@ -26,7 +26,7 @@
 
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class Extension;
 
 struct ExtensionClassInfo {
@@ -77,7 +77,7 @@ public:
 
 	static ReportMessagePtr getTypeNameFor(Extension* pExt, std::string &pNameOut);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //EXTENSIONREGISTRY_H

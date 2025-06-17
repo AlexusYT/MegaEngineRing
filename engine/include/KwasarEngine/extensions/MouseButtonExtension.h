@@ -23,7 +23,7 @@
 #define MOUSEBUTTONEXTENSION_H
 #include "Extension.h"
 
-namespace mer::sdk {
+namespace ke {
 class MouseButtonExtension : public Extension {
 public:
 	using ButtonSignal = sigc::signal<void(MouseButton pButton, bool pPressed, double pX, double pY)>;
@@ -50,7 +50,7 @@ protected:
 		}
 	}
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //MOUSEBUTTONEXTENSION_H

@@ -77,7 +77,7 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 		if (contextMenuImguiId == 0) contextMenuImguiId = ImGui::GetID("ContextMenu");
 		if (ImGui::BeginPopup("ContextMenu")) {
 			if (ImGui::MenuItem(tr("ObjectAdd"))) {
-				auto newNode = sdk::Node::create(tr("ObjectUnnamed"));
+				auto newNode = ke::Node::create(tr("ObjectUnnamed"));
 				scene->addNode(selectedNodeForContext, newNode);
 			}
 			if (selectedNodeForContext) {
@@ -137,7 +137,7 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 	}
 }
 
-void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
+void ViewObjectsTree::updateTreeLevel(const std::vector<ke::Node*> &pNodes) {
 	for (auto node: pNodes) {
 		ImGui::TableNextRow();
 
@@ -158,8 +158,8 @@ void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 		ImGui::TableNextColumn();
 		std::string types;
 		for (auto &extension: node->getExtensions()) {
-			if (extension.first == typeid(sdk::MeshExtension)) { types += "M "; } else if (
-				extension.first == typeid(sdk::LightExtension)) { types += "L "; }
+			if (extension.first == typeid(ke::MeshExtension)) { types += "M "; } else if (
+				extension.first == typeid(ke::LightExtension)) { types += "L "; }
 		}
 		ImGui::TextUnformatted(types.c_str());
 
@@ -170,7 +170,7 @@ void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 	}
 }
 
-void ViewObjectsTree::setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pScene) {
+void ViewObjectsTree::setSceneToRender(const std::shared_ptr<ke::Scene3D> &pScene) {
 	scene = pScene;
 	if (!scene) {
 		selectedMap.clear();
@@ -183,7 +183,7 @@ void ViewObjectsTree::setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pSce
 	});
 }
 
-void ViewObjectsTree::markSelected(const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+void ViewObjectsTree::markSelected(const std::vector<ke::Node*> &pNodes, bool pSelected) {
 	for (auto node: pNodes) {
 		if (auto iter = selectedMap.find(node); iter != selectedMap.end()) iter->second = pSelected;
 	}

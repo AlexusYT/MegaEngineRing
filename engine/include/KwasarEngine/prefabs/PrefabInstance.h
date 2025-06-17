@@ -32,11 +32,11 @@
 #include "KwasarEngine/utils/UUID.h"
 #include "IPrefabInstance.h"
 
-namespace mer::sdk {
+namespace ke {
 class Transformation;
 }
 
-namespace mer::sdk {
+namespace ke {
 class IMaterialResource;
 class PrefabElementInstance;
 
@@ -75,6 +75,6 @@ protected:
 
 	void setInstanceId(uint32_t pInstanceId) override { instanceId = pInstanceId; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PREFABINSTANCE_H

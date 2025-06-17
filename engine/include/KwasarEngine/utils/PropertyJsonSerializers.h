@@ -27,14 +27,14 @@
 #include "KwasarEngine/resources/models/IModel3DObject.h"
 #include "PropertyJsonSerializer.h"
 
-namespace mer::sdk {
+namespace ke {
 class ITextureResource;
 class IMaterialResource;
 class ShaderProgram;
 class IModel3DObject;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 //
 template <>
 struct PropertyJsonSerializer<glm::vec4> {
@@ -98,6 +98,6 @@ struct PropertyJsonSerializer<std::shared_ptr<IMaterialResource>> {
 
 	static std::shared_ptr<IMaterialResource> deserialize(const nlohmann::json &pJson, const Extension* pExtension);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PROPERTYJSONSERIALIZERS_H

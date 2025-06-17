@@ -24,7 +24,7 @@
 #include "imgui.h"
 #include "imgui_internal.h"
 
-namespace mer::sdk {
+namespace ke {
 void UiPopup::render() {
 	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
 	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
@@ -59,4 +59,4 @@ void UiPopup::render() {
 	} else
 		onUpdate(false);
 }
-} // namespace mer::sdk
+} // namespace ke

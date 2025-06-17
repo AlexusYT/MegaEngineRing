@@ -26,7 +26,7 @@
 #include "KwasarEngine/extensions/MainObjectExtension.h"
 #include "KwasarEngine/scripting/IScript.h"
 
-namespace mer::sdk {
+namespace ke {
 SceneObject::SceneObject() {
 	auto mainExt = MainObjectExtension::create();
 	SceneObject::addExtension("Main", mainExt);
@@ -204,4 +204,4 @@ bool SceneObject::notifyOnMouseScroll(double pDx, double pDy) {
 	if (script) handled = script->notifyOnMouseScroll(pDx, pDy) || handled;
 	return handled;
 }
-} // namespace mer::sdk
+} // namespace ke

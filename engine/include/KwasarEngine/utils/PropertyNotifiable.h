@@ -23,7 +23,7 @@
 #define PROPERTYNOTIFYABLE_H
 #include "PropertyBase.h"
 
-namespace mer::sdk {
+namespace ke {
 class PropertyBase;
 
 class IPropertyNotifiable {
@@ -44,6 +44,6 @@ public:
 private:
 	void setBase(PropertyBase* pBase) final { notifiablePropertyBase = pBase; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PROPERTYNOTIFYABLE_H

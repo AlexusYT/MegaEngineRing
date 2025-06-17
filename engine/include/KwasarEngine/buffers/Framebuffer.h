@@ -23,7 +23,7 @@
 #define FRAMEBUFFER_H
 #include "KwasarEngine/render/Initializable.h"
 
-namespace mer::sdk {
+namespace ke {
 class Framebuffer : public Initializable {
 	uint32_t fboMs{};
 	uint32_t textureMs{};
@@ -59,6 +59,6 @@ protected:
 
 	void onUninitialize() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //FRAMEBUFFER_H

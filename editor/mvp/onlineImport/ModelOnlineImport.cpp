@@ -46,7 +46,7 @@ void ModelOnlineImport::setSearchRequest(const SearchRequest &pRequest) {
 
 void ModelOnlineImport::nextSearchResult() const {
 	if (!presenter) return;
-	search->next([this](const sdk::ReportMessagePtr &pError) { presenter->onSearchResultLoaded(pError); });
+	search->next([this](const ke::ReportMessagePtr &pError) { presenter->onSearchResultLoaded(pError); });
 }
 
 void ModelOnlineImport::setSelectedModel(const std::shared_ptr<ModelSearchList> &pSelectedModel) {
@@ -56,10 +56,10 @@ void ModelOnlineImport::setSelectedModel(const std::shared_ptr<ModelSearchList> 
 	/*nlohmann::json j;
 	if (auto msg =
 			account->getRequest("https://api.sketchfab.com/v3/models/" + selectedModel->uid + "/download", "", j)) {
-		sdk::Logger::error(msg);
+		ke::Logger::error(msg);
 		return;
 	}
-	sdk::Logger::out(j.dump(2));*/
+	ke::Logger::out(j.dump(2));*/
 }
 
 bool ModelOnlineImport::isModelInCache() const {
@@ -67,9 +67,9 @@ bool ModelOnlineImport::isModelInCache() const {
 	return account->isFileCached(selectedModel->uid);
 }
 
-sdk::ReportMessagePtr ModelOnlineImport::loadModelFromCache(std::shared_ptr<std::iostream> &pData) const {
+ke::ReportMessagePtr ModelOnlineImport::loadModelFromCache(std::shared_ptr<std::iostream> &pData) const {
 	if (!selectedModel) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Unable to load model from cache");
 		msg->setMessage("No selected model to load. It is a programmer error");
 		return msg;

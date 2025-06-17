@@ -22,7 +22,7 @@
 #ifndef IPREFABINSTANCE_H
 #define IPREFABINSTANCE_H
 
-namespace mer::sdk {
+namespace ke {
 class UUID;
 class PrefabElementInstance;
 
@@ -38,6 +38,6 @@ public:
 
 	virtual void setInstanceId(uint32_t pInstanceId) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IPREFABINSTANCE_H

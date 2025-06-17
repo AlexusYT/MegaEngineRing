@@ -25,7 +25,7 @@
 
 #include "BasicBuffer.h"
 
-namespace mer::sdk {
+namespace ke {
 class VertexBufferObjectImpl : public BasicBuffer {
 public:
 	void bindVertexArray(uint32_t pVao, uint32_t pBindingIndex, uint32_t pOffest, int32_t pStride) const;
@@ -113,6 +113,6 @@ public:
 
 	const void* getBytes() const override { return data.data(); }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //VERTEXBUFFEROBJECT_H

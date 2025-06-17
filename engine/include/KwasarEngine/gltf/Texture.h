@@ -23,7 +23,7 @@
 #define TEXTURE_H
 #include "KwasarEngine/render/Initializable.h"
 
-namespace mer::sdk {
+namespace ke {
 class Sampler;
 }
 
@@ -31,7 +31,7 @@ namespace Microsoft::glTF {
 struct Texture;
 }
 
-namespace mer::sdk {
+namespace ke {
 class Image;
 
 class Texture : public Initializable {
@@ -55,6 +55,6 @@ protected:
 
 	void onUninitialize() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TEXTURE_H

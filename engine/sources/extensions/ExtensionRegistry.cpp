@@ -33,7 +33,7 @@
 #include "KwasarEngine/utils/ReportMessage.h"
 #include "KwasarEngine/utils/Utils.h"
 
-namespace mer::sdk {
+namespace ke {
 void ExtensionRegistry::init() {
 	/*registerClass<MainObjectExtension>();
 	registerClass<BasicRenderExtension>();
@@ -70,4 +70,4 @@ ReportMessagePtr ExtensionRegistry::getTypeNameFor(Extension* pExt, std::string 
 	msg->addInfoLine("Extension type: {}", pNameOut);
 	return msg;
 }
-} // namespace mer::sdk
+} // namespace ke

@@ -29,7 +29,7 @@
 #include "KwasarEngine/scene/Scene.h"
 #include "KwasarEngine/scene/objects/SceneObject.h"
 
-namespace mer::sdk {
+namespace ke {
 OrbitCameraExtension::OrbitCameraExtension()
 	: propertyMatrix(this, "Matrix"),
 	  propertyAngle(this, "Angle"),
@@ -74,4 +74,4 @@ void OrbitCameraExtension::updateMatrix() {
 	propertyMatrix = getProjMatrix() * lookAt(position, propertyTargetPosition.getValue(), up);
 	propertyUp = up;
 }
-} // namespace mer::sdk
+} // namespace ke

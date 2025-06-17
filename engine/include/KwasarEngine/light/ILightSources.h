@@ -22,7 +22,7 @@
 #ifndef ILIGHTSOURCES_H
 #define ILIGHTSOURCES_H
 
-namespace mer::sdk {
+namespace ke {
 class SSBO;
 class ILightInstance;
 
@@ -40,6 +40,6 @@ public:
 
 	virtual void removeLightInstance(const std::shared_ptr<ILightInstance> &pLightInstance) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //ILIGHTSOURCES_H

@@ -25,7 +25,7 @@
 
 #include "BufferUsageEnum.h"
 
-namespace mer::sdk {
+namespace ke {
 class BasicBuffer {
 protected:
 	uint32_t name{};
@@ -105,6 +105,6 @@ private:
 			bufferSubData(0, dataSize, getBytes());
 	}
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //BASICBUFFER_H

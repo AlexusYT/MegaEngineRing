@@ -23,7 +23,7 @@
 #define SSBO_H
 #include "BasicBuffer.h"
 
-namespace mer::sdk {
+namespace ke {
 class SsboImpl : public BasicBuffer {
 protected:
 	SsboImpl() = default;
@@ -207,6 +207,6 @@ public:
 
 	[[nodiscard]] const BufferUsageEnum &getUsage() const { return usage; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //SSBO_H

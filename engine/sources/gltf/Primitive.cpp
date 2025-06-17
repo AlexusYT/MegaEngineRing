@@ -27,7 +27,7 @@
 #include "KwasarEngine/resources/shaders/ShaderProgram.h"
 #include "GLTFSDK/GLTF.h"
 
-namespace mer::sdk {
+namespace ke {
 Primitive::Primitive(const MeshMode &pMeshMode, const std::shared_ptr<Accessor> &pPositionAccessor,
 					 const std::shared_ptr<Accessor> &pIndexAccessor)
 	: indexAccessor(pIndexAccessor), positionAccessor(pPositionAccessor), aabb(nullptr, "AABB") {
@@ -50,4 +50,4 @@ void Primitive::setMaterial(const std::shared_ptr<Material> &pMaterial) {
 	material = pMaterial;
 	onMaterialChangedSignal(material);
 }
-} // namespace mer::sdk
+} // namespace ke

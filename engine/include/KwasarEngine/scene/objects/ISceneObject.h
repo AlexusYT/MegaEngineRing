@@ -27,14 +27,14 @@
 
 #include "KwasarEngine/utils/PropertyBase.h"
 
-namespace mer::sdk {
+namespace ke {
 class UUID;
 enum class MouseButton;
 class ModifierKeys;
 enum class KeyboardKey;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class IScript;
 class MainObjectExtension;
 class Extension;
@@ -101,6 +101,6 @@ protected:
 };
 
 inline bool ISceneObject::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //ISCENEOBJECT_H

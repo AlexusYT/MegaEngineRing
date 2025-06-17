@@ -25,7 +25,7 @@
 #include "KwasarEngine/utils/ReportMessage.h"
 
 TEST(ObjModelLoaderTests, ModelLoading) {
-	/*using namespace mer::sdk;
+	/*using namespace ke;
 	const auto request = std::make_shared<FileModelRequest>("TestName", "main/resources/models/untitled.obj");
 	const auto loader = std::make_shared<ObjModelLoader>();
 	const std::shared_ptr<Resources> dependencies;

@@ -25,7 +25,7 @@
 
 #include "KwasarEngine/gltf/Node.h"
 
-namespace mer::sdk {
+namespace ke {
 LightExtension::LightExtension() : lightDataId(this, "LightSource") { lightDataId = -1; }
 
 LightExtension::~LightExtension() { lightDataId = -1; }
@@ -37,4 +37,4 @@ void LightExtension::onNodeChanged(Node* /*pOldNode*/) {
 		nodeSelf->setLightDataId(pNewIndex);
 	});
 }
-} // namespace mer::sdk
+} // namespace ke

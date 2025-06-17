@@ -21,6 +21,6 @@
 
 #include "KwasarEngine/extensions/MainObjectExtension.h"
 
-namespace mer::sdk {
+namespace ke {
 MainObjectExtension::MainObjectExtension() : propertyName(this, "Name"), propertyPosition(this, "Position") {}
-} // namespace mer::sdk
+} // namespace ke

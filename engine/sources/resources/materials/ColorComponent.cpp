@@ -21,7 +21,7 @@
 
 #include "KwasarEngine/resources/materials/ColorComponent.h"
 
-namespace mer::sdk {
+namespace ke {
 ColorComponent::ColorComponent(const glm::vec4 &pColor) : color(nullptr, "ColorComponent") { color = pColor; }
 
 std::shared_ptr<ColorComponent> ColorComponent::create() { return create({0.0f, 0.0f, 0.0f, 1.0f}); }
@@ -34,4 +34,4 @@ std::shared_ptr<ColorComponent> ColorComponent::create(const float pRed, const f
 													   const float pAlpha) {
 	return create(glm::vec4(pRed, pGreen, pBlue, pAlpha));
 }
-} // namespace mer::sdk
+} // namespace ke

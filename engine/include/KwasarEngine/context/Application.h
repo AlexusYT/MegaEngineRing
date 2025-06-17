@@ -28,7 +28,7 @@
 #include "IApplication.h"
 #include "IApplicationSettings.h"
 
-namespace mer::sdk {
+namespace ke {
 class Window;
 
 class Application : public IApplication {
@@ -74,7 +74,7 @@ private:
 
 	ReportMessagePtr setupGlfw();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //APPLICATION_H

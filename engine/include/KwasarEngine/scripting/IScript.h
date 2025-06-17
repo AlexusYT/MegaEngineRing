@@ -23,7 +23,7 @@
 #define ISCRIPT_H
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class SceneObject;
 
 class IScript {
@@ -45,7 +45,7 @@ protected:
 };
 
 inline bool IScript::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //ISCRIPT_H

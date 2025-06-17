@@ -23,7 +23,7 @@
 #define BASICRENDEREXTENSION_H
 #include "Extension.h"
 
-namespace mer::sdk {
+namespace ke {
 class ShaderProgram;
 
 class BasicRenderExtension : public Extension {
@@ -47,7 +47,7 @@ protected:
 
 	void onRender() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //BASICRENDEREXTENSION_H

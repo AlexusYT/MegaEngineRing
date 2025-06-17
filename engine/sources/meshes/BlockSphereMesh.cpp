@@ -24,7 +24,7 @@
 #include "KwasarEngine/gltf/Accessor.h"
 #include "KwasarEngine/gltf/Primitive.h"
 
-namespace mer::sdk {
+namespace ke {
 BlockSphereMesh::BlockSphereMesh() {
 	setName("BlockPlaneMesh");
 	auto [vertices, indices, normals] = generateSphere(1);

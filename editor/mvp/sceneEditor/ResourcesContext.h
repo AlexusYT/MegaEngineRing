@@ -27,31 +27,31 @@
 #include "KwasarEngine/context/Application.h"
 #include "KwasarEngine/resources/IResourceLoadExecutor.h"
 
-namespace mer::sdk {
+namespace ke {
 class IResourceLoader;
 class ILoadedResources;
-} // namespace mer::sdk
+} // namespace ke
 
 namespace mer::editor::mvp {
-class ResourcesContext : public sdk::IResourceLoadExecutor {
+class ResourcesContext : public ke::IResourceLoadExecutor {
 	enum class RequestType { PRELOAD, LOAD };
 
 	struct Request {
 		std::filesystem::path uri;
 		RequestType type;
-		sigc::signal<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> callbackSignal;
+		sigc::signal<void(const std::shared_ptr<ke::ResourceLoadResult> & pResult)> callbackSignal;
 	};
 
 	std::mutex queueMutex;
 	std::unordered_map<std::filesystem::path, std::shared_ptr<Request>> queue;
 	std::mutex waitMutex;
-	std::shared_ptr<sdk::ILoadedResources> resources;
+	std::shared_ptr<ke::ILoadedResources> resources;
 	std::condition_variable cv;
 
 	std::list<std::jthread> threads;
-	sdk::IApplication* application{};
+	ke::IApplication* application{};
 	std::mutex headersLengthMutex;
-	std::unordered_map<std::shared_ptr<sdk::IResource>, int64_t> headersLength;
+	std::unordered_map<std::shared_ptr<ke::IResource>, int64_t> headersLength;
 	std::mutex processingQueueMutex;
 	std::unordered_map<std::filesystem::path, std::shared_ptr<Request>> processingQueue;
 
@@ -67,32 +67,32 @@ public:
 		cv.notify_all();
 	}
 
-	std::shared_ptr<sdk::ResourceLoadResult> loadResourceSync(const std::string &pResourceUri) override;
+	std::shared_ptr<ke::ResourceLoadResult> loadResourceSync(const std::string &pResourceUri) override;
 
 
 	void preloadResources();
 
 	void loadResourceAsync(
 		const std::string &pResourceUri,
-		const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> &pSlot) override;
+		const sigc::slot<void(const std::shared_ptr<ke::ResourceLoadResult> & pResult)> &pSlot) override;
 
 	void loop(const std::stop_token &pToken);
 
 	void processRequest(const std::shared_ptr<Request> &pRequest);
 
-	[[nodiscard]] sdk::IApplication* getApplication() const override { return application; }
+	[[nodiscard]] ke::IApplication* getApplication() const override { return application; }
 
-	void setApplication(sdk::IApplication* pApplication) override { application = pApplication; }
+	void setApplication(ke::IApplication* pApplication) override { application = pApplication; }
 
-	void setResources(const std::shared_ptr<sdk::ILoadedResources> &pResources) { resources = pResources; }
+	void setResources(const std::shared_ptr<ke::ILoadedResources> &pResources) { resources = pResources; }
 
-	const std::shared_ptr<sdk::ILoadedResources> &getResources() override { return resources; }
+	const std::shared_ptr<ke::ILoadedResources> &getResources() override { return resources; }
 
 private:
-	static void callSlot(const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
-						 const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> &pSlot);
+	static void callSlot(const std::shared_ptr<ke::ResourceLoadResult> &pResult,
+						 const sigc::slot<void(const std::shared_ptr<ke::ResourceLoadResult> & pResult)> &pSlot);
 
-	static std::shared_ptr<sdk::IResourceLoader> getLoader(const std::shared_ptr<Request> &pRequest);
+	static std::shared_ptr<ke::IResourceLoader> getLoader(const std::shared_ptr<Request> &pRequest);
 
 	std::shared_ptr<std::istream> getResourceStream(const std::shared_ptr<Request> &pRequest) const;
 };

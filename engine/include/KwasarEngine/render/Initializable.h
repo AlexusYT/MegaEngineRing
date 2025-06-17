@@ -23,7 +23,7 @@
 #define INITIALIZABLE_H
 #include "IInitializable.h"
 
-namespace mer::sdk {
+namespace ke {
 class Initializable : public virtual IInitializable {
 	bool inited{false};
 
@@ -50,6 +50,6 @@ protected:
 
 	virtual void onUninitialize() {}
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //INITIALIZABLE_H

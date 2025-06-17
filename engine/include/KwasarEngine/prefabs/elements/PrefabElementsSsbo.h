@@ -31,12 +31,12 @@ namespace sigc {
 struct scoped_connection;
 }
 
-namespace mer::sdk {
+namespace ke {
 class PrefabElementInstance;
 class PrefabElementInstanceData;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class PrefabElementsSsbo : public IRenderable, public Initializable {
 	std::unordered_map<PrefabElementInstance*, sigc::scoped_connection> instances;
 	std::vector<PrefabElementInstanceData> instancesData;
@@ -80,6 +80,6 @@ protected:
 private:
 	void onDataChanged();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PREFABELEMENTSSSBO_H

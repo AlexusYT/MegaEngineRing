@@ -28,17 +28,17 @@
 namespace mer::editor::mvp {
 ModelObjectsTree::ModelObjectsTree(NodeSelectionHelper* pSelection)
 	: selection(pSelection) {
-	selection->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+	selection->connectOnNodeSelectionChanged([this](const std::vector<ke::Node*> &pNodes, bool pSelected) {
 		if (presenter) presenter->onSelectionChanged(pNodes, pSelected);
 	});
 }
 
-void ModelObjectsTree::setScene(const std::shared_ptr<sdk::Scene3D> &pNewScene3D) {
+void ModelObjectsTree::setScene(const std::shared_ptr<ke::Scene3D> &pNewScene3D) {
 	scene = pNewScene3D;
 	if (presenter) presenter->onSceneChanged(scene);
 }
 
 void ModelObjectsTree::clearSelection() { selection->clearSelection(); }
 
-void ModelObjectsTree::select(sdk::Node* pNode) { selection->addNode(pNode); }
+void ModelObjectsTree::select(ke::Node* pNode) { selection->addNode(pNode); }
 } // namespace mer::editor::mvp

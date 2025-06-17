@@ -49,7 +49,7 @@ SceneEditor::SceneEditor(const std::string &pName)
 	auto previewView = ViewScenePreview::create("SceneEditorPreview", EditorContext::create(this));
 	scenePreviewView = previewView;
 	auto previewModel = std::make_shared<ModelScenePreview>(selection.get());
-	scene3D = sdk::Scene3D::create();
+	scene3D = ke::Scene3D::create();
 	previewModel->setScene(scene3D);
 	scenePreviewPresenter = PresenterSceneEditorPreview::create(previewView, previewModel);
 	scenePreviewPresenter->run();
@@ -124,10 +124,10 @@ void SceneEditor::loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiD
 }
 
 void SceneEditor::addPlane() {
-	auto ext = sdk::MeshExtension::create();
-	auto mesh = std::make_shared<sdk::BlockPlaneMesh>();
+	auto ext = ke::MeshExtension::create();
+	auto mesh = std::make_shared<ke::BlockPlaneMesh>();
 	ext->mesh = mesh;
-	auto instance = sdk::Node::create("");
+	auto instance = ke::Node::create("");
 	instance->addExtension(ext);
 	scene3D->addMesh(mesh);
 	scene3D->addNode(nullptr, instance);
@@ -135,37 +135,37 @@ void SceneEditor::addPlane() {
 }
 
 void SceneEditor::addCube() {
-	auto ext = sdk::MeshExtension::create();
-	auto mesh = std::make_shared<sdk::BlockCubeMesh>();
+	auto ext = ke::MeshExtension::create();
+	auto mesh = std::make_shared<ke::BlockCubeMesh>();
 	ext->mesh = mesh;
-	auto instance = sdk::Node::create("");
+	auto instance = ke::Node::create("");
 	instance->addExtension(ext);
 	scene3D->addMesh(mesh);
 	scene3D->addNode(nullptr, instance);
 }
 
 void SceneEditor::addSphere() {
-	auto ext = sdk::MeshExtension::create();
-	auto mesh = std::make_shared<sdk::BlockSphereMesh>();
+	auto ext = ke::MeshExtension::create();
+	auto mesh = std::make_shared<ke::BlockSphereMesh>();
 	ext->mesh = mesh;
-	auto instance = sdk::Node::create("");
+	auto instance = ke::Node::create("");
 	instance->addExtension(ext);
 	scene3D->addMesh(mesh);
 	scene3D->addNode(nullptr, instance);
 }
 
 void SceneEditor::addGltfModel(const std::string &pPath) {
-	sdk::ReportMessagePtr msg;
-	auto gltf = sdk::GltfModel::createFromFile(pPath, msg);
+	ke::ReportMessagePtr msg;
+	auto gltf = ke::GltfModel::createFromFile(pPath, msg);
 
 	if (!gltf) {
-		sdk::Logger::error(msg);
+		ke::Logger::error(msg);
 		return;
 	}
 	auto model = scenePreviewPresenter->getModel();
 	auto scene = model->getScene();
 	if (!scene) {
-		scene = sdk::Scene3D::create();
+		scene = ke::Scene3D::create();
 		model->setScene(scene);
 	}
 	for (auto material: gltf->getMaterials()) { scene->addMaterial(material); }

@@ -25,11 +25,11 @@
 
 #include "KwasarEngine/resources/ResourceLoader.h"
 
-namespace mer::sdk {
+namespace ke {
 class IMaterialComponent;
 }
 
-namespace mer::sdk {
+namespace ke {
 class MaterialLoader : public ResourceLoader {
 public:
 	std::shared_ptr<IResource> createResource() override;
@@ -44,6 +44,6 @@ private:
 		const std::shared_ptr<std::istream> &pStream, IResourceLoadExecutor* pLoadExecutor,
 		const sigc::slot<void(const std::shared_ptr<IMaterialComponent> & pComponent)> &pSetter);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //MATERIALLOADER_H

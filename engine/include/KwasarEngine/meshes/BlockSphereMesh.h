@@ -23,7 +23,7 @@
 #define BLOCKSPHEREMESH_H
 #include "KwasarEngine/gltf/Mesh.h"
 
-namespace mer::sdk {
+namespace ke {
 class BlockSphereMesh : public Mesh {
 public:
 	BlockSphereMesh();

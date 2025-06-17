@@ -23,11 +23,11 @@
 #define TRANSFORMABLE_H
 #include <memory>
 
-namespace mer::sdk {
+namespace ke {
 class Transformation;
 }
 
-namespace mer::sdk {
+namespace ke {
 class Transformable {
 	Transformable* parent{};
 	std::shared_ptr<Transformation> globalTransform;
@@ -57,6 +57,6 @@ protected:
 
 	virtual void onGlobalTransformChanged(const std::shared_ptr<Transformation> &pTransformation);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TRANSFORMABLE_H

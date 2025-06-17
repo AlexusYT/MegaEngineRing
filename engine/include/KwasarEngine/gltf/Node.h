@@ -30,13 +30,13 @@
 #include "KwasarEngine/utils/Property.h"
 #include "GLTFSDK/GLTF.h"
 
-namespace mer::sdk {
+namespace ke {
 class Scene3D;
 }
 
 class DebugGeometry;
 
-namespace mer::sdk {
+namespace ke {
 class VolumeAabb;
 }
 
@@ -44,7 +44,7 @@ namespace Microsoft::glTF {
 struct Node;
 }
 
-namespace mer::sdk {
+namespace ke {
 struct MeshInstanceData {
 	glm::mat4 modelMat;
 	glm::mat4 normalMat;
@@ -182,6 +182,6 @@ protected:
 
 	void updateNodeAabb();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //NODE_H

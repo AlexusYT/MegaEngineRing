@@ -22,7 +22,7 @@
 #ifndef ILIGHTINSTANCE_H
 #define ILIGHTINSTANCE_H
 
-namespace mer::sdk {
+namespace ke {
 class LightInstanceData;
 class ILightSources;
 
@@ -38,6 +38,6 @@ public:
 
 	[[nodiscard]] virtual const LightInstanceData &getLightInstanceData() const = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //ILIGHTINSTANCE_H

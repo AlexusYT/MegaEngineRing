@@ -30,13 +30,13 @@
 #include "KwasarEngine/utils/MouseButton.h"
 #include "IScene.h"
 
-namespace mer::sdk {
+namespace ke {
 class PrefabInstance;
 class Prefab;
 class ILightSources;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class ICamera;
 class ISceneObject;
 
@@ -114,7 +114,7 @@ protected:
 
 	virtual void afterRender() {}
 
-	sdk::ReportMessagePtr initScene() override;
+	ke::ReportMessagePtr initScene() override;
 
 	void deinitScene() override;
 
@@ -135,7 +135,7 @@ private:
 
 	bool notifyOnMouseScroll(double pDx, double pDy) final;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //SCENE_H

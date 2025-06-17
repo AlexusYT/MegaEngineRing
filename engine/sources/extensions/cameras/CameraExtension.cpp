@@ -31,7 +31,7 @@
 #include "KwasarEngine/scene/objects/SceneObject.h"
 #include "KwasarEngine/extensions/MainObjectExtension.h"
 
-namespace mer::sdk {
+namespace ke {
 CameraExtension::CameraExtension()
 	: propertyMatrix(this, "Matrix"), propertyDirection(this, "Direction"), propertyAngle(this, "Angle") {
 	propertyDirection.getEvent().connect(sigc::hide(sigc::mem_fun(*this, &CameraExtension::updateMatrix)));
@@ -74,4 +74,4 @@ void CameraExtension::updateMatrix() {
 	const auto position = objectSelf->getMainExtension()->propertyPosition.getValue();
 	propertyMatrix = getProjMatrix() * lookAt(position, position + propertyDirection.getValue(), {0, 1, 0});
 }
-} // namespace mer::sdk
+} // namespace ke

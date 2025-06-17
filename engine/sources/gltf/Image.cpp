@@ -27,7 +27,7 @@
 #include "KwasarEngine/resources/textures/Texture2DType.h"
 #include "KwasarEngine/utils/Logger.h"
 
-namespace mer::sdk {
+namespace ke {
 Image::Image(const Microsoft::glTF::Image &pImage, const Microsoft::glTF::Document &pDocument,
 			 const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader)
 	: width(-1), height(-1), format(Texture2DImageFormat::UNDEFINED), type(Texture2DType::UNDEFINED) {
@@ -230,4 +230,4 @@ std::unique_ptr<spng_ctx, void (*)(spng_ctx*)> Image::isPng(ReportMessagePtr &pE
 	}
 	return ctx;
 }
-} // namespace mer::sdk
+} // namespace ke

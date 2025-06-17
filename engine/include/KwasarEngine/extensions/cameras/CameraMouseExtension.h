@@ -25,7 +25,7 @@
 
 #include "KwasarEngine/extensions/Extension.h"
 
-namespace mer::sdk {
+namespace ke {
 class CameraMouseExtension : public Extension {
 	std::optional<glm::dvec2> lastCursorPos{};
 
@@ -57,6 +57,6 @@ protected:
 
 	void onEnabledChanged() override { lastCursorPos.reset(); }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //CAMERAMOUSEEXTENSION_H

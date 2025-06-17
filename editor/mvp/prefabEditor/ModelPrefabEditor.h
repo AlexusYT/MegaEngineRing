@@ -23,18 +23,18 @@
 #define MODELPREFABEDITOR_H
 #include "IModelPrefabEditor.h"
 
-namespace mer::sdk {
+namespace ke {
 class Prefab;
 }
 
 namespace mer::editor::mvp {
 class ModelPrefabEditor : public IModelPrefabEditor {
-	std::shared_ptr<sdk::Prefab> selectedPrefab;
+	std::shared_ptr<ke::Prefab> selectedPrefab;
 
 public:
-	[[nodiscard]] const std::shared_ptr<sdk::Prefab> &getSelectedPrefab() const override { return selectedPrefab; }
+	[[nodiscard]] const std::shared_ptr<ke::Prefab> &getSelectedPrefab() const override { return selectedPrefab; }
 
-	void setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pSelectedPrefab) override {
+	void setSelectedPrefab(const std::shared_ptr<ke::Prefab> &pSelectedPrefab) override {
 		selectedPrefab = pSelectedPrefab;
 	}
 };

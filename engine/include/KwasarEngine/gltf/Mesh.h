@@ -25,7 +25,7 @@
 
 #include "KwasarEngine/utils/Property.h"
 
-namespace mer::sdk {
+namespace ke {
 class VolumeAabb;
 class Primitive;
 
@@ -56,6 +56,6 @@ public:
 private:
 	void buildAabb() const;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //MESH_H

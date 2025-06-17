@@ -25,7 +25,7 @@
 #include "KwasarEngine/resources/shaders/ShaderProgram.h"
 #include "KwasarEngine/utils/ReportMessage.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<IResource> ShaderProgramLoader::createResource() { return std::make_shared<ShaderProgram>(); }
 
 ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoadExecutor*/,
@@ -50,4 +50,4 @@ ReportMessagePtr ShaderProgramLoader::load(IResourceLoadExecutor* /*pLoadExecuto
 
 	return nullptr;
 }
-} // namespace mer::sdk
+} // namespace ke

@@ -28,7 +28,7 @@
 
 #include "KwasarEngine/resources/materials/IMaterialResource.h"
 
-namespace mer::sdk {
+namespace ke {
 class IMaterialResource;
 class Prefab;
 class PrefabElementInstance;
@@ -98,6 +98,6 @@ public:
 
 	void onParentMaterialChanged(const std::shared_ptr<IMaterialResource> &pMaterial);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PREFABELEMENT_H

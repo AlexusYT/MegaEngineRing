@@ -40,9 +40,9 @@ void PresenterObjectProperties::stop() {
 	model.reset();
 }
 
-void PresenterObjectProperties::onEditingNodeChanged(sdk::Node* pNode) { view->setSelectedNode(pNode); }
+void PresenterObjectProperties::onEditingNodeChanged(ke::Node* pNode) { view->setSelectedNode(pNode); }
 
-void PresenterObjectProperties::onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) { view->setScene(pScene); }
+void PresenterObjectProperties::onSceneChanged(const std::shared_ptr<ke::Scene3D> &pScene) { view->setScene(pScene); }
 
 void PresenterObjectProperties::addView(const std::shared_ptr<IView> & /*pElement*/) {
 	/*

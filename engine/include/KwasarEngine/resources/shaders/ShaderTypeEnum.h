@@ -22,7 +22,7 @@
 #ifndef SHADERTYPEENUM_H
 #define SHADERTYPEENUM_H
 
-namespace mer::sdk {
+namespace ke {
 enum class ShaderTypeEnum {
 	/// Shader that is intended to run on the programmable compute processor.
 	COMPUTE_SHADER,
@@ -52,7 +52,7 @@ inline const char* to_string(ShaderTypeEnum pE) {
 		default: return "unknown";
 	}
 }
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //SHADERTYPEENUM_H

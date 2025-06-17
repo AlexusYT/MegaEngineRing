@@ -27,7 +27,7 @@
 #include "KwasarEngine/utils/IReportable.h"
 #include "ShaderTypeEnum.h"
 
-namespace mer::sdk {
+namespace ke {
 enum class ShaderTypeEnum;
 
 class Shader : public Initializable, public IReportable {
@@ -84,5 +84,5 @@ class VertexShader : public Shader {
 public:
 	VertexShader() : Shader(ShaderTypeEnum::VERTEX_SHADER) {}
 };
-} // namespace mer::sdk
+} // namespace ke
 #endif //SHADER_H

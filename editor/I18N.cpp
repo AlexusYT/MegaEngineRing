@@ -56,12 +56,12 @@ void I18n::init() {
 			countryName = gettext("CountryName");
 		}
 		catch (...) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to load locale");
 			msg->setMessage("Exception occurred");
 			msg->addInfoLine("Locale directory: {}", LOCALE_DIR);
 			msg->addInfoLine("Locale name: {}", filename);
-			sdk::Logger::error(msg);
+			ke::Logger::error(msg);
 			continue;
 		}
 		trLanguages.emplace_back(filename);

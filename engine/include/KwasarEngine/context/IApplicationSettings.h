@@ -24,14 +24,14 @@
 
 #include <KwasarEngine/utils/Property.h>
 
-namespace mer::sdk {
+namespace ke {
 class IApplicationSettings {
 public:
 	IApplicationSettings() = default;
 
 	virtual ~IApplicationSettings() = default;
 
-	virtual sdk::ReportMessagePtr init() = 0;
+	virtual ke::ReportMessagePtr init() = 0;
 
 	[[nodiscard]] virtual const Property<std::string> &getLogsDirectory() const = 0;
 
@@ -49,6 +49,6 @@ public:
 
 	virtual void setRunDirectory(const std::string &pRunDirectory) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IAPPLICATIONSETTINGS_H

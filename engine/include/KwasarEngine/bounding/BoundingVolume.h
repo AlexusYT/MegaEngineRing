@@ -25,7 +25,7 @@
 #include "KwasarEngine/render/Initializable.h"
 #include "KwasarEngine/utils/PropertyNotifiable.h"
 
-namespace mer::sdk {
+namespace ke {
 class BoundingVolume : public IRenderable, public Initializable, public PropertyNotifiable {
 	uint32_t vao{};
 	uint32_t verticesBuffer{};
@@ -52,6 +52,6 @@ protected:
 
 	void onUninitialize() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IBOUNDINGVOLUME_H

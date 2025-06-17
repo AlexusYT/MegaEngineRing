@@ -45,15 +45,15 @@ void PresenterObjectsTree::addView(const std::shared_ptr<IView> & /*pNewView*/) 
 	view->openView();*/
 }
 
-void PresenterObjectsTree::onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) {
+void PresenterObjectsTree::onSceneChanged(const std::shared_ptr<ke::Scene3D> &pScene) {
 	view->setSceneToRender(pScene);
 }
 
-void PresenterObjectsTree::onSelectionChanged(const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+void PresenterObjectsTree::onSelectionChanged(const std::vector<ke::Node*> &pNodes, bool pSelected) {
 	view->markSelected(pNodes, pSelected);
 }
 
 void PresenterObjectsTree::clearSelection() { model->clearSelection(); }
 
-void PresenterObjectsTree::select(sdk::Node* pNode) { model->select(pNode); }
+void PresenterObjectsTree::select(ke::Node* pNode) { model->select(pNode); }
 } // namespace mer::editor::mvp

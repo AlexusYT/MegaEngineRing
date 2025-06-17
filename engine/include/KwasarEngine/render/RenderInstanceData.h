@@ -25,13 +25,13 @@
 
 #include "KwasarEngine/resources/materials/MaterialData.h"
 
-namespace mer::sdk {
+namespace ke {
 class RenderInstanceData {
 public:
 	MaterialData material;
 	glm::mat4 modelViewMatrix{1};
 	glm::mat4 normalMatrix{1};
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //RENDERINSTANCEDATA_H

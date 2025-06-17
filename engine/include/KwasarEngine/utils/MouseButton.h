@@ -22,7 +22,7 @@
 #ifndef MOUSEBUTTON_H
 #define MOUSEBUTTON_H
 
-namespace mer::sdk {
+namespace ke {
 enum class MouseButton {
 	BUTTON_PRIMARY = 1,
 	BUTTON_MIDDLE,

@@ -23,7 +23,7 @@
 #define SCRIPT_H
 #include "IScript.h"
 
-namespace mer::sdk {
+namespace ke {
 class Script : public IScript {
 	SceneObject* object{};
 
@@ -34,7 +34,7 @@ public:
 
 	bool notifyOnMouseScroll(const double pDx, const double pDy) final { return onMouseScroll(pDx, pDy); }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //SCRIPT_H

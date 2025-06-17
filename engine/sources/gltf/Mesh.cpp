@@ -24,7 +24,7 @@
 #include "KwasarEngine/gltf/Primitive.h"
 #include "KwasarEngine/bounding/VolumeAabb.h"
 
-namespace mer::sdk {
+namespace ke {
 Mesh::Mesh()
 	: aabb(nullptr, "AABB") {
 	aabb = VolumeAabb::create();
@@ -73,4 +73,4 @@ void Mesh::buildAabb() const {
 
 	if (minDefined && maxDefined) aabb->setBounds(min, max);
 }
-} // namespace mer::sdk
+} // namespace ke

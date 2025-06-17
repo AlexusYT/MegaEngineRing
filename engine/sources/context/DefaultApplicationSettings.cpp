@@ -21,14 +21,14 @@
 
 #include <KwasarEngine/context/DefaultApplicationSettings.h>
 
-namespace mer::sdk {
+namespace ke {
 DefaultApplicationSettings::DefaultApplicationSettings()
 	: applicationName(nullptr, "ApplicationName"),
 	  applicationDisplayName(nullptr, "AppDisplayName"),
 	  logsDirectory(nullptr, "LogsDir"),
 	  runDirectory(nullptr, "RunDir") {}
 
-sdk::ReportMessagePtr DefaultApplicationSettings::init() {
+ke::ReportMessagePtr DefaultApplicationSettings::init() {
 	if (applicationName->empty()) setApplicationName("DefaultApplication");
 	if (applicationDisplayName->empty()) setApplicationDisplayName("Default Application");
 	/*if (logsDirectory->empty())
@@ -37,4 +37,4 @@ sdk::ReportMessagePtr DefaultApplicationSettings::init() {
 	runDirectory = std::filesystem::current_path().string();
 	return nullptr;
 }
-} // namespace mer::sdk
+} // namespace ke

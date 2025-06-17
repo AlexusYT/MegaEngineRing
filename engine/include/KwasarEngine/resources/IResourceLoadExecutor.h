@@ -25,7 +25,7 @@
 
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class ResourceLoadResult;
 class ILoadedResources;
 class IApplication;
@@ -50,7 +50,7 @@ public:
 
 	virtual const std::shared_ptr<ILoadedResources> &getResources() = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //IRESOURCES_H

@@ -24,7 +24,7 @@
 #include "KwasarEngine/gltf/Mesh.h"
 #include "KwasarEngine/render/Renderer.h"
 
-namespace mer::sdk {
+namespace ke {
 Scene3D::Scene3D() : renderer(std::make_shared<Renderer>()) {}
 
 void Scene3D::render() {}
@@ -124,4 +124,4 @@ void Scene3D::removeChildImpl(Node* pNode) {
 
 	nodes.erase(iter);
 }
-} // namespace mer::sdk
+} // namespace ke

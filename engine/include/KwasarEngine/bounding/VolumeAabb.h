@@ -25,11 +25,11 @@
 
 #include "BoundingVolume.h"
 
-namespace mer::sdk {
+namespace ke {
 class Transformation;
 }
 
-namespace mer::sdk {
+namespace ke {
 class VolumeAabb : public BoundingVolume {
 	glm::vec3 min{};
 	glm::vec3 max{};
@@ -81,6 +81,6 @@ protected:
 
 	std::vector<uint16_t> getIndices() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //VOLUMEAABB_H

@@ -29,7 +29,7 @@ namespace Microsoft::glTF {
 class ExtensionDeserializer;
 }
 
-namespace mer::sdk {
+namespace ke {
 class Light;
 
 class KhrLightsPunctual : public Microsoft::glTF::Extension {
@@ -69,6 +69,6 @@ public:
 	static std::unique_ptr<Extension> deserializeNode(
 		const std::string &pJson, const Microsoft::glTF::ExtensionDeserializer & /*pExtensionDeserializer*/);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //KHRLIGHTSPUNCTUAL_H

@@ -25,7 +25,7 @@
 
 #include "IMaterialComponent.h"
 
-namespace mer::sdk {
+namespace ke {
 class ColorComponent : public IMaterialComponent {
 	ColorComponent(const glm::vec4 &pColor);
 
@@ -41,6 +41,6 @@ public:
 private:
 	PropertyReadOnly<glm::vec4> getComponentValueProperty() override { return color.getReadOnly(); }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //COLORCOMPONENT_H

@@ -24,7 +24,7 @@
 #include <glm/fwd.hpp>
 #include <sigc++/signal.h>
 
-namespace mer::sdk {
+namespace ke {
 template <typename T>
 class ExtensionProperty;
 
@@ -40,6 +40,6 @@ public:
 
 	virtual void updateMatrix() = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //ICAMERA_H

@@ -22,7 +22,7 @@
 #ifndef IMODELPREFABEDITOR_H
 #define IMODELPREFABEDITOR_H
 
-namespace mer::sdk {
+namespace ke {
 class Prefab;
 }
 
@@ -31,9 +31,9 @@ class IModelPrefabEditor {
 public:
 	virtual ~IModelPrefabEditor() = default;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::Prefab> &getSelectedPrefab() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::Prefab> &getSelectedPrefab() const = 0;
 
-	virtual void setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pSelectedPrefab) = 0;
+	virtual void setSelectedPrefab(const std::shared_ptr<ke::Prefab> &pSelectedPrefab) = 0;
 };
 } // namespace mer::editor::mvp
 

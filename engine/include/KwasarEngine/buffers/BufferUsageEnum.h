@@ -22,7 +22,7 @@
 #ifndef BUFFERUSAGEENUM_H
 #define BUFFERUSAGEENUM_H
 
-namespace mer::sdk {
+namespace ke {
 enum BufferUsageEnum : uint32_t {
 	STREAM_DRAW  = 0x88E0,
 	STREAM_READ  = 0x88E1,

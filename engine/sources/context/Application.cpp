@@ -36,10 +36,10 @@
 #include "KwasarEngine/resources/ResourceLoaders.h"
 
 #ifndef EDITOR_SDK
-extern std::shared_ptr<mer::sdk::IScene> getPrimaryScene();
+extern std::shared_ptr<ke::IScene> getPrimaryScene();
 #endif
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<Application> Application::create() { return std::shared_ptr<Application>(new Application()); }
 
 ReportMessagePtr Application::initEngine() {
@@ -60,7 +60,6 @@ void Application::deinitEngine() {
 void Application::registerWindow(const std::shared_ptr<Window> &pWindow) { window = pWindow; }
 
 void Application::sigHandler(int pSig) {
-	using namespace sdk;
 	const auto msg = ReportMessage::create();
 	msg->setTitle("Signal recieved");
 	msg->setMessage("Aborting...");
@@ -96,7 +95,6 @@ void Application::initSigHandlers() {
 }
 
 void Application::loadSettings() {
-	using namespace sdk;
 	bool userSettingsLoaded = false;
 	if (applicationSettings) {
 		if (ReportMessagePtr msg = applicationSettings->init()) {
@@ -115,7 +113,6 @@ void Application::loadSettings() {
 }
 
 void Application::createLog() const {
-	using namespace sdk;
 	if (const auto logsDir = applicationSettings->getLogsDirectory().getValue(); !logsDir.empty()) {
 		const auto logPath = std::filesystem::path(logsDir) / "latest.log";
 		if (const auto msg = Logger::openLog(logPath)) {
@@ -126,7 +123,6 @@ void Application::createLog() const {
 }
 
 ReportMessagePtr Application::setupGlfw() {
-	using namespace sdk;
 	if (!glfwInit()) {
 		auto msg = ReportMessage::create();
 		msg->setTitle("Failed to init engine");
@@ -151,7 +147,6 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 	window.reset();
 	return 0;
 #ifndef EDITOR_SDK
-	using namespace sdk;
 
 	std::shared_ptr<MainWindow> window = MainWindow::create();
 	if (auto msg = window->setContextVersion(4, 0)) {
@@ -184,4 +179,4 @@ int Application::runMainLoop(int /*argc*/, char* /*argv*/[]) {
 #endif
 	return 0;
 }
-} // namespace mer::sdk
+} // namespace ke

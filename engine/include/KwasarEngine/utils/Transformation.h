@@ -30,7 +30,7 @@
 
 #include "Property.h"
 
-namespace mer::sdk {
+namespace ke {
 class Transformation {
 protected:
 	glm::vec3 positionVal{};
@@ -237,6 +237,6 @@ protected:
 		calculateModelMatrix();
 	}
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TRANSFORMATION_H

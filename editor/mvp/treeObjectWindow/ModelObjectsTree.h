@@ -22,7 +22,7 @@
 #ifndef MODELOBJECTSTREE_H
 #define MODELOBJECTSTREE_H
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 }
 
@@ -31,7 +31,7 @@ class IPresenterObjectsTree;
 class NodeSelectionHelper;
 } // namespace mer::editor::mvp
 
-namespace mer::sdk {
+namespace ke {
 class Scene3D;
 }
 
@@ -44,17 +44,17 @@ public:
 
 	virtual void setPresenter(IPresenterObjectsTree* pPresenter) = 0;
 
-	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void setScene(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::Scene3D> &getScene() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::Scene3D> &getScene() const = 0;
 
 	virtual void clearSelection() = 0;
 
-	virtual void select(sdk::Node* pNode) = 0;
+	virtual void select(ke::Node* pNode) = 0;
 };
 
 class ModelObjectsTree : public IModelObjectsTree {
-	std::shared_ptr<sdk::Scene3D> scene;
+	std::shared_ptr<ke::Scene3D> scene;
 	NodeSelectionHelper* selection;
 	IPresenterObjectsTree* presenter{};
 
@@ -65,13 +65,13 @@ public:
 
 	void setPresenter(IPresenterObjectsTree* pPresenter) override { presenter = pPresenter; }
 
-	void setScene(const std::shared_ptr<sdk::Scene3D> &pNewScene3D) override;
+	void setScene(const std::shared_ptr<ke::Scene3D> &pNewScene3D) override;
 
-	[[nodiscard]] const std::shared_ptr<sdk::Scene3D> &getScene() const override { return scene; }
+	[[nodiscard]] const std::shared_ptr<ke::Scene3D> &getScene() const override { return scene; }
 
 	void clearSelection() override;
 
-	void select(sdk::Node* pNode) override;
+	void select(ke::Node* pNode) override;
 };
 } // namespace mer::editor::mvp
 

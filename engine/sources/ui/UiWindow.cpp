@@ -23,7 +23,7 @@
 
 #include "KwasarEngine/ui/UiPopup.h"
 
-namespace mer::sdk {
+namespace ke {
 void UiWindow::render() {
 	const ImGuiViewport* viewport = ImGui::GetMainViewport();
 	/*glm::vec2 actualPos;
@@ -69,4 +69,4 @@ void UiWindow::onKeyChanged(int /*pKey*/, int /*pScancode*/, int /*pAction*/, in
 void UiWindow::onMouseScroll(double /*pXOffset*/, double /*pYOffset*/) {}
 
 void UiWindow::onMouseButton(int /*pButton*/, int /*pAction*/, int /*pMods*/) {}
-} // namespace mer::sdk
+} // namespace ke

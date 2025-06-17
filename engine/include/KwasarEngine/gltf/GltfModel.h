@@ -24,21 +24,21 @@
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 #include "GLTFSDK/Document.h"
 
-namespace mer::sdk {
+namespace ke {
 struct Light;
 class Scene3D;
 class Material;
 class Texture;
 class Image;
 class Sampler;
-} // namespace mer::sdk
+} // namespace ke
 
 namespace Microsoft::glTF {
 class IStreamReader;
 class GLTFResourceReader;
 } // namespace Microsoft::glTF
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 class Mesh;
 class Prefab;
@@ -86,6 +86,6 @@ private:
 	ReportMessagePtr parseStructure(const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader,
 									const Microsoft::glTF::Document &pDocument);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //GLTFMODEL_H

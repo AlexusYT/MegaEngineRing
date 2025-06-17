@@ -25,7 +25,7 @@
 #include <mutex>
 #include <unordered_map>
 
-namespace mer::sdk {
+namespace ke {
 class IRenderable;
 class IResource;
 
@@ -88,7 +88,7 @@ public:
 
 private:
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //LOADEDRESOURCES_H

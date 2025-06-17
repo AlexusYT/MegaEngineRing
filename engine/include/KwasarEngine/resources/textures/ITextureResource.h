@@ -24,12 +24,12 @@
 #include "KwasarEngine/render/IRenderable.h"
 #include "KwasarEngine/resources/materials/IMaterialComponent.h"
 
-namespace mer::sdk {
+namespace ke {
 template <typename T>
 class PropertyReadOnly;
 }
 
-namespace mer::sdk {
+namespace ke {
 enum class Texture2DType;
 enum class Texture2DImageFormat;
 enum class TextureBaseInternalFormat;
@@ -72,6 +72,6 @@ public:
 
 	[[nodiscard]] virtual PropertyReadOnly<uint64_t> getTextureHandle() = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //ITEXTURERESOURCE_H

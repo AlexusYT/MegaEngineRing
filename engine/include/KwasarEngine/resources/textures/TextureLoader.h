@@ -23,7 +23,7 @@
 #define TEXTURELOADER_H
 #include "KwasarEngine/resources/ResourceLoader.h"
 
-namespace mer::sdk {
+namespace ke {
 class TextureLoader : public ResourceLoader {
 public:
 	std::shared_ptr<IResource> createResource() override;
@@ -34,6 +34,6 @@ public:
 private:
 	std::string getFileExtension() override { return "entex"; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TEXTURELOADER_H

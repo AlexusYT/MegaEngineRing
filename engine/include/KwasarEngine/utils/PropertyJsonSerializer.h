@@ -24,11 +24,11 @@
 
 #include <nlohmann/json.hpp>
 
-namespace mer::sdk {
+namespace ke {
 class Extension;
 }
 
-namespace mer::sdk {
+namespace ke {
 template <class T>
 struct PropertyJsonSerializer {
 	template <std::enable_if_t<std::is_arithmetic<T>::value, bool>  = true>
@@ -37,7 +37,7 @@ struct PropertyJsonSerializer {
 	template <std::enable_if_t<std::is_arithmetic<T>::value, bool>  = true>
 	static T deserialize(const nlohmann::json &pJson, Extension* /*pExtension*/) { return pJson.get<T>(); }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //PROPERTYJSONSERIALIZER_H

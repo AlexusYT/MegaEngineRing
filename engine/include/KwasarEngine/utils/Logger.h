@@ -28,7 +28,7 @@
 
 #include "ReportMessage.h"
 
-namespace mer::sdk {
+namespace ke {
 enum class LoggerMsgType : uint8_t { INFO, WARN, ERROR, OUT };
 
 class Logger {
@@ -97,7 +97,7 @@ public:
 private:
 	static void processException(const std::string &pFailedMessage);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //LOGGER_H

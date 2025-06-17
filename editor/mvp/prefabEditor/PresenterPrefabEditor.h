@@ -45,7 +45,7 @@ public:
 
 	void addMeshesFrom(const std::filesystem::path &pPath) override;
 
-	void setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pPrefab) override;
+	void setSelectedPrefab(const std::shared_ptr<ke::Prefab> &pPrefab) override;
 
 	void run() override;
 

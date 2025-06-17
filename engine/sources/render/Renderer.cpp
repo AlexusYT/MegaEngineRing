@@ -33,7 +33,7 @@
 #include "KwasarEngine/gltf/Primitive.h"
 #include "KwasarEngine/utils/Logger.h"
 
-namespace mer::sdk {
+namespace ke {
 class Logger;
 
 RenderPass::RenderPass() { litByInstancesSsbo.addElement(0); }
@@ -499,4 +499,4 @@ void Renderer::onPrimitiveMaterialChanged(const std::shared_ptr<Material> &pNewM
 	metadata.materialId = static_cast<uint32_t>(matIter->second);
 	meshMetadataSsbo.markDirty();
 }
-} // namespace mer::sdk
+} // namespace ke

@@ -33,7 +33,7 @@
 #include "KwasarEngine/resources/LoadedResources.h"
 #include "ResourcesWindow.h"
 
-namespace mer::sdk {
+namespace ke {
 std::condition_variable cv;
 
 ResourcesWindow::ResourcesWindow()
@@ -78,7 +78,7 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 			std::filesystem::path uri;
 			try {
 				if (!uri.has_extension()) {
-					auto msg = sdk::ReportMessage::create();
+					auto msg = ke::ReportMessage::create();
 					msg->setTitle("Unable to load resource");
 					msg->setMessage("No resource extension in uri");
 					msg->addInfoLine("Resource URI: {}", uri.string());
@@ -91,7 +91,7 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 
 				auto loader = ResourceLoaders::getInstance()->getLoader(uri.extension());
 				if (!loader) {
-					auto msg = sdk::ReportMessage::create();
+					auto msg = ke::ReportMessage::create();
 					msg->setTitle("Unable to load resource");
 					msg->setMessage("No loader registered that can load such resource");
 					msg->addInfoLine("Resource URI: {}", uri.string());
@@ -134,7 +134,7 @@ void ResourcesWindow::resourceLoop(const std::stop_token &pToken) {
 				callSlot(result, slot);
 			}
 			catch (...) {
-				auto msg = sdk::ReportMessage::create();
+				auto msg = ke::ReportMessage::create();
 				msg->setTitle("Unable to load resource");
 				msg->setMessage("Exception thrown while executing request");
 				msg->addInfoLine("Resource URI: {}", uri.string());
@@ -152,7 +152,7 @@ void ResourcesWindow::callSlot(const std::shared_ptr<ResourceLoadResult> &pResul
 							   const sigc::slot<void(const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) {
 	try { pSlot(pResult); }
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to send loading result to the callback");
 		msg->setMessage("Exception thrown in callback");
 		msg->addInfoLine("Result state: {}", pResult->getStateStr());
@@ -164,5 +164,5 @@ void ResourcesWindow::callSlot(const std::shared_ptr<ResourceLoadResult> &pResul
 		Logger::error(msg);
 	}
 }
-} // namespace mer::sdk
+} // namespace ke
 #endif

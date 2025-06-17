@@ -25,7 +25,7 @@
 #include "KwasarEngine/gltf/Primitive.h"
 #include "GLTFSDK/GLTF.h"
 
-namespace mer::sdk {
+namespace ke {
 BlockPlaneMesh::BlockPlaneMesh() {
 	setName("BlockPlaneMesh");
 	auto indexAccessor = Accessor::createIndexAccessor<uint16_t>({0, 1, 2, 1, 2, 3});
@@ -52,4 +52,4 @@ BlockPlaneMesh::BlockPlaneMesh() {
 	primitive->setNormalAccessor(normalAccessor);
 	addPrimitive(primitive);
 }
-} // namespace mer::sdk
+} // namespace ke

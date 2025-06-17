@@ -30,11 +30,11 @@
 #include "KwasarEngine/scene/IScene.h"
 #include "Window.h"
 
-namespace mer::sdk {
+namespace ke {
 class ILoadedResources;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class ResourcesWindow : public Window, public IResourceLoadExecutor {
 	std::list<std::pair<std::string, LoadingFinishedSlot>> queue;
 	std::mutex queueMutex;
@@ -63,13 +63,13 @@ public:
 
 	const std::shared_ptr<ILoadedResources> &getResources() override { return resources; }
 
-	static void callSlot(const std::shared_ptr<sdk::ResourceLoadResult> &pResult,
-						 const sigc::slot<void(const std::shared_ptr<sdk::ResourceLoadResult> & pResult)> &pSlot);
+	static void callSlot(const std::shared_ptr<ke::ResourceLoadResult> &pResult,
+						 const sigc::slot<void(const std::shared_ptr<ke::ResourceLoadResult> & pResult)> &pSlot);
 
 private:
 	void resourceLoop(const std::stop_token &pToken);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif

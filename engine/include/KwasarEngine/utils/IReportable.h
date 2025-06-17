@@ -23,13 +23,13 @@
 #define IREPORTABLE_H
 #include "ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class IReportable {
 public:
 	virtual ~IReportable() = default;
 
 	virtual void addReportInfo(const ReportMessagePtr &pMsg) const = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IREPORTABLE_H

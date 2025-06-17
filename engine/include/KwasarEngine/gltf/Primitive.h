@@ -28,13 +28,13 @@
 #include "KwasarEngine/utils/Property.h"
 #include "GLTFSDK/MicrosoftGeneratorVersion.h"
 
-namespace mer::sdk {}
+namespace ke {}
 
 namespace Microsoft::glTF {
 struct MeshPrimitive;
 } // namespace Microsoft::glTF
 
-namespace mer::sdk {
+namespace ke {
 class ShaderProgram;
 class MaterialSsbo;
 class Material;
@@ -118,6 +118,6 @@ public:
 		accessors = pAccessors;
 	}
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PRIMITIVE_H

@@ -26,7 +26,7 @@
 
 #include "KwasarEngine/resources/Resource.h"
 
-namespace mer::sdk {
+namespace ke {
 class Shader;
 
 class ShaderProgram : public Resource {
@@ -77,7 +77,7 @@ public:
 
 	void addReportInfo(const ReportMessagePtr &pMsg) const override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //SHADERPROGRAM_H

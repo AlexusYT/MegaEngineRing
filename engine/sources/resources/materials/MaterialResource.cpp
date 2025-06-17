@@ -25,7 +25,7 @@
 #include "KwasarEngine/resources/ResourceType.h"
 #include "KwasarEngine/resources/materials/IMaterialComponent.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<MaterialResource> MaterialResource::defaultMaterial = nullptr;
 
 MaterialResource::MaterialResource()
@@ -116,4 +116,4 @@ sigc::scoped_connection MaterialResource::connectComponentValChanged(
 			dirty.store(true);
 		}));
 }
-} // namespace mer::sdk
+} // namespace ke

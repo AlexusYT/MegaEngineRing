@@ -21,7 +21,7 @@
 #include "KwasarEngine/utils/UUID.h"
 #include "KwasarEngine/utils/ReportMessage.h"
 
-using namespace mer::sdk;
+using namespace ke;
 
 TEST(UUID_TESTS, ZeroUUIDToString) {
 	constexpr UUID uuid;
@@ -43,7 +43,7 @@ TEST(UUID_TESTS, RandomUUIDUpper) {
 }
 
 TEST(UUID_TESTS, ParseUUID) {
-	mer::sdk::ReportMessagePtr msg;
+	ke::ReportMessagePtr msg;
 	auto uuid = UUID::parse("A27C75DB-3886-17B2-F65A-C3B4D89D24F2", msg);
 	ASSERT_NE(uuid, nullptr) << (msg ? msg->getReport() : "");
 	EXPECT_EQ(uuid->toString(true), "A27C75DB-3886-17B2-F65A-C3B4D89D24F2");
@@ -56,7 +56,7 @@ TEST(UUID_TESTS, ParseUUID) {
 }
 
 TEST(UUID_TESTS, ParseUUIDNotMatch) {
-	mer::sdk::ReportMessagePtr msg;
+	ke::ReportMessagePtr msg;
 	auto uuid = UUID::parse("A27C75DB-3886-17B2-F65A-C3B4D89D24F2sdfsd", msg);
 	EXPECT_EQ(uuid, nullptr);
 	ASSERT_NE(msg, nullptr);

@@ -23,13 +23,13 @@
 #define UIPOPUP_H
 #include "UiBase.h"
 
-namespace mer::sdk {
+namespace ke {
 class UiPopup : public UiBase {
 public:
 	UiPopup(const std::string &pName) : UiBase(pName) {}
 
 	void render() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //UIPOPUP_H

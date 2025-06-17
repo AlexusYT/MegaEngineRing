@@ -23,10 +23,10 @@
 #define REPORTMESSAGEFWD_H
 #include <memory>
 
-namespace mer::sdk {
+namespace ke {
 class ReportMessage;
 
 using ReportMessagePtr = std::shared_ptr<ReportMessage>;
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //REPORTMESSAGEFWD_H

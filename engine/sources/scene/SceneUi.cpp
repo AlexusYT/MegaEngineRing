@@ -25,7 +25,7 @@
 #include "KwasarEngine/ui/UiWindow.h"
 #include "imgui.h"
 
-namespace mer::sdk {
+namespace ke {
 void SceneUi::beforeUiFrame() {}
 
 void SceneUi::updateUi() {
@@ -70,4 +70,4 @@ void SceneUi::onMouseButton(int pButton, int pAction, int pMods) {
 ReportMessagePtr SceneUi::onInitialize() { return Initializable::onInitialize(); }
 
 void SceneUi::onUninitialize() {}
-} // namespace mer::sdk
+} // namespace ke

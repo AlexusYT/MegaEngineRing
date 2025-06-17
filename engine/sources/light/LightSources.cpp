@@ -24,7 +24,7 @@
 #include "KwasarEngine/buffers/SSBO.h"
 #include "KwasarEngine/light/ILightInstance.h"
 
-namespace mer::sdk {
+namespace ke {
 LightSources::LightSources() : lightSsbo(std::make_shared<SSBO>()) { lightSsbo->setUsage(DYNAMIC_DRAW); }
 
 std::shared_ptr<LightSources> LightSources::create() { return std::shared_ptr < LightSources > (new LightSources()); }
@@ -54,4 +54,4 @@ void LightSources::removeLightInstance(const std::shared_ptr<ILightInstance> &pL
 	erase(lights, pLightInstance);
 	onInstanceDataChanged(pLightInstance.get());
 }
-} // namespace mer::sdk
+} // namespace ke

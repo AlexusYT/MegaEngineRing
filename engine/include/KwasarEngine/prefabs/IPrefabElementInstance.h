@@ -22,7 +22,7 @@
 #ifndef IPREFABELEMENTINSTANCE_H
 #define IPREFABELEMENTINSTANCE_H
 
-namespace mer::sdk {
+namespace ke {
 class PrefabElement;
 class PrefabInstance;
 
@@ -36,6 +36,6 @@ public:
 
 	virtual void setPrefabInstance(PrefabInstance* pPrefabInstance) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IPREFABELEMENTINSTANCE_H

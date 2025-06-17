@@ -23,7 +23,7 @@
 #define PREFABPROGRAM_H
 #include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
-namespace mer::sdk {
+namespace ke {
 class PrefabProgram : public ShaderProgram {
 	static std::shared_ptr<PrefabProgram> instance;
 
@@ -32,6 +32,6 @@ class PrefabProgram : public ShaderProgram {
 public:
 	static std::shared_ptr<PrefabProgram> getInstance();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PREFABPROGRAM_H

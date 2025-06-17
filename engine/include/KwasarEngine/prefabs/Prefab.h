@@ -32,7 +32,7 @@
 #include "PrefabInstance.h"
 #include "KwasarEngine/resources/materials/IMaterialResource.h"
 
-namespace mer::sdk {
+namespace ke {
 class ShaderProgram;
 class PrefabSsbo;
 class IMaterialResource;
@@ -111,6 +111,6 @@ public:
 
 private:
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PREFAB_H

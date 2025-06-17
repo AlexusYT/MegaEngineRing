@@ -39,7 +39,7 @@ std::shared_ptr<PresenterPrefabEditor> PresenterPrefabEditor::create(const std::
 
 void PresenterPrefabEditor::addMeshesFrom(const std::filesystem::path & /*pPath*/) {}
 
-void PresenterPrefabEditor::setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pPrefab) {
+void PresenterPrefabEditor::setSelectedPrefab(const std::shared_ptr<ke::Prefab> &pPrefab) {
 	model->setSelectedPrefab(pPrefab);
 }
 

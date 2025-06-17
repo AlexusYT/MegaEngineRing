@@ -23,7 +23,7 @@
 
 #include <epoxy/gl.h>
 
-namespace mer::sdk {
+namespace ke {
 void VertexBufferObjectImpl::bindVertexArray(uint32_t pVao, uint32_t pBindingIndex, uint32_t pOffest,
 											 int32_t pStride) const {
 	glVertexArrayVertexBuffer(pVao, pBindingIndex, name, pOffest, pStride);
@@ -33,4 +33,4 @@ void VertexBufferObjectImpl::bindVertexArray(uint32_t pVao, uint32_t pBindingInd
 	glVertexArrayVertexBuffer(pVao, pBindingIndex, name, pOffest,
 							  static_cast<GLsizei>(getElementSize() * getTypeComponentsCount()));
 }
-} // namespace mer::sdk
+} // namespace ke

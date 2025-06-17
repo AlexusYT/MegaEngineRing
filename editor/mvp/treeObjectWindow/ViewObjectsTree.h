@@ -25,10 +25,10 @@
 #include "mvp/IView.h"
 #include "mvp/editor/Editor.h"
 
-namespace mer::sdk {
+namespace ke {
 class Scene3D;
 class Node;
-} // namespace mer::sdk
+} // namespace ke
 
 namespace mer::editor::mvp {
 class IWidgetContext;
@@ -36,23 +36,23 @@ class IPresenterObjectsTree;
 
 class IViewObjectsTree : public IView {
 public:
-	virtual void setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void setSceneToRender(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 
-	virtual void markSelected(const std::vector<sdk::Node*> &pNodes, bool pSelected) = 0;
+	virtual void markSelected(const std::vector<ke::Node*> &pNodes, bool pSelected) = 0;
 
 	virtual void setPresenter(IPresenterObjectsTree* pPresenter) = 0;
 };
 
 class ViewObjectsTree : public IViewObjectsTree, public EditorTool {
 	std::shared_ptr<IWidgetContext> context;
-	std::shared_ptr<sdk::Scene3D> scene;
-	std::unordered_map<sdk::Node*, bool> selectedMap;
+	std::shared_ptr<ke::Scene3D> scene;
+	std::unordered_map<ke::Node*, bool> selectedMap;
 	sigc::scoped_connection sceneNodesChangedConnection;
 	IPresenterObjectsTree* presenter;
-	sdk::Node* selectedNodeForContext{};
-	sdk::Node* hoveredNode{};
+	ke::Node* selectedNodeForContext{};
+	ke::Node* hoveredNode{};
 	uint32_t contextMenuImguiId{};
-	sdk::Node* nodeToReparent{};
+	ke::Node* nodeToReparent{};
 
 public:
 	ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext);
@@ -66,11 +66,11 @@ public:
 	void onUpdate(bool pVisible) override;
 
 private:
-	void updateTreeLevel(const std::vector<sdk::Node*> &pNodes);
+	void updateTreeLevel(const std::vector<ke::Node*> &pNodes);
 
-	void setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pScene) override;
+	void setSceneToRender(const std::shared_ptr<ke::Scene3D> &pScene) override;
 
-	void markSelected(const std::vector<sdk::Node*> &pNodes, bool pSelected) override;
+	void markSelected(const std::vector<ke::Node*> &pNodes, bool pSelected) override;
 
 	void setPresenter(IPresenterObjectsTree* pPresenter) override { presenter = pPresenter; }
 };

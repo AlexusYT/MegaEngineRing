@@ -69,7 +69,7 @@ public:
 	std::shared_ptr<std::istream> GetInputStream(const std::string & /*pFilename*/) const override { return stream; }
 };
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<GltfModel> GltfModel::createFromStream(const std::shared_ptr<std::istream> &pStream,
 													   ReportMessagePtr &pErrorOut) {
 	auto model = std::shared_ptr<GltfModel>(new GltfModel());
@@ -293,4 +293,4 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 	}
 	return nullptr;
 }
-} // namespace mer::sdk
+} // namespace ke

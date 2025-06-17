@@ -127,7 +127,7 @@ void ViewSettingsWindow::updateChangedState() {
 
 void ViewSettingsWindow::applyChanges() {
 	for (auto &category: clonedCategories | std::views::values) { category.second->apply(category.first); }
-	if (auto msg = Settings::save()) { sdk::Logger::error(msg); }
+	if (auto msg = Settings::save()) { ke::Logger::error(msg); }
 	updateChangedState();
 }
 } // namespace mer::editor::mvp

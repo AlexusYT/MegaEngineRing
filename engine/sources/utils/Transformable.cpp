@@ -23,7 +23,7 @@
 
 #include "KwasarEngine/utils/Transformation.h"
 
-namespace mer::sdk {
+namespace ke {
 Transformable::Transformable()
 	: globalTransform(Transformation::create()), localTransform(Transformation::create()) {
 	localTransform->connectOnChanged([this](const glm::mat4 & /*pNewMatrix*/) {
@@ -42,4 +42,4 @@ void Transformable::updateTransform() {
 void Transformable::onLocalTransformChanged(const std::shared_ptr<Transformation> & /*pTransformation*/) {}
 
 void Transformable::onGlobalTransformChanged(const std::shared_ptr<Transformation> & /*pTransformation*/) {}
-} // namespace mer::sdk
+} // namespace ke

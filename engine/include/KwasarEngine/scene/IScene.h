@@ -26,17 +26,17 @@
 
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 enum class MouseButton;
 class ModifierKeys;
 enum class KeyboardKey;
-} // namespace mer::sdk
+} // namespace ke
 
 namespace mer::editor::mvp {
 class PresenterSceneEditor;
 } // namespace mer::editor::mvp
 
-namespace mer::sdk {
+namespace ke {
 class ResourceLoadResult;
 class IApplication;
 class ICamera;
@@ -52,7 +52,7 @@ public:
 
 	virtual void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) const = 0;
 
-	virtual sdk::ReportMessagePtr initScene() = 0;
+	virtual ke::ReportMessagePtr initScene() = 0;
 
 	virtual void deinitScene() = 0;
 
@@ -105,7 +105,7 @@ protected:
 };
 
 inline bool IScene::onMouseScroll(double /*pDx*/, double /*pDy*/) { return false; }
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //ISCENE_H

@@ -40,19 +40,19 @@
 namespace mer::editor::mvp {
 ViewPrefabEditor::ViewPrefabEditor(const std::shared_ptr<IWidgetContext> &pContext)
 	: UiWindow("PrefabEditor"), context(pContext) {
-	auto prefab = prefabs.emplace_back(sdk::Prefab::create(), false).first;
+	auto prefab = prefabs.emplace_back(ke::Prefab::create(), false).first;
 	prefab->setName("Prefab");
-	auto program = sdk::DefaultProgram::getInstance();
-	if (auto msg = program->initialize()) sdk::Logger::error(msg);
+	auto program = ke::DefaultProgram::getInstance();
+	if (auto msg = program->initialize()) ke::Logger::error(msg);
 	prefab->setShaderProgram(program);
 	prefab->initialize();
-	instance = sdk::PrefabInstance::create();
+	instance = ke::PrefabInstance::create();
 	prefab->addInstance(instance);
 	overlay = SceneOverlayElements::create();
 	overlay->initialize();
-	camera = sdk::OrbitCameraExtension::create();
+	camera = ke::OrbitCameraExtension::create();
 	camera->propertyDistance = 2.0f;
-	programBuffer = std::make_shared<sdk::ProgramWideShaderBuffer>();
+	programBuffer = std::make_shared<ke::ProgramWideShaderBuffer>();
 	camera->getPosition().connectEvent([this](const glm::vec3 &pPosition) { programBuffer->setCameraPos(pPosition); });
 	camera->getOnMatrixChanged().connect(
 		[this](const glm::mat4 &pMatrix) { programBuffer->setViewProjMatrix(pMatrix); });
@@ -161,7 +161,7 @@ std::string ViewPrefabEditor::getTitle() const { return trs("PrefabEditor"); }
 
 void ViewPrefabEditor::openView() {
 	//context->addWindow(this);
-	frameBuffer = std::make_shared<sdk::Framebuffer>();
+	frameBuffer = std::make_shared<ke::Framebuffer>();
 	frameBuffer->initialize();
 }
 
@@ -218,16 +218,16 @@ void ViewPrefabEditor::onKeyChanged(int pKey, int pScancode, int pAction, int pM
 	if (pAction == 1) return;
 	//std::filesystem::path path = "/home/alexus/Downloads/models/bathroom/scene.gltf";
 	std::filesystem::path path = "/home/alexus/Downloads/models/VertexColorTest.gltf";
-	sdk::ReportMessagePtr errorMsg;
-	gltfModel = sdk::GltfModel::createFromFile(path, errorMsg);
-	if (!gltfModel) { sdk::Logger::error(errorMsg); }
+	ke::ReportMessagePtr errorMsg;
+	gltfModel = ke::GltfModel::createFromFile(path, errorMsg);
+	if (!gltfModel) { ke::Logger::error(errorMsg); }
 
-	//if (auto msg = gltfModel->getDefaultScene()->initialize()) { sdk::Logger::error(msg); }
+	//if (auto msg = gltfModel->getDefaultScene()->initialize()) { ke::Logger::error(msg); }
 
 	UiWindow::onKeyChanged(pKey, pScancode, pAction, pMods);
 }
 
-void ViewPrefabEditor::updateTabBar(std::shared_ptr<sdk::Prefab> &pSelectedPrefab, int &pSelectedIndex) {
+void ViewPrefabEditor::updateTabBar(std::shared_ptr<ke::Prefab> &pSelectedPrefab, int &pSelectedIndex) {
 	if (!ImGui::BeginTabBar("MyTabBar", 0)) return;
 	int indexToRemove = -1;
 
@@ -253,17 +253,17 @@ void ViewPrefabEditor::updateTabBar(std::shared_ptr<sdk::Prefab> &pSelectedPrefa
 	if (indexToRemove > -1) { prefabs.erase(prefabs.begin() + indexToRemove); }
 }
 
-void ViewPrefabEditor::updateElements(const std::shared_ptr<sdk::Prefab> &pSelectedPrefab, size_t pPrefabIndex) {
+void ViewPrefabEditor::updateElements(const std::shared_ptr<ke::Prefab> &pSelectedPrefab, size_t pPrefabIndex) {
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (!ImGui::CollapsingHeader("Elements")) return;
-	static std::shared_ptr<sdk::PrefabElement> selectedElement{};
+	static std::shared_ptr<ke::PrefabElement> selectedElement{};
 	if (pSelectedPrefab->getElements().empty()) selectedElement.reset();
 
 	if (ImGui::Button("Add from file")) {
 		if (presenter) presenter->addMeshesFrom("/home/alexus/MegaEngineProjects/models/source/Pistol.obj");
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("+")) { pSelectedPrefab->addElement(sdk::MeshPrefabElement::create()); }
+	if (ImGui::Button("+")) { pSelectedPrefab->addElement(ke::MeshPrefabElement::create()); }
 	ImGui::SameLine();
 	ImGui::BeginDisabled(selectedElement == nullptr);
 	if (ImGui::Button("-")) { pSelectedPrefab->removeElement(selectedElement); }
@@ -296,7 +296,7 @@ void ViewPrefabEditor::updateElements(const std::shared_ptr<sdk::Prefab> &pSelec
 		selectedElement->setName(prefabName);
 		prefabs.at(pPrefabIndex).second = true;
 	}
-	/*if (auto meshElement = std::dynamic_pointer_cast<sdk::MeshPrefabElement>(selectedElement)) {
+	/*if (auto meshElement = std::dynamic_pointer_cast<ke::MeshPrefabElement>(selectedElement)) {
 		meshElement->getMesh()
 	}*/
 	bool visible = selectedElement->visible;

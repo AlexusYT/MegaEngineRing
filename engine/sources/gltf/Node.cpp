@@ -34,7 +34,7 @@
 #include "KwasarEngine/utils/Transformation.h"
 #include "KwasarEngine/utils/Logger.h"
 
-namespace mer::sdk {
+namespace ke {
 Node::Node(const Microsoft::glTF::Node &pNode)
 	: nodeAabb(nullptr, "AABB"), contentAabb(nullptr, "Geometry AABB") {
 	name = pNode.name;
@@ -184,4 +184,4 @@ void Node::updateNodeAabb() {
 	}
 	nodeAabb->setBounds(min, max);
 }
-} // namespace mer::sdk
+} // namespace ke

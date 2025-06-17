@@ -23,7 +23,7 @@
 
 #include <epoxy/gl.h>
 
-namespace mer::sdk {
+namespace ke {
 Framebuffer::Framebuffer() {}
 
 Framebuffer::~Framebuffer() { uninitialize(); }
@@ -93,4 +93,4 @@ void Framebuffer::onUninitialize() {
 	if (rbo)
 		glDeleteRenderbuffers(1, &rbo);
 }
-} // namespace mer::sdk
+} // namespace ke

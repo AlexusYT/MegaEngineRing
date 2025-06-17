@@ -24,7 +24,7 @@
 
 #include "KwasarEngine/utils/ReportMessage.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<UUID> UUID::parse(const std::string &pString, ReportMessagePtr &pError) {
 	//language=regexp
 	static std::regex regex(
@@ -56,4 +56,4 @@ std::shared_ptr<UUID> UUID::parse(const std::string &pString, ReportMessagePtr &
 		return nullptr;
 	}
 }
-} // namespace mer::sdk
+} // namespace ke

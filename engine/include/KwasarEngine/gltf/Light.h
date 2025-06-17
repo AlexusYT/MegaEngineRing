@@ -27,7 +27,7 @@
 #include <nlohmann/json_fwd.hpp>
 #include <sigc++/signal.h>
 
-namespace mer::sdk {
+namespace ke {
 enum class LightType { DIRECTIONAL, POINT, SPOT, LIGHT_TYPE_MAX };
 
 inline const char* light_type_array_str[3] = {"directional", "point", "spot"};
@@ -146,6 +146,6 @@ public:
 		pType->deserialize(pJson);
 	}
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //LIGHT_H

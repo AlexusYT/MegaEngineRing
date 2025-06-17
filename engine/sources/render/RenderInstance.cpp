@@ -23,6 +23,6 @@
 
 #include "KwasarEngine/render/IInstancedRender.h"
 
-namespace mer::sdk {
+namespace ke {
 void RenderInstance::notifyDataChanged() { if (instancedRender) instancedRender->onInstanceDataChanged(this); }
-} // namespace mer::sdk
+} // namespace ke

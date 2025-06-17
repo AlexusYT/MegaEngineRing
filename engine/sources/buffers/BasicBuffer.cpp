@@ -23,7 +23,7 @@
 
 #include <epoxy/gl.h>
 
-namespace mer::sdk {
+namespace ke {
 BasicBuffer::~BasicBuffer() { unintialize(); }
 
 void BasicBuffer::reallocate(int64_t pNewSize, const void* pNewData) {
@@ -43,4 +43,4 @@ void BasicBuffer::unintialize() {
 		name = 0;
 	}
 }
-} // namespace mer::sdk
+} // namespace ke

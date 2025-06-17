@@ -30,12 +30,12 @@ namespace std {
 struct type_index;
 }
 
-namespace mer::sdk {
+namespace ke {
 class Light;
 class MeshExtension;
 class Scene3D;
 class Node;
-} // namespace mer::sdk
+} // namespace ke
 
 namespace mer::editor::mvp {
 class IPresenterObjectProperties;
@@ -44,18 +44,18 @@ class IViewObjectProperties : public IView {
 public:
 	virtual void setPresenter(IPresenterObjectProperties* pPresenter) = 0;
 
-	virtual void setSelectedNode(sdk::Node* pSelectedNode) = 0;
+	virtual void setSelectedNode(ke::Node* pSelectedNode) = 0;
 
-	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void setScene(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 };
 
 class ViewObjectProperties : public IViewObjectProperties, public EditorTool {
-	static std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> & pExt)>>
+	static std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<ke::Extension> & pExt)>>
 	extRenderers;
 	std::shared_ptr<IWidgetContext> context;
 	IPresenterObjectProperties* presenter{};
-	sdk::Node* selectedNode{};
-	std::shared_ptr<sdk::Scene3D> scene{};
+	ke::Node* selectedNode{};
+	std::shared_ptr<ke::Scene3D> scene{};
 
 public:
 	ViewObjectProperties(const std::shared_ptr<IWidgetContext> &pContext);
@@ -64,9 +64,9 @@ public:
 
 	void setPresenter(IPresenterObjectProperties* pPresenter) override { presenter = pPresenter; }
 
-	void setSelectedNode(sdk::Node* pSelectedNode) override { selectedNode = pSelectedNode; }
+	void setSelectedNode(ke::Node* pSelectedNode) override { selectedNode = pSelectedNode; }
 
-	void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) override { scene = pScene; }
+	void setScene(const std::shared_ptr<ke::Scene3D> &pScene) override { scene = pScene; }
 
 	[[nodiscard]] std::string getTitle() const override { return trs("ObjectPropertiesTool"); }
 
@@ -77,14 +77,14 @@ private:
 
 	void drawTransformation();
 
-	ImGuiID drawMeshTab(const std::shared_ptr<sdk::MeshExtension> &pExt);
+	ImGuiID drawMeshTab(const std::shared_ptr<ke::MeshExtension> &pExt);
 
 	static bool confirmationMenuItem(const char* pLabel, const char* pShortcut = nullptr, float pTimeout = 0.5f,
 									 bool pSelected = false, bool pEnabled = true);
 
-	ImGuiID drawLightTab(const std::shared_ptr<sdk::LightExtension> &pExt);
+	ImGuiID drawLightTab(const std::shared_ptr<ke::LightExtension> &pExt);
 
-	void drawLightSourceSettings(const std::shared_ptr<sdk::Light> &pLight);
+	void drawLightSourceSettings(const std::shared_ptr<ke::Light> &pLight);
 
 	static void getSpeeds(float &pSpeed, const char*&pRoundFormat) {
 		pSpeed = 0.005f;

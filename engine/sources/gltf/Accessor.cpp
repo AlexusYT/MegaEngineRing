@@ -28,7 +28,7 @@
 #include "GLTFSDK/GLTF.h"
 #include "GLTFSDK/GLTFResourceReader.h"
 
-namespace mer::sdk {
+namespace ke {
 Accessor::Accessor(const Microsoft::glTF::Accessor &pGltf, const Microsoft::glTF::Document &pDocument,
 				   const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pResourceReader) {
 	if (pGltf.min.size() >= 3) {
@@ -113,4 +113,4 @@ void Accessor::recalcMinMaxSize() {
 	minSize = minSizeVec;
 	maxSize = maxSizeVec;
 }
-} // namespace mer::sdk
+} // namespace ke

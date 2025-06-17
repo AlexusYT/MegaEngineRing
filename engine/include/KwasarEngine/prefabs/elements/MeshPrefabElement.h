@@ -26,7 +26,7 @@
 #include "KwasarEngine/resources/models/IModel3DObject.h"
 #include "PrefabElement.h"
 
-namespace mer::sdk {
+namespace ke {
 class IModel3DObject;
 
 class MeshPrefabElement : public PrefabElement {
@@ -48,6 +48,6 @@ public:
 
 	void setMesh(const std::shared_ptr<IModel3DObject> &pMesh) { mesh = pMesh; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //MESHPREFABELEMENT_H

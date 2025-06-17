@@ -52,7 +52,7 @@ public:
 
 	static std::string parseDlError(const std::string &pMsg);
 
-	static mer::sdk::ReportMessagePtr decompressJpeg(unsigned char* pDataBuffer, uint64_t pDataSize,
+	static ke::ReportMessagePtr decompressJpeg(unsigned char* pDataBuffer, uint64_t pDataSize,
 													 std::vector<unsigned char> &pOutData, int* pWidthOut = nullptr,
 													 int* pHeightOut = nullptr) noexcept;
 };

@@ -21,8 +21,8 @@
 
 #include "KwasarEngine/resources/ResourceLoadResult.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<ResourceLoadResult> ResourceLoadResult::create() {
 	return std::shared_ptr<ResourceLoadResult>(new ResourceLoadResult());
 }
-} // namespace mer::sdk
+} // namespace ke

@@ -31,7 +31,7 @@
 #include "KwasarEngine/utils/Transformable.h"
 #include "KwasarEngine/utils/Property.h"
 
-namespace mer::sdk {
+namespace ke {
 class PrefabInstance;
 class PrefabElement;
 class IMaterialResource;
@@ -93,6 +93,6 @@ private:
 
 	void onMaterialChanged(const MaterialData &pData);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PREFABPARTINSTANCE_H

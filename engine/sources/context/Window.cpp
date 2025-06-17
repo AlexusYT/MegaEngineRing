@@ -32,7 +32,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
-namespace mer::sdk {
+namespace ke {
 Window::Window() {}
 
 Window::~Window() { if (native) glfwDestroyWindow(native); }
@@ -167,12 +167,12 @@ bool Window::isVisible() const { return glfwGetWindowAttrib(native, GLFW_VISIBLE
 
 void Window::setCloseRequest(const bool pState) const { if (native) glfwSetWindowShouldClose(native, pState); }
 
-sdk::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor) const {
+ke::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor) const {
 	if (native) return nullptr;
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, pMajor);
 	const char* errorMsg;
 	if (auto errorId = glfwGetError(&errorMsg); errorId != GLFW_NO_ERROR) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to set context version");
 		msg->setMessage("Function returns an error when setting major version");
 		msg->addInfoLine("Error num: {}", errorId);
@@ -183,7 +183,7 @@ sdk::ReportMessagePtr Window::setContextVersion(int pMajor, int pMinor) const {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, pMajor);
 
 	if (auto errorId = glfwGetError(&errorMsg); errorId != GLFW_NO_ERROR) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to set context version");
 		msg->setMessage("Function returns an error when setting minor version");
 		msg->addInfoLine("Error num: {}", errorId);
@@ -295,7 +295,7 @@ void Window::onMouseButton(int pButton, int pAction, int pMods) {
 	for (auto sceneUi: sceneUis) sceneUi->onMouseButton(pButton, pAction, pMods);
 }
 
-sdk::ReportMessagePtr Window::init() {
+ke::ReportMessagePtr Window::init() {
 	makeCurrent();
 	return nullptr;
 }
@@ -306,4 +306,4 @@ void Window::swapBuffers() const {
 	glfwSwapBuffers(native);
 	glfwPollEvents();
 }
-} // namespace mer::sdk
+} // namespace ke

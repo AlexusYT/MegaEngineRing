@@ -34,7 +34,7 @@
 #include "KwasarEngine/resources/models/Model3DLoader.h"
 #include "KwasarEngine/resources/models/Model3DResource.h"
 
-using namespace mer::sdk;
+using namespace ke;
 using ::testing::_;
 
 class LoadExecutorStub : public IResourceLoadExecutor {
@@ -68,7 +68,7 @@ const std::shared_ptr<ResourceLoadResult> & pResult)> &pSlot) override {
 	const std::shared_ptr<ILoadedResources> &getResources() override { return resources; }
 };
 
-class HiddenWindow : public mer::sdk::Window {
+class HiddenWindow : public ke::Window {
 public:
 	HiddenWindow() = default;
 };

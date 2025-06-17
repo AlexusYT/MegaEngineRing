@@ -23,7 +23,7 @@
 #define BUILTINPROGRAMREQUEST_H
 #include "KwasarEngine/resources/ResourceLoader.h"
 
-namespace mer::sdk {
+namespace ke {
 class ShaderProgramLoader : public ResourceLoader {
 public:
 	std::shared_ptr<IResource> createResource() override;
@@ -34,7 +34,7 @@ public:
 private:
 	std::string getFileExtension() override { return "enshader"; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //BUILTINPROGRAMREQUEST_H

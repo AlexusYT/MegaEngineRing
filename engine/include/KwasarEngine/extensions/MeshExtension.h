@@ -25,7 +25,7 @@
 #include "KwasarEngine/gltf/Mesh.h"
 #include "Extension.h"
 
-namespace mer::sdk {
+namespace ke {
 class Mesh;
 
 class MeshExtension : public Extension {
@@ -50,7 +50,7 @@ public:
 
 	void onNodeChanged(Node* pNode) override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //MODELRENDEREXTENSION_H

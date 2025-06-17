@@ -26,12 +26,12 @@
 #include "KwasarEngine/render/IRenderable.h"
 #include "KwasarEngine/render/Initializable.h"
 
-namespace mer::sdk {
+namespace ke {
 class LightInstance;
 class Light;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class Renderer;
 class Material;
 class Node;
@@ -100,6 +100,6 @@ protected:
 
 	void addToRootNodes(Node* pNode) { rootNodes.emplace_back(pNode); }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //SCENE3D_H

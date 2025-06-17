@@ -30,10 +30,10 @@
 namespace mer::editor::mvp {
 ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper)
 	: selectionHelper(pSelectionHelper) {
-	outlinePass = std::make_shared<sdk::RenderPass>();
-	selectionHelper->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+	outlinePass = std::make_shared<ke::RenderPass>();
+	selectionHelper->connectOnNodeSelectionChanged([this](const std::vector<ke::Node*> &pNodes, bool pSelected) {
 		for (auto node: pNodes) {
-			if (node->hasExtension<sdk::MeshExtension>()) {
+			if (node->hasExtension<ke::MeshExtension>()) {
 				if (pSelected) {
 					scene->getRenderer()->getMainRenderPass()->removeNode(node);
 					outlinePass->addNode(node);
@@ -46,7 +46,7 @@ ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper)
 	});
 }
 
-void ModelScenePreview::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
+void ModelScenePreview::setScene(const std::shared_ptr<ke::Scene3D> &pScene) {
 	if (pScene == scene) return;
 	if (scene) {
 		clearSelectedMeshes();
@@ -57,7 +57,7 @@ void ModelScenePreview::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
 	if (presenter) presenter->onSceneChanged();
 }
 
-void ModelScenePreview::addSelectedMeshNode(sdk::Node* pNode) { selectionHelper->addNode(pNode); }
+void ModelScenePreview::addSelectedMeshNode(ke::Node* pNode) { selectionHelper->addNode(pNode); }
 
 void ModelScenePreview::clearSelectedMeshes() { selectionHelper->clearSelection(); }
 } // namespace mer::editor::mvp

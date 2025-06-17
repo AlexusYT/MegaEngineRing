@@ -23,7 +23,7 @@
 #define MATERIALDATA_H
 #include <glm/vec4.hpp>
 
-namespace mer::sdk {
+namespace ke {
 struct MaterialData {
 	glm::vec4 baseColorMap{};
 	glm::vec4 normalMap{};
@@ -31,6 +31,6 @@ struct MaterialData {
 	glm::vec4 roughnessMap{};
 	glm::vec4 aoMap{};
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //MATERIALDATA_H

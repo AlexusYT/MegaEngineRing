@@ -24,7 +24,7 @@
 #include "KwasarEngine/ui/UiPopup.h"
 
 namespace mer::editor::mvp {
-class ConfirmationDialog : public sdk::UiPopup {
+class ConfirmationDialog : public ke::UiPopup {
 	std::string title;
 	std::string message;
 	std::vector<std::string> buttons;

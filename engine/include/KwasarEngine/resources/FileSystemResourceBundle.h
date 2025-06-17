@@ -26,7 +26,7 @@
 
 #include "IResourceBundle.h"
 
-namespace mer::sdk {
+namespace ke {
 class FileSystemResourceBundle : public IResourceBundle {
 	std::filesystem::path searchPath{};
 
@@ -41,6 +41,6 @@ public:
 
 	void listResources(std::vector<std::string> &pUris) const override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //FSRESOURCEBUNDLE_H

@@ -27,11 +27,11 @@
 #include "KwasarEngine/utils/PropertyBase.h"
 #include "PropertyNotifiable.h"
 
-namespace mer::sdk {
+namespace ke {
 class IPropertyNotifiable;
 }
 
-namespace mer::sdk {
+namespace ke {
 template <typename T>
 concept IsSharedPtr = requires { std::is_pointer_v<typename T::element_type>; };
 
@@ -203,6 +203,6 @@ public:
 
 	PropertyReadOnly<T> getReadOnly() { return PropertyReadOnly<T>(value, valueChanged, getter); }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PROPERTY_H

@@ -24,7 +24,7 @@
 #include "KwasarEngine/scene/Scene3D.h"
 #include "mvp/IPresenter.h"
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 }
 
@@ -34,9 +34,9 @@ class IModelObjectProperties;
 
 class IPresenterObjectProperties : public IPresenter {
 public:
-	virtual void onEditingNodeChanged(sdk::Node* pNode) = 0;
+	virtual void onEditingNodeChanged(ke::Node* pNode) = 0;
 
-	virtual void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void onSceneChanged(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 };
 
 class PresenterObjectProperties : public IPresenterObjectProperties {
@@ -51,9 +51,9 @@ public:
 
 	void stop() override;
 
-	void onEditingNodeChanged(sdk::Node* pNode) override;
+	void onEditingNodeChanged(ke::Node* pNode) override;
 
-	void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) override;
+	void onSceneChanged(const std::shared_ptr<ke::Scene3D> &pScene) override;
 
 	void addView(const std::shared_ptr<IView> &) override;
 

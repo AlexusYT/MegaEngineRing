@@ -30,7 +30,7 @@
 #include "KwasarEngine/scene/objects/SceneObject.h"
 #include "KwasarEngine/extensions/MainObjectExtension.h"
 
-namespace mer::sdk {
+namespace ke {
 void CameraKeyboardExtension::onKeyStateChanged(const KeyboardKey pKey, const bool pPressed,
 												const ModifierKeys & /*pMods*/) {
 	if (pKey == propertyForwardKey) fwdPressed = pPressed;
@@ -59,4 +59,4 @@ void CameraKeyboardExtension::onRender() {
 		propertyPosition = position;
 	}
 }
-} // namespace mer::sdk
+} // namespace ke

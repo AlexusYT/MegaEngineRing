@@ -146,7 +146,7 @@ void DownloadableModel::serialize(const nlohmann::json &pJson) {
 	catch (...) { expiresAt.reset(); }
 }
 
-std::shared_ptr<sdk::ReportMessage> DownloadableModel::download(std::atomic<float> &pProgress) {
+std::shared_ptr<ke::ReportMessage> DownloadableModel::download(std::atomic<float> &pProgress) {
 	if (auto msg = account->downloadModel(url, stream, pProgress)) {
 		//addReportInfo(msg);
 		return msg;
@@ -168,7 +168,7 @@ void DownloadLinks::serialize(const nlohmann::json &pJson) {
 	catch (...) { source.reset(); }
 }
 
-sdk::ReportMessagePtr Image::loadImage() {
+ke::ReportMessagePtr Image::loadImage() {
 	std::vector<unsigned char> jpegData;
 	if (auto msg = account->downloadImage(url, jpegData)) {
 		msg->addInfoLine("Address: {}", url);
@@ -264,13 +264,13 @@ void ModelSearchList::setAccount(SketchfabAccount* pAccount) {
 		user->setAccount(pAccount);
 	}
 	std::jthread thread([this] {
-		if (const auto msg = smallThumbnail->loadImage()) sdk::Logger::error(msg);
-		if (const auto msg = user->getSmallAvatar()->loadImage()) sdk::Logger::error(msg);
+		if (const auto msg = smallThumbnail->loadImage()) ke::Logger::error(msg);
+		if (const auto msg = user->getSmallAvatar()->loadImage()) ke::Logger::error(msg);
 	});
 	thread.detach();
 }
 
-std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<float> &pProgress) {
+std::shared_ptr<ke::ReportMessage> ModelSearchList::downloadLinks(std::atomic<float> &pProgress) {
 	std::string address = API_V3 "/models/" + uid + "/download";
 	nlohmann::json j;
 	if (auto msg = account->getRequest(address, "", pProgress, j)) {
@@ -279,7 +279,7 @@ std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<f
 	}
 
 	if (auto it = j.find("error"); it != j.end()) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to get download links");
 		msg->setMessage("Server returned an error");
 		addReportInfo(msg);
@@ -290,7 +290,7 @@ std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<f
 		return msg;
 	}
 	if (auto it = j.find("detail"); it != j.end()) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to get download links");
 		msg->setMessage("Server returned an error.");
 		//TODO renew an expired token
@@ -309,7 +309,7 @@ std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<f
 	}
 	catch (...) {
 		links.reset();
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to get download links");
 		msg->setMessage("Parsing error");
 		addReportInfo(msg);
@@ -317,18 +317,18 @@ std::shared_ptr<sdk::ReportMessage> ModelSearchList::downloadLinks(std::atomic<f
 		msg->addInfoLine("Response: {}", j.dump(2));
 		return msg;
 	}
-	//sdk::Logger::out("{}", j.dump(2));
+	//ke::Logger::out("{}", j.dump(2));
 
 	return nullptr;
 }
 
-void ModelSearchList::addReportInfo(const sdk::ReportMessagePtr &pMsg) const {
+void ModelSearchList::addReportInfo(const ke::ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Model UID: {}", uid);
 	pMsg->addInfoLine("Model name: {}", name);
 	pMsg->addInfoLine("Model viewer url: {}", viewerUrl);
 }
 
-void SketchfabSearch::next(const std::function<void(const sdk::ReportMessagePtr &pError)> &pCallback) {
+void SketchfabSearch::next(const std::function<void(const ke::ReportMessagePtr &pError)> &pCallback) {
 	{
 		std::lock_guard lock(loadingInProgressMutex);
 		if (loadingInProgress) return;
@@ -347,7 +347,7 @@ void SketchfabSearch::next(const std::function<void(const sdk::ReportMessagePtr 
 			return;
 		}
 		if (auto it = j.find("error"); it != j.end()) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Search Error");
 			msg->setMessage("Server returned an error");
 			msg->addInfoLine("Address: {}", address);
@@ -359,7 +359,7 @@ void SketchfabSearch::next(const std::function<void(const sdk::ReportMessagePtr 
 			loadingInProgress = false;
 			return;
 		}
-		//sdk::Logger::out("{}", j.dump(2));
+		//ke::Logger::out("{}", j.dump(2));
 		//j.at("next")
 		std::vector<std::shared_ptr<ModelSearchList>> searchList;
 		/*for (auto result: j.at("results")) {

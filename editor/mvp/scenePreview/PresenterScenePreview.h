@@ -23,16 +23,16 @@
 #define PRESENTERSCENEPREVIEW_H
 #include "IPresenterScenePreview.h"
 
-namespace mer::sdk {
+namespace ke {
 class RenderPass;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class BoundingVolumeProgram;
 class VolumeAabb;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 }
 
@@ -44,12 +44,12 @@ class PresenterScenePreview : public IPresenterScenePreview {
 protected:
 	std::shared_ptr<IViewScenePreview> view;
 	std::shared_ptr<IModelScenePreview> model;
-	std::shared_ptr<sdk::VolumeAabb> test;
-	sdk::Node* hoveredMeshNode{};
-	std::shared_ptr<sdk::BoundingVolumeProgram> boundingProgram{};
+	std::shared_ptr<ke::VolumeAabb> test;
+	ke::Node* hoveredMeshNode{};
+	std::shared_ptr<ke::BoundingVolumeProgram> boundingProgram{};
 
 	bool movingNode{};
-	std::unordered_map<sdk::Node*, glm::vec3> startPosForNodes{};
+	std::unordered_map<ke::Node*, glm::vec3> startPosForNodes{};
 	std::optional<glm::dvec2> lastCursorPosMove{};
 
 	PresenterScenePreview(const std::shared_ptr<IViewScenePreview> &pView,

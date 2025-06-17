@@ -25,7 +25,7 @@
 #include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/editor/Editor.h"
 
-namespace mer::sdk {
+namespace ke {
 class Scene3D;
 }
 
@@ -44,7 +44,7 @@ class SceneEditor : public Editor {
 	std::shared_ptr<EditorTool> propertiesViewTool;
 	std::shared_ptr<NodeSelectionHelper> selection;
 
-	std::shared_ptr<sdk::Scene3D> scene3D;
+	std::shared_ptr<ke::Scene3D> scene3D;
 
 public:
 	explicit SceneEditor(const std::string &pName);

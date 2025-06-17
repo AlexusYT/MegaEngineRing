@@ -25,11 +25,11 @@
 #include "UiBase.h"
 #include "imgui.h"
 
-namespace mer::sdk {
+namespace ke {
 class UiPopup;
 }
 
-namespace mer::sdk {
+namespace ke {
 class UiWindow : public UiBase {
 	std::vector<std::shared_ptr<UiPopup>> popups;
 
@@ -53,6 +53,6 @@ public:
 
 	virtual void onMouseButton(int pButton, int pAction, int pMods);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //UIWINDOW_H

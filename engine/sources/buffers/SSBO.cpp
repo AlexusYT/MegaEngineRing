@@ -24,7 +24,7 @@
 
 #include <epoxy/gl.h>
 
-namespace mer::sdk {
+namespace ke {
 void SsboImpl::bindBufferBase(const uint32_t pBinding) const {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, pBinding, name);
 }
@@ -64,4 +64,4 @@ void SSBO::reallocate(int64_t pNewSize, const void* pNewData) {
 	glCreateBuffers(1, &name);
 	setData(pNewData, pNewSize, usage);
 }
-} // namespace mer::sdk
+} // namespace ke

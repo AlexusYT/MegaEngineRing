@@ -27,7 +27,7 @@
 
 #include "IApplicationSettings.h"
 
-namespace mer::sdk {
+namespace ke {
 class DefaultApplicationSettings : public IApplicationSettings {
 	/**
 	 * @brief The application name. Used in paths.
@@ -53,13 +53,13 @@ public:
 	DefaultApplicationSettings();
 
 	//TODO make replacing of the environment variables
-	sdk::ReportMessagePtr init() override;
+	ke::ReportMessagePtr init() override;
 
 	[[nodiscard]] const Property<std::string> &getLogsDirectory() const override { return logsDirectory; }
 
 	void setLogsDirectory(const std::string &pLogsDirectory) override {
 		logsDirectory = pLogsDirectory;
-		sdk::Logger::info(pLogsDirectory);
+		ke::Logger::info(pLogsDirectory);
 	}
 
 	[[nodiscard]] Property<std::string> &getApplicationName() override { return applicationName; }
@@ -84,6 +84,6 @@ private:
 		std::forma
 	}*/
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //DEFAULTAPPLICATIONSETTINGS_H

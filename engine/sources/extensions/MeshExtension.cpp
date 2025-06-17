@@ -29,7 +29,7 @@
 #include "KwasarEngine/scene/Scene3D.h"
 #include "KwasarEngine/utils/Transformation.h"
 
-namespace mer::sdk {
+namespace ke {
 MeshExtension::MeshExtension() : mesh(this, "Mesh") {}
 
 MeshExtension::~MeshExtension() {}
@@ -100,4 +100,4 @@ void MeshExtension::onNodeChanged(Node* pOldNode) {
 		});
 	}));
 }
-} // namespace mer::sdk
+} // namespace ke

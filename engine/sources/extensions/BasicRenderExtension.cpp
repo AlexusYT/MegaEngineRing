@@ -28,7 +28,7 @@
 #include "KwasarEngine/scene/Scene.h"
 #include "KwasarEngine/scene/objects/SceneObject.h"
 
-namespace mer::sdk {
+namespace ke {
 ReportMessagePtr BasicRenderExtension::onInit() {
 	/*enqueueResourceLoading(
 		BuiltInProgramRequest::getDefaultProgram(),
@@ -72,4 +72,4 @@ void BasicRenderExtension::onRender() {
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glBindVertexArray(0);
 }
-} // namespace mer::sdk
+} // namespace ke

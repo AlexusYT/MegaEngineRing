@@ -25,7 +25,7 @@
 
 #include "KwasarEngine/utils/IReportable.h"
 
-namespace mer::sdk {
+namespace ke {
 class UUID;
 enum class ResourceType;
 
@@ -52,6 +52,6 @@ public:
 
 	virtual void setIncomplete(bool pIncomplete) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IRESOURCE_H

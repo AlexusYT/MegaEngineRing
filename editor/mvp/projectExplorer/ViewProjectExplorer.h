@@ -31,7 +31,7 @@ namespace mer::editor::mvp {
 class ConfirmationDialog;
 class ProjectExplorerElement;
 
-class ViewProjectExplorer : public IViewProjectExplorer, public sdk::UiWindow {
+class ViewProjectExplorer : public IViewProjectExplorer, public ke::UiWindow {
 	IPresenterProjectExplorer* presenter{};
 	std::shared_ptr<IWidgetContext> context;
 	std::vector<std::shared_ptr<ProjectExplorerElement>> array;

@@ -27,7 +27,7 @@
 #include "KwasarEngine/resources/materials/MaterialResource.h"
 #include "KwasarEngine/utils/Transformation.h"
 
-namespace mer::sdk {
+namespace ke {
 PrefabElementInstance::PrefabElementInstance()
 	: data(nullptr, ""), visible(nullptr, ""), material(nullptr, "") {
 	visible = true;
@@ -65,4 +65,4 @@ void PrefabElementInstance::onMaterialChanged(const MaterialData &pData) {
 	data->material = pData;
 	data.notifyChanged();
 }
-} // namespace mer::sdk
+} // namespace ke

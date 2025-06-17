@@ -23,7 +23,7 @@
 
 #include "KwasarEngine/resources/models/IModel3DObject.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<Model3DResource> Model3DResource::create() {
 	return std::shared_ptr<Model3DResource>(new Model3DResource());
 }
@@ -54,4 +54,4 @@ std::shared_ptr<IModel3DObject> Model3DResource::getModelObject(const std::strin
 	if (iter == modelObjects.end()) return nullptr;
 	return iter->second;
 }
-} // namespace mer::sdk
+} // namespace ke

@@ -40,7 +40,7 @@ public:
 	virtual void openPopup() = 0;
 };
 
-class ViewSettingsWindow : public IViewSettingsWindow, public sdk::UiPopup {
+class ViewSettingsWindow : public IViewSettingsWindow, public ke::UiPopup {
 	IPresenterSettingsWindow* presenter{};
 	std::shared_ptr<IWidgetContext> context{};
 	std::shared_ptr<SettingsCategory> selectedCategory{};

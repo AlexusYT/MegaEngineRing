@@ -22,7 +22,7 @@
 #ifndef TEXTURE2DTYPE_H
 #define TEXTURE2DTYPE_H
 
-namespace mer::sdk {
+namespace ke {
 enum class Texture2DType {
 	UNDEFINED                   = 0,
 	UNSIGNED_BYTE               = 0x1401,
@@ -71,6 +71,6 @@ inline const char* to_string(const Texture2DType pE) {
 		default: return "unknown";
 	}
 }
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TEXTURE2DTYPE_H

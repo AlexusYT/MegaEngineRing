@@ -22,7 +22,7 @@
 #ifndef IRESOURCELOADERS_H
 #define IRESOURCELOADERS_H
 
-namespace mer::sdk {
+namespace ke {
 class IResourceLoader;
 
 class IResourceLoaders {
@@ -35,6 +35,6 @@ public:
 
 	virtual void initLoaders() = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IRESOURCELOADERS_H

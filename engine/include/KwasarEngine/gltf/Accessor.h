@@ -26,7 +26,7 @@
 #include "KwasarEngine/render/Initializable.h"
 #include "GLTFSDK/GLTF.h"
 
-namespace mer::sdk {
+namespace ke {
 class BufferView;
 }
 
@@ -36,7 +36,7 @@ class Document;
 struct Accessor;
 } // namespace Microsoft::glTF
 
-namespace mer::sdk {
+namespace ke {
 class Accessor {
 	Microsoft::glTF::ComponentType componentType = Microsoft::glTF::COMPONENT_UNKNOWN;
 	Microsoft::glTF::AccessorType type = Microsoft::glTF::TYPE_UNKNOWN;
@@ -152,6 +152,6 @@ public:
 protected:
 	void recalcMinMaxSize();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //ACCESSOR_H

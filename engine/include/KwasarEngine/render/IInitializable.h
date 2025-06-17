@@ -23,7 +23,7 @@
 #define IINITIALIZABLE_H
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class IInitializable {
 public:
 	virtual ~IInitializable() = default;
@@ -36,6 +36,6 @@ public:
 
 	virtual void setInited(bool pInited) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IINITIALIZABLE_H

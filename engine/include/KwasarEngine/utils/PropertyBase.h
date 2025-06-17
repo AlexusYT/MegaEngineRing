@@ -23,7 +23,7 @@
 #define EXTENSIONPROPERTYBASE_H
 #include <string>
 
-namespace mer::sdk {
+namespace ke {
 class IPropertyProvider;
 
 class PropertyBase {
@@ -51,7 +51,7 @@ public:
 	 */
 	virtual void notifyChanged();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //EXTENSIONPROPERTYBASE_H

@@ -29,7 +29,7 @@
 #include "KwasarEngine/utils/Property.h"
 #include "ITextureResource.h"
 
-namespace mer::sdk {
+namespace ke {
 class TextureResource : public ITextureResource, public Resource {
 	uint32_t id{};
 	void* data{};
@@ -99,6 +99,6 @@ public:
 private:
 	static glm::vec4 handleToVec(uint64_t pHandle);
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TEXTURERESOURCE_H

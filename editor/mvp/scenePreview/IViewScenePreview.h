@@ -23,7 +23,7 @@
 #define IVIEWSCENEPREVIEW_H
 #include "mvp/IView.h"
 
-namespace mer::sdk {
+namespace ke {
 class OrbitCameraExtension;
 }
 
@@ -36,7 +36,7 @@ public:
 
 	virtual void setPresenter(IPresenterScenePreview* pPresenter) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::OrbitCameraExtension> &getCamera() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::OrbitCameraExtension> &getCamera() const = 0;
 
 	[[nodiscard]] virtual const glm::vec2 &getMousePos() const = 0;
 

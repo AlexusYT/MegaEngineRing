@@ -27,7 +27,7 @@
 #include "KwasarEngine/utils/ModifierKeys.h"
 #include "ResourcesWindow.h"
 
-namespace mer::sdk {
+namespace ke {
 MainWindowWindow() {
 	resourcesWindow = ResourcesWindow::create();
 	resourcesWindow->setVisible(false);
@@ -73,5 +73,5 @@ void MainWindow::onKeyChanged(int /*pKey*/, int pScancode, const int pAction, co
 		currentScene->onKeyChanged(static_cast<KeyboardKey>(pScancode), pAction != GLFW_RELEASE,
 								   ModifierKeys(static_cast<uint8_t>(pMods)));
 }
-} // namespace mer::sdk
+} // namespace ke
 #endif

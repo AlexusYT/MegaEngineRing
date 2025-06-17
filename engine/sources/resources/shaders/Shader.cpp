@@ -26,7 +26,7 @@
 
 #include "KwasarEngine/utils/ReportMessage.h"
 
-namespace mer::sdk {
+namespace ke {
 Shader::Shader(const ShaderTypeEnum pType) : type(pType) {}
 
 Shader::~Shader() { Shader::uninitialize(); }
@@ -142,4 +142,4 @@ void Shader::addReportInfo(const ReportMessagePtr &pMsg) const {
 	pMsg->addInfoLine("Shader type: {}", to_string(type));
 	pMsg->addInfoLine("Is compiled: {}", getCompileStatus());
 }
-} // namespace mer::sdk
+} // namespace ke

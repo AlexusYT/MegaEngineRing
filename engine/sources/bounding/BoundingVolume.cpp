@@ -23,7 +23,7 @@
 
 #include <epoxy/gl.h>
 
-namespace mer::sdk {
+namespace ke {
 void BoundingVolume::render() {
 	if (!isInited()) return;
 	if (shouldUpdateIndices) {
@@ -82,4 +82,4 @@ void BoundingVolume::onUninitialize() {
 		vao = 0;
 	}
 }
-} // namespace mer::sdk
+} // namespace ke

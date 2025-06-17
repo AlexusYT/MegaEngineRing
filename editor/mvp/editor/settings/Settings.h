@@ -40,11 +40,11 @@ public:
 
 	static void setSettingsPath(const std::filesystem::path &pPath);
 
-	static sdk::ReportMessagePtr load();
+	static ke::ReportMessagePtr load();
 
 	static void loadDefaults();
 
-	static sdk::ReportMessagePtr save();
+	static ke::ReportMessagePtr save();
 
 	static std::shared_ptr<OtherCategory> getOther() { return getCategory<OtherCategory>(); }
 

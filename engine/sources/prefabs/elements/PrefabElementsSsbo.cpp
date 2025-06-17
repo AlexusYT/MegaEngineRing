@@ -28,7 +28,7 @@
 #include "KwasarEngine/prefabs/elements/PrefabElement.h"
 #include "KwasarEngine/prefabs/elements/PrefabElementInstance.h"
 
-namespace mer::sdk {
+namespace ke {
 PrefabElementsSsbo::PrefabElementsSsbo() {}
 
 PrefabElementsSsbo::~PrefabElementsSsbo() { if (ssboData) free(ssboData); }
@@ -98,4 +98,4 @@ void PrefabElementsSsbo::onDataChanged() {
 
 	dirty = true;
 }
-} // namespace mer::sdk
+} // namespace ke

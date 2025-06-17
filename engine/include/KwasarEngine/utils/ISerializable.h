@@ -23,7 +23,7 @@
 #define ISERIALIZABLE_H
 #include <nlohmann/json_fwd.hpp>
 
-namespace mer::sdk {
+namespace ke {
 class Extension;
 
 class ISerializable {
@@ -34,6 +34,6 @@ public:
 
 	virtual void deserialize(const nlohmann::json &pJson, Extension* pExtension) = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //ISERIALIZABLE_H

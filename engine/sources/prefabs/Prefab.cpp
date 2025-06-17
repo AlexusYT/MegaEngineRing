@@ -33,7 +33,7 @@
 #include "KwasarEngine/resources/materials/IMaterialResource.h"
 #include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
-namespace mer::sdk {
+namespace ke {
 Prefab::Prefab()
 	: name("UnnamedPrefab"),
 	  uuid(UUID::newInstance()),
@@ -219,4 +219,4 @@ void Prefab::onUninitialize() {
 	prefabElementsSsbo.reset();
 	prefabSsbo.reset();
 }
-} // namespace mer::sdk
+} // namespace ke

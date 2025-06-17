@@ -26,7 +26,7 @@
 #include "KwasarEngine/gltf/Texture.h"
 #include "GLTFSDK/GLTF.h"
 
-namespace mer::sdk {
+namespace ke {
 Material::Material(const Microsoft::glTF::Material &pMaterial,
 				   const std::unordered_map<Microsoft::glTF::TextureType, std::shared_ptr<Texture>> &pUsedTextures)
 	: usedTextures(pUsedTextures) {
@@ -96,4 +96,4 @@ glm::vec2 Material::handleToVec(const uint64_t pHandle) {
 	convertedHandle.y = static_cast<unsigned>(pHandle >> 32) & 0xFFFFFFFF;
 	return glm::uintBitsToFloat(convertedHandle);
 }
-} // namespace mer::sdk
+} // namespace ke

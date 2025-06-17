@@ -25,7 +25,7 @@
 #include "KwasarEngine/extensions/ExtensionRegistry.h"
 #include "KwasarEngine/extensions/cameras/CameraExtension.h"
 
-using namespace mer::sdk;
+using namespace ke;
 
 //TODO Tests
 class CameraExtensionTestsFixture : public testing::Test {

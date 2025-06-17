@@ -26,13 +26,13 @@
 
 #include "KwasarEngine/utils/PropertyReadOnly.h"
 
-namespace mer::sdk {
+namespace ke {
 class IMaterialComponent {
 public:
 	virtual ~IMaterialComponent() = default;
 
 	virtual PropertyReadOnly<glm::vec4> getComponentValueProperty() = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IMATERIALCOMPONENT_H

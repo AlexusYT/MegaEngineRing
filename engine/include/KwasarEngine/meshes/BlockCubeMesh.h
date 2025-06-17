@@ -23,7 +23,7 @@
 #define BLOCKCUBEMESH_H
 #include "KwasarEngine/gltf/Mesh.h"
 
-namespace mer::sdk {
+namespace ke {
 class BlockCubeMesh : public Mesh {
 public:
 	BlockCubeMesh();

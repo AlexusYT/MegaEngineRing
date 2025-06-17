@@ -26,7 +26,7 @@
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/polar_coordinates.hpp>
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<Transformation> Transformation::clone() const {
 	auto other = create();
 	other->modelMatrix = this->modelMatrix;
@@ -60,4 +60,4 @@ void Transformation::calculateModelMatrix() {
 	modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
 	onChanged(modelMatrix);
 }
-} // namespace mer::sdk
+} // namespace ke

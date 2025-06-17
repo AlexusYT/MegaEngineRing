@@ -23,7 +23,7 @@
 #define IRESOURCEBUNDLE_H
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 
-namespace mer::sdk {
+namespace ke {
 class IResourceBundle {
 public:
 	virtual ~IResourceBundle() = default;
@@ -33,6 +33,6 @@ public:
 
 	virtual void listResources(std::vector<std::string> &pUris) const = 0;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //IRESOURCEBUNDLE_H

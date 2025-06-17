@@ -56,10 +56,10 @@ void ViewScenePreview::customRender() {
 	zoom = (zoom - targetZoom) * 0.5f;
 	camera->propertyDistance = std::pow(-zoom, 1.5f);
 
-	sdk::DefaultProgram::getInstance()->use();
+	ke::DefaultProgram::getInstance()->use();
 	//camera->propertyDistance = targetZoom;
 	programBuffer->bindBufferBase(0);
-	programBuffer->setMode(sdk::RenderPassMode::REGULAR);
+	programBuffer->setMode(ke::RenderPassMode::REGULAR);
 	programBuffer->update();
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -68,11 +68,11 @@ void ViewScenePreview::customRender() {
 	glBindVertexArray(0);
 	glStencilMask(0x00);
 	overlay->render();
-	sdk::DefaultProgram::getInstance()->use();
+	ke::DefaultProgram::getInstance()->use();
 	if (presenter) presenter->renderScene();
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glDisable(GL_DEPTH_TEST);
-	programBuffer->setMode(sdk::RenderPassMode::OUTLINE);
+	programBuffer->setMode(ke::RenderPassMode::OUTLINE);
 	programBuffer->update();
 	if (presenter) presenter->renderSelected(true);
 	glStencilMask(0xFF);
@@ -122,13 +122,13 @@ void ViewScenePreview::onUpdate(bool pVisible) {
 
 void ViewScenePreview::openView() {
 	context->add(this);
-	framebuffer = std::make_shared<sdk::Framebuffer>();
+	framebuffer = std::make_shared<ke::Framebuffer>();
 	framebuffer->initialize();
 	overlay = SceneOverlayElements::create();
 	overlay->initialize();
-	camera = sdk::OrbitCameraExtension::create();
+	camera = ke::OrbitCameraExtension::create();
 	camera->propertyAngle = {-43.5f, -20.0f};
-	programBuffer = std::make_shared<sdk::ProgramWideShaderBuffer>();
+	programBuffer = std::make_shared<ke::ProgramWideShaderBuffer>();
 	camera->getPosition().connectEvent([this](const glm::vec3 &pPosition) { programBuffer->setCameraPos(pPosition); });
 	camera->getOnMatrixChanged().connect(
 		[this](const glm::mat4 &pMatrix) { programBuffer->setViewProjMatrix(pMatrix); });
@@ -157,7 +157,7 @@ void ViewScenePreview::onCursorPosChanged(double pX, double pY) {
 		//glm::vec3 cameraFwd1 = glm::cross(cameraDirection, cameraFwd);
 		camera->propertyTargetPosition = lastTargetPos - cameraRight * delta.x + cameraUp * delta.y;
 		/*glm::vec2 angle = camera->propertyAngle;
-		sdk::Logger::out("{} {}", angle.x, angle.y);
+		ke::Logger::out("{} {}", angle.x, angle.y);
 		const float angleYRad = glm::radians(angle.y);
 		const float angleYRight = angleYRad - 3.14f / 2.0f;
 		const glm::vec3 right =

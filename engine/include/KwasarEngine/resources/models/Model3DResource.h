@@ -29,7 +29,7 @@
 #include "KwasarEngine/resources/ResourceType.h"
 #include "IModel3DResource.h"
 
-namespace mer::sdk {
+namespace ke {
 class IModel3DObject;
 class IRenderInstance;
 
@@ -65,6 +65,6 @@ public:
 
 	ResourceType getResourceType() override { return ResourceType::MODEL; }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //MODEL3DRESOURCE_H

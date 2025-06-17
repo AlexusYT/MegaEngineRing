@@ -24,7 +24,7 @@
 #include "KwasarEngine/utils/UUID.h"
 #include "KwasarEngine/resources/IResource.h"
 
-namespace mer::sdk {
+namespace ke {
 ReportMessagePtr ResourceLoader::preload(IResourceLoadExecutor* /*pResourcesContext*/,
 										 const std::shared_ptr<std::istream> &pStream,
 										 const std::shared_ptr<IResource> &pResource) {
@@ -46,4 +46,4 @@ std::shared_ptr<UUID> ResourceLoader::readUuid(const std::shared_ptr<std::istrea
 	pStream->read(reinterpret_cast<std::istream::char_type*>(&*uuid), sizeof(*uuid));
 	return uuid;
 }
-} // namespace mer::sdk
+} // namespace ke

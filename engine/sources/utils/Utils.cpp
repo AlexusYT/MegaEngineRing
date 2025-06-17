@@ -57,12 +57,12 @@ std::string Utils::parseDlError(const std::string &pMsg) {
 	return pMsg;
 }
 
-mer::sdk::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, const uint64_t pDataSize,
+ke::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, const uint64_t pDataSize,
 												 std::vector<unsigned char> &pOutData, int* pWidthOut,
 												 int* pHeightOut) noexcept {
 	tjhandle decompressor = tjInitDecompress();
 	if (!decompressor) {
-		auto msg = mer::sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Image loading failed");
 		msg->setMessage("JPEG Decompressor init failed");
 		msg->addInfoLine("Turbo-JPEG error: {} ", tjGetErrorStr());
@@ -73,7 +73,7 @@ mer::sdk::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, con
 	int height;
 	if (tjDecompressHeader(decompressor, pDataBuffer, static_cast<unsigned long>(pDataSize), &width, &height) == -1) {
 		pOutData.clear();
-		auto msg = mer::sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Image loading failed");
 		msg->setMessage("JPEG header decompressing failed");
 		msg->addInfoLine("Turbo-JPEG error: {} ", tjGetErrorStr());
@@ -88,7 +88,7 @@ mer::sdk::ReportMessagePtr Utils::decompressJpeg(unsigned char* pDataBuffer, con
 					  height, TJPF_RGB,
 					  TJFLAG_FASTDCT) == -1) {
 		pOutData.clear();
-		auto msg = mer::sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Image loading failed");
 		msg->setMessage("JPEG Decompressing failed");
 		msg->addInfoLine("Turbo-JPEG error: {} ", tjGetErrorStr());

@@ -42,12 +42,12 @@
 #include "project/Project.h"
 
 namespace mer::editor::ui {
-class EditorWindow : public sdk::Window {
+class EditorWindow : public ke::Window {
 public:
 	explicit EditorWindow() { glfwWindowHint(GLFW_SAMPLES, 4); }
 
 protected:
-	sdk::ReportMessagePtr init() override {
+	ke::ReportMessagePtr init() override {
 		auto mainUi = std::make_shared<mvp::EditorUi>();
 
 		mainUi->addEditor(std::make_shared<mvp::OnlineImportWorkspace>());
@@ -70,7 +70,7 @@ protected:
 int GameEngine::run(const int pArgc, char* pArgv[]) {
 	Globals::init();
 	mvp::Settings::init();
-	auto application = sdk::Application::create();
+	auto application = ke::Application::create();
 
 	application->initEngine();
 
@@ -79,25 +79,25 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 
 	if (std::filesystem::exists(settingsPath)) {
 		if (auto msg = mvp::Settings::load()) {
-			sdk::Logger::error(msg);
-			sdk::Logger::error("Using default settings as a fallback...");
+			ke::Logger::error(msg);
+			ke::Logger::error("Using default settings as a fallback...");
 			mvp::Settings::loadDefaults();
 		} else
-			sdk::Logger::info("Settings are loaded successfully");
+			ke::Logger::info("Settings are loaded successfully");
 	} else {
-		sdk::Logger::info("Settings file does not exists. Creating with defaults...");
+		ke::Logger::info("Settings file does not exists. Creating with defaults...");
 		mvp::Settings::loadDefaults();
-		if (auto msg = mvp::Settings::save()) sdk::Logger::error(msg);
+		if (auto msg = mvp::Settings::save()) ke::Logger::error(msg);
 	}
 	mvp::I18n::init();
 
 
 	if (auto ret = curl_global_init(CURL_GLOBAL_DEFAULT); ret != CURLE_OK) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to initialize CURL");
 		msg->setMessage("Function curl_global_init returned an error");
 		msg->addInfoLine("Error: {}", curl_easy_strerror(ret));
-		sdk::Logger::error(msg);
+		ke::Logger::error(msg);
 		return 1;
 	}
 

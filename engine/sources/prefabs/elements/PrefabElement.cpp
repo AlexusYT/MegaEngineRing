@@ -26,7 +26,7 @@
 #include "KwasarEngine/resources/materials/IMaterialResource.h"
 #include "KwasarEngine/utils/UUID.h"
 
-namespace mer::sdk {
+namespace ke {
 PrefabElement::PrefabElement(const std::string &pName)
 	: uuid(UUID::newInstance()), name(pName), visible(nullptr, ""), material(nullptr, "") {
 	visible = true;
@@ -61,4 +61,4 @@ void PrefabElement::onParentMaterialChanged(const std::shared_ptr<IMaterialResou
 	if (*material) return;
 	for (auto instance: instances) { instance->onParentMaterialChanged(pMaterial); }
 }
-} // namespace mer::sdk
+} // namespace ke

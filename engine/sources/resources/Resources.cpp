@@ -21,4 +21,4 @@
 
 #include "KwasarEngine/resources/Resources.h"
 
-namespace mer::sdk {} // namespace mer::sdk
+namespace ke {} // namespace ke

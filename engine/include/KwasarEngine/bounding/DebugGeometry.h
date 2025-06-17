@@ -25,7 +25,7 @@
 
 #include "BoundingVolume.h"
 
-class DebugGeometry : public mer::sdk::BoundingVolume {
+class DebugGeometry : public ke::BoundingVolume {
 	std::vector<uint16_t> indices;
 	std::vector<float> vertices;
 

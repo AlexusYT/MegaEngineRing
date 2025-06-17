@@ -28,7 +28,7 @@
 #include "KwasarEngine/resources/shaders/ShaderProgram.h"
 #include "KwasarEngine/utils/Logger.h"
 
-namespace mer::sdk {
+namespace ke {
 std::shared_ptr<IResource> Model3DLoader::createResource() { return Model3DResource::create(); }
 
 ReportMessagePtr Model3DLoader::preload(IResourceLoadExecutor* pResourcesContext,
@@ -94,4 +94,4 @@ ReportMessagePtr Model3DLoader::load(IResourceLoadExecutor* pLoadExecutor,
 
 	return nullptr;
 }
-} // namespace mer::sdk
+} // namespace ke

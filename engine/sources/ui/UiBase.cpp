@@ -21,6 +21,6 @@
 
 #include "KwasarEngine/ui/UiBase.h"
 
-namespace mer::sdk {
+namespace ke {
 void UiBase::customRender() {}
-} // namespace mer::sdk
+} // namespace ke

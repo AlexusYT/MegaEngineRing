@@ -29,7 +29,7 @@
 #include "KwasarEngine/utils/Logger.h"
 #include "KwasarEngine/utils/PropertyBase.h"
 
-namespace mer::sdk {
+namespace ke {
 Extension::Extension() {}
 
 void Extension::serialize(nlohmann::json &pJson) {
@@ -75,4 +75,4 @@ void Extension::removeProperty(PropertyBase* pProperty) { erase(properties, pPro
 void Extension::propertyChanged(PropertyBase* pProperty) {
 	if (object) object->notifyExtensionPropertyChanged(this, pProperty);
 }
-} // namespace mer::sdk
+} // namespace ke

@@ -28,11 +28,11 @@
 #include "KwasarEngine/utils/ReportMessageFwd.h"
 #include "ISceneObject.h"
 
-namespace mer::sdk {
+namespace ke {
 class IScript;
 }
 
-namespace mer::sdk {
+namespace ke {
 class Extension;
 class IScene;
 
@@ -130,7 +130,7 @@ private:
 
 	bool notifyOnMouseScroll(double pDx, double pDy) final;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 
 #endif //SCENEOBJECT_H

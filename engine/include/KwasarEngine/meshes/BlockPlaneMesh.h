@@ -23,7 +23,7 @@
 #define BLOCKPLANEMESH_H
 #include "KwasarEngine/gltf/Mesh.h"
 
-namespace mer::sdk {
+namespace ke {
 class BlockPlaneMesh : public Mesh {
 public:
 	BlockPlaneMesh();
@@ -31,6 +31,6 @@ public:
 protected:
 public:
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //BLOCKPLANEMESH_H

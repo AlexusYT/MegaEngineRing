@@ -23,7 +23,7 @@
 #define IPRESENTERPREFABEDITOR_H
 #include "mvp/IPresenter.h"
 
-namespace mer::sdk {
+namespace ke {
 class Prefab;
 }
 
@@ -34,7 +34,7 @@ public:
 
 	virtual void addMeshesFrom(const std::filesystem::path &pPath) = 0;
 
-	virtual void setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pPrefab) = 0;
+	virtual void setSelectedPrefab(const std::shared_ptr<ke::Prefab> &pPrefab) = 0;
 };
 } // namespace mer::editor::mvp
 

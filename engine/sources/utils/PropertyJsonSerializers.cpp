@@ -33,7 +33,7 @@
 #include "KwasarEngine/resources/models/Model3DResource.h"
 #include "KwasarEngine/resources/textures/ITextureResource.h"
 
-namespace mer::sdk {
+namespace ke {
 nlohmann::json PropertyJsonSerializer<glm::vec<4, float>>::serialize(const glm::vec4 &pValue,
 																	 Extension* /*pExtension*/) {
 	return {pValue.x, pValue.y, pValue.z, pValue.w};
@@ -175,4 +175,4 @@ std::shared_ptr<IMaterialResource> PropertyJsonSerializer<std::shared_ptr<IMater
 	const auto resource = pExtension->loadResourceSync(resourceUri);
 	return std::dynamic_pointer_cast<IMaterialResource>(resource);
 }
-} // namespace mer::sdk
+} // namespace ke

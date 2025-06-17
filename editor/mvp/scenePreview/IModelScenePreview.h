@@ -26,14 +26,14 @@ namespace mer::editor::project {
 class Scene3DEditor;
 }
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 class Renderer;
 class Scene3D;
 class Mesh;
 class RenderPass;
 class Material;
-} // namespace mer::sdk
+} // namespace ke
 
 namespace mer::editor::mvp {
 class IPresenterScenePreview;
@@ -46,15 +46,15 @@ public:
 
 	virtual void setPresenter(IPresenterScenePreview* pPresenter) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::Scene3D> &getScene() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::Scene3D> &getScene() const = 0;
 
-	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void setScene(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::RenderPass> &getOutlinePass() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::RenderPass> &getOutlinePass() const = 0;
 
-	[[nodiscard]] virtual const std::vector<sdk::Node*> &getSelectedMeshNodes() const = 0;
+	[[nodiscard]] virtual const std::vector<ke::Node*> &getSelectedMeshNodes() const = 0;
 
-	virtual void addSelectedMeshNode(sdk::Node* pNode) = 0;
+	virtual void addSelectedMeshNode(ke::Node* pNode) = 0;
 
 	virtual void clearSelectedMeshes() = 0;
 };

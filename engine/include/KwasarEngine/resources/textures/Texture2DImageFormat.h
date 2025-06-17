@@ -22,7 +22,7 @@
 #ifndef TEXTURE2DIMAGEFORMAT_H
 #define TEXTURE2DIMAGEFORMAT_H
 
-namespace mer::sdk {
+namespace ke {
 enum class Texture2DImageFormat {
 	UNDEFINED       = 0,
 	RED             = 0x1903,
@@ -63,6 +63,6 @@ inline const char* to_string(const Texture2DImageFormat pE) {
 		default: return "unknown";
 	}
 }
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //TEXTURE2DIMAGEFORMAT_H

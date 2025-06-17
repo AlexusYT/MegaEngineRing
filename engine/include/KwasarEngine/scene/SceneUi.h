@@ -30,12 +30,12 @@
 struct ImGuiIO;
 struct ImGuiContext;
 
-namespace mer::sdk {
+namespace ke {
 class UiWindow;
 class Window;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class SceneUi : public Initializable {
 	Window* window{};
 	ImGuiContext* imGuiContext{};
@@ -78,6 +78,6 @@ protected:
 
 	void onUninitialize() override;
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //SCENEUI_H

@@ -31,7 +31,7 @@
 #include "KwasarEngine/resources/textures/TextureMinFilter.h"
 #include "KwasarEngine/utils/Logger.h"
 
-namespace mer::sdk {
+namespace ke {
 TextureResource::TextureResource()
 	: minFilter(TextureMinFilter::LINEAR),
 	  magFilter(TextureMagFilter::LINEAR),
@@ -129,4 +129,4 @@ glm::vec4 TextureResource::handleToVec(const uint64_t pHandle) {
 	convertedHandle.y = static_cast<unsigned>(pHandle >> 32) & 0xFFFFFFFF;
 	return glm::vec4(glm::uintBitsToFloat(convertedHandle), 0.0f, 2.0f);
 }
-} // namespace mer::sdk
+} // namespace ke

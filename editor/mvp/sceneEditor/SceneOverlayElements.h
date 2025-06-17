@@ -24,16 +24,16 @@
 #include "KwasarEngine/render/IRenderable.h"
 #include "KwasarEngine/render/Initializable.h"
 
-namespace mer::sdk {
+namespace ke {
 class ShaderProgram;
 }
 
 namespace mer::editor::mvp {
-class SceneOverlayElements : public sdk::Initializable, public sdk::IRenderable {
+class SceneOverlayElements : public ke::Initializable, public ke::IRenderable {
 	uint32_t dataBuffer{};
 	uint32_t indexBuffer{};
 	uint32_t vao{};
-	std::shared_ptr<sdk::ShaderProgram> shader;
+	std::shared_ptr<ke::ShaderProgram> shader;
 	std::vector<uint16_t> indices;
 	bool gridVisible{true};
 
@@ -52,7 +52,7 @@ public:
 protected:
 	void renderGrid() const;
 
-	sdk::ReportMessagePtr onInitialize() override;
+	ke::ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 };

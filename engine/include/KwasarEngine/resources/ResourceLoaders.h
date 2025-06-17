@@ -25,7 +25,7 @@
 
 #include "IResourceLoaders.h"
 
-namespace mer::sdk {
+namespace ke {
 class IResourceLoader;
 
 class ResourceLoaders : public IResourceLoaders {
@@ -53,6 +53,6 @@ public:
 
 	static void clearLoaders() { instance.reset(); }
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //RESOURCELOADERS_H

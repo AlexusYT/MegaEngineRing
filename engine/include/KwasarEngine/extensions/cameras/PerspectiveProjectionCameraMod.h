@@ -28,7 +28,7 @@
 #include "KwasarEngine/extensions/ExtensionProperty.h"
 #include "IProjectionCameraMod.h"
 
-namespace mer::sdk {
+namespace ke {
 class PerspectiveProjectionCameraMod : public Extension, public IProjectionCameraMod {
 protected:
 	PerspectiveProjectionCameraMod();
@@ -53,6 +53,6 @@ protected:
 private:
 	void updateProjMatrix();
 };
-} // namespace mer::sdk
+} // namespace ke
 
 #endif //PROJECTIONCAMERAMOD_H
