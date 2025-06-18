@@ -1,23 +1,8 @@
-# English translations for MegaEngineRing package.
+# English translations for KwasarEngine package.
 # Copyright (C) 2025 "Timofeev (Alexus_XX) Alexander"
-# This file is distributed under the same license as the MegaEngineRing package.
+# This file is distributed under the same license as the KwasarEngine package.
 # Automatically generated, 2025.
 #
-msgid ""
-msgstr ""
-"Project-Id-Version: MegaEngineRing 0.1.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-08 13:25+0500\n"
-"PO-Revision-Date: 2025-06-08 15:47+0000\n"
-"Last-Translator: AlexusYT <93870232+AlexusYT@users.noreply.github.com>\n"
-"Language-Team: English (United States) <https://hosted.weblate.org/projects/"
-"megaenginering/ui-strings/en_US/>\n"
-"Language: en_US\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
 
 #: mvp/treeObjectWindow/ViewObjectsTree.cpp:55
 msgid "ObjectName"
