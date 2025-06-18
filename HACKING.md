@@ -152,7 +152,7 @@ fix them respectively. Customization available using the `FORMAT_PATTERNS` and
 
 #### `run-exe`
 
-Runs the executable target `MegaEngineEditor`.
+Runs the executable target `KwasarEngineEditor`.
 
 #### `spell-check` and `spell-fix`
 

@@ -30,3 +30,42 @@
 @import url('m-layout.css');
 @import url('pygments-dark.css');
 @import url('pygments-console.css');
+
+table {
+    border-collapse: collapse;
+    border: 2px solid rgba(140, 140, 140, 0.62);
+    letter-spacing: 1px;
+}
+
+caption {
+    caption-side: bottom;
+    padding: 10px;
+    font-weight: bold;
+}
+
+thead,
+tfoot {
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+th,
+td {
+    border: 1px solid rgb(160 160 160);
+    padding: 8px 10px;
+}
+
+td:last-of-type {
+    text-align: center;
+}
+
+tbody > tr:nth-of-type(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+tfoot th {
+    text-align: right;
+}
+
+tfoot td {
+    font-weight: bold;
+}

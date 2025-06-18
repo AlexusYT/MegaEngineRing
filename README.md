@@ -1,11 +1,11 @@
-# MegaEngineRing
+# Kwasar Engine
 
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](LICENSE)
 [![C++](https://img.shields.io/badge/C++-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
-[![CMake on multiple platforms](https://github.com/AlexusYT/MegaEngineRing/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/AlexusYT/MegaEngineRing/actions/workflows/cmake-multi-platform.yml)
-[![Translation status](https://hosted.weblate.org/widget/megaenginering/ui-strings/svg-badge.svg)](https://hosted.weblate.org/engage/megaenginering/)
+[![CMake on multiple platforms](https://github.com/AlexusYT/KwasarEngine/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/AlexusYT/KwasarEngine/actions/workflows/cmake-multi-platform.yml)
+[![Translation status](https://hosted.weblate.org/widget/kwasarengine/ui-strings/svg-badge.svg)](https://hosted.weblate.org/engage/kwasarengine/)
 
-MegaEngineRing is a modern C++ game engine focused on performance and extensibility. The engine provides a comprehensive
+Kwasar Engine (formerly MegaEngineRing) is a modern C++ game engine focused on performance and extensibility. The engine provides a comprehensive
 set of tools and features for game development, including 3D model support, scene editing, and integration with popular
 3D model platforms.
 
@@ -40,9 +40,9 @@ production use.
 
 ### Localization
 
-[![Translated languages](https://hosted.weblate.org/widget/megaenginering/ui-strings/multi-auto.svg)](https://hosted.weblate.org/engage/megaenginering/)
+[![Translated languages](https://hosted.weblate.org/widget/kwasarengine/ui-strings/multi-auto.svg)](https://hosted.weblate.org/engage/kwasarengine/)
 
-You can help us with translating the engine into other languages on [Weblate](https://hosted.weblate.org/engage/megaenginering/).
+You can help us with translating the engine into other languages on [Weblate](https://hosted.weblate.org/engage/kwasarEngine/).
 
 ## 🔧 Prerequisites
 
@@ -105,8 +105,8 @@ Here is the list of submodules:
 Clone the repository with the submodules into a directory:
 
 ```bash
-git clone --recurse-submodules -j4 https://github.com/AlexusYT/MegaEngineRing.git
-cd MegaEngineRing
+git clone --recurse-submodules -j4 https://github.com/AlexusYT/KwasarEngine.git
+cd KwasarEngine
 ```
 
 #### Step 2. Configuring
@@ -153,7 +153,7 @@ This is the normal behavior, you should ignore it.
 
 > Note that the installation script does not add a desktop icon and uninstall scripts.
 > Here is
-> the [issue](https://github.com/AlexusYT/MegaEngineRing/issues/80)
+> the [issue](https://github.com/AlexusYT/KwasarEngine/issues/80)
 > about that.
 
 ## Quick Start Guide
@@ -162,7 +162,7 @@ _To be filled_
 
 ## Documentation
 
-Engine documentation stored on the repository [GitHub Pages](https://alexusyt.github.io/MegaEngineRing/)
+Engine documentation stored on the repository [GitHub Pages](https://alexusyt.github.io/KwasarEngine/)
 (Maybe a bit outdated).
 
 ## Support
@@ -178,9 +178,9 @@ Add issues templates and describe them here.
 - Fill the Quick Start Guide and Roadmap sections of README
 - Embed glTF-SDK code into engine codebase .
 	- Make glTF-SDK to use nlohmann-json instead of
-	  rapidjson ([#76](https://github.com/AlexusYT/MegaEngineRing/issues/79)).
+	  rapidjson ([#76](https://github.com/AlexusYT/KwasarEngine/issues/79)).
 - Add packaging with CPack to simplify the delivery to
-  end-user ([#80](https://github.com/AlexusYT/MegaEngineRing/issues/80)).
+  end-user ([#80](https://github.com/AlexusYT/KwasarEngine/issues/80)).
 -
 - _To be filled..._
 

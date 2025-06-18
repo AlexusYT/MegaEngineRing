@@ -163,10 +163,10 @@ void EditorUi::updateUi() {
 			}
 			if (ImGui::BeginMenu(tr("MenuHelp"))) {
 				if (ImGui::MenuItem(tr("Open website")))
-					ImGui::GetPlatformIO().Platform_OpenInShellFn(GImGui, "https://alexusyt.github.io/MegaEngineRing/");
+					ImGui::GetPlatformIO().Platform_OpenInShellFn(GImGui, "https://alexusyt.github.io/KwasarEngine/");
 				if (ImGui::MenuItem(tr("Open manual")))
 					ImGui::GetPlatformIO().Platform_OpenInShellFn(
-						GImGui, "https://alexusyt.github.io/MegaEngineRing/?page=manual/index");
+						GImGui, "https://alexusyt.github.io/KwasarEngine/?page=manual/index");
 
 				ImGui::BeginDisabled();
 				if (ImGui::MenuItem(tr("MenuAbout..."))) {}
