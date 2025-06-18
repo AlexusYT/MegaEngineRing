@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,26 +23,26 @@
 #define NODESELECTIONHELPER_H
 #include <vector>
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class NodeSelectionHelper {
-	std::vector<sdk::Node*> selectedNodes{};
-	sigc::signal<void(const std::vector<sdk::Node*> &pNodes, bool pSelected)> onNodeSelectionChanged;
-	sdk::Node* editingNode{};
-	sigc::signal<void(sdk::Node* pNode)> onEditingNodeChanged;
+	std::vector<ke::Node*> selectedNodes{};
+	sigc::signal<void(const std::vector<ke::Node*> &pNodes, bool pSelected)> onNodeSelectionChanged;
+	ke::Node* editingNode{};
+	sigc::signal<void(ke::Node* pNode)> onEditingNodeChanged;
 
 public:
-	void addNode(sdk::Node* pNode) {
+	void addNode(ke::Node* pNode) {
 		selectedNodes.push_back(pNode);
 		onNodeSelectionChanged(std::vector{pNode}, true);
 		editingNode = pNode;
 		onEditingNodeChanged(editingNode);
 	}
 
-	void addNodes(const std::vector<sdk::Node*> &pNodes) {
+	void addNodes(const std::vector<ke::Node*> &pNodes) {
 		selectedNodes.insert(selectedNodes.cend(), pNodes.begin(), pNodes.end());
 		onNodeSelectionChanged(pNodes, true);
 	}
@@ -54,20 +54,20 @@ public:
 		onEditingNodeChanged(editingNode);
 	}
 
-	[[nodiscard]] const std::vector<sdk::Node*> &getSelectedNodes() const { return selectedNodes; }
+	[[nodiscard]] const std::vector<ke::Node*> &getSelectedNodes() const { return selectedNodes; }
 
 	sigc::connection connectOnNodeSelectionChanged(
-		const sigc::slot<void(const std::vector<sdk::Node*> &pNodes, bool pSelected)> &pSlot) {
+		const sigc::slot<void(const std::vector<ke::Node*> &pNodes, bool pSelected)> &pSlot) {
 		return onNodeSelectionChanged.connect(pSlot);
 	}
 
-	[[nodiscard]] sdk::Node* getEditingNode() const { return editingNode; }
+	[[nodiscard]] ke::Node* getEditingNode() const { return editingNode; }
 
-	sigc::connection connectOnEditingNodeChanged(const sigc::slot<void(sdk::Node* pNode)> &pSlot) {
+	sigc::connection connectOnEditingNodeChanged(const sigc::slot<void(ke::Node* pNode)> &pSlot) {
 		pSlot(editingNode);
 		return onEditingNodeChanged.connect(pSlot);
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //NODESELECTIONHELPER_H

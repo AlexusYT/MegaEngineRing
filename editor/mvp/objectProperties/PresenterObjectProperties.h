@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,22 +21,22 @@
 
 #ifndef PRESENTEROBJECTPROPERTIES_H
 #define PRESENTEROBJECTPROPERTIES_H
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/scene/Scene3D.h"
 #include "mvp/IPresenter.h"
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IViewObjectProperties;
 class IModelObjectProperties;
 
 class IPresenterObjectProperties : public IPresenter {
 public:
-	virtual void onEditingNodeChanged(sdk::Node* pNode) = 0;
+	virtual void onEditingNodeChanged(ke::Node* pNode) = 0;
 
-	virtual void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void onSceneChanged(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 };
 
 class PresenterObjectProperties : public IPresenterObjectProperties {
@@ -51,14 +51,14 @@ public:
 
 	void stop() override;
 
-	void onEditingNodeChanged(sdk::Node* pNode) override;
+	void onEditingNodeChanged(ke::Node* pNode) override;
 
-	void onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) override;
+	void onSceneChanged(const std::shared_ptr<ke::Scene3D> &pScene) override;
 
 	void addView(const std::shared_ptr<IView> &) override;
 
 	std::string getTypeName() override { return "PresenterObjectProperties"; }
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTEROBJECTPROPERTIES_H

@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,19 +21,19 @@
 
 #include "ModelScenePreview.h"
 
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/render/Renderer.h"
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/render/Renderer.h"
+#include "KwasarEngine/scene/Scene3D.h"
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper)
 	: selectionHelper(pSelectionHelper) {
-	outlinePass = std::make_shared<sdk::RenderPass>();
-	selectionHelper->connectOnNodeSelectionChanged([this](const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+	outlinePass = std::make_shared<ke::RenderPass>();
+	selectionHelper->connectOnNodeSelectionChanged([this](const std::vector<ke::Node*> &pNodes, bool pSelected) {
 		for (auto node: pNodes) {
-			if (node->hasExtension<sdk::MeshExtension>()) {
+			if (node->hasExtension<ke::MeshExtension>()) {
 				if (pSelected) {
 					scene->getRenderer()->getMainRenderPass()->removeNode(node);
 					outlinePass->addNode(node);
@@ -46,7 +46,7 @@ ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper)
 	});
 }
 
-void ModelScenePreview::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
+void ModelScenePreview::setScene(const std::shared_ptr<ke::Scene3D> &pScene) {
 	if (pScene == scene) return;
 	if (scene) {
 		clearSelectedMeshes();
@@ -57,7 +57,7 @@ void ModelScenePreview::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
 	if (presenter) presenter->onSceneChanged();
 }
 
-void ModelScenePreview::addSelectedMeshNode(sdk::Node* pNode) { selectionHelper->addNode(pNode); }
+void ModelScenePreview::addSelectedMeshNode(ke::Node* pNode) { selectionHelper->addNode(pNode); }
 
 void ModelScenePreview::clearSelectedMeshes() { selectionHelper->clearSelection(); }
-} // namespace mer::editor::mvp
+} // namespace ked

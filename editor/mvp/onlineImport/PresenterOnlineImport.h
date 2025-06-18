@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -28,11 +28,11 @@
 #include "mvp/IPresenter.h"
 #include "mvp/scenePreview/ModelScenePreview.h"
 
-namespace mer::sdk {
+namespace ke {
 class GltfModel;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ModelSearchList;
 class DownloadableModel;
 class DownloadLinks;
@@ -52,7 +52,7 @@ public:
 
 	virtual void onSearchRequestChanged() = 0;
 
-	virtual void onSearchResultLoaded(const sdk::ReportMessagePtr &pError) = 0;
+	virtual void onSearchResultLoaded(const ke::ReportMessagePtr &pError) = 0;
 
 	virtual void selectModel(const std::shared_ptr<ModelSearchList> &pModel) = 0;
 
@@ -97,7 +97,7 @@ public:
 
 	void onSearchRequestChanged() override;
 
-	void onSearchResultLoaded(const sdk::ReportMessagePtr &pError) override;
+	void onSearchResultLoaded(const ke::ReportMessagePtr &pError) override;
 
 	void selectModel(const std::shared_ptr<ModelSearchList> &pModel) override;
 
@@ -120,6 +120,6 @@ private:
 
 	std::shared_ptr<DownloadLinks> getGltfLinks() const;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTERONLINEIMPORT_H

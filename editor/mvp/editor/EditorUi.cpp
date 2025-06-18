@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@
 #include "settings/ViewSettingsWindow.h"
 #include "settings/categories/OtherCategory.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 EditorUi::EditorUi() {
 	// Unique identifier to match/filter top level editors with the top level dockspace. This could be a user enum.
 	topLevelEditorWindowClass.ClassId = ImHashStr("MY_TOPLEVEL_EDITOR", 0);
@@ -234,7 +234,7 @@ void EditorUi::beforeUiFrame() {
 
 void EditorUi::addEditor(const std::shared_ptr<Editor> &pEditor) { editors.emplace_back(pEditor)->setUi(this); }
 
-sdk::ReportMessagePtr EditorUi::onInitialize() {
+ke::ReportMessagePtr EditorUi::onInitialize() {
 	Settings::getGeneral()->connectChanged([this]() { fontSettingsChanged = true; });
 	fontSettingsChanged = true;
 	ImGuiIO &io = ImGui::GetIO();
@@ -285,4 +285,4 @@ void EditorUi::onMouseButton(const int pButton, const int pAction, const int pMo
 	for (const auto &editor: editors) editor->onMouseButton(pButton, pAction, pMods);
 	SceneUi::onMouseButton(pButton, pAction, pMods);
 }
-} // namespace mer::editor::mvp
+} // namespace ked

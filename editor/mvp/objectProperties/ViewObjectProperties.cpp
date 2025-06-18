@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,33 +23,33 @@
 
 #include <glm/ext/scalar_common.hpp>
 
-#include "EngineSDK/extensions/ExtensionRegistry.h"
-#include "EngineSDK/extensions/LightExtension.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/gltf/Light.h"
-#include "EngineSDK/gltf/Material.h"
-#include "EngineSDK/gltf/Mesh.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/gltf/Primitive.h"
-#include "EngineSDK/scene/Scene3D.h"
-#include "EngineSDK/utils/Transformation.h"
+#include "KwasarEngine/extensions/ExtensionRegistry.h"
+#include "KwasarEngine/extensions/LightExtension.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/gltf/Light.h"
+#include "KwasarEngine/gltf/Material.h"
+#include "KwasarEngine/gltf/Mesh.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/gltf/Primitive.h"
+#include "KwasarEngine/scene/Scene3D.h"
+#include "KwasarEngine/utils/Transformation.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
 
-namespace mer::editor::mvp {
-std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<sdk::Extension> &pExt)>>
+namespace ked {
+std::unordered_map<std::type_index, std::function<ImGuiID(const std::shared_ptr<ke::Extension> & pExt)>>
 ViewObjectProperties::extRenderers;
 
 ViewObjectProperties::ViewObjectProperties(const std::shared_ptr<IWidgetContext> &pContext)
 	: EditorTool("ViewObjectPropertiesTool"), context(pContext) {
-	extRenderers.emplace(std::type_index(typeid(sdk::MeshExtension)),
-						 [this](const std::shared_ptr<sdk::Extension> &pExt) {
-							 return this->drawMeshTab(std::dynamic_pointer_cast<sdk::MeshExtension>(pExt));
+	extRenderers.emplace(std::type_index(typeid(ke::MeshExtension)),
+						 [this](const std::shared_ptr<ke::Extension> &pExt) {
+							 return this->drawMeshTab(std::dynamic_pointer_cast<ke::MeshExtension>(pExt));
 						 });
-	extRenderers.emplace(std::type_index(typeid(sdk::LightExtension)),
-						 [this](const std::shared_ptr<sdk::Extension> &pExt) {
-							 return this->drawLightTab(std::dynamic_pointer_cast<sdk::LightExtension>(pExt));
+	extRenderers.emplace(std::type_index(typeid(ke::LightExtension)),
+						 [this](const std::shared_ptr<ke::Extension> &pExt) {
+							 return this->drawLightTab(std::dynamic_pointer_cast<ke::LightExtension>(pExt));
 						 });
 }
 
@@ -90,7 +90,7 @@ void ViewObjectProperties::onUpdate(bool /*pVisible*/) {
 			ImGui::OpenPopup("AddExtensionMenu");
 		}
 		if (ImGui::BeginPopup("AddExtensionMenu")) {
-			for (auto &extension: sdk::ExtensionRegistry::getExtensionsByType()) {
+			for (auto &extension: ke::ExtensionRegistry::getExtensionsByType()) {
 				if (selectedNode->hasExtension(extension.first)) continue;
 				try {
 					if (ImGui::MenuItem(I18n::trExtensionsMap.at(extension.second.typeName).c_str())) {
@@ -251,7 +251,7 @@ void ViewObjectProperties::drawTransformation() {
 	if (scaleChanged) local->setScale(scale);
 }
 
-ImGuiID ViewObjectProperties::drawMeshTab(const std::shared_ptr<sdk::MeshExtension> &pExt) {
+ImGuiID ViewObjectProperties::drawMeshTab(const std::shared_ptr<ke::MeshExtension> &pExt) {
 	if (!ImGui::BeginTabItem(tr("MeshExtension"), nullptr, ImGuiTabItemFlags_None)) return ImGui::GetItemID();
 	auto id = ImGui::GetItemID();
 
@@ -282,7 +282,7 @@ ImGuiID ViewObjectProperties::drawMeshTab(const std::shared_ptr<sdk::MeshExtensi
 	return id;
 }
 
-ImGuiID ViewObjectProperties::drawLightTab(const std::shared_ptr<sdk::LightExtension> &pExt) {
+ImGuiID ViewObjectProperties::drawLightTab(const std::shared_ptr<ke::LightExtension> &pExt) {
 	if (!ImGui::BeginTabItem(tr("LightExtension"), nullptr, ImGuiTabItemFlags_None)) return ImGui::GetItemID();
 	auto id = ImGui::GetItemID();
 	auto &lights = scene->getLights();
@@ -317,7 +317,7 @@ ImGuiID ViewObjectProperties::drawLightTab(const std::shared_ptr<sdk::LightExten
 			static int32_t lightId = -1;
 			if (ImGui::IsWindowAppearing()) lightId = hoveredLightId;
 			if (ImGui::MenuItem(tr("NewLight"))) {
-				auto newLight = sdk::Light::create(tr("LightUnnamed"));
+				auto newLight = ke::Light::create(tr("LightUnnamed"));
 				scene->addLightSource(newLight);
 			}
 			if (lightId != -1) {
@@ -349,7 +349,7 @@ ImGuiID ViewObjectProperties::drawLightTab(const std::shared_ptr<sdk::LightExten
 	return id;
 }
 
-void ViewObjectProperties::drawLightSourceSettings(const std::shared_ptr<sdk::Light> &pLight) {
+void ViewObjectProperties::drawLightSourceSettings(const std::shared_ptr<ke::Light> &pLight) {
 	float speed;
 	const char* roundFormat;
 	getSpeeds(speed, roundFormat);
@@ -371,10 +371,10 @@ void ViewObjectProperties::drawLightSourceSettings(const std::shared_ptr<sdk::Li
 	int lightTypeId = static_cast<int>(lightType);
 	ImGui::SetNextItemWidth(-1);
 	if (std::string display = std::format("{}: {}", tr("LightType"), lightTypes[static_cast<size_t>(lightTypeId)]);
-		ImGui::SliderInt("##LightType", &lightTypeId, 0, static_cast<int>(sdk::LightType::LIGHT_TYPE_MAX) - 1,
-						 display.c_str())) { pLight->setType(static_cast<sdk::LightType>(lightTypeId)); }
+		ImGui::SliderInt("##LightType", &lightTypeId, 0, static_cast<int>(ke::LightType::LIGHT_TYPE_MAX) - 1,
+						 display.c_str())) { pLight->setType(static_cast<ke::LightType>(lightTypeId)); }
 
-	if (lightType == sdk::LightType::POINT || lightType == sdk::LightType::SPOT) {
+	if (lightType == ke::LightType::POINT || lightType == ke::LightType::SPOT) {
 		float lightRange = pLight->getRange();
 		ImGui::SetNextItemWidth(-1);
 		if (std::string display =
@@ -383,7 +383,7 @@ void ViewObjectProperties::drawLightSourceSettings(const std::shared_ptr<sdk::Li
 							 ImGuiSliderFlags_NoSpeedTweaks))
 			pLight->setRange(lightRange);
 	}
-	if (lightType == sdk::LightType::SPOT) {
+	if (lightType == ke::LightType::SPOT) {
 		float maxAngle = std::numbers::pi_v<float> / 2.0f;
 		float lightInnerCone = pLight->getInnerConeAngle();
 		float lightOuterCone = pLight->getOuterConeAngle();
@@ -413,9 +413,9 @@ void ViewObjectProperties::drawLightSourceSettings(const std::shared_ptr<sdk::Li
 
 /*
  //TODO
-void ViewObjectProperties::drawMaterial(sdk::MeshInstance* pMeshNode) {
+void ViewObjectProperties::drawMaterial(ke::MeshInstance* pMeshNode) {
 	auto mesh = pMeshNode->getMesh();
-	std::shared_ptr<sdk::Primitive> curPrimitive{};
+	std::shared_ptr<ke::Primitive> curPrimitive{};
 	for (auto primitive: mesh->getPrimitives()) {
 		curPrimitive = primitive;
 		break; //TODO Take only first primitive. For now.
@@ -451,4 +451,4 @@ void ViewObjectProperties::drawMaterial(sdk::MeshInstance* pMeshNode) {
 		ImGui::EndCombo();
 	}
 }*/
-} // namespace mer::editor::mvp
+} // namespace ked

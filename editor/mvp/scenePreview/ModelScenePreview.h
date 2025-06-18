@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -27,25 +27,25 @@
 #include "IPresenterScenePreview.h"
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
-namespace mer::sdk {
+namespace ke {
 class Renderer;
 }
 
-namespace mer::sdk {
+namespace ke {
 class Material;
 class RenderPass;
 class Mesh;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class Scene3D;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ModelScenePreview : public IModelScenePreview {
 	IPresenterScenePreview* presenter{};
-	std::shared_ptr<sdk::Scene3D> scene{};
-	std::shared_ptr<sdk::RenderPass> outlinePass;
+	std::shared_ptr<ke::Scene3D> scene{};
+	std::shared_ptr<ke::RenderPass> outlinePass;
 	NodeSelectionHelper* selectionHelper;
 
 public:
@@ -58,20 +58,20 @@ public:
 		presenter->onSceneChanged();
 	}
 
-	[[nodiscard]] const std::shared_ptr<sdk::Scene3D> &getScene() const override { return scene; }
+	[[nodiscard]] const std::shared_ptr<ke::Scene3D> &getScene() const override { return scene; }
 
-	void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) override;
+	void setScene(const std::shared_ptr<ke::Scene3D> &pScene) override;
 
-	[[nodiscard]] const std::shared_ptr<sdk::RenderPass> &getOutlinePass() const override { return outlinePass; }
+	[[nodiscard]] const std::shared_ptr<ke::RenderPass> &getOutlinePass() const override { return outlinePass; }
 
-	[[nodiscard]] const std::vector<sdk::Node*> &getSelectedMeshNodes() const override {
+	[[nodiscard]] const std::vector<ke::Node*> &getSelectedMeshNodes() const override {
 		return selectionHelper->getSelectedNodes();
 	}
 
-	void addSelectedMeshNode(sdk::Node* pNode) override;
+	void addSelectedMeshNode(ke::Node* pNode) override;
 
 	void clearSelectedMeshes() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELSCENEPREVIEW_H

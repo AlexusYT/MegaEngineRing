@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,10 +21,10 @@
 
 #ifndef CONFIRMATIONDIALOG_H
 #define CONFIRMATIONDIALOG_H
-#include "EngineSDK/ui/UiPopup.h"
+#include "KwasarEngine/ui/UiPopup.h"
 
-namespace mer::editor::mvp {
-class ConfirmationDialog : public sdk::UiPopup {
+namespace ked {
+class ConfirmationDialog : public ke::UiPopup {
 	std::string title;
 	std::string message;
 	std::vector<std::string> buttons;
@@ -56,6 +56,6 @@ public:
 		buttonClickedCallback = pButtonClickedCallback;
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //CONFIRMATIONDIALOG_H

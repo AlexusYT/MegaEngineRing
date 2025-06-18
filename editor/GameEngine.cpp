@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -30,8 +30,8 @@
 
 #include <curl/curl.h>
 
-#include "EngineSDK/context/Application.h"
-#include "EngineSDK/context/Window.h"
+#include "KwasarEngine/context/Application.h"
+#include "KwasarEngine/context/Window.h"
 #include "Globals.h"
 #include "I18N.h"
 #include "examples/libs/glfw/include/GLFW/glfw3.h"
@@ -41,20 +41,20 @@
 #include "mvp/sceneEditor/ViewSceneEditor.h"
 #include "project/Project.h"
 
-namespace mer::editor::ui {
-class EditorWindow : public sdk::Window {
+namespace ked {
+class EditorWindow : public ke::Window {
 public:
 	explicit EditorWindow() { glfwWindowHint(GLFW_SAMPLES, 4); }
 
 protected:
-	sdk::ReportMessagePtr init() override {
-		auto mainUi = std::make_shared<mvp::EditorUi>();
+	ke::ReportMessagePtr init() override {
+		auto mainUi = std::make_shared<EditorUi>();
 
-		mainUi->addEditor(std::make_shared<mvp::OnlineImportWorkspace>());
-		mainUi->addEditor(std::make_shared<mvp::SceneEditor>("Scene 1"));
+		mainUi->addEditor(std::make_shared<OnlineImportWorkspace>());
+		mainUi->addEditor(std::make_shared<SceneEditor>("Scene 1"));
 		addScene(mainUi);
 
-		auto project = project::Project::create();
+		auto project = Project::create();
 		if (!project) return nullptr;
 		project->setProjectName("Untitled");
 		auto path = Globals::getProjectsPath() / "unsaved/Untitled";
@@ -69,35 +69,35 @@ protected:
 
 int GameEngine::run(const int pArgc, char* pArgv[]) {
 	Globals::init();
-	mvp::Settings::init();
-	auto application = sdk::Application::create();
+	Settings::init();
+	auto application = ke::Application::create();
 
 	application->initEngine();
 
 	auto settingsPath = Globals::getConfigPath() / "settings.json";
-	mvp::Settings::setSettingsPath(settingsPath);
+	Settings::setSettingsPath(settingsPath);
 
 	if (std::filesystem::exists(settingsPath)) {
-		if (auto msg = mvp::Settings::load()) {
-			sdk::Logger::error(msg);
-			sdk::Logger::error("Using default settings as a fallback...");
-			mvp::Settings::loadDefaults();
+		if (auto msg = Settings::load()) {
+			ke::Logger::error(msg);
+			ke::Logger::error("Using default settings as a fallback...");
+			Settings::loadDefaults();
 		} else
-			sdk::Logger::info("Settings are loaded successfully");
+			ke::Logger::info("Settings are loaded successfully");
 	} else {
-		sdk::Logger::info("Settings file does not exists. Creating with defaults...");
-		mvp::Settings::loadDefaults();
-		if (auto msg = mvp::Settings::save()) sdk::Logger::error(msg);
+		ke::Logger::info("Settings file does not exists. Creating with defaults...");
+		Settings::loadDefaults();
+		if (auto msg = Settings::save()) ke::Logger::error(msg);
 	}
-	mvp::I18n::init();
+	I18n::init();
 
 
 	if (auto ret = curl_global_init(CURL_GLOBAL_DEFAULT); ret != CURLE_OK) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to initialize CURL");
 		msg->setMessage("Function curl_global_init returned an error");
 		msg->addInfoLine("Error: {}", curl_easy_strerror(ret));
-		sdk::Logger::error(msg);
+		ke::Logger::error(msg);
 		return 1;
 	}
 
@@ -107,7 +107,7 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 
 	auto result = application->runMainLoop(pArgc, pArgv);
 	curl_global_cleanup();
-	mvp::I18n::deinit();
+	I18n::deinit();
 	return result;
 }
-} // namespace mer::editor::ui
+} // namespace ked

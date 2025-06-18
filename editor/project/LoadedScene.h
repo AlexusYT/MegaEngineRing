@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -22,36 +22,36 @@
 #ifndef LOADEDSCENE_H
 #define LOADEDSCENE_H
 
-namespace mer::sdk {
+namespace ke {
 enum class MouseButton;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ResourcesContext;
-} // namespace mer::editor::mvp
+} // namespace ked
 
-namespace mer::sdk {
+namespace ke {
 class IResourceLoadExecutor;
 class Application;
 class Extension;
 class ISceneObject;
 class IScene;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::editor::project {
+namespace ked {
 class LoadedScene {
 	std::string name;
 	sigc::signal<void(const std::string &pName)> onNameChanged;
-	std::shared_ptr<sdk::IScene> scene;
-	sigc::signal<void(const sdk::ReportMessagePtr &pError)> onErrorOccurred;
-	sigc::signal<void(sdk::Extension* pObject)> onExtensionAdded;
-	std::shared_ptr<sdk::Application> app;
-	std::shared_ptr<sdk::ISceneObject> cameraObject;
+	std::shared_ptr<ke::IScene> scene;
+	sigc::signal<void(const ke::ReportMessagePtr &pError)> onErrorOccurred;
+	sigc::signal<void(ke::Extension* pObject)> onExtensionAdded;
+	std::shared_ptr<ke::Application> app;
+	std::shared_ptr<ke::ISceneObject> cameraObject;
 
 	sigc::signal<void()> onLoadingSignal;
 	sigc::signal<void()> onLoadedSignal;
 	std::vector<sigc::connection> connections;
-	std::shared_ptr<mvp::ResourcesContext> context;
+	std::shared_ptr<ResourcesContext> context;
 
 public:
 	LoadedScene();
@@ -62,11 +62,11 @@ public:
 
 	bool hasResourcesContext() const;
 
-	sdk::IResourceLoadExecutor* getResourceLoadExecutor() const;
+	ke::IResourceLoadExecutor* getResourceLoadExecutor() const;
 
-	void setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext);
+	void setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext);
 
-	void connectErrorOccurred(const sigc::slot<void(const sdk::ReportMessagePtr &pError)> &pSlot) {
+	void connectErrorOccurred(const sigc::slot<void(const ke::ReportMessagePtr &pError)> &pSlot) {
 		onErrorOccurred.connect(pSlot);
 	}
 
@@ -76,7 +76,7 @@ public:
 
 	void render() const;
 
-	sdk::ReportMessagePtr load(const std::filesystem::path &pPath);
+	ke::ReportMessagePtr load(const std::filesystem::path &pPath);
 
 	sigc::connection connectOnLoadingSignal(const sigc::slot<void()> &pSlot) { return onLoadingSignal.connect(pSlot); }
 
@@ -84,7 +84,7 @@ public:
 
 	void unload();
 
-	sdk::ReportMessagePtr readObjects();
+	ke::ReportMessagePtr readObjects();
 
 	void setName(const std::string &pName) {
 		if (name == pName) return;
@@ -101,31 +101,31 @@ public:
 
 	void addObject();
 
-	void removeObject(sdk::ISceneObject* pObjectToRemove);
+	void removeObject(ke::ISceneObject* pObjectToRemove);
 
-	void removeExtension(const sdk::Extension* pExtensionToRemove) const;
+	void removeExtension(const ke::Extension* pExtensionToRemove) const;
 
-	void renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const;
+	void renameObject(ke::ISceneObject* pObject, const std::string &pNewName) const;
 
-	std::shared_ptr<sdk::Extension> addExtension(sdk::ISceneObject* pObject, const std::string &pType,
+	std::shared_ptr<ke::Extension> addExtension(ke::ISceneObject* pObject, const std::string &pType,
 												 const std::string &pName) const;
 
-	void saveObject(sdk::ISceneObject* pObject) const;
+	void saveObject(ke::ISceneObject* pObject) const;
 
-	void addObjectToDatabase(const std::shared_ptr<sdk::ISceneObject> &pObject) const;
+	void addObjectToDatabase(const std::shared_ptr<ke::ISceneObject> &pObject) const;
 
-	[[nodiscard]] const std::shared_ptr<sdk::IScene> &getScene() const { return scene; }
+	[[nodiscard]] const std::shared_ptr<ke::IScene> &getScene() const { return scene; }
 
 	void onCursorPosChanged(double pX, double pY) const;
 
-	void onMouseButtonStateChanged(sdk::MouseButton pButton, bool pPressed, double pX, double pY) const;
+	void onMouseButtonStateChanged(ke::MouseButton pButton, bool pPressed, double pX, double pY) const;
 
-	[[nodiscard]] const std::shared_ptr<sdk::Application> &getApp() const { return app; }
+	[[nodiscard]] const std::shared_ptr<ke::Application> &getApp() const { return app; }
 
 private:
-	std::shared_ptr<sdk::ISceneObject> createObject() const;
+	std::shared_ptr<ke::ISceneObject> createObject() const;
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //LOADEDSCENE_H

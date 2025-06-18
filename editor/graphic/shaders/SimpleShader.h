@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,10 +21,10 @@
 
 #ifndef SIMPLESHADER_H
 #define SIMPLESHADER_H
-#include "EngineSDK/resources/shaders/ShaderProgram.h"
+#include "KwasarEngine/resources/shaders/ShaderProgram.h"
 
-namespace mer::editor::graphics {
-class SimpleShader : public sdk::ShaderProgram {
+namespace ked {
+class SimpleShader : public ke::ShaderProgram {
 	static std::shared_ptr<SimpleShader> instance;
 
 	SimpleShader();
@@ -32,6 +32,6 @@ class SimpleShader : public sdk::ShaderProgram {
 public:
 	static std::shared_ptr<SimpleShader> getInstance();
 };
-} // namespace mer::editor::graphics
+} // namespace ked
 
 #endif //SIMPLESHADER_H

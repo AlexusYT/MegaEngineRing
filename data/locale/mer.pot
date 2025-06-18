@@ -28,12 +28,12 @@ msgid "Left click to reparent to the \"{}\".\n"
 msgstr ""
 
 #. translators: root element in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:112
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:109
 msgid "Root of the scene"
 msgstr ""
 
 #. translators: second line in reparent tooltip in an object tree window
-#: mvp/treeObjectWindow/ViewObjectsTree.cpp:121
+#: mvp/treeObjectWindow/ViewObjectsTree.cpp:118
 msgid "Right click to cancel."
 msgstr ""
 

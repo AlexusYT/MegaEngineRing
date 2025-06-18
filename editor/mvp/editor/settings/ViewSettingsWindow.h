@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,11 +23,11 @@
 #define VIEWSETTINGSWINDOW_H
 #include <typeindex>
 
-#include "EngineSDK/ui/UiPopup.h"
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiPopup.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/IView.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class SettingsCategory;
 class IPresenterSettingsWindow;
 
@@ -40,7 +40,7 @@ public:
 	virtual void openPopup() = 0;
 };
 
-class ViewSettingsWindow : public IViewSettingsWindow, public sdk::UiPopup {
+class ViewSettingsWindow : public IViewSettingsWindow, public ke::UiPopup {
 	IPresenterSettingsWindow* presenter{};
 	std::shared_ptr<IWidgetContext> context{};
 	std::shared_ptr<SettingsCategory> selectedCategory{};
@@ -75,6 +75,6 @@ private:
 
 	void applyChanges();
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //VIEWSETTINGSWINDOW_H

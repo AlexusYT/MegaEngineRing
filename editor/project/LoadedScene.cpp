@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,29 +23,29 @@
 
 #include <nlohmann/json.hpp>
 
-#include "EngineSDK/context/Application.h"
-#include "EngineSDK/context/IApplicationSettings.h"
-#include "EngineSDK/extensions/Extension.h"
-#include "EngineSDK/extensions/ExtensionRegistry.h"
-#include "EngineSDK/extensions/MainObjectExtension.h"
-#include "EngineSDK/extensions/MouseButtonExtension.h"
-#include "EngineSDK/extensions/cameras/CameraMouseExtension.h"
-#include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineSDK/resources/LoadedResources.h"
-#include "EngineSDK/scene/IScene.h"
-#include "EngineSDK/scene/Scene.h"
-#include "EngineSDK/scene/objects/ISceneObject.h"
-#include "EngineSDK/scene/objects/SceneObject.h"
-#include "EngineSDK/utils/UUID.h"
+#include "KwasarEngine/context/Application.h"
+#include "KwasarEngine/context/IApplicationSettings.h"
+#include "KwasarEngine/extensions/Extension.h"
+#include "KwasarEngine/extensions/ExtensionRegistry.h"
+#include "KwasarEngine/extensions/MainObjectExtension.h"
+#include "KwasarEngine/extensions/MouseButtonExtension.h"
+#include "KwasarEngine/extensions/cameras/CameraMouseExtension.h"
+#include "KwasarEngine/extensions/cameras/OrbitCameraExtension.h"
+#include "KwasarEngine/resources/LoadedResources.h"
+#include "KwasarEngine/scene/IScene.h"
+#include "KwasarEngine/scene/Scene.h"
+#include "KwasarEngine/scene/objects/ISceneObject.h"
+#include "KwasarEngine/scene/objects/SceneObject.h"
+#include "KwasarEngine/utils/UUID.h"
 #include "mvp/sceneEditor/ResourcesContext.h"
 
-namespace mer::sdk {
+namespace ke {
 class PropertyBase;
 }
 
-namespace mer::editor::project {
+namespace ked {
 LoadedScene::LoadedScene() {
-	app = sdk::Application::create();
+	app = ke::Application::create();
 	app->initEngine();
 }
 
@@ -57,11 +57,11 @@ bool LoadedScene::hasScene() const { return scene != nullptr; }
 
 bool LoadedScene::hasResourcesContext() const { return getResourceLoadExecutor() != nullptr; }
 
-sdk::IResourceLoadExecutor* LoadedScene::getResourceLoadExecutor() const { return scene->getResourceExecutor(); }
+ke::IResourceLoadExecutor* LoadedScene::getResourceLoadExecutor() const { return scene->getResourceExecutor(); }
 
-void LoadedScene::setupResourcesContext(const std::shared_ptr<mvp::ResourcesContext> &pResourcesContext) {
+void LoadedScene::setupResourcesContext(const std::shared_ptr<ResourcesContext> &pResourcesContext) {
 	context = pResourcesContext;
-	const auto resources = sdk::LoadedResources::create();
+	const auto resources = ke::LoadedResources::create();
 	pResourcesContext->setResources(resources);
 	pResourcesContext->setApplication(app.get());
 	pResourcesContext->preloadResources();
@@ -76,11 +76,11 @@ void LoadedScene::render() const {
 	scene->render();
 }
 
-sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path & /*pPath*/) {
-	auto resourcesContext = std::make_shared<mvp::ResourcesContext>();
+ke::ReportMessagePtr LoadedScene::load(const std::filesystem::path & /*pPath*/) {
+	auto resourcesContext = std::make_shared<ResourcesContext>();
 	setupResourcesContext(resourcesContext);
 	unload();
-	scene = sdk::Scene::create();
+	scene = ke::Scene::create();
 	scene->setResourceExecutor(context.get());
 	onLoadingSignal();
 	setName("Untitled Scene");
@@ -88,19 +88,19 @@ sdk::ReportMessagePtr LoadedScene::load(const std::filesystem::path & /*pPath*/)
 	if (auto msg = readObjects()) { return msg; }
 	onLoadedSignal();
 
-	std::shared_ptr<sdk::ICamera> editorCamera;
-	auto camera = sdk::OrbitCameraExtension::create();
-	auto cameraMouse = sdk::CameraMouseExtension::create();
+	std::shared_ptr<ke::ICamera> editorCamera;
+	auto camera = ke::OrbitCameraExtension::create();
+	auto cameraMouse = ke::CameraMouseExtension::create();
 	cameraMouse->setEnabled(false);
-	auto mouseButton = sdk::MouseButtonExtension::create();
-	mouseButton->connectButtonSignal(sdk::MouseButton::BUTTON_MIDDLE,
-									 [cameraMouse](sdk::MouseButton /*pButton*/, bool pPressed, double /*pX*/,
+	auto mouseButton = ke::MouseButtonExtension::create();
+	mouseButton->connectButtonSignal(ke::MouseButton::BUTTON_MIDDLE,
+									 [cameraMouse](ke::MouseButton /*pButton*/, bool pPressed, double /*pX*/,
 												   double /*pY*/) {
 										 cameraMouse->setEnabled(pPressed);
 									 });
 
 	cameraMouse->propertyAngle.getEvent().connect(camera->propertyAngle.getSetter());
-	cameraObject = sdk::SceneObject::create();
+	cameraObject = ke::SceneObject::create();
 	cameraObject->addExtension("cameraMouse", cameraMouse);
 	cameraObject->addExtension("mouseButton", mouseButton);
 	cameraObject->addExtension("camera", camera);
@@ -123,7 +123,7 @@ void LoadedScene::unload() {
 	name.clear();
 }
 
-sdk::ReportMessagePtr LoadedScene::readObjects() { return nullptr; }
+ke::ReportMessagePtr LoadedScene::readObjects() { return nullptr; }
 
 void LoadedScene::addObject() {
 	auto obj = createObject();
@@ -131,28 +131,28 @@ void LoadedScene::addObject() {
 	addObjectToDatabase(obj);
 }
 
-void LoadedScene::removeObject(sdk::ISceneObject* pObjectToRemove) {
+void LoadedScene::removeObject(ke::ISceneObject* pObjectToRemove) {
 	std::thread([this, pObjectToRemove] { if (scene) scene->removeObject(pObjectToRemove); }).detach();
 }
 
-void LoadedScene::removeExtension(const sdk::Extension* pExtensionToRemove) const {
+void LoadedScene::removeExtension(const ke::Extension* pExtensionToRemove) const {
 	auto obj = pExtensionToRemove->getObject();
 	if (!obj) return;
 
-	std::shared_ptr<sdk::Extension> removedExtension;
+	std::shared_ptr<ke::Extension> removedExtension;
 	obj->removeExtension(pExtensionToRemove->getName(), removedExtension);
 
 	std::thread([this, obj] { saveObject(obj); }).detach();
 }
 
-void LoadedScene::renameObject(sdk::ISceneObject* pObject, const std::string &pNewName) const {
+void LoadedScene::renameObject(ke::ISceneObject* pObject, const std::string &pNewName) const {
 	pObject->getMainExtension()->propertyName = pNewName;
 	std::thread([this, pObject] { saveObject(pObject); }).detach();
 }
 
-std::shared_ptr<sdk::Extension> LoadedScene::addExtension(sdk::ISceneObject* pObject, const std::string &pType,
+std::shared_ptr<ke::Extension> LoadedScene::addExtension(ke::ISceneObject* pObject, const std::string &pType,
 														  const std::string &pName) const {
-	const auto ext = sdk::ExtensionRegistry::newInstance(pType);
+	const auto ext = ke::ExtensionRegistry::newInstance(pType);
 	pObject->addExtension(pName, ext);
 	//if (hasResourcesContext()) ext->onInit();
 	onExtensionAdded(ext.get());
@@ -160,9 +160,9 @@ std::shared_ptr<sdk::Extension> LoadedScene::addExtension(sdk::ISceneObject* pOb
 	return ext;
 }
 
-void LoadedScene::saveObject(sdk::ISceneObject* /*pObject*/) const {}
+void LoadedScene::saveObject(ke::ISceneObject* /*pObject*/) const {}
 
-void LoadedScene::addObjectToDatabase(const std::shared_ptr<sdk::ISceneObject> &pObject) const {
+void LoadedScene::addObjectToDatabase(const std::shared_ptr<ke::ISceneObject> &pObject) const {
 	nlohmann::json json;
 	for (auto [extName, ext]: pObject->getExtensions()) {
 		nlohmann::json arrayElement;
@@ -177,18 +177,18 @@ void LoadedScene::onCursorPosChanged(const double pX, const double pY) const {
 	if (cameraObject) cameraObject->onCursorPosChanged(pX, pY);
 }
 
-void LoadedScene::onMouseButtonStateChanged(const sdk::MouseButton pButton, const bool pPressed, const double pX,
+void LoadedScene::onMouseButtonStateChanged(const ke::MouseButton pButton, const bool pPressed, const double pX,
 											const double pY) const {
 	if (cameraObject) cameraObject->onMouseButtonStateChanged(pButton, pPressed, pX, pY);
 }
 
-std::shared_ptr<sdk::ISceneObject> LoadedScene::createObject() const {
-	auto object = sdk::SceneObject::create();
+std::shared_ptr<ke::ISceneObject> LoadedScene::createObject() const {
+	auto object = ke::SceneObject::create();
 	object->connectOnExtensionPropertyChanged(
-		[this, object](sdk::Extension* /*pExtension*/, sdk::PropertyBase* /*pProperty*/) {
+		[this, object](ke::Extension* /*pExtension*/, ke::PropertyBase* /*pProperty*/) {
 			std::thread([this, object] { saveObject(object.get()); }).detach();
 		});
 	scene->addObject(object);
 	return object;
 }
-} // namespace mer::editor::project
+} // namespace ked

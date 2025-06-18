@@ -143,11 +143,11 @@ set(EDITOR_SOURCES
 
 )
 
-add_library(MegaEngineEditor_lib OBJECT CompressedFonts.h ${EDITOR_SOURCES})
+add_library(KwasarEngineEditor_lib OBJECT CompressedFonts.h ${EDITOR_SOURCES})
 
 configure_gettext(
         DOMAIN "mer"
-        TARGET_NAME "MegaEngineEditor_lib-gettext"
+        TARGET_NAME "KwasarEngineEditor_lib-gettext"
         SOURCES ${EDITOR_SOURCES}
         POTFILE_DESTINATION "${PROJECT_SOURCE_DIR}/data/locale"
         GMOFILE_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/locale"
@@ -160,8 +160,8 @@ configure_gettext(
         "--copyright-holder=\"Timofeev (Alexus_XX) Alexander\"" "--from-code=UTF-8"
         MSGINIT_ARGS "--no-translator"
         LANGUAGES "en_US" "ru_RU")
-target_compile_definitions(MegaEngineEditor_lib PUBLIC LOCALE_DIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
-add_dependencies(MegaEngineEditor_lib MegaEngineEditor_lib-gettext)
+target_compile_definitions(KwasarEngineEditor_lib PUBLIC LOCALE_DIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
+add_dependencies(KwasarEngineEditor_lib KwasarEngineEditor_lib-gettext)
 #[[find_program(XGETTEXT_CMD xgettext REQUIRED)
 SET(_potFile ${PROJECT_NAME}.pot)
 ADD_CUSTOM_COMMAND(OUTPUT ${_potFile}
@@ -174,35 +174,34 @@ gettext_process_pot_file(${_potFile} LANGUAGES data/locale/ru_RU/ui)
 ADD_CUSTOM_TARGET(pot_file ${_all}
         DEPENDS ${_potFile}
 )]]
-target_compile_options(MegaEngineEditor_lib PRIVATE -Werror)
+target_compile_options(KwasarEngineEditor_lib PRIVATE -Werror)
 
-target_precompile_headers(MegaEngineEditor_lib
+target_precompile_headers(KwasarEngineEditor_lib
         PRIVATE common.h
 )
 
 target_include_directories(
-        MegaEngineEditor_lib ${warning_guard}
+        KwasarEngineEditor_lib ${warning_guard}
         PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}
 )
 target_include_directories(
-        MegaEngineEditor_lib ${warning_guard}
+        KwasarEngineEditor_lib ${warning_guard}
         PUBLIC
         "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor>"
 )
 if (WIN32)
-    target_link_libraries(MegaEngineEditor_lib PRIVATE libintl)
+    target_link_libraries(KwasarEngineEditor_lib PRIVATE libintl)
 endif ()
-target_link_libraries(MegaEngineEditor_lib PRIVATE MegaEngineSDK_shared)
-target_compile_definitions(MegaEngineEditor_lib PRIVATE GLM_ENABLE_EXPERIMENTAL)
-target_compile_features(MegaEngineEditor_lib PRIVATE cxx_std_23)
+target_link_libraries(KwasarEngineEditor_lib PRIVATE KwasarEngineLib)
+target_compile_definitions(KwasarEngineEditor_lib PRIVATE GLM_ENABLE_EXPERIMENTAL)
 
-target_link_libraries(MegaEngineEditor_lib PRIVATE ImGUI)
-target_link_libraries(MegaEngineEditor_lib PRIVATE ImGuiFileDialog)
+target_link_libraries(KwasarEngineEditor_lib PRIVATE ImGUI)
+target_link_libraries(KwasarEngineEditor_lib PRIVATE ImGuiFileDialog)
 
 #find_package(nlohmann_json CONFIG REQUIRED)
 pkg_check_modules(nlohmann_json REQUIRED IMPORTED_TARGET nlohmann_json)
-target_link_libraries(MegaEngineEditor_lib PRIVATE ${nlohmann_json_LIBRARIES})
+target_link_libraries(KwasarEngineEditor_lib PRIVATE ${nlohmann_json_LIBRARIES})
 set(nlohmann-json_IMPLICIT_CONVERSIONS OFF)
 
-target_link_libraries(MegaEngineEditor_lib PRIVATE curl)
+target_link_libraries(KwasarEngineEditor_lib PRIVATE curl)

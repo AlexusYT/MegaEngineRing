@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -22,13 +22,13 @@
 #ifndef UIWINDOWCONTEXT_H
 #define UIWINDOWCONTEXT_H
 
-namespace mer::sdk {
+namespace ke {
 class SceneUi;
 class UiWindow;
 class UiBase;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class Editor;
 class EditorTool;
 
@@ -36,7 +36,7 @@ class IWidgetContext {
 public:
 	virtual ~IWidgetContext() = default;
 
-	virtual void add(sdk::UiBase* pWidget) = 0;
+	virtual void add(ke::UiBase* pWidget) = 0;
 
 	virtual void remove() = 0;
 };
@@ -52,26 +52,26 @@ public:
 		return std::shared_ptr<EditorContext>(new EditorContext(pEditor));
 	}
 
-	void add(sdk::UiBase* pWidget) override;
+	void add(ke::UiBase* pWidget) override;
 
 	void remove() override;
 };
 
 class SceneUiContext : public IWidgetContext {
-	sdk::UiBase* window{};
-	sdk::SceneUi* scene{};
+	ke::UiBase* window{};
+	ke::SceneUi* scene{};
 
-	explicit SceneUiContext(sdk::SceneUi* pScene) : scene(pScene) {}
+	explicit SceneUiContext(ke::SceneUi* pScene) : scene(pScene) {}
 
 public:
-	static std::shared_ptr<IWidgetContext> create(sdk::SceneUi* pScene) {
+	static std::shared_ptr<IWidgetContext> create(ke::SceneUi* pScene) {
 		return std::shared_ptr<SceneUiContext>(new SceneUiContext(pScene));
 	}
 
-	void add(sdk::UiBase* pWidget) override;
+	void add(ke::UiBase* pWidget) override;
 
 	void remove() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //UIWINDOWCONTEXT_H

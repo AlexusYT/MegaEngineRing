@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,12 +21,12 @@
 
 #include "UiWindowContext.h"
 
-#include "EngineSDK/scene/SceneUi.h"
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/scene/SceneUi.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/editor/Editor.h"
 
-namespace mer::editor::mvp {
-void EditorContext::add(sdk::UiBase* pWidget) {
+namespace ked {
+void EditorContext::add(ke::UiBase* pWidget) {
 	tool = dynamic_cast<EditorTool*>(pWidget);
 	if (!editor || !tool) return;
 	editor->addTool(tool->shared_from_this());
@@ -37,18 +37,18 @@ void EditorContext::remove() {
 	editor->removeTool(tool);
 }
 
-void SceneUiContext::add(sdk::UiBase* pWidget) {
+void SceneUiContext::add(ke::UiBase* pWidget) {
 	if (!scene) return;
 	// ReSharper disable once CppDFAUnreachableCode
 	window = pWidget;
-	if (auto widget = dynamic_cast<sdk::UiWindow*>(pWidget)) scene->addUiWindow(widget);
-	if (auto widget = dynamic_cast<sdk::UiPopup*>(pWidget)) scene->addUiPopup(widget);
+	if (auto widget = dynamic_cast<ke::UiWindow*>(pWidget)) scene->addUiWindow(widget);
+	if (auto widget = dynamic_cast<ke::UiPopup*>(pWidget)) scene->addUiPopup(widget);
 }
 
 void SceneUiContext::remove() {
 	if (!scene || !window) return;
 	// ReSharper disable once CppDFAUnreachableCode
-	if (auto widget = dynamic_cast<sdk::UiWindow*>(window)) scene->removeUiWindow(widget->getName());
-	if (auto widget = dynamic_cast<sdk::UiPopup*>(window)) scene->removeUiWindow(widget->getName());
+	if (auto widget = dynamic_cast<ke::UiWindow*>(window)) scene->removeUiWindow(widget->getName());
+	if (auto widget = dynamic_cast<ke::UiPopup*>(window)) scene->removeUiWindow(widget->getName());
 }
-} // namespace mer::editor::mvp
+} // namespace ked

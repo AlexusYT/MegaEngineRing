@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -22,14 +22,14 @@
 #ifndef VIEWSCENEEDITOR_H
 #define VIEWSCENEEDITOR_H
 
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "mvp/editor/Editor.h"
 
-namespace mer::sdk {
+namespace ke {
 class Scene3D;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class NodeSelectionHelper;
 class IPresenterObjectProperties;
 class IPresenterObjectsTree;
@@ -44,7 +44,7 @@ class SceneEditor : public Editor {
 	std::shared_ptr<EditorTool> propertiesViewTool;
 	std::shared_ptr<NodeSelectionHelper> selection;
 
-	std::shared_ptr<sdk::Scene3D> scene3D;
+	std::shared_ptr<ke::Scene3D> scene3D;
 
 public:
 	explicit SceneEditor(const std::string &pName);
@@ -65,6 +65,6 @@ private:
 
 	void addGltfModel(const std::string &pPath);
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //VIEWSCENEEDITOR_H

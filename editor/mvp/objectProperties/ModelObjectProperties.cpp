@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -25,16 +25,16 @@
 #include "mvp/objectProperties/PresenterObjectProperties.h"
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ModelObjectProperties::ModelObjectProperties(NodeSelectionHelper* pSelectionHelper)
 	: selectionHelper(pSelectionHelper) {
-	selectionHelper->connectOnEditingNodeChanged([this](sdk::Node* pNode) {
+	selectionHelper->connectOnEditingNodeChanged([this](ke::Node* pNode) {
 		if (presenter) presenter->onEditingNodeChanged(pNode);
 	});
 }
 
-void ModelObjectProperties::setScene(const std::shared_ptr<sdk::Scene3D> &pScene) {
+void ModelObjectProperties::setScene(const std::shared_ptr<ke::Scene3D> &pScene) {
 	scene = pScene;
 	if (presenter) presenter->onSceneChanged(pScene);
 }
-} // namespace mer::editor::mvp
+} // namespace ked

@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,42 +21,42 @@
 
 #ifndef VIEWPREFABEDITOR_H
 #define VIEWPREFABEDITOR_H
-#include "EngineSDK/ui/UiWindow.h"
+#include "KwasarEngine/ui/UiWindow.h"
 #include "IViewPrefabEditor.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class SubWindows;
 class SceneOverlayElements;
 class IPresenterPrefabEditor;
-} // namespace mer::editor::mvp
+} // namespace ked
 
-namespace mer::sdk {
+namespace ke {
 class Framebuffer;
 class GltfModel;
 class PrefabInstance;
 class ProgramWideShaderBuffer;
 class OrbitCameraExtension;
 class Prefab;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::editor::mvp {
-class ViewPrefabEditor : public IViewPrefabEditor, public sdk::UiWindow {
+namespace ked {
+class ViewPrefabEditor : public IViewPrefabEditor, public ke::UiWindow {
 	std::shared_ptr<IWidgetContext> context{};
-	std::vector<std::pair<std::shared_ptr<sdk::Prefab>, bool /*unsaved*/>> prefabs;
-	std::shared_ptr<sdk::Framebuffer> frameBuffer;
+	std::vector<std::pair<std::shared_ptr<ke::Prefab>, bool /*unsaved*/>> prefabs;
+	std::shared_ptr<ke::Framebuffer> frameBuffer;
 	int width{}, height{};
-	std::shared_ptr<sdk::Prefab> selectedPrefab{};
+	std::shared_ptr<ke::Prefab> selectedPrefab{};
 	IPresenterPrefabEditor* presenter{};
-	std::shared_ptr<sdk::OrbitCameraExtension> camera;
-	std::shared_ptr<sdk::ProgramWideShaderBuffer> programBuffer;
+	std::shared_ptr<ke::OrbitCameraExtension> camera;
+	std::shared_ptr<ke::ProgramWideShaderBuffer> programBuffer;
 	bool mouseHeld{};
 	float zoom{10};
 	std::shared_ptr<SceneOverlayElements> overlay;
-	std::shared_ptr<sdk::PrefabInstance> instance;
+	std::shared_ptr<ke::PrefabInstance> instance;
 	glm::vec3 scale{1};
 	glm::vec3 translation;
 	glm::vec3 rotation;
-	std::shared_ptr<sdk::GltfModel> gltfModel;
+	std::shared_ptr<ke::GltfModel> gltfModel;
 
 	explicit ViewPrefabEditor(const std::shared_ptr<IWidgetContext> &pContext);
 
@@ -82,10 +82,10 @@ public:
 	void onKeyChanged(int pKey, int pScancode, int pAction, int pMods) override;
 
 private:
-	void updateTabBar(std::shared_ptr<sdk::Prefab> &pSelectedPrefab, int &pSelectedIndex);
+	void updateTabBar(std::shared_ptr<ke::Prefab> &pSelectedPrefab, int &pSelectedIndex);
 
-	void updateElements(const std::shared_ptr<sdk::Prefab> &pSelectedPrefab, size_t pPrefabIndex);
+	void updateElements(const std::shared_ptr<ke::Prefab> &pSelectedPrefab, size_t pPrefabIndex);
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //VIEWPREFABEDITOR_H

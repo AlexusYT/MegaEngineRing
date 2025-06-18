@@ -1,11 +1,11 @@
 # ---- Developer mode ----
 
 # Developer mode enables targets and code paths in the CMake scripts that are
-# only relevant for the developer(s) of MegaEngineRing
+# only relevant for the developer(s) of KwasarEngine
 # Targets necessary to build the project must be provided unconditionally, so
 # consumers can trivially build and package the project
 if (PROJECT_IS_TOP_LEVEL)
-    option(MegaEngine_DEVELOPER_MODE "Enable developer mode" OFF)
+    option(KwasarEngine_DEVELOPER_MODE "Enable developer mode" OFF)
 endif ()
 
 # ---- Warning guard ----
@@ -17,12 +17,12 @@ endif ()
 set(warning_guard "")
 if (NOT PROJECT_IS_TOP_LEVEL)
     option(
-            MegaEngine_INCLUDES_WITH_SYSTEM
-            "Use SYSTEM modifier for MegaEngine's includes, disabling warnings"
+            KwasarEngine_INCLUDES_WITH_SYSTEM
+            "Use SYSTEM modifier for KwasarEngine's includes, disabling warnings"
             ON
     )
-    mark_as_advanced(MegaEngine_INCLUDES_WITH_SYSTEM)
-    if (MegaEngine_INCLUDES_WITH_SYSTEM)
+    mark_as_advanced(KwasarEngine_INCLUDES_WITH_SYSTEM)
+    if (KwasarEngine_INCLUDES_WITH_SYSTEM)
         set(warning_guard SYSTEM)
     endif ()
 endif ()

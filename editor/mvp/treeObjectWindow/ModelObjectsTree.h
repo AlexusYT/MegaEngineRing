@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -22,20 +22,20 @@
 #ifndef MODELOBJECTSTREE_H
 #define MODELOBJECTSTREE_H
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterObjectsTree;
 class NodeSelectionHelper;
-} // namespace mer::editor::mvp
+} // namespace ked
 
-namespace mer::sdk {
+namespace ke {
 class Scene3D;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelObjectsTree {
 public:
 	virtual ~IModelObjectsTree() = default;
@@ -44,17 +44,17 @@ public:
 
 	virtual void setPresenter(IPresenterObjectsTree* pPresenter) = 0;
 
-	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void setScene(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::Scene3D> &getScene() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::Scene3D> &getScene() const = 0;
 
 	virtual void clearSelection() = 0;
 
-	virtual void select(sdk::Node* pNode) = 0;
+	virtual void select(ke::Node* pNode) = 0;
 };
 
 class ModelObjectsTree : public IModelObjectsTree {
-	std::shared_ptr<sdk::Scene3D> scene;
+	std::shared_ptr<ke::Scene3D> scene;
 	NodeSelectionHelper* selection;
 	IPresenterObjectsTree* presenter{};
 
@@ -65,14 +65,14 @@ public:
 
 	void setPresenter(IPresenterObjectsTree* pPresenter) override { presenter = pPresenter; }
 
-	void setScene(const std::shared_ptr<sdk::Scene3D> &pNewScene3D) override;
+	void setScene(const std::shared_ptr<ke::Scene3D> &pNewScene3D) override;
 
-	[[nodiscard]] const std::shared_ptr<sdk::Scene3D> &getScene() const override { return scene; }
+	[[nodiscard]] const std::shared_ptr<ke::Scene3D> &getScene() const override { return scene; }
 
 	void clearSelection() override;
 
-	void select(sdk::Node* pNode) override;
+	void select(ke::Node* pNode) override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELOBJECTSTREE_H

@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,20 +23,20 @@
 
 #include <memory>
 
-#include "EngineSDK/bounding/DebugGeometry.h"
-#include "EngineSDK/bounding/VolumeAabb.h"
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/extensions/cameras/OrbitCameraExtension.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/render/Renderer.h"
-#include "EngineSDK/resources/shaders/builtin/BoundingVolumeProgram.h"
-#include "EngineSDK/resources/shaders/builtin/DefaultProgram.h"
-#include "EngineSDK/scene/Scene3D.h"
-#include "EngineSDK/utils/Transformation.h"
+#include "KwasarEngine/bounding/DebugGeometry.h"
+#include "KwasarEngine/bounding/VolumeAabb.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/extensions/cameras/OrbitCameraExtension.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/render/Renderer.h"
+#include "KwasarEngine/resources/shaders/builtin/BoundingVolumeProgram.h"
+#include "KwasarEngine/resources/shaders/builtin/DefaultProgram.h"
+#include "KwasarEngine/scene/Scene3D.h"
+#include "KwasarEngine/utils/Transformation.h"
 #include "IModelScenePreview.h"
 #include "IViewScenePreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterScenePreview::PresenterScenePreview(const std::shared_ptr<IViewScenePreview> &pView,
 											 const std::shared_ptr<IModelScenePreview> &pModel)
 	: view(pView), model(pModel) {
@@ -48,7 +48,7 @@ void PresenterScenePreview::renderScene() {
 	auto &scene = model->getScene();
 	if (!scene) return;
 	/*if (!scene->isInited()) {
-		if (auto msg = scene->initialize()) { sdk::Logger::error(msg); }
+		if (auto msg = scene->initialize()) { ke::Logger::error(msg); }
 	}
 	*/
 	scene->getRenderer()->executeMainPass();
@@ -68,21 +68,21 @@ void PresenterScenePreview::renderGeometryBoundingVolumes() {
 	glm::vec3 origin = camera->propertyPosition.getValue();
 	test->setBounds(dir, origin);
 	hoveredMeshNode = nullptr;
-	std::vector<std::pair<glm::vec3, sdk::Node*>> candidates;
+	std::vector<std::pair<glm::vec3, ke::Node*>> candidates;
 	//test->render();
 	for (auto node: scene->getRootNodes()) {
 		//
 		node->listGeometryIntersectsAabb(origin, dir - origin, candidates);
 	} /*
-	std::ranges::sort(candidates, [origin](const std::pair<glm::vec3, sdk::Node*> &pLhs,
-										   const std::pair<glm::vec3, sdk::Node*> &pRhs) {
+	std::ranges::sort(candidates, [origin](const std::pair<glm::vec3, ke::Node*> &pLhs,
+										   const std::pair<glm::vec3, ke::Node*> &pRhs) {
 		return glm::distance(pLhs.first, origin) < glm::distance(origin, pRhs.first);
 	});*/
 	if (candidates.empty()) return;
 
 	float minDistance = std::numeric_limits<float>::max();
 	for (auto &[coordinate, node]: candidates) {
-		if (auto ext = node->getExtension<sdk::MeshExtension>()) {
+		if (auto ext = node->getExtension<ke::MeshExtension>()) {
 			glm::vec2 coord;
 			float distance;
 			if (ext->isGeometryIntersects(origin, glm::normalize(dir - origin), coord, distance)) {
@@ -99,7 +99,7 @@ void PresenterScenePreview::renderGeometryBoundingVolumes() {
 	//for (auto &[coord, meshInst]: selectedByRay) {
 
 	//meshInst->debugGeometry->setCube(origin + glm::normalize(dir - origin) * coord);
-	/*sdk::Logger::out("{}, {}: {}, {}, {}", meshInst->getName(), glm::distance(coord, origin), coord.x, coord.y,
+	/*ke::Logger::out("{}, {}: {}, {}, {}", meshInst->getName(), glm::distance(coord, origin), coord.x, coord.y,
 						 coord.z);*/
 	if (!hoveredMeshNode) return;
 	if (!hoveredMeshNode->debugGeometry->isInited()) hoveredMeshNode->debugGeometry->initialize();
@@ -134,11 +134,11 @@ void PresenterScenePreview::renderSelected(bool /*pOutline*/) {
 }
 
 void PresenterScenePreview::init() {
-	boundingProgram = sdk::BoundingVolumeProgram::getInstance();
-	if (auto msg = boundingProgram->initialize()) { sdk::Logger::error(msg); }
-	auto defaultProgram = sdk::DefaultProgram::getInstance();
-	if (!defaultProgram->isInited()) { if (auto msg = defaultProgram->initialize()) { sdk::Logger::error(msg); } }
-	test = sdk::VolumeAabb::create();
+	boundingProgram = ke::BoundingVolumeProgram::getInstance();
+	if (auto msg = boundingProgram->initialize()) { ke::Logger::error(msg); }
+	auto defaultProgram = ke::DefaultProgram::getInstance();
+	if (!defaultProgram->isInited()) { if (auto msg = defaultProgram->initialize()) { ke::Logger::error(msg); } }
+	test = ke::VolumeAabb::create();
 	test->initialize();
 }
 
@@ -153,11 +153,11 @@ void PresenterScenePreview::onSecondaryMouseKeyPressed() { cancelCurrentAction()
 void PresenterScenePreview::onSceneChanged() {
 	/*auto scene = model->getScene();
 	if (!scene) return;*/
-	/*std::vector<sdk::Node*> nodes;
+	/*std::vector<ke::Node*> nodes;
 	for (auto material: scene->getMaterials()) { model->addMaterial(material.get()); }
 	for (auto rootNode: scene->getRootNodes()) { getAllNodes(rootNode.get(), nodes); }
 	for (auto node: nodes) {
-		if (auto instance = dynamic_cast<sdk::MeshInstance*>(node)) {
+		if (auto instance = dynamic_cast<ke::MeshInstance*>(node)) {
 			model->addMeshInstance(instance->getMesh(), instance);
 		}
 	}*/
@@ -226,4 +226,4 @@ bool PresenterScenePreview::onCursorPosChanged(double pX, double pY) {
 void PresenterScenePreview::run() { view->openView(); }
 
 void PresenterScenePreview::stop() { view->closeView(); }
-} // namespace mer::editor::mvp
+} // namespace ked

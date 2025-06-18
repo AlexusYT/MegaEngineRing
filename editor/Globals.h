@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+namespace ked {
 class Globals {
 	inline static std::filesystem::path logPath;
 	inline static std::filesystem::path projectsPath;
@@ -47,6 +48,7 @@ public:
 
 	static void setCachePath(const std::filesystem::path &pCachePath) { cachePath = pCachePath; }
 };
+}
 
 
 #endif //GLOBALS_H

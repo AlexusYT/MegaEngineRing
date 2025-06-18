@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 #include "ModelObjectsTree.h"
 #include "ViewObjectsTree.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterObjectsTree::PresenterObjectsTree(const std::shared_ptr<IViewObjectsTree> &pView,
 										   const std::shared_ptr<IModelObjectsTree> &pModel)
 	: model(pModel), view(pView) {
@@ -45,15 +45,15 @@ void PresenterObjectsTree::addView(const std::shared_ptr<IView> & /*pNewView*/) 
 	view->openView();*/
 }
 
-void PresenterObjectsTree::onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) {
+void PresenterObjectsTree::onSceneChanged(const std::shared_ptr<ke::Scene3D> &pScene) {
 	view->setSceneToRender(pScene);
 }
 
-void PresenterObjectsTree::onSelectionChanged(const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+void PresenterObjectsTree::onSelectionChanged(const std::vector<ke::Node*> &pNodes, bool pSelected) {
 	view->markSelected(pNodes, pSelected);
 }
 
 void PresenterObjectsTree::clearSelection() { model->clearSelection(); }
 
-void PresenterObjectsTree::select(sdk::Node* pNode) { model->select(pNode); }
-} // namespace mer::editor::mvp
+void PresenterObjectsTree::select(ke::Node* pNode) { model->select(pNode); }
+} // namespace ked

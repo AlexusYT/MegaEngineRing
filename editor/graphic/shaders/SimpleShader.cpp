@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,15 +21,15 @@
 
 #include "SimpleShader.h"
 
-#include "EngineSDK/resources/shaders/Shader.h"
+#include "KwasarEngine/resources/shaders/Shader.h"
 
-namespace mer::editor::graphics {
+namespace ked {
 std::shared_ptr<SimpleShader> SimpleShader::instance = std::shared_ptr<SimpleShader>(new SimpleShader);
 
 SimpleShader::SimpleShader() {
 	Resource::setResourceUri("_builtin_/shaders/SimpleShader.enshader");
 
-	std::shared_ptr<sdk::Shader> vertexShader = std::make_shared<sdk::VertexShader>();
+	std::shared_ptr<ke::Shader> vertexShader = std::make_shared<ke::VertexShader>();
 	//language=glsl
 	vertexShader->setSource(R"(
 #version 460 core
@@ -50,7 +50,7 @@ void main(){
 })");
 	attachShader(vertexShader);
 
-	std::shared_ptr<sdk::Shader> geometryShader = std::make_shared<sdk::GeometryShader>();
+	std::shared_ptr<ke::Shader> geometryShader = std::make_shared<ke::GeometryShader>();
 	//language=glsl
 	geometryShader->setSource(R"(
 #version 460 core
@@ -86,7 +86,7 @@ void main() {
 }
 )");
 	attachShader(geometryShader);
-	std::shared_ptr<sdk::Shader> fragmentShader = std::make_shared<sdk::FragmentShader>();
+	std::shared_ptr<ke::Shader> fragmentShader = std::make_shared<ke::FragmentShader>();
 	//language=glsl
 	fragmentShader->setSource(R"(
 #version 460 core
@@ -109,4 +109,4 @@ void main()
 }
 
 std::shared_ptr<SimpleShader> SimpleShader::getInstance() { return instance; }
-} // namespace mer::editor::graphics
+} // namespace ked

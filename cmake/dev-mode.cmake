@@ -2,15 +2,15 @@ include(cmake/folders.cmake)
 
 include(CTest)
 if (BUILD_TESTING)
-    add_subdirectory(sdk/test)
+    add_subdirectory(engine/test)
 endif ()
 
 add_custom_target(
         run-exe
-        COMMAND MegaEngineEditor
+        COMMAND KwasarEngineEditor
         VERBATIM
 )
-add_dependencies(run-exe MegaEngineEditor)
+add_dependencies(run-exe KwasarEngineEditor)
 
 option(BUILD_MCSS_DOCS "Build documentation using Doxygen and m.css" OFF)
 if (BUILD_MCSS_DOCS)

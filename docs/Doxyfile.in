@@ -7,7 +7,7 @@ PROJECT_NAME = "@PROJECT_NAME@"
 PROJECT_NUMBER = "@PROJECT_VERSION@"
 
 # Add sources
-INPUT = "@PROJECT_SOURCE_DIR@/docs/pages/index.md @PROJECT_SOURCE_DIR@/README.md" "@PROJECT_SOURCE_DIR@/editor"  "@PROJECT_SOURCE_DIR@/sdk/include" "@PROJECT_SOURCE_DIR@/sdk/sources" "@PROJECT_SOURCE_DIR@/docs/pages"
+INPUT = "@PROJECT_SOURCE_DIR@/docs/pages/index.md @PROJECT_SOURCE_DIR@/README.md" "@PROJECT_SOURCE_DIR@/editor"  "@PROJECT_SOURCE_DIR@/engine/include" "@PROJECT_SOURCE_DIR@/engine/sources" "@PROJECT_SOURCE_DIR@/docs/pages"
 EXTRACT_ALL = YES
 RECURSIVE = YES
 OUTPUT_DIRECTORY = "@DOXYGEN_OUTPUT_DIRECTORY@"
@@ -17,8 +17,8 @@ USE_MDFILE_AS_MAINPAGE = "@PROJECT_SOURCE_DIR@/docs/pages/index.md"
 
 # set relative include paths
 FULL_PATH_NAMES = YES
-STRIP_FROM_PATH = "@PROJECT_SOURCE_DIR@/editor" "@PROJECT_SOURCE_DIR@/sdk/include" "@PROJECT_SOURCE_DIR@/sdk" "@PROJECT_SOURCE_DIR@/docs/pages"
-STRIP_FROM_INC_PATH ="@PROJECT_SOURCE_DIR@/sdk/include"
+STRIP_FROM_PATH = "@PROJECT_SOURCE_DIR@/editor" "@PROJECT_SOURCE_DIR@/engine/include" "@PROJECT_SOURCE_DIR@/engine" "@PROJECT_SOURCE_DIR@/docs/pages"
+STRIP_FROM_INC_PATH ="@PROJECT_SOURCE_DIR@/engine/include"
 
 # We use m.css to generate the html documentation, so we only need XML output
 GENERATE_XML = YES
@@ -28,7 +28,7 @@ XML_PROGRAMLISTING = NO
 CREATE_SUBDIRS = NO
 
 #Ignore C++ concepts
-EXCLUDE_SYMBOLS=mer::sdk::ExtensionTypeName
+EXCLUDE_SYMBOLS=ke::ExtensionTypeName ke::HasBaseClassNotify ke::IsConvertibleToNotify ke::IsSharedPtr
 
 # Include all directories, files and namespaces in the documentation
 # Disable to include only explicitly documented objects

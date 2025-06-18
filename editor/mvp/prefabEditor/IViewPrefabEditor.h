@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 #define IVIEWPREFABEDIROT_H
 #include "mvp/IView.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 class SubWindows;
 class IPresenterPrefabEditor;
 
@@ -33,6 +33,6 @@ public:
 
 	virtual void setPresenter(IPresenterPrefabEditor* pPresenter) = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //IVIEWPREFABEDIROT_H

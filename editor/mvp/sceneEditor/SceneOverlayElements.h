@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,19 +21,19 @@
 
 #ifndef SCENEOVERLAYELEMENTS_H
 #define SCENEOVERLAYELEMENTS_H
-#include "EngineSDK/render/IRenderable.h"
-#include "EngineSDK/render/Initializable.h"
+#include "KwasarEngine/render/IRenderable.h"
+#include "KwasarEngine/render/Initializable.h"
 
-namespace mer::sdk {
+namespace ke {
 class ShaderProgram;
 }
 
-namespace mer::editor::mvp {
-class SceneOverlayElements : public sdk::Initializable, public sdk::IRenderable {
+namespace ked {
+class SceneOverlayElements : public ke::Initializable, public ke::IRenderable {
 	uint32_t dataBuffer{};
 	uint32_t indexBuffer{};
 	uint32_t vao{};
-	std::shared_ptr<sdk::ShaderProgram> shader;
+	std::shared_ptr<ke::ShaderProgram> shader;
 	std::vector<uint16_t> indices;
 	bool gridVisible{true};
 
@@ -52,10 +52,10 @@ public:
 protected:
 	void renderGrid() const;
 
-	sdk::ReportMessagePtr onInitialize() override;
+	ke::ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //SCENEOVERLAYELEMENTS_H

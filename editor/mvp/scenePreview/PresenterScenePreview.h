@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,20 +23,20 @@
 #define PRESENTERSCENEPREVIEW_H
 #include "IPresenterScenePreview.h"
 
-namespace mer::sdk {
+namespace ke {
 class RenderPass;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class BoundingVolumeProgram;
 class VolumeAabb;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class IModelScenePreview;
 class IViewScenePreview;
 
@@ -44,12 +44,12 @@ class PresenterScenePreview : public IPresenterScenePreview {
 protected:
 	std::shared_ptr<IViewScenePreview> view;
 	std::shared_ptr<IModelScenePreview> model;
-	std::shared_ptr<sdk::VolumeAabb> test;
-	sdk::Node* hoveredMeshNode{};
-	std::shared_ptr<sdk::BoundingVolumeProgram> boundingProgram{};
+	std::shared_ptr<ke::VolumeAabb> test;
+	ke::Node* hoveredMeshNode{};
+	std::shared_ptr<ke::BoundingVolumeProgram> boundingProgram{};
 
 	bool movingNode{};
-	std::unordered_map<sdk::Node*, glm::vec3> startPosForNodes{};
+	std::unordered_map<ke::Node*, glm::vec3> startPosForNodes{};
 	std::optional<glm::dvec2> lastCursorPosMove{};
 
 	PresenterScenePreview(const std::shared_ptr<IViewScenePreview> &pView,
@@ -87,6 +87,6 @@ protected:
 
 	void stop() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //PRESENTERSCENEPREVIEW_H

@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 
 #define LOCALE_DOMAIN "mer"
 
-namespace mer::editor::mvp {
+namespace ked {
 void I18n::init() {
 	onLanguageChangedConnection = Settings::getGeneral()->onLanguageChanged.connect(
 		[](const std::string &pNew, const std::string & /*pOld*/) { switchTo(pNew); });
@@ -56,12 +56,12 @@ void I18n::init() {
 			countryName = gettext("CountryName");
 		}
 		catch (...) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to load locale");
 			msg->setMessage("Exception occurred");
 			msg->addInfoLine("Locale directory: {}", LOCALE_DIR);
 			msg->addInfoLine("Locale name: {}", filename);
-			sdk::Logger::error(msg);
+			ke::Logger::error(msg);
 			continue;
 		}
 		trLanguages.emplace_back(filename);
@@ -183,4 +183,4 @@ void I18n::updateStrings() {
 	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[3], tr("SketchfabMaterialMetalness"));
 	trSketchfabMaterialTypesMap.emplace(trSketchfabMaterialTypes[4], tr("SketchfabMaterialSpecular"));
 }
-} // namespace mer::editor::mvp
+} // namespace ked

@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 #define CPPGENERATOR_H
 #include <project/generators/GeneratorElement.h>
 
-namespace mer::editor::project {
+namespace ked {
 class CppGenerator {
 	std::vector<std::string> includes;
 	std::vector<GeneratorElement*> elements;
@@ -41,7 +41,7 @@ public:
 
 	void addElement(GeneratorElement* pElement) { elements.emplace_back(pElement); }
 
-	mer::sdk::ReportMessagePtr saveHeader(const std::filesystem::path &pPath) const {
+	ke::ReportMessagePtr saveHeader(const std::filesystem::path &pPath) const {
 		create_directories(pPath.parent_path());
 		std::ofstream stream;
 		try {
@@ -49,7 +49,7 @@ public:
 			stream.open(pPath);
 		}
 		catch (...) {
-			auto msg = mer::sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to save header file.");
 			msg->setMessage("Exception thrown");
 			msg->addInfoLine("Trying to save file at {}", pPath.string());
@@ -66,7 +66,7 @@ public:
 		return nullptr;
 	}
 
-	mer::sdk::ReportMessagePtr saveSource(const std::filesystem::path &pPath) const {
+	ke::ReportMessagePtr saveSource(const std::filesystem::path &pPath) const {
 		create_directories(pPath.parent_path());
 		std::ofstream stream;
 		try {
@@ -74,7 +74,7 @@ public:
 			stream.open(pPath);
 		}
 		catch (...) {
-			auto msg = mer::sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to save source file.");
 			msg->setMessage("Exception thrown");
 			msg->addInfoLine("Trying to save file at {}", pPath.string());
@@ -90,7 +90,7 @@ public:
 		return nullptr;
 	}
 };
-} // namespace mer::editor::project
+} // namespace ked
 
 
 #endif //CPPGENERATOR_H

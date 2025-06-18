@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -22,20 +22,20 @@
 #ifndef IMODELSCENEPREVIEW_H
 #define IMODELSCENEPREVIEW_H
 
-namespace mer::editor::project {
+namespace ked {
 class Scene3DEditor;
 }
 
-namespace mer::sdk {
+namespace ke {
 class Node;
 class Renderer;
 class Scene3D;
 class Mesh;
 class RenderPass;
 class Material;
-} // namespace mer::sdk
+} // namespace ke
 
-namespace mer::editor::mvp {
+namespace ked {
 class IPresenterScenePreview;
 
 class IModelScenePreview {
@@ -46,18 +46,18 @@ public:
 
 	virtual void setPresenter(IPresenterScenePreview* pPresenter) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::Scene3D> &getScene() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::Scene3D> &getScene() const = 0;
 
-	virtual void setScene(const std::shared_ptr<sdk::Scene3D> &pScene) = 0;
+	virtual void setScene(const std::shared_ptr<ke::Scene3D> &pScene) = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<sdk::RenderPass> &getOutlinePass() const = 0;
+	[[nodiscard]] virtual const std::shared_ptr<ke::RenderPass> &getOutlinePass() const = 0;
 
-	[[nodiscard]] virtual const std::vector<sdk::Node*> &getSelectedMeshNodes() const = 0;
+	[[nodiscard]] virtual const std::vector<ke::Node*> &getSelectedMeshNodes() const = 0;
 
-	virtual void addSelectedMeshNode(sdk::Node* pNode) = 0;
+	virtual void addSelectedMeshNode(ke::Node* pNode) = 0;
 
 	virtual void clearSelectedMeshes() = 0;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //IMODELSCENEPREVIEW_H

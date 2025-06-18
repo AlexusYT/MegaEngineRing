@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace mer::editor::mvp {
+namespace ked {
 void Settings::init() {
 	addCategory(std::make_shared<GeneralCategory>());
 	addCategory(std::make_shared<OtherCategory>());
@@ -36,10 +36,10 @@ void Settings::deinit() {
 
 void Settings::setSettingsPath(const std::filesystem::path &pPath) { path = pPath; }
 
-sdk::ReportMessagePtr Settings::load() {
+ke::ReportMessagePtr Settings::load() {
 	std::ifstream file(path);
 	if (!file.is_open()) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to load settings.");
 		msg->setMessage("Unable to open settings file");
 		msg->addInfoLine("Settings file path: {}", path.string());
@@ -48,7 +48,7 @@ sdk::ReportMessagePtr Settings::load() {
 	nlohmann::json root;
 	try { file >> root; }
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to load settings.");
 		msg->setMessage("Exception occurred while parsing json.");
 		msg->addInfoLine("Settings file path: {}", path.string());
@@ -57,7 +57,7 @@ sdk::ReportMessagePtr Settings::load() {
 	for (const auto &category: categoriesArray) {
 		try { category->load(root); }
 		catch (...) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to load settings.");
 			msg->setMessage("Exception occurred while parsing settings values.");
 			msg->addInfoLine("Settings file path: {}", path.string());
@@ -70,13 +70,13 @@ sdk::ReportMessagePtr Settings::load() {
 
 void Settings::loadDefaults() { for (const auto &category: categoriesArray) category->loadDefaults(); }
 
-sdk::ReportMessagePtr Settings::save() {
+ke::ReportMessagePtr Settings::save() {
 	std::ofstream file;
 	auto tmpPath = path;
 	if (backupSettingsFile) {
 		tmpPath.replace_extension(path.extension().string() + ".tmp");
 		if (std::error_code ec; !std::filesystem::remove(tmpPath, ec) && ec) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to save settings.");
 			msg->setMessage("Unable to remove previous tmp-file");
 			msg->addInfoLine("Settings file path: {}", path.string());
@@ -88,7 +88,7 @@ sdk::ReportMessagePtr Settings::save() {
 
 	file.open(tmpPath);
 	if (!file.is_open()) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to save settings.");
 		msg->setMessage("Unable to open settings file");
 		msg->addInfoLine("Settings file path: {}", tmpPath.string());
@@ -98,7 +98,7 @@ sdk::ReportMessagePtr Settings::save() {
 	for (const auto &category: categoriesArray) {
 		try { category->save(root); }
 		catch (...) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to save settings.");
 			msg->setMessage("Exception occurred while parsing settings values to json");
 			msg->addInfoLine("Settings file path: {}", tmpPath.string());
@@ -108,7 +108,7 @@ sdk::ReportMessagePtr Settings::save() {
 	}
 	try { file << root; }
 	catch (...) {
-		auto msg = sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to save settings.");
 		msg->setMessage("Exception occurred while saving json to file.");
 		msg->addInfoLine("Settings file path: {}", tmpPath.string());
@@ -117,7 +117,7 @@ sdk::ReportMessagePtr Settings::save() {
 	file.close();
 	if (backupSettingsFile) {
 		if (std::error_code ec; !std::filesystem::remove(path, ec) && ec) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to save settings.");
 			msg->setMessage("Unable to remove settings file");
 			msg->addInfoLine("Settings file path: {}", path.string());
@@ -130,7 +130,7 @@ sdk::ReportMessagePtr Settings::save() {
 		std::error_code ec;
 		std::filesystem::rename(tmpPath, path, ec);
 		if (ec) {
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to save settings.");
 			msg->setMessage("Unable to rename temp file to settings file");
 			msg->addInfoLine("Settings file path: {}", path.string());
@@ -150,4 +150,4 @@ void Settings::addCategory(const std::shared_ptr<SettingsCategory> &pCategory) {
 	categories.emplace(typeid(typeExpr), pCategory);
 	categoriesArray.emplace_back(pCategory);
 }
-} // namespace mer::editor::mvp
+} // namespace ked

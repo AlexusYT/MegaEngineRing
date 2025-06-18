@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,15 +23,15 @@
 
 #include <project/Project.h>
 
-#include "EngineSDK/extensions/LightExtension.h"
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/extensions/LightExtension.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/scene/Scene3D.h"
 #include "PresenterObjectsTree.h"
 #include "imgui_internal.h"
 #include "mvp/contexts/UiWindowContext.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 ViewObjectsTree::ViewObjectsTree(const std::shared_ptr<IWidgetContext> &pContext)
 	: EditorTool("TreeViewTool"), context(pContext) {}
 
@@ -77,7 +77,7 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 		if (contextMenuImguiId == 0) contextMenuImguiId = ImGui::GetID("ContextMenu");
 		if (ImGui::BeginPopup("ContextMenu")) {
 			if (ImGui::MenuItem(tr("ObjectAdd"))) {
-				auto newNode = sdk::Node::create(tr("ObjectUnnamed"));
+				auto newNode = ke::Node::create(tr("ObjectUnnamed"));
 				scene->addNode(selectedNodeForContext, newNode);
 			}
 			if (selectedNodeForContext) {
@@ -98,10 +98,7 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 			std::string tooltipText;
 			//translators: second line in reparent tooltip in an object tree window
 			const std::string unformattedText = tr("Left click to reparent to the \"{}\".\n");
-			if (hoveredNode && nodeToReparent
-				!=
-				hoveredNode
-			) {
+			if (hoveredNode && nodeToReparent != hoveredNode) {
 				tooltipText = std::vformat(unformattedText, std::make_format_args(hoveredNode->getName()));
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
 					scene->reparentNode(nodeToReparent, hoveredNode);
@@ -140,7 +137,7 @@ void ViewObjectsTree::onUpdate(bool pVisible) {
 	}
 }
 
-void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
+void ViewObjectsTree::updateTreeLevel(const std::vector<ke::Node*> &pNodes) {
 	for (auto node: pNodes) {
 		ImGui::TableNextRow();
 
@@ -161,8 +158,8 @@ void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 		ImGui::TableNextColumn();
 		std::string types;
 		for (auto &extension: node->getExtensions()) {
-			if (extension.first == typeid(sdk::MeshExtension)) { types += "M "; } else if (
-				extension.first == typeid(sdk::LightExtension)) { types += "L "; }
+			if (extension.first == typeid(ke::MeshExtension)) { types += "M "; } else if (
+				extension.first == typeid(ke::LightExtension)) { types += "L "; }
 		}
 		ImGui::TextUnformatted(types.c_str());
 
@@ -173,7 +170,7 @@ void ViewObjectsTree::updateTreeLevel(const std::vector<sdk::Node*> &pNodes) {
 	}
 }
 
-void ViewObjectsTree::setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pScene) {
+void ViewObjectsTree::setSceneToRender(const std::shared_ptr<ke::Scene3D> &pScene) {
 	scene = pScene;
 	if (!scene) {
 		selectedMap.clear();
@@ -186,9 +183,9 @@ void ViewObjectsTree::setSceneToRender(const std::shared_ptr<sdk::Scene3D> &pSce
 	});
 }
 
-void ViewObjectsTree::markSelected(const std::vector<sdk::Node*> &pNodes, bool pSelected) {
+void ViewObjectsTree::markSelected(const std::vector<ke::Node*> &pNodes, bool pSelected) {
 	for (auto node: pNodes) {
 		if (auto iter = selectedMap.find(node); iter != selectedMap.end()) iter->second = pSelected;
 	}
 }
-} // namespace mer::editor::mvp
+} // namespace ked

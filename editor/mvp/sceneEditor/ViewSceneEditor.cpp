@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,16 +21,16 @@
 
 #include "ViewSceneEditor.h"
 
-#include "EngineSDK/extensions/MeshExtension.h"
-#include "EngineSDK/gltf/GltfModel.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/meshes/BlockPlaneMesh.h"
+#include "KwasarEngine/extensions/MeshExtension.h"
+#include "KwasarEngine/gltf/GltfModel.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/meshes/BlockPlaneMesh.h"
 #include "Globals.h"
 #include "ImGuiFileDialog.h"
 #include "NodeSelectionHelper.h"
 #include "imgui_internal.h"
-#include "EngineSDK/meshes/BlockCubeMesh.h"
-#include "EngineSDK/meshes/BlockSphereMesh.h"
+#include "KwasarEngine/meshes/BlockCubeMesh.h"
+#include "KwasarEngine/meshes/BlockSphereMesh.h"
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/objectProperties/ModelObjectProperties.h"
 #include "mvp/objectProperties/PresenterObjectProperties.h"
@@ -42,14 +42,14 @@
 #include "mvp/treeObjectWindow/PresenterObjectsTree.h"
 #include "mvp/treeObjectWindow/ViewObjectsTree.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 SceneEditor::SceneEditor(const std::string &pName)
 	: Editor(pName) {
 	selection = std::make_shared<NodeSelectionHelper>();
 	auto previewView = ViewScenePreview::create("SceneEditorPreview", EditorContext::create(this));
 	scenePreviewView = previewView;
 	auto previewModel = std::make_shared<ModelScenePreview>(selection.get());
-	scene3D = sdk::Scene3D::create();
+	scene3D = ke::Scene3D::create();
 	previewModel->setScene(scene3D);
 	scenePreviewPresenter = PresenterSceneEditorPreview::create(previewView, previewModel);
 	scenePreviewPresenter->run();
@@ -124,10 +124,10 @@ void SceneEditor::loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiD
 }
 
 void SceneEditor::addPlane() {
-	auto ext = sdk::MeshExtension::create();
-	auto mesh = std::make_shared<sdk::BlockPlaneMesh>();
+	auto ext = ke::MeshExtension::create();
+	auto mesh = std::make_shared<ke::BlockPlaneMesh>();
 	ext->mesh = mesh;
-	auto instance = sdk::Node::create("");
+	auto instance = ke::Node::create("");
 	instance->addExtension(ext);
 	scene3D->addMesh(mesh);
 	scene3D->addNode(nullptr, instance);
@@ -135,37 +135,37 @@ void SceneEditor::addPlane() {
 }
 
 void SceneEditor::addCube() {
-	auto ext = sdk::MeshExtension::create();
-	auto mesh = std::make_shared<sdk::BlockCubeMesh>();
+	auto ext = ke::MeshExtension::create();
+	auto mesh = std::make_shared<ke::BlockCubeMesh>();
 	ext->mesh = mesh;
-	auto instance = sdk::Node::create("");
+	auto instance = ke::Node::create("");
 	instance->addExtension(ext);
 	scene3D->addMesh(mesh);
 	scene3D->addNode(nullptr, instance);
 }
 
 void SceneEditor::addSphere() {
-	auto ext = sdk::MeshExtension::create();
-	auto mesh = std::make_shared<sdk::BlockSphereMesh>();
+	auto ext = ke::MeshExtension::create();
+	auto mesh = std::make_shared<ke::BlockSphereMesh>();
 	ext->mesh = mesh;
-	auto instance = sdk::Node::create("");
+	auto instance = ke::Node::create("");
 	instance->addExtension(ext);
 	scene3D->addMesh(mesh);
 	scene3D->addNode(nullptr, instance);
 }
 
 void SceneEditor::addGltfModel(const std::string &pPath) {
-	sdk::ReportMessagePtr msg;
-	auto gltf = sdk::GltfModel::createFromFile(pPath, msg);
+	ke::ReportMessagePtr msg;
+	auto gltf = ke::GltfModel::createFromFile(pPath, msg);
 
 	if (!gltf) {
-		sdk::Logger::error(msg);
+		ke::Logger::error(msg);
 		return;
 	}
 	auto model = scenePreviewPresenter->getModel();
 	auto scene = model->getScene();
 	if (!scene) {
-		scene = sdk::Scene3D::create();
+		scene = ke::Scene3D::create();
 		model->setScene(scene);
 	}
 	for (auto material: gltf->getMaterials()) { scene->addMaterial(material); }
@@ -174,4 +174,4 @@ void SceneEditor::addGltfModel(const std::string &pPath) {
 
 	scene->mergeNodes(gltf->getNodes());
 }
-} // namespace mer::editor::mvp
+} // namespace ked

@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,21 +23,21 @@
 #define MODELPREFABEDITOR_H
 #include "IModelPrefabEditor.h"
 
-namespace mer::sdk {
+namespace ke {
 class Prefab;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class ModelPrefabEditor : public IModelPrefabEditor {
-	std::shared_ptr<sdk::Prefab> selectedPrefab;
+	std::shared_ptr<ke::Prefab> selectedPrefab;
 
 public:
-	[[nodiscard]] const std::shared_ptr<sdk::Prefab> &getSelectedPrefab() const override { return selectedPrefab; }
+	[[nodiscard]] const std::shared_ptr<ke::Prefab> &getSelectedPrefab() const override { return selectedPrefab; }
 
-	void setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pSelectedPrefab) override {
+	void setSelectedPrefab(const std::shared_ptr<ke::Prefab> &pSelectedPrefab) override {
 		selectedPrefab = pSelectedPrefab;
 	}
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELTEXTUREEDITOR_H

@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -25,11 +25,11 @@
 
 #include "sketchfab/SketchfabSearch.h"
 
-namespace mer::sdk {
+namespace ke {
 class GltfModel;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 class SketchfabSearch;
 class ModelSearchList;
 class IPresenterOnlineImport;
@@ -59,7 +59,7 @@ public:
 
 	[[nodiscard]] virtual bool isModelInCache() const = 0;
 
-	virtual sdk::ReportMessagePtr loadModelFromCache(std::shared_ptr<std::iostream> &pData) const = 0;
+	virtual ke::ReportMessagePtr loadModelFromCache(std::shared_ptr<std::iostream> &pData) const = 0;
 
 	[[nodiscard]] virtual IPresenterOnlineImport* getPresenter() const = 0;
 
@@ -73,7 +73,7 @@ class ModelOnlineImport : public IModelOnlineImport {
 	std::shared_ptr<SketchfabAccount> account;
 	std::shared_ptr<SketchfabSearch> search;
 	std::shared_ptr<ModelSearchList> selectedModel;
-	std::shared_ptr<sdk::GltfModel> loadedGltfModel;
+	std::shared_ptr<ke::GltfModel> loadedGltfModel;
 	IPresenterOnlineImport* presenter{};
 
 public:
@@ -97,7 +97,7 @@ public:
 
 	[[nodiscard]] bool isModelInCache() const override;
 
-	sdk::ReportMessagePtr loadModelFromCache(std::shared_ptr<std::iostream> &pData) const;
+	ke::ReportMessagePtr loadModelFromCache(std::shared_ptr<std::iostream> &pData) const;
 
 	[[nodiscard]] IPresenterOnlineImport* getPresenter() const override { return presenter; }
 
@@ -105,6 +105,6 @@ public:
 
 	bool isSearching() override;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //MODELONLINEIMPORT_H

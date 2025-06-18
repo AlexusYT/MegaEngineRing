@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -25,10 +25,10 @@
 #include <nlohmann/json.hpp>
 #include <thread>
 
-#include "EngineSDK/gltf/GltfModel.h"
-#include "EngineSDK/gltf/Node.h"
-#include "EngineSDK/render/Renderer.h"
-#include "EngineSDK/scene/Scene3D.h"
+#include "KwasarEngine/gltf/GltfModel.h"
+#include "KwasarEngine/gltf/Node.h"
+#include "KwasarEngine/render/Renderer.h"
+#include "KwasarEngine/scene/Scene3D.h"
 #include "Globals.h"
 #include "ModelOnlineImport.h"
 #include "Utils.h"
@@ -46,31 +46,31 @@ namespace Microsoft::glTF {
 class GLTFResourceReader;
 }
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterOnlineImport::PresenterOnlineImport(const std::shared_ptr<IModelOnlineImport> &pModel,
 											 const std::shared_ptr<IViewOnlineImport> &pView)
 	: model(pModel), view(pView) {
 	view->setPresenter(this);
 	model->setPresenter(this);
-	sdk::ReportMessagePtr message;
+	ke::ReportMessagePtr message;
 	auto path = Globals::getConfigPath() / "sketchfab-account.json";
 	if (exists(path)) {
-		sdk::Logger::info("Loading Sketchfab account");
+		ke::Logger::info("Loading Sketchfab account");
 		if (auto account = SketchfabAccount::createFromFile(path, message)) { model->setAccount(account); } else {
-			sdk::Logger::error(message);
-			sdk::Logger::info("Re-login to Sketchfab account required");
+			ke::Logger::error(message);
+			ke::Logger::info("Re-login to Sketchfab account required");
 			view->loginError("invalid_save", "Re-login required");
 			view->showLoginDialog();
 		}
 	} else {
-		sdk::Logger::info("No Sketchfab account found. Login required");
+		ke::Logger::info("No Sketchfab account found. Login required");
 		view->showLoginDialog();
 	}
 }
 
 std::shared_ptr<PresenterOnlineImport> PresenterOnlineImport::create(const std::shared_ptr<IModelOnlineImport> &pModel,
 																	 const std::shared_ptr<IViewOnlineImport> &pView) {
-	return std::shared_ptr<PresenterOnlineImport>(new PresenterOnlineImport(pModel, pView));
+	return std::shared_ptr < PresenterOnlineImport > (new PresenterOnlineImport(pModel, pView));
 }
 
 void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const std::string &pPassword) {
@@ -79,7 +79,7 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 			std::format("grant_type=password&client_id={}&username={}&password={}", CLIENT_ID, pUsername, pPassword);
 		try {
 			std::unique_ptr<CURL, void (*)(CURL*)>
-				request(curl_easy_init(), curl_easy_cleanup);
+			request(curl_easy_init(), curl_easy_cleanup);
 			view->setLoginInProgress();
 			curl_easy_setopt(request.get(), CURLOPT_URL, SKETCHFAB_OAUTH);
 
@@ -107,8 +107,8 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 				auto account = SketchfabAccount::create();
 				account->deserialize(j);
 				if (auto msg = account->saveToFile(Globals::getConfigPath() / "sketchfab-account.json")) {
-					sdk::Logger::error(msg);
-				} else { sdk::Logger::info("Sketchfab account saved"); }
+					ke::Logger::error(msg);
+				} else { ke::Logger::info("Sketchfab account saved"); }
 				model->setAccount(account);
 				view->hideLoginDialog();
 
@@ -120,7 +120,7 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 
 		catch (...) {
 			view->loginError("runtime_error", "");
-			auto msg = sdk::ReportMessage::create();
+			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Login failed");
 			msg->setMessage("Exception occurred during login");
 			msg->addInfoLine("Address: {}", SKETCHFAB_OAUTH);
@@ -129,7 +129,7 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 			auto user = "username=" + pUsername;
 			str = str.replace(str.find(user), user.size(), "username=<REDACTED>");
 			msg->addInfoLine("Data: {}", str);
-			sdk::Logger::error(msg);
+			ke::Logger::error(msg);
 			return;
 		}
 		view->loginError("unknown_error", "Unknown error");
@@ -171,7 +171,7 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 					if (!hasDownloadLinks()) {
 						view->setProgressMode(IViewOnlineImport::ProgressMode::DOWNLOAD_LINKS);
 						if (auto msg = selectedModel->downloadLinks(view->getProgressAtomic())) {
-							sdk::Logger::error(msg);
+							ke::Logger::error(msg);
 							if (pToken.stop_requested()) return;
 							std::this_thread::sleep_for(1s);
 							continue;
@@ -183,7 +183,7 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 					if (!link->getStream()) {
 						view->setProgressMode(IViewOnlineImport::ProgressMode::DOWNLOAD_MODEL);
 						if (auto msg = link->download(view->getProgressAtomic())) {
-							sdk::Logger::error(msg);
+							ke::Logger::error(msg);
 							if (pToken.stop_requested()) return;
 							std::this_thread::sleep_for(1s);
 							continue;
@@ -194,7 +194,7 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 					}
 				} else {
 					if (auto msg = model->loadModelFromCache(stream)) {
-						sdk::Logger::error(msg);
+						ke::Logger::error(msg);
 						forceDownload = true;
 					} else
 						break;
@@ -207,16 +207,16 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 			}
 			view->setProgressMode(IViewOnlineImport::ProgressMode::PARSE_MODEL);
 			view->getProgressAtomic().store(-1.0f);
-			sdk::ReportMessagePtr errorMsg;
-			auto gltfModel = sdk::GltfModel::createFromStream(stream, errorMsg);
+			ke::ReportMessagePtr errorMsg;
+			auto gltfModel = ke::GltfModel::createFromStream(stream, errorMsg);
 			if (!gltfModel) {
 				view->setProgressMode(IViewOnlineImport::ProgressMode::NONE);
 				view->hideModelLoading();
 				errorMsg->setTitle("Model parsing error");
-				sdk::Logger::error(errorMsg);
+				ke::Logger::error(errorMsg);
 				return;
 			}
-			auto scene = sdk::Scene3D::create();
+			auto scene = ke::Scene3D::create();
 			for (auto material: gltfModel->getMaterials()) { scene->addMaterial(material); }
 			for (auto light: gltfModel->getLights()) { scene->addLightSource(light); }
 			for (auto mesh: gltfModel->getMeshes()) { scene->addMesh(mesh); }
@@ -226,7 +226,7 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 			/*for (auto material: gltfModel->getMaterials()) { modelPreview->addMaterial(material); }
 
 			for (auto node: gltfModel->getNodes()) {
-				if (auto meshInstance = std::dynamic_pointer_cast<sdk::MeshInstance>(node))
+				if (auto meshInstance = std::dynamic_pointer_cast<ke::MeshInstance>(node))
 					modelPreview->addNode(nullptr, meshInstance);
 			}*/
 			view->setProgressMode(IViewOnlineImport::ProgressMode::NONE);
@@ -235,12 +235,12 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 		});
 		loadingThread->detach();
 		/*std::filesystem::path path = "/home/alexus/Downloads/models/CompareMetallic.glb";
-		sdk::ReportMessagePtr errorMsg;
-		auto gltfModel = sdk::GltfModel::createFromFile(path, errorMsg);
-		if (!gltfModel) { sdk::Logger::error(errorMsg); }
+		ke::ReportMessagePtr errorMsg;
+		auto gltfModel = ke::GltfModel::createFromFile(path, errorMsg);
+		if (!gltfModel) { ke::Logger::error(errorMsg); }
 
 		auto scene = gltfModel->getDefaultScene();
-		if (auto msg = scene->initialize()) { sdk::Logger::error(msg); }
+		if (auto msg = scene->initialize()) { ke::Logger::error(msg); }
 		modelPreview->setScene(scene);*/
 	} else {
 		modelPreview->setScene(nullptr);
@@ -269,8 +269,8 @@ void PresenterOnlineImport::onSearchRequestChanged() {
 	searchDelayThread->detach();
 }
 
-void PresenterOnlineImport::onSearchResultLoaded(const sdk::ReportMessagePtr &pError) {
-	if (pError) sdk::Logger::error(pError);
+void PresenterOnlineImport::onSearchResultLoaded(const ke::ReportMessagePtr &pError) {
+	if (pError) ke::Logger::error(pError);
 	view->setResults(model->getSearchResult());
 }
 
@@ -298,4 +298,4 @@ std::shared_ptr<DownloadLinks> PresenterOnlineImport::getGltfLinks() const {
 	if (!selectedModel) return nullptr;
 	return selectedModel->getLinks();
 }
-} // namespace mer::editor::mvp
+} // namespace ked

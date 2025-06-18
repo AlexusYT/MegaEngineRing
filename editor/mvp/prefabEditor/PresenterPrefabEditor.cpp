@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -21,25 +21,25 @@
 
 #include "PresenterPrefabEditor.h"
 
-#include "EngineSDK/prefabs/Prefab.h"
-#include "EngineSDK/prefabs/elements/MeshPrefabElement.h"
+#include "KwasarEngine/prefabs/Prefab.h"
+#include "KwasarEngine/prefabs/elements/MeshPrefabElement.h"
 #include "IModelPrefabEditor.h"
 #include "IViewPrefabEditor.h"
 #include "mvp/scenePreview/ViewScenePreview.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterPrefabEditor::PresenterPrefabEditor(const std::shared_ptr<IModelPrefabEditor> &pModel,
 											 const std::shared_ptr<IViewPrefabEditor> &pView)
 	: model(pModel), view(pView) { view->setPresenter(this); }
 
 std::shared_ptr<PresenterPrefabEditor> PresenterPrefabEditor::create(const std::shared_ptr<IModelPrefabEditor> &pModel,
 																	 const std::shared_ptr<IViewPrefabEditor> &pView) {
-	return std::shared_ptr<PresenterPrefabEditor>(new PresenterPrefabEditor(pModel, pView));
+	return std::shared_ptr < PresenterPrefabEditor > (new PresenterPrefabEditor(pModel, pView));
 }
 
 void PresenterPrefabEditor::addMeshesFrom(const std::filesystem::path & /*pPath*/) {}
 
-void PresenterPrefabEditor::setSelectedPrefab(const std::shared_ptr<sdk::Prefab> &pPrefab) {
+void PresenterPrefabEditor::setSelectedPrefab(const std::shared_ptr<ke::Prefab> &pPrefab) {
 	model->setSelectedPrefab(pPrefab);
 }
 
@@ -53,4 +53,4 @@ void PresenterPrefabEditor::run() {
 }
 
 void PresenterPrefabEditor::stop() { view->closeView(); }
-} // namespace mer::editor::mvp
+} // namespace ked

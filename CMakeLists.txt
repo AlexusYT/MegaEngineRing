@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.21)
 include(cmake/prelude.cmake)
 
 project(
-        MegaEngineRing
+        KwasarEngine
         VERSION 0.1.0
         DESCRIPTION "Game engine"
         HOMEPAGE_URL "https://example.com/"
@@ -38,7 +38,6 @@ set(ENABLE_UNIT_TESTS OFF)
 set(ENABLE_SAMPLES OFF)
 add_subdirectory(submodules/glTF-SDK)
 target_include_directories(GLTFSDK SYSTEM PUBLIC "submodules/glTF-SDK/GLTFSDK/Inc/")
-target_compile_options(GLTFSDK PRIVATE -fPIC)
 
 add_library(ImGUI OBJECT
         submodules/imgui/imgui.cpp
@@ -50,7 +49,6 @@ add_library(ImGUI OBJECT
         submodules/imgui/imgui_widgets.cpp
         submodules/imgui/backends/imgui_impl_glfw.cpp
         submodules/imgui/backends/imgui_impl_opengl3.cpp)
-target_compile_options(ImGUI PRIVATE -fPIC)
 target_compile_options(ImGUI BEFORE PRIVATE -w)
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui")
 target_include_directories(ImGUI SYSTEM PUBLIC "submodules/imgui/backends")
@@ -72,50 +70,40 @@ else ()
     message(STATUS "Compilation of ImGuiB2C utility succeeded")
 endif ()
 
-target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/sdk/imconfig_custom.h>\"")
+target_compile_definitions(ImGUI PUBLIC "IMGUI_USER_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/engine/imconfig_custom.h>\"")
 
 add_subdirectory(submodules/ImGuiFileDialog)
 target_link_libraries(ImGuiFileDialog PRIVATE ImGUI)
 target_compile_definitions(ImGuiFileDialog PUBLIC "CUSTOM_IMGUIFILEDIALOG_CONFIG=\"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/editor/ImGuiFileDialogConfigCustom.h>\"")
 
 
-add_subdirectory(sdk)
+add_subdirectory(engine)
 add_subdirectory(editor)
 
 # ---- Declare executable ----
 
-add_executable(MegaEngineEditor source/main.cpp)
-add_executable(MegaEngine::Editor ALIAS MegaEngineEditor)
-if (LINUX)
-    target_link_options(MegaEngineEditor PRIVATE -rdynamic)
-endif ()
-set_property(TARGET MegaEngineEditor PROPERTY OUTPUT_NAME MegaEngineEditor)
+add_executable(KwasarEngineEditor source/main.cpp)
+add_executable(KwasarEngine::Editor ALIAS KwasarEngineEditor)
+set_property(TARGET KwasarEngineEditor PROPERTY OUTPUT_NAME KwasarEngineEditor)
 
-target_link_libraries(MegaEngineEditor PRIVATE MegaEngineEditor_lib)
-target_compile_options(MegaEngineEditor PRIVATE -Werror)
+target_link_libraries(KwasarEngineEditor PRIVATE KwasarEngineEditor_lib)
+target_compile_options(KwasarEngineEditor PRIVATE -Werror)
 
-#[[install(TARGETS MegaEngineEditor
-        RUNTIME ARCHIVE LIBRARY RUNTIME FRAMEWORK BUNDLE PUBLIC_HEADER RESOURCE)]]
 if (WIN32)
-
-    #[[add_custom_command(TARGET MegaEngineEditor POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:MegaEngineEditor> $<TARGET_FILE_DIR:MegaEngineEditor>
-            COMMAND_EXPAND_LISTS
-    )]]
     install(
-            TARGETS MegaEngineEditor
+            TARGETS KwasarEngineEditor
             COMPONENT editor
             RUNTIME_DEPENDENCIES
             PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
             POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
-            DIRECTORIES $<TARGET_FILE_DIR:MegaEngineEditor>
-            $<TARGET_FILE_DIR:MegaEngineSDK_shared>
+            DIRECTORIES $<TARGET_FILE_DIR:KwasarEngineEditor>
+            $<TARGET_FILE_DIR:KwasarEngineLib>
             $ENV{PATH}
     )
 else ()
 
     install(
-            IMPORTED_RUNTIME_ARTIFACTS MegaEngineEditor
+            IMPORTED_RUNTIME_ARTIFACTS KwasarEngineEditor
             COMPONENT editor
     )
 endif ()
@@ -128,12 +116,12 @@ endif ()
 
 # ---- Developer mode ----
 
-if (NOT MegaEngine_DEVELOPER_MODE)
+if (NOT KwasarEngine_DEVELOPER_MODE)
     return()
 elseif (NOT PROJECT_IS_TOP_LEVEL)
     message(
             AUTHOR_WARNING
-            "Developer mode is intended for developers of MegaEngineRing"
+            "Developer mode is intended for developers of KwasarEngine"
     )
 endif ()
 

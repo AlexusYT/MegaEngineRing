@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -24,8 +24,8 @@
 #include "CppDeclaration.h"
 #include "CppDefinition.h"
 
-namespace mer::editor::project {
-mer::sdk::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath) {
+namespace ked {
+ke::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath) {
 	std::filesystem::path path = pPath;
 	path.replace_extension(getExtension());
 	create_directories(pPath.parent_path());
@@ -48,7 +48,7 @@ mer::sdk::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath
 		for (const auto &cppDefinition: getDefinitions()) stream << cppDefinition->getCode(0, isHeader()) << "\n";
 	}
 	catch (...) {
-		auto msg = mer::sdk::ReportMessage::create();
+		auto msg = ke::ReportMessage::create();
 		msg->setTitle("Failed to save the file.");
 		msg->setMessage("Exception thrown");
 		msg->addInfoLine("Trying to save the file at {}", pPath.string());
@@ -56,4 +56,4 @@ mer::sdk::ReportMessagePtr CppFile::writeFile(const std::filesystem::path &pPath
 	}
 	return nullptr;
 }
-} // namespace mer::editor::project
+} // namespace ked

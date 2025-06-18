@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 #ifndef SKETCHFABCACHE_H
 #define SKETCHFABCACHE_H
 
-namespace mer::editor::mvp {
+namespace ked {
 class SketchfabCache {
 	std::filesystem::path pathToCache;
 	std::mutex mutex;
@@ -30,18 +30,18 @@ class SketchfabCache {
 public:
 	SketchfabCache(const std::filesystem::path &pPath);
 
-	sdk::ReportMessagePtr saveCache(const std::string &pUrl, const std::vector<unsigned char> &pData);
+	ke::ReportMessagePtr saveCache(const std::string &pUrl, const std::vector<unsigned char> &pData);
 
-	sdk::ReportMessagePtr saveCache(const std::string &pUrl, const std::ostream &pData);
+	ke::ReportMessagePtr saveCache(const std::string &pUrl, const std::ostream &pData);
 
-	sdk::ReportMessagePtr loadCache(const std::string &pUrl, std::vector<unsigned char> &pData);
+	ke::ReportMessagePtr loadCache(const std::string &pUrl, std::vector<unsigned char> &pData);
 
-	sdk::ReportMessagePtr loadCache(const std::string &pUrl, std::shared_ptr<std::iostream> &pData);
+	ke::ReportMessagePtr loadCache(const std::string &pUrl, std::shared_ptr<std::iostream> &pData);
 
 	bool isCached(const std::string &pUrl) const;
 
-	sdk::ReportMessagePtr buildPath(const std::string &pUrl, std::filesystem::path &pPathOut) const;
+	ke::ReportMessagePtr buildPath(const std::string &pUrl, std::filesystem::path &pPathOut) const;
 };
-} // namespace mer::editor::mvp
+} // namespace ked
 
 #endif //SKETCHFABCACHE_H

@@ -1,4 +1,4 @@
-//  MegaEngineRing is a program that can speed up game development.
+//  KwasarEngine is an SDK that can help you speed up game development.
 //  Copyright (C) 2024-2025. Timofeev (Alexus_XX) Alexander
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 #include "ModelObjectProperties.h"
 #include "ViewObjectProperties.h"
 
-namespace mer::editor::mvp {
+namespace ked {
 PresenterObjectProperties::PresenterObjectProperties(const std::shared_ptr<IViewObjectProperties> &pView,
 													 const std::shared_ptr<IModelObjectProperties> &pModel)
 	: model(pModel), view(pView) {
@@ -40,9 +40,9 @@ void PresenterObjectProperties::stop() {
 	model.reset();
 }
 
-void PresenterObjectProperties::onEditingNodeChanged(sdk::Node* pNode) { view->setSelectedNode(pNode); }
+void PresenterObjectProperties::onEditingNodeChanged(ke::Node* pNode) { view->setSelectedNode(pNode); }
 
-void PresenterObjectProperties::onSceneChanged(const std::shared_ptr<sdk::Scene3D> &pScene) { view->setScene(pScene); }
+void PresenterObjectProperties::onSceneChanged(const std::shared_ptr<ke::Scene3D> &pScene) { view->setScene(pScene); }
 
 void PresenterObjectProperties::addView(const std::shared_ptr<IView> & /*pElement*/) {
 	/*
@@ -53,4 +53,4 @@ void PresenterObjectProperties::addView(const std::shared_ptr<IView> & /*pElemen
 	loadedScene->connectSelectionChanged([view](ExplorerObject* pSelectedObject) { view->setObject(pSelectedObject); });
 	view->openView();*/
 }
-} // namespace mer::editor::mvp
+} // namespace ked
