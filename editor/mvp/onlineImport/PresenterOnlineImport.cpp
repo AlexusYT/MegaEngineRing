@@ -70,7 +70,7 @@ PresenterOnlineImport::PresenterOnlineImport(const std::shared_ptr<IModelOnlineI
 
 std::shared_ptr<PresenterOnlineImport> PresenterOnlineImport::create(const std::shared_ptr<IModelOnlineImport> &pModel,
 																	 const std::shared_ptr<IViewOnlineImport> &pView) {
-	return std::shared_ptr < PresenterOnlineImport > (new PresenterOnlineImport(pModel, pView));
+	return std::shared_ptr<PresenterOnlineImport>(new PresenterOnlineImport(pModel, pView));
 }
 
 void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const std::string &pPassword) {
@@ -79,7 +79,7 @@ void PresenterOnlineImport::loginImplicit(const std::string &pUsername, const st
 			std::format("grant_type=password&client_id={}&username={}&password={}", CLIENT_ID, pUsername, pPassword);
 		try {
 			std::unique_ptr<CURL, void (*)(CURL*)>
-			request(curl_easy_init(), curl_easy_cleanup);
+				request(curl_easy_init(), curl_easy_cleanup);
 			view->setLoginInProgress();
 			curl_easy_setopt(request.get(), CURLOPT_URL, SKETCHFAB_OAUTH);
 
@@ -217,12 +217,13 @@ void PresenterOnlineImport::onSelectedModelChanged() {
 				return;
 			}
 			auto scene = ke::Scene3D::create();
+			sceneInitingFailed = false;
+			modelPreview->setScene(scene);
 			for (auto material: gltfModel->getMaterials()) { scene->addMaterial(material); }
 			for (auto light: gltfModel->getLights()) { scene->addLightSource(light); }
 			for (auto mesh: gltfModel->getMeshes()) { scene->addMesh(mesh); }
 
 			scene->mergeNodes(gltfModel->getNodes());
-			modelPreview->setScene(scene);
 			/*for (auto material: gltfModel->getMaterials()) { modelPreview->addMaterial(material); }
 
 			for (auto node: gltfModel->getNodes()) {
@@ -275,6 +276,17 @@ void PresenterOnlineImport::onSearchResultLoaded(const ke::ReportMessagePtr &pEr
 }
 
 bool PresenterOnlineImport::isSearching() { return model->isSearching(); }
+
+void PresenterOnlineImport::initScene() {
+	if (sceneInitingFailed) return;
+	auto scene = modelPreview->getScene();
+	if (!scene) return;
+	if (scene->isInited()) return;
+	if (auto msg = scene->initialize()) {
+		ke::Logger::error(msg);
+		sceneInitingFailed = true;
+	}
+}
 
 void PresenterOnlineImport::run() {
 	view->openView();

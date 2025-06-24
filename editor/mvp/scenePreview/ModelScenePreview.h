@@ -44,7 +44,6 @@ class ModelScenePreview : public IModelScenePreview {
 	std::shared_ptr<ke::RenderPass> outlinePass;
 	NodeSelectionHelper* selectionHelper;
 	std::shared_ptr<ke::Renderer> prevSceneRenderer;
-	std::shared_ptr<ke::Renderer> editorRenderer;
 
 	std::shared_ptr<ke::OrbitCameraExtension> editorCamera;
 	std::shared_ptr<ke::ICamera> prevSceneCamera;

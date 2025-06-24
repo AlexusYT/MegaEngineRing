@@ -35,8 +35,6 @@ namespace ked {
 ModelScenePreview::ModelScenePreview(NodeSelectionHelper* pSelectionHelper)
 	: selectionHelper(pSelectionHelper) {
 	outlinePass = std::make_shared<ke::RenderPass>();
-	editorRenderer = CustomEditorRenderer::create();
-	editorRenderer->addRenderPass("__editor_outline__", outlinePass);
 	editorCamera = ke::OrbitCameraExtension::create();
 	editorCamera->propertyAngle = {-43.5f, -20.0f};
 	selectionHelper->connectOnNodeSelectionChanged([this](const std::vector<ke::Node*> &pNodes, bool pSelected) {
@@ -63,6 +61,8 @@ void ModelScenePreview::setScene(const std::shared_ptr<ke::Scene3D> &pScene) {
 	}
 	if (pScene) {
 		prevSceneRenderer = pScene->getRenderer();
+		auto editorRenderer = CustomEditorRenderer::create();
+		editorRenderer->addRenderPass("__editor_outline__", outlinePass);
 		pScene->setRenderer(editorRenderer);
 		prevSceneCamera = pScene->getMainCamera();
 		pScene->setMainCamera(editorCamera);

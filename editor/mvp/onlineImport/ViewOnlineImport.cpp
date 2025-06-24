@@ -329,7 +329,7 @@ void ViewOnlineImport::renderResults() {
 			break;
 	}
 	if (mode != ProgressMode::NONE) ImGui::ProgressBar(prog, ImVec2(itemWidth, 0.0f), progressStr.c_str());
-
+	else { presenter->initScene(); }
 	auto maxScroll = ImGui::GetScrollMaxY();
 	if (maxScroll > 100 && ImGui::GetScrollY() + 100.0f >= maxScroll) {
 		if (!presenter->isSearching() && !resultsInvalidated) presenter->nextSearchResult();

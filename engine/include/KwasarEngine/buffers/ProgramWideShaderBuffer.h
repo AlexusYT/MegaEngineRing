@@ -24,6 +24,7 @@
 
 #include <glm/mat4x4.hpp>
 #include <KwasarEngine/extensions/cameras/ICamera.h>
+#include <sigc++/scoped_connection.h>
 
 #include "SSBO.h"
 
@@ -40,7 +41,7 @@ struct ProgramShaderData {
 
 class ProgramWideShaderBuffer : public Ssbo<ProgramShaderData> {
 	std::shared_ptr<ICamera> camera;
-	std::vector<sigc::connection> cameraConnections;
+	std::vector<sigc::scoped_connection> cameraConnections;
 
 public:
 	ProgramWideShaderBuffer() {}

@@ -67,6 +67,8 @@ public:
 	virtual void setPreviewModel(const std::shared_ptr<ModelScenePreview> &pPreview) = 0;
 
 	virtual bool isSearching() = 0;
+
+	virtual void initScene() = 0;
 };
 
 class PresenterOnlineImport : public IPresenterOnlineImport {
@@ -75,6 +77,7 @@ class PresenterOnlineImport : public IPresenterOnlineImport {
 	std::shared_ptr<IModelScenePreview> modelPreview;
 	std::optional<std::jthread> loadingThread;
 	std::optional<std::jthread> searchDelayThread;
+	bool sceneInitingFailed{};
 
 	std::atomic<std::chrono::steady_clock::time_point> searchTime{};
 
@@ -108,6 +111,8 @@ public:
 	void setPreviewModel(const std::shared_ptr<ModelScenePreview> &pPreview) override { modelPreview = pPreview; }
 
 	bool isSearching() override;
+
+	void initScene() override;
 
 	void run() override;
 
