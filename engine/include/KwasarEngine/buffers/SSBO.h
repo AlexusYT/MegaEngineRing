@@ -49,11 +49,13 @@ public:
 
 	[[nodiscard]] const T &getData() const { return data; }
 
+	[[nodiscard]] T &getData() { return data; }
+
 	size_t getElementSize() const override { return sizeof(T); }
 
 	size_t getBytesCount() const override { return getElementSize(); }
 
-	const void* getBytes() const override { return data.data(); }
+	const void* getBytes() const override { return &data; }
 };
 
 template <typename T>

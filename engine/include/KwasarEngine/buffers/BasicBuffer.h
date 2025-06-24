@@ -32,7 +32,7 @@ protected:
 	BufferUsageEnum usage = DYNAMIC_DRAW;
 	int64_t allocatedSize{};
 	std::recursive_mutex mutex;
-	bool dirty{};
+	bool dirty{true};
 
 	BasicBuffer() = default;
 
@@ -99,7 +99,7 @@ public:
 
 private:
 	void updateImpl() {
-		if (int64_t dataSize = static_cast<int64_t>(getBytesCount()); allocatedSize < dataSize)
+		if (int64_t dataSize = static_cast<int64_t>(getBytesCount()); allocatedSize < dataSize || name == 0)
 			reallocate(dataSize, getBytes());
 		else
 			bufferSubData(0, dataSize, getBytes());
