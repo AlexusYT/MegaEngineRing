@@ -104,6 +104,7 @@ void ViewScenePreview::openView() {
 }
 
 void ViewScenePreview::closeView() {
+	if (presenter) presenter->uninit();
 	context->remove();
 	framebuffer->uninitialize();
 }

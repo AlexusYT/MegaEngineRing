@@ -35,11 +35,14 @@ CustomEditorRenderer::CustomEditorRenderer() {
 
 ke::ReportMessagePtr CustomEditorRenderer::onInitialize() {
 	if (const auto msg = overlay->initialize()) { ke::Logger::error(msg); }
+	if (auto msg = ke::DefaultProgram::getInstance()->initialize()) { ke::Logger::error(msg); }
+
 	return Renderer::onInitialize();
 }
 
 void CustomEditorRenderer::onUninitialize() {
 	overlay->uninitialize();
+	ke::DefaultProgram::getInstance()->uninitialize();
 	Renderer::onUninitialize();
 }
 

@@ -49,6 +49,8 @@ class SceneEditor : public Editor {
 public:
 	explicit SceneEditor(const std::string &pName);
 
+	~SceneEditor() override;
+
 	void updateUi() override;
 
 protected:

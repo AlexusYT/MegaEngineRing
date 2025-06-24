@@ -253,7 +253,10 @@ void Renderer::removeRenderPass(const std::string &pName) {
 }
 
 void Renderer::executeRenderPass(const std::string &pPassName) {
-	if (!isInited()) initialize();
+	if (!isInited()) {
+		Logger::warn("Renderer must be initialized before rendering. Did you call Scene3D::initialize() before?");
+		initialize();
+	}
 	auto renderPass = getRenderPass(pPassName);
 	if (!renderPass) return;
 	glBindVertexArray(vao);

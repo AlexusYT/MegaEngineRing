@@ -34,6 +34,8 @@ public:
 
 	virtual void init() = 0;
 
+	virtual void uninit() = 0;
+
 	virtual void onPrimaryMouseKeyPressed() = 0;
 
 	virtual void onSecondaryMouseKeyPressed() = 0;

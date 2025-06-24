@@ -119,10 +119,16 @@ void PresenterScenePreview::renderGeometryBoundingVolumes() {
 void PresenterScenePreview::init() {
 	//boundingProgram = ke::BoundingVolumeProgram::getInstance();
 	//if (auto msg = boundingProgram->initialize()) { ke::Logger::error(msg); }
-	auto defaultProgram = ke::DefaultProgram::getInstance();
-	if (!defaultProgram->isInited()) { if (auto msg = defaultProgram->initialize()) { ke::Logger::error(msg); } }
+	if (auto scene = model->getScene())
+		if (auto msg = scene->initialize()) ke::Logger::error(msg);
+
 	test = ke::VolumeAabb::create();
 	test->initialize();
+}
+
+void PresenterScenePreview::uninit() {
+	if (auto scene = model->getScene())
+		scene->uninitialize();
 }
 
 void PresenterScenePreview::onPrimaryMouseKeyPressed() {

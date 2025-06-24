@@ -62,6 +62,8 @@ public:
 
 	void init() override;
 
+	void uninit() override;
+
 	void onPrimaryMouseKeyPressed() override;
 
 	void onSecondaryMouseKeyPressed() override;

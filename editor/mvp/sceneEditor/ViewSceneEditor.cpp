@@ -68,6 +68,12 @@ SceneEditor::SceneEditor(const std::string &pName)
 	propertiesPresenter->run();
 }
 
+SceneEditor::~SceneEditor() {
+	scenePreviewPresenter->stop();
+	objTreePresenter->stop();
+	propertiesPresenter->stop();
+}
+
 void SceneEditor::updateUi() {
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu(tr("SceneAdd"))) {

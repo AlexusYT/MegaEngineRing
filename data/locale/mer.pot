@@ -200,43 +200,43 @@ msgstr ""
 msgid "ProjectExplorerTool"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:73
+#: mvp/sceneEditor/ViewSceneEditor.cpp:79
 msgid "SceneAdd"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:74
+#: mvp/sceneEditor/ViewSceneEditor.cpp:80
 msgid "SceneAddBlocking"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:75
+#: mvp/sceneEditor/ViewSceneEditor.cpp:81
 msgid "SceneAddBlockPlane"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:76
+#: mvp/sceneEditor/ViewSceneEditor.cpp:82
 msgid "SceneAddBlockCube"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:77
+#: mvp/sceneEditor/ViewSceneEditor.cpp:83
 msgid "SceneAddBlockSphere"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:80
+#: mvp/sceneEditor/ViewSceneEditor.cpp:86
 msgid "SceneAddModel"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:82
+#: mvp/sceneEditor/ViewSceneEditor.cpp:88
 msgid "SceneAddFromFile"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:86
+#: mvp/sceneEditor/ViewSceneEditor.cpp:92
 msgid "SceneAddFromFileTitle"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:90
+#: mvp/sceneEditor/ViewSceneEditor.cpp:96
 msgid "SceneAddFromSketchfab"
 msgstr ""
 
-#: mvp/sceneEditor/ViewSceneEditor.cpp:91
+#: mvp/sceneEditor/ViewSceneEditor.cpp:97
 msgid "SceneAddFromFavorites"
 msgstr ""
 
