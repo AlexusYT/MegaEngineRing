@@ -2,6 +2,16 @@ Language: Cpp
 BasedOnStyle: InheritParentConfig
 AlignArrayOfStructures: Left
 AllowShortCaseExpressionOnASingleLine: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: 'KwasarEngine'
+    Priority: 1
+  - Regex: '^"(llvm|llvm-c|clang|clang-c)/'
+    Priority: 2
+  - Regex: '^(<|"(gtest|gmock|isl|json)/)'
+    Priority: 3
+  - Regex: '.*'
+    Priority: 4
 PenaltyBreakAssignment: 2
 PenaltyBreakBeforeFirstCallParameter: 19
 PenaltyBreakComment: 300
