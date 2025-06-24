@@ -17,4 +17,4 @@
 
 #include <GameEngine.h>
 
-int main(const int argc, char** argv) { return ked::GameEngine::run(argc, argv); }
+int main(const int pArgc, char** pArgv) { return ked::GameEngine::run(pArgc, pArgv); }
