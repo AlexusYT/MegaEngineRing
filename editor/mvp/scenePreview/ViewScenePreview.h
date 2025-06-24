@@ -45,9 +45,6 @@ class ViewScenePreview : public IViewScenePreview, public EditorTool {
 	std::shared_ptr<IWidgetContext> context;
 	std::shared_ptr<ke::Framebuffer> framebuffer;
 	bool frameDisplayed{};
-	std::shared_ptr<ke::OrbitCameraExtension> camera;
-	std::shared_ptr<ke::ProgramWideShaderBuffer> programBuffer;
-	std::shared_ptr<SceneOverlayElements> overlay;
 	bool widgetHovered{};
 	bool mouseHeld{};
 	bool moveKeyHeld{};
@@ -90,8 +87,6 @@ public:
 	void onMouseButton(int pButton, int pAction, int pMods) override;
 
 	void onMouseScroll(double pXOffset, double pYOffset) override;
-
-	[[nodiscard]] const std::shared_ptr<ke::OrbitCameraExtension> &getCamera() const override { return camera; }
 
 	[[nodiscard]] const glm::vec2 &getMousePos() const override { return mousePos; }
 

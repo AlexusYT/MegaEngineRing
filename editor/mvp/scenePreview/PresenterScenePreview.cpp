@@ -51,15 +51,15 @@ void PresenterScenePreview::renderScene() {
 		if (auto msg = scene->initialize()) { ke::Logger::error(msg); }
 	}
 	*/
-	scene->getRenderer()->executeMainPass();
+	scene->render();
 	//for (auto mesh: scene->getMeshes()) mesh->render();
 }
 
 void PresenterScenePreview::renderGeometryBoundingVolumes() {
-	boundingProgram->use();
+	//boundingProgram->use();
 	auto &scene = model->getScene();
 	if (!scene) return;
-	auto camera = view->getCamera();
+	auto camera = model->getEditorCamera();
 	auto mousePos = view->getMousePos();
 	[[maybe_unused]] glm::vec3 dir =
 		camera->propertyTargetPosition.getValue() +
@@ -95,47 +95,30 @@ void PresenterScenePreview::renderGeometryBoundingVolumes() {
 		}
 	}
 	//auto &[coord, meshInst] = selectedByRay.front();
-	int i = 0;
+	//int i = 0;
 	//for (auto &[coord, meshInst]: selectedByRay) {
 
 	//meshInst->debugGeometry->setCube(origin + glm::normalize(dir - origin) * coord);
 	/*ke::Logger::out("{}, {}: {}, {}, {}", meshInst->getName(), glm::distance(coord, origin), coord.x, coord.y,
 						 coord.z);*/
 	if (!hoveredMeshNode) return;
-	if (!hoveredMeshNode->debugGeometry->isInited()) hoveredMeshNode->debugGeometry->initialize();
-	boundingProgram->setUniform("color", glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+	//if (!hoveredMeshNode->debugGeometry->isInited()) hoveredMeshNode->debugGeometry->initialize();
+	//boundingProgram->setUniform("color", glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
 	//hoveredMeshNode->debugGeometry->render();
-	auto aabb = hoveredMeshNode->getContentAabb();
-	if (!aabb->isInited()) aabb->initialize();
-	boundingProgram->setUniform("color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-	aabb->render();
+	//auto aabb = hoveredMeshNode->getContentAabb();
+	//if (!aabb->isInited()) aabb->initialize();
+	//boundingProgram->setUniform("color", glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+	//aabb->render();
 
 	//if (view->isRotate()) selectedMesh->getLocalTransform()->translate(0.1f, 0, 0);
 	//	break;
-	i++;
+	//i++;
 	//}
 }
 
-void PresenterScenePreview::renderSelected(bool /*pOutline*/) {
-	auto &scene = model->getScene();
-	if (!scene) return;
-	scene->getRenderer()->executeRenderPass("__editor_outline__");
-	/*for (auto selectedMesh: model->getSelectedMeshes()) {
-		if (!selectedMesh->isInited()) selectedMesh->initialize();
-		selectedMesh->render();
-	}
-	if (view->isRotate()) {
-		for (auto selectedMeshNode: model->getSelectedMeshNodes()) {
-			selectedMeshNode->getLocalTransform()->translate(1, 0, 0);
-		}
-	}*/
-	//scene->getMeshes().at(1)->render();
-	//scene->render();
-}
-
 void PresenterScenePreview::init() {
-	boundingProgram = ke::BoundingVolumeProgram::getInstance();
-	if (auto msg = boundingProgram->initialize()) { ke::Logger::error(msg); }
+	//boundingProgram = ke::BoundingVolumeProgram::getInstance();
+	//if (auto msg = boundingProgram->initialize()) { ke::Logger::error(msg); }
 	auto defaultProgram = ke::DefaultProgram::getInstance();
 	if (!defaultProgram->isInited()) { if (auto msg = defaultProgram->initialize()) { ke::Logger::error(msg); } }
 	test = ke::VolumeAabb::create();
@@ -200,7 +183,7 @@ bool PresenterScenePreview::applyCurrentAction() {
 bool PresenterScenePreview::onCursorPosChanged(double pX, double pY) {
 	const glm::dvec2 pos{pX, pY};
 	if (movingNode) {
-		auto camera = view->getCamera();
+		auto camera = model->getEditorCamera();
 		auto mousePos = view->getMousePos();
 		glm::vec3 cameraDirection =
 			glm::normalize(camera->propertyPosition.getValue() - camera->propertyTargetPosition.getValue());

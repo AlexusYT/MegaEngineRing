@@ -31,6 +31,7 @@
 #include "IPresenterScenePreview.h"
 #include "examples/libs/glfw/include/GLFW/glfw3.h"
 #include "imgui_internal.h"
+#include "IModelScenePreview.h"
 #include "mvp/contexts/UiWindowContext.h"
 #include "mvp/sceneEditor/SceneOverlayElements.h"
 
@@ -40,7 +41,7 @@ ViewScenePreview::ViewScenePreview(const std::string &pName, const std::shared_p
 
 std::shared_ptr<ViewScenePreview> ViewScenePreview::create(const std::string &pName,
 														   const std::shared_ptr<IWidgetContext> &pContext) {
-	return std::shared_ptr < ViewScenePreview > (new ViewScenePreview(pName, pContext));
+	return std::shared_ptr<ViewScenePreview>(new ViewScenePreview(pName, pContext));
 }
 
 void ViewScenePreview::customRender() {
@@ -54,35 +55,10 @@ void ViewScenePreview::customRender() {
 	glViewport(0, 0, framebuffer->getWidth(), framebuffer->getHeight());
 
 	zoom = (zoom - targetZoom) * 0.5f;
-	camera->propertyDistance = std::pow(-zoom, 1.5f);
+	presenter->getModel()->getEditorCamera()->propertyDistance = std::pow(-zoom, 1.5f);
+	presenter->renderScene();
 
-	ke::DefaultProgram::getInstance()->use();
-	//camera->propertyDistance = targetZoom;
-	programBuffer->bindBufferBase(0);
-	programBuffer->setMode(ke::RenderPassMode::REGULAR);
-	programBuffer->update();
-	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	glStencilMask(0xFF);
-	if (presenter) presenter->renderSelected(false);
-	glBindVertexArray(0);
-	glStencilMask(0x00);
-	overlay->render();
-	ke::DefaultProgram::getInstance()->use();
-	if (presenter) presenter->renderScene();
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glDisable(GL_DEPTH_TEST);
-	programBuffer->setMode(ke::RenderPassMode::OUTLINE);
-	programBuffer->update();
-	if (presenter) presenter->renderSelected(true);
-	glStencilMask(0xFF);
-	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	glDisable(GL_STENCIL_TEST);
-	glBindVertexArray(0);
 	if (presenter) presenter->renderGeometryBoundingVolumes();
-	glEnable(GL_DEPTH_TEST);
-
-
 	//selectedPrefab->getShaderProgram()->use();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -109,7 +85,7 @@ void ViewScenePreview::onUpdate(bool pVisible) {
 	mousePos.y = (mouse.y - screenCursor.y - contentAvail.y / 2.0f) / (contentAvail.y * 0.25f);
 	//mousePos = mousePos;
 	if (framebuffer->getWidth() != width || framebuffer->getHeight() != height) {
-		camera->propertyAspect = contentAvail.x / contentAvail.y;
+		presenter->getModel()->getEditorCamera()->propertyAspect = contentAvail.x / contentAvail.y;
 		framebuffer->setSize(width, height);
 	}
 
@@ -124,28 +100,19 @@ void ViewScenePreview::openView() {
 	context->add(this);
 	framebuffer = std::make_shared<ke::Framebuffer>();
 	framebuffer->initialize();
-	overlay = SceneOverlayElements::create();
-	overlay->initialize();
-	camera = ke::OrbitCameraExtension::create();
-	camera->propertyAngle = {-43.5f, -20.0f};
-	programBuffer = std::make_shared<ke::ProgramWideShaderBuffer>();
-	camera->getPosition().connectEvent([this](const glm::vec3 &pPosition) { programBuffer->setCameraPos(pPosition); });
-	camera->getOnMatrixChanged().connect(
-		[this](const glm::mat4 &pMatrix) { programBuffer->setViewProjMatrix(pMatrix); });
 	if (presenter) presenter->init();
 }
 
 void ViewScenePreview::closeView() {
 	context->remove();
 	framebuffer->uninitialize();
-	overlay->uninitialize();
-	programBuffer.reset();
 }
 
 void ViewScenePreview::onCursorPosChanged(double pX, double pY) {
 	if (!widgetHovered) return;
 	const glm::dvec2 pos{pX, pY};
 	if (presenter->onCursorPosChanged(pX, pY)) return;
+	auto camera = presenter->getModel()->getEditorCamera();
 	if (moveKeyHeld && mouseHeld) {
 		if (!lastCursorPosMove) { lastCursorPosMove = pos; }
 		const glm::vec2 delta = glm::vec2(lastCursorPosMove.value() - pos) * 0.002f * zoom;
@@ -197,6 +164,7 @@ void ViewScenePreview::onMouseButton(int pButton, int pAction, int /*pMods*/) {
 	//if (!widgetHovered) return;
 	mouseHeld = widgetHovered && pButton == GLFW_MOUSE_BUTTON_MIDDLE && pAction == GLFW_PRESS;
 
+	auto camera = presenter->getModel()->getEditorCamera();
 	if (moveKeyHeld) { lastTargetPos = camera->propertyTargetPosition; }
 	if (!widgetHovered) return;
 	if (pButton == GLFW_MOUSE_BUTTON_LEFT && pAction == GLFW_RELEASE)

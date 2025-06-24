@@ -28,16 +28,12 @@
 #include "mvp/sceneEditor/NodeSelectionHelper.h"
 
 namespace ke {
+class OrbitCameraExtension;
+class ICamera;
 class Renderer;
-}
-
-namespace ke {
 class Material;
 class RenderPass;
 class Mesh;
-} // namespace ke
-
-namespace ke {
 class Scene3D;
 }
 
@@ -47,6 +43,11 @@ class ModelScenePreview : public IModelScenePreview {
 	std::shared_ptr<ke::Scene3D> scene{};
 	std::shared_ptr<ke::RenderPass> outlinePass;
 	NodeSelectionHelper* selectionHelper;
+	std::shared_ptr<ke::Renderer> prevSceneRenderer;
+	std::shared_ptr<ke::Renderer> editorRenderer;
+
+	std::shared_ptr<ke::OrbitCameraExtension> editorCamera;
+	std::shared_ptr<ke::ICamera> prevSceneCamera;
 
 public:
 	explicit ModelScenePreview(NodeSelectionHelper* pSelectionHelper);
@@ -71,6 +72,10 @@ public:
 	void addSelectedMeshNode(ke::Node* pNode) override;
 
 	void clearSelectedMeshes() override;
+
+	[[nodiscard]] const std::shared_ptr<ke::OrbitCameraExtension> &getEditorCamera() const override {
+		return editorCamera;
+	}
 };
 } // namespace ked
 

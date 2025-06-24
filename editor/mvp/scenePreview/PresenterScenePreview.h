@@ -60,8 +60,6 @@ public:
 
 	void renderGeometryBoundingVolumes() override;
 
-	void renderSelected(bool pOutline) override;
-
 	void init() override;
 
 	void onPrimaryMouseKeyPressed() override;

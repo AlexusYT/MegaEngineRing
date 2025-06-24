@@ -140,6 +140,8 @@ set(EDITOR_SOURCES
         mvp/editor/settings/categories/GeneralCategory.h
         I18N.cpp
         I18N.h
+        mvp/scenePreview/CustomEditorRenderer.cpp
+        mvp/scenePreview/CustomEditorRenderer.h
 
 )
 

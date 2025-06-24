@@ -16,42 +16,24 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 27.02.25.
+// Created by alexus on 18.06.2025.
 //
 
-#ifndef IPRESENTERSCENEPREVIEW_H
-#define IPRESENTERSCENEPREVIEW_H
-#include "mvp/IPresenter.h"
+#ifndef DRAWELEMENTSINDIRECTCOMMAND_H
+#define DRAWELEMENTSINDIRECTCOMMAND_H
 
-namespace ked {
-class IModelScenePreview;
+namespace ke {
 
-class IPresenterScenePreview : public IPresenter {
-public:
-	virtual void renderScene() = 0;
-
-	virtual void renderGeometryBoundingVolumes() = 0;
-
-	virtual void init() = 0;
-
-	virtual void onPrimaryMouseKeyPressed() = 0;
-
-	virtual void onSecondaryMouseKeyPressed() = 0;
-
-	virtual void onSceneChanged() = 0;
-
-	virtual void setFocus() = 0;
-
-	[[nodiscard]] virtual const std::shared_ptr<IModelScenePreview> &getModel() const = 0;
-
-	virtual void startMovingGesture() = 0;
-
-	virtual bool cancelCurrentAction() = 0;
-
-	virtual bool applyCurrentAction() = 0;
-
-	virtual bool onCursorPosChanged(double pX, double pY) = 0;
+struct DrawElementsIndirectCommand {
+	//number of indices
+	unsigned int count{};
+	unsigned int instanceCount{1};
+	//an index (not byte) offset into the bound element array buffer to start reading index data.
+	unsigned int firstIndex{};
+	//interpreted as an addition to whatever index is read from the element array buffer.
+	int baseVertex{};
+	unsigned int baseInstance{};
 };
-} // namespace ked
+} // ke
 
-#endif //IPRESENTERSCENEPREVIEW_H
+#endif //DRAWELEMENTSINDIRECTCOMMAND_H

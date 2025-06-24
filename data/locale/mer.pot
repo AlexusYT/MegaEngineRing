@@ -360,7 +360,7 @@ msgstr ""
 msgid "SearchWindowTool"
 msgstr ""
 
-#: mvp/scenePreview/ViewScenePreview.h:76
+#: mvp/scenePreview/ViewScenePreview.h:73
 msgid "ScenePreviewTool"
 msgstr ""
 

@@ -20,3 +20,17 @@
 //
 
 #include "KwasarEngine/buffers/ProgramWideShaderBuffer.h"
+
+#include <KwasarEngine/extensions/ExtensionProperty.h>
+
+void ke::ProgramWideShaderBuffer::setCamera(const std::shared_ptr<ICamera> &pCamera) {
+	if (camera == pCamera) return;
+	camera = pCamera;
+	if (camera) {
+		cameraConnections.emplace_back(camera->getPosition().connectEvent([this](const glm::vec3 &pPosition) {
+			setCameraPos(pPosition);
+		}));
+		cameraConnections.emplace_back(camera->getOnMatrixChanged().connect(
+			[this](const glm::mat4 &pMatrix) { setViewProjMatrix(pMatrix); }));
+	} else cameraConnections.clear();
+}

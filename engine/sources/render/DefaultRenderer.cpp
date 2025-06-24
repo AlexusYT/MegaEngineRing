@@ -16,42 +16,14 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 27.02.25.
+// Created by alexus on 18.06.2025.
 //
 
-#ifndef IPRESENTERSCENEPREVIEW_H
-#define IPRESENTERSCENEPREVIEW_H
-#include "mvp/IPresenter.h"
+#include "KwasarEngine/render/DefaultRenderer.h"
 
-namespace ked {
-class IModelScenePreview;
+#include <KwasarEngine/render/RenderPass.h>
 
-class IPresenterScenePreview : public IPresenter {
-public:
-	virtual void renderScene() = 0;
 
-	virtual void renderGeometryBoundingVolumes() = 0;
-
-	virtual void init() = 0;
-
-	virtual void onPrimaryMouseKeyPressed() = 0;
-
-	virtual void onSecondaryMouseKeyPressed() = 0;
-
-	virtual void onSceneChanged() = 0;
-
-	virtual void setFocus() = 0;
-
-	[[nodiscard]] virtual const std::shared_ptr<IModelScenePreview> &getModel() const = 0;
-
-	virtual void startMovingGesture() = 0;
-
-	virtual bool cancelCurrentAction() = 0;
-
-	virtual bool applyCurrentAction() = 0;
-
-	virtual bool onCursorPosChanged(double pX, double pY) = 0;
-};
-} // namespace ked
-
-#endif //IPRESENTERSCENEPREVIEW_H
+namespace ke {
+DefaultRenderer::DefaultRenderer() { addMainPass(std::make_shared<RenderPass>()); }
+} // ke

@@ -23,53 +23,47 @@
 #define PROGRAMWIDESHADERBUFFER_H
 
 #include <glm/mat4x4.hpp>
+#include <KwasarEngine/extensions/cameras/ICamera.h>
 
 #include "SSBO.h"
 
 namespace ke {
 enum class RenderPassMode : int32_t { REGULAR, OUTLINE };
 
-class ProgramWideShaderBuffer : public SSBO {
-	struct Data {
-		glm::mat4 viewProjMatrix{1};
-		glm::mat4 projectionMatrix{1};
-		glm::mat4 viewMatrix{1};
-		glm::vec4 camPos{0};
-		int32_t mode{0};
-	};
+struct ProgramShaderData {
+	glm::mat4 viewProjMatrix{1};
+	glm::mat4 projectionMatrix{1};
+	glm::mat4 viewMatrix{1};
+	glm::vec4 camPos{0};
+	int32_t mode{0};
+};
 
-	Data data{};
-	bool dirty{};
+class ProgramWideShaderBuffer : public Ssbo<ProgramShaderData> {
+	std::shared_ptr<ICamera> camera;
+	std::vector<sigc::connection> cameraConnections;
 
 public:
-	ProgramWideShaderBuffer() {
-		bind();
-		setData(&data, sizeof(data), DYNAMIC_DRAW);
-	}
+	ProgramWideShaderBuffer() {}
 
-	void update() {
-		if (!dirty) return;
+	[[nodiscard]] const std::shared_ptr<ICamera> &getCamera() const { return camera; }
 
-		bind();
-		bufferSubData(0, sizeof(data), &data);
-		dirty = false;
-	}
+	void setCamera(const std::shared_ptr<ICamera> &pCamera);
 
-	[[nodiscard]] const glm::mat4 &getViewProjMatrix() const { return data.viewProjMatrix; }
+	[[nodiscard]] const glm::mat4 &getViewProjMatrix() const { return getData().viewProjMatrix; }
 
 	void setViewProjMatrix(const glm::mat4 &pViewProjMatrix) {
-		data.viewProjMatrix = pViewProjMatrix;
-		dirty = true;
+		getData().viewProjMatrix = pViewProjMatrix;
+		markDirty();
 	}
 
 	void setMode(RenderPassMode pMode) {
-		data.mode = static_cast<int32_t>(pMode);
-		dirty = true;
+		getData().mode = static_cast<int32_t>(pMode);
+		markDirty();
 	}
 
 	void setCameraPos(const glm::vec3 &pPosition) {
-		data.camPos = glm::vec4(pPosition, 1.0f);
-		dirty = true;
+		getData().camPos = glm::vec4(pPosition, 1.0f);
+		markDirty();
 	}
 };
 } // namespace ke

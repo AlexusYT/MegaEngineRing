@@ -27,6 +27,7 @@ class Scene3DEditor;
 }
 
 namespace ke {
+class OrbitCameraExtension;
 class Node;
 class Renderer;
 class Scene3D;
@@ -57,6 +58,8 @@ public:
 	virtual void addSelectedMeshNode(ke::Node* pNode) = 0;
 
 	virtual void clearSelectedMeshes() = 0;
+
+	[[nodiscard]] virtual const std::shared_ptr<ke::OrbitCameraExtension> &getEditorCamera() const = 0;
 };
 } // namespace ked
 

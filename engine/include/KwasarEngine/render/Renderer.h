@@ -23,74 +23,22 @@
 #define RENDERER_H
 
 #include <unordered_map>
+#include <KwasarEngine/buffers/SSBO.h>
+#include <KwasarEngine/gltf/Material.h>
+#include <sigc++/scoped_connection.h>
 
-#include "KwasarEngine/buffers/SSBO.h"
+#include "DrawElementsIndirectCommand.h"
+#include "Initializable.h"
+#include "IRenderable.h"
 #include "KwasarEngine/buffers/VertexBufferObject.h"
 #include "KwasarEngine/gltf/Light.h"
-#include "KwasarEngine/gltf/Material.h"
-#include "KwasarEngine/gltf/Node.h"
-#include "Initializable.h"
 
 namespace ke {
-class Light;
-class Primitive;
-class Renderer;
-class MeshInstanceSsbo;
+class ProgramWideShaderBuffer;
+class Node;
 class Mesh;
-
-struct DrawElementsIndirectCommand {
-	//number of indices
-	unsigned int count{};
-	unsigned int instanceCount{1};
-	//an index (not byte) offset into the bound element array buffer to start reading index data.
-	unsigned int firstIndex{};
-	//interpreted as an addition to whatever index is read from the element array buffer.
-	int baseVertex{};
-	unsigned int baseInstance{};
-};
-
-class RenderPass : public Initializable {
-	friend class Renderer;
-	Renderer* renderer{};
-	std::unordered_map<Mesh*, std::vector<size_t> /*instancesIds*/> meshesToRender;
-	uint32_t drawCmdBuffer{};
-	std::vector<DrawElementsIndirectCommand> commands;
-	bool commandsBufferDirty{true};
-	std::mutex commandsBufferMutex;
-	size_t commandsBufferSize{};
-
-	std::vector<uint32_t> instanceIndices;
-	uint32_t instanceIndicesBuffer{};
-	bool instanceIndicesBufferDirty{true};
-	std::vector<uint32_t> meshIndices;
-	uint32_t meshIndicesBuffer{};
-	bool meshIndicesBufferDirty{true};
-
-	Ssbo<std::vector<MeshInstanceData>> meshInstanceSsbo;
-	std::unordered_map<Node*, std::pair<size_t /*index*/, sigc::scoped_connection>> instances;
-	Ssbo<std::vector<int32_t>> litByInstancesSsbo;
-
-public:
-	RenderPass();
-
-
-	void addNode(Node* pNode);
-
-	void removeNode(Node* pNode);
-
-	void removeAllMeshInstances();
-
-	void changeMesh(Node* pNode, Mesh* pMesh);
-
-protected:
-	ReportMessagePtr onInitialize() override;
-
-	void onUninitialize() override;
-
-	void render();
-
-	void removeInstanceFromMesh(Node* pNode);
-};
+class Primitive;
+class RenderPass;
 
 struct MeshMetadata {
 	uint32_t uvStartPos{};
@@ -107,7 +55,23 @@ struct MeshInfo {
 	std::vector<sigc::connection> materialChangedConnections;
 };
 
-class Renderer : public Initializable {
+/**
+ * @brief You can inherit this class to customize your geometry rendering process.
+ *
+ * Override method render() from IRenderable in your Renderer class:
+ *
+ * @code
+ *	class CustomRenderer : public Renderer{
+ *	public:
+ *		void render() override{
+ *			//Call executeMainPass or executeRenderPass to run render passes.
+ *			//Also, you can switch opengl state here.
+ *		}
+ *	}
+ * @endcode
+ * @see DefaultRenderer for renderer that used by default
+ */
+class Renderer : public Initializable, public IRenderable {
 	std::vector<std::shared_ptr<Material>> materials;
 	std::unordered_map<Material*, sigc::scoped_connection> materialsConnections;
 	std::unordered_map<Material*, size_t /*index*/> materialToIndexMap;
@@ -139,9 +103,12 @@ class Renderer : public Initializable {
 	Ssbo<std::vector<glm::vec4>> colorSsbo;
 	std::unordered_map<std::string, std::shared_ptr<RenderPass>> renderPasses;
 
-public:
+protected:
+	std::shared_ptr<ProgramWideShaderBuffer> programBuffer;
+
 	Renderer();
 
+public:
 	void addMaterial(const std::shared_ptr<Material> &pMaterial);
 
 	void removeAllMaterials();
@@ -162,19 +129,11 @@ public:
 
 	std::optional<MeshInfo> getMeshInfo(Mesh* pMesh);
 
-	void addRenderPass(const std::string &pName, const std::shared_ptr<RenderPass> &pPass) {
-		auto iter = renderPasses.find(pName);
-		if (iter != renderPasses.end()) return;
-		pPass->renderer = this;
-		renderPasses.emplace_hint(iter, pName, pPass);
-	}
+	[[nodiscard]] const std::shared_ptr<ProgramWideShaderBuffer> &getProgramBuffer() const { return programBuffer; }
 
-	void removeRenderPass(const std::string &pName) {
-		auto iter = renderPasses.find(pName);
-		if (iter == renderPasses.end()) return;
-		iter->second->renderer = nullptr;
-		renderPasses.erase(iter);
-	}
+	void addRenderPass(const std::string &pName, const std::shared_ptr<RenderPass> &pPass);
+
+	void removeRenderPass(const std::string &pName);
 
 	void executeMainPass() { executeRenderPass(getMainPassName()); }
 
@@ -201,6 +160,8 @@ public:
 	[[nodiscard]] const std::vector<std::shared_ptr<Material>> &getMaterials() const { return materials; }
 
 protected:
+	void addMainPass(const std::shared_ptr<RenderPass> &pPass) { addRenderPass(getMainPassName(), pPass); }
+
 	ReportMessagePtr onInitialize() override;
 
 	void onUninitialize() override;

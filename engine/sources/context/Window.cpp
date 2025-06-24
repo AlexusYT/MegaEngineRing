@@ -36,7 +36,11 @@
 namespace ke {
 Window::Window() {}
 
-Window::~Window() { if (native) glfwDestroyWindow(native); }
+Window::~Window() {
+	scene3ds.clear();
+	sceneUis.clear();
+	if (native) glfwDestroyWindow(native);
+}
 
 void Window::show() {
 	if (!native) {

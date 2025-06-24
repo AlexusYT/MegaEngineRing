@@ -85,6 +85,8 @@ set(ENGINE_SOURCES sources/context/Application.cpp
         sources/utils/ReportMessage.cpp
         sources/utils/ConsoleColors.cpp
         sources/utils/PropertyBase.cpp
+        sources/render/RenderPass.cpp
+        sources/render/DefaultRenderer.cpp
 )
 set(ENGINE_HEADERS include/KwasarEngine/context/Application.h
         include/KwasarEngine/context/Window.h
@@ -222,6 +224,9 @@ set(ENGINE_HEADERS include/KwasarEngine/context/Application.h
         include/KwasarEngine/utils/PropertyReadOnly.h
         include/KwasarEngine/utils/IReportable.h
         include/KwasarEngine/utils/PropertyNotifiable.h
+        include/KwasarEngine/render/RenderPass.h
+        include/KwasarEngine/render/DrawElementsIndirectCommand.h
+        include/KwasarEngine/render/DefaultRenderer.h
 )
 
 foreach (SOURCE IN ITEMS ${ENGINE_SOURCES})

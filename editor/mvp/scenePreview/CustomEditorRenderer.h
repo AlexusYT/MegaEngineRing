@@ -16,42 +16,37 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 27.02.25.
+// Created by alexus on 18.06.2025.
 //
 
-#ifndef IPRESENTERSCENEPREVIEW_H
-#define IPRESENTERSCENEPREVIEW_H
-#include "mvp/IPresenter.h"
+#ifndef CUSTOMEDITORRENDERER_H
+#define CUSTOMEDITORRENDERER_H
+#include <KwasarEngine/render/Renderer.h>
+
+namespace ke {
+class ProgramWideShaderBuffer;
+}
 
 namespace ked {
-class IModelScenePreview;
+class SceneOverlayElements;
 
-class IPresenterScenePreview : public IPresenter {
+class CustomEditorRenderer : public ke::Renderer {
+	CustomEditorRenderer();
+
+	std::shared_ptr<SceneOverlayElements> overlay;
+
+protected:
+	ke::ReportMessagePtr onInitialize() override;
+
+	void onUninitialize() override;
+
 public:
-	virtual void renderScene() = 0;
+	static std::shared_ptr<CustomEditorRenderer> create() {
+		return std::shared_ptr<CustomEditorRenderer>(new CustomEditorRenderer());
+	}
 
-	virtual void renderGeometryBoundingVolumes() = 0;
-
-	virtual void init() = 0;
-
-	virtual void onPrimaryMouseKeyPressed() = 0;
-
-	virtual void onSecondaryMouseKeyPressed() = 0;
-
-	virtual void onSceneChanged() = 0;
-
-	virtual void setFocus() = 0;
-
-	[[nodiscard]] virtual const std::shared_ptr<IModelScenePreview> &getModel() const = 0;
-
-	virtual void startMovingGesture() = 0;
-
-	virtual bool cancelCurrentAction() = 0;
-
-	virtual bool applyCurrentAction() = 0;
-
-	virtual bool onCursorPosChanged(double pX, double pY) = 0;
+	void render() override;
 };
-} // namespace ked
+} // ked
 
-#endif //IPRESENTERSCENEPREVIEW_H
+#endif //CUSTOMEDITORRENDERER_H

@@ -21,13 +21,22 @@
 
 #include "KwasarEngine/scene/Scene3D.h"
 
+#include <KwasarEngine/buffers/ProgramWideShaderBuffer.h>
+#include <KwasarEngine/render/DefaultRenderer.h>
+#include <KwasarEngine/render/RenderPass.h>
+#include <KwasarEngine/utils/Logger.h>
+
 #include "KwasarEngine/gltf/Mesh.h"
+#include "KwasarEngine/gltf/Node.h"
 #include "KwasarEngine/render/Renderer.h"
 
 namespace ke {
-Scene3D::Scene3D() : renderer(std::make_shared<Renderer>()) {}
+Scene3D::Scene3D() : renderer(DefaultRenderer::create()) {}
 
-void Scene3D::render() {}
+void Scene3D::render() {
+	//
+	if (renderer) renderer->render();
+}
 
 void Scene3D::addRootNode(const std::shared_ptr<Node> &pNewNode) {
 	rootNodes.emplace_back(pNewNode.get());
@@ -101,9 +110,21 @@ void Scene3D::changeMesh(Node* pNode, Mesh* pNewMesh) const { renderer->changeMe
 
 const std::vector<std::shared_ptr<Material>> &Scene3D::getMaterials() const { return renderer->getMaterials(); }
 
-ReportMessagePtr Scene3D::onInitialize() { return Initializable::onInitialize(); }
+ReportMessagePtr Scene3D::onInitialize() {
+	if (auto msg = renderer->initialize()) Logger::error(msg);
+	return Initializable::onInitialize();
+}
 
-void Scene3D::onUninitialize() { Initializable::onUninitialize(); }
+void Scene3D::onUninitialize() {
+	renderer->uninitialize();
+	Initializable::onUninitialize();
+}
+
+void Scene3D::setMainCamera(const std::shared_ptr<ICamera> &pMainCamera) {
+	if (mainCamera == pMainCamera) return;
+	mainCamera = pMainCamera;
+	renderer->getProgramBuffer()->setCamera(mainCamera);
+}
 
 void Scene3D::addToMainRenderPass(const std::shared_ptr<Node> &pNode) const {
 	renderer->getMainRenderPass()->addNode(pNode.get());

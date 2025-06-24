@@ -21,6 +21,7 @@
 
 #ifndef SCENE3D_H
 #define SCENE3D_H
+#include <KwasarEngine/extensions/cameras/ICamera.h>
 #include <sigc++/signal.h>
 
 #include "KwasarEngine/render/IRenderable.h"
@@ -29,9 +30,6 @@
 namespace ke {
 class LightInstance;
 class Light;
-} // namespace ke
-
-namespace ke {
 class Renderer;
 class Material;
 class Node;
@@ -42,12 +40,19 @@ class Scene3D : public Initializable, public IRenderable {
 	std::vector<std::shared_ptr<Node>> nodes;
 	std::vector<Node*> rootNodes;
 	sigc::signal<void()> onNodeCollectionChanged;
+	std::shared_ptr<ICamera> mainCamera;
 
 protected:
 	Scene3D();
 
+	explicit Scene3D(const std::shared_ptr<Renderer> &pRenderer) : renderer(pRenderer) {}
+
 public:
 	static std::shared_ptr<Scene3D> create() { return std::shared_ptr<Scene3D>(new Scene3D()); }
+
+	static std::shared_ptr<Scene3D> create(const std::shared_ptr<Renderer> &pRenderer) {
+		return std::shared_ptr<Scene3D>(new Scene3D(pRenderer));
+	}
 
 	void render() override;
 
@@ -75,9 +80,15 @@ public:
 
 	[[nodiscard]] const std::vector<std::shared_ptr<Material>> &getMaterials() const;
 
+	void setMainCamera(const std::shared_ptr<ICamera> &pMainCamera);
+
+	[[nodiscard]] const std::shared_ptr<ICamera> &getMainCamera() const { return mainCamera; }
+
 	[[nodiscard]] const std::vector<std::shared_ptr<Node>> &getNodes() const { return nodes; }
 
 	[[nodiscard]] const std::vector<Node*> &getRootNodes() const { return rootNodes; }
+
+	void setRenderer(const std::shared_ptr<Renderer> &pRenderer) { renderer = pRenderer; }
 
 	[[nodiscard]] const std::shared_ptr<Renderer> &getRenderer() const { return renderer; }
 
