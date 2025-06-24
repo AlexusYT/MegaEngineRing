@@ -25,11 +25,11 @@
 
 namespace ke {
 class BlockPlaneMesh : public Mesh {
-public:
+protected:
 	BlockPlaneMesh();
 
-protected:
 public:
+	static std::shared_ptr<BlockPlaneMesh> create() { return std::shared_ptr<BlockPlaneMesh>(new BlockPlaneMesh()); }
 };
 } // namespace ke
 

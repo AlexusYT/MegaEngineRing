@@ -25,8 +25,11 @@
 
 namespace ke {
 class BlockCubeMesh : public Mesh {
-public:
+protected:
 	BlockCubeMesh();
+
+public:
+	static std::shared_ptr<BlockCubeMesh> create() { return std::shared_ptr<BlockCubeMesh>(new BlockCubeMesh()); }
 };
 }
 

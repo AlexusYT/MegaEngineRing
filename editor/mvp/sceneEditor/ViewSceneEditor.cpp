@@ -125,7 +125,7 @@ void SceneEditor::loadPreset(ImGuiID pDockspaceId, ImVec2 pDockspaceSize, ImGuiD
 
 void SceneEditor::addPlane() {
 	auto ext = ke::MeshExtension::create();
-	auto mesh = std::make_shared<ke::BlockPlaneMesh>();
+	auto mesh = ke::BlockPlaneMesh::create();
 	ext->mesh = mesh;
 	auto instance = ke::Node::create("");
 	instance->addExtension(ext);
@@ -136,7 +136,7 @@ void SceneEditor::addPlane() {
 
 void SceneEditor::addCube() {
 	auto ext = ke::MeshExtension::create();
-	auto mesh = std::make_shared<ke::BlockCubeMesh>();
+	auto mesh = ke::BlockCubeMesh::create();
 	ext->mesh = mesh;
 	auto instance = ke::Node::create("");
 	instance->addExtension(ext);
@@ -146,7 +146,7 @@ void SceneEditor::addCube() {
 
 void SceneEditor::addSphere() {
 	auto ext = ke::MeshExtension::create();
-	auto mesh = std::make_shared<ke::BlockSphereMesh>();
+	auto mesh = ke::BlockSphereMesh::create();
 	ext->mesh = mesh;
 	auto instance = ke::Node::create("");
 	instance->addExtension(ext);

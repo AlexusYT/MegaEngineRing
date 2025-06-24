@@ -31,7 +31,7 @@ Mesh::Mesh()
 	buildAabb();
 }
 
-std::shared_ptr<Mesh> Mesh::create() { return std::shared_ptr < Mesh > (new Mesh()); }
+std::shared_ptr<Mesh> Mesh::createEmptyMesh() { return std::shared_ptr<Mesh>(new Mesh()); }
 
 void Mesh::addPrimitive(const std::shared_ptr<Primitive> &pPrimitive) {
 	primitives.emplace_back(pPrimitive);

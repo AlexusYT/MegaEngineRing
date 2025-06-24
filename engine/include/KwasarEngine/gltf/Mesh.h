@@ -39,7 +39,7 @@ protected:
 	Mesh();
 
 public:
-	static std::shared_ptr<Mesh> create();
+	static std::shared_ptr<Mesh> createEmptyMesh();
 
 	[[nodiscard]] PropertyReadOnly<std::shared_ptr<VolumeAabb>> getAabb() { return aabb.getReadOnly(); }
 

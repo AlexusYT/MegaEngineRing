@@ -256,7 +256,7 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 			prim->setAccessors(accessorsUsed);
 		}
 
-		auto mesh = meshes.emplace_back(Mesh::create());
+		auto mesh = meshes.emplace_back(Mesh::createEmptyMesh());
 		mesh->setPrimitives(primitives);
 		mesh->setName(meshData.name);
 	}

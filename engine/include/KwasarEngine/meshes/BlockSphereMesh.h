@@ -25,8 +25,11 @@
 
 namespace ke {
 class BlockSphereMesh : public Mesh {
-public:
+protected:
 	BlockSphereMesh();
+
+public:
+	static std::shared_ptr<BlockSphereMesh> create() { return std::shared_ptr<BlockSphereMesh>(new BlockSphereMesh()); }
 
 protected:
 	static std::tuple<std::vector<float>, std::vector<uint16_t>, std::vector<float>> generateSphere(
