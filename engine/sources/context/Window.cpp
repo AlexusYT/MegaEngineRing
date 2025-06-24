@@ -26,6 +26,7 @@
 // Must be included after epoxy
 #include <GLFW/glfw3.h>
 #include <thread>
+#include <KwasarEngine/scene/Scene3D.h>
 
 #include "KwasarEngine/scene/SceneUi.h"
 #include "KwasarEngine/utils/Logger.h"
@@ -206,6 +207,10 @@ void Window::addScene(const std::shared_ptr<SceneUi> &pScene) {
 
 void Window::removeScene(const std::shared_ptr<SceneUi> &pScene) { erase(sceneUis, pScene); }
 
+void Window::addScene(const std::shared_ptr<Scene3D> &pScene) { scene3ds.emplace_back(pScene); }
+
+void Window::removeScene(const std::shared_ptr<Scene3D> &pScene) { erase(scene3ds, pScene); }
+
 void Window::runMainLoop() {
 	setContextVersion(3, 0);
 
@@ -215,6 +220,7 @@ void Window::runMainLoop() {
 	if (!native) return;
 	glfwMaximizeWindow(native);
 	glfwSwapInterval(1); // Enable vsync
+	for (auto scene3D: scene3ds) { if (auto msg = scene3D->initialize()) Logger::error(msg); }
 	IMGUI_CHECKVERSION();
 	while (!glfwWindowShouldClose(native)) {
 		glfwMakeContextCurrent(native);
@@ -268,11 +274,15 @@ void Window::runMainLoop() {
 		glViewport(0, 0, displayW, displayH);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		for (auto scene3D: scene3ds) { scene3D->render(); }
 		if (imGuiContext) { ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); }
 		glfwSwapBuffers(native);
 	}
 	for (auto ui: sceneUis) { ui->uninitialize(); }
 	sceneUis.clear();
+
+	for (auto scene3D: scene3ds) { scene3D->uninitialize(); }
+	scene3ds.clear();
 }
 
 void Window::onSizeChanged(int pWidth, int pHeight) {

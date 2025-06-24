@@ -30,6 +30,7 @@ struct ImGuiContext;
 typedef struct GLFWwindow GLFWwindow;
 
 namespace ke {
+class Scene3D;
 class SceneUi;
 
 class Window : IContext {
@@ -39,6 +40,7 @@ class Window : IContext {
 	int height = 600;
 	std::string title = "Untitled121";
 	std::vector<std::shared_ptr<SceneUi>> sceneUis;
+	std::vector<std::shared_ptr<Scene3D>> scene3ds;
 	ImGuiContext* imGuiContext{};
 
 protected:
@@ -64,6 +66,10 @@ public:
 	void addScene(const std::shared_ptr<SceneUi> &pScene);
 
 	void removeScene(const std::shared_ptr<SceneUi> &pScene);
+
+	void addScene(const std::shared_ptr<Scene3D> &pScene);
+
+	void removeScene(const std::shared_ptr<Scene3D> &pScene);
 
 	void runMainLoop();
 
