@@ -75,6 +75,15 @@ int GameEngine::run(const int pArgc, char* pArgv[]) {
 	application->initEngine();
 
 	auto settingsPath = Globals::getConfigPath() / "settings.json";
+	auto systemInfo = ke::ReportMessage::create();
+	systemInfo->setTitle("System info");
+	systemInfo->setMessage("Editor paths and system info for debugging purposes");
+	systemInfo->addInfoLine("Path to locale: {}", Globals::getPathToLocale().string());
+	systemInfo->addInfoLine("Path to sandbox: {}", Globals::getPathToSandbox().string());
+	systemInfo->addInfoLine("Path to config: {}", Globals::getConfigPath().string());
+	systemInfo->addInfoLine("Path to cache: {}", Globals::getCachePath().string());
+	systemInfo->addInfoLine("Path to projects: {}", Globals::getProjectsPath().string());
+	ke::Logger::info(systemInfo->getReport(false));
 	Settings::setSettingsPath(settingsPath);
 
 	if (std::filesystem::exists(settingsPath)) {
