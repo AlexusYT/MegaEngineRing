@@ -222,12 +222,15 @@ void Window::runMainLoop() {
 	// Create window with graphics context
 	show();
 	if (!native) return;
+	initialize();
+	onSizeChanged(width, height);
 	glfwMaximizeWindow(native);
 	glfwSwapInterval(1); // Enable vsync
 	for (auto scene3D: scene3ds) { if (auto msg = scene3D->initialize()) Logger::error(msg); }
 	IMGUI_CHECKVERSION();
 	while (!glfwWindowShouldClose(native)) {
 		glfwMakeContextCurrent(native);
+		beforeDraw();
 		glfwPollEvents();
 		if (glfwGetWindowAttrib(native, GLFW_ICONIFIED) != 0) {
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -280,8 +283,10 @@ void Window::runMainLoop() {
 		glClear(GL_COLOR_BUFFER_BIT);
 		for (auto scene3D: scene3ds) { scene3D->render(); }
 		if (imGuiContext) { ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); }
+		afterDraw();
 		glfwSwapBuffers(native);
 	}
+	uninitialize();
 	for (auto ui: sceneUis) { ui->uninitialize(); }
 	sceneUis.clear();
 

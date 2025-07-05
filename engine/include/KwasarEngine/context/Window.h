@@ -21,6 +21,7 @@
 
 #ifndef WINDOW_H
 #define WINDOW_H
+#include <KwasarEngine/render/Initializable.h>
 #include <KwasarEngine/utils/ReportMessageFwd.h>
 
 #include "IContext.h"
@@ -33,7 +34,7 @@ namespace ke {
 class Scene3D;
 class SceneUi;
 
-class Window : IContext {
+class Window : IContext, protected Initializable {
 	GLFWwindow* native{};
 	std::shared_ptr<Window> sharedWindow;
 	int width = 800;
@@ -70,6 +71,10 @@ public:
 	void addScene(const std::shared_ptr<Scene3D> &pScene);
 
 	void removeScene(const std::shared_ptr<Scene3D> &pScene);
+
+	virtual void beforeDraw() {}
+
+	virtual void afterDraw() {}
 
 	void runMainLoop();
 
