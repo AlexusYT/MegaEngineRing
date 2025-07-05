@@ -23,8 +23,46 @@
 #include <KwasarEngine/utils/ReportMessage.h>
 #include <cstring>
 #include <utility>
+#include <nlohmann/json.hpp>
 
-ke::ReportMessage::ReportMessage(std::stacktrace pStacktrace)
-	: stacktrace(std::move(pStacktrace)), exceptionPtr(std::current_exception()) {
+namespace ke {
+void ReportMessage::StacktraceEntry::serialize(nlohmann::json &pJson) const {
+	pJson["description"] = description;
+	pJson["line"] = line;
+	pJson["file"] = file;
+}
+
+void ReportMessage::StacktraceEntry::deserialize(const nlohmann::json &pJson) {
+	pJson.at("description").get_to(description);
+	pJson.at("line").get_to(line);
+	pJson.at("file").get_to(file);
+}
+
+ReportMessage::ReportMessage(const std::stacktrace &pStacktrace)
+	: exceptionPtr(std::current_exception()) {
+	setStacktrace(pStacktrace);
 	addInfoLine("Current errno status: {}", strerror(errno));
+}
+
+void ReportMessage::setStacktrace(const std::stacktrace &pStacktrace) {
+	stacktrace.clear();
+	for (auto entry: pStacktrace) {
+		StacktraceEntry sEntry(entry.description(), entry.source_line(), entry.source_file());
+		stacktrace.push_back(sEntry);
+	}
+}
+
+void ReportMessage::serialize(nlohmann::json &pJson) const {
+	pJson["title"] = title;
+	pJson["message"] = message;
+	pJson["infoLines"] = infoLines;
+	pJson["stacktrace"] = stacktrace;
+}
+
+void ReportMessage::deserialize(const nlohmann::json &pJson) {
+	pJson.at("title").get_to(title);
+	pJson.at("message").get_to(message);
+	pJson.at("infoLines").get_to(infoLines);
+	pJson.at("stacktrace").get_to(stacktrace);
+}
 }

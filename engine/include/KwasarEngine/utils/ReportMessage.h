@@ -23,20 +23,51 @@
 #define REPORTMESSAGE_H
 #include <stacktrace>
 #include <vector>
+#include <nlohmann/json_fwd.hpp>
 
 #include "ReportMessageFwd.h"
 #include "Utils.h"
 
 namespace ke {
 class ReportMessage {
+	class StacktraceEntry {
+		std::string description;
+		uint_least32_t line{};
+		std::string file;
+
+	public:
+		StacktraceEntry() = default;
+
+		StacktraceEntry(const std::string &pDescription, uint_least32_t pLine, const std::string &pFile)
+			: description(pDescription),
+			  line(pLine),
+			  file(pFile) {}
+
+		[[nodiscard]] const std::string &getDescription() const { return description; }
+
+		[[nodiscard]] uint_least32_t getLine() const { return line; }
+
+		[[nodiscard]] const std::string &getFile() const { return file; }
+
+		void serialize(nlohmann::json &pJson) const;
+
+		void deserialize(const nlohmann::json &pJson);
+
+		bool isEmpty() const { return description.empty() && file.empty() && line == 0; }
+
+		friend void to_json(nlohmann::json &pJson, const StacktraceEntry &pMsg) { pMsg.serialize(pJson); }
+
+		friend void from_json(const nlohmann::json &pJson, StacktraceEntry &pMsg) { pMsg.deserialize(pJson); }
+	};
+
 	std::string title;
 	std::string message;
 	std::vector<std::string> infoLines{};
-	std::stacktrace stacktrace{};
+	std::vector<StacktraceEntry> stacktrace{};
 	std::exception_ptr exceptionPtr;
 
 
-	explicit ReportMessage(std::stacktrace pStacktrace);
+	explicit ReportMessage(const std::stacktrace &pStacktrace);
 
 public:
 	static ReportMessagePtr create(const std::stacktrace &pStacktrace = std::stacktrace::current()) {
@@ -58,7 +89,7 @@ public:
 
 	void addInfoLine(const std::string &pInfoLine) { infoLines.emplace_back(pInfoLine); }
 
-	void setStacktrace(const std::stacktrace &pStacktrace = std::stacktrace::current()) { stacktrace = pStacktrace; }
+	void setStacktrace(const std::stacktrace &pStacktrace = std::stacktrace::current());
 
 	void setExceptionPtr(const std::exception_ptr &pExceptionPtr) { exceptionPtr = pExceptionPtr; }
 
@@ -77,8 +108,33 @@ public:
 		}
 		ss << "Additional info:\n";
 		for (const auto &infoLine: infoLines) { ss << "\t" << infoLine << "\n"; }
-		if (pShowStacktrace) ss << "Stacktrace: \n" << stacktrace;
+		if (pShowStacktrace) {
+			ss << "Stacktrace: \n";
+			int skipped = 0;
+			for (uint32_t i = 0; auto &entry: stacktrace) {
+				if (!entry.isEmpty()) {
+					if (skipped > 0) ss << "      Skipped " << skipped << " empty frames" << "\n";
+					ss << std::setw(4) << i << "# " << entry.getDescription() << " at " << entry.getFile() <<
+						":" << entry.getLine() << "\n";
+					skipped = 0;
+				} else
+					skipped++;
+
+				i++;
+			}
+		}
 		return ss.str();
+	}
+
+	void serialize(nlohmann::json &pJson) const;
+
+	void deserialize(const nlohmann::json &pJson);
+
+	friend void to_json(nlohmann::json &pJson, const ReportMessagePtr &pMsg) { pMsg->serialize(pJson); }
+
+	friend void from_json(const nlohmann::json &pJson, ReportMessagePtr &pMsg) {
+		pMsg = create();
+		pMsg->deserialize(pJson);
 	}
 };
 } // namespace ke
