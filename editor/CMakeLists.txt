@@ -162,7 +162,6 @@ configure_gettext(
         "--copyright-holder=\"Timofeev (Alexus_XX) Alexander\"" "--from-code=UTF-8"
         MSGINIT_ARGS "--no-translator"
         LANGUAGES "en_US" "ru_RU")
-target_compile_definitions(KwasarEngineEditor_lib PUBLIC LOCALE_DIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
 add_dependencies(KwasarEngineEditor_lib KwasarEngineEditor_lib-gettext)
 #[[find_program(XGETTEXT_CMD xgettext REQUIRED)
 SET(_potFile ${PROJECT_NAME}.pot)

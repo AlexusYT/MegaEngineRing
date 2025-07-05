@@ -453,170 +453,170 @@ msgid "GeneralCategory"
 msgstr ""
 
 #. translators: Name of your language. It will be used in the lang settings combobox: LangName (CountryName)
-#: I18N.cpp:54
+#: I18N.cpp:55
 msgid "LangName"
 msgstr ""
 
 #. translators: Name of your language. It will be used in the lang settings combobox: LangName (CountryName)
-#: I18N.cpp:56
+#: I18N.cpp:57
 msgid "CountryName"
 msgstr ""
 
-#: I18N.cpp:100 I18N.cpp:102
+#: I18N.cpp:101 I18N.cpp:103
 msgid "LangSystem"
 msgstr ""
 
-#: I18N.cpp:103
+#: I18N.cpp:104
 msgid "AngleDegreeSymbol"
 msgstr ""
 
-#: I18N.cpp:118
+#: I18N.cpp:119
 msgid "SketchfabRelevancy"
 msgstr ""
 
-#: I18N.cpp:119
+#: I18N.cpp:120
 msgid "SketchfabLikeCountAsc"
 msgstr ""
 
-#: I18N.cpp:120
+#: I18N.cpp:121
 msgid "SketchfabLikeCountDesc"
 msgstr ""
 
-#: I18N.cpp:121
+#: I18N.cpp:122
 msgid "SketchfabViewCountAsc"
 msgstr ""
 
-#: I18N.cpp:122
+#: I18N.cpp:123
 msgid "SketchfabViewCountDesc"
 msgstr ""
 
-#: I18N.cpp:123
+#: I18N.cpp:124
 msgid "SketchfabPublishedAtAsc"
 msgstr ""
 
-#: I18N.cpp:124
+#: I18N.cpp:125
 msgid "SketchfabPublishedAtDesc"
 msgstr ""
 
-#: I18N.cpp:125
+#: I18N.cpp:126
 msgid "SketchfabProcessedAtAsc"
 msgstr ""
 
-#: I18N.cpp:126
+#: I18N.cpp:127
 msgid "SketchfabProcessedAtDesc"
 msgstr ""
 
-#: I18N.cpp:131
+#: I18N.cpp:132
 msgid "Any License"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Any License"
-#: I18N.cpp:133
+#: I18N.cpp:134
 msgid "AnyLicenseDescription"
 msgstr ""
 
-#: I18N.cpp:136
+#: I18N.cpp:137
 msgid "Creative Commons: Attribution"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Attribution"
-#: I18N.cpp:138
+#: I18N.cpp:139
 msgid "Author must be credited. Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:140
+#: I18N.cpp:141
 msgid "Creative Commons: ShareAlike"
 msgstr ""
 
-#: I18N.cpp:143
+#: I18N.cpp:144
 msgid ""
 "Author must be credited. Modified versions must have the same license. "
 "Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:145
+#: I18N.cpp:146
 msgid "Creative Commons: NoDerivatives"
 msgstr ""
 
-#: I18N.cpp:148
+#: I18N.cpp:149
 msgid ""
 "Author must be credited. Modified versions can not be distributed. "
 "Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:150
+#: I18N.cpp:151
 msgid "Creative Commons: NonCommercial"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: NonCommercial"
-#: I18N.cpp:152
+#: I18N.cpp:153
 msgid "Author must be credited. No commercial use."
 msgstr ""
 
-#: I18N.cpp:154
+#: I18N.cpp:155
 msgid "Creative Commons: NonCommercial-ShareAlike"
 msgstr ""
 
-#: I18N.cpp:157
+#: I18N.cpp:158
 msgid ""
 "Author must be credited. No commercial use. Modified versions must have the "
 "same license."
 msgstr ""
 
-#: I18N.cpp:159
+#: I18N.cpp:160
 msgid "Creative Commons: NonCommercial-NoDerivatives"
 msgstr ""
 
-#: I18N.cpp:162
+#: I18N.cpp:163
 msgid ""
 "Author must be credited. No commercial use. Modified versions can not be "
 "distributed."
 msgstr ""
 
-#: I18N.cpp:164
+#: I18N.cpp:165
 msgid "Creative Commons: Zero"
 msgstr ""
 
 #. translators: Description for Sketchfab License filter "Creative Commons: Zero"
-#: I18N.cpp:166
+#: I18N.cpp:167
 msgid "Credit is not mandatory. Commercial use is allowed."
 msgstr ""
 
-#: I18N.cpp:168
+#: I18N.cpp:169
 msgid "Editorial"
 msgstr ""
 
-#: I18N.cpp:171
+#: I18N.cpp:172
 msgid ""
 "Use only in connection with events that are newsworthy or of public interest"
 msgstr ""
 
-#: I18N.cpp:173
+#: I18N.cpp:174
 msgid "Standard"
 msgstr ""
 
-#: I18N.cpp:176
+#: I18N.cpp:177
 msgid ""
 "Under basic restrictions, use worldwide, on all types of media, commercially "
 "or not, and in all types of derivative works"
 msgstr ""
 
-#: I18N.cpp:180
+#: I18N.cpp:181
 msgid "SketchfabMaterialAny"
 msgstr ""
 
-#: I18N.cpp:181
+#: I18N.cpp:182
 msgid "SketchfabMaterialSimple"
 msgstr ""
 
-#: I18N.cpp:182
+#: I18N.cpp:183
 msgid "SketchfabMaterialPBROnly"
 msgstr ""
 
-#: I18N.cpp:183
+#: I18N.cpp:184
 msgid "SketchfabMaterialMetalness"
 msgstr ""
 
-#: I18N.cpp:184
+#: I18N.cpp:185
 msgid "SketchfabMaterialSpecular"
 msgstr ""

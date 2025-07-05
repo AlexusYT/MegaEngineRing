@@ -20,6 +20,7 @@
 //
 
 #include "Globals.h"
+
 namespace ked {
 void Globals::init() {
 #if defined __MINGW32__
@@ -52,6 +53,13 @@ void Globals::init() {
 	create_directories(configPath);
 	cachePath = home / ".cache/KwasarEngineEditor/";
 	create_directories(cachePath);
+
+	auto execDir = std::filesystem::current_path();
+	pathToLocale = searchFor({
+		execDir / "locale",
+		execDir / "../locale",
+		execDir / "../share/locale"
+	});
 #endif
 }
 }

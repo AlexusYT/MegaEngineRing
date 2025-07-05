@@ -21,6 +21,7 @@
 
 #include "I18N.h"
 
+#include <Globals.h>
 #include <libintl.h>
 
 #include "mvp/editor/settings/Settings.h"
@@ -39,7 +40,7 @@ void I18n::init() {
 #ifdef __MINGW32__
 	_configthreadlocale(_DISABLE_PER_THREAD_LOCALE);
 #endif
-	for (auto &entry: std::filesystem::directory_iterator(LOCALE_DIR)) {
+	for (auto &entry: std::filesystem::directory_iterator(Globals::getPathToLocale())) {
 		if (!entry.is_directory()) continue;
 		std::string filename = entry.path().stem().string();
 		std::string langName;
@@ -59,7 +60,7 @@ void I18n::init() {
 			auto msg = ke::ReportMessage::create();
 			msg->setTitle("Failed to load locale");
 			msg->setMessage("Exception occurred");
-			msg->addInfoLine("Locale directory: {}", LOCALE_DIR);
+			msg->addInfoLine("Locale directory: {}", Globals::getPathToLocale().string());
 			msg->addInfoLine("Locale name: {}", filename);
 			ke::Logger::error(msg);
 			continue;
@@ -91,7 +92,7 @@ void I18n::switchTo(const std::string &pLocale) {
 		std::setlocale(LC_MESSAGES, (pLocale + ".UTF-8").c_str());
 #endif
 
-	bindtextdomain(LOCALE_DOMAIN, LOCALE_DIR);
+	bindtextdomain(LOCALE_DOMAIN, Globals::getPathToLocale().c_str());
 	textdomain(LOCALE_DOMAIN);
 	bind_textdomain_codeset(LOCALE_DOMAIN, "UTF-8");
 }

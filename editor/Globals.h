@@ -28,6 +28,7 @@ class Globals {
 	inline static std::filesystem::path projectsPath;
 	inline static std::filesystem::path configPath;
 	inline static std::filesystem::path cachePath;
+	inline static std::filesystem::path pathToLocale;
 
 public:
 	static void init();
@@ -47,6 +48,21 @@ public:
 	[[nodiscard]] static const std::filesystem::path &getCachePath() { return cachePath; }
 
 	static void setCachePath(const std::filesystem::path &pCachePath) { cachePath = pCachePath; }
+
+	[[nodiscard]] static const std::filesystem::path &getPathToLocale() { return pathToLocale; }
+
+	static void setPathToLocale(const std::filesystem::path &pPathToLocale) { pathToLocale = pPathToLocale; }
+
+private:
+	static std::filesystem::path searchFor(const std::vector<std::filesystem::path> &pCandidates,
+										   std::filesystem::path pDefault = "") {
+		for (auto &sandboxPath: pCandidates) {
+			std::error_code ec;
+			auto finalPath = canonical(sandboxPath, ec);
+			if (!ec) return finalPath;
+		}
+		return pDefault;
+	}
 };
 }
 
