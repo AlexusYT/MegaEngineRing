@@ -55,6 +55,11 @@ void Globals::init() {
 	create_directories(cachePath);
 
 	auto execDir = std::filesystem::current_path();
+	pathToSandbox = searchFor({
+		execDir / "KwasarEngineSandbox",
+		execDir / "../KwasarEngineSandbox",
+		execDir / "../libexec/KwasarEngineSandbox"
+	});
 	pathToLocale = searchFor({
 		execDir / "locale",
 		execDir / "../locale",

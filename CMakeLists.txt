@@ -79,6 +79,7 @@ target_compile_definitions(ImGuiFileDialog PUBLIC "CUSTOM_IMGUIFILEDIALOG_CONFIG
 
 add_subdirectory(engine)
 add_subdirectory(editor)
+add_subdirectory(sandbox)
 
 # ---- Declare executable ----
 
@@ -88,6 +89,7 @@ set_property(TARGET KwasarEngineEditor PROPERTY OUTPUT_NAME KwasarEngineEditor)
 
 target_link_libraries(KwasarEngineEditor PRIVATE KwasarEngineEditor_lib)
 target_compile_options(KwasarEngineEditor PRIVATE -Werror)
+add_dependencies(KwasarEngineEditor KwasarEngineSandbox)
 
 if (WIN32)
     install(

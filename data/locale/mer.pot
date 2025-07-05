@@ -90,7 +90,7 @@ msgstr ""
 msgid "Scale"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:255 I18N.cpp:105
+#: mvp/objectProperties/ViewObjectProperties.cpp:255 I18N.cpp:106
 msgid "MeshExtension"
 msgstr ""
 
@@ -102,7 +102,7 @@ msgstr ""
 msgid "MeshNone"
 msgstr ""
 
-#: mvp/objectProperties/ViewObjectProperties.cpp:286 I18N.cpp:104
+#: mvp/objectProperties/ViewObjectProperties.cpp:286 I18N.cpp:105
 msgid "LightExtension"
 msgstr ""
 
@@ -360,7 +360,7 @@ msgstr ""
 msgid "SearchWindowTool"
 msgstr ""
 
-#: mvp/scenePreview/ViewScenePreview.h:73
+#: mvp/scenePreview/ViewScenePreview.h:77
 msgid "ScenePreviewTool"
 msgstr ""
 

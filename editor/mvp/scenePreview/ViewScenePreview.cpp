@@ -92,8 +92,31 @@ void ViewScenePreview::onUpdate(bool pVisible) {
 	glm::vec2 imageStart = screenCursor;
 	glm::vec2 imageEnd = imageStart + contentAvail;
 	frameDisplayed = true;
-	dl->AddImageRounded(framebuffer->getFrameTexture(), imageStart, imageEnd, ImVec2(0, 1), ImVec2(1, 0),
-						IM_COL32_WHITE, 8);
+
+	if (sandboxStatus.load() == SandboxStatus::RUNNING) {
+		int32_t frameWidth, frameHeight;
+		size_t frameSize;
+		void* data{};
+		presenter->getFrameData(frameWidth, frameHeight, data, frameSize);
+		if (simTextureId > 0)
+			glDeleteTextures(1, &simTextureId);
+		glCreateTextures(GL_TEXTURE_2D, 1, &simTextureId);
+		glTextureStorage2D(simTextureId, 1, GL_RGBA8, frameWidth, frameHeight);
+		glTextureSubImage2D(simTextureId, 0, 0, 0, frameWidth, frameHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+							data);
+		dl->AddImageRounded(simTextureId, imageStart, imageEnd, ImVec2(0, 1), ImVec2(1, 0),
+							IM_COL32_WHITE, 8);
+	} else
+		dl->AddImageRounded(framebuffer->getFrameTexture(), imageStart, imageEnd, ImVec2(0, 1), ImVec2(1, 0),
+							IM_COL32_WHITE, 8);
+
+	if (auto status = sandboxStatus.load(); ImGui::Button(
+		status == SandboxStatus::RUNNING || status == SandboxStatus::STARTED
+			? "Stop##SimulateBtn"
+			: "Run##SimulateBtn")) {
+		if (presenter)
+			presenter->onSimulationButtonClicked();
+	}
 }
 
 void ViewScenePreview::openView() {
@@ -107,6 +130,7 @@ void ViewScenePreview::closeView() {
 	if (presenter) presenter->uninit();
 	context->remove();
 	framebuffer->uninitialize();
+	glDeleteTextures(1, &simTextureId);
 }
 
 void ViewScenePreview::onCursorPosChanged(double pX, double pY) {
@@ -183,4 +207,6 @@ void ViewScenePreview::onMouseScroll(double /*pXOffset*/, double pYOffset) {
 bool ViewScenePreview::isRotate() { return rotate; }
 
 void ViewScenePreview::focusOnThis() { focusWindow = true; }
+
+void ViewScenePreview::reportError(const ke::ReportMessagePtr &pErrorMsg) { ke::Logger::error(pErrorMsg); }
 } // namespace ked

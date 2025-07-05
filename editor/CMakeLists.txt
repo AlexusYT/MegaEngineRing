@@ -142,6 +142,7 @@ set(EDITOR_SOURCES
         I18N.h
         mvp/scenePreview/CustomEditorRenderer.cpp
         mvp/scenePreview/CustomEditorRenderer.h
+        mvp/scenePreview/sceneEditor/SandboxStatus.h
 
 )
 

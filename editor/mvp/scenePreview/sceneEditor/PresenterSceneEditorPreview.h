@@ -21,10 +21,26 @@
 
 #ifndef PRESENTERSCENEEDITORPREVIEW_H
 #define PRESENTERSCENEEDITORPREVIEW_H
+#include <thread>
+
 #include "mvp/scenePreview/PresenterScenePreview.h"
 
 namespace ked {
 class PresenterSceneEditorPreview : public PresenterScenePreview {
+	std::optional<std::jthread> simulationThread;
+	pid_t sandboxPid{};
+	bool sandboxRunning{};
+	int sharedMemHandle{-1};
+	void* sharedFrameHandle{};
+	std::string sharedMemName;
+	size_t sharedFrameSize{0};
+	int32_t sharedFrameWidth{0};
+	int32_t sharedFrameHeight{0};
+
+	int childStdIn[2]{};
+	int childStdOut[2]{};
+	int childStdErr[2]{};
+
 	PresenterSceneEditorPreview(const std::shared_ptr<IViewScenePreview> &pView,
 								const std::shared_ptr<IModelScenePreview> &pModel)
 		: PresenterScenePreview(pView, pModel) {}
@@ -34,6 +50,23 @@ public:
 															   const std::shared_ptr<IModelScenePreview> &pModel);
 
 	std::string getTypeName() override { return "PresenterSceneEditorPreview"; }
+
+	void onSimulationButtonClicked() override;
+
+	inline void getFrameData(int32_t &pWidthOut, int32_t &pHeightOut, void*&pDataOut, size_t &pDataSizeOut) override;
+
+private:
+	void parseJson(const std::string &pJsonString);
+
+	void initSharedMemory(const std::string &pName);
+
+	void sharedFrameResized(size_t pNewFrameSize, int32_t pNewFrameWidth, int32_t pNewFrameHeight);
+
+	void uninitSharedMemory();
+
+	int unmapMemory();
+
+	void reportSandboxError(const ke::ReportMessagePtr &pErrorMsg);
 };
 } // namespace ked
 

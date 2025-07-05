@@ -21,6 +21,8 @@
 
 #ifndef VIEWSCENEPREVIEW_H
 #define VIEWSCENEPREVIEW_H
+#include <atomic>
+
 #include "IViewScenePreview.h"
 #include "mvp/editor/Editor.h"
 
@@ -44,6 +46,8 @@ class ViewScenePreview : public IViewScenePreview, public EditorTool {
 	IPresenterScenePreview* presenter{};
 	std::shared_ptr<IWidgetContext> context;
 	std::shared_ptr<ke::Framebuffer> framebuffer;
+	uint32_t simTextureId{};
+	std::atomic<SandboxStatus> sandboxStatus{SandboxStatus::STOPPED};
 	bool frameDisplayed{};
 	bool widgetHovered{};
 	bool mouseHeld{};
@@ -93,6 +97,10 @@ public:
 	bool isRotate() override;
 
 	void focusOnThis() override;
+
+	void sandboxStatusChanged(SandboxStatus pStatus) override { sandboxStatus = pStatus; }
+
+	void reportError(const ke::ReportMessagePtr &pErrorMsg) override;
 };
 } // namespace ked
 

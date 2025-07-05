@@ -53,7 +53,16 @@ public:
 	virtual bool applyCurrentAction() = 0;
 
 	virtual bool onCursorPosChanged(double pX, double pY) = 0;
+
+	virtual void onSimulationButtonClicked();
+
+	virtual void getFrameData(int32_t &pWidthOut, int32_t &pHeightOut, void* &pDataOut, size_t &pDataSizeOut);
 };
+
+inline void IPresenterScenePreview::onSimulationButtonClicked() {}
+
+inline void IPresenterScenePreview::getFrameData(int32_t &/*pWidthOut*/, int32_t &/*pHeightOut*/, void*&/*pDataOut*/,
+												 size_t &/*pDataSizeOut*/) {}
 } // namespace ked
 
 #endif //IPRESENTERSCENEPREVIEW_H

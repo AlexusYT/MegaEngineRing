@@ -16,37 +16,8 @@
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 //
-// Created by alexus on 27.02.25.
+// Created by alexus on 15.06.2025.
 //
+import Sandbox;
 
-#ifndef IVIEWSCENEPREVIEW_H
-#define IVIEWSCENEPREVIEW_H
-#include "mvp/IView.h"
-#include "sceneEditor/SandboxStatus.h"
-
-namespace ke {
-class OrbitCameraExtension;
-}
-
-namespace ked {
-class IPresenterScenePreview;
-
-class IViewScenePreview : public IView {
-public:
-	[[nodiscard]] virtual IPresenterScenePreview* getPresenter() const = 0;
-
-	virtual void setPresenter(IPresenterScenePreview* pPresenter) = 0;
-
-	[[nodiscard]] virtual const glm::vec2 &getMousePos() const = 0;
-
-	virtual bool isRotate() = 0;
-
-	virtual void focusOnThis() = 0;
-
-	virtual void sandboxStatusChanged(SandboxStatus pRunning) = 0;
-
-	virtual void reportError(const ke::ReportMessagePtr &pErrorMsg) = 0;
-};
-} // namespace ked
-
-#endif //IVIEWSCENEPREVIEW_H
+int main(int pArgc, char* pArgv[]) { return run(pArgc, pArgv); }
