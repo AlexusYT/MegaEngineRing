@@ -33,6 +33,7 @@ uint32_t Framebuffer::getFrameTexture() const { return texture; }
 void Framebuffer::setSize(const int pWidth, const int pHeight) {
 	width = pWidth;
 	height = pHeight;
+	if (!isInited()) return;
 	if (textureMs)
 		glDeleteTextures(1, &textureMs);
 	glCreateTextures(GL_TEXTURE_2D_MULTISAMPLE, 1, &textureMs);
@@ -67,6 +68,19 @@ void Framebuffer::unbind() const {
 
 bool Framebuffer::isComplete() const {
 	return glCheckNamedFramebufferStatus(fboMs, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+}
+
+std::vector<uint8_t> Framebuffer::getPixels() const {
+	std::vector<uint8_t> pixels(static_cast<size_t>(width * height * 4));
+	glGetTextureImage(texture, 0, GL_RGB8, GL_UNSIGNED_BYTE, static_cast<int>(pixels.size()), pixels.data());
+	return pixels;
+}
+
+void Framebuffer::readPixels(std::vector<uint8_t> &pOut) const {
+	auto size = pOut.size();
+	auto targetSize = static_cast<size_t>(width * height * 4);
+	if (size < targetSize) pOut.resize(targetSize);
+	glGetTextureImage(texture, 0, GL_RGBA, GL_UNSIGNED_BYTE, static_cast<int>(pOut.size()), pOut.data());
 }
 
 ReportMessagePtr Framebuffer::onInitialize() {

@@ -21,6 +21,8 @@
 
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
+
+#include <vector>
 #include "KwasarEngine/render/Initializable.h"
 
 namespace ke {
@@ -53,6 +55,25 @@ public:
 	void unbind() const;
 
 	bool isComplete() const;
+
+	/**
+	 * Retrieves raw pixel data from the framebuffer's texture as a vector of uint8_t.
+	 *
+	 * @return A vector containing the uncompressed RGBA pixel data. The size is determined by the current width and
+	 * height of the framebuffer (width * height * 4 bytes).
+	 * @note This method will allocate memory every call. See readPixels() if you need to get pixels frequently.
+	 * @see readPixels
+	 */
+	std::vector<uint8_t> getPixels() const;
+
+	/**
+	 * Reads pixel data from the framebuffer's texture into the provided output buffer. Useful for per frame
+	 * operations.
+	 *
+	 * @param pOut Reference to a vector<uint8_t> that will store the raw pixel data. The method will resize this
+	 * vector if it is smaller than required.
+	 */
+	void readPixels(std::vector<uint8_t> &pOut) const;
 
 protected:
 	ReportMessagePtr onInitialize() override;
