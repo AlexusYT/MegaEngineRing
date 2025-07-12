@@ -34,23 +34,17 @@ void KhrLightsPunctual::addHandlers(Microsoft::glTF::ExtensionDeserializer &pDes
 }
 
 std::unique_ptr<Microsoft::glTF::Extension> KhrLightsPunctual::deserializeDocument(
-	const std::string &pJson, const Microsoft::glTF::ExtensionDeserializer &) {
+	const nlohmann::json &pJson, const std::shared_ptr<Microsoft::glTF::ExtensionDeserializer> &) {
 	auto ext = std::make_unique<KhrLightsPunctual>();
-	try {
-		auto json = nlohmann::json::parse(pJson);
-		json.at("lights").get_to(ext->lights);
-	}
+	try { pJson.at("lights").get_to(ext->lights); }
 	catch (...) { ext->lights.clear(); }
 	return ext;
 }
 
 std::unique_ptr<Microsoft::glTF::Extension> KhrLightsPunctual::deserializeNode(
-	const std::string &pJson, const Microsoft::glTF::ExtensionDeserializer &) {
+	const nlohmann::json &pJson, const std::shared_ptr<Microsoft::glTF::ExtensionDeserializer> &) {
 	auto ext = std::make_unique<Node>();
-	try {
-		auto json = nlohmann::json::parse(pJson);
-		json.at("light").get_to(ext->light);
-	}
+	try { pJson.at("light").get_to(ext->light); }
 	catch (...) { ext->light = -1; }
 	return ext;
 }

@@ -42,6 +42,8 @@ public:
 
 		std::unique_ptr<Extension> Clone() const override { return std::make_unique<Node>(*this); }
 
+		std::string getName() const override { return "KHR_lights_punctual"; }
+
 		bool IsEqual(const Extension &pRhs) const override {
 			const auto other = dynamic_cast<const Node*>(&pRhs);
 
@@ -52,6 +54,8 @@ public:
 	static constexpr const char* EXTENSION_NAME = "KHR_lights_punctual";
 
 	std::unique_ptr<Extension> Clone() const override { return std::make_unique<KhrLightsPunctual>(*this); }
+
+	std::string getName() const override { return EXTENSION_NAME; }
 
 	bool IsEqual(const Extension &pRhs) const override {
 		const auto other = dynamic_cast<const KhrLightsPunctual*>(&pRhs);
@@ -64,10 +68,12 @@ public:
 	static void addHandlers(Microsoft::glTF::ExtensionDeserializer &pDeserializer);
 
 	static std::unique_ptr<Extension> deserializeDocument(
-		const std::string &pJson, const Microsoft::glTF::ExtensionDeserializer & /*pExtensionDeserializer*/);
+		const nlohmann::json &pJson,
+		const std::shared_ptr<Microsoft::glTF::ExtensionDeserializer> & /*pExtensionDeserializer*/);
 
 	static std::unique_ptr<Extension> deserializeNode(
-		const std::string &pJson, const Microsoft::glTF::ExtensionDeserializer & /*pExtensionDeserializer*/);
+		const nlohmann::json &pJson,
+		const std::shared_ptr<Microsoft::glTF::ExtensionDeserializer> & /*pExtensionDeserializer*/);
 };
 } // namespace ke
 

@@ -98,7 +98,7 @@ ReportMessagePtr GltfModel::loadFromStream(const std::shared_ptr<std::istream> &
 	std::string manifest = glbResourceReader->GetJson();
 
 	std::shared_ptr<GLTFResourceReader> resourceReader = std::move(glbResourceReader);
-	Document document;
+	auto document = Document::create();
 	if (auto msg = deserializeManifest(manifest, document)) return msg;
 	if (auto msg = parseStructure(resourceReader, document)) return msg;
 	return nullptr;
@@ -147,18 +147,18 @@ ReportMessagePtr GltfModel::loadFromFile(const std::filesystem::path &pFilePath)
 		msg->addInfoLine("File: {}", pFilePath.string());
 		return msg;
 	}
-	Document document;
+	auto document = Document::create();
 	if (auto msg = deserializeManifest(manifest, document)) return msg;
 	if (auto msg = parseStructure(resourceReader, document)) return msg;
 	return nullptr;
 }
 
-ReportMessagePtr GltfModel::deserializeManifest(const std::string &pJson, Document &pDocumentOut) {
+ReportMessagePtr GltfModel::deserializeManifest(const std::string &pJson, std::shared_ptr<Document> &pDocumentOut) {
 	try {
-		ExtensionDeserializer deserializer = KHR::GetKHRExtensionDeserializer();
-		KhrLightsPunctual::addHandlers(deserializer);
+		auto deserializer = KHR::GetKHRExtensionDeserializer();
+		KhrLightsPunctual::addHandlers(*deserializer);
 
-		pDocumentOut = Deserialize(pJson, deserializer);
+		pDocumentOut = Deserializer::Deserialize(pJson, deserializer);
 		return nullptr;
 	}
 	catch (...) {
@@ -170,44 +170,44 @@ ReportMessagePtr GltfModel::deserializeManifest(const std::string &pJson, Docume
 }
 
 ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceReader> &pReader,
-										   const Document &pDocument) {
-	if (pDocument.IsExtensionUsed(KhrLightsPunctual::EXTENSION_NAME)) {
-		auto &ext = pDocument.GetExtension<KhrLightsPunctual>();
+										   const std::shared_ptr<Document> &pDocument) {
+	if (pDocument->IsExtensionUsed(KhrLightsPunctual::EXTENSION_NAME)) {
+		auto &ext = pDocument->GetExtension<KhrLightsPunctual>();
 		lights = ext.getLights();
 	}
-	for (auto &accessor: pDocument.accessors.Elements()) {
-		accessors.emplace_back(Accessor::create(accessor, pDocument, pReader));
+	for (auto &accessor: pDocument->accessors.Elements()) {
+		accessors.emplace_back(Accessor::create(accessor, *pDocument, pReader));
 	}
-	for (auto &sampler: pDocument.samplers.Elements()) { samplers.emplace_back(Sampler::create(sampler)); }
+	for (auto &sampler: pDocument->samplers.Elements()) { samplers.emplace_back(Sampler::create(sampler)); }
 
-	for (auto &image: pDocument.images.Elements()) {
-		auto img = Image::create(image, pDocument, pReader);
+	for (auto &image: pDocument->images.Elements()) {
+		auto img = Image::create(image, *pDocument, pReader);
 		if (auto msg = img->initialize()) return msg;
 		images.emplace_back(img);
 	}
-	for (auto &texture: pDocument.textures.Elements()) {
+	for (auto &texture: pDocument->textures.Elements()) {
 		std::shared_ptr<Image> image{};
 		//From spec: When undefined, an extension or other mechanism SHOULD supply an alternate texture source,
 		//otherwise behavior is undefined.
 		if (auto &textureId = texture.imageId; !textureId.empty()) {
-			image = images.at(pDocument.images.GetIndex(textureId));
+			image = images.at(pDocument->images.GetIndex(textureId));
 		} else {
 			//TODO Add fallback texture.
 		}
 		std::shared_ptr<Sampler> sampler{};
 		if (auto &samplerId = texture.samplerId; !samplerId.empty()) {
-			sampler = samplers.at(pDocument.samplers.GetIndex(samplerId));
+			sampler = samplers.at(pDocument->samplers.GetIndex(samplerId));
 		}
 		textures.emplace_back(Texture::create(texture, image, sampler));
 	}
 
 	//defaultScene = Scene3D::create();
-	for (auto &material: pDocument.materials.Elements()) {
+	for (auto &material: pDocument->materials.Elements()) {
 		std::unordered_map<TextureType, std::shared_ptr<Texture>> usedTextures;
 		for (auto &texture: material.GetTextures()) {
 			std::shared_ptr<Texture> tex{};
 			if (auto &textureId = texture.first; !textureId.empty()) {
-				tex = textures.at(pDocument.textures.GetIndex(textureId));
+				tex = textures.at(pDocument->textures.GetIndex(textureId));
 			}
 			usedTextures.emplace(texture.second, tex);
 		}
@@ -215,16 +215,16 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 		materials.emplace_back(mat);
 		//defaultScene->addMaterial(mat);
 	}
-	for (auto &meshData: pDocument.meshes.Elements()) {
+	for (auto &meshData: pDocument->meshes.Elements()) {
 		std::vector<std::shared_ptr<Primitive>> primitives;
 		for (auto &primitive: meshData.primitives) {
 			std::shared_ptr<Accessor> indexAccessor{};
 			if (auto &accessorId = primitive.indicesAccessorId; !accessorId.empty())
-				indexAccessor = accessors.at(pDocument.accessors.GetIndex(primitive.indicesAccessorId));
+				indexAccessor = accessors.at(pDocument->accessors.GetIndex(primitive.indicesAccessorId));
 
 			std::shared_ptr<Accessor> positionAccessor{};
 			if (auto iter = primitive.attributes.find("POSITION"); iter != primitive.attributes.end()) {
-				auto index = pDocument.accessors.GetIndex(iter->second);
+				auto index = pDocument->accessors.GetIndex(iter->second);
 				positionAccessor = accessors.at(index);
 			}
 			auto prim = primitives.emplace_back(
@@ -232,11 +232,11 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 								  positionAccessor, indexAccessor));
 
 			if (auto &materialId = primitive.materialId; !materialId.empty())
-				prim->setMaterial(materials.at(pDocument.materials.GetIndex(materialId)));
+				prim->setMaterial(materials.at(pDocument->materials.GetIndex(materialId)));
 
 			std::unordered_map<std::string, std::shared_ptr<Accessor>> accessorsUsed;
 			for (auto &attribute: primitive.attributes) {
-				auto index = pDocument.accessors.GetIndex(attribute.second);
+				auto index = pDocument->accessors.GetIndex(attribute.second);
 				const auto &accessor = accessors.at(index);
 				if (attribute.first == "POSITION") continue;
 				if (attribute.first == "TEXCOORD_0") {
@@ -261,10 +261,10 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 		mesh->setName(meshData.name);
 	}
 
-	for (auto &element: pDocument.nodes.Elements()) {
+	for (auto &element: pDocument->nodes.Elements()) {
 		auto node = Node::create(element);
 		if (!element.meshId.empty()) {
-			auto mesh = meshes.at(pDocument.meshes.GetIndex(element.meshId));
+			auto mesh = meshes.at(pDocument->meshes.GetIndex(element.meshId));
 			auto ext = MeshExtension::create();
 			ext->mesh = mesh;
 			node->addExtension(ext);
@@ -277,17 +277,17 @@ ReportMessagePtr GltfModel::parseStructure(const std::shared_ptr<GLTFResourceRea
 		}
 		nodes.emplace_back(node);
 	}
-	for (auto &element: pDocument.nodes.Elements()) {
-		auto node = nodes.at(pDocument.nodes.GetIndex(element.id));
+	for (auto &element: pDocument->nodes.Elements()) {
+		auto node = nodes.at(pDocument->nodes.GetIndex(element.id));
 		for (auto &child: element.children) {
-			auto childNode = nodes.at(pDocument.nodes.GetIndex(child));
+			auto childNode = nodes.at(pDocument->nodes.GetIndex(child));
 			node->addChild(childNode.get());
 			//defaultScene->addNode(node, childNode);
 		}
 	}
-	auto &scene = pDocument.GetDefaultScene();
+	auto &scene = pDocument->GetDefaultScene();
 	for (auto &nodeId: scene.nodes) {
-		auto node = nodes.at(pDocument.nodes.GetIndex(nodeId));
+		auto node = nodes.at(pDocument->nodes.GetIndex(nodeId));
 		//defaultScene->addNode(nullptr, node);
 		rootNodes.emplace_back(node);
 	}
