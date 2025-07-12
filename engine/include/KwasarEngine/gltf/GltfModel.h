@@ -81,10 +81,11 @@ private:
 
 	ReportMessagePtr loadFromFile(const std::filesystem::path &pFilePath);
 
-	static ReportMessagePtr deserializeManifest(const std::string &pJson, Microsoft::glTF::Document &pDocumentOut);
+	static ReportMessagePtr deserializeManifest(const std::string &pJson,
+												std::shared_ptr<Microsoft::glTF::Document> &pDocumentOut);
 
 	ReportMessagePtr parseStructure(const std::shared_ptr<Microsoft::glTF::GLTFResourceReader> &pReader,
-									const Microsoft::glTF::Document &pDocument);
+									const std::shared_ptr<Microsoft::glTF::Document> &pDocument);
 };
 } // namespace ke
 
